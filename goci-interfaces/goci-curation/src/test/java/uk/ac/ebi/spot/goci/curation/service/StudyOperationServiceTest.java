@@ -116,7 +116,7 @@ public class StudyOperationServiceTest {
         // Test changing status
         getStudyOperationsService().updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS3);
+        assertEquals("Study status must be " + NEW_STATUS3.getStatus(),STU1.getHousekeeping().getCurationStatus(), NEW_STATUS3);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
@@ -135,7 +135,7 @@ public class StudyOperationServiceTest {
         getStudyOperationsService().updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS1.getStatus());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS1);
+        assertEquals("Study status must be " + NEW_STATUS1.getStatus(),STU1.getHousekeeping().getCurationStatus(), NEW_STATUS1);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
@@ -153,7 +153,7 @@ public class StudyOperationServiceTest {
         getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS2);
+        assertEquals("Study status must be " + NEW_STATUS2.getStatus() ,STU1.getHousekeeping().getCurationStatus(), NEW_STATUS2);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
 
     }
@@ -172,7 +172,9 @@ public class StudyOperationServiceTest {
         getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(mailService, never()).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), CURRENT_STATUS1); // check status was not changed
+        assertEquals("Study status must be " + CURRENT_STATUS1.getStatus(),
+                     STU1.getHousekeeping().getCurationStatus(),
+                     CURRENT_STATUS1); // check status was not changed
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
