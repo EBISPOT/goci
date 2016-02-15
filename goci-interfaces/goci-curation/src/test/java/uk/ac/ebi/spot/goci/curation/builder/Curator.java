@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.curation.builder;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -59,24 +59,14 @@ public class Curator {
         return userName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "Curator{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-    
 }
