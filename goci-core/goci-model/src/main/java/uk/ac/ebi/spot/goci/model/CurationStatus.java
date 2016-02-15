@@ -45,12 +45,15 @@ public class CurationStatus {
         return seqnbr;
     }
 
-    @Override
-    public String toString() {
-        return "CurationStatus{" +
-                "id=" + id +
-                ", curationStatus='" + status + '\'' +
-                ", seqnbr='" + seqnbr + '\'' +
-                '}';
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setSeqnbr(String seqnbr) {
+        this.seqnbr = seqnbr;
     }
 }
