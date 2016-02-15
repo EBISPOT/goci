@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.spot.goci.curation.component;
 
 import org.slf4j.Logger;
@@ -23,15 +24,17 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+*/
 /**
  * Created by emma on 28/09/2015.
  *
  * @author emma
  *         <p>
  *         Scheduled component that runs nightly and pings Ensembl REST API to check for changes in release number.
- */
+ *//*
+
 @Component
-public class NightlyEnsemblReleaseCheck {
+public class EnsemblReleaseCheck {
 
     private EnsemblRelease ensemblRelease;
 
@@ -46,12 +49,12 @@ public class NightlyEnsemblReleaseCheck {
     private MapCatalogService mapCatalogService;
 
     @Autowired
-    public NightlyEnsemblReleaseCheck(EnsemblRelease ensemblRelease,
-                                      EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
-                                      EnsemblDbsnpVersion ensemblDbsnpVersion,
-                                      MappingMetadataRepository mappingMetadataRepository,
-                                      MailService mailService,
-                                      MapCatalogService mapCatalogService) {
+    public EnsemblReleaseCheck(EnsemblRelease ensemblRelease,
+                               EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
+                               EnsemblDbsnpVersion ensemblDbsnpVersion,
+                               MappingMetadataRepository mappingMetadataRepository,
+                               MailService mailService,
+                               MapCatalogService mapCatalogService) {
         this.ensemblRelease = ensemblRelease;
         this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
         this.ensemblDbsnpVersion = ensemblDbsnpVersion;
@@ -66,9 +69,11 @@ public class NightlyEnsemblReleaseCheck {
         return log;
     }
 
-    /**
+    */
+/**
      * Method used to determine if there has been a new Ensembl release
-     */
+     *//*
+
     @Scheduled(cron = "0 00 20 ? * THU")
     public void checkRelease() throws EnsemblMappingException {
 
@@ -169,13 +174,15 @@ public class NightlyEnsemblReleaseCheck {
         }
     }
 
-    /**
+    */
+/**
      * Method used to create and save new Ensembl release details in the database
      *
      * @param ensemblReleaseNumber the latest Ensembl release number returned from Ensembl API
      * @param genomeBuildVersion   the latest Genome build version returned from Ensembl API
      * @param dbsnpVersion         the latest dbSNP version returned from Ensembl API
-     */
+     *//*
+
     private void createMappingMetaData(int ensemblReleaseNumber,
                                        String genomeBuildVersion,
                                        int dbsnpVersion) {
@@ -187,10 +194,13 @@ public class NightlyEnsemblReleaseCheck {
         mappingMetadataRepository.save(newMappingMetadata);
     }
 
-    /**
+    */
+/**
      * Method used to create a sorting option for a database query
      *
      * @return Sort object used by database query
-     */
+     *//*
+
     private Sort sortByUsageStartDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "usageStartDate"));}
 }
+*/

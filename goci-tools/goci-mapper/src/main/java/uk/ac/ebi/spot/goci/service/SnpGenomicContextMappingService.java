@@ -296,6 +296,8 @@ public class SnpGenomicContextMappingService {
         // Go through each rs_id and its associated genomic contexts returned from the mapping pipeline
         for (String snpRsId : snpToGenomicContextMap.keySet()) {
 
+            getLog().debug("Storing genomic context for " + snpRsId);
+
             Set<GenomicContext> genomicContextsFromMapping = snpToGenomicContextMap.get(snpRsId);
 
             // Check if the SNP exists
@@ -418,6 +420,7 @@ public class SnpGenomicContextMappingService {
         }
 
         // Save gene
+        getLog().debug("Creating " + source + " gene, with name " + geneName);
         geneRepository.save(newGene);
     }
 

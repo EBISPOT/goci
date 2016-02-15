@@ -274,7 +274,7 @@ public class EnsemblMappingPipeline {
         int chr_start = 1;
         int chr_end = getChromosomeEnd(snp_location.getChromosomeName());
 
-   //     getGenomicContext(snp_location, chr_start, chr_end, getEnsemblSource());
+        getGenomicContext(snp_location, chr_start, chr_end, getEnsemblSource());
         getGenomicContext(snp_location, chr_start, chr_end, getNcbiSource());
     }
 
@@ -610,7 +610,8 @@ public class EnsemblMappingPipeline {
                 }
                 if (closest_gene.length() == 0 && new_pos != boundary) {
                     // Recursive code to find the nearest upstream or downstream gene
-                    closest_gene = this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
+                    closest_gene =
+                            this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
                 }
             }
         }
