@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
@@ -163,8 +162,11 @@ public class StudyOperationServiceTest {
     public void testStudyAssociationCheck() {
         Collection<Association> associations = Arrays.asList(ASS1, ASS2);
         assertEquals(0, getStudyOperationsService().studyAssociationCheck(associations));
+
+        Collection<Association> associations1 = Arrays.asList(ASS1, ASS3);
+        assertEquals(1, getStudyOperationsService().studyAssociationCheck(associations1));
     }
-    
+
     // Class to test, getter and setters
     public StudyOperationsService getStudyOperationsService() {
         return studyOperationsService;
