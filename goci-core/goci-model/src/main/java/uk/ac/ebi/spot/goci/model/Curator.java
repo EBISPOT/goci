@@ -11,8 +11,6 @@ import javax.persistence.Id;
  *         <p>
  *         Model object representing a curator and its attributes
  */
-
-
 @Entity
 public class Curator {
     @Id
@@ -78,5 +76,5 @@ public class Curator {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
+
 }
