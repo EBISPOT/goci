@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
@@ -24,7 +25,6 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,6 +57,10 @@ public class StudyOperationServiceTest {
     private static final Association ASS2 =
             new AssociationBuilder().setId(801L)
                     .setSnpApproved(true).build();
+
+    private static final Association ASS3 =
+            new AssociationBuilder().setId(803L)
+                    .setSnpApproved(false).build();
 
     private static final Curator CURATOR1 = new CuratorBuilder().setId(803L)
             .setEmail("gwas-dev@ebi.ac.uk")
@@ -91,9 +95,8 @@ public class StudyOperationServiceTest {
 
     }
 
-
     @Test
-    public void testMocks(){
+    public void testMocks() {
         // Test mock creation
         assertNotNull(associationRepository);
         assertNotNull(mailService);
@@ -102,10 +105,6 @@ public class StudyOperationServiceTest {
 
     @Test
     public void testUpdateStatus() {
-        // Test mock creation
-        assertNotNull(associationRepository);
-        assertNotNull(mailService);
-        assertNotNull(housekeepingRepository);
 
         // Test interaction with association repository
         Collection<Association> associations = new ArrayList<>();
@@ -117,33 +116,13 @@ public class StudyOperationServiceTest {
         // Test changing status
         getStudyOperationsService().updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(STU1.getHousekeeping() , times(1)).setCurationStatus(NEW_STATUS3);
         assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS3);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
-
-        // Test changing status to "Level 1 curation done"
-        getStudyOperationsService().updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(mailService).sendEmailNotification(STU1, NEW_STATUS1.getStatus());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS1);
-        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
-
-        // Test changing status to "Publish study"
-        getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(mailService).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
-        assertEquals(STU1.getHousekeeping().getCurationStatus(), NEW_STATUS2);
-        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
-
     }
 
 
     @Test
     public void testUpdateStatusToLevelOneCurationDone() {
-        // Test mock creation
-        assertNotNull(associationRepository);
-        assertNotNull(mailService);
-        assertNotNull(housekeepingRepository);
 
         // Test interaction with association repository
         Collection<Association> associations = new ArrayList<>();
@@ -180,15 +159,12 @@ public class StudyOperationServiceTest {
     }
 
 
-
-
     @Test
     public void testStudyAssociationCheck() {
         Collection<Association> associations = Arrays.asList(ASS1, ASS2);
         assertEquals(0, getStudyOperationsService().studyAssociationCheck(associations));
     }
-
-
+    
     // Class to test, getter and setters
     public StudyOperationsService getStudyOperationsService() {
         return studyOperationsService;
