@@ -10,6 +10,13 @@ import uk.ac.ebi.spot.goci.model.Study;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Created by emma on 12/02/2016.
+ *
+ * @author emma
+ *         <p>
+ *         Study builder used in testing
+ */
 public class StudyBuilder {
 
     private Study study = new Study();
@@ -85,7 +92,7 @@ public class StudyBuilder {
     }
 
     public StudyBuilder setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-       study.setSingleNucleotidePolymorphisms(singleNucleotidePolymorphisms);
+        study.setSingleNucleotidePolymorphisms(singleNucleotidePolymorphisms);
         return this;
     }
 
