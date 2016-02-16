@@ -1,4 +1,4 @@
-/*
+
 package uk.ac.ebi.spot.goci.curation.component;
 
 import org.slf4j.Logger;
@@ -13,25 +13,20 @@ import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.curation.service.MailService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
-import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
-import uk.ac.ebi.spot.goci.service.MappingService;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-*/
 /**
  * Created by emma on 28/09/2015.
  *
  * @author emma
  *         <p>
  *         Scheduled component that runs nightly and pings Ensembl REST API to check for changes in release number.
- *//*
+ */
 
 @Component
 public class EnsemblReleaseCheck {
@@ -46,21 +41,17 @@ public class EnsemblReleaseCheck {
 
     private MailService mailService;
 
-    private MapCatalogService mapCatalogService;
-
     @Autowired
     public EnsemblReleaseCheck(EnsemblRelease ensemblRelease,
                                EnsemblGenomeBuildVersion ensemblGenomeBuildVersion,
                                EnsemblDbsnpVersion ensemblDbsnpVersion,
                                MappingMetadataRepository mappingMetadataRepository,
-                               MailService mailService,
-                               MapCatalogService mapCatalogService) {
+                               MailService mailService) {
         this.ensemblRelease = ensemblRelease;
         this.ensemblGenomeBuildVersion = ensemblGenomeBuildVersion;
         this.ensemblDbsnpVersion = ensemblDbsnpVersion;
         this.mappingMetadataRepository = mappingMetadataRepository;
         this.mailService = mailService;
-        this.mapCatalogService = mapCatalogService;
     }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -69,11 +60,9 @@ public class EnsemblReleaseCheck {
         return log;
     }
 
-    */
-/**
+    /**
      * Method used to determine if there has been a new Ensembl release
-     *//*
-
+     */
     @Scheduled(cron = "0 00 20 ? * THU")
     public void checkRelease() throws EnsemblMappingException {
 
@@ -86,14 +75,13 @@ public class EnsemblReleaseCheck {
             // If we have all the required values
             if (latestEnsemblReleaseNumber != 0 && genomeBuildVersion != null && dbsnpVersion != 0) {
 
-                String performer = "Release " + latestEnsemblReleaseNumber + " mapping";
                 List<MappingMetadata> mappingMetadataList =
                         mappingMetadataRepository.findAll(sortByUsageStartDateDesc());
 
                 // If there are no details in table then add them
                 if (mappingMetadataList.isEmpty()) {
                     getLog().info(
-                            "No mapping metadata found, adding information to database and mapping data to release " +
+                            "No mapping metadata found, adding information to database " +
                                     latestEnsemblReleaseNumber);
                     createMappingMetaData(latestEnsemblReleaseNumber, genomeBuildVersion, dbsnpVersion);
 
@@ -101,20 +89,13 @@ public class EnsemblReleaseCheck {
                     mailService.sendReleaseChangeEmail(null,
                                                        latestEnsemblReleaseNumber);
 
-                    // Map database contents
-                    try {
-                        mapCatalogService.mapCatalogContents(performer);
-                    }
-                    catch (EnsemblMappingException e) {
-                        getLog().error("Problem mapping catalog contents as part of nightly release check", e);
-                    }
                 }
                 else {
                     Integer currentEnsemblReleaseNumberInDatabase =
                             mappingMetadataList.get(0).getEnsemblReleaseNumber();
 
                     // If the latest release in database does not match
-                    // the latest Ensembl release do mapping and send notification email
+                    // the latest Ensembl release and send notification email
                     if (!currentEnsemblReleaseNumberInDatabase.equals(latestEnsemblReleaseNumber)) {
                         if (currentEnsemblReleaseNumberInDatabase < latestEnsemblReleaseNumber) {
 
@@ -127,13 +108,6 @@ public class EnsemblReleaseCheck {
 
                             // Perform remapping and set performer
                             getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);
-                            getLog().info("Remapping all database contents");
-                            try {
-                                mapCatalogService.mapCatalogContents(performer);
-                            }
-                            catch (EnsemblMappingException e) {
-                                getLog().error("Problem mapping catalog contents as part of nightly release check", e);
-                            }
                         }
                         else {
                             getLog().error("Ensembl Release Integrity Issue: Current Ensembl release is " +
@@ -174,14 +148,17 @@ public class EnsemblReleaseCheck {
         }
     }
 
-    */
-/**
+
+    /**
      * Method used to create and save new Ensembl release details in the database
      *
      * @param ensemblReleaseNumber the latest Ensembl release number returned from Ensembl API
      * @param genomeBuildVersion   the latest Genome build version returned from Ensembl API
      * @param dbsnpVersion         the latest dbSNP version returned from Ensembl API
-     *//*
+     *                             <p>
+     *                             Method used to create a sorting option for a database query
+     * @return Sort object used by database query
+     */
 
     private void createMappingMetaData(int ensemblReleaseNumber,
                                        String genomeBuildVersion,
@@ -194,13 +171,12 @@ public class EnsemblReleaseCheck {
         mappingMetadataRepository.save(newMappingMetadata);
     }
 
-    */
-/**
+
+    /**
      * Method used to create a sorting option for a database query
      *
      * @return Sort object used by database query
-     *//*
+     */
 
     private Sort sortByUsageStartDateDesc() {return new Sort(new Sort.Order(Sort.Direction.DESC, "usageStartDate"));}
 }
-*/
