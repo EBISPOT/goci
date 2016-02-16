@@ -26,5 +26,6 @@
         <module>goci-kb-metrics</module>
         <module>goci-urilabelchecker</module>
         <module>goci-ancestry-mapper</module>
+        <module>goci-parent-mapper</module>
     </modules>
 </project>
