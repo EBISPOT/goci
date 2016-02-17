@@ -339,7 +339,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
 
                                     //                                    ensemblMappedGene = setOrAppend(ensemblMappedGene,
-                                    //                                                                    getMappedGeneString(association,
+                                    //                                                                      getMappedGeneString(association,
                                     //                                                                                        snp,
                                     //                                                                                        "Ensembl"),
                                     //                                                                    " : ");
@@ -730,11 +730,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                                                                                          geneName);
                                         }
 
-                                        else {
-                                            getLog().warn("No closest upstream and downstream gene for association: " +
-                                                                  association.getId() + ", snp: " + snp.getRsId() +
-                                                                  ", for source " + source);
-                                        }
+//                                        else {
+//                                            getLog().warn("No closest upstream and downstream gene for association: " +
+//                                                                  association.getId() + ", snp: " + snp.getRsId() +
+//                                                                  ", for source " + source);
+//                                        }
                                     }
 
                                     else {
@@ -781,7 +781,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         List<String> allUpstreamAndDownstreamGenes = new ArrayList<String>();
         for (Long locationId : closestUpstreamDownstreamGenesToLocation.keySet()) {
 
-
             if (closestUpstreamDownstreamGenesToLocation.get(locationId) != null) {
 
                 Map<String, String> closestUpstreamDownstreamGenes = closestUpstreamDownstreamGenesToLocation.get(locationId);
@@ -815,19 +814,34 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         String geneString = "";
 
-        if (!allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-            geneString = String.join("|", allMappedGenes)
-                    .concat("|")
-                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
+//        if (!allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
+//            geneString = String.join("|", allMappedGenes)
+//                    .concat("|")
+//                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
+//        }
+//        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
+//            geneString = String.join("|", allMappedGenes);
+//        }
+//        else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
+//            geneString = String.join("|", allUpstreamAndDownstreamGenes);
+//        }
+//        else {
+//            geneString = "N/A";
+//        }
+
+        if (!allMappedGenes.isEmpty()) {
+            geneString = String.join(", ", allMappedGenes);
+//                    .concat("|")
+//                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
         }
-        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-            geneString = String.join("|", allMappedGenes);
-        }
+//        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
+//            geneString = String.join("|", allMappedGenes);
+//        }
         else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
-            geneString = String.join("|", allUpstreamAndDownstreamGenes);
+            geneString = String.join(", ", allUpstreamAndDownstreamGenes);
         }
         else {
-            geneString = "N/A";
+            geneString = "No mapped genes";
         }
 
         return geneString;
