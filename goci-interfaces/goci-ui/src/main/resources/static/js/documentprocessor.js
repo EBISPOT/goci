@@ -363,7 +363,7 @@ function processAssociation(association, table) {
 
             var pattern = new RegExp("^\\d+$");
 
-            if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+                if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
                 location = location.concat("chr").concat(chromName);
                 console.log(chromName);
