@@ -23,5 +23,6 @@
         <module>goci-kb-metrics</module>
         <module>goci-urilabelchecker</module>
         <module>goci-ancestry-mapper</module>
+        <module>goci-cttv-snpExport</module>
     </modules>
 </project>
