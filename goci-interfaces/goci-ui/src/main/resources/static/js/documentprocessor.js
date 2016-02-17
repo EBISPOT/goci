@@ -242,7 +242,7 @@ function processAssociation(association, table) {
     //}
 
     if (association.rsId != null && association.strongestAllele != null) {
-        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf('x') == -1)) {
+        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
             var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat(
                     "</a></span>");
             var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
@@ -492,7 +492,13 @@ function processAssociation(association, table) {
                             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
                     if(type == 'delim'){
-                        emg = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                        if(mapped == ''){
+                            mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+
+                        }else{
+                            mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+
+                        }
                     }
                     else if(dist == 0){
                         if(mapped == '') {
