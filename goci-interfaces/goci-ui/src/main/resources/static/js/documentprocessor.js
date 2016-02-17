@@ -268,9 +268,9 @@ function processAssociation(association, table) {
                 }
             }
             //this is for an interaction
-            else if (association.rsId[0].indexOf('x') != -1) {
-                rsIds = association.rsId[0].split('x');
-                alleles = association.strongestAllele[0].split('x');
+            else if (association.rsId[0].indexOf(' x ') != -1) {
+                rsIds = association.rsId[0].split(' x ');
+                alleles = association.strongestAllele[0].split(' x ');
                 type = 'x';
             }
 
@@ -363,7 +363,7 @@ function processAssociation(association, table) {
 
             var pattern = new RegExp("^\\d+$");
 
-            if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+                if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
                 location = location.concat(chromName);
                 console.log(chromName);
