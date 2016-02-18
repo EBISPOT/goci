@@ -3,15 +3,16 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Created by catherineleroy on 17/02/2016.
@@ -41,8 +42,18 @@ public class JsonBuilder {
         SnpToGeneMapper snpToGeneMapper = new SnpToGeneMapper(snp2geneMappingFilePath);
 
 
-//        Collection<Association> associations = associationService.findPublishedAssociations();
-        buildJson();
+        Collection<Association> associations = associationService.findPublishedAssociationsBySnpId(Long.parseLong("26816"));
+        System.out.println("\n\n\nasso size = " + associations.size());
+        for(Association association : associations){
+            System.out.println("\n\n" + association.getPvalue());
+            Collection<EfoTrait> efoTraits = association.getEfoTraits();
+            for(EfoTrait efoTrait : efoTraits) {
+                System.out.println("efo trait uri = " + efoTrait.getUri());
+                buildJson(association.getPvalue(), efoTrait.getUri() );
+            }
+
+        }
+//        buildJson();
 //        for(Association association : associations){
 
 //        }
@@ -50,18 +61,18 @@ public class JsonBuilder {
         return jsons;
     }
 
-    private String buildJson(){
+    private String buildJson(double pvalue, String efoTrait){
 
         String ensemblId = "ENSG00000000971";
         String rsId = "rs380390";
-        String efoTrait = "EFO_0001365";
+//        String efoTrait = "EFO_0001365";
         int sampleSize = 146;
         int gwasPanelResolution = 103611;
         String pubmedId = "15761122";
-        String pvalue = "4e-8";//"4e-8";
+//        String pvalue = "4e-8";//"4e-8";
 
 
-        String dbVersion = "2015-11-03T13:24:28+00:00";
+        String dbVersion = getDate();
         String gwasDbId = "http://identifiers.org/gwascatalog";
         String jsonSchemaVersion = "1.2.1";
         String soTerm = "http://purl.obolibrary.org/obo/SO_0001627";
@@ -77,7 +88,7 @@ public class JsonBuilder {
                 .build();
 
         JsonObject disease = Json.createObjectBuilder()
-                .add("id", Json.createArrayBuilder().add("http://www.ebi.ac.uk/efo/" + efoTrait))
+                .add("id", Json.createArrayBuilder().add( efoTrait))
                 .build();
 
         JsonObject uniqueAssociationFields = Json.createObjectBuilder()
@@ -85,11 +96,11 @@ public class JsonBuilder {
                 .add("gwas_panel_resolution", Integer.toString(gwasPanelResolution))
                         .add("pubmed_refs", "http://europepmc.org/abstract/MED/" + pubmedId)
                         .add("target", "http://identifiers.org/ensembl/" + ensemblId)
-                        .add("object", "http://www.ebi.ac.uk/efo/" + efoTrait)
-                        .add("variant", "http://identifiers.org/dbsnp/" + rsId)
+                        .add("object", efoTrait)
+                .add("variant", "http://identifiers.org/dbsnp/" + rsId)
                         .add("study_name", "cttv009_gwas_catalog")
-                        .add("pvalue", pvalue)
-                        .build();
+                        .add("pvalue", "" + pvalue)
+                .build();
 
 //        mail gwas.json
 //        "provenance_type": {
@@ -204,9 +215,74 @@ public class JsonBuilder {
 //    public static void main(String[] args) {
 //        Double monDouble = Double.valueOf("4e-8");
 //        System.out.println(monDouble);
-//        DecimalFormat format = new DecimalFormat("#.#####E-#");
-//        format.setPositivePrefix("4");
-//        format.setNegativeSuffix("8");
-//        System.out.println(format.toPattern());
+//        getDate();
 //    }
+
+
+    public  static String getDate(){
+        String date = "";
+        Calendar c = new GregorianCalendar();
+
+        int dayOfMonth =  c.get(Calendar.DAY_OF_MONTH);
+        String dayOfMonthString = "";
+        if(dayOfMonth < 10){
+            dayOfMonthString = "0" + dayOfMonth;
+        }else{
+            dayOfMonthString = "" + dayOfMonth;
+
+        }
+
+        int monthNumber = c.get(Calendar.MONTH);
+        String monthNumberString;
+        if(monthNumber<10){
+            monthNumberString = "0" + monthNumber;
+        }else{
+            monthNumberString = "" + monthNumber;
+
+        }
+
+        int year = c.get(Calendar.YEAR);
+
+
+        int hour = c.get(Calendar.HOUR);
+        String hourString;
+        if(hour<10){
+            hourString = "0" + hour;
+        }else{
+            hourString = "" + hour;
+
+        }
+
+
+        int minute = c.get(Calendar.MINUTE);
+        String minuteString;
+        if(minute<10){
+            minuteString = "0" + minute;
+        }else{
+            minuteString = "" + minute;
+        }
+
+        int seconds = c.get(Calendar.SECOND);
+        String secondsString;
+        if(seconds<10){
+            secondsString = "0" + seconds;
+        }else{
+            secondsString = "" + seconds;
+        }
+
+
+        date = year + "-" + monthNumberString + "-" + dayOfMonthString + "T"  + hourString + ":" + minuteString + ":" + secondsString + "+00:00";
+
+
+
+        return date;
+    }
+
+
+
+
+
+
+
+
 }
