@@ -2,8 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.*;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -44,13 +43,32 @@ public class JsonBuilder {
 
         Collection<Association> associations = associationService.findPublishedAssociationsBySnpId(Long.parseLong("26816"));
         System.out.println("\n\n\nasso size = " + associations.size());
+
+
         for(Association association : associations){
             System.out.println("\n\n" + association.getPvalue());
             Collection<EfoTrait> efoTraits = association.getEfoTraits();
-            for(EfoTrait efoTrait : efoTraits) {
-                System.out.println("efo trait uri = " + efoTrait.getUri());
-                buildJson(association.getPvalue(), efoTrait.getUri() );
+            Collection<Locus> loci = association.getLoci();
+
+            Collection<Ethnicity> ethnicities = association.getStudy().getEthnicities();
+            int sampleSize = 0;
+            for(Ethnicity ethnicity : ethnicities){
+                sampleSize =+ ethnicity.getNumberOfIndividuals();
             }
+
+            for(Locus locus : loci){
+                Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
+                for(RiskAllele riskAllele : riskAlleles){
+
+                    for(EfoTrait efoTrait : efoTraits) {
+                        System.out.println("efo trait uri = " + efoTrait.getUri());
+                        buildJson(association.getPvalue(), efoTrait.getUri(),riskAllele.getSnp().getRsId(),
+                                association.getStudy().getPubmedId(),sampleSize );
+                    }
+
+                }
+            }
+
 
         }
 //        buildJson();
@@ -61,14 +79,14 @@ public class JsonBuilder {
         return jsons;
     }
 
-    private String buildJson(double pvalue, String efoTrait){
+    private String buildJson(double pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize){
 
         String ensemblId = "ENSG00000000971";
-        String rsId = "rs380390";
+//        String rsId = "rs380390";
 //        String efoTrait = "EFO_0001365";
-        int sampleSize = 146;
+//        int sampleSize = 146;
         int gwasPanelResolution = 103611;
-        String pubmedId = "15761122";
+//        String pubmedId = "15761122";
 //        String pvalue = "4e-8";//"4e-8";
 
 
