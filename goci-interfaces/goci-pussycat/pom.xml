@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.1-SNAPSHOT</version>
+        <version>2.1-RC2</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-pussycat</artifactId>
-    <version>2.1-SNAPSHOT</version>
+    <version>2.1-RC2</version>
     <packaging>war</packaging>
 
     <name>GOCI Pussycat (serves GWAS catalog diagram)</name>
