@@ -11,15 +11,15 @@
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>goci-cttv-snpExport</artifactId>
+    <artifactId>goci-cttv-jsonGeneration</artifactId>
     <version>2.0.8</version>
     <packaging>jar</packaging>
 
-    <name>Snp Exporter</name>
-    <description>Exports a list of all snps in GWAS.</description>
+    <name>Export gwas as gson for CTTV</name>
+    <description>Exports GWAS into json for cttv.</description>
 
     <build>
-        <finalName>goci-cttv-snpExport</finalName>
+        <finalName>goci-cttv-jsonGeneration</finalName>
 
         <plugins>
             <plugin>
@@ -41,6 +41,16 @@
             <artifactId>goci-repository</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!--goci ontology utils-->
         <dependency>
@@ -48,6 +58,11 @@
             <artifactId>goci-utils</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+        </dependency>
 
         <!-- oracle JDBC drivers for db comms -->
         <dependency>

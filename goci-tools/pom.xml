@@ -24,5 +24,6 @@
         <module>goci-urilabelchecker</module>
         <module>goci-ancestry-mapper</module>
         <module>goci-cttv-snpExport</module>
+        <module>goci-cttv-jsonGeneration</module>
     </modules>
 </project>
