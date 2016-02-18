@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Gene;
@@ -29,6 +31,11 @@ public class LociAttributesService {
     private RiskAlleleRepository riskAlleleRepository;
     private LocusRepository locusRepository;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger getLog() {
+        return log;
+    }
+
     // Constructor
     @Autowired
     public LociAttributesService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
@@ -48,17 +55,19 @@ public class LociAttributesService {
             authorReportedGene = tidy_curator_entered_string(authorReportedGene);
 
             // Check if gene already exists, note we may have duplicates so for moment just take first one
-            Gene geneInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
+            Gene geneInDatabase = geneRepository.findByGeneName(authorReportedGene);
             Gene gene;
 
             // Exists in database already
             if (geneInDatabase != null) {
+                getLog().debug("Gene "+ geneInDatabase +" already exists in database");
                 gene = geneInDatabase;
             }
 
             // If gene doesn't exist then create and save
             else {
                 // Create new gene
+                getLog().debug("Gene "+ geneInDatabase +" not found in database. Creating and saving new gene.");
                 Gene newGene = new Gene();
                 newGene.setGeneName(authorReportedGene);
 

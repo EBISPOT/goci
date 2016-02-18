@@ -242,7 +242,7 @@ function processAssociation(association, table) {
     //}
 
     if (association.rsId != null && association.strongestAllele != null) {
-        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf('x') == -1)) {
+        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
             var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat(
                     "</a></span>");
             var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
@@ -268,9 +268,9 @@ function processAssociation(association, table) {
                 }
             }
             //this is for an interaction
-            else if (association.rsId[0].indexOf('x') != -1) {
-                rsIds = association.rsId[0].split('x');
-                alleles = association.strongestAllele[0].split('x');
+            else if (association.rsId[0].indexOf(' x ') != -1) {
+                rsIds = association.rsId[0].split(' x ');
+                alleles = association.strongestAllele[0].split(' x ');
                 type = 'x';
             }
 
@@ -363,20 +363,22 @@ function processAssociation(association, table) {
 
             var pattern = new RegExp("^\\d+$");
 
-            if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+                if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
                 location = location.concat("chr").concat(chromName);
                 console.log(chromName);
+                if (position == '') {
+                    position = "?";
+                }
+                location = location.concat(":").concat(position);
+
             }
-            else {
-                location = location.concat("chr").concat("?");
-            }
-            if (position == '') {
-                position = "?";
-            }
+            //else {
+            //    location = location.concat("chr").concat("?");
+            //}
+
             //if (association.chromosomePosition != null) {
             //    var position = association.chromosomePosition[0];
-            location = location.concat(":").concat(position);
 
             var min = parseInt(position) - 500;
             var max = parseInt(position) + 500;
@@ -472,8 +474,13 @@ function processAssociation(association, table) {
         for (var k = 0; k < association.entrezMappedGenes.length; k++) {
             var emg = association.entrezMappedGenes[k];
 
+            var type;
+            if(emg.indexOf(' - ') > -1 || emg.indexOf(' x ') > -1 || emg.indexOf(':')){
+                type = 'delim';
+            }
+
             for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
-                if(association.entrezMappedGeneLinks[j].indexOf(emg) > -1){
+                if(emg.indexOf(association.entrezMappedGeneLinks[j].split("|")[0]) > -1){
                     var gene = association.entrezMappedGeneLinks[j].split("|")[0];
                     var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
                     var dist = association.entrezMappedGeneLinks[j].split("|")[2];
@@ -484,7 +491,16 @@ function processAssociation(association, table) {
                             "'  target='_blank'>").concat(
                             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                    if(dist == 0){
+                    if(type == 'delim'){
+                        if(mapped == ''){
+                            mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+
+                        }else{
+                            mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+
+                        }
+                    }
+                    else if(dist == 0){
                         if(mapped == '') {
                             mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
                         }
@@ -503,7 +519,10 @@ function processAssociation(association, table) {
 
             }
         }
-        if(mapped != ''){
+        if(type == 'delim'){
+            mapgene = emg;
+        }
+        else if(mapped != ''){
             mapgene = mapped;
         }
         else if(upstream != '' && downstream != ''){
@@ -517,7 +536,7 @@ function processAssociation(association, table) {
         }
 
     }
-    else if (association.entrezMappedGene != null) {
+    else if (association.entrezMappedGenes != null) {
         for (var j = 0; j < association.entrezMappedGenes.length; j++) {
             var mapgenesearch = "<span><a href='search?query=".concat(association.entrezMappedGenes[j]).concat("'>").concat(
                     association.entrezMappedGenes[j]).concat("</a></span>");
