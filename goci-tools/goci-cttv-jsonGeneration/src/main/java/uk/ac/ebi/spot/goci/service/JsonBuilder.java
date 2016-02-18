@@ -9,6 +9,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -54,10 +55,12 @@ public class JsonBuilder {
         String ensemblId = "ENSG00000000971";
         String rsId = "rs380390";
         String efoTrait = "EFO_0001365";
-        String sampleSize = "146";
-        String gwasPanelResolution = "103611";
+        int sampleSize = 146;
+        int gwasPanelResolution = 103611;
         String pubmedId = "15761122";
-        String pvalue = "4e-8";
+        String pvalue = "4e-8";//"4e-8";
+
+
         String dbVersion = "2015-11-03T13:24:28+00:00";
         String gwasDbId = "http://identifiers.org/gwascatalog";
         String jsonSchemaVersion = "1.2.1";
@@ -78,15 +81,15 @@ public class JsonBuilder {
                 .build();
 
         JsonObject uniqueAssociationFields = Json.createObjectBuilder()
-                .add("sample_size",sampleSize)
-                .add("gwas_panel_resolution", gwasPanelResolution)
-                .add("pubmed_refs", "http://europepmc.org/abstract/MED/" + pubmedId)
-                .add("target", "http://identifiers.org/ensembl/" + ensemblId)
-                .add("object", "http://www.ebi.ac.uk/efo/" + efoTrait)
-                .add("variant", "http://identifiers.org/dbsnp/" + rsId)
-                .add("study_name", "cttv009_gwas_catalog")
-                .add("pvalue",pvalue)
-                .build();
+                .add("sample_size", Integer.toString(sampleSize))
+                .add("gwas_panel_resolution", Integer.toString(gwasPanelResolution))
+                        .add("pubmed_refs", "http://europepmc.org/abstract/MED/" + pubmedId)
+                        .add("target", "http://identifiers.org/ensembl/" + ensemblId)
+                        .add("object", "http://www.ebi.ac.uk/efo/" + efoTrait)
+                        .add("variant", "http://identifiers.org/dbsnp/" + rsId)
+                        .add("study_name", "cttv009_gwas_catalog")
+                        .add("pvalue", pvalue)
+                        .build();
 
 //        mail gwas.json
 //        "provenance_type": {
@@ -96,7 +99,7 @@ public class JsonBuilder {
 //                }]
 //            }
 //        },
-        JsonObject litId = Json.createObjectBuilder().add("lit_id", "http://europepmc.org/abstract/MED" + pubmedId).build();
+        JsonObject litId = Json.createObjectBuilder().add("lit_id", "http://europepmc.org/abstract/MED/" + pubmedId).build();
         JsonArray references = Json.createArrayBuilder().add(litId).build();
         JsonObject literature = Json.createObjectBuilder().add("references", references).build();
         JsonObject provenanceType = Json.createObjectBuilder().add("literature",literature).build();
@@ -127,9 +130,9 @@ public class JsonBuilder {
                 .build();
 
         JsonObject resourceScore = Json.createObjectBuilder()
-                .add("type","pvalue")
+                .add("type", "pvalue")
                 .add("method",method)
-                .add("value",pvalue)
+                .add("value",Double.valueOf(pvalue))
                 .build();
 
         JsonArray evidenceCodes = Json.createArrayBuilder()
@@ -139,7 +142,7 @@ public class JsonBuilder {
 
         JsonObject variant2disease = Json.createObjectBuilder()
                 .add("gwas_sample_size", sampleSize)
-                .add("unique_experiment_reference","http://europepmc.org/abstract/MED" + pubmedId)
+                .add("unique_experiment_reference","http://europepmc.org/abstract/MED/" + pubmedId)
                 .add("gwas_panel_resolution", gwasPanelResolution)
                 .add("provenance_type",variant2diseaseProvenanceType)
                 .add("is_associated", true)
@@ -176,8 +179,6 @@ public class JsonBuilder {
                 .add("provenance_type", provenanceType)
                 .add("variant2disease", variant2disease)
                 .add("gene2variant", gene2variant)
-                .add("validated_against_schema_version",jsonSchemaVersion)
-                .add("type", "genetic_association")
                 .build();
 
 
@@ -190,10 +191,22 @@ public class JsonBuilder {
                 .add("variant", variant)
                 .add("disease", disease)
                 .add("unique_association_fields",uniqueAssociationFields)
+                .add("evidence",evidence)
+                .add("validated_against_schema_version",jsonSchemaVersion)
+                .add("type", "genetic_association")
                 .build();
         System.out.println("\n\n" + json.toString() + "\n\n");
 
         return json.toString();
 
     }
+
+//    public static void main(String[] args) {
+//        Double monDouble = Double.valueOf("4e-8");
+//        System.out.println(monDouble);
+//        DecimalFormat format = new DecimalFormat("#.#####E-#");
+//        format.setPositivePrefix("4");
+//        format.setNegativeSuffix("8");
+//        System.out.println(format.toPattern());
+//    }
 }
