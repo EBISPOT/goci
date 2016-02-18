@@ -553,7 +553,7 @@ public class EnsemblMappingPipeline {
         int position2 = Integer.parseInt(position);
         int snp_pos = Integer.parseInt(snp_position);
 
-        String new_pos = position;
+        int new_pos = position1;
 
         JSONArray closest_gene = new JSONArray();
         int closest_distance = 0;
@@ -561,18 +561,19 @@ public class EnsemblMappingPipeline {
         if (type.equals("upstream")) {
             position1 = position2 - getGenomicDistance();
             position1 = (position1 < 0) ? boundary : position1;
-            new_pos = String.valueOf(position1);
+            new_pos = position1;
         }
         else {
             if (type.equals("downstream")) {
                 position2 = position1 + getGenomicDistance();
                 position2 = (position2 > boundary) ? boundary : position2;
-                new_pos = String.valueOf(position2);
+                new_pos = position2;
             }
         }
 
         String pos1 = String.valueOf(position1);
         String pos2 = String.valueOf(position2);
+        String new_pos_string = String.valueOf(new_pos);
 
         JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome, pos1, pos2, rest_opt);
 
@@ -607,10 +608,17 @@ public class EnsemblMappingPipeline {
                         closest_distance = distance;
                     }
                 }
-                if (closest_gene.length() == 0 && position2 != boundary) {
+                if (closest_gene.length() == 0 && new_pos != boundary) {
                     // Recursive code to find the nearest upstream or downstream gene
-                    closest_gene = this.getNearestGene(chromosome, snp_position, new_pos, boundary, rest_opt, type);
+                    closest_gene =
+                            this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
                 }
+            }
+        }
+        else {
+            if (new_pos != boundary) {
+                // Recursive code to find the nearest upstream or downstream gene
+                closest_gene = this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
             }
         }
         return closest_gene;

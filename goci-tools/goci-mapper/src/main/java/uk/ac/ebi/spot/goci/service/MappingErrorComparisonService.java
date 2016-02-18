@@ -1,11 +1,13 @@
-package uk.ac.ebi.spot.goci.curation.service;
+package uk.ac.ebi.spot.goci.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.MappingErrorComparisonReport;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
+import uk.ac.ebi.spot.goci.model.MappingErrorComparisonReport;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -30,6 +32,10 @@ import java.util.Map;
  */
 @Service
 public class MappingErrorComparisonService {
+
+    // Location of output file
+    @Value("${download.report}")
+    private Resource report;
 
     private AssociationReportRepository associationReportRepository;
 
@@ -299,10 +305,13 @@ public class MappingErrorComparisonService {
         }
 
         // Create and write to file
-        String uploadDir =
-                System.getProperty("java.io.tmpdir") + File.separator + "gwas_new_release_mapping_error_report" +
-                        File.separator;
-        File outputFile = new File(uploadDir + "gwas_new_release_mapping_error_report.txt");
+        File outputFile = null;
+        try {
+            outputFile = report.getFile();
+        }
+        catch (IOException e) {
+            getLog().info("Could not find file to write to errors to");
+        }
 
         // If at this stage we haven't got a file create one and write to it
         if (!outputFile.exists()) {
@@ -311,7 +320,7 @@ public class MappingErrorComparisonService {
                 getLog().info("Created file: " + outputFile);
             }
             catch (IOException e) {
-                getLog().error("Could not create file " + uploadDir);
+                getLog().error("Could not create file");
             }
         }
 

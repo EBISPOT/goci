@@ -242,7 +242,7 @@ function processAssociation(association, table) {
     //}
 
     if (association.rsId != null && association.strongestAllele != null) {
-        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf('x') == -1)) {
+        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
             var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat(
                     "</a></span>");
             var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
@@ -268,9 +268,9 @@ function processAssociation(association, table) {
                 }
             }
             //this is for an interaction
-            else if (association.rsId[0].indexOf('x') != -1) {
-                rsIds = association.rsId[0].split('x');
-                alleles = association.strongestAllele[0].split('x');
+            else if (association.rsId[0].indexOf(' x ') != -1) {
+                rsIds = association.rsId[0].split(' x ');
+                alleles = association.strongestAllele[0].split(' x ');
                 type = 'x';
             }
 
@@ -355,7 +355,7 @@ function processAssociation(association, table) {
         row.append($("<td>"));
     }
 
-    var location = "chr";
+    var location = '';
     if (association.positionLinks != null) {
         for (var k = 0; k < association.positionLinks.length; k++) {
             var chromName = association.positionLinks[k].split("|")[0];
@@ -365,32 +365,35 @@ function processAssociation(association, table) {
 
             if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
-                location = location.concat(chromName);
+                location = location.concat("chr").concat(chromName);
                 console.log(chromName);
+                if (position == '') {
+                    position = "?";
+                }
+                location = location.concat(":").concat(position);
+
+                var min = parseInt(position) - 500;
+                var max = parseInt(position) + 500;
+                var locationsearch = min.toString().concat("-").concat(max.toString());
+
+                if (chromName != null && chromName != '') {
+                    locationsearch = chromName.concat(':').concat(locationsearch);
+                }
+
+                var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat(
+                        "'  target='_blank'>").concat(
+                        "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+                location = location.concat('&nbsp;&nbsp;').concat(ensembl);
             }
-            else {
-                location = location.concat("?");
-            }
-            if (position == '') {
-                position = "?";
-            }
+            //else {
+            //    location = location.concat("chr").concat("?");
+            //}
+
             //if (association.chromosomePosition != null) {
             //    var position = association.chromosomePosition[0];
-            location = location.concat(":").concat(position);
 
-            var min = parseInt(position) - 500;
-            var max = parseInt(position) + 500;
-            var locationsearch = min.toString().concat("-").concat(max.toString());
 
-            if (chromName != null && chromName != '') {
-                locationsearch = chromName.concat(':').concat(locationsearch);
-            }
-
-            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Location/View?r=".concat(locationsearch).concat(
-                    "'  target='_blank'>").concat(
-                    "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-            location = location.concat('&nbsp;&nbsp;').concat(ensembl);
         }
     }
     else {
@@ -469,8 +472,20 @@ function processAssociation(association, table) {
         var upstream = '';
         var downstream = '';
         var mapped = '';
+        var lit = ''
         for (var k = 0; k < association.entrezMappedGenes.length; k++) {
             var emg = association.entrezMappedGenes[k];
+
+            var type;
+            if(emg.indexOf(' - ') > -1 || emg.indexOf(' x ') > -1 || emg.indexOf(':') > -1){
+                //type = 'delim';
+                if(lit == '') {
+                    lit = emg;
+                }
+                else{
+                    lit = lit.concat(", ").concat(emg);
+                }
+            }
 
             for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
                 if(association.entrezMappedGeneLinks[j].indexOf(emg) > -1){
@@ -484,6 +499,16 @@ function processAssociation(association, table) {
                             "'  target='_blank'>").concat(
                             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
+                    //if(type == 'delim'){
+                    //    if(mapped == ''){
+                    //        mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                    //
+                    //    }else{
+                    //        mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                    //
+                    //    }
+                    //}
+                    //else
                     if(dist == 0){
                         if(mapped == '') {
                             mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
@@ -503,6 +528,10 @@ function processAssociation(association, table) {
 
             }
         }
+        //if(type == 'delim'){
+        //    mapgene = emg;
+        //}
+        //else
         if(mapped != ''){
             mapgene = mapped;
         }
@@ -510,14 +539,21 @@ function processAssociation(association, table) {
             mapgene = upstream.concat(" - ").concat(downstream);
         }
         else if(upstream != '' && downstream == '') {
-            mapgene = upstream.concat(" - ?");
+            mapgene = upstream.concat(" - N/A");
         }
-        else{
-            mapgene = ("? - ").concat(downstream);
+        else if(upstream == '' && downstream != ''){
+            mapgene = ("N/A - ").concat(downstream);
+        }
+        else if(lit != ''){
+            mapgene = lit;
+
+            if(mapped != ''){
+                mapgene = mapgene.concat(', ').concat(mapped);
+            }
         }
 
     }
-    else if (association.entrezMappedGene != null) {
+    else if (association.entrezMappedGenes != null) {
         for (var j = 0; j < association.entrezMappedGenes.length; j++) {
             var mapgenesearch = "<span><a href='search?query=".concat(association.entrezMappedGenes[j]).concat("'>").concat(
                     association.entrezMappedGenes[j]).concat("</a></span>");
