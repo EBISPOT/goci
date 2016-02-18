@@ -601,6 +601,7 @@ public class JsonProcessingService {
 
     private Map<String, MappedGene> getMappedGenes(JsonNode doc) {
         List<String> actuallyMapped = new ArrayList<>();
+        List<String> processed = new ArrayList<>();
 
         if (doc.get("entrezMappedGenes") != null) {
 
@@ -621,6 +622,7 @@ public class JsonProcessingService {
                 String gene = data[0];
 
                 if(actuallyMapped.contains(gene)){
+                    processed.add(gene);
                     String geneId, geneDist;
 
 
@@ -631,9 +633,9 @@ public class JsonProcessingService {
                     int dist = Integer.parseInt(geneDist);
 
                     if(dist == 0){
-                        ingene.setId(geneId);
+                        ingene.setOrAppendId(geneId);
                         ingene.setDistance(geneDist);
-                        ingene.setName(gene);
+                        ingene.setOrAppendName(gene);
                     }
                     else if(dist > 0){
                         upstream.setId(geneId);
@@ -649,6 +651,19 @@ public class JsonProcessingService {
 
             }
         }
+
+        String lit = "";
+        for(String am : actuallyMapped){
+            if(!processed.contains(am)){
+                if(lit.equals("")){
+                    lit = am;
+                }
+                else {
+                    lit = lit.concat(", ").concat(am);
+                }
+            }
+        }
+        ingene.setOrAppendName(lit);
         genes.put("upstream", upstream);
         genes.put("downstream", downstream);
         genes.put("ingene", ingene);
@@ -716,6 +731,24 @@ public class JsonProcessingService {
 
         public void setDistance(String distance) {
             this.distance = distance;
+        }
+
+        public void setOrAppendId(String id){
+            if(this.id.equals("")){
+                this.id = id;
+            }
+            else{
+                this.id = this.id.concat(", ").concat(id);
+            }
+        }
+
+        public void setOrAppendName(String name){
+            if(this.name.equals("")){
+                this.name = name;
+            }
+            else{
+                this.name = this.name.concat(", ").concat(name);
+            }
         }
     }
 }
