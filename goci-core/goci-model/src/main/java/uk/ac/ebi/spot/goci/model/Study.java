@@ -62,6 +62,9 @@ public class Study {
 
     private Boolean gxg=false;
 
+    @OneToOne
+    private ArrayInfo arrayInfo;
+
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
 
@@ -96,7 +99,6 @@ public class Study {
     public Study() {
     }
 
-
     public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
@@ -114,6 +116,27 @@ public class Study {
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
+    }
+
+
+    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping, ArrayInfo arrayInfo) {
+        this.author = author;
+        this.publicationDate = publicationDate;
+        this.publication = publication;
+        this.title = title;
+        this.initialSampleSize = initialSampleSize;
+        this.replicateSampleSize = replicateSampleSize;
+        this.platform = platform;
+        this.pubmedId = pubmedId;
+        this.cnv = cnv;
+        this.gxe = gxe;
+        this.gxg = gxg;
+        this.diseaseTrait = diseaseTrait;
+        this.efoTraits = efoTraits;
+        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+        this.ethnicities = ethnicities;
+        this.housekeeping = housekeeping;
+        this.arrayInfo = arrayInfo;
     }
 
     public Long getId() {
@@ -259,6 +282,10 @@ public class Study {
     public void setStudyReport(StudyReport studyReport) {
         this.studyReport = studyReport;
     }
+
+    public ArrayInfo getArrayInfo(){ return arrayInfo;    }
+
+    public void setArrayInfo(ArrayInfo arrayInfo) {this.arrayInfo = arrayInfo; }
 
     @Override public String toString() {
         return "Study{" +

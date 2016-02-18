@@ -63,7 +63,7 @@ public class JsonBuilder {
                     for(EfoTrait efoTrait : efoTraits) {
                         System.out.println("efo trait uri = " + efoTrait.getUri());
                         buildJson(association.getPvalue(), efoTrait.getUri(),riskAllele.getSnp().getRsId(),
-                                association.getStudy().getPubmedId(),sampleSize );
+                                association.getStudy().getPubmedId(),sampleSize, association.getStudy().getArrayInfo().getSnpCount() );
                     }
 
                 }
@@ -79,13 +79,13 @@ public class JsonBuilder {
         return jsons;
     }
 
-    private String buildJson(double pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize){
+    private String buildJson(double pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize, long gwasPanelResolution){
 
         String ensemblId = "ENSG00000000971";
 //        String rsId = "rs380390";
 //        String efoTrait = "EFO_0001365";
 //        int sampleSize = 146;
-        int gwasPanelResolution = 103611;
+//        long gwasPanelResolution = snpCount;//103611;
 //        String pubmedId = "15761122";
 //        String pvalue = "4e-8";//"4e-8";
 
@@ -111,7 +111,7 @@ public class JsonBuilder {
 
         JsonObject uniqueAssociationFields = Json.createObjectBuilder()
                 .add("sample_size", Integer.toString(sampleSize))
-                .add("gwas_panel_resolution", Integer.toString(gwasPanelResolution))
+                .add("gwas_panel_resolution", Long.toString(gwasPanelResolution))
                         .add("pubmed_refs", "http://europepmc.org/abstract/MED/" + pubmedId)
                         .add("target", "http://identifiers.org/ensembl/" + ensemblId)
                         .add("object", efoTrait)
