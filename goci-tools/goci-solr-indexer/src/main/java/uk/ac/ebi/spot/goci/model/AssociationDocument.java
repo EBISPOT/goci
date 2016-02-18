@@ -840,9 +840,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
             geneString = String.join(", ", allUpstreamAndDownstreamGenes);
         }
-        else {
-            geneString = "No mapped genes";
-        }
+//        else {
+//            geneString = "No mapped genes";
+//        }
 
         return geneString;
     }
