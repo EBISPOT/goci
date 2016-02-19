@@ -63,7 +63,7 @@ public class StudyControllerTest {
 
     @Before
     public void setUpMock() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(this.studyController).build();
     }
 
     @Test
