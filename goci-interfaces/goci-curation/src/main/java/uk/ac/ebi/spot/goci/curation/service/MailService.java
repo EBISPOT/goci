@@ -189,7 +189,7 @@ public class MailService {
                         + currentEnsemblReleaseNumberInDatabase
                         + "."
                         + "\n\n"
-                        + "All associations will now be remapped to the latest Ensembl release."
+                        + "Please remap all catalog associations."
                         + "\n\n"
                         + "An error report will be available here once mapping is complete: " + getLink() + "mappingerrorreport");
         javaMailSender.send(mailMessage);

@@ -304,11 +304,11 @@ public enum CatalogHeaderBinding {
                        new Inclusion.FieldIncluded("gene_not_on_genome")),
     // Added for the alternative spreadsheet download
     EFO_TRAIT("EFO_TRAIT",
-              new Inclusion.Excluded(),
+              new Inclusion.CommaSeparatedIncluded("MAPPED_TRAIT"),
               new Inclusion.CommaSeparatedIncluded("MAPPED_TRAIT"),
               new Inclusion.Excluded()),
     EFO_URI("EFO_URI",
-            new Inclusion.Excluded(),
+            new Inclusion.CommaSeparatedIncluded("MAPPED_TRAIT_URI"),
             new Inclusion.CommaSeparatedIncluded("MAPPED_TRAIT_URI"),
             new Inclusion.Excluded());
 

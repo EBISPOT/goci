@@ -563,6 +563,9 @@ Hcy:  homocysteine
 HDL-C:  Total cholesterol in HDL
 
 
+HER2: human epidermal growth factor receptor 2
+
+
 Hgb: Hemoglobin
 
 
@@ -579,6 +582,9 @@ HDL: high density lipoprotein
 
 
 HOMA-B: beta-cell function
+
+
+HR: hormone receptor
 
 
 HRmax: maximum heart rate during treadmill fitness test
