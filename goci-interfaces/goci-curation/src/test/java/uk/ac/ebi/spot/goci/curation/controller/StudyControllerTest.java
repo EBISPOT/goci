@@ -4,8 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -13,8 +16,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.ac.ebi.spot.goci.CurationApplication;
+import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
@@ -27,7 +33,13 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import static org.hamcrest.Matchers.isA;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -37,65 +49,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author emma
  *         <p>
- *         Study controller test
+ *         Study controller unit test
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MockServletContext.class)
+@SpringApplicationConfiguration(classes = CurationApplication.class)
 @WebAppConfiguration
 public class StudyControllerTest {
 
-    @Mock
-    private StudyRepository studyRepository;
-
-    @Mock
-    private HousekeepingRepository housekeepingRepository;
-
-    @Mock
-    private DiseaseTraitRepository diseaseTraitRepository;
-
-    @Mock
-    private EfoTraitRepository efoTraitRepository;
-
-    @Mock
-    private CuratorRepository curatorRepository;
-
-    @Mock
-    private CurationStatusRepository curationStatusRepository;
-
-    @Mock
-    private AssociationRepository associationRepository;
-
-    @Mock
-    private EthnicityRepository ethnicityRepository;
-
-    @Mock
-    private UnpublishReasonRepository unpublishReasonRepository;
-
-    @Mock
-    private DefaultPubMedSearchService defaultPubMedSearchService;
-
-    @Mock
-    private StudyOperationsService studyService;
-
-    @Mock
-    private Study study;
+    @Autowired
+    private StudyController studyController;
 
     private MockMvc mockMvc;
 
-
     @Before
     public void setUpMock() {
-        StudyController studyController = new StudyController(studyRepository,
-                                                              studyService,
-                                                              defaultPubMedSearchService,
-                                                              unpublishReasonRepository,
-                                                              ethnicityRepository,
-                                                              associationRepository,
-                                                              curationStatusRepository,
-                                                              curatorRepository,
-                                                              efoTraitRepository,
-                                                              diseaseTraitRepository,
-                                                              housekeepingRepository);
         this.mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 
