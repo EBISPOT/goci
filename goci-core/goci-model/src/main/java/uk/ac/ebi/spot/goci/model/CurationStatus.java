@@ -36,4 +36,13 @@ public class CurationStatus {
     public String getStatus() {
         return status;
     }
+
+    //Setters used in testing
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
