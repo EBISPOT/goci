@@ -610,7 +610,7 @@ public class JsonProcessingService {
             }
         }
 
-        Map<String, MappedGene> genes = new HashMap<String, MappedGene>();
+        Map<String, MappedGene> genes = new HashMap<>();
         MappedGene upstream = new MappedGene();
         MappedGene downstream = new MappedGene();
         MappedGene ingene = new MappedGene();
@@ -622,30 +622,41 @@ public class JsonProcessingService {
                 String gene = data[0];
 
                 if(actuallyMapped.contains(gene)){
-                    processed.add(gene);
-                    String geneId, geneDist;
+
+                    String chrom = data[3];
+
+                    String pattern = "^\\d+$";
+
+                    Pattern p = Pattern.compile(pattern);
+                    Matcher m = p.matcher(chrom);
+
+                    if (m.find() || chrom.equals("X") || chrom.equals("Y")) {
+
+                        processed.add(gene);
+                        String geneId, geneDist;
 
 
-                    geneId = data[1];
-                    geneDist = data[2];
+                        geneId = data[1];
+                        geneDist = data[2];
 
 
-                    int dist = Integer.parseInt(geneDist);
+                        int dist = Integer.parseInt(geneDist);
 
-                    if(dist == 0){
-                        ingene.setOrAppendId(geneId);
-                        ingene.setDistance(geneDist);
-                        ingene.setOrAppendName(gene);
-                    }
-                    else if(dist > 0){
-                        upstream.setId(geneId);
-                        upstream.setDistance(geneDist);
-                        upstream.setName(gene);
-                    }
-                    else{
-                        downstream.setId(geneId);
-                        downstream.setDistance(geneDist.substring(1));
-                        downstream.setName(gene);
+                        if (dist == 0) {
+                            ingene.setOrAppendId(geneId);
+                            ingene.setDistance(geneDist);
+                            ingene.setOrAppendName(gene);
+                        }
+                        else if (dist > 0) {
+                            upstream.setId(geneId);
+                            upstream.setDistance(geneDist);
+                            upstream.setName(gene);
+                        }
+                        else {
+                            downstream.setId(geneId);
+                            downstream.setDistance(geneDist.substring(1));
+                            downstream.setName(gene);
+                        }
                     }
                 }
 

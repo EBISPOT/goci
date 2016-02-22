@@ -831,7 +831,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 //        }
 
         if (!allMappedGenes.isEmpty()) {
-            geneString = String.join(", ", allMappedGenes);
+            if(association.getMultiSnpHaplotype()){
+                geneString = String.join("; ", allMappedGenes);
+
+            }
+            else{
+                geneString = String.join(", ", allMappedGenes);
+            }
 //                    .concat("|")
 //                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
         }
@@ -839,7 +845,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 //            geneString = String.join("|", allMappedGenes);
 //        }
         else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
-            geneString = String.join(", ", allUpstreamAndDownstreamGenes);
+            if(association.getMultiSnpHaplotype()){
+                geneString = String.join("; ", allUpstreamAndDownstreamGenes);
+            }
+            else{
+                geneString = String.join(", ", allUpstreamAndDownstreamGenes);
+            }
         }
 //        else {
 //            geneString = "No mapped genes";
