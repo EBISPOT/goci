@@ -189,8 +189,8 @@
     <field name="pValueMantissa" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="pValueExponent" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
-    <field name="orPerCopyUnitDescr" type="text_general" indexed="true" stored="true" multiValued="false" />
-    <field name="orPerCopyRange" type="text_general" indexed="false" stored="true" multiValued="false" />
+    <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="range" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
     <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />

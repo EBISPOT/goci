@@ -63,10 +63,10 @@ public class SingleSnpMultiSnpAssociationService {
         association.setSnpApproved(snpAssociationForm.getSnpApproved());
         association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
-        association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
+        association.setRange(snpAssociationForm.getOrPerCopyRange());
         association.setOrPerCopyRecipRange(snpAssociationForm.getOrPerCopyRecipRange());
-        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
-        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
+        association.setStandardError(snpAssociationForm.getOrPerCopyStdError());
+        association.setDescription(snpAssociationForm.getOrPerCopyUnitDescr());
 
         // Set risk frequency
         association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
@@ -196,10 +196,10 @@ public class SingleSnpMultiSnpAssociationService {
         snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
-        snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
-        snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationForm.setOrPerCopyStdError(association.getStandardError());
+        snpAssociationForm.setOrPerCopyRange(association.getRange());
         snpAssociationForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
+        snpAssociationForm.setOrPerCopyUnitDescr(association.getDescription());
 
 
         // Add collection of Efo traits

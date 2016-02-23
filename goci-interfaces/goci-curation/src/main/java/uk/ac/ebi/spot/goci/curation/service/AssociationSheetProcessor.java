@@ -440,9 +440,9 @@ public class AssociationSheetProcessor {
                     newAssociation.setPvalueExponent(pvalueExponent);
                     newAssociation.setPvalueText(pvalueText);
                     newAssociation.setOrPerCopyRecip(orPerCopyRecip);
-                    newAssociation.setOrPerCopyStdError(orPerCopyStdError);
+                    newAssociation.setStandardError(orPerCopyStdError);
                     newAssociation.setOrPerCopyRecipRange(orPerCopyRecipRange);
-                    newAssociation.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+                    newAssociation.setDescription(orPerCopyUnitDescr);
                     newAssociation.setSnpType(snpType);
 
                     boolean recipReverse = false;
@@ -460,14 +460,14 @@ public class AssociationSheetProcessor {
                     // This logic is retained from Dani's original code
                     if ((orPerCopyRecipRange != null) && recipReverse) {
                         orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRecipRange);
-                        newAssociation.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setRange(orPerCopyRange);
                     }
                     else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
                         orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-                        newAssociation.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setRange(orPerCopyRange);
                     }
                     else {
-                        newAssociation.setOrPerCopyRange(orPerCopyRange);
+                        newAssociation.setRange(orPerCopyRange);
                     }
 
                     if (orType.equalsIgnoreCase("Y")) {

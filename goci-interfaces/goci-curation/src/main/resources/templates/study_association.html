@@ -284,13 +284,13 @@
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.orType} ?:''"></td>
                             <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                                th:text="${snpAssociationTableView.range} ?: ''"></td>
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
                             <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                                th:text="${snpAssociationTableView.description} ?: ''"></td>
                             <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                                th:text="${snpAssociationTableView.standardError} ?: ''"></td>
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                             <td style="background-color: darkgrey"
@@ -402,13 +402,13 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.orType} ?:''"></td>
                                 <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                                    th:text="${snpAssociationTableView.range} ?: ''"></td>
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
                                 <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
+                                    th:text="${snpAssociationTableView.description} ?: ''"></td>
                                 <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                                    th:text="${snpAssociationTableView.standardError} ?: ''"></td>
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                                 <td style="background-color: lightyellow"
@@ -509,10 +509,10 @@
                                           th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
                                 <td th:text="${snpAssociationTableView.orType} ?:''"></td>
-                                <td th:text="${snpAssociationTableView.orPerCopyRange} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.range} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
-                                <td th:text="${snpAssociationTableView.orPerCopyUnitDescr} ?: ''"></td>
-                                <td th:text="${snpAssociationTableView.orPerCopyStdError} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.description} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.standardError} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                                 <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>

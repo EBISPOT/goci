@@ -241,10 +241,10 @@ public class AssociationViewService {
             }
         }
 
-        snpAssociationTableView.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationTableView.setOrPerCopyRange(association.getRange());
         snpAssociationTableView.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationTableView.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
-        snpAssociationTableView.setOrPerCopyStdError(association.getOrPerCopyStdError());
+        snpAssociationTableView.setOrPerCopyUnitDescr(association.getDescription());
+        snpAssociationTableView.setOrPerCopyStdError(association.getStandardError());
         snpAssociationTableView.setAssociationType(association.getSnpType());
 
 

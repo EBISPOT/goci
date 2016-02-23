@@ -92,9 +92,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         super(association);
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueText();
-        this.orPerCopyUnitDescr = association.getOrPerCopyUnitDescr();
+        this.orPerCopyUnitDescr = association.getDescription();
         this.orType = String.valueOf(association.getOrType());
-        this.orPerCopyRange = association.getOrPerCopyRange();
+        this.orPerCopyRange = association.getRange();
 
         if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();

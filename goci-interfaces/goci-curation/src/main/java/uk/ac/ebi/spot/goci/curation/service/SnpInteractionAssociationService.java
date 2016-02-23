@@ -61,10 +61,10 @@ public class SnpInteractionAssociationService {
         association.setSnpApproved(snpAssociationInteractionForm.getSnpApproved());
         association.setOrPerCopyNum(snpAssociationInteractionForm.getOrPerCopyNum());
         association.setOrPerCopyRecip(snpAssociationInteractionForm.getOrPerCopyRecip());
-        association.setOrPerCopyRange(snpAssociationInteractionForm.getOrPerCopyRange());
+        association.setRange(snpAssociationInteractionForm.getOrPerCopyRange());
         association.setOrPerCopyRecipRange(snpAssociationInteractionForm.getOrPerCopyRecipRange());
-        association.setOrPerCopyStdError(snpAssociationInteractionForm.getOrPerCopyStdError());
-        association.setOrPerCopyUnitDescr(snpAssociationInteractionForm.getOrPerCopyUnitDescr());
+        association.setStandardError(snpAssociationInteractionForm.getOrPerCopyStdError());
+        association.setDescription(snpAssociationInteractionForm.getOrPerCopyUnitDescr());
         association.setRiskFrequency(snpAssociationInteractionForm.getRiskFrequency());
 
         // Set multi-snp and snp interaction checkboxes
@@ -171,10 +171,10 @@ public class SnpInteractionAssociationService {
         snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationInteractionForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
-        snpAssociationInteractionForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
-        snpAssociationInteractionForm.setOrPerCopyRange(association.getOrPerCopyRange());
+        snpAssociationInteractionForm.setOrPerCopyStdError(association.getStandardError());
+        snpAssociationInteractionForm.setOrPerCopyRange(association.getRange());
         snpAssociationInteractionForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationInteractionForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
+        snpAssociationInteractionForm.setOrPerCopyUnitDescr(association.getDescription());
         snpAssociationInteractionForm.setRiskFrequency(association.getRiskFrequency());
 
         // Add collection of Efo traits

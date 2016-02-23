@@ -142,11 +142,11 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if (association.getOrPerCopyRange() == null) {
+            if (association.getRange() == null) {
                 line.append("");
             }
             else {
-                line.append(association.getOrPerCopyRange());
+                line.append(association.getRange());
             }
             line.append("\t");
 
@@ -159,20 +159,20 @@ public class AssociationDownloadService {
             line.append("\t");
 
 
-            if (association.getOrPerCopyUnitDescr() == null) {
+            if (association.getDescription() == null) {
                 line.append("");
             }
             else {
-                line.append(association.getOrPerCopyUnitDescr());
+                line.append(association.getDescription());
             }
 
             line.append("\t");
 
-            if (association.getOrPerCopyStdError() == null) {
+            if (association.getStandardError() == null) {
                 line.append("");
             }
             else {
-                line.append(association.getOrPerCopyStdError());
+                line.append(association.getStandardError());
             }
 
             line.append("\t");
