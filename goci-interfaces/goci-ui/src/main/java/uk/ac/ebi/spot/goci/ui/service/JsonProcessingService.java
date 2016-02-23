@@ -601,6 +601,7 @@ public class JsonProcessingService {
 
     private Map<String, MappedGene> getMappedGenes(JsonNode doc) {
         List<String> actuallyMapped = new ArrayList<>();
+        List<String> processed = new ArrayList<>();
 
         if (doc.get("entrezMappedGenes") != null) {
 
@@ -621,34 +622,58 @@ public class JsonProcessingService {
                 String gene = data[0];
 
                 if(actuallyMapped.contains(gene)){
-                    String geneId, geneDist;
+
+                    String chrom = data[3];
+
+                    String pattern = "^\\d+$";
+
+                    Pattern p = Pattern.compile(pattern);
+                    Matcher m = p.matcher(chrom);
+
+                    if (m.find() || chrom.equals("X") || chrom.equals("Y")) {
+                        processed.add(gene);
+                        String geneId, geneDist;
 
 
-                    geneId = data[1];
-                    geneDist = data[2];
+                        geneId = data[1];
+                        geneDist = data[2];
 
 
-                    int dist = Integer.parseInt(geneDist);
+                        int dist = Integer.parseInt(geneDist);
 
-                    if(dist == 0){
-                        ingene.setId(geneId);
-                        ingene.setDistance(geneDist);
-                        ingene.setName(gene);
-                    }
-                    else if(dist > 0){
-                        upstream.setId(geneId);
-                        upstream.setDistance(geneDist);
-                        upstream.setName(gene);
-                    }
-                    else{
-                        downstream.setId(geneId);
-                        downstream.setDistance(geneDist.substring(1));
-                        downstream.setName(gene);
+                        if (dist == 0) {
+                            ingene.setOrAppendId(geneId);
+                            ingene.setDistance(geneDist);
+                            ingene.setOrAppendName(gene);
+                        }
+                        else if (dist > 0) {
+                            upstream.setId(geneId);
+                            upstream.setDistance(geneDist);
+                            upstream.setName(gene);
+                        }
+                        else {
+                            downstream.setId(geneId);
+                            downstream.setDistance(geneDist.substring(1));
+                            downstream.setName(gene);
+                        }
                     }
                 }
 
             }
         }
+
+        String lit = "";
+        for(String am : actuallyMapped){
+            if(!processed.contains(am)){
+                if(lit.equals("")){
+                    lit = am;
+                }
+                else {
+                    lit = lit.concat(", ").concat(am);
+                }
+            }
+        }
+        ingene.setOrAppendName(lit);
         genes.put("upstream", upstream);
         genes.put("downstream", downstream);
         genes.put("ingene", ingene);
@@ -716,6 +741,24 @@ public class JsonProcessingService {
 
         public void setDistance(String distance) {
             this.distance = distance;
+        }
+
+        public void setOrAppendId(String id){
+            if(this.id.equals("")){
+                this.id = id;
+            }
+            else{
+                this.id = this.id.concat(", ").concat(id);
+            }
+        }
+
+        public void setOrAppendName(String name){
+            if(this.name.equals("")){
+                this.name = name;
+            }
+            else{
+                this.name = this.name.concat(", ").concat(name);
+            }
         }
     }
 }

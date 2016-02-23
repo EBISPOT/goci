@@ -35,21 +35,25 @@ public class StudyOperationsService {
         this.housekeepingRepository = housekeepingRepository;
     }
 
-
+    /**
+     * Update a studies status
+     *
+     * @param newStatus          New status to apply to study
+     * @param study              Study to update
+     * @param currentStudyStatus Current status of the study to update
+     */
     public String updateStatus(CurationStatus newStatus, Study study, CurationStatus currentStudyStatus) {
 
         String message = null;
-
         Housekeeping housekeeping = study.getHousekeeping();
-
-        // For the study check all SNPs have been checked
-        Collection<Association> associations = associationRepository.findByStudyId(study.getId());
-        int snpsNotApproved = studyAssociationCheck(associations);
 
         // If the status has changed
         if (newStatus != null && newStatus != currentStudyStatus) {
             switch (newStatus.getStatus()) {
                 case "Publish study":
+                    // For the study check all SNPs have been checked
+                    Collection<Association> associations = associationRepository.findByStudyId(study.getId());
+                    int snpsNotApproved = studyAssociationCheck(associations);
 
                     if (snpsNotApproved == 1) {
                         message = "Some SNP associations have not been checked for study: "
@@ -91,7 +95,11 @@ public class StudyOperationsService {
         return message;
     }
 
-
+    /**
+     * Check SNPs have been approved
+     *
+     * @param associations All associations found for a study
+     */
     public int studyAssociationCheck(Collection<Association> associations) {
         int snpsNotApproved = 0;
         for (Association association : associations) {
