@@ -23,8 +23,6 @@ import java.util.Date;
  *         <p>
  *         Model object representing an association
  */
-
-
 @Entity
 public class Association {
     @Id
@@ -35,11 +33,9 @@ public class Association {
 
     private String pvalueText;
 
-    private Float orPerCopyNum;
+    private Integer pvalueMantissa;
 
-    private Boolean orType = false;
-
-    private String snpType;
+    private Integer pvalueExponent;
 
     private Boolean multiSnpHaplotype = false;
 
@@ -47,19 +43,30 @@ public class Association {
 
     private Boolean snpApproved = false;
 
-    private Integer pvalueMantissa;
+    private String snpType;
 
-    private Integer pvalueExponent;
-
-    private Float orPerCopyRecip;
+    // TODO REMOVE
+    private Boolean orType = false;
 
     private Float orPerCopyStdError;
 
     private String orPerCopyRange;
 
+    private String orPerCopyUnitDescr;
+
+    // OR specific values
+    private Float orPerCopyNum;
+
+    private Float orPerCopyRecip;
+
     private String orPerCopyRecipRange;
 
-    private String orPerCopyUnitDescr;
+    // Beta specific values
+    private Float betaNum;
+
+    private String betaUnit;
+
+    private String betaUnitDirection;
 
     @ManyToOne
     private Study study;
@@ -96,40 +103,47 @@ public class Association {
 
     public Association(String riskFrequency,
                        String pvalueText,
-                       Float orPerCopyNum,
-                       Boolean orType,
-                       String snpType,
+                       Integer pvalueMantissa,
+                       Integer pvalueExponent,
                        Boolean multiSnpHaplotype,
                        Boolean snpInteraction,
                        Boolean snpApproved,
-                       Integer pvalueMantissa,
-                       Integer pvalueExponent,
-                       Float orPerCopyRecip,
+                       String snpType,
+                       Boolean orType,
                        Float orPerCopyStdError,
                        String orPerCopyRange,
-                       String orPerCopyRecipRange,
                        String orPerCopyUnitDescr,
+                       Float orPerCopyNum,
+                       Float orPerCopyRecip,
+                       String orPerCopyRecipRange,
+                       Float betaNum,
+                       String betaUnit,
+                       String betaUnitDirection,
                        Study study,
                        Collection<Locus> loci,
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
                        Date lastMappingDate,
-                       String lastMappingPerformedBy, Date lastUpdateDate) {
+                       String lastMappingPerformedBy,
+                       Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
-        this.orPerCopyNum = orPerCopyNum;
-        this.orType = orType;
-        this.snpType = snpType;
+        this.pvalueMantissa = pvalueMantissa;
+        this.pvalueExponent = pvalueExponent;
         this.multiSnpHaplotype = multiSnpHaplotype;
         this.snpInteraction = snpInteraction;
         this.snpApproved = snpApproved;
-        this.pvalueMantissa = pvalueMantissa;
-        this.pvalueExponent = pvalueExponent;
-        this.orPerCopyRecip = orPerCopyRecip;
+        this.snpType = snpType;
+        this.orType = orType;
         this.orPerCopyStdError = orPerCopyStdError;
         this.orPerCopyRange = orPerCopyRange;
-        this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+        this.orPerCopyNum = orPerCopyNum;
+        this.orPerCopyRecip = orPerCopyRecip;
+        this.orPerCopyRecipRange = orPerCopyRecipRange;
+        this.betaNum = betaNum;
+        this.betaUnit = betaUnit;
+        this.betaUnitDirection = betaUnitDirection;
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
@@ -329,5 +343,29 @@ public class Association {
 
     public double getPvalue() {
         return (pvalueMantissa * Math.pow(10, pvalueExponent));
+    }
+
+    public Float getBetaNum() {
+        return betaNum;
+    }
+
+    public void setBetaNum(Float betaNum) {
+        this.betaNum = betaNum;
+    }
+
+    public String getBetaUnit() {
+        return betaUnit;
+    }
+
+    public void setBetaUnit(String betaUnit) {
+        this.betaUnit = betaUnit;
+    }
+
+    public String getBetaUnitDirection() {
+        return betaUnitDirection;
+    }
+
+    public void setBetaUnitDirection(String betaUnitDirection) {
+        this.betaUnitDirection = betaUnitDirection;
     }
 }
