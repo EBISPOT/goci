@@ -48,11 +48,11 @@ public class Association {
     // TODO REMOVE
     private Boolean orType = false;
 
-    private Float orPerCopyStdError;
+    private Float standardError;
 
-    private String orPerCopyRange;
+    private String range;
 
-    private String orPerCopyUnitDescr;
+    private String description;
 
     // OR specific values
     private Float orPerCopyNum;
@@ -110,9 +110,9 @@ public class Association {
                        Boolean snpApproved,
                        String snpType,
                        Boolean orType,
-                       Float orPerCopyStdError,
-                       String orPerCopyRange,
-                       String orPerCopyUnitDescr,
+                       Float standardError,
+                       String range,
+                       String description,
                        Float orPerCopyNum,
                        Float orPerCopyRecip,
                        String orPerCopyRecipRange,
@@ -135,9 +135,9 @@ public class Association {
         this.snpApproved = snpApproved;
         this.snpType = snpType;
         this.orType = orType;
-        this.orPerCopyStdError = orPerCopyStdError;
-        this.orPerCopyRange = orPerCopyRange;
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+        this.standardError = standardError;
+        this.range = range;
+        this.description = description;
         this.orPerCopyNum = orPerCopyNum;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyRecipRange = orPerCopyRecipRange;
@@ -241,20 +241,20 @@ public class Association {
         this.orPerCopyRecip = orPerCopyRecip;
     }
 
-    public Float getOrPerCopyStdError() {
-        return orPerCopyStdError;
+    public Float getStandardError() {
+        return standardError;
     }
 
-    public void setOrPerCopyStdError(Float orPerCopyStdError) {
-        this.orPerCopyStdError = orPerCopyStdError;
+    public void setStandardError(Float standardError) {
+        this.standardError = standardError;
     }
 
-    public String getOrPerCopyRange() {
-        return orPerCopyRange;
+    public String getRange() {
+        return range;
     }
 
-    public void setOrPerCopyRange(String orPerCopyRange) {
-        this.orPerCopyRange = orPerCopyRange;
+    public void setRange(String range) {
+        this.range = range;
     }
 
     public String getOrPerCopyRecipRange() {
@@ -265,12 +265,12 @@ public class Association {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
     }
 
-    public String getOrPerCopyUnitDescr() {
-        return orPerCopyUnitDescr;
+    public String getDescription() {
+        return description;
     }
 
-    public void setOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Study getStudy() {
