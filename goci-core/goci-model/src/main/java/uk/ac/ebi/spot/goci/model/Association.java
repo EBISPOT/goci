@@ -66,7 +66,7 @@ public class Association {
 
     private String betaUnit;
 
-    private String betaUnitDirection;
+    private String betaDirection;
 
     @ManyToOne
     private Study study;
@@ -118,14 +118,13 @@ public class Association {
                        String orPerCopyRecipRange,
                        Float betaNum,
                        String betaUnit,
-                       String betaUnitDirection,
+                       String betaDirection,
                        Study study,
                        Collection<Locus> loci,
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
                        Date lastMappingDate,
-                       String lastMappingPerformedBy,
-                       Date lastUpdateDate) {
+                       String lastMappingPerformedBy, Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
         this.pvalueText = pvalueText;
         this.pvalueMantissa = pvalueMantissa;
@@ -143,7 +142,7 @@ public class Association {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.betaNum = betaNum;
         this.betaUnit = betaUnit;
-        this.betaUnitDirection = betaUnitDirection;
+        this.betaDirection = betaDirection;
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
@@ -361,11 +360,11 @@ public class Association {
         this.betaUnit = betaUnit;
     }
 
-    public String getBetaUnitDirection() {
-        return betaUnitDirection;
+    public String getBetaDirection() {
+        return betaDirection;
     }
 
-    public void setBetaUnitDirection(String betaUnitDirection) {
-        this.betaUnitDirection = betaUnitDirection;
+    public void setBetaDirection(String betaDirection) {
+        this.betaDirection = betaDirection;
     }
 }
