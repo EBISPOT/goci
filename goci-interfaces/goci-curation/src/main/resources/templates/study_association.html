@@ -67,12 +67,12 @@
 </div>
 
 <!--Alert if errors not checked before approving-->
-<div class="container-fluid" th:if="${!#strings.isEmpty(approvalStopped)}">
+<div class="container-fluid" th:if="${!#strings.isEmpty(efoMessage)}">
     <div class="row">
         <div class="col-md-8">
-            <div class="alert alert-warning">
+            <div class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${approvalStopped}">Warning!</strong>
+                <strong th:text="${efoMessage}">Warning!</strong>
             </div>
         </div>
     </div>
@@ -266,8 +266,12 @@
                                 th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
 
                             <!--EFO traits-->
-                            <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+                            <td style="background-color: darkgrey">
+                                <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
+                                 <span style="font-style: italic; color:red; font-size: small"
+                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                       th:text="'Warning: EFO trait not assigned'"></span>
+                            </td>
 
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
@@ -380,8 +384,12 @@
                                     th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
 
                                 <!--EFO traits-->
-                                <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+                                <td style="background-color: lightyellow">
+                                    <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
+                                 <span style="font-style: italic; color:red; font-size: small"
+                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                       th:text="'Warning: EFO trait not assigned'"></span>
+                                </td>
 
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
@@ -486,7 +494,12 @@
                                 <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
 
                                 <!--EFO traits-->
-                                <td th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>
+                                <td>
+                                    <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
+                                 <span style="font-style: italic; color:red; font-size: small"
+                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                       th:text="'Warning: EFO trait not assigned'"></span>
+                                </td>
 
                                 <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                                 <td>

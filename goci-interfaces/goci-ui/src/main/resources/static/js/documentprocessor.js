@@ -492,36 +492,43 @@ function processAssociation(association, table) {
                     var gene = association.entrezMappedGeneLinks[j].split("|")[0];
                     var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
                     var dist = association.entrezMappedGeneLinks[j].split("|")[2];
+                    var chromName = association.entrezMappedGeneLinks[j].split("|")[3];
 
-                    var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat(
-                            "</a></span>");
-                    var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat(
-                            "'  target='_blank'>").concat(
-                            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+                    var pattern = new RegExp("^\\d+$");
 
-                    //if(type == 'delim'){
-                    //    if(mapped == ''){
-                    //        mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                    //
-                    //    }else{
-                    //        mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                    //
-                    //    }
-                    //}
-                    //else
-                    if(dist == 0){
-                        if(mapped == '') {
-                            mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                    if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+
+                        var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat(
+                                "</a></span>");
+                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat(
+                                "'  target='_blank'>").concat(
+                                "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+                        //if(type == 'delim'){
+                        //    if(mapped == ''){
+                        //        mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                        //
+                        //    }else{
+                        //        mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                        //
+                        //    }
+                        //}
+                        //else
+                        if (dist == 0) {
+                            if (mapped == '') {
+                                mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                            }
+                            else {
+                                mapped =
+                                        mapped.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
+                            }
                         }
-                        else{
-                            mapped = mapped.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
+                        else if (dist > 0) {
+                            upstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
                         }
-                    }
-                    else if(dist > 0){
-                        upstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
-                    }
-                    else{
-                        downstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                        else {
+                            downstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                        }
                     }
 
                 }

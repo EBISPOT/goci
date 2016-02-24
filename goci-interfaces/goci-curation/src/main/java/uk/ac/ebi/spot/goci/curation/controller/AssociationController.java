@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
+import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignment;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
@@ -95,6 +96,7 @@ public class AssociationController {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
+    private CheckEfoTermAssignment checkEfoTermAssignment;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -125,7 +127,7 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  SnpFormRowValidator snpFormRowValidator,
                                  SnpFormColumnValidator snpFormColumnValidator,
-                                 MappingService mappingService) {
+                                 MappingService mappingService, CheckEfoTermAssignment checkEfoTermAssignment) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -141,6 +143,7 @@ public class AssociationController {
         this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
+        this.checkEfoTermAssignment = checkEfoTermAssignment;
     }
 
     /*  Study SNP/Associations */
@@ -1122,17 +1125,26 @@ public class AssociationController {
     @RequestMapping(value = "associations/{associationId}/approve",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveSnpAssociation(@PathVariable Long associationId) {
+    public String approveSnpAssociation(@PathVariable Long associationId, RedirectAttributes redirectAttributes) {
 
         Association association = associationRepository.findOne(associationId);
 
-        // Mark errors as checked
-        associationErrorsChecked(association);
+        // Check if association has an EFO trait
+        Boolean associationEfoTermsAssigned = checkEfoTermAssignment.checkAssociationEfoAssignment(association);
 
-        // Set snpChecked attribute to true
-        association.setSnpApproved(true);
-        association.setLastUpdateDate(new Date());
-        associationRepository.save(association);
+        if (!associationEfoTermsAssigned) {
+            String message = "Cannot approve association as no EFO trait assigned";
+            redirectAttributes.addFlashAttribute("efoMessage", message);
+        }
+        else {
+            // Mark errors as checked
+            associationErrorsChecked(association);
+
+            // Set snpChecked attribute to true
+            association.setSnpApproved(true);
+            association.setLastUpdateDate(new Date());
+            associationRepository.save(association);
+        }
 
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
@@ -1167,20 +1179,33 @@ public class AssociationController {
         String message = "";
         Integer count = 0;
 
-        // For each one set snpChecked attribute to true
+        // Create a collection of all association objects and check EFO term assignment
+        Collection<Association> allAssociations = new ArrayList<>();
         for (String associationId : associationsIds) {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
-
-            // Mark errors as checked
-            associationErrorsChecked(association);
-
-            association.setSnpApproved(true);
-            association.setLastUpdateDate(new Date());
-            associationRepository.save(association);
-            count++;
+            allAssociations.add(association);
         }
-        message = "Successfully updated " + count + " associations";
+        Boolean associationsEfoTermsAssigned = checkEfoTermAssignment.checkAssociationsEfoAssignment(allAssociations);
 
+        if (!associationsEfoTermsAssigned) {
+            message = "Cannot approve association(s) as no EFO trait assigned";
+        }
+
+        else {
+            // For each one set snpChecked attribute to true
+            for (String associationId : associationsIds) {
+                Association association = associationRepository.findOne(Long.valueOf(associationId));
+
+                // Mark errors as checked
+                associationErrorsChecked(association);
+
+                association.setSnpApproved(true);
+                association.setLastUpdateDate(new Date());
+                associationRepository.save(association);
+                count++;
+            }
+            message = "Successfully updated " + count + " associations";
+        }
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
@@ -1224,15 +1249,23 @@ public class AssociationController {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+        Boolean associationEfoTermsAssigned = checkEfoTermAssignment.checkAssociationsEfoAssignment(studyAssociations);
 
-        // For each one set snpChecked attribute to true
-        for (Association association : studyAssociations) {
-            // Mark errors as checked
-            associationErrorsChecked(association);
+        if (!associationEfoTermsAssigned) {
+            String message = "Cannot approve all associations as no EFO trait assigned";
+            redirectAttributes.addFlashAttribute("efoMessage", message);
+        }
 
-            association.setSnpApproved(true);
-            association.setLastUpdateDate(new Date());
-            associationRepository.save(association);
+        else {
+            // For each one set snpChecked attribute to true
+            for (Association association : studyAssociations) {
+                // Mark errors as checked
+                associationErrorsChecked(association);
+
+                association.setSnpApproved(true);
+                association.setLastUpdateDate(new Date());
+                associationRepository.save(association);
+            }
         }
         return "redirect:/studies/" + studyId + "/associations";
     }

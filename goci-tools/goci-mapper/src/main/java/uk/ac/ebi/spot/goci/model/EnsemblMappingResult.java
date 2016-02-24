@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by emma on 20/01/2016.
@@ -25,7 +27,9 @@ public class EnsemblMappingResult {
 
     private String functionalClass;
 
-    private ArrayList<String> overlappingGenes = new ArrayList<>();
+    private Set<String> ncbiOverlappingGene = new HashSet<>();
+
+    private Set<String> ensemblOverlappingGene = new HashSet<>();
 
 
     public EnsemblMappingResult() {
@@ -54,16 +58,26 @@ public class EnsemblMappingResult {
     }
 
     /**
-     * Add gene to list of overlapping genes.
+     * Add gene to list of NCBI overlapping genes.
      *
      * @param gene
      */
-    public void addOverlappingGene(String gene) {
-        ArrayList<String> overlappingGenes = getOverlappingGenes();
-        overlappingGenes.add(gene);
-        setOverlappingGenes(overlappingGenes);
+    public void addNcbiOverlappingGene(String gene) {
+        Set<String> ncbiOverlappingGene = getNcbiOverlappingGene();
+        ncbiOverlappingGene.add(gene);
+        setNcbiOverlappingGene(ncbiOverlappingGene);
     }
 
+    /**
+     * Add gene to list of Ensembl overlapping genes.
+     *
+     * @param gene
+     */
+    public void addEnsemblOverlappingGene(String gene) {
+        Set<String> ensemblOverlappingGene = getEnsemblOverlappingGene();
+        ensemblOverlappingGene.add(gene);
+        setEnsemblOverlappingGene(ensemblOverlappingGene);
+    }
 
     // Getters/setters
     public ArrayList<String> getPipelineErrors() {
@@ -114,12 +128,19 @@ public class EnsemblMappingResult {
         this.rsId = rsId;
     }
 
-    public ArrayList<String> getOverlappingGenes() {
-        return overlappingGenes;
+    public Set<String> getNcbiOverlappingGene() {
+        return ncbiOverlappingGene;
     }
 
-    public void setOverlappingGenes(ArrayList<String> overlappingGenes) {
-        this.overlappingGenes = overlappingGenes;
+    public void setNcbiOverlappingGene(Set<String> ncbiOverlappingGene) {
+        this.ncbiOverlappingGene = ncbiOverlappingGene;
     }
 
+    public Set<String> getEnsemblOverlappingGene() {
+        return ensemblOverlappingGene;
+    }
+
+    public void setEnsemblOverlappingGene(Set<String> ensemblOverlappingGene) {
+        this.ensemblOverlappingGene = ensemblOverlappingGene;
+    }
 }
