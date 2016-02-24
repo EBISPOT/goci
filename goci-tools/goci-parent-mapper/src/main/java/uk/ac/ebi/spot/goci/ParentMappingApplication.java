@@ -83,7 +83,7 @@ public class ParentMappingApplication {
             line[0] = trait.getTrait();
             line[1] = trait.getEfoTerm();
             line[2] = trait.getUri();
-            line[3] = "foo";
+            line[3] = trait.getParent();
 
             lines.add(line);
         }
