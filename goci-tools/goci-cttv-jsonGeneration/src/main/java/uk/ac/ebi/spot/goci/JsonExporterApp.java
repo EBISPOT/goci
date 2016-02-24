@@ -157,8 +157,9 @@ public class JsonExporterApp {
 
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
+        System.out.println("jsons.size = " + jsons.size());
         for(String json : jsons) {
-            bw.write(json);
+            bw.write(json + "\n");
         }
 
 

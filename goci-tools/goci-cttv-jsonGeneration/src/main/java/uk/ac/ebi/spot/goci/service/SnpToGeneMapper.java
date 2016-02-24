@@ -30,6 +30,7 @@ public class SnpToGeneMapper {
 
     public SnpToGeneMapper(String snp2geneFilePath) throws IOException {
 
+//        rs8050187       1       ENSG00000186153 WWOX    intron_variant  0
 
         String line;
 
@@ -38,49 +39,69 @@ public class SnpToGeneMapper {
         while ((line = br.readLine()) != null) {
 
             String[] array = line.split("\t");
+            if(!"".equals(array[2]) && array[2] != null) {
 
-            SnpInfo snpInfo = new SnpInfo();
+                SnpInfo snpInfo = new SnpInfo();
 
-            snpInfo.setRsId(array[0]);
+                snpInfo.setRsId(array[0]);
 
-            snpInfo.setSoTerm(array[1]);
+                snpInfo.setIsInEnsmbl(array[1]);
 
-            if(array[2].contains(",")){
-                String[] ensemblIds = array[2].split(",");
-                List<String> ids = new ArrayList<>();
+                snpInfo.setSoTerm(array[4]);
 
-                for(String ensemblId : ensemblIds){
-                    ids.add(ensemblId);
+                if (array[2].contains(",")) {
+                    String[] ensemblIds = array[2].split(",");
+                    List<String> ids = new ArrayList<>();
+
+                    for (String ensemblId : ensemblIds) {
+                        ids.add(ensemblId);
+                    }
+                    snpInfo.setEnsemblIds(ids);
+                } else {
+                    List<String> ids = new ArrayList<>();
+                    ids.add(array[2].toString());
+
+                    snpInfo.setEnsemblIds(ids);
                 }
-                snpInfo.setEnsemblId(ids);
-            }else{
-                List<String> ids = new ArrayList<>();
-                ids.add(line);
-                snpInfo.setEnsemblId(ids);
-            }
 
-            if(array[3].contains(",")){
-                String[] ensemblLabels = array[3].split(",");
-                List<String> labels = new ArrayList<>();
+                if (array[3].contains(",")) {
+                    String[] ensemblLabels = array[3].split(",");
+                    List<String> labels = new ArrayList<>();
 
-                for(String label : ensemblLabels){
-                    labels.add(label);
+                    for (String label : ensemblLabels) {
+                        labels.add(label);
+                    }
+                    snpInfo.setEnsemblName(labels);
+                } else {
+                    List<String> labels = new ArrayList<>();
+                    labels.add(array[3].toString());
+                    snpInfo.setEnsemblName(labels);
                 }
-                snpInfo.setEnsemblName(labels);
-            }else{
-                List<String> labels = new ArrayList<>();
-                labels.add(line);
-                snpInfo.setEnsemblName(labels);
+
+                snpInfo.setDistance(array[5]);
+
+                snp2snpInfo.put(snpInfo.getRsId(),snpInfo );
+
+//                System.out.println(line);
             }
-
-            snpInfo.setDistance(array[4]);
-
-            System.out.println(line);
         }
     }
 
     public SnpInfo get(String rsId){
         return snp2snpInfo.get(rsId);
     }
+
+
+//    public static void main(String[] args) throws IOException {
+//        SnpToGeneMapper mapper = new SnpToGeneMapper("/Users/catherineleroy/Documents/cttv_gwas_releases/sept_2016/snp_2_gene_mapping.tab");
+//        SnpInfo snpInfo = mapper.get("rs10043775");
+//        System.out.println("getRsId " + snpInfo.getRsId());
+//        System.out.println("getDistance getEnsemblName" + snpInfo.getDistance());
+//        System.out.println("getIsInEnsmbl " + snpInfo.getIsInEnsmbl());
+//        System.out.println("getSoTerm " + snpInfo.getSoTerm());
+//        System.out.println("getEnsemblId " + snpInfo.getEnsemblIds());
+//        System.out.println("getEnsemblName " + snpInfo.getEnsemblName());
+//
+//    }
 
 }

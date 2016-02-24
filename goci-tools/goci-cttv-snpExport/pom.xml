@@ -71,6 +71,12 @@
             <artifactId>commons-cli</artifactId>
         </dependency>
 
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
     </dependencies>
 
 
