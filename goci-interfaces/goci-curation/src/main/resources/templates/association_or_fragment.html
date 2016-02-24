@@ -11,7 +11,7 @@
         <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum" th:filed="*{orPerCopyNum}"/>
     </div>
 
-
+    <!--Warning if OR value is less than 1-->
     <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
          role="alert"
          th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
@@ -27,7 +27,7 @@
     <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy reciprocal</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" id="orPerCopyRecip" th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
+        <input type="number" class="form-control" id="orPerCopyRecip" th:field="*{orPerCopyRecip}" name="orPerCopyRecip"/>
     </div>
 
     <div class="col-md-10"><button type="button" class="btn btn-primary pull-right" id="calculate-or">Calculate OR/HR/RR per copy (Num)</button>
