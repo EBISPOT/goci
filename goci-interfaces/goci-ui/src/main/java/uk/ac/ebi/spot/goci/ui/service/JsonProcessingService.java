@@ -196,8 +196,9 @@ public class JsonProcessingService {
         if(mappedGenes.get("ingene").getName() != ""){
             line.append(mappedGenes.get("ingene").getName());
         }
-        if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() != ""){
-            line.append(mappedGenes.get("upstream").getName().concat(" - ").concat(mappedGenes.get("downstream").getName()));
+        else if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() != ""){
+            line.append(mappedGenes.get("upstream").getName().concat(" - ").concat(mappedGenes.get("downstream")
+                                                                                           .getName()));
         }
         else if (mappedGenes.get("upstream").getName() != "" && mappedGenes.get("downstream").getName() == ""){
             line.append(mappedGenes.get("upstream").getName().concat(" - NA"));
@@ -673,7 +674,9 @@ public class JsonProcessingService {
                 }
             }
         }
-        ingene.setOrAppendName(lit);
+        if(!lit.equals("")){
+            ingene.setOrAppendName(lit);
+        }
         genes.put("upstream", upstream);
         genes.put("downstream", downstream);
         genes.put("ingene", ingene);
