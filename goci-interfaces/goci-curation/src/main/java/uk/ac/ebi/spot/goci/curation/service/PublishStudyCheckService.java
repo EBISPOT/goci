@@ -37,15 +37,15 @@ public class PublishStudyCheckService {
         Boolean efoTermsAssigned = checkEfoTermAssignment.checkStudyEfoAssignment(study);
 
         // Check all associations approved
-        int snpApproved = studyAssociationCheck(associations);
+        int snpNotApproved = studyAssociationCheck(associations);
 
-        if (snpApproved == 1 && !efoTermsAssigned) {
+        if (snpNotApproved == 1 && !efoTermsAssigned) {
             message = "No EFO trait assigned and some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
                     + ", please review before changing the status.";
         }
-        else if (snpApproved == 1) {
+        else if (snpNotApproved == 1) {
             message = "Some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
