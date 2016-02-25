@@ -52,7 +52,10 @@ public class PublishStudyCheckService {
                     + ", please review before changing the status.";
         }
         else if (!efoTermsAssigned) {
-            message = "No EFO trait assigned to study.";
+            message = "No EFO trait assigned to study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", please review before changing the status.";
         }
         else {
             message = null;
