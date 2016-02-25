@@ -127,7 +127,7 @@ You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs 
 
 ==== [[faq-7]]7. How often are the GWAS Catalog and diagram updated?
 
-New data is currently added to the GWAS Catalog and diagram on a nightly basis.
+New data is added to the GWAS Catalog and diagram on a weekly basis, with new data generally going public every Tuesday.
 
 ==== [[faq-8]]8. Why does the data I just downloaded look different from what I downloaded in the old Catalog?
 

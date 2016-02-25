@@ -41,6 +41,12 @@ public class FileController {
     @Value("${download.alternative}")
     private Resource alternativeFileDownload;
 
+    @Value("${download.studies}")
+    private Resource studiesFileDownload;
+
+    @Value("${download.studiesAlternative}")
+    private Resource alternativeStudiesDownload;
+
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
@@ -59,7 +65,7 @@ public class FileController {
             Date date = new Date();
             String now = dateFormat.format(date);
 
-            String fileName = "gwas_catalog_v1.0-downloaded_".concat(now).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0-associations-downloaded_".concat(now).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -79,6 +85,36 @@ public class FileController {
         }
     }
 
+    @RequestMapping(value = "api/search/downloads/studies",
+                    method = RequestMethod.GET)
+    public void getStudiesDownload(HttpServletResponse response) throws IOException {
+        if (studiesFileDownload.exists()) {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName = "gwas_catalog_v1.0-studies-downloaded_".concat(now).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            InputStream inputStream = null;
+            inputStream = studiesFileDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
+    }
+
+
     @RequestMapping(value = "api/search/downloads/alternative",
                     method = RequestMethod.GET,
                     produces = MediaType.TEXT_PLAIN_VALUE)
@@ -89,7 +125,7 @@ public class FileController {
             Date date = new Date();
             String now = dateFormat.format(date);
 
-            String fileName = "gwas_catalog_v1.0.1-downloaded_".concat(now).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0.1-associations-downloaded_".concat(now).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -108,6 +144,36 @@ public class FileController {
             throw new FileNotFoundException();
         }
     }
+
+    @RequestMapping(value = "api/search/downloads/studies_alternative",
+                    method = RequestMethod.GET)
+    public void getAlternativeStudiesDownload(HttpServletResponse response) throws IOException {
+        if (alternativeStudiesDownload.exists()) {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName = "gwas_catalog_v1.0.1-studies-downloaded_".concat(now).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            InputStream inputStream = null;
+            inputStream = alternativeStudiesDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
+    }
+
 
     @RequestMapping(value = "api/search/downloads/full_NCBI",
                     method = RequestMethod.GET,

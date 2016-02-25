@@ -73,8 +73,32 @@ public class MappingService {
      * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
      */
-  //  @Transactional(rollbackFor = EnsemblMappingException.class)
+    @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAssociations(Collection<Association> associations, String performer)
+            throws EnsemblMappingException {
+
+        try {
+            for (Association association : associations) {
+                doMapping(association);
+
+                // Once mapping is complete, update mapping record
+                getLog().debug("Update mapping record");
+                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+            }
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map supplied associations failed", e);
+        }
+    }
+
+
+    /**
+     * Perform validation and mapping of all database associations
+     *
+     * @param associations Collection of associations to map
+     * @param performer    name of curator/job carrying out the mapping
+     */
+    public void validateAndMapAllAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
         try {
@@ -111,10 +135,8 @@ public class MappingService {
         for (Locus associationLocus : studyAssociationLoci) {
             Long locusId = associationLocus.getId();
 
-            getLog().debug("Getting SNPs linked to locus: " + locusId);
             Collection<SingleNucleotidePolymorphism> snpsLinkedToLocus =
                     singleNucleotidePolymorphismQueryService.findByRiskAllelesLociId(locusId);
-            getLog().debug("SNPs retrieved");
 
             Collection<Gene> authorReportedGenesLinkedToSnp = associationLocus.getAuthorReportedGenes();
 
