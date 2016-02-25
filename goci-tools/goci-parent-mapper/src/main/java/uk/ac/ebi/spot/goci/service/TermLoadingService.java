@@ -3,7 +3,8 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import uk.ac.ebi.spot.goci.model.Trait;
+import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.TraitEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * Created by Dani on 15/02/2016.
  */
+@Service
 public class TermLoadingService {
 
 
@@ -42,17 +44,17 @@ public class TermLoadingService {
     }
 
 
-    public Map<String, List<Trait>> getTraits() {
-        List<Trait> allTraits = retrieveData();
+    public Map<String, List<TraitEntity>> getTraits() {
+        List<TraitEntity> allTraits = retrieveData();
 
-        Map<String, List<Trait>> traitsByURI = new HashMap<String, List<Trait>>();
+        Map<String, List<TraitEntity>> traitsByURI = new HashMap<>();
 
-        for(Trait trait : allTraits){
+        for(TraitEntity trait : allTraits){
             if(traitsByURI.get(trait.getUri()) != null){
                 traitsByURI.get(trait.getUri()).add(trait);
             }
             else {
-                List<Trait> t = new ArrayList<Trait>();
+                List<TraitEntity> t = new ArrayList<>();
                 t.add(trait);
                 traitsByURI.put(trait.getUri(), t);
             }
@@ -63,7 +65,7 @@ public class TermLoadingService {
     }
 
 
-    public List<Trait> retrieveData(){
+    public List<TraitEntity> retrieveData(){
         return getJdbcTemplate().query(DBQUERY, new TraitMapper());
     }
 
@@ -72,13 +74,13 @@ public class TermLoadingService {
     }
 
 
-    private class TraitMapper implements RowMapper<Trait> {
-        public Trait mapRow(ResultSet rs, int i) throws SQLException {
+    private class TraitMapper implements RowMapper<TraitEntity> {
+        public TraitEntity mapRow(ResultSet rs, int i) throws SQLException {
             String trait = rs.getString(1).trim();
             String efoTerm = rs.getString(2).trim();
             String uri = rs.getString(3).trim();
 
-            return new Trait(trait, efoTerm, uri);
+            return new TraitEntity(trait, efoTerm, uri);
         }
     }
 

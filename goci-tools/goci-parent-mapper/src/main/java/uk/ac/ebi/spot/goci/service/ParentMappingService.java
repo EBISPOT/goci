@@ -2,13 +2,13 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.Trait;
+import uk.ac.ebi.spot.goci.model.ParentList;
+import uk.ac.ebi.spot.goci.model.TraitEntity;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,15 +28,19 @@ public class ParentMappingService {
           this.ontologyLoader = ontologyLoader;
     }
 
-    public List<Trait> mapTraits(Map<String, List<Trait>> unmappedTraits) {
-//        for(Mapping term : terms){
-//            String map = findParent(term.getChildURI());
-//            term.setParentURI(map);
-//            term.setParentName(ParentList.PARENT_URI.get(map));
-//        }
+    public List<TraitEntity> mapTraits(Map<String, List<TraitEntity>> unmappedTraits) {
+        List<TraitEntity> mappedTraits = new ArrayList<>();
 
+        for(String uri : unmappedTraits.keySet()){
+            String map = findParent(uri);
+            for(TraitEntity trait : unmappedTraits.get(uri)) {
+                trait.setParentUri(map);
+                trait.setParentName(ParentList.PARENT_URI.get(map));
+                mappedTraits.add(trait);
+            }
+        }
 
-        return null;
+        return mappedTraits;
     }
 
 
