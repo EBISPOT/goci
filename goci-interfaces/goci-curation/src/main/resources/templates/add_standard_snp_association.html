@@ -138,11 +138,11 @@
                             </div>
                         </div>
 
-                        <div th:include="common_association_elements :: association_elemets"></div>
+                        <div th:include="fragments/common_association_elements :: association_elemets"></div>
                         <div th:if="${#strings.containsIgnoreCase(measurementType,'or')}"
-                             th:include="association_or_fragment :: or"></div>
+                             th:include="fragments/association_or_fragment :: or"></div>
                         <div th:if="${#strings.containsIgnoreCase(measurementType,'beta')}"
-                             th:include="association_beta_fragment :: beta"></div>
+                             th:include="fragments/association_beta_fragment :: beta"></div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
