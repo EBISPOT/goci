@@ -36,6 +36,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignment;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationFormService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
 import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
@@ -768,17 +769,14 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
-            SnpAssociationInteractionForm snpAssociationInteractionForm =
-                    snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
-            model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+            SnpAssociationForm form = createForm(associationToView, snpInteractionAssociationService);
+            model.addAttribute("snpAssociationInteractionForm", form);
             return "edit_snp_interaction_association";
         }
 
         else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
-            // Create form and return to user
-            SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                    associationToView);
-            model.addAttribute("snpAssociationForm", snpAssociationForm);
+            SnpAssociationForm form = createForm(associationToView, singleSnpMultiSnpAssociationService);
+            model.addAttribute("snpAssociationForm", form);
             return "edit_multi_snp_association";
         }
 
@@ -795,18 +793,15 @@ public class AssociationController {
 
             // Case where we have SNP interaction
             if (locusCount > 1) {
-                SnpAssociationInteractionForm snpAssociationInteractionForm =
-                        snpInteractionAssociationService.createSnpAssociationInteractionForm(associationToView);
-                model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+                SnpAssociationForm form = createForm(associationToView, snpInteractionAssociationService);
+                model.addAttribute("snpAssociationInteractionForm", form);
                 return "edit_snp_interaction_association";
             }
             else {
 
                 // Create form and return to user
-                SnpAssociationForm snpAssociationForm = singleSnpMultiSnpAssociationService.createSnpAssociationForm(
-                        associationToView);
-                model.addAttribute("snpAssociationForm", snpAssociationForm);
-
+                SnpAssociationForm form = createForm(associationToView, singleSnpMultiSnpAssociationService);
+                model.addAttribute("snpAssociationForm", form);
 
                 // If editing multi-snp haplotype
                 if (riskAlleles.size() > 1) {
@@ -1536,5 +1531,17 @@ public class AssociationController {
 
         return result.hasErrors();
     }
+
+    /**
+     * Create a form from association details
+     *
+     * @param association Association to create form from
+     * @param service     Service to create form
+     */
+    private SnpAssociationForm createForm(Association association, SnpAssociationFormService service) {
+        SnpAssociationForm form = service.createForm(association);
+        return form;
+    }
+
 }
 
