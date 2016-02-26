@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.builder;
 
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
@@ -103,6 +104,11 @@ public class StudyBuilder {
 
     public StudyBuilder setHousekeeping(Housekeeping housekeeping) {
         study.setHousekeeping(housekeeping);
+        return this;
+    }
+
+    public StudyBuilder setAssociations(Collection<Association> associations){
+        study.setAssociations(associations);
         return this;
     }
 
