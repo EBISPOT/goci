@@ -25,14 +25,17 @@ public class StudyOperationsService {
     private AssociationRepository associationRepository;
     private MailService mailService;
     private HousekeepingRepository housekeepingRepository;
+    private PublishStudyCheckService publishStudyCheckService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
                                   MailService mailService,
-                                  HousekeepingRepository housekeepingRepository) {
+                                  HousekeepingRepository housekeepingRepository,
+                                  PublishStudyCheckService publishStudyCheckService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
+        this.publishStudyCheckService = publishStudyCheckService;
     }
 
     /**
@@ -44,25 +47,18 @@ public class StudyOperationsService {
      */
     public String updateStatus(CurationStatus newStatus, Study study, CurationStatus currentStudyStatus) {
 
-        String message = null;
         Housekeeping housekeeping = study.getHousekeeping();
-
+        String message = null;
         // If the status has changed
         if (newStatus != null && newStatus != currentStudyStatus) {
             switch (newStatus.getStatus()) {
                 case "Publish study":
-                    // For the study check all SNPs have been checked
-                    Collection<Association> associations = associationRepository.findByStudyId(study.getId());
-                    int snpsNotApproved = studyAssociationCheck(associations);
 
-                    if (snpsNotApproved == 1) {
-                        message = "Some SNP associations have not been checked for study: "
-                                + study.getAuthor() + ", "
-                                + " pubmed = " + study.getPubmedId()
-                                + ", please review before changing the status to "
-                                + newStatus.getStatus();
-                    }
-                    else {
+                    // Run pre-publish checks
+                    Collection<Association> associations = associationRepository.findByStudyId(study.getId());
+                    message = publishStudyCheckService.runChecks(study, associations);
+
+                    if (message == null) {
                         // If there is no existing publish date then update
                         if (study.getHousekeeping().getCatalogPublishDate() == null) {
                             Date publishDate = new Date();
@@ -70,6 +66,10 @@ public class StudyOperationsService {
                         }
                         mailService.sendEmailNotification(study, newStatus.getStatus());
                         housekeeping.setCurationStatus(newStatus);
+                    }
+                    // restore previous status
+                    else {
+                        housekeeping.setCurationStatus(currentStudyStatus);
                     }
                     break;
 
@@ -82,33 +82,9 @@ public class StudyOperationsService {
                     housekeeping.setCurationStatus(newStatus);
                     break;
             }
+            // Save changes
+            housekeepingRepository.save(housekeeping);
         }
-
-        // If error was identified restore previous status
-        if (message != null) {
-            housekeeping.setCurationStatus(currentStudyStatus);
-        }
-
-        // Save changes
-        housekeepingRepository.save(housekeeping);
-
         return message;
-    }
-
-    /**
-     * Check SNPs have been approved
-     *
-     * @param associations All associations found for a study
-     */
-    public int studyAssociationCheck(Collection<Association> associations) {
-        int snpsNotApproved = 0;
-        for (Association association : associations) {
-            // If we have one that is not checked set value
-            if (!association.getSnpApproved()) {
-                snpsNotApproved = 1;
-            }
-        }
-
-        return snpsNotApproved;
     }
 }
