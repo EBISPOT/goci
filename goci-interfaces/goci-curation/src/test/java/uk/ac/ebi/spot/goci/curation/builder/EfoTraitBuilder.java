@@ -15,7 +15,7 @@ import java.util.Collection;
  */
 public class EfoTraitBuilder {
 
-    private EfoTrait efoTrait;
+    private EfoTrait efoTrait = new EfoTrait();
 
     public EfoTraitBuilder setId(Long id) {
         efoTrait.setId(id);
