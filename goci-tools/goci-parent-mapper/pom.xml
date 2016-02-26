@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-parent-mapper</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>GOCI Parent Mapper</name>
@@ -36,21 +36,21 @@
             <artifactId>goci-utils</artifactId>
         </dependency>
 
-    <dependency>
-        <groupId>uk.ac.ebi.spot</groupId>
-        <artifactId>goci-ontology</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
 
 
-    <dependency>
-        <groupId>net.sourceforge.owlapi</groupId>
-        <artifactId>owlapi-distribution</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+        </dependency>
 
-    <dependency>
-        <groupId>com.hermit-reasoner</groupId>
-        <artifactId>org.semanticweb.hermit</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>com.hermit-reasoner</groupId>
+            <artifactId>org.semanticweb.hermit</artifactId>
+        </dependency>
     </dependencies>
 
 

@@ -37,6 +37,7 @@ import java.util.Map;
 @SpringBootApplication
 public class ParentMappingApplication {
 
+
     @Autowired
     private TermLoadingService termLoadingService;
 
@@ -45,6 +46,9 @@ public class ParentMappingApplication {
 
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
+
+//    @Autowired
+//    private ReasonedOntologyLoader ontologyLoader;
 
     private static File outputFile;
 
@@ -135,9 +139,15 @@ public class ParentMappingApplication {
 
 
     void doMappingsExport(File mappingsFile) throws IOException {
+        getLog().debug("Collecting all traits from the database");
         Map<String, List<TraitEntity>> unmappedTraits = termLoadingService.getTraits();
+
+        getLog().debug("Successfully retrieved " + unmappedTraits.keySet().size() + " unmapped traits");
         List<TraitEntity> mappedTraits = parentMappingService.mapTraits(unmappedTraits);
+
+        getLog().debug("All traits mapped");
         String[][] data = transformMappings(mappedTraits);
+        getLog().debug("Ready to write to file");
         catalogSpreadsheetExporter.writeToFile(data, mappingsFile);
     }
 
