@@ -29,7 +29,7 @@ import java.util.List;
  *         Assumes we only have one locus for associations of type: single and multi-snp haplotypes
  */
 @Service
-public class SingleSnpMultiSnpAssociationService {
+public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormService {
 
     // Repositories
     private AssociationRepository associationRepository;
@@ -51,7 +51,7 @@ public class SingleSnpMultiSnpAssociationService {
     }
 
 
-    public Association createAssociation(SnpAssociationForm snpAssociationForm) {
+    @Override public Association createAssociation(SnpAssociationForm form) {
 
         Association association = new Association();
 
@@ -178,7 +178,7 @@ public class SingleSnpMultiSnpAssociationService {
 
 
     // Creates form which we can then return to view for editing etc.
-    public SnpAssociationForm createSnpAssociationForm(Association association) {
+    @Override public SnpAssociationForm createForm(Association association) {
 
         SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
 

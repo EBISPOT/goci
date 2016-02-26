@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
@@ -29,7 +30,7 @@ import java.util.List;
  *         Used only for SNP X SNP interaction associations
  */
 @Service
-public class SnpInteractionAssociationService {
+public class SnpInteractionAssociationService implements SnpAssociationFormService {
 
     // Repositories
     private LocusRepository locusRepository;
@@ -50,7 +51,7 @@ public class SnpInteractionAssociationService {
         this.lociAttributesService = lociAttributesService;
     }
 
-    public Association createAssociation(SnpAssociationInteractionForm snpAssociationInteractionForm) {
+    @Override public Association createAssociation(SnpAssociationForm form) {
 
         Association association = new Association();
 
@@ -156,7 +157,7 @@ public class SnpInteractionAssociationService {
     }
 
     // Create a form to return to view from Association model object
-    public SnpAssociationInteractionForm createSnpAssociationInteractionForm(Association association) {
+    @Override public SnpAssociationInteractionForm createForm(Association association) {
 
         // Create form
         SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
