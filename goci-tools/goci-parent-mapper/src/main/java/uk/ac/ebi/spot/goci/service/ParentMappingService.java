@@ -40,71 +40,31 @@ public class ParentMappingService {
     public List<TraitEntity> mapTraits(Map<String, List<TraitEntity>> unmappedTraits) {
         List<TraitEntity> mappedTraits = new ArrayList<>();
 
-//        if(ontologyLoader.isReady()){
-//            getLog().debug("Mapping " + unmappedTraits.keySet().size() + " traits");
-//            for(String uri : unmappedTraits.keySet()){
-//                getLog().debug("Acquiring mapping for trait " + uri);
-//                String map = findParent(uri);
-//                for(TraitEntity trait : unmappedTraits.get(uri)) {
-//                    trait.setParentUri(map);
-//                    trait.setParentName(ParentList.PARENT_URI.get(map));
-//                    mappedTraits.add(trait);
-//                }
-//            }
-//
-//        }
-//        else {
-//            getLog().debug("OntologyLoader not ready yet");
-//            try {
-//                ontologyLoader.waitUntilReady();
-//                getLog().debug("Now the OntologyLoader is ready");
-//                mappedTraits = mapTraits(unmappedTraits);
-//
-//            }
-//            catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-//        try {
-//            ontologyLoader.waitUntilReady();
-//        }
-//        catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        getLog().debug("Mapping " + unmappedTraits.keySet().size() + " traits");
-//        for(String uri : unmappedTraits.keySet()){
-//            getLog().debug("Acquiring mapping for trait " + uri);
-//            String map = findParent(uri);
-//            for(TraitEntity trait : unmappedTraits.get(uri)) {
-//                trait.setParentUri(map);
-//                trait.setParentName(ParentList.PARENT_URI.get(map));
-//                mappedTraits.add(trait);
-//            }
-//        }
-
-            while(!ontologyLoader.isReady()){
-                try {
-                    getLog().debug("Going to put this thread to sleep for 2s");
-                    Thread.sleep(2000);      //1000 milliseconds is one second.
-
-                } catch(InterruptedException ex) {
-                    Thread.currentThread().interrupt();
+        if(ontologyLoader.isReady()){
+            getLog().debug("Mapping " + unmappedTraits.keySet().size() + " traits");
+            for(String uri : unmappedTraits.keySet()){
+                getLog().debug("Acquiring mapping for trait " + uri);
+                String map = findParent(uri);
+                for(TraitEntity trait : unmappedTraits.get(uri)) {
+                    trait.setParentUri(map);
+                    trait.setParentName(ParentList.PARENT_URI.get(map));
+                    mappedTraits.add(trait);
                 }
             }
-        getLog().debug("Mapping " + unmappedTraits.keySet().size() + " traits");
-                for(String uri : unmappedTraits.keySet()){
-                    getLog().debug("Acquiring mapping for trait " + uri);
-                    String map = findParent(uri);
-                    for(TraitEntity trait : unmappedTraits.get(uri)) {
-                        trait.setParentUri(map);
-                        trait.setParentName(ParentList.PARENT_URI.get(map));
-                        mappedTraits.add(trait);
-                    }
-                }
 
+        }
+        else {
+            getLog().debug("OntologyLoader not ready yet");
+            try {
+                ontologyLoader.waitUntilReady();
+                getLog().debug("Now the OntologyLoader is ready");
+                mappedTraits = mapTraits(unmappedTraits);
 
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         return mappedTraits;
     }

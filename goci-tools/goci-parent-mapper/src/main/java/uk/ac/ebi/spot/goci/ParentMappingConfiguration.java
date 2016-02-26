@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
@@ -22,7 +21,7 @@ public class ParentMappingConfiguration {
     private Resource efoResource;
 
 
-    @Bean(name = "parentTermOntologyLoader") OntologyLoader ontologyLoader() {
+    @Bean(name = "parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
         loader.setOntologyName("efo");
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));

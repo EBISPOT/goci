@@ -158,7 +158,7 @@ public class ParentMappingApplication {
 
         lines.add(header);
         for(TraitEntity trait : mappedTraits){
-            String[] line = new String[4];
+            String[] line = new String[5];
 
             line[0] = trait.getTrait();
             line[1] = trait.getEfoTerm();
