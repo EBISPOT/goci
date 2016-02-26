@@ -4,6 +4,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
 
@@ -66,4 +67,28 @@ public class CheckEfoTermAssignment {
 
         return efoTermsAssigned;
     }
+
+    /**
+     * Check study to ensure it has EFO trait assigned
+     *
+     * @param study
+     */
+    public Boolean checkStudyEfoAssignment(Study study) {
+        Boolean efoTermsAssigned = true;
+
+        // If we have one that is not checked set value
+        Collection<EfoTrait> studyEfoTraits = study.getEfoTraits();
+
+        if (studyEfoTraits == null) {
+            efoTermsAssigned = false;
+        }
+        else {
+            if (studyEfoTraits.isEmpty()) {
+                efoTermsAssigned = false;
+            }
+        }
+
+        return efoTermsAssigned;
+    }
+
 }

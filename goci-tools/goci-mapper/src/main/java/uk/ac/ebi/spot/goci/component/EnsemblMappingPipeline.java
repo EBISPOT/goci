@@ -330,7 +330,13 @@ public class EnsemblMappingPipeline {
                 JSONObject gene_json_object = overlap_gene_result.getJSONObject(i);
 
                 String geneName = gene_json_object.getString("external_name");
-                getEnsemblMappingResult().addOverlappingGene(geneName);
+
+                if (source.equals(getNcbiSource())) {
+                    getEnsemblMappingResult().addNcbiOverlappingGene(geneName);
+                }
+                else {
+                    getEnsemblMappingResult().addEnsemblOverlappingGene(geneName);
+                }
             }
             addGenomicContext(overlap_gene_result, snp_location, source, "overlap");
         }
@@ -366,7 +372,7 @@ public class EnsemblMappingPipeline {
             boolean closest_found = addGenomicContext(overlap_gene_result, snp_location, source, type);
             if (!closest_found) {
                 if (position_up > chr_start) {
-                    JSONArray closest_gene = getNearestGene(chromosome, position, pos_up, 1, rest_opt, type);
+                    JSONArray closest_gene = getNearestGene(chromosome, position, pos_up, 1, rest_opt, type, source);
                     if (closest_gene.length() > 0) {
                         addGenomicContext(closest_gene, snp_location, source, type);
                     }
@@ -408,7 +414,7 @@ public class EnsemblMappingPipeline {
                 if (!closest_found) {
                     if (position_down != chr_end) {
                         JSONArray closest_gene =
-                                getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type);
+                                getNearestGene(chromosome, position, pos_down, chr_end, rest_opt, type, source);
                         if (closest_gene.length() > 0) {
                             addGenomicContext(closest_gene, snp_location, source, type);
                         }
@@ -451,10 +457,19 @@ public class EnsemblMappingPipeline {
                 String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
-                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
-                        gene_name ==
-                                null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
-                    continue;
+                if (source.equals(getNcbiSource())) {
+                    if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
+                            gene_name ==
+                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
+                }
+                else {
+                    if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                            gene_name ==
+                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
                 }
 
                 int distance = 0;
@@ -481,11 +496,21 @@ public class EnsemblMappingPipeline {
             int distance = 0;
 
             if (intergenic) {
-                if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
-                        gene_name ==
-                                null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
-                    continue;
+                if (source.equals(getNcbiSource())) {
+                    if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
+                            gene_name ==
+                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
                 }
+                else {
+                    if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                            gene_name ==
+                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                        continue;
+                    }
+                }
+
                 int pos = Integer.parseInt(position);
                 if (type.equals("upstream")) {
                     distance = pos - json_gene.getInt("end");
@@ -539,6 +564,7 @@ public class EnsemblMappingPipeline {
      *                     of the chromosome)
      * @param rest_opt     the extra parameters to add at the end of the REST call url (inherited from other methods)
      * @param type         the type of genomic context (i.e. overlap, upstream, downstream)
+     * @param source
      * @return A JSONArray object containing a single JSONObject corresponding to the closest gene (upstream or
      * downstream) over the 100kb range
      */
@@ -547,7 +573,7 @@ public class EnsemblMappingPipeline {
                                      String position,
                                      int boundary,
                                      String rest_opt,
-                                     String type) throws EnsemblRestIOException {
+                                     String type, String source) throws EnsemblRestIOException {
 
         int position1 = Integer.parseInt(position);
         int position2 = Integer.parseInt(position);
@@ -589,10 +615,19 @@ public class EnsemblMappingPipeline {
                     String gene_id = json_gene.getString("id");
                     String gene_name = json_gene.getString("external_name");
 
-                    if ((gene_name != null && getEnsemblMappingResult().getOverlappingGenes().contains(gene_name)) ||
-                            gene_name ==
-                                    null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
-                        continue;
+                    if (source.equals(getNcbiSource())) {
+                        if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
+                                gene_name ==
+                                        null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                            continue;
+                        }
+                    }
+                    else {
+                        if ((gene_name != null && getEnsemblMappingResult().getEnsemblOverlappingGene().contains(gene_name)) ||
+                                gene_name ==
+                                        null) { // Skip overlapping genes which also overlap upstream and/or downstream of the variant
+                            continue;
+                        }
                     }
 
                     int distance = 0;
@@ -611,14 +646,16 @@ public class EnsemblMappingPipeline {
                 if (closest_gene.length() == 0 && new_pos != boundary) {
                     // Recursive code to find the nearest upstream or downstream gene
                     closest_gene =
-                            this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
+                            this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type,
+                                                source);
                 }
             }
         }
         else {
             if (new_pos != boundary) {
                 // Recursive code to find the nearest upstream or downstream gene
-                closest_gene = this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type);
+                closest_gene = this.getNearestGene(chromosome, snp_position, new_pos_string, boundary, rest_opt, type,
+                                                   source);
             }
         }
         return closest_gene;
