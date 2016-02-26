@@ -30,7 +30,7 @@ public class TermLoadingService {
                     " SELECT DISTINCT D.TRAIT, E.TRAIT, E.URI " +
                     " FROM DISEASE_TRAIT D " +
                     " JOIN STUDY_DISEASE_TRAIT SD ON SD.DISEASE_TRAIT_ID = D.ID " +
-                    " JOIN ASSOICATION A ON A.STUDY_ID = SD.STUDY_ID " +
+                    " JOIN ASSOCIATION A ON A.STUDY_ID = SD.STUDY_ID " +
                     " JOIN ASSOCIATION_EFO_TRAIT AE ON AE.ASSOCIATION_ID = A.ID " +
                     " JOIN EFO_TRAIT E ON E.ID = AE.EFO_TRAIT_ID";
 
