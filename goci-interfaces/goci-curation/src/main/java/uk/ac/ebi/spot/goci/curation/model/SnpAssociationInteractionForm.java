@@ -12,181 +12,61 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Service class to deal with form used by curators to enter snp/association details for interaction studies
+ *         DTO object that represents form used to enter interaction association information
  */
-public class SnpAssociationInteractionForm {
-
-    // Holds ID of association so we can create a link on form to edit the
-    // linked association
-    private Long associationId;
-
-    private String pvalueText;
-
-    private Float orPerCopyNum;
-
-    private String snpType;
-
-    private Boolean snpApproved = false;
-
-    private Boolean orType;
-
-    private Integer pvalueMantissa;
-
-    private Integer pvalueExponent;
-
-    private Float orPerCopyRecip;
-
-    private Float orPerCopyStdError;
-
-    private String orPerCopyRange;
-
-    private String orPerCopyRecipRange;
-
-    private String orPerCopyUnitDescr;
+public class SnpAssociationInteractionForm extends SnpAssociationForm {
 
     private List<SnpFormColumn> snpFormColumns = new ArrayList<>();
 
-    private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
-
-    private Collection<GenomicContext> genomicContexts = new ArrayList<>();
-
-    private Collection<EfoTrait> efoTraits = new ArrayList<>();
-
     private Integer numOfInteractions;
-
-    private String riskFrequency;
-
 
     // Constructors
     public SnpAssociationInteractionForm() {
     }
 
     public SnpAssociationInteractionForm(Long associationId,
+                                         String riskFrequency,
                                          String pvalueText,
-                                         Float orPerCopyNum,
+                                         Integer pvalueMantissa,
+                                         Integer pvalueExponent,
+                                         List<SnpMappingForm> snpMappingForms,
+                                         Collection<EfoTrait> efoTraits,
+                                         Collection<GenomicContext> genomicContexts,
                                          String snpType,
                                          Boolean snpApproved,
                                          Boolean orType,
-                                         Integer pvalueMantissa,
-                                         Integer pvalueExponent,
+                                         Float standardError,
+                                         String range,
+                                         String description,
+                                         Float orPerCopyNum,
                                          Float orPerCopyRecip,
-                                         Float orPerCopyStdError,
-                                         String orPerCopyRange,
                                          String orPerCopyRecipRange,
-                                         String orPerCopyUnitDescr,
-                                         List<SnpFormColumn> snpFormColumns,
-                                         List<SnpMappingForm> snpMappingForms,
-                                         Collection<GenomicContext> genomicContexts,
-                                         Collection<EfoTrait> efoTraits,
-                                         Integer numOfInteractions,
-                                         String riskFrequency) {
-        this.associationId = associationId;
-        this.pvalueText = pvalueText;
-        this.orPerCopyNum = orPerCopyNum;
-        this.snpType = snpType;
-        this.snpApproved = snpApproved;
-        this.orType = orType;
-        this.pvalueMantissa = pvalueMantissa;
-        this.pvalueExponent = pvalueExponent;
-        this.orPerCopyRecip = orPerCopyRecip;
-        this.orPerCopyStdError = orPerCopyStdError;
-        this.orPerCopyRange = orPerCopyRange;
-        this.orPerCopyRecipRange = orPerCopyRecipRange;
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+                                         Float betaNum,
+                                         String betaUnit,
+                                         String betaDirection,
+                                         List<SnpFormColumn> snpFormColumns, Integer numOfInteractions) {
+        super(associationId,
+              riskFrequency,
+              pvalueText,
+              pvalueMantissa,
+              pvalueExponent,
+              snpMappingForms,
+              efoTraits,
+              genomicContexts,
+              snpType,
+              snpApproved,
+              orType,
+              standardError,
+              range,
+              description,
+              orPerCopyNum,
+              orPerCopyRecip,
+              orPerCopyRecipRange,
+              betaNum,
+              betaUnit,
+              betaDirection);
         this.snpFormColumns = snpFormColumns;
-        this.snpMappingForms = snpMappingForms;
-        this.genomicContexts = genomicContexts;
-        this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
-        this.riskFrequency = riskFrequency;
-    }
-
-    public Long getAssociationId() {
-        return associationId;
-    }
-
-    public void setAssociationId(Long associationId) {
-        this.associationId = associationId;
-    }
-
-    public String getPvalueText() {
-        return pvalueText;
-    }
-
-    public void setPvalueText(String pvalueText) {
-        this.pvalueText = pvalueText;
-    }
-
-    public Float getOrPerCopyNum() {
-        return orPerCopyNum;
-    }
-
-    public void setOrPerCopyNum(Float orPerCopyNum) {
-        this.orPerCopyNum = orPerCopyNum;
-    }
-
-    public String getSnpType() {
-        return snpType;
-    }
-
-    public void setSnpType(String snpType) {
-        this.snpType = snpType;
-    }
-
-    public Integer getPvalueMantissa() {
-        return pvalueMantissa;
-    }
-
-    public void setPvalueMantissa(Integer pvalueMantissa) {
-        this.pvalueMantissa = pvalueMantissa;
-    }
-
-    public Integer getPvalueExponent() {
-        return pvalueExponent;
-    }
-
-    public void setPvalueExponent(Integer pvalueExponent) {
-        this.pvalueExponent = pvalueExponent;
-    }
-
-    public Float getOrPerCopyRecip() {
-        return orPerCopyRecip;
-    }
-
-    public void setOrPerCopyRecip(Float orPerCopyRecip) {
-        this.orPerCopyRecip = orPerCopyRecip;
-    }
-
-    public Float getOrPerCopyStdError() {
-        return orPerCopyStdError;
-    }
-
-    public void setOrPerCopyStdError(Float orPerCopyStdError) {
-        this.orPerCopyStdError = orPerCopyStdError;
-    }
-
-    public String getOrPerCopyRange() {
-        return orPerCopyRange;
-    }
-
-    public void setOrPerCopyRange(String orPerCopyRange) {
-        this.orPerCopyRange = orPerCopyRange;
-    }
-
-    public String getOrPerCopyRecipRange() {
-        return orPerCopyRecipRange;
-    }
-
-    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
-        this.orPerCopyRecipRange = orPerCopyRecipRange;
-    }
-
-    public String getOrPerCopyUnitDescr() {
-        return orPerCopyUnitDescr;
-    }
-
-    public void setOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
     }
 
     public List<SnpFormColumn> getSnpFormColumns() {
@@ -197,30 +77,6 @@ public class SnpAssociationInteractionForm {
         this.snpFormColumns = snpFormColumns;
     }
 
-    public List<SnpMappingForm> getSnpMappingForms() {
-        return snpMappingForms;
-    }
-
-    public void setSnpMappingForms(List<SnpMappingForm> snpMappingForms) {
-        this.snpMappingForms = snpMappingForms;
-    }
-
-    public Collection<GenomicContext> getGenomicContexts() {
-        return genomicContexts;
-    }
-
-    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
-        this.genomicContexts = genomicContexts;
-    }
-
-    public Collection<EfoTrait> getEfoTraits() {
-        return efoTraits;
-    }
-
-    public void setEfoTraits(Collection<EfoTrait> efoTraits) {
-        this.efoTraits = efoTraits;
-    }
-
     public Integer getNumOfInteractions() {
         return numOfInteractions;
     }
@@ -228,29 +84,4 @@ public class SnpAssociationInteractionForm {
     public void setNumOfInteractions(Integer numOfInteractions) {
         this.numOfInteractions = numOfInteractions;
     }
-
-    public Boolean getSnpApproved() {
-        return snpApproved;
-    }
-
-    public void setSnpApproved(Boolean snpApproved) {
-        this.snpApproved = snpApproved;
-    }
-
-    public Boolean getOrType() {
-        return orType;
-    }
-
-    public void setOrType(Boolean orType) {
-        this.orType = orType;
-    }
-
-    public String getRiskFrequency() {
-        return riskFrequency;
-    }
-
-    public void setRiskFrequency(String riskFrequency) {
-        this.riskFrequency = riskFrequency;
-    }
-
 }
