@@ -22,7 +22,7 @@ public class ParentMappingConfiguration {
     private Resource efoResource;
 
 
-    @Bean OntologyLoader ontologyLoader() {
+    @Bean(name = "parentTermOntologyLoader") OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
         loader.setOntologyName("efo");
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));

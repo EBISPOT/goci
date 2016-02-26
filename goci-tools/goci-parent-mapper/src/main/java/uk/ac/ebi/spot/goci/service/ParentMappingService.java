@@ -5,6 +5,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.ParentList;
 import uk.ac.ebi.spot.goci.model.TraitEntity;
@@ -31,7 +32,7 @@ public class ParentMappingService {
     private ReasonedOntologyLoader ontologyLoader;
 
     @Autowired
-    public ParentMappingService(ReasonedOntologyLoader ontologyLoader){
+    public ParentMappingService(@Qualifier("parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader){
           this.ontologyLoader = ontologyLoader;
 
     }
