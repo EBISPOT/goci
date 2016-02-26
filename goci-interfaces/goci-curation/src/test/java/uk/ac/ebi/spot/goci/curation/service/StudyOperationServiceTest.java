@@ -19,7 +19,6 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
@@ -47,6 +46,9 @@ public class StudyOperationServiceTest {
 
     @Mock
     private HousekeepingRepository housekeepingRepository;
+
+    @Mock
+    private PublishStudyCheckService publishStudyCheckService;
 
     private StudyOperationsService studyOperationsService;
 
@@ -91,7 +93,7 @@ public class StudyOperationServiceTest {
     public void setUpMock() {
         setStudyOperationsService(new StudyOperationsService(associationRepository,
                                                              mailService,
-                                                             housekeepingRepository));
+                                                             housekeepingRepository, publishStudyCheckService));
 
     }
 
@@ -115,8 +117,9 @@ public class StudyOperationServiceTest {
 
         // Test changing status
         getStudyOperationsService().updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        assertEquals("Study status must be " + NEW_STATUS3.getStatus(),STU1.getHousekeeping().getCurationStatus(), NEW_STATUS3);
+        assertEquals("Study status must be " + NEW_STATUS3.getStatus(),
+                     STU1.getHousekeeping().getCurationStatus(),
+                     NEW_STATUS3);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
@@ -133,9 +136,10 @@ public class StudyOperationServiceTest {
 
         // Test changing status to "Level 1 curation done"
         getStudyOperationsService().updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS1.getStatus());
-        assertEquals("Study status must be " + NEW_STATUS1.getStatus(),STU1.getHousekeeping().getCurationStatus(), NEW_STATUS1);
+        assertEquals("Study status must be " + NEW_STATUS1.getStatus(),
+                     STU1.getHousekeeping().getCurationStatus(),
+                     NEW_STATUS1);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
@@ -148,12 +152,15 @@ public class StudyOperationServiceTest {
         associations.add(ASS2);
 
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
 
         // Test changing status to "Publish study"
         getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
-        assertEquals("Study status must be " + NEW_STATUS2.getStatus() ,STU1.getHousekeeping().getCurationStatus(), NEW_STATUS2);
+        assertEquals("Study status must be " + NEW_STATUS2.getStatus(),
+                     STU1.getHousekeeping().getCurationStatus(),
+                     NEW_STATUS2);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
 
     }
@@ -167,6 +174,8 @@ public class StudyOperationServiceTest {
         associations.add(ASS3);
 
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(
+                "Some SNP associations have not been approved for study");
 
         // Test changing status to "Publish study" where SNPs are unapproved
         getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
@@ -178,14 +187,6 @@ public class StudyOperationServiceTest {
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
-    @Test
-    public void testStudyAssociationCheck() {
-        Collection<Association> associations = Arrays.asList(ASS1, ASS2);
-        assertEquals(0, getStudyOperationsService().studyAssociationCheck(associations));
-
-        Collection<Association> associations1 = Arrays.asList(ASS1, ASS3);
-        assertEquals(1, getStudyOperationsService().studyAssociationCheck(associations1));
-    }
 
     // Class to test, getter and setters
     public StudyOperationsService getStudyOperationsService() {
