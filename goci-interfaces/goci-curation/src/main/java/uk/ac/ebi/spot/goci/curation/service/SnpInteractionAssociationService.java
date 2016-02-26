@@ -30,7 +30,7 @@ import java.util.List;
  *         Used only for SNP X SNP interaction associations
  */
 @Service
-public class SnpInteractionAssociationService implements SnpAssociationFormService {
+public class SnpInteractionAssociationService implements SnpAssociationFormService  {
 
     // Repositories
     private LocusRepository locusRepository;
@@ -51,113 +51,8 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         this.lociAttributesService = lociAttributesService;
     }
 
-    @Override public Association createAssociation(SnpAssociationForm form) {
-
-        Association association = new Association();
-
-        // Set simple string, boolean and float association attributes
-        association.setPvalueText(snpAssociationInteractionForm.getPvalueText());
-        association.setOrType(snpAssociationInteractionForm.getOrType());
-        association.setSnpType(snpAssociationInteractionForm.getSnpType());
-        association.setSnpApproved(snpAssociationInteractionForm.getSnpApproved());
-        association.setOrPerCopyNum(snpAssociationInteractionForm.getOrPerCopyNum());
-        association.setOrPerCopyRecip(snpAssociationInteractionForm.getOrPerCopyRecip());
-        association.setRange(snpAssociationInteractionForm.getOrPerCopyRange());
-        association.setOrPerCopyRecipRange(snpAssociationInteractionForm.getOrPerCopyRecipRange());
-        association.setStandardError(snpAssociationInteractionForm.getOrPerCopyStdError());
-        association.setDescription(snpAssociationInteractionForm.getOrPerCopyUnitDescr());
-        association.setRiskFrequency(snpAssociationInteractionForm.getRiskFrequency());
-
-        // Set multi-snp and snp interaction checkboxes
-        association.setMultiSnpHaplotype(false);
-        association.setSnpInteraction(true);
-
-        // Add collection of EFO traits
-        association.setEfoTraits(snpAssociationInteractionForm.getEfoTraits());
-
-        // Set mantissa and exponent
-        association.setPvalueMantissa(snpAssociationInteractionForm.getPvalueMantissa());
-        association.setPvalueExponent(snpAssociationInteractionForm.getPvalueExponent());
-
-        // Check for existing loci, when editing delete any existing loci and risk alleles
-        // They will be recreated in next for loop
-        if (snpAssociationInteractionForm.getAssociationId() != null) {
-
-            Association associationUserIsEditing =
-                    associationRepository.findOne(snpAssociationInteractionForm.getAssociationId());
-            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
-            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
-
-            if (associationLoci != null) {
-                for (Locus locus : associationLoci) {
-                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
-                }
-                for (Locus locus : associationLoci) {
-                    lociAttributesService.deleteLocus(locus);
-                }
-                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
-                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
-                }
-            }
-        }
-
-        // For each column create a loci
-        Collection<Locus> loci = new ArrayList<>();
-        for (SnpFormColumn col : snpAssociationInteractionForm.getSnpFormColumns()) {
-
-            Locus locus = new Locus();
-            locus.setDescription("SNP x SNP interaction");
-
-            // Set locus genes
-            Collection<String> authorReportedGenes = col.getAuthorReportedGenes();
-            Collection<Gene> locusGenes = lociAttributesService.createGene(authorReportedGenes);
-            locus.setAuthorReportedGenes(locusGenes);
-
-            // Create SNP
-            String curatorEnteredSNP = col.getSnp();
-            SingleNucleotidePolymorphism snp = lociAttributesService.createSnp(curatorEnteredSNP);
-
-            // One risk allele per locus
-            String curatorEnteredRiskAllele = col.getStrongestRiskAllele();
-            RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
-            Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
-
-            // Set risk allele attributes
-            riskAllele.setGenomeWide(col.getGenomeWide());
-            riskAllele.setLimitedList(col.getLimitedList());
-            riskAllele.setRiskFrequency(col.getRiskFrequency());
-
-            // Check for a proxy and if we have one create a proxy snp
-            Collection<String> curatorEnteredProxySnps = col.getProxySnps();
-            if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
-
-                Collection<SingleNucleotidePolymorphism> riskAlleleProxySnps = new ArrayList<>();
-
-                for (String curatorEnteredProxySnp : curatorEnteredProxySnps) {
-                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
-                    riskAlleleProxySnps.add(proxySnp);
-                }
-
-                riskAllele.setProxySnps(riskAlleleProxySnps);
-            }
-
-            // Link risk allele to locus
-            locusRiskAlleles.add(riskAllele);
-            locus.setStrongestRiskAlleles(locusRiskAlleles);
-
-            // Save our newly created locus
-            locusRepository.save(locus);
-
-            // Add locus to collection and link to our association
-            loci.add(locus);
-
-        }
-        association.setLoci(loci);
-        return association;
-    }
-
     // Create a form to return to view from Association model object
-    @Override public SnpAssociationInteractionForm createForm(Association association) {
+    @Override public SnpAssociationForm createForm(Association association) {
 
         // Create form
         SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
@@ -172,10 +67,10 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationInteractionForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
-        snpAssociationInteractionForm.setOrPerCopyStdError(association.getStandardError());
-        snpAssociationInteractionForm.setOrPerCopyRange(association.getRange());
+        snpAssociationInteractionForm.setStandardError(association.getStandardError());
+        snpAssociationInteractionForm.setRange(association.getRange());
         snpAssociationInteractionForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationInteractionForm.setOrPerCopyUnitDescr(association.getDescription());
+        snpAssociationInteractionForm.setDescription(association.getDescription());
         snpAssociationInteractionForm.setRiskFrequency(association.getRiskFrequency());
 
         // Add collection of Efo traits
@@ -269,6 +164,111 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         snpAssociationInteractionForm.setSnpFormColumns(snpFormColumns);
         snpAssociationInteractionForm.setNumOfInteractions(snpFormColumns.size());
         return snpAssociationInteractionForm;
+    }
+
+    public Association createAssociation(SnpAssociationInteractionForm form) {
+
+        Association association = new Association();
+
+        // Set simple string, boolean and float association attributes
+        association.setPvalueText(form.getPvalueText());
+        association.setOrType(form.getOrType());
+        association.setSnpType(form.getSnpType());
+        association.setSnpApproved(form.getSnpApproved());
+        association.setOrPerCopyNum(form.getOrPerCopyNum());
+        association.setOrPerCopyRecip(form.getOrPerCopyRecip());
+        association.setRange(form.getRange());
+        association.setOrPerCopyRecipRange(form.getOrPerCopyRecipRange());
+        association.setStandardError(form.getStandardError());
+        association.setDescription(form.getDescription());
+        association.setRiskFrequency(form.getRiskFrequency());
+
+        // Set multi-snp and snp interaction checkboxes
+        association.setMultiSnpHaplotype(false);
+        association.setSnpInteraction(true);
+
+        // Add collection of EFO traits
+        association.setEfoTraits(form.getEfoTraits());
+
+        // Set mantissa and exponent
+        association.setPvalueMantissa(form.getPvalueMantissa());
+        association.setPvalueExponent(form.getPvalueExponent());
+
+        // Check for existing loci, when editing delete any existing loci and risk alleles
+        // They will be recreated in next for loop
+        if (form.getAssociationId() != null) {
+
+            Association associationUserIsEditing =
+                    associationRepository.findOne(form.getAssociationId());
+            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
+
+            if (associationLoci != null) {
+                for (Locus locus : associationLoci) {
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
+                }
+            }
+        }
+
+        // For each column create a loci
+        Collection<Locus> loci = new ArrayList<>();
+        for (SnpFormColumn col : form.getSnpFormColumns()) {
+
+            Locus locus = new Locus();
+            locus.setDescription("SNP x SNP interaction");
+
+            // Set locus genes
+            Collection<String> authorReportedGenes = col.getAuthorReportedGenes();
+            Collection<Gene> locusGenes = lociAttributesService.createGene(authorReportedGenes);
+            locus.setAuthorReportedGenes(locusGenes);
+
+            // Create SNP
+            String curatorEnteredSNP = col.getSnp();
+            SingleNucleotidePolymorphism snp = lociAttributesService.createSnp(curatorEnteredSNP);
+
+            // One risk allele per locus
+            String curatorEnteredRiskAllele = col.getStrongestRiskAllele();
+            RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
+            Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
+
+            // Set risk allele attributes
+            riskAllele.setGenomeWide(col.getGenomeWide());
+            riskAllele.setLimitedList(col.getLimitedList());
+            riskAllele.setRiskFrequency(col.getRiskFrequency());
+
+            // Check for a proxy and if we have one create a proxy snp
+            Collection<String> curatorEnteredProxySnps = col.getProxySnps();
+            if (curatorEnteredProxySnps != null && !curatorEnteredProxySnps.isEmpty()) {
+
+                Collection<SingleNucleotidePolymorphism> riskAlleleProxySnps = new ArrayList<>();
+
+                for (String curatorEnteredProxySnp : curatorEnteredProxySnps) {
+                    SingleNucleotidePolymorphism proxySnp = lociAttributesService.createSnp(curatorEnteredProxySnp);
+                    riskAlleleProxySnps.add(proxySnp);
+                }
+
+                riskAllele.setProxySnps(riskAlleleProxySnps);
+            }
+
+            // Link risk allele to locus
+            locusRiskAlleles.add(riskAllele);
+            locus.setStrongestRiskAlleles(locusRiskAlleles);
+
+            // Save our newly created locus
+            locusRepository.save(locus);
+
+            // Add locus to collection and link to our association
+            loci.add(locus);
+
+        }
+        association.setLoci(loci);
+        return association;
     }
 
 
