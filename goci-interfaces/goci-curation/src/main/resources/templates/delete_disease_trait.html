@@ -14,7 +14,7 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitUsed)}">
     <div class="row">

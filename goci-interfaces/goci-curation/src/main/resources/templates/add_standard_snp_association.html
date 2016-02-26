@@ -39,7 +39,7 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 
 <div class="container-fluid">
@@ -52,7 +52,7 @@
     </div>
     <!--Link back to study page -->
     <div class="col-md-10" style="margin-top:10px">
-        <div th:include="link_to_all_study_associations :: all_associations"></div>
+        <div th:include="fragments/link_to_all_study_associations :: all_associations"></div>
     </div>
 </div>
 <br/>
@@ -72,7 +72,7 @@
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </div>
-                    <div th:include="field_errors :: field_errors"></div>
+                    <div th:include="fragments/field_errors :: field_errors"></div>
 
                     <div id="association_div">
                         <div class="form-group">
@@ -298,8 +298,8 @@
                             <div>
                                 <label class="control-label">Mapping data:</label>
                             </div>
-                            <div th:include="snp_mapping :: mapping_table"></div>
-                            <div th:include="snp_genomic_context :: genomic_context_table"></div>
+                            <div th:include="fragments/snp_mapping :: mapping_table"></div>
+                            <div th:include="fragments/snp_genomic_context :: genomic_context_table"></div>
                         </div>
                     </div>
                 </form>

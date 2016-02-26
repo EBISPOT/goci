@@ -40,7 +40,7 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 
 <div class="container-fluid">
@@ -53,13 +53,13 @@
     </div>
     <!--Include errors-->
     <div class="col-md-10" style="margin-top:10px">
-        <div th:include="association_error :: association_errors"></div>
+        <div th:include="fragments/association_error :: association_errors"></div>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <div th:include="association_mapping_details :: mapping_details"></div>
+        <div th:include="fragments/association_mapping_details :: mapping_details"></div>
         <div class="col-md-10">
             <div id="editSNPForm">
 
@@ -70,7 +70,7 @@
                       th:action="@{${uri}(associationtype=standardormulti)}">
 
                     <!--Only show save button if SNP has not been approved, warn if editing approved SNP-->
-                    <div th:include="association_approval_alert :: association_approval"
+                    <div th:include="fragments/association_approval_alert :: association_approval"
                          th:if="*{#bools.isTrue(snpApproved)}"></div>
 
                     <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <div th:include="field_errors :: field_errors"></div>
+                    <div th:include="fragments/field_errors :: field_errors"></div>
 
                     <div id="association_div">
                         <div class="form-group">
@@ -337,8 +337,8 @@
                             <div>
                                 <label class="control-label">Mapping data:</label>
                             </div>
-                            <div th:include="snp_mapping :: mapping_table"></div>
-                            <div th:include="snp_genomic_context :: genomic_context_table"></div>
+                            <div th:include="fragments/snp_mapping :: mapping_table"></div>
+                            <div th:include="fragments/snp_genomic_context :: genomic_context_table"></div>
                         </div>
                     </div>
 

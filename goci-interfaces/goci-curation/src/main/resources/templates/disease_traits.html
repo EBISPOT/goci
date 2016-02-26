@@ -37,7 +37,7 @@
 </style>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <!--Alert if data is deleted-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitExists)}">

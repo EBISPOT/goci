@@ -31,7 +31,7 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <div class="container-fluid">
     <div class="row">
@@ -43,7 +43,7 @@
 </div>
 
 <!--Include filter options-->
-<div th:include="reports_filter :: yearly_search_filter"></div>
+<div th:include="fragments/reports_filter :: yearly_search_filter"></div>
 
 <div class="container-fluid">
     <div class="row">
