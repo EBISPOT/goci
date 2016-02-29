@@ -50,8 +50,8 @@ public class AssociationBatchLoaderService {
         }
         finally {
             // Delete our file
-            File fileToDelete = new File(fileName);
-            fileToDelete.deleteOnExit();
+//            File fileToDelete = new File(fileName);
+//            fileToDelete.deleteOnExit();
         }
     }
 
