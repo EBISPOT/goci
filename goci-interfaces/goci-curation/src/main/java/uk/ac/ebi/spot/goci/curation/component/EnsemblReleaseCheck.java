@@ -63,7 +63,7 @@ public class EnsemblReleaseCheck {
     /**
      * Method used to determine if there has been a new Ensembl release
      */
-    @Scheduled(cron = "0 00 20 ? * MON-FRI")
+    @Scheduled(cron = "0 00 14,20 * * *")
     public void checkRelease() throws EnsemblMappingException {
 
         // Get relevant metadata

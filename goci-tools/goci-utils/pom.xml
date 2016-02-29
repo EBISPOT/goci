@@ -43,6 +43,10 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-db-binding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
 
     </dependencies>
 

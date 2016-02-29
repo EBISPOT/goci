@@ -34,6 +34,13 @@
 |===
 
 
+File name conventions:
+
+* v1.0 indicates the columns originally proposed by the NCBI
+* v1.0.1 indicates the addition of ontology annotations
+* eXX indicates the Ensembl release version that the data is mapped to
+* rYYYY-MM-DD indicates the date on which the GWAS Catalog was released
+
 Older versions of the GWAS Catalog, with or without ontology annotations, can be found on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/[ our FTP server].
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
