@@ -52,25 +52,6 @@ public class StudyOperationServiceTest {
 
     private StudyOperationsService studyOperationsService;
 
-    private static final Association ASS1 =
-            new AssociationBuilder().setId(800L)
-                    .setSnpApproved(true).build();
-
-    private static final Association ASS2 =
-            new AssociationBuilder().setId(801L)
-                    .setSnpApproved(true).build();
-
-    private static final Association ASS3 =
-            new AssociationBuilder().setId(803L)
-                    .setSnpApproved(false).build();
-
-    private static final Curator CURATOR1 = new CuratorBuilder().setId(803L)
-            .setEmail("gwas-dev@ebi.ac.uk")
-            .setFirstName("test")
-            .setLastName("Test")
-            .setUserName("testing")
-            .build();
-
     private static final CurationStatus NEW_STATUS1 =
             new CurationStatusBuilder().setId(804L).setStatus("Level 1 curation done").build();
 
@@ -83,17 +64,36 @@ public class StudyOperationServiceTest {
     private static final CurationStatus CURRENT_STATUS1 =
             new CurationStatusBuilder().setId(806L).setStatus("Level 2 ancestry done").build();
 
+    private static final Curator CURATOR1 = new CuratorBuilder().setId(803L)
+            .setEmail("gwas-dev@ebi.ac.uk")
+            .setFirstName("test")
+            .setLastName("Test")
+            .setUserName("testing")
+            .build();
+
     private static final Housekeeping HOUSEKEEPING1 =
             new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
 
     private static final Study STU1 =
             new StudyBuilder().setId(802L).setHousekeeping(HOUSEKEEPING1).build();
 
+    private static final Association ASS1 =
+            new AssociationBuilder().setId(800L)
+                    .setSnpApproved(true).build();
+
+    private static final Association ASS2 =
+            new AssociationBuilder().setId(801L)
+                    .setSnpApproved(true).build();
+
+    private static final Association ASS3 =
+            new AssociationBuilder().setId(803L)
+                    .setSnpApproved(false).build();
+
     @Before
     public void setUpMock() {
-        setStudyOperationsService(new StudyOperationsService(associationRepository,
-                                                             mailService,
-                                                             housekeepingRepository, publishStudyCheckService));
+        studyOperationsService = new StudyOperationsService(associationRepository,
+                                                            mailService,
+                                                            housekeepingRepository, publishStudyCheckService);
 
     }
 
@@ -103,44 +103,29 @@ public class StudyOperationServiceTest {
         assertNotNull(associationRepository);
         assertNotNull(mailService);
         assertNotNull(housekeepingRepository);
+        assertNotNull(publishStudyCheckService);
     }
 
     @Test
     public void testUpdateStatus() {
-
-        // Test interaction with association repository
-        Collection<Association> associations = new ArrayList<>();
-        associations.add(ASS1);
-        associations.add(ASS2);
-
-        when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
-
         // Test changing status
-        getStudyOperationsService().updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
+        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
         assertEquals("Study status must be " + NEW_STATUS3.getStatus(),
                      STU1.getHousekeeping().getCurationStatus(),
                      NEW_STATUS3);
-        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
-
 
     @Test
     public void testUpdateStatusToLevelOneCurationDone() {
 
-        // Test interaction with association repository
-        Collection<Association> associations = new ArrayList<>();
-        associations.add(ASS1);
-        associations.add(ASS2);
-
-        when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
-
         // Test changing status to "Level 1 curation done"
-        getStudyOperationsService().updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS1.getStatus());
+        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
         assertEquals("Study status must be " + NEW_STATUS1.getStatus(),
                      STU1.getHousekeeping().getCurationStatus(),
                      NEW_STATUS1);
-        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
     }
 
     @Test
@@ -151,22 +136,23 @@ public class StudyOperationServiceTest {
         associations.add(ASS1);
         associations.add(ASS2);
 
+        // Stub behaviour
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
 
         // Test changing status to "Publish study"
-        getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
         assertEquals("Study status must be " + NEW_STATUS2.getStatus(),
                      STU1.getHousekeeping().getCurationStatus(),
                      NEW_STATUS2);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
-
     }
 
     @Test
-    public void testUpdateStatusToPublishStudyWithUnapprovedSnps() {
+    public void testUpdateStatusToPublishStudyWithStudyThatDoesNotPassPublishCheck() {
 
         // Test interaction with association repository
         Collection<Association> associations = new ArrayList<>();
@@ -175,25 +161,16 @@ public class StudyOperationServiceTest {
 
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(
-                "Some SNP associations have not been approved for study");
+                "No EFO trait assigned and some SNP associations have not been approved for study");
 
         // Test changing status to "Publish study" where SNPs are unapproved
-        getStudyOperationsService().updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService, never()).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
         assertEquals("Study status must be " + CURRENT_STATUS1.getStatus(),
                      STU1.getHousekeeping().getCurationStatus(),
                      CURRENT_STATUS1); // check status was not changed
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
-    }
-
-
-    // Class to test, getter and setters
-    public StudyOperationsService getStudyOperationsService() {
-        return studyOperationsService;
-    }
-
-    public void setStudyOperationsService(StudyOperationsService studyOperationsService) {
-        this.studyOperationsService = studyOperationsService;
     }
 }
