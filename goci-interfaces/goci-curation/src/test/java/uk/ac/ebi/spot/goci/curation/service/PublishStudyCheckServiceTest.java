@@ -13,14 +13,23 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Arrays;
+import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by emma on 26/02/2016.
  *
  * @author emma
+ *         <p>
+ *         Test of goci-interfaces/goci-curation/src/main/java/uk/ac/ebi/spot/goci/curation/service/PublishStudyCheckService.java
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PublishStudyCheckServiceTest {
@@ -53,36 +62,52 @@ public class PublishStudyCheckServiceTest {
     private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED =
             new StudyBuilder().setId(802L)
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
-                    .setAssociations(Arrays.asList(ASS_APPROVED))
+                    .setAssociations(Collections.singletonList(ASS_APPROVED))
                     .build();
 
     private static final Study STUDY_NO_EFO_TRAIT =
             new StudyBuilder().setId(802L)
-                    .setAssociations(Arrays.asList(ASS_NOT_APPROVED))
+                    .setAssociations(Collections.singletonList(ASS_NOT_APPROVED))
                     .build();
 
     @Before
     public void setUp() throws Exception {
-        setPublishStudyCheckService(new PublishStudyCheckService(checkEfoTermAssignment));
+        setPublishStudyCheckService(new PublishStudyCheckService(getCheckEfoTermAssignment()));
 
     }
 
     @Test
     public void testMocks() {
         // Test mock creation
-        assertNotNull(checkEfoTermAssignment);
+        assertNotNull(getCheckEfoTermAssignment());
     }
 
     @Test
-    public void testRunChecks() throws Exception {
+    public void testStudyWithEfoTraitsAndApprovedAssociation() throws Exception {
 
-        // TODO MIGHT NEED TO MOCK RETURN TYPE AND THEN TEST THAT CLASS SEPARATELY
-        boolean result = getCheckEfoTermAssignment().checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED);
+        when(getCheckEfoTermAssignment().checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED)).thenReturn(true);
+
+        getPublishStudyCheckService().runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
+                                                Collections.singletonList(ASS_APPROVED));
+        verify(getCheckEfoTermAssignment(), times(1)).checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED);
         assertTrue(getCheckEfoTermAssignment().checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED));
-        //String result = getPublishStudyCheckService().runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED, Arrays.asList(ASS_APPROVED));
+        assertNull(getPublishStudyCheckService().runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
+                                                           Collections.singletonList(ASS_APPROVED)));
+    }
 
-        //       assertNotNull(getPublishStudyCheckService().runChecks(STUDY_NO_EFO_TRAIT, Arrays.asList(ASS_NOT_APPROVED)));
-        //    assertEquals(null,getPublishStudyCheckService().runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,Arrays.asList(ASS_APPROVED)));
+    @Test
+    public void testStudyWithoutEfoTraitsAndAssociationNotApproved() {
+        when(getCheckEfoTermAssignment().checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT)).thenReturn(false);
+
+        getPublishStudyCheckService().runChecks(STUDY_NO_EFO_TRAIT,
+                                                Collections.singletonList(ASS_NOT_APPROVED));
+        verify(getCheckEfoTermAssignment(), times(1)).checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT);
+        assertFalse(getCheckEfoTermAssignment().checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT));
+        assertNotNull(getPublishStudyCheckService().runChecks(STUDY_NO_EFO_TRAIT,
+                                                              Collections.singletonList(ASS_APPROVED)));
+        assertThat(getPublishStudyCheckService().runChecks(STUDY_NO_EFO_TRAIT,
+                                                           Collections.singletonList(ASS_APPROVED))
+                           .contains("No EFO trait assigned and some SNP associations have not been approved for study"));
 
     }
 
