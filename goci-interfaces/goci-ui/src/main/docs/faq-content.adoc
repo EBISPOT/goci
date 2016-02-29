@@ -150,7 +150,6 @@ Ancestry data is provided in two forms: a free text sample description and struc
 SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
 
 
-
 == Searching
 
 ==== [[faq-12]]12. How do I do a search?
