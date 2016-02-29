@@ -44,6 +44,9 @@ public class FileController {
     @Value("${download.studiesAlternative}")
     private Resource alternativeStudiesDownload;
 
+    @Value("${download.efoMappings}")
+    private Resource efoMappingsDownload;
+
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
@@ -161,6 +164,36 @@ public class FileController {
 
             InputStream inputStream = null;
             inputStream = alternativeStudiesDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
+    }
+
+    @RequestMapping(value = "api/search/downloads/trait_mappings",
+                    method = RequestMethod.GET)
+    public void getTraitMappingsDownload(HttpServletResponse response) throws IOException {
+        if (efoMappingsDownload.exists() && catalogStatsFile.exists()) {
+
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
+
+
+            String fileName = "gwas_catalog_trait-mappings_r".concat(releasedate).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            InputStream inputStream = null;
+            inputStream = efoMappingsDownload.getInputStream();
 
             OutputStream outputStream;
             outputStream = response.getOutputStream();
