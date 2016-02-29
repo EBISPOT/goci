@@ -37,7 +37,7 @@ public class PublishStudyCheckServiceTest {
     private PublishStudyCheckService publishStudyCheckService;
 
     @Mock
-    private CheckEfoTermAssignment checkEfoTermAssignment;
+    private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
 
     private static final EfoTrait EFO1 =
             new EfoTraitBuilder().setId(987L)
@@ -72,36 +72,36 @@ public class PublishStudyCheckServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        publishStudyCheckService = new PublishStudyCheckService(checkEfoTermAssignment);
+        publishStudyCheckService = new PublishStudyCheckService(checkEfoTermAssignmentService);
     }
 
     @Test
     public void testMocks() {
         // Test mock creation
-        assertNotNull(checkEfoTermAssignment);
+        assertNotNull(checkEfoTermAssignmentService);
     }
 
     @Test
     public void testStudyWithEfoTraitsAndApprovedAssociation() throws Exception {
 
-        when(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED)).thenReturn(true);
+        when(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED)).thenReturn(true);
 
         publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
                                            Collections.singletonList(ASS_APPROVED));
-        verify(checkEfoTermAssignment, times(1)).checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED);
-        assertTrue(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED));
+        verify(checkEfoTermAssignmentService, times(1)).checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED);
+        assertTrue(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED));
         assertNull(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
                                                       Collections.singletonList(ASS_APPROVED)));
     }
 
     @Test
     public void testStudyWithoutEfoTraitsAndAssociationNotApproved() {
-        when(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT)).thenReturn(false);
+        when(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT)).thenReturn(false);
 
         publishStudyCheckService.runChecks(STUDY_NO_EFO_TRAIT,
                                            Collections.singletonList(ASS_NOT_APPROVED));
-        verify(checkEfoTermAssignment, times(1)).checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT);
-        assertFalse(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT));
+        verify(checkEfoTermAssignmentService, times(1)).checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT);
+        assertFalse(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT));
         assertNotNull(publishStudyCheckService.runChecks(STUDY_NO_EFO_TRAIT,
                                                          Collections.singletonList(ASS_APPROVED)));
         assertThat(publishStudyCheckService.runChecks(STUDY_NO_EFO_TRAIT,

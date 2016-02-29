@@ -65,30 +65,30 @@ public class CheckEfoTermAssignmentTest {
             new StudyBuilder().setId(802L)
                     .build();
 
-    private CheckEfoTermAssignment checkEfoTermAssignment;
+    private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
 
     @Before
     public void setUp() throws Exception {
-        checkEfoTermAssignment = new CheckEfoTermAssignment();
+        checkEfoTermAssignmentService = new CheckEfoTermAssignmentService();
     }
 
     @Test
     public void testCheckAssociationsEfoAssignment() {
-        assertTrue(checkEfoTermAssignment.checkAssociationsEfoAssignment(Arrays.asList(ASS_WITH_EFO_TRAIT_1,
-                                                                                       ASS_WITH_EFO_TRAIT_2)));
-        assertFalse(checkEfoTermAssignment.checkAssociationsEfoAssignment(Arrays.asList(ASS_NO_EFO_TRAIT,
-                                                                                        ASS_WITH_EFO_TRAIT_1)));
+        assertTrue(checkEfoTermAssignmentService.checkAssociationsEfoAssignment(Arrays.asList(ASS_WITH_EFO_TRAIT_1,
+                                                                                              ASS_WITH_EFO_TRAIT_2)));
+        assertFalse(checkEfoTermAssignmentService.checkAssociationsEfoAssignment(Arrays.asList(ASS_NO_EFO_TRAIT,
+                                                                                               ASS_WITH_EFO_TRAIT_1)));
     }
 
     @Test
     public void testCheckAssociationEfoAssignment() {
-        assertTrue(checkEfoTermAssignment.checkAssociationEfoAssignment(ASS_WITH_EFO_TRAIT_1));
-        assertFalse(checkEfoTermAssignment.checkAssociationEfoAssignment(ASS_NO_EFO_TRAIT));
+        assertTrue(checkEfoTermAssignmentService.checkAssociationEfoAssignment(ASS_WITH_EFO_TRAIT_1));
+        assertFalse(checkEfoTermAssignmentService.checkAssociationEfoAssignment(ASS_NO_EFO_TRAIT));
     }
 
     @Test
     public void testCheckStudyEfoAssignment() {
-        assertTrue(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED));
-        assertFalse(checkEfoTermAssignment.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT));
+        assertTrue(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED));
+        assertFalse(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_NO_EFO_TRAIT));
     }
 }

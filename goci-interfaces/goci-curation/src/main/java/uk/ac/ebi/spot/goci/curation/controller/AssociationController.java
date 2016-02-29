@@ -32,7 +32,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
-import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignment;
+import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
@@ -96,7 +96,7 @@ public class AssociationController {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
-    private CheckEfoTermAssignment checkEfoTermAssignment;
+    private CheckEfoTermAssignmentService checkEfoTermAssignment;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -127,7 +127,7 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  SnpFormRowValidator snpFormRowValidator,
                                  SnpFormColumnValidator snpFormColumnValidator,
-                                 MappingService mappingService, CheckEfoTermAssignment checkEfoTermAssignment) {
+                                 MappingService mappingService, CheckEfoTermAssignmentService checkEfoTermAssignment) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;

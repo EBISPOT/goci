@@ -17,11 +17,11 @@ import java.util.Collection;
 @Service
 public class PublishStudyCheckService {
 
-    private CheckEfoTermAssignment checkEfoTermAssignment;
+    private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
 
     @Autowired
-    public PublishStudyCheckService(CheckEfoTermAssignment checkEfoTermAssignment) {
-        this.checkEfoTermAssignment = checkEfoTermAssignment;
+    public PublishStudyCheckService(CheckEfoTermAssignmentService checkEfoTermAssignment) {
+        this.checkEfoTermAssignmentService = checkEfoTermAssignment;
     }
 
     /**
@@ -34,7 +34,7 @@ public class PublishStudyCheckService {
         String message;
 
         // Check EFO term assigned to study
-        Boolean efoTermsAssigned = checkEfoTermAssignment.checkStudyEfoAssignment(study);
+        Boolean efoTermsAssigned = checkEfoTermAssignmentService.checkStudyEfoAssignment(study);
 
         // Check all associations approved
         int snpNotApproved = studyAssociationCheck(associations);
