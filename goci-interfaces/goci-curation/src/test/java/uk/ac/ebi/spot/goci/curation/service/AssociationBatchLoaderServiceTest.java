@@ -1,22 +1,27 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.junit.Rule;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.model.Association;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.atLeastOnce;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,42 +30,41 @@ import static org.mockito.Mockito.when;
  *
  * @author emma
  *         <p>
- *         Unit test for AssociationBatchLoaderService
+ *         Test for AssociationBatchLoaderService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AssociationBatchLoaderServiceTest {
 
-    @InjectMocks
     private AssociationBatchLoaderService associationBatchLoaderService;
 
     @Mock
     private AssociationSheetProcessor associationSheetProcessor;
 
-    @Mock
-    private XSSFSheet sheet;
+    private static final Association ASS1 =
+            new AssociationBuilder().setId(800L).build();
 
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    private static final Association ASS2 =
+            new AssociationBuilder().setId(801L).build();
+
+    @Before
+    public void setUp() throws Exception {
+        associationBatchLoaderService = new AssociationBatchLoaderService(associationSheetProcessor);
+    }
 
     @Test
     public void testProcessData() throws IOException, InvalidFormatException {
 
-        Collection<Association> testAssociations = new ArrayList<>();
+        File file = new File("/Users/emma/Desktop/java_checkouts/goci_new/goci/goci-interfaces/goci-curation/src/test/resources/test.xlsx");
 
-        // Checking return type
+        // Stubbing
+  
+   assertNotNull(associationBatchLoaderService.processData(file.getAbsolutePath()));
 
 
-        // TODO FULL PATH
-        Collection<Association> returnedCollection = associationBatchLoaderService.processData(
-                "/Users/emma/Desktop/java_checkouts/goci_new/goci/goci-interfaces/goci-curation/src/test/java/uk/ac/ebi/spot/goci/curation/service/test.xlsx");
-        assertEquals(returnedCollection, testAssociations);
-
-        // Stubbing behaviour of Association Sheet Processor
-        when(associationSheetProcessor.readSnpAssociations(sheet)).thenReturn(testAssociations);
-        assertEquals(testAssociations, associationSheetProcessor.readSnpAssociations(sheet));
-        verify(associationSheetProcessor, atLeastOnce()).readSnpAssociations(sheet);
-
+        // Run tests
+//   assertNotNull(associationBatchLoaderService.processData(file.getName()));
+   //     verify(associationSheetProcessor, times(1)).readSnpAssociations(sheet);
+   //     assertNotNull(associationBatchLoaderService.processData(file.getName()));
+        assertThat(associationBatchLoaderService.processData(file.getAbsolutePath())).containsExactly(ASS1, ASS2);
     }
-
-    // TODO TEST EXCEPTIONS ARE THROWN
 }
