@@ -60,7 +60,7 @@ We'd love to hear what you think of this new feature, contact the GWAS Catalog t
 
 == GWAS to EFO mappings
 
-A file showing all GWAS to EFO mappings, including the parent category each trait is mapped to on the diagram can be found link:../api/search/downloads/efo_mappings[ here] and on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest[ our FTP server]. Note that mappings are not one-to-one, i.e. one EFO term may be mapped to several different GWAS traits and vice versa.
+A file showing all GWAS to EFO mappings, including the parent category each trait is mapped to on the diagram can be found link:../api/search/downloads/trait_mappings[ here] and on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest[ our FTP server]. Note that mappings are not one-to-one, i.e. one EFO term may be mapped to several different GWAS traits and vice versa.
 
 
 == Downloading the GWAS Diagram

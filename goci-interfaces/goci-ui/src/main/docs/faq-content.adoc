@@ -245,11 +245,13 @@ In March 2016 we switched to a new Ensembl mapping pipeline which provides the g
 The format of the mapping data we provide in both the search interface and downloads will remain the same, but with the chromosomal position of the SNP, cytogenetic region and mapped Entrez genes provided by Ensembl. We are changing to using an Ensembl pipeline as this will allow us to provide a denser set of results and, in the future, to integrate additional information from Ensembl with GWAS Catalog data. As the mapping information will now be provided by Ensembl, rather than NCBI, there will be a small number of differences in SNP position and mapped gene. The mapping information will be updated at every Ensembl release, every 2-3 months. In addition, we have made improvements to the display of haplotypes and proxy SNPs to make the data more user-friendly.
 
 +++<u>Changes to mapping locations</u>+++
+
 * Chromosome 23 is now labelled as chromosome X.
 * The mapping positions have changed for a small number of SNPs.
 * The cytogenetic region has changed for approximately 400 SNPs.
 
 +++<u>Changes to mapped genes</u>+++
+
 As with the old pipeline the new pipeline includes any genes in which a SNP maps, or the closest upstream and downstream gene for intergenic SNPs. Mapped gene information is now provided from the RefSeq import in Ensembl which includes multiple gene biotypes, such as protein coding genes, non-coding RNA and pseudogenes. This has led to changes in the mapped gene information being reported for approximately 43% of SNPs, with the majority of these differences due to the SNP being mapped within, or closer to, different genes. Examples of the types of mapping differences are shown below.
 
 
