@@ -57,7 +57,7 @@ public class AssociationBatchLoaderServiceTest {
         File file = new File("/Users/emma/Desktop/java_checkouts/goci_new/goci/goci-interfaces/goci-curation/src/test/resources/test.xlsx");
 
         // Stubbing
-  
+
    assertNotNull(associationBatchLoaderService.processData(file.getAbsolutePath()));
 
 
