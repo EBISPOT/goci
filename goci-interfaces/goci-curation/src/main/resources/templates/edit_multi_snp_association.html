@@ -104,7 +104,7 @@
                                             <th>SNP</th>
                                             <th>Strongest SNP-Risk Allele</th>
                                             <th>Proxy SNP</th>
-                                            <th>Merged</th>
+                                            <!--<th>Merged</th>-->
                                             <th>
                                                 <button type="submit" name="addRow">Add row</button>
                                             </th>
@@ -127,11 +127,11 @@
                                                 <input type="text" data-role="tagsinput" label="proxySnps"
                                                        th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                             </td>
-                                            <td>
-                                                <input th:id="merged_+${rowStat.count}"
-                                                       type="text"
-                                                       th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
-                                            </td>
+                                            <!--<td>-->
+                                                <!--<input th:id="merged_+${rowStat.count}"-->
+                                                       <!--type="text"-->
+                                                       <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
+                                            <!--</td>-->
                                             <td>
                                                 <button type="submit" name="removeRow" th:value="${rowStat.index}">
                                                     Remove row

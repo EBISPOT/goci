@@ -156,9 +156,9 @@ public class SingleSnpMultiSnpAssociationService {
             }
 
             // Get the merged information
-            if (row.getMerged() != null) {
-                snp.setMerged(row.getMerged());
-            }
+//            if (row.getMerged() != null) {
+//                snp.setMerged(row.getMerged());
+//            }
 
             locusRiskAlleles.add(riskAllele);
         }
@@ -239,7 +239,7 @@ public class SingleSnpMultiSnpAssociationService {
             SingleNucleotidePolymorphism snp = riskAllele.getSnp();
             String rsID = snp.getRsId();
             snpFormRow.setSnp(rsID);
-            snpFormRow.setMerged(snp.getMerged());
+//            snpFormRow.setMerged(snp.getMerged());
 
             Collection<Location> locations = snp.getLocations();
             for (Location location : locations) {
