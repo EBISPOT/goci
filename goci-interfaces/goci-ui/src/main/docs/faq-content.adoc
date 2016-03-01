@@ -96,6 +96,10 @@
 
 33. <<faq-33,How do I zoom and move the diagram?>>
 
+34. <<faq-34,How is the genomic annotation for each SNP provided?>>
+
+35. <<faq-35,What changes will I see in the genomic annotation with the new mapping pipeline?>>
+
 '''
 == General
 
@@ -144,7 +148,6 @@ Ancestry data is provided in two forms: a free text sample description and struc
 ==== [[faq-11]]11. Why do some SNPs not have any corresponding mapping information?
 
 SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
-
 
 
 == Searching
@@ -222,7 +225,6 @@ The full diagram can be filtered by typing a trait into the search box to the le
 If your selected trait is available in the diagram, all other traits will be faded to a lower visibility to highlight the desired trait. A counter in the top left corner of the diagram will indicate how many dots on the diagram correspond to your search term. Searchable traits are based on EFO categories and may not coincide with curator-assigned trait names, e.g. a search for "hair color" will highlight SNP-trait associations labelled hair color as well as "black vs blond hair" and "red vs non-red hair".
 
 
-
 ==== [[faq-31]]31. How do I display the legend?
 A legend of the colour scheme is available to the left of the diagram. The legend includes a count of the number of dots of each colour in the diagram. You can hide the sidebar of increase the amount of screen space for the diagram by clicking on the little shevron icon at the top of the sidebar. Click on any item in the legend to filter the diagram by that category. This does not work for any of the "other"-type categories (other measurement, other disease and other trait). Please note that some traits, in particular some diseases, belong to multiple categories, eg Crohn's disease is both a digestive system disease and an immune system disease. Each dot on the diagram can only be assigned one colour and colour assignment is determined by a term's most specific ancestor (ancestor that has itself the most number of ancestors) in EFO so it is possible to find dots of a different colour when searching for example for "digestive system disease".
 
@@ -232,6 +234,88 @@ Chromosomes and traits (coloured circles) have labels that display when hovering
 ==== [[faq-33]]33. How do I zoom and move the diagram?
 The diagram was designed to have GoogleMaps-style interactivity. There are two ways to zoom in and out. The easiest option is to use the scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the top right-hand corner of the diagram features a zoom bar which can be used to generate exactly the same effect, by dragging the little square left or right along the bar with the mouse pointer or clicking the plus and minus buttons.
 The diagram can be moved around the viewing area by clicking on any part of the diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the screen until the desired part is visible. This feature is particularly useful for centering the diagram on a specific location at higher zoom levels.
+
+
+== Genomic mappings
+
+==== [[faq-34]]34. How is the genomic annotation for each SNP provided?
+In March 2016 we switched to a new Ensembl mapping pipeline which provides the genomic annotation (chromosome location, cytogenetic region and mapped genes), which is available alongside the curated content in the GWAS Catalog. Previously the genomic annotation was provided by an NCBI mapping pipeline.
+
+==== [[faq-35]]35. What changes will I see in the genomic annotation with the new mapping pipeline?
+The format of the mapping data we provide in both the search interface and downloads will remain the same, but with the chromosomal position of the SNP, cytogenetic region and mapped Entrez genes provided by Ensembl. We are changing to using an Ensembl pipeline as this will allow us to provide a denser set of results and, in the future, to integrate additional information from Ensembl with GWAS Catalog data. As the mapping information will now be provided by Ensembl, rather than NCBI, there will be a small number of differences in SNP position and mapped gene. The mapping information will be updated at every Ensembl release, every 2-3 months. In addition, we have made improvements to the display of haplotypes and proxy SNPs to make the data more user-friendly.
+
++++<u>Changes to mapping locations</u>+++
+
+* Chromosome 23 is now labelled as chromosome X.
+* The mapping positions have changed for a small number of SNPs.
+* The cytogenetic region has changed for approximately 400 SNPs.
+
++++<u>Changes to mapped genes</u>+++
+
+As with the old pipeline the new pipeline includes any genes in which a SNP maps, or the closest upstream and downstream gene for intergenic SNPs. Mapped gene information is now provided from the RefSeq import in Ensembl which includes multiple gene biotypes, such as protein coding genes, non-coding RNA and pseudogenes. This has led to changes in the mapped gene information being reported for approximately 43% of SNPs, with the majority of these differences due to the SNP being mapped within, or closer to, different genes. Examples of the types of mapping differences are shown below.
+
+
+*Examples of mapping differences*
+
+[width="90" options="header",cols="2,2,2,2,2,2,2,4", frame="all", grid="cols"]
+|===
+|SNP |New Region |New location |New mapped gene |Old Region |Old location |Old mapped gene |Comment
+
+|rs17124318
+|1p31.3
+|Chr1:63015059
+|LOC105378769
+|1p31.3
+|Chr1:63015059
+|ATG4C - LINC00466
+|This SNP maps within a long non-coding RNA that was not included in the previous mapping
+
+|rs1733724
+|10q21.1
+|Chr10:52464217
+|LINC01468
+|10q21.1
+|Chr10:52464217
+|PRKRIRP3 - MBL2
+|This SNP maps within a long non-coding RNA that was not included in the previous mapping
+
+|rs710521
+|3q28
+|Chr3:189928144
+|TP63 - P3H2
+|3q28
+|Chr3:189928144
+|MIR944 - P3H2
+|TP63 is the closest upstream gene to rs710521 (30865bp compared to 98135bp for MIR944)
+
+|rs7604827
+|2q34
+|Chr2:214477166
+|VWC2L
+|2q34, 2q35
+|Chr2:214477166
+|VWC2L
+|Previosuly, the SNP mapped to the boundary between two cytogenetic regions. It now maps within one region.
+
+|rs5743894
+|11p15.5
+|Chr11:1303542
+|TOLLIP
+|11p15.5, 11p15.5[rs5743894]; 11p15.5[rs111521887]
+|Chr11:1303542
+|TOLLIP
+|Previously, the cytogenetic region displayed the SNP and proxy SNP in addition to the region. The display is now cleaner, only showing the region.
+
+|rs4773144
+|13q34
+|Chr13:110308365
+|COL4A2
+|13q34
+|Chr13:110308365
+|NA
+|Previously this SNP did not map to any gene. However, it now maps to COL4A2 due to the location of this gene changing between GRCh37 and GRCh38.
+|===
+
 
 
 '''
