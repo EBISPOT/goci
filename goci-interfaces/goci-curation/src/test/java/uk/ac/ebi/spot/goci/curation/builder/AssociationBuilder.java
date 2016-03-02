@@ -81,13 +81,13 @@ public class AssociationBuilder {
         return this;
     }
 
-    public AssociationBuilder setOrPerCopyStdError(Float orPerCopyStdError) {
-        association.setOrPerCopyStdError(orPerCopyStdError);
+    public AssociationBuilder setStandardError(Float stdError) {
+        association.setStandardError(stdError);
         return this;
     }
 
-    public AssociationBuilder setOrPerCopyRange(String orPerCopyRange) {
-        association.setOrPerCopyRange(orPerCopyRange);
+    public AssociationBuilder setRange(String range) {
+        association.setRange(range);
         return this;
     }
 
@@ -96,8 +96,8 @@ public class AssociationBuilder {
         return this;
     }
 
-    public AssociationBuilder setOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-        association.setOrPerCopyUnitDescr(orPerCopyUnitDescr);
+    public AssociationBuilder setDescription(String description) {
+        association.setDescription(description);
         return this;
     }
 
