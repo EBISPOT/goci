@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.model.SnpMappingForm;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -112,7 +113,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
             SingleNucleotidePolymorphism snp = riskAllele.getSnp();
             String rsID = snp.getRsId();
             snpFormRow.setSnp(rsID);
-            snpFormRow.setMerged(snp.getMerged());
 
             Collection<Location> locations = snp.getLocations();
             for (Location location : locations) {
@@ -243,12 +243,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
                 riskAllele.setProxySnps(riskAlleleProxySnps);
             }
-
-            // Get the merged information
-//            if (row.getMerged() != null) {
-//                snp.setMerged(row.getMerged());
-//            }
-
+            
             locusRiskAlleles.add(riskAllele);
         }
 
