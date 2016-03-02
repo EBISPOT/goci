@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.spot.goci.curation.controller;
 
 
@@ -17,13 +18,15 @@ import uk.ac.ebi.spot.goci.CurationApplication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+*/
 /**
  * Created by emma on 14/10/2015.
  *
  * @author emma
  *         <p>
  *         Unit test for HomeController based on http://spring.io/guides/gs/spring-boot/
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CurationApplication.class)
 @WebAppConfiguration
@@ -47,3 +50,4 @@ public class HomeControllerTest {
     }
 }
 
+*/

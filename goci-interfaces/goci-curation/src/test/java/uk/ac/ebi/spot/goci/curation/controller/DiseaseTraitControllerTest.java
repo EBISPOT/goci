@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.junit.Before;
@@ -23,13 +24,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+*/
 /**
  * Created by emma on 15/10/2015.
  *
  * @author emma
  *         <p>
  *         Disease trait unot controller test
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CurationApplication.class)
 @WebAppConfiguration
@@ -62,3 +65,4 @@ public class DiseaseTraitControllerTest {
         ;
     }
 }
+*/
