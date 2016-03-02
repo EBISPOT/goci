@@ -100,7 +100,7 @@
                                         <th>SNP</th>
                                         <th>Strongest SNP-Risk Allele</th>
                                         <th>Proxy SNP</th>
-                                        <th>Merged</th>
+                                        <!--<th>Merged</th>-->
 
                                     </tr>
                                     </thead>
@@ -120,11 +120,11 @@
                                             <input type="text" data-role="tagsinput" label="proxySnps"
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
-                                        <td>
-                                            <input th:id="merged_+${rowStat.count}"
-                                                   type="text"
-                                                   th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>
-                                        </td>
+                                        <!--<td>-->
+                                            <!--<input th:id="merged_+${rowStat.count}"-->
+                                                   <!--type="text"-->
+                                                   <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
+                                        <!--</td>-->
 
                                     </tr>
                                     </tbody>

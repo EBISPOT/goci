@@ -209,8 +209,6 @@
 
                     <div class="col-md-4">
                         <select th:field="*{curator}" id="curator" class="form-control select2-select">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
                             <option th:each="curator : ${curators}"
                                     th:value="${curator.id}"
                                     th:text="${curator.lastName}"></option>
@@ -223,8 +221,6 @@
 
                     <div class="col-md-4">
                         <select th:field="*{curationStatus}" id="curationStatus" class="form-control select2-select">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
                             <option th:each="curationStatus : ${curationstatuses}"
                                     th:value="${curationStatus.id}"
                                     th:text="${curationStatus.status}"></option>

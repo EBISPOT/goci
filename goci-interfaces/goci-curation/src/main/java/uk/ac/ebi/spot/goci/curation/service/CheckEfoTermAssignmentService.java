@@ -16,7 +16,7 @@ import java.util.Collection;
  *         Check EFO terms are assigned to either study or a studies associatiions
  */
 @Service
-public class CheckEfoTermAssignment {
+public class CheckEfoTermAssignmentService {
 
     /**
      * Check study to ensure it has EFO trait assigned

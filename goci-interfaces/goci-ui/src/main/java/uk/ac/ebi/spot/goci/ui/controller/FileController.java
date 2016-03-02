@@ -17,9 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -47,25 +44,30 @@ public class FileController {
     @Value("${download.studiesAlternative}")
     private Resource alternativeStudiesDownload;
 
+    @Value("${download.efoMappings}")
+    private Resource efoMappingsDownload;
+
     @Value("${download.NCBI}")
     private Resource fullFileDownloadNcbi;
 
     @Value("${catalog.stats.file}")
     private Resource catalogStatsFile;
 
-    @Value("${download.ensemblmapping}")
-    private Resource ensemblMappingFileDownload;
+//    @Value("${download.ensemblmapping}")
+//    private Resource ensemblMappingFileDownload;
 
     @RequestMapping(value = "api/search/downloads/full",
                     method = RequestMethod.GET)
     public void getFullDownload(HttpServletResponse response) throws IOException {
-        if (fullFileDownload.exists()) {
+        if (fullFileDownload.exists() && catalogStatsFile.exists()) {
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String now = dateFormat.format(date);
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
+            String ensemblbuild = properties.getProperty("ensemblbuild");
 
-            String fileName = "gwas_catalog_v1.0-associations-downloaded_".concat(now).concat(".tsv");
+
+            String fileName = "gwas_catalog_v1.0-associations_e".concat(ensemblbuild).concat("_r").concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -88,13 +90,13 @@ public class FileController {
     @RequestMapping(value = "api/search/downloads/studies",
                     method = RequestMethod.GET)
     public void getStudiesDownload(HttpServletResponse response) throws IOException {
-        if (studiesFileDownload.exists()) {
+        if (studiesFileDownload.exists() && catalogStatsFile.exists()) {
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String now = dateFormat.format(date);
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
 
-            String fileName = "gwas_catalog_v1.0-studies-downloaded_".concat(now).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0-studies_r".concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -119,13 +121,14 @@ public class FileController {
                     method = RequestMethod.GET,
                     produces = MediaType.TEXT_PLAIN_VALUE)
     public void getAlternativeDownload(HttpServletResponse response) throws IOException {
-        if (alternativeFileDownload.exists()) {
+        if (alternativeFileDownload.exists() && catalogStatsFile.exists()) {
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String now = dateFormat.format(date);
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
+            String ensemblbuild = properties.getProperty("ensemblbuild");
 
-            String fileName = "gwas_catalog_v1.0.1-associations-downloaded_".concat(now).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0.1-associations_e".concat(ensemblbuild).concat("_r").concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -148,18 +151,49 @@ public class FileController {
     @RequestMapping(value = "api/search/downloads/studies_alternative",
                     method = RequestMethod.GET)
     public void getAlternativeStudiesDownload(HttpServletResponse response) throws IOException {
-        if (alternativeStudiesDownload.exists()) {
+        if (alternativeStudiesDownload.exists() && catalogStatsFile.exists()) {
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String now = dateFormat.format(date);
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
 
-            String fileName = "gwas_catalog_v1.0.1-studies-downloaded_".concat(now).concat(".tsv");
+
+            String fileName = "gwas_catalog_v1.0.1-studies_r".concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
             InputStream inputStream = null;
             inputStream = alternativeStudiesDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
+    }
+
+    @RequestMapping(value = "api/search/downloads/trait_mappings",
+                    method = RequestMethod.GET)
+    public void getTraitMappingsDownload(HttpServletResponse response) throws IOException {
+        if (efoMappingsDownload.exists() && catalogStatsFile.exists()) {
+
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
+
+
+            String fileName = "gwas_catalog_trait-mappings_r".concat(releasedate).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            InputStream inputStream = null;
+            inputStream = efoMappingsDownload.getInputStream();
 
             OutputStream outputStream;
             outputStream = response.getOutputStream();
@@ -209,6 +243,7 @@ public class FileController {
         String associationcount;
         String genebuild;
         String dbsnpbuild;
+        String ensemblbuild;
 
         Properties properties = new Properties();
         try {
@@ -219,6 +254,7 @@ public class FileController {
             associationcount = properties.getProperty("associationcount");
             genebuild = properties.getProperty("genomebuild");
             dbsnpbuild = properties.getProperty("dbsnpbuild");
+            ensemblbuild = properties.getProperty("ensemblbuild");
 
             response.put("date", releasedate);
             response.put("studies", studycount);
@@ -226,6 +262,7 @@ public class FileController {
             response.put("associations", associationcount);
             response.put("genebuild", genebuild);
             response.put("dbsnpbuild", dbsnpbuild);
+            response.put("ensemblbuild", ensemblbuild);
 
         }
         catch (IOException e) {
@@ -242,37 +279,37 @@ public class FileController {
     }
 
 
-    @RequestMapping(value = "api/search/downloads/ensembl_mapping",
-                    method = RequestMethod.GET,
-                    produces = MediaType.TEXT_PLAIN_VALUE)
-    public void getEnsemblMappingDownload(HttpServletResponse response) throws IOException {
-
-        if (ensemblMappingFileDownload.exists()) {
-
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String now = dateFormat.format(date);
-
-            String fileName = "gwas_catalog_ensembl_mapping_v1.0-downloaded_".concat(now).concat(".tsv");
-            response.setContentType("text/tsv");
-            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
-
-            InputStream inputStream = null;
-            inputStream = ensemblMappingFileDownload.getInputStream();
-
-            OutputStream outputStream;
-            outputStream = response.getOutputStream();
-
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-
-        }
-        else {
-            throw new FileNotFoundException();
-        }
-
-    }
+//    @RequestMapping(value = "api/search/downloads/ensembl_mapping",
+//                    method = RequestMethod.GET,
+//                    produces = MediaType.TEXT_PLAIN_VALUE)
+//    public void getEnsemblMappingDownload(HttpServletResponse response) throws IOException {
+//
+//        if (ensemblMappingFileDownload.exists()) {
+//
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            Date date = new Date();
+//            String now = dateFormat.format(date);
+//
+//            String fileName = "gwas_catalog_ensembl_mapping_v1.0-downloaded_".concat(now).concat(".tsv");
+//            response.setContentType("text/tsv");
+//            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+//
+//            InputStream inputStream = null;
+//            inputStream = ensemblMappingFileDownload.getInputStream();
+//
+//            OutputStream outputStream;
+//            outputStream = response.getOutputStream();
+//
+//            IOUtils.copy(inputStream, outputStream);
+//            inputStream.close();
+//            outputStream.close();
+//
+//        }
+//        else {
+//            throw new FileNotFoundException();
+//        }
+//
+//    }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "File not found for download")
     @ExceptionHandler(FileNotFoundException.class)
