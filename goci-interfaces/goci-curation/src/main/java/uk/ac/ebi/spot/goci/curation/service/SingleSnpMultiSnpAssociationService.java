@@ -243,7 +243,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
                 riskAllele.setProxySnps(riskAlleleProxySnps);
             }
-            
+
             locusRiskAlleles.add(riskAllele);
         }
 
