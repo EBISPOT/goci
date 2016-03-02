@@ -38,8 +38,9 @@
         <fluxion-spi.version>1.0-alpha-3</fluxion-spi.version>
         <jena-core.version>2.12.0</jena-core.version>
         <mockito.version>1.10.19</mockito.version>
-        <junit.version>4.11</junit.version>
         <batik.version>1.8</batik.version>
+        <junit.version>4.12</junit.version>
+        <assertj.version>2.3.0</assertj.version>
     </properties>
 
     <build>
