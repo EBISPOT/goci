@@ -96,7 +96,7 @@ public class AssociationController {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
-    private CheckEfoTermAssignmentService checkEfoTermAssignment;
+    private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -127,7 +127,7 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  SnpFormRowValidator snpFormRowValidator,
                                  SnpFormColumnValidator snpFormColumnValidator,
-                                 MappingService mappingService, CheckEfoTermAssignmentService checkEfoTermAssignment) {
+                                 MappingService mappingService, CheckEfoTermAssignmentService checkEfoTermAssignmentService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -143,7 +143,7 @@ public class AssociationController {
         this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
-        this.checkEfoTermAssignment = checkEfoTermAssignment;
+        this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
     }
 
     /*  Study SNP/Associations */
@@ -1130,7 +1130,7 @@ public class AssociationController {
         Association association = associationRepository.findOne(associationId);
 
         // Check if association has an EFO trait
-        Boolean associationEfoTermsAssigned = checkEfoTermAssignment.checkAssociationEfoAssignment(association);
+        Boolean associationEfoTermsAssigned = checkEfoTermAssignmentService.checkAssociationEfoAssignment(association);
 
         if (!associationEfoTermsAssigned) {
             String message = "Cannot approve association as no EFO trait assigned";
@@ -1185,7 +1185,7 @@ public class AssociationController {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
             allAssociations.add(association);
         }
-        Boolean associationsEfoTermsAssigned = checkEfoTermAssignment.checkAssociationsEfoAssignment(allAssociations);
+        Boolean associationsEfoTermsAssigned = checkEfoTermAssignmentService.checkAssociationsEfoAssignment(allAssociations);
 
         if (!associationsEfoTermsAssigned) {
             message = "Cannot approve association(s) as no EFO trait assigned";
@@ -1249,7 +1249,7 @@ public class AssociationController {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-        Boolean associationEfoTermsAssigned = checkEfoTermAssignment.checkAssociationsEfoAssignment(studyAssociations);
+        Boolean associationEfoTermsAssigned = checkEfoTermAssignmentService.checkAssociationsEfoAssignment(studyAssociations);
 
         if (!associationEfoTermsAssigned) {
             String message = "Cannot approve all associations as no EFO trait assigned";
