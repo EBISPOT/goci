@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
  * Created by emma on 22/09/2015.
  */
 @MappedSuperclass
-public class TotalsSummaryView {
+abstract public class TotalsSummaryView {
 
     @Id
     private Long id;

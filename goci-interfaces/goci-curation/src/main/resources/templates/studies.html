@@ -18,10 +18,10 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <!--Include filter-->
-<div th:include="study_filter :: filter"></div>
+<div th:include="fragments/study_filter :: filter"></div>
 <br/>
 <div class="container-fluid">
     <div class="row">
@@ -78,7 +78,7 @@
 
         <!--Only show bar if more that one study available and pagination is set to true-->
         <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }"
-             th:include="pagination_bar :: pagination_bar"></div>
+             th:include="fragments/pagination_bar :: pagination_bar"></div>
     </div>
 </div>
 </body>
