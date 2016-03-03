@@ -209,12 +209,14 @@
                     </th>
                     <th style="font-size: small">p-Value Text</th>
                     <th style="font-size: small">EFO trait</th>
-                    <th style="font-size: small">OR per Copy Num</th>
-                    <th style="font-size: small">OR entered (reciprocal)</th>
-                    <th style="font-size: small">OR-Type</th>
-                    <th style="font-size: small">OR per Copy Range</th>
-                    <th style="font-size: small">OR per Copy Range (reciprocal)</th>
-                    <th style="font-size: small">OR per Copy Unit Description</th>
+                    <th style="font-size: small">OR per copy num</th>
+                    <th style="font-size: small">OR per copy reciprocal</th>
+                    <th style="font-size: small">OR per copy reciprocal range</th>
+                    <th style="font-size: small">Beta num</th>
+                    <th style="font-size: small">Beta unit</th>
+                    <th style="font-size: small">Beta direction</th>
+                    <th style="font-size: small">Range</th>
+                    <th style="font-size: small">Description</th>
                     <th style="font-size: small">Std Error</th>
                     <th style="font-size: small">SNP Type</th>
                     <th style="font-size: small">SNP Status</th>
@@ -281,12 +283,21 @@
                                       th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                       th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                             </td>
-                            <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.orType} ?:''"></td>
-                            <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.range} ?: ''"></td>
+
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.betaUnit} ?: ''"></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.betaDirection} ?: ''"></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.range} ?: ''"></td>
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.description} ?: ''"></td>
                             <td style="background-color: darkgrey"
@@ -399,12 +410,21 @@
                                               th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                               th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
-                                <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.orType} ?:''"></td>
-                                <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.range} ?: ''"></td>
+
+
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.betaUnit} ?: ''"></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.betaDirection} ?: ''"></td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.range} ?: ''"></td>
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.description} ?: ''"></td>
                                 <td style="background-color: lightyellow"
@@ -508,9 +528,15 @@
                                           th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                           th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
-                                <td th:text="${snpAssociationTableView.orType} ?:''"></td>
-                                <td th:text="${snpAssociationTableView.range} ?: ''"></td>
+
+
                                 <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
+                                <td th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.betaUnit} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.betaDirection} ?: ''"></td>
+
+                                <td th:text="${snpAssociationTableView.range} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.description} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.standardError} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
@@ -590,17 +616,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Please select association type?</h4>
             </div>
             <div class="modal-body">
-                    <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='or')}"
-                       class="btn btn-default"
-                       role="button">OR</a>
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
 
-                    <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='beta')}"
-                       class="btn btn-default"
-                       role="button">Beta</a>
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
 
             </div>
         </div>
@@ -612,7 +641,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Please select association type?</h4>
             </div>
             <div class="modal-body">
@@ -633,7 +665,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Please select association type?</h4>
             </div>
             <div class="modal-body">
