@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -26,7 +27,11 @@
 
     <!--Handles checkbox in table -->
     <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
-    
+
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -171,7 +176,7 @@
             </div>
             <table id="mainTable"
                    class="table table-hover table-bordered"
-                   th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
+                   th:if="${not #lists.isEmpty(snpAssociationTableViews)}" cellspacing="0" width="100%">
                 <br/>
                 <caption id="total" th:text="'Total number of SNP associations = '+ ${totalAssociations}"></caption>
                 <thead>
@@ -721,7 +726,14 @@
         </div>
     </div>
 </div>
-
+<script>
+    $(document).ready(function() {
+        $('#mainTable').DataTable({
+                                      "info": false,
+                                      "paging":   false
+                                  });
+    });
+</script>
 
 </body>
 </html>
