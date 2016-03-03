@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 
 /**
@@ -9,6 +10,7 @@ import uk.ac.ebi.spot.goci.model.Association;
  *         <p>
  *         Service class that handles common operations performed on associations
  */
+@Service
 public class AssociationOperationsService {
     /**
      * Check if association is an OR or BETA type association
