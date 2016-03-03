@@ -84,7 +84,8 @@ public class AssociationViewService {
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
 
                 // Check for any potential errors
-                syntaxError = syntaxError + associationComponentsSyntaxChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
+                syntaxError =
+                        syntaxError + associationComponentsSyntaxChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
 
                 // For standard association set the risk allele frequency
                 // Based on assumption we only have one locus with a single risk allele attached
@@ -228,23 +229,19 @@ public class AssociationViewService {
         associationEfoTraits = String.join(", ", efoTraits);
         snpAssociationTableView.setEfoTraits(associationEfoTraits);
 
+        // Set OR values
         snpAssociationTableView.setOrPerCopyNum(association.getOrPerCopyNum());
         snpAssociationTableView.setOrPerCopyRecip(association.getOrPerCopyRecip());
-
-        if (association.getOrType() != null) {
-            if (association.getOrType()) {
-                snpAssociationTableView.setOrType("Yes");
-            }
-
-            if (!association.getOrType()) {
-                snpAssociationTableView.setOrType("No");
-            }
-        }
-
-        snpAssociationTableView.setOrPerCopyRange(association.getRange());
         snpAssociationTableView.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationTableView.setOrPerCopyUnitDescr(association.getDescription());
-        snpAssociationTableView.setOrPerCopyStdError(association.getStandardError());
+
+        // Set beta values
+        snpAssociationTableView.setBetaNum(association.getBetaNum());
+        snpAssociationTableView.setBetaDirection(association.getBetaDirection());
+        snpAssociationTableView.setBetaUnit(association.getBetaUnit());
+
+        snpAssociationTableView.setRange(association.getRange());
+        snpAssociationTableView.setDescription(association.getDescription());
+        snpAssociationTableView.setStandardError(association.getStandardError());
         snpAssociationTableView.setAssociationType(association.getSnpType());
 
 
