@@ -36,18 +36,13 @@ public class AssociationBuilder {
         return this;
     }
 
-    public AssociationBuilder setOrPerCopyNum(Float orPerCopyNum) {
-        association.setOrPerCopyNum(orPerCopyNum);
+    public AssociationBuilder setPvalueMantissa(Integer pvalueMantissa) {
+        association.setPvalueMantissa(pvalueMantissa);
         return this;
     }
 
-    public AssociationBuilder setOrType(Boolean orType) {
-        association.setOrType(orType);
-        return this;
-    }
-
-    public AssociationBuilder setSnpType(String snpType) {
-        association.setSnpType(snpType);
+    public AssociationBuilder setPvalueExponent(Integer pvalueExponent) {
+        association.setPvalueExponent(pvalueExponent);
         return this;
     }
 
@@ -66,20 +61,11 @@ public class AssociationBuilder {
         return this;
     }
 
-    public AssociationBuilder setPvalueMantissa(Integer pvalueMantissa) {
-        association.setPvalueMantissa(pvalueMantissa);
+    public AssociationBuilder setSnpType(String snpType) {
+        association.setSnpType(snpType);
         return this;
     }
 
-    public AssociationBuilder setPvalueExponent(Integer pvalueExponent) {
-        association.setPvalueExponent(pvalueExponent);
-        return this;
-    }
-
-    public AssociationBuilder setOrPerCopyRecip(Float orPerCopyRecip) {
-        association.setOrPerCopyRecip(orPerCopyRecip);
-        return this;
-    }
 
     public AssociationBuilder setStandardError(Float stdError) {
         association.setStandardError(stdError);
@@ -91,13 +77,38 @@ public class AssociationBuilder {
         return this;
     }
 
+    public AssociationBuilder setDescription(String description) {
+        association.setDescription(description);
+        return this;
+    }
+
+    public AssociationBuilder setOrPerCopyNum(Float orPerCopyNum) {
+        association.setOrPerCopyNum(orPerCopyNum);
+        return this;
+    }
+
+    public AssociationBuilder setOrPerCopyRecip(Float orPerCopyRecip) {
+        association.setOrPerCopyRecip(orPerCopyRecip);
+        return this;
+    }
+
     public AssociationBuilder setOrPerCopyRecipRange(String orPerCopyRecipRange) {
         association.setOrPerCopyRecipRange(orPerCopyRecipRange);
         return this;
     }
 
-    public AssociationBuilder setDescription(String description) {
-        association.setDescription(description);
+    public AssociationBuilder setBetaNum(Float betaNum) {
+        association.setBetaNum(betaNum);
+        return this;
+    }
+
+    public AssociationBuilder setBetaUnit(String betaUnit) {
+        association.setBetaUnit(betaUnit);
+        return this;
+    }
+
+    public AssociationBuilder setBetaDirection(String betaDirection) {
+        association.setBetaDirection(betaDirection);
         return this;
     }
 
