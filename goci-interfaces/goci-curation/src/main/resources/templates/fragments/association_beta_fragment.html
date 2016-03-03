@@ -5,7 +5,7 @@
 <body th:fragment="beta">
 
 <div class="form-group">
-    <label for="beta" class="control-label col-md-2">Beta (Num)</label>
+    <label for="beta" class="control-label col-md-2">Beta num</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" name="beta" id="beta" th:filed="*{betaNum}"/>
@@ -32,6 +32,29 @@
             <input type="radio" name="betaDecrease" th:value="'decrease'"
                    th:field="*{betaDirection}">Decrease</input>
         </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="standardError" class="control-label col-md-2">Standard Error</label>
+
+    <div class="col-md-10">
+        <input type="number" class="form-control" id="standardError"
+               th:field="*{standardError}" name="standardError"/>
+    </div>
+
+    <div class="col-md-12">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-range-from-beta">Build range</button>
+    </div>
+</div>
+<div class="form-group">
+    <label for="range" class="control-label col-md-2">Range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{range}" name="range"/>
     </div>
 </div>
 
