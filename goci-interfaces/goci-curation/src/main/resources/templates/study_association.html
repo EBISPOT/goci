@@ -28,7 +28,7 @@
     <!--Handles checkbox in table -->
     <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
 
-
+    <!--https://www.datatables.net/-->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
@@ -77,95 +77,8 @@
     </div>
 </div>
 
-
-<div class="container-fluid" th:object="${study}" th:if="${not #lists.isEmpty(snpAssociationTableViews)}">
-    <div class="row">
-        <div class="col-md-12">
-
-            <a href="#DeleteAllModal"
-               class="btn btn-default"
-               data-toggle="modal"
-               role="button">Delete All SNPs</a>
-
-            <!--th:value used to send study id to javascript file-->
-            <a href="#DeleteSelectedModal"
-               class="btn btn-default"
-               role="button"
-               data-toggle="modal">Delete Checked SNPs</a>
-
-            <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=${study.Id})}"
-               class="btn btn-default"
-               role="button">Apply EFO trait(s) to all SNPs</a>
-
-            <a th:href="@{/studies/{studyId}/associations/validate_all(studyId=${study.Id})}"
-               class="btn btn-default"
-               role="button">Validate All SNPs</a>
-
-            <a th:href="@{/studies/{studyId}/associations/approve_all(studyId=${study.Id})}"
-               class="btn btn-default"
-               role="button">Approve All SNPs</a>
-
-            <!--th:value used to send study id to javascript file-->
-            <a id="approve-button"
-               class="btn btn-default"
-               role="button">Approve Checked SNPs</a>
-
-            <a id="unapprove-button"
-               class="btn btn-default"
-               role="button">Unapprove Checked SNPs</a>
-
-            <a th:href="@{/studies/{studyId}/associations/download(studyId=${study.Id})}"
-               class="btn btn-default pull-right"
-               role="button">Download SNPs to spreadsheet</a>
-
-        </div>
-    </div>
-</div>
-
-<!-- Modal HTML -->
-<div id="DeleteAllModal" class="modal fade" th:object="${study}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Confirmation</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete all SNP associations?</p>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-                    <a th:href="@{/studies/{studyId}/associations/delete_all(studyId=${study.Id})}"
-                       class="btn btn-default"
-                       role="button">Delete All SNPs</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="DeleteSelectedModal" class="modal fade" th:object="${study}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Confirmation</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete selected SNP associations?</p>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <!--th:value used to send study id to javascript file-->
-                    <a id="delete-button"
-                       class="btn btn-default"
-                       role="button">Delete Checked SNPs</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--Top level buttons and modals-->
+<div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"></div>
 <br/>
 
 <div class="container-fluid">
