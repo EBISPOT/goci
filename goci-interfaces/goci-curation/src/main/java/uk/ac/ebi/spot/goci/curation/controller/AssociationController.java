@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
@@ -52,7 +53,6 @@ import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
-import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
@@ -99,6 +99,7 @@ public class AssociationController {
     private LociAttributesService lociAttributesService;
     private AssociationFormErrorViewService associationFormErrorViewService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
+    private AssociationOperationsService associationOperationsService;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -118,7 +119,6 @@ public class AssociationController {
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
-                                 SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                  AssociationReportRepository associationReportRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationDownloadService associationDownloadService,
@@ -127,9 +127,11 @@ public class AssociationController {
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  LociAttributesService lociAttributesService,
                                  AssociationFormErrorViewService associationFormErrorViewService,
+                                 CheckEfoTermAssignmentService checkEfoTermAssignmentService,
+                                 AssociationOperationsService associationOperationsService,
                                  SnpFormRowValidator snpFormRowValidator,
                                  SnpFormColumnValidator snpFormColumnValidator,
-                                 MappingService mappingService, CheckEfoTermAssignmentService checkEfoTermAssignmentService) {
+                                 MappingService mappingService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -142,10 +144,11 @@ public class AssociationController {
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
         this.associationFormErrorViewService = associationFormErrorViewService;
+        this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
+        this.associationOperationsService = associationOperationsService;
         this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
-        this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
     }
 
     /*  Study SNP/Associations */
@@ -768,6 +771,15 @@ public class AssociationController {
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
 
+        // Determine if association is an OR or BETA type
+        Boolean isOrType = associationOperationsService.determineIfAssociationIsOrType(associationToView);
+        if (isOrType) {
+            model.addAttribute("measurementType", "or");
+        }
+        else {
+            model.addAttribute("measurementType", "beta");
+        }
+
         if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
             SnpAssociationForm form = createForm(associationToView, snpInteractionAssociationService);
             model.addAttribute("snpAssociationInteractionForm", form);
@@ -1203,7 +1215,8 @@ public class AssociationController {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
             allAssociations.add(association);
         }
-        Boolean associationsEfoTermsAssigned = checkEfoTermAssignmentService.checkAssociationsEfoAssignment(allAssociations);
+        Boolean associationsEfoTermsAssigned =
+                checkEfoTermAssignmentService.checkAssociationsEfoAssignment(allAssociations);
 
         if (!associationsEfoTermsAssigned) {
             message = "Cannot approve association(s) as no EFO trait assigned";
@@ -1267,7 +1280,8 @@ public class AssociationController {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-        Boolean associationEfoTermsAssigned = checkEfoTermAssignmentService.checkAssociationsEfoAssignment(studyAssociations);
+        Boolean associationEfoTermsAssigned =
+                checkEfoTermAssignmentService.checkAssociationsEfoAssignment(studyAssociations);
 
         if (!associationEfoTermsAssigned) {
             String message = "Cannot approve all associations as no EFO trait assigned";
