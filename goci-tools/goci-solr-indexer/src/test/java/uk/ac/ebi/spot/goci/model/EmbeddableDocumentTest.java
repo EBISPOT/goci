@@ -56,22 +56,24 @@ public class EmbeddableDocumentTest {
 
         this.association = new Association("riskFrequency",
                                            "pValueText",
-                                           1.0f,
+                                           1,
+                                           1,
+                                           false,
+                                           false,
                                            false,
                                            "snpType",
                                            false,
-                                           false,
-                                           true,
-                                           1,
-                                           1,
-                                           1.0f,
-                                           1.0f,
-                                           "orPerCopyRange",
-                                           "orPerCopyRecipRange",
-                                           "orPerCopyDescr",
+                                           (float) 1.01,
+                                           "[NR]",
+                                           "description",
+                                           (float) 1.04,
+                                           (float) 0.68,
+                                           "[NR]",
+                                           null,
+                                           null,
+                                           null,
                                            study,
-                                           Collections.emptyList(),
-                                           Collections.emptyList(), null, null, null, null);
+                                           Collections.emptyList(), Collections.emptyList(), null, null, null, null);
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
 
