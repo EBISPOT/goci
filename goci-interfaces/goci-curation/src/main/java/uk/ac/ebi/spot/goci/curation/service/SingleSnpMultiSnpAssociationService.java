@@ -207,7 +207,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
                 locus.setDescription(numberOfRows + "-SNP haplotype");
             }
             else {
-                locus.setDescription(numberOfRows + "Single variant");
+                locus.setDescription("Single variant");
             }
         }
 
