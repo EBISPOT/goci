@@ -131,28 +131,14 @@
                     <th style="font-size: small">Edit</th>
                     <th style="font-size: small">Genes (author reported)</th>
                     <th style="font-size: small">Strongest Allele</th>
-                    <th style="font-size: small">SNP
-                        <div>
-                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id}, direction='asc', associationId=${lastViewedAssociation.id})}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
-                            <a th:href="@{/studies/{studyId}/associations/sortrsid(studyId=${study.id}, direction='desc', associationId=${lastViewedAssociation.id})}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
-                        </div>
-                    </th>
+                    <th style="font-size: small">SNP</th>
                     <th style="font-size: small">Proxy SNP</th>
                     <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
                     <th style="font-size: small; width: 5%">Risk element (allele, haplotype or SNPxSNP interaction)
                                                             frequency in
                                                             controls
                     </th>
-                    <th style="font-size: small">p-Value (mantissa x 10 exponent)
-                        <div>
-                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='asc', associationId=${lastViewedAssociation.id})}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
-                            <a th:href="@{/studies/{studyId}/associations/sortpvalue(studyId=${study.id},direction='desc', associationId=${lastViewedAssociation.id})}"
-                               class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
-                        </div>
-                    </th>
+                    <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
                     <th style="font-size: small">p-Value Text</th>
                     <th style="font-size: small">EFO trait</th>
                     <th style="font-size: small">OR per copy num</th>
