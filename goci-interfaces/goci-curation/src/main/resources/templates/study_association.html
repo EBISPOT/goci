@@ -34,6 +34,9 @@
     <script type="text/javascript"
             charset="utf8"
             src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
 </head>
 <body>
@@ -89,11 +92,40 @@
             <div class="well well-sm" th:if="${#lists.isEmpty(snpAssociationTableViews)}">
                 <p style="color:grey">No snp associations to display for this study</p>
             </div>
+
             <table id="mainTable"
                    class="table table-hover table-bordered"
                    th:if="${not #lists.isEmpty(snpAssociationTableViews)}" cellspacing="0" width="100%">
                 <br/>
                 <caption id="total" th:text="'Total number of SNP associations = '+ ${totalAssociations}"></caption>
+                <div>Toggle column:
+                    <a class="toggle-vis" data-column="1">Genes</a> -
+                    <a class="toggle-vis" data-column="2">Strongest Allele</a> -
+                    <a class="toggle-vis" data-column="3">SNP</a> -
+                    <a class="toggle-vis" data-column="4">Proxy SNP</a> -
+                    <a class="toggle-vis" data-column="5">Independent SNP risk allele frequency in controls</a> -
+                    <a class="toggle-vis" data-column="6">Risk element (allele, haplotype or SNPxSNP interaction)
+                                                          frequency in
+                                                          controls</a> -
+                    <a class="toggle-vis" data-column="7">p-Value (mantissa x 10 exponent)</a> -
+                    <a class="toggle-vis" data-column="8">p-Value Text</a> -
+                    <a class="toggle-vis" data-column="9">EFO trait</a> -
+                    <a class="toggle-vis" data-column="10">OR per copy num</a> -
+                    <a class="toggle-vis" data-column="11">OR per copy reciprocal</a> -
+                    <a class="toggle-vis" data-column="12">OR per copy reciprocal range</a> -
+                    <a class="toggle-vis" data-column="13">Beta num</a> -
+                    <a class="toggle-vis" data-column="14">Beta unit</a> -
+                    <a class="toggle-vis" data-column="15">Beta direction</a> -
+                    <a class="toggle-vis" data-column="16">Range</a> -
+                    <a class="toggle-vis" data-column="17">Description</a> -
+                    <a class="toggle-vis" data-column="18">Std Error</a> -
+                    <a class="toggle-vis" data-column="19">SNP Type</a> -
+                    <a class="toggle-vis" data-column="20">SNP Status</a> -
+                    <a class="toggle-vis" data-column="21">Multi-SNP haplotype</a> -
+                    <a class="toggle-vis" data-column="22">SNP:SNP interaction</a> -
+                    <a class="toggle-vis" data-column="23">Errors/ Mapping Details</a> -
+                    <a class="toggle-vis" data-column="24">SNP Approved</a>
+                </div>
                 <thead>
                 <tr>
                     <th style="font-size: small">Edit</th>
@@ -506,10 +538,23 @@
 
 <script>
     $(document).ready(function() {
-        $('#mainTable').DataTable({
-                                      "info": false,
-                                      "paging": false
-                                  });
+        var table = $('#mainTable').DataTable({
+                                                  "info": false,
+                                                  "paging": false,
+                                                  "columnDefs": [
+                                                      {'bSortable': false, 'targets': [0, 25]}
+                                                  ]
+                                              });
+
+        $('a.toggle-vis').on('click', function(e) {
+            e.preventDefault();
+
+            // Get the column API object
+            var column = table.column($(this).attr('data-column'));
+
+            // Toggle the visibility
+            column.visible(!column.visible());
+        });
     });
 </script>
 
