@@ -303,7 +303,6 @@ public class AssociationController {
 
         // Add one row by default and set description
         emptyForm.getSnpFormRows().add(new SnpFormRow());
-        emptyForm.setMultiSnpHaplotypeDescr("Single variant");
 
         // Measurement type determines whether we render a OR/Beta form
         model.addAttribute("snpAssociationForm", emptyForm);
