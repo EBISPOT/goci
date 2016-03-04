@@ -116,6 +116,14 @@
                         </div>
                         <div id="rest_result"></div>
 
+                        <!--Hidden as description is always "Single variant"-->
+                        <div class="form-group">
+                            <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
+                            <div class="col-md-10">
+                                <input type="hidden" class="form-control" id="multiSnpHaplotypeDescr"
+                                       th:field="*{multiSnpHaplotypeDescr}" th:text="Single variant"/>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="authorgenes" class="control-label col-md-2">Gene(s)</label>
