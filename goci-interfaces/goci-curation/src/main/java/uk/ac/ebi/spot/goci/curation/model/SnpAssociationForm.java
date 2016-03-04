@@ -39,8 +39,6 @@ public abstract class SnpAssociationForm {
 
     private Boolean snpApproved = false;
 
-    private Boolean orType = false;
-
     private Float standardError;
 
     private String range;
@@ -94,7 +92,6 @@ public abstract class SnpAssociationForm {
         this.genomicContexts = genomicContexts;
         this.snpType = snpType;
         this.snpApproved = snpApproved;
-        this.orType = orType;
         this.standardError = standardError;
         this.range = range;
         this.description = description;
@@ -192,14 +189,6 @@ public abstract class SnpAssociationForm {
 
     public void setSnpApproved(Boolean snpApproved) {
         this.snpApproved = snpApproved;
-    }
-
-    public Boolean getOrType() {
-        return orType;
-    }
-
-    public void setOrType(Boolean orType) {
-        this.orType = orType;
     }
 
     public String getSnpType() {

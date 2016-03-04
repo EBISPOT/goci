@@ -63,7 +63,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         form.setRiskFrequency(association.getRiskFrequency());
         form.setPvalueText(association.getPvalueText());
         form.setOrPerCopyNum(association.getOrPerCopyNum());
-        form.setOrType(association.getOrType());
         form.setSnpType(association.getSnpType());
         // TODO      form.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
         form.setSnpApproved(association.getSnpApproved());
@@ -145,7 +144,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         // Set simple string, boolean and float association attributes
         association.setPvalueText(form.getPvalueText());
-        association.setOrType(form.getOrType());
         association.setSnpType(form.getSnpType());
         //     association.setMultiSnpHaplotype(form.getMultiSnpHaplotype());
         association.setSnpApproved(form.getSnpApproved());

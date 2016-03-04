@@ -63,7 +63,6 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         snpAssociationInteractionForm.setOrPerCopyNum(association.getOrPerCopyNum());
         snpAssociationInteractionForm.setSnpType(association.getSnpType());
         snpAssociationInteractionForm.setSnpApproved(association.getSnpApproved());
-        snpAssociationInteractionForm.setOrType(association.getOrType());
         snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
         snpAssociationInteractionForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
@@ -172,7 +171,6 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
 
         // Set simple string, boolean and float association attributes
         association.setPvalueText(form.getPvalueText());
-        association.setOrType(form.getOrType());
         association.setSnpType(form.getSnpType());
         association.setSnpApproved(form.getSnpApproved());
         association.setOrPerCopyNum(form.getOrPerCopyNum());
