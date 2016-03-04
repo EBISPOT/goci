@@ -179,6 +179,14 @@
                             <div th:if="${#strings.containsIgnoreCase(measurementType,'beta')}"
                                  th:include="fragments/association_beta_fragment :: beta"></div>
 
+                            <!--Hidden field-->
+                            <div class="form-group">
+                                <label for="multiSNPHaplotype" class="control-label col-md-2"></label>
+                                <input id="multiSNPHaplotype" type="hidden"
+                                       th:field="*{multiSnpHaplotype}" th:value="true"/>
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     <button type="submit" class="btn btn-primary">Save</button>

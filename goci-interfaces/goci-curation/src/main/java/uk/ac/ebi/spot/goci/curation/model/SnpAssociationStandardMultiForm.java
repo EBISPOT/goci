@@ -25,6 +25,8 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
 
     private Integer multiSnpHaplotypeNum;
 
+    private Boolean multiSnpHaplotype = false;
+
     // Constructors
     public SnpAssociationStandardMultiForm() {
     }
@@ -52,7 +54,7 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
                                            List<SnpFormRow> snpFormRows,
                                            Collection<String> authorReportedGenes,
                                            String multiSnpHaplotypeDescr,
-                                           Integer multiSnpHaplotypeNum) {
+                                           Integer multiSnpHaplotypeNum, Boolean multiSnpHaplotype) {
         super(associationId,
               riskFrequency,
               pvalueText,
@@ -77,6 +79,7 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
         this.authorReportedGenes = authorReportedGenes;
         this.multiSnpHaplotypeDescr = multiSnpHaplotypeDescr;
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
+        this.multiSnpHaplotype = multiSnpHaplotype;
     }
 
     public List<SnpFormRow> getSnpFormRows() {
@@ -109,5 +112,13 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
 
     public void setMultiSnpHaplotypeNum(Integer multiSnpHaplotypeNum) {
         this.multiSnpHaplotypeNum = multiSnpHaplotypeNum;
+    }
+
+    public Boolean getMultiSnpHaplotype() {
+        return multiSnpHaplotype;
+    }
+
+    public void setMultiSnpHaplotype(Boolean multiSnpHaplotype) {
+        this.multiSnpHaplotype = multiSnpHaplotype;
     }
 }

@@ -128,9 +128,9 @@
                                                        th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                             </td>
                                             <!--<td>-->
-                                                <!--<input th:id="merged_+${rowStat.count}"-->
-                                                       <!--type="text"-->
-                                                       <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
+                                            <!--<input th:id="merged_+${rowStat.count}"-->
+                                            <!--type="text"-->
+                                            <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
                                             <!--</td>-->
                                             <td>
                                                 <button type="submit" name="removeRow" th:value="${rowStat.index}">
@@ -172,11 +172,11 @@
                             <div th:if="${#strings.containsIgnoreCase(measurementType,'beta')}"
                                  th:include="fragments/association_beta_fragment :: beta"></div>
 
-
+                            <!--Hidden field-->
                             <div class="form-group">
                                 <label for="multiSNPHaplotype" class="control-label col-md-2"></label>
                                 <input id="multiSNPHaplotype" type="hidden"
-                                       th:field="*{multiSnpHaplotype}"/>
+                                       th:field="*{multiSnpHaplotype}" th:value="true"/>
                             </div>
 
 

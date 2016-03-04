@@ -64,7 +64,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         form.setPvalueText(association.getPvalueText());
         form.setOrPerCopyNum(association.getOrPerCopyNum());
         form.setSnpType(association.getSnpType());
-        // TODO      form.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
+        form.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
         form.setSnpApproved(association.getSnpApproved());
         form.setPvalueMantissa(association.getPvalueMantissa());
         form.setPvalueExponent(association.getPvalueExponent());
@@ -145,7 +145,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         // Set simple string, boolean and float association attributes
         association.setPvalueText(form.getPvalueText());
         association.setSnpType(form.getSnpType());
-        //     association.setMultiSnpHaplotype(form.getMultiSnpHaplotype());
+        association.setMultiSnpHaplotype(form.getMultiSnpHaplotype());
         association.setSnpApproved(form.getSnpApproved());
         association.setOrPerCopyNum(form.getOrPerCopyNum());
         association.setOrPerCopyRecip(form.getOrPerCopyRecip());
@@ -224,11 +224,10 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
             // Create a new risk allele and assign newly created snp
             RiskAllele riskAllele = lociAttributesService.createRiskAllele(curatorEnteredRiskAllele, snp);
 
-            // If its not a multi-snp haplotype save frequency to risk allele
-            // TODO FIX
- /*           if (!form.getMultiSnpHaplotype()) {
+            // If association is not a multi-snp haplotype save frequency to risk allele
+            if (!form.getMultiSnpHaplotype()) {
                 riskAllele.setRiskFrequency(form.getRiskFrequency());
-            }*/
+            }
 
             // Check for proxies and if we have one create a proxy snps
             if (row.getProxySnps() != null && !row.getProxySnps().isEmpty()) {
