@@ -34,14 +34,11 @@
     <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
     <script src="../static/js/goci-snp-association-mapping.js"
             th:src="@{../js/goci-snp-association-mapping.js}"></script>
-
-
 </head>
 <body>
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
-
 
 <div class="container-fluid">
     <!-- Link to the different SNP tabs -->
@@ -85,31 +82,18 @@
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
                                 <table class="table table-hover table-bordered">
-
-                                    <div class="form-group">
-                                        <label for="multiSnpHaplotypeDescr" class="control-label col-md-2"></label>
-
-                                        <div class="col-md-10">
-                                            <input type="hidden" class="form-control" id="multiSnpHaplotypeDescr"
-                                                   th:field="*{multiSnpHaplotypeDescr}"/>
-                                        </div>
-                                    </div>
-
                                     <thead>
                                     <tr>
                                         <th>SNP</th>
                                         <th>Strongest SNP-Risk Allele</th>
                                         <th>Proxy SNP</th>
-                                        <!--<th>Merged</th>-->
-
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="row,rowStat : *{snpFormRows}">
                                         <td>
                                             <input th:id="snp_id_+${rowStat.count}"
-                                                   type="text"
-                                                   th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
+                                                   type="text" th:field="*{snpFormRows[__${rowStat.index}__].snp}"/>
 
                                         </td>
                                         <td>
@@ -117,15 +101,11 @@
                                                    th:field="*{snpFormRows[__${rowStat.index}__].strongestRiskAllele}"/>
                                         </td>
                                         <td>
-                                            <input type="text" data-role="tagsinput" label="proxySnps"
+                                            <input type="text"
+                                                   data-role="tagsinput"
+                                                   label="proxySnps"
                                                    th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>
                                         </td>
-                                        <!--<td>-->
-                                            <!--<input th:id="merged_+${rowStat.count}"-->
-                                                   <!--type="text"-->
-                                                   <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
-                                        <!--</td>-->
-
                                     </tr>
                                     </tbody>
                                 </table>
@@ -141,7 +121,6 @@
                                        data-role="tagsinput"
                                        placeholder="Enter author reported genes..."/>
                             </div>
-
                         </div>
 
                         <div class="form-group">
@@ -160,7 +139,6 @@
                         <div th:if="${#strings.containsIgnoreCase(measurementType,'beta')}"
                              th:include="fragments/association_beta_fragment :: beta"></div>
 
-
                         <!--Hidden as no longer completed for new associations-->
                         <div class="form-group">
                             <input id="snpApproved" type="hidden" th:field="*{snpApproved}"/>
@@ -174,7 +152,6 @@
                         </div>
                     </div>
 
-
                     <!-- Mapping div containing the mappings and context forms -->
                     <div class="row" id="mapping_div" style="display:none">
                         <div class="form-group">
@@ -185,7 +162,6 @@
                             <div th:include="fragments/snp_genomic_context :: genomic_context_table"></div>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -198,21 +174,17 @@
         $('#EFOTrait').select2();
     });
 </script>
-
 <!--Formats tags input -->
 <script>
     $('#proxySnps').tagsinput({
                                   trimValue: true
                               });
 </script>
-
 <!--Formats tags input -->
 <script>
     $('#authorgenes').tagsinput({
                                     trimValue: true
                                 });
 </script>
-
 </body>
-
 </html>
