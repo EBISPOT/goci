@@ -202,7 +202,14 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         if (form.getMultiSnpHaplotypeDescr() != null && !form.getMultiSnpHaplotypeDescr().isEmpty()) {
             locus.setDescription(form.getMultiSnpHaplotypeDescr());
         }
-        else { locus.setDescription(numberOfRows + "-SNP haplotype");}
+        else {
+            if (numberOfRows > 1) {
+                locus.setDescription(numberOfRows + "-SNP haplotype");
+            }
+            else {
+                locus.setDescription(numberOfRows + "Single variant");
+            }
+        }
 
         // Create gene from each string entered, may sure to check pre-existence
         Collection<String> authorReportedGenes = form.getAuthorReportedGenes();
