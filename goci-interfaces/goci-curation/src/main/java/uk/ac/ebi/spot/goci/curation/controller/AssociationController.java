@@ -288,7 +288,7 @@ public class AssociationController {
         emptyForm.getSnpFormRows().add(new SnpFormRow());
 
         // Measurement type determines whether we render a OR/Beta form
-        model.addAttribute("snpAssociationForm", emptyForm);
+        model.addAttribute("form", emptyForm);
         model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
@@ -309,7 +309,7 @@ public class AssociationController {
         SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
 
         // Measurement type determines whether we render a OR/Beta form
-        model.addAttribute("snpAssociationForm", emptyForm);
+        model.addAttribute("form", emptyForm);
         model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
@@ -330,7 +330,7 @@ public class AssociationController {
 
         // Measurement type determines whether we render a OR/Beta form
         model.addAttribute("measurementType", measurementType);
-        model.addAttribute("snpAssociationInteractionForm", emptyForm);
+        model.addAttribute("form", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -351,7 +351,7 @@ public class AssociationController {
         }
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -373,7 +373,7 @@ public class AssociationController {
         }
 
         // Pass back updated form
-        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+        model.addAttribute("form", snpAssociationInteractionForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -389,7 +389,7 @@ public class AssociationController {
         snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -405,7 +405,7 @@ public class AssociationController {
         snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+        model.addAttribute("form", snpAssociationInteractionForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -427,7 +427,7 @@ public class AssociationController {
         snpAssociationStandardMultiForm.getSnpFormRows().remove(rowId.intValue());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -449,7 +449,7 @@ public class AssociationController {
         snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+        model.addAttribute("form", snpAssociationInteractionForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -471,7 +471,7 @@ public class AssociationController {
                 associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
         if (hasErrors) {
-            model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+            model.addAttribute("form", snpAssociationStandardMultiForm);
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
@@ -522,7 +522,7 @@ public class AssociationController {
                 associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
         if (hasErrors) {
-            model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+            model.addAttribute("form", snpAssociationStandardMultiForm);
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
@@ -573,7 +573,7 @@ public class AssociationController {
                                                                                                   snpAssociationInteractionForm);
 
         if (hasErrors) {
-            model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+            model.addAttribute("form", snpAssociationInteractionForm);
 
             // Also passes back study object to view so we can create links back to main study page
             model.addAttribute("study", studyRepository.findOne(studyId));
@@ -702,8 +702,7 @@ public class AssociationController {
 
             // Return any association errors
             AssociationFormErrorView associationFormErrorView =
-                    associationFormErrorViewService.checkAssociationForErrors(
-                            associationToEdit);
+                    associationFormErrorViewService.checkAssociationForErrors(associationToEdit);
             model.addAttribute("errors", associationFormErrorView);
 
             // Establish study
@@ -713,24 +712,14 @@ public class AssociationController {
             model.addAttribute("study", studyRepository.findOne(studyId));
 
             if (associationType.equalsIgnoreCase("interaction")) {
-                model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+                model.addAttribute("form", snpAssociationInteractionForm);
                 return "edit_snp_interaction_association";
             }
-
             else {
-                Integer locusCount = associationToEdit.getLoci().size();
+                model.addAttribute("form", snpAssociationStandardMultiForm);
 
-                List<RiskAllele> riskAlleles = new ArrayList<>();
-                for (Locus locus : associationToEdit.getLoci()) {
-                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                        riskAlleles.add(riskAllele);
-                    }
-                }
-
-                model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
-
-                // Determine html view to display
-                if (riskAlleles.size() > 1) {
+                // Determine view
+                if (associationToEdit.getMultiSnpHaplotype()) {
                     return "edit_multi_snp_association";
                 }
                 else {
@@ -746,13 +735,6 @@ public class AssociationController {
             if (associationType.equalsIgnoreCase("interaction")) {
                 editedAssociation = snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
             }
-
-            else if (associationType.equalsIgnoreCase("standardormulti")) {
-                editedAssociation =
-                        singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
-            }
-
-            // default to standard view
             else {
                 editedAssociation =
                         singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
@@ -795,7 +777,7 @@ public class AssociationController {
         snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -823,7 +805,7 @@ public class AssociationController {
         snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+        model.addAttribute("form", snpAssociationInteractionForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -857,7 +839,7 @@ public class AssociationController {
         snpAssociationStandardMultiForm.getSnpFormRows().remove(rowId.intValue());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -891,7 +873,7 @@ public class AssociationController {
         snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
+        model.addAttribute("form", snpAssociationInteractionForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -1266,7 +1248,7 @@ public class AssociationController {
     public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
         return dataIntegrityException.getMessage();
     }
-    
+
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
@@ -1299,4 +1281,3 @@ public class AssociationController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "loci.strongestRiskAlleles.snp.rsId"));
     }
 }
-
