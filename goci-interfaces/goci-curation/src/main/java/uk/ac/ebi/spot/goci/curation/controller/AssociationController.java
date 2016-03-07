@@ -341,7 +341,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRows"})
     public String addRows(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                           Model model,
-                          @PathVariable Long studyId) {
+                          @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
         Integer numberOfRows = snpAssociationStandardMultiForm.getMultiSnpHaplotypeNum();
 
         // Add number of rows curator selected
@@ -349,11 +349,9 @@ public class AssociationController {
             snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
             numberOfRows--;
         }
-
-        // Pass back updated form
+        // Pass back required attributes
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("form", snpAssociationStandardMultiForm);
-
-        // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_multi_snp_association";
@@ -363,7 +361,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCols"})
     public String addRows(SnpAssociationInteractionForm snpAssociationInteractionForm,
                           Model model,
-                          @PathVariable Long studyId) {
+                          @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
         Integer numberOfCols = snpAssociationInteractionForm.getNumOfInteractions();
 
         // Add number of cols curator selected
@@ -372,10 +370,9 @@ public class AssociationController {
             numberOfCols--;
         }
 
-        // Pass back updated form
+        // Pass back required attributes
         model.addAttribute("form", snpAssociationInteractionForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_snp_interaction_association";
@@ -385,13 +382,13 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRow"})
     public String addRow(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                          Model model,
-                         @PathVariable Long studyId) {
+                         @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+
         snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
-        // Pass back updated form
+        // Pass back required attributes
         model.addAttribute("form", snpAssociationStandardMultiForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_multi_snp_association";
@@ -401,13 +398,13 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCol"})
     public String addCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
                          Model model,
-                         @PathVariable Long studyId) {
+                         @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+
         snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
 
-        // Pass back updated form
+        // Pass back required attributes
         model.addAttribute("form", snpAssociationInteractionForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_snp_interaction_association";
@@ -418,7 +415,7 @@ public class AssociationController {
     public String removeRow(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                             HttpServletRequest req,
                             Model model,
-                            @PathVariable Long studyId) {
+                            @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
         //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
@@ -426,10 +423,9 @@ public class AssociationController {
         // Remove row
         snpAssociationStandardMultiForm.getSnpFormRows().remove(rowId.intValue());
 
-        // Pass back updated form
+        // Pass back required attributes
         model.addAttribute("form", snpAssociationStandardMultiForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_multi_snp_association";
@@ -440,7 +436,7 @@ public class AssociationController {
     public String removeCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
                             HttpServletRequest req,
                             Model model,
-                            @PathVariable Long studyId) {
+                            @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
         //Index of value to remove
         final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
@@ -448,10 +444,9 @@ public class AssociationController {
         // Remove col
         snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
 
-        // Pass back updated form
+        // Pass back required attributes
         model.addAttribute("form", snpAssociationInteractionForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         return "add_snp_interaction_association";
