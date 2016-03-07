@@ -65,7 +65,7 @@
                     <form class="form-horizontal"
                           method="post"
                           name="snp-association-form"
-                          th:object="${snpAssociationInteractionForm}"
+                          th:object="${form}"
                           th:action="@{${uri}(associationtype=interaction)}">
 
                         <!--Only show save button if SNP has not been approved, warn if editing approved SNP-->
