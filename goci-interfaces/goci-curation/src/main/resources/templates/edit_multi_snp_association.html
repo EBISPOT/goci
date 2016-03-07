@@ -106,7 +106,7 @@
                                             <th>Proxy SNP</th>
                                             <!--<th>Merged</th>-->
                                             <th>
-                                                <button type="submit" name="addRow">Add row</button>
+                                                <button type="submit" class="btn btn-default btn-sm" name="addRow">Add row</button>
                                             </th>
                                         </tr>
                                         </thead>
@@ -133,10 +133,9 @@
                                             <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
                                             <!--</td>-->
                                             <td>
-                                                <button type="submit" name="removeRow" th:value="${rowStat.index}">
-                                                    Remove row
+                                                 <button type="submit" class="btn btn-danger btn-sm">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                                 </button>
-
                                             </td>
                                         </tr>
                                         </tbody>
