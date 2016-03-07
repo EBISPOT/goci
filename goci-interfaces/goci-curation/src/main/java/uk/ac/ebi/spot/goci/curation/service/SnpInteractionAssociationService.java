@@ -30,7 +30,7 @@ import java.util.List;
  *         Used only for SNP X SNP interaction associations
  */
 @Service
-public class SnpInteractionAssociationService implements SnpAssociationFormService  {
+public class SnpInteractionAssociationService implements SnpAssociationFormService {
 
     // Repositories
     private LocusRepository locusRepository;
@@ -55,25 +55,30 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
     @Override public SnpAssociationForm createForm(Association association) {
 
         // Create form
-        SnpAssociationInteractionForm snpAssociationInteractionForm = new SnpAssociationInteractionForm();
+        SnpAssociationInteractionForm form = new SnpAssociationInteractionForm();
 
         // Set simple string and boolean values
-        snpAssociationInteractionForm.setAssociationId(association.getId());
-        snpAssociationInteractionForm.setPvalueText(association.getPvalueText());
-        snpAssociationInteractionForm.setOrPerCopyNum(association.getOrPerCopyNum());
-        snpAssociationInteractionForm.setSnpType(association.getSnpType());
-        snpAssociationInteractionForm.setSnpApproved(association.getSnpApproved());
-        snpAssociationInteractionForm.setPvalueMantissa(association.getPvalueMantissa());
-        snpAssociationInteractionForm.setPvalueExponent(association.getPvalueExponent());
-        snpAssociationInteractionForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
-        snpAssociationInteractionForm.setStandardError(association.getStandardError());
-        snpAssociationInteractionForm.setRange(association.getRange());
-        snpAssociationInteractionForm.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
-        snpAssociationInteractionForm.setDescription(association.getDescription());
-        snpAssociationInteractionForm.setRiskFrequency(association.getRiskFrequency());
+        form.setAssociationId(association.getId());
+        form.setPvalueText(association.getPvalueText());
+        form.setSnpType(association.getSnpType());
+        form.setSnpApproved(association.getSnpApproved());
+        form.setPvalueMantissa(association.getPvalueMantissa());
+        form.setPvalueExponent(association.getPvalueExponent());
+        form.setStandardError(association.getStandardError());
+        form.setRange(association.getRange());
+        form.setDescription(association.getDescription());
+        form.setRiskFrequency(association.getRiskFrequency());
+
+        // Set OR/Beta values
+        form.setOrPerCopyNum(association.getOrPerCopyNum());
+        form.setOrPerCopyRecip(association.getOrPerCopyRecip());
+        form.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
+        form.setBetaNum(association.getBetaNum());
+        form.setBetaUnit(association.getBetaUnit());
+        form.setBetaDirection(association.getBetaDirection());
 
         // Add collection of Efo traits
-        snpAssociationInteractionForm.setEfoTraits(association.getEfoTraits());
+        form.setEfoTraits(association.getEfoTraits());
 
         // Create form columns
         List<SnpFormColumn> snpFormColumns = new ArrayList<>();
@@ -158,39 +163,21 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
                 snpFormColumns.add(snpFormColumn);
             }
         }
-        snpAssociationInteractionForm.setSnpMappingForms(snpMappingForms);
-        snpAssociationInteractionForm.setGenomicContexts(snpGenomicContexts);
-        snpAssociationInteractionForm.setSnpFormColumns(snpFormColumns);
-        snpAssociationInteractionForm.setNumOfInteractions(snpFormColumns.size());
-        return snpAssociationInteractionForm;
+        form.setSnpMappingForms(snpMappingForms);
+        form.setGenomicContexts(snpGenomicContexts);
+        form.setSnpFormColumns(snpFormColumns);
+        form.setNumOfInteractions(snpFormColumns.size());
+        return form;
     }
 
     public Association createAssociation(SnpAssociationInteractionForm form) {
 
-        Association association = new Association();
-
         // Set simple string, boolean and float association attributes
-        association.setPvalueText(form.getPvalueText());
-        association.setSnpType(form.getSnpType());
-        association.setSnpApproved(form.getSnpApproved());
-        association.setOrPerCopyNum(form.getOrPerCopyNum());
-        association.setOrPerCopyRecip(form.getOrPerCopyRecip());
-        association.setRange(form.getRange());
-        association.setOrPerCopyRecipRange(form.getOrPerCopyRecipRange());
-        association.setStandardError(form.getStandardError());
-        association.setDescription(form.getDescription());
-        association.setRiskFrequency(form.getRiskFrequency());
+        Association association = setCommonAssociationElements(form);
 
         // Set multi-snp and snp interaction checkboxes
         association.setMultiSnpHaplotype(false);
         association.setSnpInteraction(true);
-
-        // Add collection of EFO traits
-        association.setEfoTraits(form.getEfoTraits());
-
-        // Set mantissa and exponent
-        association.setPvalueMantissa(form.getPvalueMantissa());
-        association.setPvalueExponent(form.getPvalueExponent());
 
         // Check for existing loci, when editing delete any existing loci and risk alleles
         // They will be recreated in next for loop
@@ -268,6 +255,4 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         association.setLoci(loci);
         return association;
     }
-
-
 }

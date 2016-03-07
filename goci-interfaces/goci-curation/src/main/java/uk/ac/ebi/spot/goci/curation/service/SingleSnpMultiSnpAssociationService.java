@@ -62,18 +62,22 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         // Set simple string and float association attributes
         form.setRiskFrequency(association.getRiskFrequency());
         form.setPvalueText(association.getPvalueText());
-        form.setOrPerCopyNum(association.getOrPerCopyNum());
         form.setSnpType(association.getSnpType());
         form.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
         form.setSnpApproved(association.getSnpApproved());
         form.setPvalueMantissa(association.getPvalueMantissa());
         form.setPvalueExponent(association.getPvalueExponent());
-        form.setOrPerCopyRecip(association.getOrPerCopyRecip());
         form.setStandardError(association.getStandardError());
         form.setRange(association.getRange());
-        form.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
         form.setDescription(association.getDescription());
 
+        // Set OR/Beta values
+        form.setOrPerCopyNum(association.getOrPerCopyNum());
+        form.setOrPerCopyRecip(association.getOrPerCopyRecip());
+        form.setOrPerCopyRecipRange(association.getOrPerCopyRecipRange());
+        form.setBetaNum(association.getBetaNum());
+        form.setBetaUnit(association.getBetaUnit());
+        form.setBetaDirection(association.getBetaDirection());
 
         // Add collection of Efo traits
         form.setEfoTraits(association.getEfoTraits());
@@ -140,32 +144,10 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
     public Association createAssociation(SnpAssociationStandardMultiForm form) {
 
-        Association association = new Association();
-
-        // Set simple string, boolean and float association attributes
-        association.setPvalueText(form.getPvalueText());
-        association.setSnpType(form.getSnpType());
+        // Set common string, boolean and float association attributes
+        Association association = setCommonAssociationElements(form);
         association.setMultiSnpHaplotype(form.getMultiSnpHaplotype());
-        association.setSnpApproved(form.getSnpApproved());
-        association.setOrPerCopyNum(form.getOrPerCopyNum());
-        association.setOrPerCopyRecip(form.getOrPerCopyRecip());
-        association.setRange(form.getRange());
-        association.setOrPerCopyRecipRange(form.getOrPerCopyRecipRange());
-        association.setStandardError(form.getStandardError());
-        association.setDescription(form.getDescription());
-
-        // Set risk frequency
-        association.setRiskFrequency(form.getRiskFrequency());
-
-        // Set value by default to false
         association.setSnpInteraction(false);
-
-        // Add collection of EFO traits
-        association.setEfoTraits(form.getEfoTraits());
-
-        // Set mantissa and exponent
-        association.setPvalueMantissa(form.getPvalueMantissa());
-        association.setPvalueExponent(form.getPvalueExponent());
 
         // Check for existing loci, when editing delete any existing loci and risk alleles
         // They will be recreated in next for loop
@@ -264,6 +246,5 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         loci.add(locus);
         association.setLoci(loci);
         return association;
-
     }
 }
