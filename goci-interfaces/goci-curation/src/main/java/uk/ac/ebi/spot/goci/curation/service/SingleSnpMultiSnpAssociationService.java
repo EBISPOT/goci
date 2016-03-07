@@ -146,7 +146,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         // Set common string, boolean and float association attributes
         Association association = setCommonAssociationElements(form);
-        association.setMultiSnpHaplotype(form.getMultiSnpHaplotype());
         association.setSnpInteraction(false);
 
         // Check for existing loci, when editing delete any existing loci and risk alleles
@@ -179,6 +178,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
         Integer numberOfRows = form.getSnpFormRows().size();
         if (numberOfRows > 1) {
             locus.setHaplotypeSnpCount(numberOfRows);
+            association.setMultiSnpHaplotype(true);
         }
 
         if (form.getMultiSnpHaplotypeDescr() != null && !form.getMultiSnpHaplotypeDescr().isEmpty()) {
