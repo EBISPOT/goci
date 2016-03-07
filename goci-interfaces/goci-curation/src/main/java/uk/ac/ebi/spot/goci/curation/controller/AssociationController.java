@@ -37,7 +37,6 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
-import uk.ac.ebi.spot.goci.curation.service.SnpAssociationFormService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
 import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
@@ -660,49 +659,21 @@ public class AssociationController {
             model.addAttribute("measurementType", "beta");
         }
 
+        // Determine form to return
+        SnpAssociationForm form = associationOperationsService.generateForm(associationToView);
+        model.addAttribute("form", form);
+
+        // Determine page to return
         if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
-            SnpAssociationForm form = createForm(associationToView, snpInteractionAssociationService);
-            model.addAttribute("snpAssociationInteractionForm", form);
             return "edit_snp_interaction_association";
         }
 
         else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
-            SnpAssociationForm form = createForm(associationToView, singleSnpMultiSnpAssociationService);
-            model.addAttribute("snpAssociationForm", form);
             return "edit_multi_snp_association";
         }
 
-        // If attributes haven't been set determine based on locus count and risk allele count
         else {
-            Integer locusCount = associationToView.getLoci().size();
-
-            List<RiskAllele> riskAlleles = new ArrayList<>();
-            for (Locus locus : associationToView.getLoci()) {
-                for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                    riskAlleles.add(riskAllele);
-                }
-            }
-
-            // Case where we have SNP interaction
-            if (locusCount > 1) {
-                SnpAssociationForm form = createForm(associationToView, snpInteractionAssociationService);
-                model.addAttribute("snpAssociationInteractionForm", form);
-                return "edit_snp_interaction_association";
-            }
-            else {
-
-                // Create form and return to user
-                SnpAssociationForm form = createForm(associationToView, singleSnpMultiSnpAssociationService);
-                model.addAttribute("snpAssociationForm", form);
-
-                // If editing multi-snp haplotype
-                if (riskAlleles.size() > 1) {
-                    return "edit_multi_snp_association";
-                }
-                else {
-                    return "edit_standard_snp_association";
-                }
-            }
+            return "edit_standard_snp_association";
         }
     }
 
@@ -1425,17 +1396,5 @@ public class AssociationController {
 
         return result.hasErrors();
     }
-
-    /**
-     * Create a form from association details
-     *
-     * @param association Association to create form from
-     * @param service     Service to create form
-     */
-    private SnpAssociationForm createForm(Association association, SnpAssociationFormService service) {
-        SnpAssociationForm form = service.createForm(association);
-        return form;
-    }
-
 }
 
