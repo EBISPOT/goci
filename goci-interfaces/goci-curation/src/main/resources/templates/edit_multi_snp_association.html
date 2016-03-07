@@ -133,7 +133,10 @@
                                             <!--th:field="*{snpFormRows[__${rowStat.index}__].merged}"/>-->
                                             <!--</td>-->
                                             <td>
-                                                 <button type="submit" class="btn btn-danger btn-sm" name="removeRow">
+                                                 <button type="submit"
+                                                         class="btn btn-danger btn-sm"
+                                                         name="removeRow"
+                                                         th:value="${rowStat.index}">
                                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                                 </button>
                                             </td>
