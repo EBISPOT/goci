@@ -109,8 +109,8 @@
                                         <tr>
                                             <td></td>
                                             <td th:each="col,colStat : *{snpFormColumns}">
-                                                 <button class="btn btn-default btn-sm" type="submit" name="removeCol"
-                                                         th:value="${colStat.index}"><span class="glyphicon glyphicon-remove"
+                                                 <button class="btn btn-danger btn-sm" type="submit" name="removeCol"
+                                                         th:value="${colStat.index}"><span class="glyphicon glyphicon-trash"
                                                                                            aria-hidden="true"></span>
                                              </button>
                                             </td>
