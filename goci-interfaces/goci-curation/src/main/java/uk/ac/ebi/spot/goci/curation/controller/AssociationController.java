@@ -38,17 +38,13 @@ import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -87,7 +83,6 @@ public class AssociationController {
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
     private LocusRepository locusRepository;
-    private AssociationReportRepository associationReportRepository;
 
     // Services
     private AssociationBatchLoaderService associationBatchLoaderService;
@@ -99,12 +94,6 @@ public class AssociationController {
     private AssociationFormErrorViewService associationFormErrorViewService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
-
-    // Validators
-    private SnpFormRowValidator snpFormRowValidator;
-    private SnpFormColumnValidator snpFormColumnValidator;
-
-    // Uses goci-mapper service to run mapping
     private MappingService mappingService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -118,7 +107,6 @@ public class AssociationController {
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
-                                 AssociationReportRepository associationReportRepository,
                                  AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationDownloadService associationDownloadService,
                                  AssociationViewService associationViewService,
@@ -128,14 +116,11 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
-                                 SnpFormRowValidator snpFormRowValidator,
-                                 SnpFormColumnValidator snpFormColumnValidator,
                                  MappingService mappingService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
-        this.associationReportRepository = associationReportRepository;
         this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationDownloadService = associationDownloadService;
         this.associationViewService = associationViewService;
@@ -145,8 +130,6 @@ public class AssociationController {
         this.associationFormErrorViewService = associationFormErrorViewService;
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
-        this.snpFormRowValidator = snpFormRowValidator;
-        this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
     }
 
@@ -174,7 +157,8 @@ public class AssociationController {
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
 
         // Determine last viewed association
-        LastViewedAssociation lastViewedAssociation = getLastViewedAssociation(associationId);
+        LastViewedAssociation lastViewedAssociation =
+                associationOperationsService.getLastViewedAssociation(associationId);
         model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
         // Pass back count of associations
@@ -483,7 +467,8 @@ public class AssociationController {
                                   Model model) throws EnsemblMappingException {
 
         // Check for errors in form
-        Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
+        Boolean hasErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
         if (hasErrors) {
             model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
@@ -533,7 +518,8 @@ public class AssociationController {
                                Model model) throws EnsemblMappingException {
 
         // Check for errors in form
-        Boolean hasErrors = checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
+        Boolean hasErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
         if (hasErrors) {
             model.addAttribute("snpAssociationForm", snpAssociationStandardMultiForm);
@@ -583,7 +569,8 @@ public class AssociationController {
             throws EnsemblMappingException {
 
         // Check for errors in form
-        Boolean hasErrors = checkSnpAssociationInteractionFormErrors(result, snpAssociationInteractionForm);
+        Boolean hasErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(result,
+                                                                                                  snpAssociationInteractionForm);
 
         if (hasErrors) {
             model.addAttribute("snpAssociationInteractionForm", snpAssociationInteractionForm);
@@ -636,7 +623,7 @@ public class AssociationController {
         Association associationToView = associationRepository.findOne(associationId);
 
         // Get mapping details
-        MappingDetails mappingDetails = createMappingDetails(associationToView);
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(associationToView);
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
@@ -694,11 +681,13 @@ public class AssociationController {
         // Validate returned form depending on association type
         Boolean hasErrors;
         if (associationType.equalsIgnoreCase("interaction")) {
-            hasErrors = checkSnpAssociationInteractionFormErrors(snpAssociationInteractionFormBindingResult,
-                                                                 snpAssociationInteractionForm);
+            hasErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(
+                    snpAssociationInteractionFormBindingResult,
+                    snpAssociationInteractionForm);
         }
         else {
-            hasErrors = checkSnpAssociationFormErrors(snpAssociationFormBindingResult, snpAssociationStandardMultiForm);
+            hasErrors = associationOperationsService.checkSnpAssociationFormErrors(snpAssociationFormBindingResult,
+                                                                                   snpAssociationStandardMultiForm);
         }
 
         // If errors found then return the edit form with all information entered by curator preserved
@@ -708,7 +697,7 @@ public class AssociationController {
             Association associationToEdit = associationRepository.findOne(associationId);
 
             // Get mapping details
-            MappingDetails mappingDetails = createMappingDetails(associationToEdit);
+            MappingDetails mappingDetails = associationOperationsService.createMappingDetails(associationToEdit);
             model.addAttribute("mappingDetails", mappingDetails);
 
             // Return any association errors
@@ -815,7 +804,7 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Get mapping details
-        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
@@ -843,7 +832,7 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Get mapping details
-        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
@@ -877,7 +866,7 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Get mapping details
-        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
@@ -911,7 +900,7 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Get mapping details
-        MappingDetails mappingDetails = createMappingDetails(currentAssociation);
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
@@ -1019,7 +1008,7 @@ public class AssociationController {
         }
         else {
             // Mark errors as checked
-            associationErrorsChecked(association);
+            associationOperationsService.associationErrorsChecked(association);
 
             // Set snpChecked attribute to true
             association.setSnpApproved(true);
@@ -1040,7 +1029,7 @@ public class AssociationController {
         Association association = associationRepository.findOne(associationId);
 
         // Mark errors as unchecked
-        associationErrorsUnchecked(association);
+        associationOperationsService.associationErrorsUnchecked(association);
 
         // Set snpChecked attribute to true
         association.setSnpApproved(false);
@@ -1079,7 +1068,7 @@ public class AssociationController {
                 Association association = associationRepository.findOne(Long.valueOf(associationId));
 
                 // Mark errors as checked
-                associationErrorsChecked(association);
+                associationOperationsService.associationErrorsChecked(association);
 
                 association.setSnpApproved(true);
                 association.setLastUpdateDate(new Date());
@@ -1108,7 +1097,7 @@ public class AssociationController {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
 
             // Mark errors as checked
-            associationErrorsUnchecked(association);
+            associationOperationsService.associationErrorsUnchecked(association);
 
             association.setSnpApproved(false);
             association.setLastUpdateDate(new Date());
@@ -1143,7 +1132,7 @@ public class AssociationController {
             // For each one set snpChecked attribute to true
             for (Association association : studyAssociations) {
                 // Mark errors as checked
-                associationErrorsChecked(association);
+                associationOperationsService.associationErrorsChecked(association);
 
                 association.setSnpApproved(true);
                 association.setLastUpdateDate(new Date());
@@ -1277,12 +1266,10 @@ public class AssociationController {
     public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
         return dataIntegrityException.getMessage();
     }
-
-
+    
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
-
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEfoTraits() {
@@ -1310,91 +1297,6 @@ public class AssociationController {
 
     private Sort sortByRsidDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "loci.strongestRiskAlleles.snp.rsId"));
-    }
-
-    /**
-     * Gather mapping details for an association
-     *
-     * @param association Association with mapping details
-     */
-    private MappingDetails createMappingDetails(Association association) {
-        MappingDetails mappingDetails = new MappingDetails();
-        mappingDetails.setPerformer(association.getLastMappingPerformedBy());
-        mappingDetails.setMappingDate(association.getLastMappingDate());
-        return mappingDetails;
-    }
-
-
-    /**
-     * Mark errors for a particular association as checked, this involves updating the linked association report
-     *
-     * @param association Association to mark as errors checked
-     */
-    public void associationErrorsChecked(Association association) {
-        AssociationReport associationReport = association.getAssociationReport();
-        associationReport.setErrorCheckedByCurator(true);
-        associationReport.setLastUpdateDate(new Date());
-        associationReportRepository.save(associationReport);
-    }
-
-
-    /**
-     * Mark errors for a particular association as unchecked, this involves updating the linked association report
-     *
-     * @param association Association to mark as errors unchecked
-     */
-    public void associationErrorsUnchecked(Association association) {
-        AssociationReport associationReport = association.getAssociationReport();
-        associationReport.setErrorCheckedByCurator(false);
-        associationReport.setLastUpdateDate(new Date());
-        associationReportRepository.save(associationReport);
-    }
-
-
-    /**
-     * Determine last viewed association
-     *
-     * @param associationId ID of association last viewed
-     */
-    private LastViewedAssociation getLastViewedAssociation(Long associationId) {
-
-        LastViewedAssociation lastViewedAssociation = new LastViewedAssociation();
-        if (associationId != null) {
-            lastViewedAssociation.setId(associationId);
-        }
-        return lastViewedAssociation;
-    }
-
-    /**
-     * Check a standard SNP association form for errors
-     *
-     * @param result Binding result from edit form
-     * @param form   The form to validate
-     */
-
-    private Boolean checkSnpAssociationFormErrors(BindingResult result,
-                                                  SnpAssociationStandardMultiForm form) {
-        for (SnpFormRow row : form.getSnpFormRows()) {
-            snpFormRowValidator.validate(row, result);
-        }
-
-        return result.hasErrors();
-    }
-
-    /**
-     * Check a SNP association interaction form for errors
-     *
-     * @param result Binding result from edit form
-     * @param form   The form to validate
-     */
-    private Boolean checkSnpAssociationInteractionFormErrors(BindingResult result,
-                                                             SnpAssociationInteractionForm form) {
-
-        for (SnpFormColumn column : form.getSnpFormColumns()) {
-            snpFormColumnValidator.validate(column, result);
-        }
-
-        return result.hasErrors();
     }
 }
 
