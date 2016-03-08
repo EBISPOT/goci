@@ -54,13 +54,13 @@ public class AssociationOperationsService {
      *
      * @param association Association to check
      */
-    public Boolean determineIfAssociationIsOrType(Association association) {
+    public String determineIfAssociationIsOrType(Association association) {
 
-        Boolean isOrType = true;
+        String measurementType = "or";
         if (association.getBetaNum() != null) {
-            isOrType = false;
+            measurementType = "beta";
         }
-        return isOrType;
+        return measurementType;
     }
 
     /**

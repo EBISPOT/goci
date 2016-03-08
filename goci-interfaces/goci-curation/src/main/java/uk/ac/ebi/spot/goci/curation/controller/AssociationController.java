@@ -633,13 +633,8 @@ public class AssociationController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Determine if association is an OR or BETA type
-        Boolean isOrType = associationOperationsService.determineIfAssociationIsOrType(associationToView);
-        if (isOrType) {
-            model.addAttribute("measurementType", "or");
-        }
-        else {
-            model.addAttribute("measurementType", "beta");
-        }
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToView);
+        model.addAttribute("measurementType", measurementType);
 
         // Determine form to return
         SnpAssociationForm form = associationOperationsService.generateForm(associationToView);
@@ -768,20 +763,22 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
     public String addRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                  Model model,
-                                 @PathVariable Long associationId,
-                                 @RequestParam(required = true) String measurementType) {
+                                 @PathVariable Long associationId) {
 
         snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationStandardMultiForm);
-        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
 
         // Get mapping details
         MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
@@ -799,20 +796,22 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}", params = {"addCol"})
     public String addColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
                                  Model model,
-                                 @PathVariable Long associationId,
-                                 @RequestParam(required = true) String measurementType) {
+                                 @PathVariable Long associationId) {
 
         snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationInteractionForm);
-        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
 
         // Get mapping details
         MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
@@ -831,8 +830,7 @@ public class AssociationController {
     public String removeRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                     HttpServletRequest req,
                                     Model model,
-                                    @PathVariable Long associationId,
-                                    @RequestParam(required = true) String measurementType) {
+                                    @PathVariable Long associationId) {
 
         //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
@@ -842,13 +840,16 @@ public class AssociationController {
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationStandardMultiForm);
-        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
 
         // Get mapping details
         MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
@@ -867,8 +868,7 @@ public class AssociationController {
     public String removeColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
                                     HttpServletRequest req,
                                     Model model,
-                                    @PathVariable Long associationId,
-                                    @RequestParam(required = true) String measurementType) {
+                                    @PathVariable Long associationId) {
 
         //Index of value to remove
         final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
@@ -878,13 +878,16 @@ public class AssociationController {
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationInteractionForm);
-        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
         Study associationStudy = currentAssociation.getStudy();
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
 
         // Get mapping details
         MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
