@@ -25,7 +25,7 @@ import java.util.Set;
  */
 @Service
 public class MappingDetailsService {
-    
+
     private AssociationRepository associationRepository;
 
     @Autowired
@@ -89,6 +89,4 @@ public class MappingDetailsService {
         }
         return mappingSummary;
     }
-
-
 }
