@@ -61,7 +61,7 @@ public class MappingDetailsService {
 
             // Only care about automated mapping
             if (performer != null) {
-                if (performer.equals("automatic_mapping_process") || performer.contains("Release")) {
+                if (performer.equals("automatic_mapping_process")) {
 
                     // Go through all associations and store mapping performer and date
                     for (Association association : studyAssociations) {
