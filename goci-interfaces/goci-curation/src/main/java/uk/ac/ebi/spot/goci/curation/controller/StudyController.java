@@ -25,6 +25,7 @@ import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -82,6 +83,7 @@ public class StudyController {
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
+    private MappingDetailsService mappingDetailsService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -93,27 +95,29 @@ public class StudyController {
 
     @Autowired
     public StudyController(StudyRepository studyRepository,
-                           StudyOperationsService studyOperationsService,
-                           DefaultPubMedSearchService defaultPubMedSearchService,
-                           UnpublishReasonRepository unpublishReasonRepository,
-                           EthnicityRepository ethnicityRepository,
-                           AssociationRepository associationRepository,
-                           CurationStatusRepository curationStatusRepository,
-                           CuratorRepository curatorRepository,
-                           EfoTraitRepository efoTraitRepository,
+                           HousekeepingRepository housekeepingRepository,
                            DiseaseTraitRepository diseaseTraitRepository,
-                           HousekeepingRepository housekeepingRepository) {
+                           EfoTraitRepository efoTraitRepository,
+                           CuratorRepository curatorRepository,
+                           CurationStatusRepository curationStatusRepository,
+                           AssociationRepository associationRepository,
+                           EthnicityRepository ethnicityRepository,
+                           UnpublishReasonRepository unpublishReasonRepository,
+                           DefaultPubMedSearchService defaultPubMedSearchService,
+                           StudyOperationsService studyOperationsService,
+                           MappingDetailsService mappingDetailsService) {
         this.studyRepository = studyRepository;
-        this.studyOperationsService = studyOperationsService;
-        this.defaultPubMedSearchService = defaultPubMedSearchService;
-        this.unpublishReasonRepository = unpublishReasonRepository;
-        this.ethnicityRepository = ethnicityRepository;
-        this.associationRepository = associationRepository;
-        this.curationStatusRepository = curationStatusRepository;
-        this.curatorRepository = curatorRepository;
-        this.efoTraitRepository = efoTraitRepository;
-        this.diseaseTraitRepository = diseaseTraitRepository;
         this.housekeepingRepository = housekeepingRepository;
+        this.diseaseTraitRepository = diseaseTraitRepository;
+        this.efoTraitRepository = efoTraitRepository;
+        this.curatorRepository = curatorRepository;
+        this.curationStatusRepository = curationStatusRepository;
+        this.associationRepository = associationRepository;
+        this.ethnicityRepository = ethnicityRepository;
+        this.unpublishReasonRepository = unpublishReasonRepository;
+        this.defaultPubMedSearchService = defaultPubMedSearchService;
+        this.studyOperationsService = studyOperationsService;
+        this.mappingDetailsService = mappingDetailsService;
     }
 
     /* All studies and various filtered lists */
@@ -716,7 +720,7 @@ public class StudyController {
         model.addAttribute("study", study);
 
         // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails", studyOperationsService.createMappingSummary(study));
+        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(study));
 
         return "study_housekeeping";
     }
