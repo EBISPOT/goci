@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
-import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
@@ -49,16 +48,12 @@ import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by emma on 20/11/14.
@@ -86,7 +81,7 @@ public class StudyController {
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
-    private StudyOperationsService studyService;
+    private StudyOperationsService studyOperationsService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -98,7 +93,7 @@ public class StudyController {
 
     @Autowired
     public StudyController(StudyRepository studyRepository,
-                           StudyOperationsService studyService,
+                           StudyOperationsService studyOperationsService,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            UnpublishReasonRepository unpublishReasonRepository,
                            EthnicityRepository ethnicityRepository,
@@ -109,7 +104,7 @@ public class StudyController {
                            DiseaseTraitRepository diseaseTraitRepository,
                            HousekeepingRepository housekeepingRepository) {
         this.studyRepository = studyRepository;
-        this.studyService = studyService;
+        this.studyOperationsService = studyOperationsService;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.ethnicityRepository = ethnicityRepository;
@@ -690,7 +685,7 @@ public class StudyController {
             CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
             // Handles status change
-            String studySnpsNotApproved = studyService.updateStatus(status, study, currentStudyStatus);
+            String studySnpsNotApproved = studyOperationsService.updateStatus(status, study, currentStudyStatus);
             study.getHousekeeping().setLastUpdateDate(new Date());
             studyRepository.save(study);
 
@@ -721,7 +716,7 @@ public class StudyController {
         model.addAttribute("study", study);
 
         // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails", createMappingSummary(study));
+        model.addAttribute("mappingDetails", studyOperationsService.createMappingSummary(study));
 
         return "study_housekeeping";
     }
@@ -747,7 +742,8 @@ public class StudyController {
         housekeepingRepository.save(housekeeping);
 
         // Update status
-        String message = studyService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
+        String message =
+                studyOperationsService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
 
         // Add save message
         if (message == null) {
@@ -914,63 +910,6 @@ public class StudyController {
 
         return sort;
     }
-
-    /**
-     * An additional date should be added to the "Curator information" tab called "Last automated mapping date". This
-     * should record the last date all SNPs were mapped using the automated mapping pipeline i.e. when there has been an
-     * Ensembl release. This should be left blank for studies where SNPs have different mapping dates or were mapped by
-     * a curator, indicating that the curator should check the "SNP associations page" for last mapping info.
-     *
-     * @param study Study with mapping details
-     */
-    private MappingDetails createMappingSummary(Study study) {
-
-        MappingDetails mappingSummary = new MappingDetails();
-        Collection<Association> studyAssociations = associationRepository.findByStudyId(study.getId());
-
-        // Determine if we have more than one performer
-        Set<String> allAssociationMappingPerformers = new HashSet<String>();
-        for (Association association : studyAssociations) {
-            allAssociationMappingPerformers.add(association.getLastMappingPerformedBy());
-        }
-
-        Map<String, String> mappingDateToPerformerMap = new HashMap<>();
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-
-        // If only one performer we need to check dates to see mapping didn't happen at different times
-        if (allAssociationMappingPerformers.size() == 1) {
-            String performer = allAssociationMappingPerformers.iterator().next();
-            // Only care about automated mapping
-            if (performer.equals("automatic_mapping_process") || performer.contains("Release")) {
-
-                // Go through all associations and store mapping performer and date
-                for (Association association : studyAssociations) {
-                    String date = dt.format(association.getLastMappingDate());
-                    mappingDateToPerformerMap.put(date, performer);
-                }
-            }
-        }
-
-        // If its only been mapped by an automated process, all with same date
-        if (mappingDateToPerformerMap.size() == 1) {
-            for (String date : mappingDateToPerformerMap.keySet()) {
-                Date newDate = null;
-                try {
-                    newDate = dt.parse(date);
-
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                mappingSummary.setMappingDate(newDate);
-                mappingSummary.setPerformer(mappingDateToPerformerMap.get(date));
-            }
-        }
-
-        return mappingSummary;
-    }
-
-
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -1138,5 +1077,4 @@ public class StudyController {
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }
-
 }
