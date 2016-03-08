@@ -768,11 +768,14 @@ public class AssociationController {
     @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
     public String addRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                  Model model,
-                                 @PathVariable Long associationId) {
+                                 @PathVariable Long associationId,
+                                 @RequestParam(required = true) String measurementType) {
+
         snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationStandardMultiForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -795,12 +798,15 @@ public class AssociationController {
     // Add single column to table
     @RequestMapping(value = "/associations/{associationId}", params = {"addCol"})
     public String addColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                 Model model, @PathVariable Long associationId) {
+                                 Model model,
+                                 @PathVariable Long associationId,
+                                 @RequestParam(required = true) String measurementType) {
 
         snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationInteractionForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -825,7 +831,8 @@ public class AssociationController {
     public String removeRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                     HttpServletRequest req,
                                     Model model,
-                                    @PathVariable Long associationId) {
+                                    @PathVariable Long associationId,
+                                    @RequestParam(required = true) String measurementType) {
 
         //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
@@ -835,6 +842,7 @@ public class AssociationController {
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationStandardMultiForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -859,7 +867,8 @@ public class AssociationController {
     public String removeColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
                                     HttpServletRequest req,
                                     Model model,
-                                    @PathVariable Long associationId) {
+                                    @PathVariable Long associationId,
+                                    @RequestParam(required = true) String measurementType) {
 
         //Index of value to remove
         final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
@@ -869,6 +878,7 @@ public class AssociationController {
 
         // Pass back updated form
         model.addAttribute("form", snpAssociationInteractionForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
