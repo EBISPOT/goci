@@ -11,9 +11,8 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by emma on 03/03/2016.
@@ -70,7 +69,7 @@ public class AssociationOperationsServiceTest {
 
     @Test
     public void testDetermineIfAssociationIsOrType() {
-        assertFalse(associationOperationsService.determineIfAssociationIsOrType(ASS_BETA));
-        assertTrue(associationOperationsService.determineIfAssociationIsOrType(ASS_OR));
+        assertEquals("beta", associationOperationsService.determineIfAssociationIsOrType(ASS_BETA));
+        assertEquals("or", associationOperationsService.determineIfAssociationIsOrType(ASS_OR));
     }
 }
