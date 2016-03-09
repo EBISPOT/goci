@@ -27,7 +27,7 @@ public class EmailMappingErrorsService {
         this.associationMappingErrorService = associationMappingErrorService;
     }
 
-    public void getMappingDetails(Study study, CurationSystemEmailToCurator email) {
+    public CurationSystemEmailToCurator getMappingDetails(Study study, CurationSystemEmailToCurator email) {
 
         String mappingDetails = "";
 
@@ -76,6 +76,7 @@ public class EmailMappingErrorsService {
         }
 
         email.addToBody(mappingDetails);
+        return email;
     }
 
 

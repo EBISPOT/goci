@@ -54,7 +54,7 @@ public class MailService {
         email.setLink(this.link);
         email.setFrom(this.from);
         email.createBody(study, status);
-        emailMappingErrorsService.getMappingDetails(study, email);
+        email = emailMappingErrorsService.getMappingDetails(study, email);
         sendEmail(email);
     }
 
