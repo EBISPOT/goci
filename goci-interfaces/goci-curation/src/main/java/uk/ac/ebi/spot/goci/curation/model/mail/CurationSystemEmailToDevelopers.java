@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.model.mail;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
  * Created by emma on 08/03/2016.
  *
@@ -10,13 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
  *         Concrete implementation of emails sent to developers
  */
 public class CurationSystemEmailToDevelopers extends CurationSystemEmail {
-
-    @Value("${devmail.to}")
-    private String devTo;
-
-    @Override void setTo(String to) {
-        this.devTo = to;
-    }
 
     public void createReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase,
                                          int latestEnsemblReleaseNumber) {
