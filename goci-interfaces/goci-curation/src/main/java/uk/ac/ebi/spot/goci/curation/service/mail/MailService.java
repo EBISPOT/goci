@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmail;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToDevelopers;
-import uk.ac.ebi.spot.goci.curation.service.mail.EmailMappingErrorsService;
 import uk.ac.ebi.spot.goci.model.Study;
 
 /**
@@ -50,7 +49,7 @@ public class MailService {
      */
     public void sendEmailNotification(Study study, String status) {
 
-       CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
+        CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
         email.setTo(this.to);
         email.setLink(this.link);
         email.setFrom(this.from);
