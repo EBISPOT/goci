@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.model.Ping;
-import uk.ac.ebi.spot.goci.curation.service.MailService;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 
 /**
  * Created by emma on 08/01/2016.
