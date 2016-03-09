@@ -74,7 +74,7 @@ public class EmailMappingErrorsService {
         if (mappingDetails.isEmpty()) {
             mappingDetails = "Note: No mapping errors detected for any association in this study.";
         }
-        
+
         email.addToBody(mappingDetails);
     }
 
