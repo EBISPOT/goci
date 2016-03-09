@@ -11,33 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public abstract class CurationSystemEmail {
 
-    @Value("${mail.from}")
-    private String from;
-
-    @Value("${mail.link}")
-    private String link;
-
     private String subject;
 
     private String body;
 
-    private String to;
-
     public CurationSystemEmail() {
-    }
-
-    public CurationSystemEmail(String subject, String body, String to) {
-        this.subject = subject;
-        this.body = body;
-        this.to = to;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public String getLink() {
-        return link;
     }
 
     public String getSubject() {
@@ -56,10 +34,8 @@ public abstract class CurationSystemEmail {
         this.body = body;
     }
 
-    public String getTo() {
-        return to;
+    public void addToBody(String textToAddToBody) {
+        String newBody = getBody() + textToAddToBody;
+        setBody(newBody);
     }
-
-    // This will be set in subclasses
-    abstract void setTo(String to);
 }
