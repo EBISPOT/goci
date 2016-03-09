@@ -10,6 +10,7 @@ import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;

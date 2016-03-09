@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.component.EnsemblDbsnpVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblGenomeBuildVersion;
 import uk.ac.ebi.spot.goci.component.EnsemblRelease;
-import uk.ac.ebi.spot.goci.curation.service.MailService;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.MappingMetadata;
 import uk.ac.ebi.spot.goci.repository.MappingMetadataRepository;
-import uk.ac.ebi.spot.goci.service.MapCatalogService;
 
 import java.util.Date;
 import java.util.List;
