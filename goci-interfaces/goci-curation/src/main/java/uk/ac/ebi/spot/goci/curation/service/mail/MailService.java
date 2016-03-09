@@ -1,12 +1,14 @@
-package uk.ac.ebi.spot.goci.curation.service;
+package uk.ac.ebi.spot.goci.curation.service.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmail;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToDevelopers;
+import uk.ac.ebi.spot.goci.curation.service.mail.EmailMappingErrorsService;
 import uk.ac.ebi.spot.goci.model.Study;
 
 /**
@@ -19,11 +21,25 @@ import uk.ac.ebi.spot.goci.model.Study;
 @Service
 public class MailService {
 
+    // Reading these from application.properties
+    @Value("${mail.from}")
+    private String from;
+    @Value("${mail.to}")
+    private String to;
+    @Value("${mail.link}")
+    private String link;
+    @Value("${devmail.to}")
+    private String devMailTo;
+
     private final JavaMailSender javaMailSender;
 
+    private EmailMappingErrorsService emailMappingErrorsService;
+
     @Autowired
-    public MailService(JavaMailSender javaMailSender) {
+    public MailService(JavaMailSender javaMailSender,
+                       EmailMappingErrorsService emailMappingErrorsService) {
         this.javaMailSender = javaMailSender;
+        this.emailMappingErrorsService = emailMappingErrorsService;
     }
 
     /**
@@ -34,8 +50,12 @@ public class MailService {
      */
     public void sendEmailNotification(Study study, String status) {
 
-        CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
+       CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
+        email.setTo(this.to);
+        email.setLink(this.link);
+        email.setFrom(this.from);
         email.createBody(study, status);
+        emailMappingErrorsService.getMappingDetails(study, email);
         sendEmail(email);
     }
 
@@ -48,6 +68,9 @@ public class MailService {
     public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
 
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.from);
         email.createReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase, latestEnsemblReleaseNumber);
         sendEmail(email);
     }
@@ -58,6 +81,9 @@ public class MailService {
     public void sendReleaseNotIdentifiedProblem() {
 
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.from);
         email.createReleaseNotIdentifiedProblem();
         sendEmail(email);
     }
@@ -68,6 +94,9 @@ public class MailService {
     public void sendEnsemblPingFailureMail() {
 
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.from);
         email.createEnsemblPingFailureMail();
         sendEmail(email);
     }
@@ -81,5 +110,4 @@ public class MailService {
         mailMessage.setText(email.getBody());
         javaMailSender.send(mailMessage);
     }
-
 }
