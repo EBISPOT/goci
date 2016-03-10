@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -10,11 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
-
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-10">
@@ -191,13 +187,15 @@
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
                     <th style="font-size: small">p-Value Text</th>
                     <th style="font-size: small">EFO trait</th>
-                    <th style="font-size: small">OR per Copy Num</th>
-                    <th style="font-size: small">OR entered (reciprocal)</th>
-                    <th style="font-size: small">OR-Type</th>
-                    <th style="font-size: small">OR per Copy Range</th>
-                    <th style="font-size: small">OR per Copy Range (reciprocal)</th>
-                    <th style="font-size: small">OR per Copy Unit Description</th>
-                    <th style="font-size: small">Std Error</th>
+                    <th style="font-size: small">OR</th>
+                    <th style="font-size: small">OR reciprocal</th>
+                    <th style="font-size: small">Beta</th>
+                    <th style="font-size: small">Beta unit</th>
+                    <th style="font-size: small">Beta direction</th>
+                    <th style="font-size: small">Range (OR/Beta)</th>
+                    <th style="font-size: small">OR reciprocal range</th>
+                    <th style="font-size: small">Std Error (OR/Beta)</th>
+                    <th style="font-size: small">Description (OR/Beta)</th>
                     <th style="font-size: small">SNP Type</th>
                     <th style="font-size: small">SNP Status</th>
                     <th style="font-size: small">Multi-SNP haplotype</th>
@@ -238,16 +236,25 @@
 
                     <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                     <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></td>
-                    <td style="font-size: small" th:text="${snpAssociationTableView.orType} ?:''"></td>
+                    <td style="font-size: small"
+                        th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
+
+                    <td style="font-size: small"
+                        th:text="${snpAssociationTableView.betaUnit} ?: ''"></td>
+
+                    <td style="font-size: small"
+                        th:text="${snpAssociationTableView.betaDirection} ?: ''"></td>
+
                     <td style="font-size: small" th:text="${snpAssociationTableView.range} ?: ''"></td>
                     <td style="font-size: small" th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
-                    <td style="font-size: small" th:text="${snpAssociationTableView.description} ?: ''"></td>
+
                     <td style="font-size: small" th:text="${snpAssociationTableView.standardError} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.description} ?: ''"></td>
+
                     <td style="font-size: small" th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                     <td style="font-size: small" th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                     <td style="font-size: small" th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
                     <td style="font-size: small" th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
-
 
                     <!-- Errors-->
                     <td>
