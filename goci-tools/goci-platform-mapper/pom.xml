@@ -31,9 +31,15 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-db-binding</artifactId>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
         </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.spot</groupId>-->
+            <!--<artifactId>goci-db-binding</artifactId>-->
+        <!--</dependency>-->
 
 
     </dependencies>

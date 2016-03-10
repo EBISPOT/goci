@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.ArrayInformation;
 import uk.ac.ebi.spot.goci.model.Study;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +28,11 @@ public class PlatformMappingService {
         return output;
     }
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public PlatformMappingService(StudyService studyService){
@@ -46,14 +49,26 @@ public class PlatformMappingService {
         qualifiers.add(">");
         qualifiers.add("more than");
 
+        platformEntries = new ArrayList<>();
+
     }
     public void mapAllValues() {
+        getLog().info("Retrieving all studies");
         this.studies = studyService.findPublishedStudies();
 
+        int all = studies.size();
+        getLog().info("Retrieved " + all + " studies");
+
+        int counter = 0;
+
         for(Study study : studies){
+            if((counter % 100) == 0){
+                getLog().info((all - counter) + " studies left to process");
+            }
             String platform = study.getPlatform();
 
             if(platform != null){
+                System.out.println(platform);
                 List<String> manufacturer = new ArrayList<>();
                 boolean imputed = false;
                 boolean pooled = false;
@@ -72,6 +87,10 @@ public class PlatformMappingService {
                         }
                     }
 
+                    if(manufacturer.size() == 0){
+                        comment = platform;
+                    }
+
                     if(platform.contains("imputed")){
                         imputed = true;
                     }
@@ -79,56 +98,72 @@ public class PlatformMappingService {
                         pooled = true;
                     }
 
-                    if(platform.contains("[") && platform.indexOf("[") == platform.lastIndexOf("[")) {
-                        int start = platform.indexOf("[");
-                        int finish = platform.indexOf("]");
+                    if(platform.contains("SNP") || platform.contains("unsure") || platform.contains("UNSURE")){
+                        comment = platform;
+                    }
+                    else{
+                        if(platform.contains("[") && platform.indexOf("[") == platform.lastIndexOf("[")) {
+                            int start = platform.indexOf("[") +1;
+                            int finish = platform.indexOf("]");
 
-                        String count = platform.substring(start + 1, finish);
+                            String count = platform.substring(start, finish).trim();
 
-                        if(!count.equals("NR")){
-                             for (String q : qualifiers) {
-                                if (count.contains(q)) {
-                                    qualifier.add(q);
+                            if(!count.equals("NR")) {
+                                for (String q : qualifiers) {
+                                    if (count.contains(q)) {
+                                        qualifier.add(q);
 
-                                    count = count.replace(q, "");
-                                }
-                            }
-
-                            if (count.contains("million")) {
-                                count = count.replace("million", "");
-
-                                double c = Double.parseDouble(count);
-
-                                snpCount = (int) (c * 1000000);
-
-                            }
-
-                            else if (count.contains(",")) {
-                                try {
-                                    snpCount = NumberFormat.getNumberInstance(java.util.Locale.US).parse(count).intValue();
-                                }
-                                catch (ParseException e) {
-                                    e.printStackTrace();
+                                        count = count.replace(q, "").trim();
+                                    }
                                 }
 
+                                if (count.contains("million")) {
+                                    //                                System.out.print(count);
+                                    count = count.replace("million", "").trim();
+
+                                    if (count.contains(",")) {
+                                        count = count.replace(",", "").trim();
+                                    }
+
+                                    //                                System.out.println("\t" + count);
+                                    double c = Double.parseDouble(count);
+
+                                    snpCount = (int) (c * 1000000);
+
+                                }
+
+                                else if (count.contains(",")) {
+                                    //                                try {
+                                    count = count.replace(",", "").trim();
+                                    snpCount = Integer.parseInt(count);
+
+
+                                    //                                    snpCount = NumberFormat.getNumberInstance(java.util.Locale.US).parse(count).intValue();
+                                    //                                }
+                                    //                                catch (ParseException e) {
+                                    //                                    e.printStackTrace();
+                                    //                                }
+
+                                }
+                                else {
+                                    snpCount = Integer.parseInt(count);
+                                }
                             }
-                            else {
-                                snpCount = Integer.parseInt(count);
-                            }
+                        }
+                        else {
+                            comment = platform;
                         }
 
                     }
 
-                    else {
-                        comment = platform;
-                    }
+
 
                 }
 
                 if(qualifier.size() > 1){
-                    platform = comment;
+                    comment = platform;
                 }
-                else {
+                else if(qualifier.size() == 1){
                     qual = qualifier.get(0);
                 }
 
@@ -137,6 +172,7 @@ public class PlatformMappingService {
                 platformEntries.add(info);
 
             }
+            counter++;
         }
 
         printArrays(platformEntries);

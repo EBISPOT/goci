@@ -1,22 +1,13 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.List;
 
 /**
-* Created by dwelter on 08/03/16.
-*/
+ * Created by dwelter on 08/03/16.
+ */
 
-@Entity
 public class ArrayInformation {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    private List<Platform> manufacturer;
+    private List<String> manufacturer;
 
     private Integer snpCount;
 
@@ -32,14 +23,14 @@ public class ArrayInformation {
 
     private String platformString;
 
-//    TO DO: add cross-links to study & manufacturer + create Manufacturer class
+    //    TO DO: add cross-links to study & manufacturer + create Manufacturer class
 
     // JPA no-args constructor
     public ArrayInformation(){
 
     }
 
-    public ArrayInformation(List<Platform> manufacturer,
+    public ArrayInformation(List<String> manufacturer,
                             Integer snpCount,
                             String qualifier,
                             boolean imputed,
@@ -59,19 +50,11 @@ public class ArrayInformation {
 
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Platform> getManufacturer() {
+    public List<String> getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(List<Platform> manufacturer) {
+    public void setManufacturer(List<String> manufacturer) {
         this.manufacturer = manufacturer;
     }
 

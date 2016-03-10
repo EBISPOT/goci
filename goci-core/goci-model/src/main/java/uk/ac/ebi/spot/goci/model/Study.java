@@ -50,7 +50,7 @@ public class Study {
 
     private String replicateSampleSize;
 
-    private String platform;
+    private Collection<Platform> platform;
 
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;

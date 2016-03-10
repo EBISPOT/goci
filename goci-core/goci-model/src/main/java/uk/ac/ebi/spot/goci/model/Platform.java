@@ -8,8 +8,8 @@ import javax.persistence.ManyToMany;
 import java.util.Collection;
 
 /**
- * Created by dwelter on 08/03/16.
- */
+* Created by dwelter on 08/03/16.
+*/
 public class Platform {
 
     @Id
