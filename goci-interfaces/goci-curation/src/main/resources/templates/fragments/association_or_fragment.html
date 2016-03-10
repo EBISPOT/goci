@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
-
 <body th:fragment="or">
 
 <div class="form-group">
-    <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR per copy num</label>
+    <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum" th:field="*{orPerCopyNum}"/>
@@ -22,7 +21,7 @@
 </div>
 
 <div class="form-group">
-    <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR per copy reciprocal</label>
+    <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR reciprocal</label>
 
     <div class="col-md-10">
         <input type="text"
@@ -40,7 +39,16 @@
 </div>
 
 <div class="form-group">
-    <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR per copy reciprocal range</label>
+    <label for="range" class="control-label col-md-2">OR Range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{range}" name="range"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR reciprocal range</label>
 
     <div class="col-md-10">
         <input type="text"
@@ -54,7 +62,6 @@
         <button type="button" class="btn btn-primary pull-right" id="calculate-recip-range">Calculate range from OR/HR/RR per copy reciprocal range</button>
     </div>
 </div>
-
 
 <div class="form-group">
     <label for="standardError" class="control-label col-md-2">Standard Error</label>
@@ -70,12 +77,13 @@
                 id="calculate-range-from-or">Build range</button>
     </div>
 </div>
+
 <div class="form-group">
-    <label for="range" class="control-label col-md-2">Range</label>
+    <label for="description" class="control-label col-md-2">OR description</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" id="range"
-               th:field="*{range}" name="range"/>
+        <input type="text" class="form-control" id="description"
+               th:field="*{description}" name="description"/>
     </div>
 </div>
 </body>

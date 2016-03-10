@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
-
 <body th:fragment="beta">
 
 <div class="form-group">
-    <label for="beta" class="control-label col-md-2">Beta num</label>
+    <label for="beta" class="control-label col-md-2">Beta</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" name="beta" id="beta" th:field="*{betaNum}"/>
@@ -36,6 +35,15 @@
 </div>
 
 <div class="form-group">
+    <label for="range" class="control-label col-md-2">Range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{range}" name="range"/>
+    </div>
+</div>
+
+<div class="form-group">
     <label for="standardError" class="control-label col-md-2">Standard Error</label>
 
     <div class="col-md-10">
@@ -49,14 +57,14 @@
                 id="calculate-range-from-beta">Build range</button>
     </div>
 </div>
+
 <div class="form-group">
-    <label for="range" class="control-label col-md-2">Range</label>
+    <label for="description" class="control-label col-md-2">Beta description</label>
 
     <div class="col-md-10">
-        <input type="text" class="form-control" id="range"
-               th:field="*{range}" name="range"/>
+        <input type="text" class="form-control" id="description"
+               th:field="*{description}" name="description"/>
     </div>
 </div>
-
 </body>
 </html>
