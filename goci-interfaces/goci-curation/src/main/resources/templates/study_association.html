@@ -212,12 +212,10 @@
                             <td style="background-color: darkgrey">
                                 <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
                                 <span style="font-style: italic; color:darkgrey; font-size: small"
-                                      th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                      th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
+                                      and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                       th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                             </td>
-
-                            <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
 
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
@@ -230,10 +228,16 @@
 
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.range} ?: ''"></td>
+
                             <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.description} ?: ''"></td>
+                                th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.standardError} ?: ''"></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.description} ?: ''"></td>
+
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                             <td style="background-color: darkgrey"
@@ -339,13 +343,10 @@
                                 <td style="background-color: lightyellow">
                                     <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
                                         <span style="font-style: italic; color:red; font-size: small"
-                                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
+                                              and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                               th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
-
-
-                                <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
 
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
@@ -357,10 +358,16 @@
 
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.range} ?: ''"></td>
+
                                 <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.description} ?: ''"></td>
+                                    th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.standardError} ?: ''"></td>
+
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.description} ?: ''"></td>
+
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                                 <td style="background-color: lightyellow"
@@ -457,20 +464,21 @@
                                 <td>
                                     <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
                                     <span style="font-style: italic; color:red; font-size: small"
-                                          th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip) and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
+                                          th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
+                                          and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
                                           th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
-
-
-                                <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
 
                                 <td th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.betaUnit} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.betaDirection} ?: ''"></td>
 
                                 <td th:text="${snpAssociationTableView.range} ?: ''"></td>
-                                <td th:text="${snpAssociationTableView.description} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.orPerCopyRecipRange} ?: ''"></td>
+
                                 <td th:text="${snpAssociationTableView.standardError} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.description} ?: ''"></td>
+
                                 <td th:text="${snpAssociationTableView.associationType} ?: ''"></td>
                                 <td th:text="${snpAssociationTableView.snpStatuses} ?:''"></td>
                                 <td th:text="${snpAssociationTableView.multiSnpHaplotype} ?:''"></td>
