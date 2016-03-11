@@ -6,7 +6,7 @@ import java.util.List;
  * Created by dwelter on 08/03/16.
  */
 
-public class ArrayInformation {
+public class LocalArrayInfo {
     private List<String> manufacturer;
 
     private Integer snpCount;
@@ -19,25 +19,25 @@ public class ArrayInformation {
 
     private String comment;
 
-    private Study study;
+    private int study;
 
     private String platformString;
 
     //    TO DO: add cross-links to study & manufacturer + create Manufacturer class
 
     // JPA no-args constructor
-    public ArrayInformation(){
+    public LocalArrayInfo(){
 
     }
 
-    public ArrayInformation(List<String> manufacturer,
-                            Integer snpCount,
-                            String qualifier,
-                            boolean imputed,
-                            boolean pooled,
-                            String comment,
-                            Study study,
-                            String platformString){
+    public LocalArrayInfo(List<String> manufacturer,
+                          Integer snpCount,
+                          String qualifier,
+                          boolean imputed,
+                          boolean pooled,
+                          String comment,
+                          int study,
+                          String platformString){
         this.manufacturer = manufacturer;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
@@ -98,11 +98,11 @@ public class ArrayInformation {
         this.comment = comment;
     }
 
-    public Study getStudy() {
+    public int getStudy() {
         return study;
     }
 
-    public void setStudy(Study study) {
+    public void setStudy(int study) {
         this.study = study;
     }
 

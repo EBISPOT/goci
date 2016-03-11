@@ -50,8 +50,6 @@ public class Study {
 
     private String replicateSampleSize;
 
-    private Collection<Platform> platform;
-
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
@@ -61,6 +59,12 @@ public class Study {
     private Boolean gxe = false;
 
     private Boolean gxg = false;
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_PLATFORM",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
+    private Collection<Platform> platform;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
@@ -89,6 +93,9 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
+    @OneToOne
+    private ArrayInformation arrayInformation;
+
     @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
     private StudyReport studyReport;
 
@@ -103,7 +110,7 @@ public class Study {
                  String title,
                  String initialSampleSize,
                  String replicateSampleSize,
-                 String platform,
+                 Collection<Platform> platform,
                  String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
@@ -112,6 +119,7 @@ public class Study {
                  Collection<EfoTrait> efoTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Collection<Ethnicity> ethnicities,
+                 ArrayInformation arrayInformation,
                  Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
@@ -128,6 +136,7 @@ public class Study {
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
+        this.arrayInformation = arrayInformation;
         this.housekeeping = housekeeping;
     }
 
@@ -187,11 +196,11 @@ public class Study {
         this.replicateSampleSize = replicateSampleSize;
     }
 
-    public String getPlatform() {
+    public Collection<Platform> getPlatform() {
         return platform;
     }
 
-    public void setPlatform(String platform) {
+    public void setPlatform(Collection<Platform> platform) {
         this.platform = platform;
     }
 
@@ -292,5 +301,13 @@ public class Study {
 
     public void setEthnicities(Collection<Ethnicity> ethnicities) {
         this.ethnicities = ethnicities;
+    }
+
+    public ArrayInformation getArrayInformation() {
+        return arrayInformation;
+    }
+
+    public void setArrayInformation(ArrayInformation arrayInformation) {
+        this.arrayInformation = arrayInformation;
     }
 }

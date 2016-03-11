@@ -165,7 +165,7 @@
                                 multiple="multiple" id="platform">
                             <option th:each="platform : ${platforms}"
                                     th:value="${platform.id}"
-                                    th:text="${platform.manufacturer}"></option>
+                                    th:text="${platform.platform}"></option>
                         </select>
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="arryInfoComment" class="control-label col-md-2">Additional array information</label>
+                    <label for="arrayInfoComment" class="control-label col-md-2">Additional array information</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="arrayInfoComment" th:field="*{arrayInfoComment}"/>

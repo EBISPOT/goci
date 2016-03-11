@@ -3,10 +3,13 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.ArrayInformation;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.LocalArrayInfo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +19,15 @@ import java.util.List;
 @Service
 public class PlatformMappingService {
 
-    private StudyService studyService;
-    private List<Study> studies;
-    private List<ArrayInformation> platformEntries;
+    private static final String DBQUERY =
+            "SELECT DISTINCT ID, PLATFORM FROM STUDY";
+
+
+    private List<LocalArrayInfo> platformEntries;
     private List<String> manufacturers;
     private List<String> qualifiers;
+
+    private JdbcTemplate jdbcTemplate;
 
     private Logger output = LoggerFactory.getLogger("output");
 
@@ -35,8 +42,8 @@ public class PlatformMappingService {
     }
 
     @Autowired
-    public PlatformMappingService(StudyService studyService){
-        this.studyService = studyService;
+    public PlatformMappingService(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
         manufacturers = new ArrayList<>();
         manufacturers.add("Affymetrix");
         manufacturers.add("Illumina");
@@ -53,19 +60,21 @@ public class PlatformMappingService {
 
     }
     public void mapAllValues() {
-        getLog().info("Retrieving all studies");
-        this.studies = studyService.findPublishedStudies();
+        getLog().info("Retrieving all platform entries");
+        
+        List<PlatformEntity> studies = retrieveData();
 
         int all = studies.size();
         getLog().info("Retrieved " + all + " studies");
 
         int counter = 0;
 
-        for(Study study : studies){
+        for(PlatformEntity study : studies){
             if((counter % 100) == 0){
                 getLog().info((all - counter) + " studies left to process");
             }
-            String platform = study.getPlatform();
+
+            String platform = study.getP();
 
             if(platform != null){
                 System.out.println(platform);
@@ -167,7 +176,7 @@ public class PlatformMappingService {
                     qual = qualifier.get(0);
                 }
 
-                ArrayInformation info = new ArrayInformation(manufacturer, snpCount, qual, imputed, pooled, comment, study, platform);
+                LocalArrayInfo info = new LocalArrayInfo(manufacturer, snpCount, qual, imputed, pooled, comment, study.getStudy(), platform);
 
                 platformEntries.add(info);
 
@@ -178,14 +187,14 @@ public class PlatformMappingService {
         printArrays(platformEntries);
     }
 
-    private void printArrays(List<ArrayInformation> arrayInformation) {
+    private void printArrays(List<LocalArrayInfo> localArrayInfo) {
 
         getOutput().info("Platform\tStudyID\tManufacturers\tQualifier\tSNPcount\tImputer\tPooled\tComment");
 
-        for(ArrayInformation info : arrayInformation){
+        for(LocalArrayInfo info : localArrayInfo){
             String platform = info.getPlatformString();
 
-            String id = info.getStudy().getId().toString();
+            String id = String.valueOf(info.getStudy());
             String manufacturer = "";
 
             if(info.getManufacturer().size() != 0){
@@ -231,4 +240,47 @@ public class PlatformMappingService {
         }
     }
 
+    public List<PlatformEntity> retrieveData(){
+        return getJdbcTemplate().query(DBQUERY, new PlatformMapper());
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    private class PlatformMapper implements RowMapper<PlatformEntity> {
+        public PlatformEntity mapRow(ResultSet rs, int i) throws SQLException {
+            int id = rs.getInt(1);
+            String p = rs.getString(2).trim();
+
+            return new PlatformEntity(id, p);
+        }
+    }
+
+    private class PlatformEntity{
+
+        private int study;
+        private String p;
+
+        public PlatformEntity(int study, String p){
+            this.study = study;
+            this.p = p;
+        }
+
+        public int getStudy() {
+            return study;
+        }
+
+        public void setStudy(int study) {
+            this.study = study;
+        }
+
+        public String getP() {
+            return p;
+        }
+
+        public void setP(String p) {
+            this.p = p;
+        }
+    }
 }

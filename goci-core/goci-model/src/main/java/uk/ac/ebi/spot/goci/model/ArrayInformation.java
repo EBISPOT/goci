@@ -3,7 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.List;
+import javax.persistence.OneToOne;
 
 /**
 * Created by dwelter on 08/03/16.
@@ -16,7 +16,7 @@ public class ArrayInformation {
     @GeneratedValue
     private Long id;
 
-    private List<Platform> manufacturer;
+//    private Collection<Platform> platform;
 
     private Integer snpCount;
 
@@ -28,33 +28,27 @@ public class ArrayInformation {
 
     private String comment;
 
+
+    @OneToOne(mappedBy = "arrayInformation")
     private Study study;
-
-    private String platformString;
-
-//    TO DO: add cross-links to study & manufacturer + create Manufacturer class
 
     // JPA no-args constructor
     public ArrayInformation(){
 
     }
 
-    public ArrayInformation(List<Platform> manufacturer,
+    public ArrayInformation(//Collection<Platform> platform,
                             Integer snpCount,
                             String qualifier,
                             boolean imputed,
                             boolean pooled,
-                            String comment,
-                            Study study,
-                            String platformString){
-        this.manufacturer = manufacturer;
+                            String comment){
+//        this.platform = platform;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
         this.pooled = pooled;
         this.comment = comment;
-        this.study = study;
-        this.platformString = platformString;
     }
 
 
@@ -67,13 +61,13 @@ public class ArrayInformation {
         this.id = id;
     }
 
-    public List<Platform> getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(List<Platform> manufacturer) {
-        this.manufacturer = manufacturer;
-    }
+//    public Collection<Platform> getPlatform() {
+//        return platform;
+//    }
+//
+//    public void setPlatform(Collection<Platform> platform) {
+//        this.platform = platform;
+//    }
 
     public Integer getSnps() {
         return snpCount;
@@ -121,13 +115,5 @@ public class ArrayInformation {
 
     public void setStudy(Study study) {
         this.study = study;
-    }
-
-    public String getPlatformString() {
-        return platformString;
-    }
-
-    public void setPlatformString(String platformString) {
-        this.platformString = platformString;
     }
 }

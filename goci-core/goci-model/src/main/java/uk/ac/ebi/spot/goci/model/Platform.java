@@ -17,18 +17,18 @@ public class Platform {
     private Long id;
 
     @NotBlank
-    private String manufacturer;
+    private String platform;
 
-    @ManyToMany(mappedBy = "platforms")
+    @ManyToMany(mappedBy = "platform")
     private Collection<Study> studies;
 
     // JPA no-args constructor
     public Platform() {
     }
 
-    public Platform(String manufacturer,
+    public Platform(String platform,
                     Collection<Study> studies) {
-        this.manufacturer = manufacturer;
+        this.platform = platform;
         this.studies = studies;
     }
 
@@ -40,12 +40,12 @@ public class Platform {
         this.id = id;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public String getPlatform() {
+        return platform;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public Collection<Study> getStudies() {
