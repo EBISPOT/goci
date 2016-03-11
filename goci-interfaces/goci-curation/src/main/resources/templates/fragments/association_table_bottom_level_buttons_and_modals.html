@@ -46,6 +46,11 @@
                    class="btn btn-default"
                    role="button">Beta</a>
 
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
+
+
             </div>
         </div>
     </div>
@@ -71,6 +76,10 @@
                    class="btn btn-default"
                    role="button">Beta</a>
 
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
+
             </div>
         </div>
     </div>
@@ -94,6 +103,10 @@
                 <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='beta')}"
                    class="btn btn-default"
                    role="button">Beta</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
 
             </div>
         </div>

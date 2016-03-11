@@ -56,9 +56,14 @@ public class AssociationOperationsService {
      */
     public String determineIfAssociationIsOrType(Association association) {
 
-        String measurementType = "or";
+        String measurementType = "none";
         if (association.getBetaNum() != null) {
             measurementType = "beta";
+        }
+        else {
+            if (association.getOrPerCopyNum() != null) {
+                measurementType = "or";
+            }
         }
         return measurementType;
     }

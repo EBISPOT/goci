@@ -30,6 +30,9 @@ public class AssociationOperationsServiceTest {
     private static final Association ASS_OR =
             new AssociationBuilder().setId(601L).setOrPerCopyNum((float) 5.97).build();
 
+    private static final Association ASS_NO_EFFECT_SIZE =
+            new AssociationBuilder().setId(602L).build();
+
     private AssociationOperationsService associationOperationsService;
 
     @Mock
@@ -66,10 +69,10 @@ public class AssociationOperationsServiceTest {
         assertNotNull(snpFormColumnValidator);
     }
 
-
     @Test
     public void testDetermineIfAssociationIsOrType() {
         assertEquals("beta", associationOperationsService.determineIfAssociationIsOrType(ASS_BETA));
         assertEquals("or", associationOperationsService.determineIfAssociationIsOrType(ASS_OR));
+        assertEquals("none", associationOperationsService.determineIfAssociationIsOrType(ASS_NO_EFFECT_SIZE));
     }
 }
