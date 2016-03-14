@@ -29,7 +29,7 @@ public class ArrayInformation {
     private String comment;
 
 
-    @OneToOne(mappedBy = "arrayInformation")
+    @OneToOne
     private Study study;
 
     // JPA no-args constructor

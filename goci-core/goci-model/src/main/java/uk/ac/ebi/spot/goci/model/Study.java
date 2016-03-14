@@ -93,7 +93,7 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
-    @OneToOne
+    @OneToOne(mappedBy = "study")
     private ArrayInformation arrayInformation;
 
     @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
