@@ -25,6 +25,9 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
     private static final String SELECT_MANUFACTURERS =
             "SELECT DISTINCT * FROM PLATFORM";
 
+    private static final String UPDATE_STUDY_POOLED =
+            "UPDATE STUDY SET POOLED = ?, SNP_COUNT = ?, QUALIFIER = ?, IMPUTED = ?, COMMENT = ? WHERE ID = ?";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -54,16 +57,6 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
         qualifiers.add("~");
         qualifiers.add(">");
 
-        SimpleJdbcInsert insertArrayInformation =
-                new SimpleJdbcInsert(jdbcTemplate)
-                    .withTableName("ARRAY_INFORMATION")
-                    .usingColumns("SNP_COUNT",
-                                  "QUALIFIER",
-                                  "IMPUTED",
-                                  "POOLED",
-                                  "COMMENT",
-                                  "STUDY_ID")
-                    .usingGeneratedKeyColumns("ID");
 
         SimpleJdbcInsert insertStudyPlatform =
                 new SimpleJdbcInsert(jdbcTemplate)
@@ -158,15 +151,13 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                 }
 
 
-                Map<String, Object> arrayInformationArgs = new HashMap<>();
-                arrayInformationArgs.put("SNP_COUNT", snpCount);
-                arrayInformationArgs.put("QUALIFIER", qual);
-                arrayInformationArgs.put("IMPUTED", imputed);
-                arrayInformationArgs.put("POOLED", pooled);
-                arrayInformationArgs.put("COMMENT", comment);
-                arrayInformationArgs.put("STUDY_ID", studyId);
-
-                insertArrayInformation.execute(arrayInformationArgs);
+                jdbcTemplate.update(UPDATE_STUDY_POOLED,
+                                    pooled,
+                                    snpCount,
+                                    qual,
+                                    imputed,
+                                    comment,
+                                    studyId);
 
                 for(String man : manufacturer){
                     Long pId = manufacturers.get(man);

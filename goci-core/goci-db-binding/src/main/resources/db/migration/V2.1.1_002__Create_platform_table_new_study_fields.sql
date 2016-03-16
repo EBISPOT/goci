@@ -1,6 +1,7 @@
 /*
 ################################################################################
-Migration script to create PLATFORM, STUDY_PLATFORM and ARRAY_INFORMATION tableS
+Migration script to create PLATFORM and STUDY_PLATFORM tables and add columns
+to the STUDY table
 
 Designed for execution with Flyway database migrations tool; this should be
 automatically run to completely generate the schema that is out-of-the-box
@@ -22,7 +23,7 @@ version: 2.1.1.002
 
   CREATE TABLE "PLATFORM" (
      "ID" NUMBER(19,0),
-     "PLATFORM" VARCHAR2(255 CHAR));
+     "MANUFACTURER" VARCHAR2(255 CHAR));
 
 --------------------------------------------------------
 --  DDL for Index PLATFORM_ID_PK
@@ -53,54 +54,10 @@ ALTER TRIGGER PLATFORM_TRG ENABLE;
 --------------------------------------------------------
 -- Insert default values into PLATFORM
 --------------------------------------------------------
-   INSERT INTO PLATFORM (PLATFORM) VALUES('Affymetrix');
-   INSERT INTO PLATFORM (PLATFORM) VALUES('Illumina');
-   INSERT INTO PLATFORM (PLATFORM) VALUES('Perlegen');
+   INSERT INTO PLATFORM (MANUFACTURER) VALUES('Affymetrix');
+   INSERT INTO PLATFORM (MANUFACTURER) VALUES('Illumina');
+   INSERT INTO PLATFORM (MANUFACTURER) VALUES('Perlegen');
 
---------------------------------------------------------
---  Create Table ARRAY_INFORMATION
---------------------------------------------------------
-
-  CREATE TABLE "ARRAY_INFORMATION" (
-     "ID" NUMBER(19,0),
-     "SNP_COUNT" NUMBER(19,0),
-     "QUALIFIER" VARCHAR2(255 CHAR),
-     "IMPUTED" NUMBER(1,0),
-     "POOLED" NUMBER(1,0),
-     "COMMENT" VARCHAR2(255 CHAR),
-     "STUDY_ID" NUMBER(19,0));
-
---------------------------------------------------------
---  DDL for Index ARRAY_INFORMATION_ID_PK
---------------------------------------------------------
-  CREATE UNIQUE INDEX "ARRAY_INFORMATION_ID_PK" ON "ARRAY_INFORMATION" ("ID");
-
---------------------------------------------------------
---  Constraints for Table ARRAY_INFORMATION
---------------------------------------------------------
-  ALTER TABLE "ARRAY_INFORMATION" ADD PRIMARY KEY ("ID") ENABLE;
-  ALTER TABLE "ARRAY_INFORMATION" MODIFY ("ID" NOT NULL ENABLE);
-
---------------------------------------------------------
--- Create trigger on ARRAY_INFORMATION
---------------------------------------------------------
-
-CREATE OR REPLACE TRIGGER ARRAY_INFORMATION_TRG
-BEFORE INSERT ON "ARRAY_INFORMATION"
-FOR EACH ROW
-    BEGIN
-        IF :NEW.ID IS NULL THEN
-            SELECT HIBERNATE_SEQUENCE.NEXTVAL INTO :NEW.ID FROM DUAL;
-        END IF;
-    END;
-/
-ALTER TRIGGER ARRAY_INFORMATION_TRG ENABLE;
-
---------------------------------------------------------
---  Ref Constraints for Table ARRAY_INFORMATION
---------------------------------------------------------
-  ALTER TABLE "ARRAY_INFORMATION" ADD CONSTRAINT "ARRAY_INFORMATION_STUDY_ID_FK" FOREIGN KEY ("STUDY_ID")
-	  REFERENCES "STUDY" ("ID") ENABLE;
 
 --------------------------------------------------------
 --  DDL for Table STUDY_PLATFORM
@@ -126,3 +83,12 @@ ALTER TRIGGER ARRAY_INFORMATION_TRG ENABLE;
 	  REFERENCES "STUDY" ("ID") ENABLE;
 
 
+--------------------------------------------------------
+--  Update for Table STUDY
+--------------------------------------------------------
+    ALTER TABLE "STUDY"
+        ADD ("POOLED" NUMBER(1,0),
+        "SNP_COUNT" NUMBER(19,0),
+        "QUALIFIER" VARCHAR2(255 CHAR),
+        "IMPUTED" NUMBER(1,0),
+        "STUDY_DESIGN_COMMENT" VARCHAR2(255 CHAR));

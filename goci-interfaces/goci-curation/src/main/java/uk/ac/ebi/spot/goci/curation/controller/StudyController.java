@@ -27,7 +27,6 @@ import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
-import uk.ac.ebi.spot.goci.model.ArrayInformation;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -38,7 +37,6 @@ import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.UnpublishReason;
-import uk.ac.ebi.spot.goci.repository.ArrayInformationRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -81,7 +79,6 @@ public class StudyController {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private PlatformRepository platformRepository;
-    private ArrayInformationRepository arrayInformationRepository;
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
@@ -107,7 +104,6 @@ public class StudyController {
                            CuratorRepository curatorRepository,
                            CurationStatusRepository curationStatusRepository,
                            PlatformRepository platformRepository,
-                           ArrayInformationRepository arrayInformationRepository,
                            AssociationRepository associationRepository,
                            EthnicityRepository ethnicityRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
@@ -121,7 +117,6 @@ public class StudyController {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.platformRepository = platformRepository;
-        this.arrayInformationRepository = arrayInformationRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
@@ -599,14 +594,12 @@ public class StudyController {
         Long housekeepingId = studyToDelete.getHousekeeping().getId();
         Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
         Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(studyId);
-        ArrayInformation arrayInformationAttachedToStudy = arrayInformationRepository.findByStudyId(studyId);
 
         // Delete ethnicity information linked to this study
         for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
             ethnicityRepository.delete(ethnicity);
         }
 
-        arrayInformationRepository.delete(arrayInformationAttachedToStudy);
 
         // Delete study
         studyRepository.delete(studyToDelete);
@@ -644,12 +637,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-        ArrayInformation studyToDuplicateArrayInformation = arrayInformationRepository.findByStudyId(studyId);
-        ArrayInformation duplicateArrayInformation = copyArrayInformation(studyToDuplicateArrayInformation);
-        duplicateArrayInformation.setStudy(duplicateStudy);
-        arrayInformationRepository.save(duplicateArrayInformation);
-
-        // Add duplicate message
+       // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
@@ -787,11 +775,9 @@ public class StudyController {
 
         Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
 
-        ArrayInformation arrayInfo = arrayInformationRepository.findByStudyId(studyId);
-
 
         // If so warn the curator
-        if (!associations.isEmpty() || !ancestryInfo.isEmpty() || !(arrayInfo == null)) {
+        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
             model.addAttribute("study", studyToUnpublish);
             return "unpublish_study_with_associations_warning";
 
@@ -882,12 +868,12 @@ public class StudyController {
         }
 
         //Deal with platforms
-        Collection<Platform> platforms = studyToDuplicate.getPlatform();
+        Collection<Platform> platforms = studyToDuplicate.getPlatforms();
         Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
 
         if(platforms != null && !platforms.isEmpty()){
             platformsDuplicateStudy.addAll(platforms);
-            duplicateStudy.setPlatform(platformsDuplicateStudy);
+            duplicateStudy.setPlatforms(platformsDuplicateStudy);
         }
 
         return duplicateStudy;
@@ -909,17 +895,6 @@ public class StudyController {
 
     }
 
-    private ArrayInformation copyArrayInformation(ArrayInformation studyToDuplicateArrayInformation){
-        ArrayInformation duplicateArrayInformation = new ArrayInformation();
-//        duplicateArrayInformation.setPlatform(studyToDuplicateArrayInformation.getPlatform());
-        duplicateArrayInformation.setQualifier(studyToDuplicateArrayInformation.getQualifier());
-        duplicateArrayInformation.setSnps(studyToDuplicateArrayInformation.getSnps());
-        duplicateArrayInformation.setImputed(studyToDuplicateArrayInformation.isImputed());
-        duplicateArrayInformation.setPooled(studyToDuplicateArrayInformation.isPooled());
-        duplicateArrayInformation.setComment(studyToDuplicateArrayInformation.getComment());
-
-        return duplicateArrayInformation;
-    }
 
     // Find correct sorting type and direction
     private Sort findSort(String sortType) {

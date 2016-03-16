@@ -158,14 +158,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="platform" class="control-label col-md-2">Platform</label>
+                    <label for="platform" class="control-label col-md-2">Array manufacturer</label>
 
                     <div class="col-md-10">
                         <select name="platform" th:field="*{platforms}" class="form-control select2-select"
                                 multiple="multiple" id="platform">
                             <option th:each="platform : ${platforms}"
                                     th:value="${platform.id}"
-                                    th:text="${platform.platform}"></option>
+                                    th:text="${platform.manufacturer}"></option>
                         </select>
                     </div>
                 </div>
@@ -180,7 +180,6 @@
                                 <th>Number SNPs analysed</th>
                                 <th>No SNP count reported</th>
                                 <th>Imputed</th>
-                                <th>Pooled</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -210,9 +209,7 @@
                                 <td>
                                     <input id="imputed" type="checkbox" th:field="*{imputed}"/>
                                 </td>
-                                <td>
-                                    <input id="pooled" type="checkbox" th:field="*{pooled}"/>
-                                </td>
+
 
                             </tr>
                             </tbody>
@@ -222,10 +219,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="arrayInfoComment" class="control-label col-md-2">Additional array information</label>
+                    <label for="studyDesignComment" class="control-label col-md-2">Additional array information</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="arrayInfoComment" th:field="*{arrayInfoComment}"/>
+                        <input type="text" class="form-control" id="studyDesignComment" th:field="*{studyDesignComment}"/>
                     </div>
                 </div>
 
@@ -288,6 +285,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="pooled" class="control-label col-md-2">Pooled</label>
+
+                    <input id="pooled" type="checkbox" th:field="*{pooled}"/>
+                </div>
+
+
+                <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="Save" class="btn btn-primary">Save</button>
                     </div>
@@ -322,8 +326,8 @@
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#platform').select2({
-                                       placeholder: "Select a sequencing platform",
+        $('#platforms').select2({
+                                       placeholder: "Select an array manufacturer",
                                        allowClear: true
                                    });
     });

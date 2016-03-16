@@ -17,7 +17,7 @@ public class Platform {
     private Long id;
 
     @NotBlank
-    private String platform;
+    private String manufacturer;
 
     @ManyToMany(mappedBy = "platform")
     private Collection<Study> studies;
@@ -26,9 +26,9 @@ public class Platform {
     public Platform() {
     }
 
-    public Platform(String platform,
+    public Platform(String manufacturer,
                     Collection<Study> studies) {
-        this.platform = platform;
+        this.manufacturer = manufacturer;
         this.studies = studies;
     }
 
@@ -40,12 +40,12 @@ public class Platform {
         this.id = id;
     }
 
-    public String getPlatform() {
-        return platform;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public Collection<Study> getStudies() {

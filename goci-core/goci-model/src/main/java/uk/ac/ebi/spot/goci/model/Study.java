@@ -60,11 +60,22 @@ public class Study {
 
     private Boolean gxg = false;
 
+    private Integer snpCount;
+
+    private String qualifier;
+
+    private Boolean imputed;
+
+    private Boolean pooled;
+
+    private String studyDesignComment;
+
+
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
-    private Collection<Platform> platform;
+    private Collection<Platform> platforms;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
@@ -93,9 +104,6 @@ public class Study {
     @OneToOne
     private Housekeeping housekeeping;
 
-    @OneToOne(mappedBy = "study")
-    private ArrayInformation arrayInformation;
-
     @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
     private StudyReport studyReport;
 
@@ -110,16 +118,20 @@ public class Study {
                  String title,
                  String initialSampleSize,
                  String replicateSampleSize,
-                 Collection<Platform> platform,
+                 Collection<Platform> platforms,
                  String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Integer snpCount,
+                 String qualifier,
+                 Boolean imputed,
+                 Boolean pooled,
+                 String studyDesignComment,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Collection<Ethnicity> ethnicities,
-                 ArrayInformation arrayInformation,
                  Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
@@ -127,16 +139,20 @@ public class Study {
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platform = platform;
+        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.snpCount = snpCount;
+        this.qualifier = qualifier;
+        this.imputed = imputed;
+        this.pooled = pooled;
+        this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
-        this.arrayInformation = arrayInformation;
         this.housekeeping = housekeeping;
     }
 
@@ -196,12 +212,12 @@ public class Study {
         this.replicateSampleSize = replicateSampleSize;
     }
 
-    public Collection<Platform> getPlatform() {
-        return platform;
+    public Collection<Platform> getPlatforms() {
+        return platforms;
     }
 
-    public void setPlatform(Collection<Platform> platform) {
-        this.platform = platform;
+    public void setPlatforms(Collection<Platform> platforms) {
+        this.platforms = platforms;
     }
 
     public String getPubmedId() {
@@ -303,11 +319,44 @@ public class Study {
         this.ethnicities = ethnicities;
     }
 
-    public ArrayInformation getArrayInformation() {
-        return arrayInformation;
+
+    public Integer getSnpCount() {
+        return snpCount;
     }
 
-    public void setArrayInformation(ArrayInformation arrayInformation) {
-        this.arrayInformation = arrayInformation;
+    public void setSnpCount(Integer snpCount) {
+        this.snpCount = snpCount;
+    }
+
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    public boolean getImputed() {
+        return imputed;
+    }
+
+    public void setImputed(boolean imputed) {
+        this.imputed = imputed;
+    }
+
+    public boolean getPooled() {
+        return pooled;
+    }
+
+    public void setPooled(boolean pooled) {
+        this.pooled = pooled;
+    }
+
+    public String getStudyDesignComment() {
+        return studyDesignComment;
+    }
+
+    public void setStudyDesignComment(String studyDesignComment) {
+        this.studyDesignComment = studyDesignComment;
     }
 }

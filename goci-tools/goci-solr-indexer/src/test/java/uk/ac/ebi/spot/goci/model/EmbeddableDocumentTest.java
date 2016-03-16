@@ -39,18 +39,23 @@ public class EmbeddableDocumentTest {
                                "publication",
                                "title",
                                "initial sample size",
-                               "replicate " +
-                                       "sample size",
-                               "platform",
+                               "replicate sample size",
+                               Collections.<Platform>emptyList(),
                                "123456",
                                false,
                                false,
                                false,
                                null,
+                               "qualifier",
+                               false,
+                               false,
+                               "study design comment",
+                               null,
                                Collections.<EfoTrait>emptyList(),
                                Collections.<SingleNucleotidePolymorphism>emptyList(),
                                Collections.<Ethnicity>emptyList(),
                                h);
+
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 
