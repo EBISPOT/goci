@@ -163,7 +163,6 @@
                     <div class="col-md-10">
                         <select name="platform" th:field="*{platforms}" class="form-control select2-select"
                                 multiple="multiple" id="platform">
-                            <option value=""></option>
                             <option th:each="platform : ${platforms}"
                                     th:value="${platform.id}"
                                     th:text="${platform.manufacturer}"></option>
