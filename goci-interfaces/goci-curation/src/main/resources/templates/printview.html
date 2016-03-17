@@ -62,7 +62,13 @@
 
                 <tr>
                     <th>Platform</th>
-                    <td th:text="${study.platformss} ?: ''"></td>
+                    <td><span th:each="platform: ${study.platforms}"
+                              th:if="${#arrays.length(study.platforms) &gt; 1}"
+                              th:text="${platform.manufacturer}+', ' ?: ''"></span>
+                        <span th:each="platform: ${study.platforms}"
+                              th:if="${#arrays.length(study.platforms) == 1}"
+                              th:text="${platform.manufacturer} ?: ''"></span>
+                    </td>
                 </tr>
 
                 <tr>

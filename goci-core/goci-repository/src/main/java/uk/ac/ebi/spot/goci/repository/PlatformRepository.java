@@ -9,4 +9,7 @@ import uk.ac.ebi.spot.goci.model.Platform;
  */
 @RepositoryRestResource
 public interface PlatformRepository extends JpaRepository<Platform, Long>{
+
+//    Collection<Platform> findByStudyId(Long studyId);
+
 }

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -10,6 +11,7 @@ import java.util.Collection;
 /**
 * Created by dwelter on 08/03/16.
 */
+@Entity
 public class Platform {
 
     @Id
@@ -19,7 +21,7 @@ public class Platform {
     @NotBlank
     private String manufacturer;
 
-    @ManyToMany(mappedBy = "platform")
+    @ManyToMany(mappedBy = "platforms")
     private Collection<Study> studies;
 
     // JPA no-args constructor

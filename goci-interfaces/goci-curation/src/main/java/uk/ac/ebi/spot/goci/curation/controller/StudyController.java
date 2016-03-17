@@ -1083,11 +1083,11 @@ public class StudyController {
     }
 
     private Sort sortByPlatformAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.platform").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
     }
 
     private Sort sortByPlatformDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.platform").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
     }
 
     private Sort sortByEfoTraitAsc() {

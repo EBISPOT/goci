@@ -20,13 +20,13 @@ import java.util.Map;
 public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigration {
 
     private static final String SELECT_PLATFORM =
-            "SELECT DISTINCT ID, PLATFORM FROM STUDY";
+            "SELECT DISTINCT ID, PLATFORM FROM STUDY WHERE PLATFORM IS NOT NULL";
 
     private static final String SELECT_MANUFACTURERS =
             "SELECT DISTINCT * FROM PLATFORM";
 
     private static final String UPDATE_STUDY_POOLED =
-            "UPDATE STUDY SET POOLED = ?, SNP_COUNT = ?, QUALIFIER = ?, IMPUTED = ?, COMMENT = ? WHERE ID = ?";
+            "UPDATE STUDY SET POOLED = ?, SNP_COUNT = ?, QUALIFIER = ?, IMPUTED = ?, STUDY_DESIGN_COMMENT = ? WHERE ID = ?";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -74,10 +74,10 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                 Integer snpCount = null;
                 List<String> qualifier = new ArrayList<>();
                 String qual = null;
-                String comment = null;
+                String studyDesignComment = null;
 
                 if(platform.equals("NR")){
-                    comment = platform;
+                    studyDesignComment = platform;
                 }
                 else {
                     for(String man : manufacturers.keySet()){
@@ -87,7 +87,7 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                     }
 
                     if(manufacturer.size() == 0){
-                        comment = platform;
+                        studyDesignComment = platform;
                     }
 
                     if(platform.contains("imputed")){
@@ -97,8 +97,8 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                         pooled = 1;
                     }
 
-                    if(platform.contains("SNP") || platform.contains("unsure") || platform.contains("UNSURE")){
-                        comment = platform;
+                    if(platform.contains("SNP") || platform.contains("unsure") || platform.contains("UNSURE") || platform.contains("CNV") || platform.contains("aplotype")){
+                        studyDesignComment = platform;
                     }
                     else{
                         if(platform.contains("[") && platform.indexOf("[") == platform.lastIndexOf("[")) {
@@ -128,23 +128,27 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                                     snpCount = (int) (c * 1000000);
                                 }
 
-                                else if (count.contains(",")) {
+                                else if (count.contains(",") || count.contains(".")) {
                                     count = count.replace(",", "").trim();
+                                    count = count.replace(".", "").trim();
                                     snpCount = Integer.parseInt(count);
                                 }
-                                else {
+                                else if (!count.equals("")){
                                     snpCount = Integer.parseInt(count);
+                                }
+                                else{
+                                    studyDesignComment = platform;
                                 }
                             }
                         }
                         else {
-                            comment = platform;
+                            studyDesignComment = platform;
                         }
                     }
                 }
 
                 if(qualifier.size() > 1){
-                    comment = platform;
+                    studyDesignComment = platform;
                 }
                 else if(qualifier.size() == 1){
                     qual = qualifier.get(0);
@@ -156,7 +160,7 @@ public class V2_1_1_003__Split_platform_array_info implements SpringJdbcMigratio
                                     snpCount,
                                     qual,
                                     imputed,
-                                    comment,
+                                    studyDesignComment,
                                     studyId);
 
                 for(String man : manufacturer){
