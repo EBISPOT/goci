@@ -857,6 +857,10 @@ public class StudyController {
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
+        duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
+        duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
+        duplicateStudy.setImputed(studyToDuplicate.getImputed());
+        duplicateStudy.setPooled(studyToDuplicate.getPooled());
 
         // Deal with EFO traits
         Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
@@ -969,7 +973,8 @@ public class StudyController {
 
     //Platforms
     @ModelAttribute("platforms")
-    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
 
 
 
@@ -1082,13 +1087,13 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
 
-    private Sort sortByPlatformAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
-    }
-
-    private Sort sortByPlatformDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
-    }
+//    private Sort sortByPlatformAsc() {
+//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+//    }
+//
+//    private Sort sortByPlatformDesc() {
+//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+//    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());

@@ -64,9 +64,9 @@ public class Study {
 
     private String qualifier;
 
-    private Boolean imputed;
+    private Boolean imputed = false;
 
-    private Boolean pooled;
+    private Boolean pooled = false;
 
     private String studyDesignComment;
 

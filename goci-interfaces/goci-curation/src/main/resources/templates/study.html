@@ -163,6 +163,7 @@
                     <div class="col-md-10">
                         <select name="platform" th:field="*{platforms}" class="form-control select2-select"
                                 multiple="multiple" id="platform">
+                            <option value=""></option>
                             <option th:each="platform : ${platforms}"
                                     th:value="${platform.id}"
                                     th:text="${platform.manufacturer}"></option>
@@ -178,7 +179,7 @@
                             <tr>
                                 <th>Qualifier</th>
                                 <th>Number SNPs analysed</th>
-                                <th>No SNP count reported</th>
+                                <!--<th>No SNP count reported</th>-->
                                 <th>Imputed</th>
                             </tr>
                             </thead>
@@ -190,6 +191,7 @@
                                            <!--th:field="*{arrayInfoRows[__${rowStat.index}__].snp}"/>-->
                                     <select name="qualifier" th:field="*{qualifier}" class="form-control select2-select"
                                             id="qualifier">
+                                        <option value=""></option>
                                         <option th:each="qualifier : ${qualifiers}"
                                                 th:value="${qualifier}"
                                                 th:text="${qualifier}"></option>
@@ -200,12 +202,10 @@
                                            <!--th:field="*{arrayInfoRows[__${rowStat.index}__].strongestRiskAllele}"/>-->
                                     <input type="text" class="form-control" id="snpCount" th:field="*{snpCount}"/>
                                 </td>
-                                <td>
-                                    <!--<input type="text" data-role="tagsinput" label="proxySnps"-->
-                                           <!--th:field="*{snpFormRows[__${rowStat.index}__].proxySnps}"/>-->
-                                    <input id="snpCountNR" type="checkbox" th:field="*{snpCountNR}"/>
+                                <!--<td>-->
+                                    <!--<input id="snpCountNR" type="checkbox" th:field="*{snpCountNR}"/>-->
 
-                                </td>
+                                <!--</td>-->
                                 <td>
                                     <input id="imputed" type="checkbox" th:field="*{imputed}"/>
                                 </td>
