@@ -44,6 +44,7 @@ public class AssociationSheetProcessor {
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
+
     protected Logger getLog() {
         return log;
     }
@@ -396,37 +397,9 @@ public class AssociationSheetProcessor {
                     newAssociation.setPvalueMantissa(pvalueMantissa);
                     newAssociation.setPvalueExponent(pvalueExponent);
                     newAssociation.setPvalueText(pvalueDescription);
-                    newAssociation.setOrPerCopyRecip(orPerCopyRecip);
-                    newAssociation.setStandardError(standardError);
-                    newAssociation.setOrPerCopyRecipRange(orPerCopyRecipRange);
-                    newAssociation.setDescription(orPerCopyUnitDescr);
                     newAssociation.setSnpType(snpType);
-
-                    boolean recipReverse = false;
-                    // Calculate OR per copy num
-                    if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
-                        orPerCopyNum = ((100 / orPerCopyRecip) / 100);
-                        newAssociation.setOrPerCopyNum(orPerCopyNum);
-                        recipReverse = true;
-                    }
-                    // Otherwise set to whatever is in upload
-                    else {
-                        newAssociation.setOrPerCopyNum(orPerCopyNum);
-                    }
-
-                    // This logic is retained from Dani's original code
-                    if ((orPerCopyRecipRange != null) && recipReverse) {
-                        range = associationCalculationService.reverseCI(orPerCopyRecipRange);
-                        newAssociation.setRange(range);
-                    }
-                    else if ((range == null) && (standardError != null)) {
-                        range = associationCalculationService.setRange(standardError, orPerCopyNum);
-                        newAssociation.setRange(range);
-                    }
-                    else {
-                        newAssociation.setRange(range);
-                    }
-
+                    newAssociation.setStandardError(standardError);
+                    newAssociation.setDescription(orPerCopyUnitDescr);
                     if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
                         newAssociation.setMultiSnpHaplotype(true);
                     }
@@ -439,6 +412,41 @@ public class AssociationSheetProcessor {
                     }
                     else {
                         newAssociation.setSnpInteraction(false);
+                    }
+
+                    // Set beta
+                    newAssociation.setBetaNum(betaNum);
+                    newAssociation.setBetaUnit(betaUnit);
+                    newAssociation.setBetaDirection(betaDirection);
+
+                    // Set OR
+                    newAssociation.setOrPerCopyRecip(orPerCopyRecip);
+                    newAssociation.setOrPerCopyRecipRange(orPerCopyRecipRange);
+
+                    // Calculate OR num if OR recip is present
+                    // Otherwise set to whatever is in upload
+                    boolean recipReverse = false;
+                    if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
+                        orPerCopyNum = ((100 / orPerCopyRecip) / 100);
+                        newAssociation.setOrPerCopyNum(orPerCopyNum);
+                        recipReverse = true;
+                    }
+                    else {
+                        newAssociation.setOrPerCopyNum(orPerCopyNum);
+                    }
+
+                    // Calculate range
+                    // (This logic is retained from Dani's original code)
+                    if ((orPerCopyRecipRange != null) && recipReverse) {
+                        range = associationCalculationService.reverseCI(orPerCopyRecipRange);
+                        newAssociation.setRange(range);
+                    }
+                    else if ((range == null) && (standardError != null)) {
+                        range = associationCalculationService.setRange(standardError, orPerCopyNum);
+                        newAssociation.setRange(range);
+                    }
+                    else {
+                        newAssociation.setRange(range);
                     }
 
                     String delimiter;
