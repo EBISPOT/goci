@@ -427,13 +427,6 @@ public class AssociationSheetProcessor {
                         newAssociation.setRange(range);
                     }
 
-                    if (orType.equalsIgnoreCase("Y")) {
-                        newAssociation.setOrType(true);
-                    }
-                    else {
-                        newAssociation.setOrType(false);
-                    }
-
                     if (multiSnpHaplotype.equalsIgnoreCase("Y")) {
                         newAssociation.setMultiSnpHaplotype(true);
                     }
