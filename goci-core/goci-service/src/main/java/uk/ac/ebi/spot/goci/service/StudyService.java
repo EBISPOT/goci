@@ -187,18 +187,21 @@ public class StudyService {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
         int ethnicityCount = study.getEthnicities().size();
+        int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                             "has " + associationCount + " associations, " + ethnicityCount +
-                            " ancestry entries and was published on " + publishDate.toString());
+                            " ancestry entries, " + platformCount + " platform manufacturers "  +
+                            " and was published on " + publishDate.toString());
         }
         else {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                             "has " + associationCount + " associations, " + ethnicityCount +
-                            " ancestry entries and is not yet published");
+                            " ancestry entries , " + platformCount + " platform manufacturers " +
+                            "and is not yet published");
         }
     }
 
@@ -206,14 +209,12 @@ public class StudyService {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
         int snpCount = study.getSingleNucleotidePolymorphisms().size();
-        //        System.out.println("BONJOUR");
-        //        getLog().error("BONJOUR");
+        int platformCount = study.getPlatforms().size();
+
         for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
             int locationCount = snp.getLocations().size();
             getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
-            //            for(Region region : snp.getRegions()){
-            //                region.getId();
-            //            }
+
             int ethnicityCount = study.getEthnicities().size();
 
             for (Association association : study.getAssociations()) {
@@ -239,14 +240,16 @@ public class StudyService {
                 getLog().trace(
                         "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                                 "has " + associationCount + " associations, " + snpCount + " snps, " + ethnicityCount +
-                                " ancestry entries and was published on " +
+                                " ancestry entries , " + platformCount + " platform manufacturers " +
+                                " and was published on " +
                                 publishDate.toString());
             }
             else {
                 getLog().trace(
                         "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                                 "has " + associationCount + " associations, " + snpCount + " snps, , " +
-                                ethnicityCount + " ancestry entries and is not yet published");
+                                ethnicityCount + " ancestry entries , " + platformCount + " platform manufacturers "  +
+                                " and is not yet published");
             }
         }
     }
