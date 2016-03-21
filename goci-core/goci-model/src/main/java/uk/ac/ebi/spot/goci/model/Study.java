@@ -50,8 +50,6 @@ public class Study {
 
     private String replicateSampleSize;
 
-    private String platform;
-
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
@@ -61,6 +59,23 @@ public class Study {
     private Boolean gxe = false;
 
     private Boolean gxg = false;
+
+    private Integer snpCount;
+
+    private String qualifier;
+
+    private Boolean imputed = false;
+
+    private Boolean pooled = false;
+
+    private String studyDesignComment;
+
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_PLATFORM",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
+    private Collection<Platform> platforms;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
@@ -103,11 +118,16 @@ public class Study {
                  String title,
                  String initialSampleSize,
                  String replicateSampleSize,
-                 String platform,
+                 Collection<Platform> platforms,
                  String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Integer snpCount,
+                 String qualifier,
+                 Boolean imputed,
+                 Boolean pooled,
+                 String studyDesignComment,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
@@ -119,11 +139,16 @@ public class Study {
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platform = platform;
+        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.snpCount = snpCount;
+        this.qualifier = qualifier;
+        this.imputed = imputed;
+        this.pooled = pooled;
+        this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
@@ -187,12 +212,12 @@ public class Study {
         this.replicateSampleSize = replicateSampleSize;
     }
 
-    public String getPlatform() {
-        return platform;
+    public Collection<Platform> getPlatforms() {
+        return platforms;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setPlatforms(Collection<Platform> platforms) {
+        this.platforms = platforms;
     }
 
     public String getPubmedId() {
@@ -292,5 +317,46 @@ public class Study {
 
     public void setEthnicities(Collection<Ethnicity> ethnicities) {
         this.ethnicities = ethnicities;
+    }
+
+
+    public Integer getSnpCount() {
+        return snpCount;
+    }
+
+    public void setSnpCount(Integer snpCount) {
+        this.snpCount = snpCount;
+    }
+
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    public boolean getImputed() {
+        return imputed;
+    }
+
+    public void setImputed(boolean imputed) {
+        this.imputed = imputed;
+    }
+
+    public boolean getPooled() {
+        return pooled;
+    }
+
+    public void setPooled(boolean pooled) {
+        this.pooled = pooled;
+    }
+
+    public String getStudyDesignComment() {
+        return studyDesignComment;
+    }
+
+    public void setStudyDesignComment(String studyDesignComment) {
+        this.studyDesignComment = studyDesignComment;
     }
 }

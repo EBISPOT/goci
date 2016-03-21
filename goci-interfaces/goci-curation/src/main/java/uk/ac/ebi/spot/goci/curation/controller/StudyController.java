@@ -34,6 +34,7 @@ import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -43,6 +44,7 @@ import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -76,6 +78,7 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private PlatformRepository platformRepository;
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
@@ -100,6 +103,7 @@ public class StudyController {
                            EfoTraitRepository efoTraitRepository,
                            CuratorRepository curatorRepository,
                            CurationStatusRepository curationStatusRepository,
+                           PlatformRepository platformRepository,
                            AssociationRepository associationRepository,
                            EthnicityRepository ethnicityRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
@@ -112,6 +116,7 @@ public class StudyController {
         this.efoTraitRepository = efoTraitRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
+        this.platformRepository = platformRepository;
         this.associationRepository = associationRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
@@ -595,6 +600,7 @@ public class StudyController {
             ethnicityRepository.delete(ethnicity);
         }
 
+
         // Delete study
         studyRepository.delete(studyToDelete);
 
@@ -631,7 +637,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-        // Add duplicate message
+       // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
@@ -846,12 +852,15 @@ public class StudyController {
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
         duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
         duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
-        duplicateStudy.setPlatform(studyToDuplicate.getPlatform());
         duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
+        duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
+        duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
+        duplicateStudy.setImputed(studyToDuplicate.getImputed());
+        duplicateStudy.setPooled(studyToDuplicate.getPooled());
 
         // Deal with EFO traits
         Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
@@ -862,6 +871,14 @@ public class StudyController {
             duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
         }
 
+        //Deal with platforms
+        Collection<Platform> platforms = studyToDuplicate.getPlatforms();
+        Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
+
+        if(platforms != null && !platforms.isEmpty()){
+            platformsDuplicateStudy.addAll(platforms);
+            duplicateStudy.setPlatforms(platformsDuplicateStudy);
+        }
 
         return duplicateStudy;
     }
@@ -881,6 +898,7 @@ public class StudyController {
         return duplicateEthnicity;
 
     }
+
 
     // Find correct sorting type and direction
     private Sort findSort(String sortType) {
@@ -907,6 +925,7 @@ public class StudyController {
         sortTypeMap.put("curatorsortdesc", sortByCuratorDesc());
         sortTypeMap.put("curationstatussortasc", sortByCurationStatusAsc());
         sortTypeMap.put("curationstatussortdesc", sortByCurationStatusDesc());
+
 
         if (sortType != null && !sortType.isEmpty()) {
             sort = sortTypeMap.get(sortType);
@@ -952,6 +971,13 @@ public class StudyController {
         return curatorRepository.findAll(sortByLastNameAsc());
     }
 
+    //Platforms
+    @ModelAttribute("platforms")
+//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
+
+
+
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
@@ -978,6 +1004,17 @@ public class StudyController {
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");
         return studyTypesOptions;
+    }
+
+    @ModelAttribute("qualifiers")
+    public List<String> populateQualifierOptions(Model model){
+        List<String> qualifierOptions = new ArrayList<>();
+        qualifierOptions.add("up to");
+        qualifierOptions.add("at least");
+        qualifierOptions.add("~");
+        qualifierOptions.add(">");
+
+        return qualifierOptions;
     }
 
     // Authors
@@ -1049,6 +1086,14 @@ public class StudyController {
     private Sort sortByDiseaseTraitDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
+
+//    private Sort sortByPlatformAsc() {
+//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+//    }
+//
+//    private Sort sortByPlatformDesc() {
+//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+//    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());

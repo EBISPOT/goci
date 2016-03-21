@@ -4,9 +4,12 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -23,8 +26,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
-
     @Field private String platform;
+
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -70,8 +73,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.author = study.getAuthor();
         this.publication = study.getPublication();
 
-        this.platform = study.getPlatform();
-
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
@@ -94,6 +95,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
             year = "N/A";
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
+
+        this.platform = embedPlatformField(study);
 
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
@@ -150,10 +153,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public String getPublicationLink() {
         return publicationLink;
-    }
-
-    public String getPlatform() {
-        return platform;
     }
 
     public String getInitialSampleDescription() {
@@ -312,8 +311,64 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         );
     }
 
+    public String getPlatform() {
+        return platform;
+    }
+
 
     //    public void addLocusDescription(String locusDescription){
     //        this.locusDescriptions.add(locusDescription);
     //    }
+
+    private String embedPlatformField(Study study) {
+        String platform = "";
+        List<String> manufacturers = new ArrayList<>();
+        study.getPlatforms().forEach(
+                p -> {
+                    String manufacturer = p.getManufacturer();
+                    manufacturers.add(manufacturer);
+                }
+        );
+
+
+        if(manufacturers.size() != 0){
+            Collections.sort(manufacturers);
+            for(String m : manufacturers){
+                if (platform.equals("")) {
+                    platform = m;
+                }
+                else {
+                    platform = platform.concat(", ").concat(m);
+                }
+            }
+        }
+        else{
+            platform = "NR";
+        }
+
+
+
+        platform = platform.concat(" [");
+
+        if(study.getQualifier() != null){
+            platform = platform.concat(study.getQualifier()).concat(" ");
+        }
+
+        if(study.getSnpCount() != null){
+            platform = platform.concat(study.getSnpCount().toString()).concat("]");
+        }
+        else{
+            platform = platform.concat("NR]");
+        }
+
+        if(study.getImputed()){
+            platform = platform.concat(" (imputed)");
+        }
+
+
+
+        return platform;
+    }
+
+
 }

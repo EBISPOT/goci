@@ -5,6 +5,7 @@ import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -57,11 +58,6 @@ public class StudyBuilder {
         return this;
     }
 
-    public StudyBuilder setPlatform(String platform) {
-        study.setPlatform(platform);
-        return this;
-    }
-
     public StudyBuilder setPubmedId(String pubmedId) {
         study.setPubmedId(pubmedId);
         return this;
@@ -109,6 +105,36 @@ public class StudyBuilder {
 
     public StudyBuilder setAssociations(Collection<Association> associations){
         study.setAssociations(associations);
+        return this;
+    }
+
+    public StudyBuilder setPooled(Boolean pooled){
+        study.setPooled(pooled);
+        return this;
+    }
+
+    public StudyBuilder setSnpCount(Integer snpCount){
+        study.setSnpCount(snpCount);
+        return this;
+    }
+
+    public StudyBuilder setQualifer(String qualifer){
+        study.setQualifier(qualifer);
+        return this;
+    }
+
+    public StudyBuilder setImputed(Boolean imputed){
+        study.setImputed(imputed);
+        return this;
+    }
+
+    public StudyBuilder setStudyDesignComment(String studyDesignComment){
+        study.setStudyDesignComment(studyDesignComment);
+        return this;
+    }
+
+    public StudyBuilder setPlatforms(Collection<Platform> platforms){
+        study.setPlatforms(platforms);
         return this;
     }
 
