@@ -11,17 +11,11 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -79,7 +73,6 @@ public class AssociationSheetProcessor {
                 getLog().debug("Last row read");
             }
             else {
-
                 // Get gene values
                 String authorReportedGene = null;
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
@@ -384,7 +377,6 @@ public class AssociationSheetProcessor {
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 }
                 else {
-
                     BatchUploadRow batchUploadRow = new BatchUploadRow();
                     batchUploadRow.setAuthorReportedGene(authorReportedGene);
                     batchUploadRow.setStrongestAllele(strongestAllele);
@@ -409,11 +401,15 @@ public class AssociationSheetProcessor {
                     batchUploadRow.setDescription(description);
                     batchUploadRow.setMultiSnpHaplotype(multiSnpHaplotype);
                     batchUploadRow.setSnpInteraction(snpInteraction);
+                    batchUploadRow.setSnpStatus(snpStatus);
                     batchUploadRow.setSnpType(snpType);
                     batchUploadRow.setEfoTrait(efoTrait);
+
+                    batchUploadRows.add(batchUploadRow);
                 }
                 rowNum++;
             }
-            return batchUploadRows;
         }
+        return batchUploadRows;
     }
+}
