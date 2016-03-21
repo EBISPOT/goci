@@ -44,7 +44,6 @@ public class AssociationSheetProcessor {
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
-
     protected Logger getLog() {
         return log;
     }
@@ -112,7 +111,7 @@ public class AssociationSheetProcessor {
                     proxy = row.getCell(3).getRichStringCellValue().getString();
                 }
                 else {
-                    getLog().debug("SNP is null in row " + row.getRowNum());
+                    getLog().debug("Proxy SNP is null in row " + row.getRowNum());
                 }
 
                 // Get Risk Allele Frequency, will contain multiple values for haplotype or interaction
@@ -185,17 +184,17 @@ public class AssociationSheetProcessor {
                     getLog().debug("pvalue exponent is null in row " + row.getRowNum());
                 }
 
-                // Get P-value (Text)
-                String pvalueText;
+                // Get P-value description
+                String pvalueDescription;
                 if (row.getCell(8, row.RETURN_BLANK_AS_NULL) != null) {
-                    pvalueText = row.getCell(8).getRichStringCellValue().getString();
+                    pvalueDescription = row.getCell(8).getRichStringCellValue().getString();
                 }
                 else {
-                    pvalueText = null;
+                    pvalueDescription = null;
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
                 }
 
-                // Get OR per copy or beta (Num)
+                // Get OR num
                 Float orPerCopyNum = null;
                 if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
                     XSSFCell or = row.getCell(9);
@@ -213,7 +212,7 @@ public class AssociationSheetProcessor {
                     getLog().debug("OR is null in row " + row.getRowNum());
                 }
 
-                // Get OR entered (reciprocal)
+                // Get reciprocal OR
                 Float orPerCopyRecip = null;
                 if (row.getCell(10, row.RETURN_BLANK_AS_NULL) != null) {
                     XSSFCell recip = row.getCell(10);
@@ -231,45 +230,56 @@ public class AssociationSheetProcessor {
                     getLog().debug("OR recip is null in row " + row.getRowNum());
                 }
 
-                String orType;
+                // Get Beta
+                Float betaNum = null;
                 if (row.getCell(11, row.RETURN_BLANK_AS_NULL) != null) {
-                    orType = row.getCell(11).getRichStringCellValue().getString();
+                    XSSFCell beta = row.getCell(11);
+                    switch (beta.getCellType()) {
+                        case Cell.CELL_TYPE_STRING:
+                            betaNum = null;
+                            break;
+                        case Cell.CELL_TYPE_NUMERIC:
+                            betaNum = (float) beta.getNumericCellValue();
+                            break;
+                    }
                 }
                 else {
-                    orType = null;
-                    getLog().debug("OR type is null in row " + row.getRowNum());
+                    orPerCopyRecip = null;
+                    getLog().debug("Beta is null in row " + row.getRowNum());
                 }
 
-                // Get Multi-SNP Haplotype value
-                String multiSnpHaplotype;
+                // Get Beta unit
+                String betaUnit;
                 if (row.getCell(12, row.RETURN_BLANK_AS_NULL) != null) {
-                    multiSnpHaplotype = row.getCell(12).getRichStringCellValue().getString();
+                    betaUnit = row.getCell(12).getRichStringCellValue().getString();
                 }
                 else {
-                    multiSnpHaplotype = null;
-                    getLog().debug("OR type is null in row " + row.getRowNum());
+                    betaUnit = null;
+                    getLog().debug("Beta unit is null in row " + row.getRowNum());
                 }
 
-                // Get SNP interaction value
-                String snpInteraction;
+
+                // Get Beta direction
+                String betaDirection;
                 if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpInteraction = row.getCell(13).getRichStringCellValue().getString();
+                    betaDirection = row.getCell(13).getRichStringCellValue().getString();
                 }
                 else {
-                    snpInteraction = null;
-                    getLog().debug("OR type is null in row " + row.getRowNum());
+                    betaDirection = null;
+                    getLog().debug("Beta direction is null in row " + row.getRowNum());
                 }
 
-                // Get Confidence Interval/Range
-                String orPerCopyRange;
+                // Get range
+                String range;
                 if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
-                    orPerCopyRange = row.getCell(14).getRichStringCellValue().getString();
+                    range = row.getCell(14).getRichStringCellValue().getString();
                 }
                 else {
-                    orPerCopyRange = null;
+                    range = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
                 }
 
+                // Get OR recip range
                 String orPerCopyRecipRange;
                 if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRecipRange = row.getCell(15).getRichStringCellValue().getString();
@@ -279,42 +289,42 @@ public class AssociationSheetProcessor {
                     getLog().debug("CI is null in row " + row.getRowNum());
                 }
 
-                // Get Beta unit and direction/description
-                String orPerCopyUnitDescr;
-                if (row.getCell(16) != null) {
-                    orPerCopyUnitDescr = row.getCell(16).getRichStringCellValue().getString();
-                }
-                else {
-                    orPerCopyUnitDescr = null;
-                    getLog().debug("OR direction is null in row " + row.getRowNum());
-                }
-
                 // Get standard error
-                Float orPerCopyStdError = null;
-                if (row.getCell(17, row.RETURN_BLANK_AS_NULL) != null) {
-                    XSSFCell std = row.getCell(17);
+                Float standardError = null;
+                if (row.getCell(16, row.RETURN_BLANK_AS_NULL) != null) {
+                    XSSFCell std = row.getCell(16);
                     switch (std.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            orPerCopyStdError = null;
+                            standardError = null;
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
-                            orPerCopyStdError = (float) std.getNumericCellValue();
+                            standardError = (float) std.getNumericCellValue();
                             break;
                     }
                 }
                 else {
-                    orPerCopyStdError = null;
+                    standardError = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
                 }
 
-                // Get SNP type (novel / known)
-                String snpType;
-                if (row.getCell(18, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpType = row.getCell(18).getRichStringCellValue().getString().toLowerCase();
+                // Get Multi-SNP Haplotype value
+                String multiSnpHaplotype;
+                if (row.getCell(17, row.RETURN_BLANK_AS_NULL) != null) {
+                    multiSnpHaplotype = row.getCell(17).getRichStringCellValue().getString();
                 }
                 else {
-                    snpType = null;
-                    getLog().debug("SNP type is null in row " + row.getRowNum());
+                    multiSnpHaplotype = null;
+                    getLog().debug("Multi-SNP Haplotype is null in row " + row.getRowNum());
+                }
+
+                // Get SNP interaction value
+                String snpInteraction;
+                if (row.getCell(18, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpInteraction = row.getCell(18).getRichStringCellValue().getString();
+                }
+                else {
+                    snpInteraction = null;
+                    getLog().debug("SNP interaction is null in row " + row.getRowNum());
                 }
 
                 // Get SNP Status
@@ -324,12 +334,32 @@ public class AssociationSheetProcessor {
                 }
                 else {
                     snpStatus = null;
+                    getLog().debug("SNP status is null in row " + row.getRowNum());
+                }
+
+    /*            // Get Beta unit and direction/description
+                String orPerCopyUnitDescr;
+                if (row.getCell(16) != null) {
+                    orPerCopyUnitDescr = row.getCell(16).getRichStringCellValue().getString();
+                }
+                else {
+                    orPerCopyUnitDescr = null;
+                    getLog().debug("OR direction is null in row " + row.getRowNum());
+                }*/
+
+                // Get SNP type (novel / known)
+                String snpType;
+                if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
+                    snpType = row.getCell(20).getRichStringCellValue().getString().toLowerCase();
+                }
+                else {
+                    snpType = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
                 }
 
                 String efoTrait;
-                if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
-                    efoTrait = row.getCell(20).getRichStringCellValue().getString();
+                if (row.getCell(21, row.RETURN_BLANK_AS_NULL) != null) {
+                    efoTrait = row.getCell(21).getRichStringCellValue().getString();
                 }
                 else {
                     efoTrait = null;
@@ -365,9 +395,9 @@ public class AssociationSheetProcessor {
                     newAssociation.setRiskFrequency(associationRiskFrequency);
                     newAssociation.setPvalueMantissa(pvalueMantissa);
                     newAssociation.setPvalueExponent(pvalueExponent);
-                    newAssociation.setPvalueText(pvalueText);
+                    newAssociation.setPvalueText(pvalueDescription);
                     newAssociation.setOrPerCopyRecip(orPerCopyRecip);
-                    newAssociation.setStandardError(orPerCopyStdError);
+                    newAssociation.setStandardError(standardError);
                     newAssociation.setOrPerCopyRecipRange(orPerCopyRecipRange);
                     newAssociation.setDescription(orPerCopyUnitDescr);
                     newAssociation.setSnpType(snpType);
@@ -386,15 +416,15 @@ public class AssociationSheetProcessor {
 
                     // This logic is retained from Dani's original code
                     if ((orPerCopyRecipRange != null) && recipReverse) {
-                        orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRecipRange);
-                        newAssociation.setRange(orPerCopyRange);
+                        range = associationCalculationService.reverseCI(orPerCopyRecipRange);
+                        newAssociation.setRange(range);
                     }
-                    else if ((orPerCopyRange == null) && (orPerCopyStdError != null)) {
-                        orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-                        newAssociation.setRange(orPerCopyRange);
+                    else if ((range == null) && (standardError != null)) {
+                        range = associationCalculationService.setRange(standardError, orPerCopyNum);
+                        newAssociation.setRange(range);
                     }
                     else {
-                        newAssociation.setRange(orPerCopyRange);
+                        newAssociation.setRange(range);
                     }
 
                     if (orType.equalsIgnoreCase("Y")) {
