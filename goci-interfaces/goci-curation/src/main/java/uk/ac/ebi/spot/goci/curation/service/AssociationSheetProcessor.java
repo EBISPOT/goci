@@ -44,7 +44,6 @@ public class AssociationSheetProcessor {
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String logMessage;
 
     protected Logger getLog() {
         return log;
@@ -62,7 +61,6 @@ public class AssociationSheetProcessor {
         this.locusRepository = locusRepository;
     }
 
-
     // Read and parse uploaded spreadsheet
     public Collection<Association> readSnpAssociations(XSSFSheet sheet) {
 
@@ -78,7 +76,6 @@ public class AssociationSheetProcessor {
             if (row == null) {
                 done = true;
                 getLog().debug("Last row read");
-                logMessage = "All spreadsheet data processed successfully";
             }
             else {
 
@@ -86,51 +83,36 @@ public class AssociationSheetProcessor {
                 String authorReportedGene = null;
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
                     authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
-
                 }
                 else {
                     getLog().debug("Gene is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Gene' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get Strongest SNP-Risk Allele
                 String strongestAllele = null;
                 if (row.getCell(1, row.RETURN_BLANK_AS_NULL) != null) {
                     strongestAllele = row.getCell(1).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
-
                 }
                 else {
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Risk allele' in row " + rowNum + 1 + "\n";
                 }
-
 
                 // Get SNP
                 String snp = null;
                 if (row.getCell(2, row.RETURN_BLANK_AS_NULL) != null) {
                     snp = row.getCell(2).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
-
                 }
                 else {
                     getLog().debug("SNP is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP' in row " + rowNum + 1 + "\n";
-
                 }
 
                 // Get Proxy SNP
                 String proxy = null;
                 if (row.getCell(3, row.RETURN_BLANK_AS_NULL) != null) {
                     proxy = row.getCell(3).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Proxy SNP' in row " + rowNum + 1 + "\n";
-
                 }
                 else {
                     getLog().debug("SNP is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Proxy SNP' in row " + rowNum + 1 + "\n";
-
                 }
 
                 // Get Risk Allele Frequency, will contain multiple values for haplotype or interaction
@@ -140,19 +122,14 @@ public class AssociationSheetProcessor {
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             riskFrequency = risk.getRichStringCellValue().getString();
-                            logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             riskFrequency = Double.toString(risk.getNumericCellValue());
-                            logMessage =
-                                    "Error in field 'Risk Allele Frequency in Controls' in row " + rowNum + 1 + "\n";
-
                             break;
                     }
                 }
                 else {
                     getLog().debug("RF is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Risk Allele Frequency in Controls' in row " + rowNum + 1 + "\n";
                 }
 
                 // Will be a single value that applies to association
@@ -162,20 +139,14 @@ public class AssociationSheetProcessor {
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             associationRiskFrequency = risk.getRichStringCellValue().getString();
-                            logMessage = "Error in field 'Interacting SNPs combined risk allele frequency' in row " +
-                                    rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             associationRiskFrequency = Double.toString(risk.getNumericCellValue());
-                            logMessage = "Error in field 'Interacting SNPs combined risk allele frequency' in row " +
-                                    rowNum + 1 + "\n";
-
                             break;
                     }
                 }
                 else {
                     getLog().debug("RF is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Risk Frequency' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get P-value mantissa	and P-value exponent
@@ -187,21 +158,15 @@ public class AssociationSheetProcessor {
                     switch (mant.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueMantissa = null;
-                            logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
-
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalueMantissa = (int) mant.getNumericCellValue();
-                            logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
-
                             break;
                     }
                 }
                 else {
                     pvalueMantissa = null;
                     getLog().debug("pvalue mantissa is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvalue mantissa' in row " + rowNum + 1 + "\n";
-
                 }
 
                 if (row.getCell(7, row.RETURN_BLANK_AS_NULL) != null) {
@@ -209,33 +174,25 @@ public class AssociationSheetProcessor {
                     switch (expo.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             pvalueExponent = null;
-                            logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
-
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             pvalueExponent = (int) expo.getNumericCellValue();
-                            logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
-
                             break;
                     }
                 }
                 else {
                     pvalueExponent = null;
                     getLog().debug("pvalue exponent is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvalue exponent' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get P-value (Text)
                 String pvalueText;
                 if (row.getCell(8, row.RETURN_BLANK_AS_NULL) != null) {
                     pvalueText = row.getCell(8).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
-
                 }
                 else {
                     pvalueText = null;
                     getLog().debug("pvalue text is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'pvaluetxt' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get OR per copy or beta (Num)
@@ -245,18 +202,15 @@ public class AssociationSheetProcessor {
                     switch (or.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyNum = null;
-                            logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyNum = (float) or.getNumericCellValue();
-                            logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 }
                 else {
                     orPerCopyNum = null;
                     getLog().debug("OR is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get OR entered (reciprocal)
@@ -266,90 +220,73 @@ public class AssociationSheetProcessor {
                     switch (recip.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyRecip = null;
-                            logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyRecip = (float) recip.getNumericCellValue();
-                            logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 }
                 else {
                     orPerCopyRecip = null;
                     getLog().debug("OR recip is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR recip' in row " + rowNum + 1 + "\n";
-
                 }
-
 
                 String orType;
                 if (row.getCell(11, row.RETURN_BLANK_AS_NULL) != null) {
                     orType = row.getCell(11).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     orType = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR type' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get Multi-SNP Haplotype value
                 String multiSnpHaplotype;
                 if (row.getCell(12, row.RETURN_BLANK_AS_NULL) != null) {
                     multiSnpHaplotype = row.getCell(12).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     multiSnpHaplotype = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Multi-SNP Haplotype' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get SNP interaction value
                 String snpInteraction;
                 if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
                     snpInteraction = row.getCell(13).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'SNP:SNP interaction' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     snpInteraction = null;
                     getLog().debug("OR type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP:SNP interaction' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get Confidence Interval/Range
                 String orPerCopyRange;
                 if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRange = row.getCell(14).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     orPerCopyRange = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'CI' in row " + rowNum + 1 + "\n";
                 }
 
                 String orPerCopyRecipRange;
                 if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
                     orPerCopyRecipRange = row.getCell(15).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'Reciprocal CI' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     orPerCopyRecipRange = null;
                     getLog().debug("CI is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Reciprocal CI' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get Beta unit and direction/description
                 String orPerCopyUnitDescr;
                 if (row.getCell(16) != null) {
                     orPerCopyUnitDescr = row.getCell(16).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     orPerCopyUnitDescr = null;
                     getLog().debug("OR direction is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'OR direction' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get standard error
@@ -359,55 +296,45 @@ public class AssociationSheetProcessor {
                     switch (std.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
                             orPerCopyStdError = null;
-                            logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             orPerCopyStdError = (float) std.getNumericCellValue();
-                            logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                             break;
                     }
                 }
                 else {
                     orPerCopyStdError = null;
                     getLog().debug("SE is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'Standard Error' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get SNP type (novel / known)
                 String snpType;
                 if (row.getCell(18, row.RETURN_BLANK_AS_NULL) != null) {
                     snpType = row.getCell(18).getRichStringCellValue().getString().toLowerCase();
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     snpType = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
                 // Get SNP Status
                 String snpStatus;
                 if (row.getCell(19, row.RETURN_BLANK_AS_NULL) != null) {
                     snpStatus = row.getCell(19).getRichStringCellValue().getString().toLowerCase();
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     snpStatus = null;
                     getLog().debug("SNP type is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'SNP type' in row " + rowNum + 1 + "\n";
                 }
 
                 String efoTrait;
                 if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
                     efoTrait = row.getCell(20).getRichStringCellValue().getString();
-                    logMessage = "Error in field 'EFO traits' in row " + rowNum + 1 + "\n";
                 }
                 else {
                     efoTrait = null;
                     getLog().debug("EFO trait is null in row " + row.getRowNum());
-                    logMessage = "Error in field 'EFO trait' in row " + rowNum + 1 + "\n";
                 }
-
 
                 // Once we have all the values entered in file process them
                 if (authorReportedGene == null && strongestAllele == null && snp == null && proxy == null &&
@@ -765,12 +692,4 @@ public class AssociationSheetProcessor {
         }
         return efoTraits;
     }
-
-
-    public String getLogMessage() {
-        return logMessage;
-    }
-
-
 }
-
