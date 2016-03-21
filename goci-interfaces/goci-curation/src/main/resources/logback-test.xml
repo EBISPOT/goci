@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_FILE" value="gwas_mapper.log" />
+    <property name="LOG_PATH" value="${catalina.home}/logs/gwas_curation" />
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
@@ -9,35 +9,39 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <!--current log file-->
-        <file>${LOG_FILE}</file>
+        <file>${LOG_PATH}/gwas_curation.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/gwas_curation.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--determines when we rollover-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>2</maxHistory>
+            <maxHistory>3</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <logger name="uk.ac.ebi.spot.goci.service.MappingService" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.curation" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestService" level="TRACE" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.service.MappingService" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestService" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.service.SnpGenomicContextMappingService" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <root level="INFO">
+    <logger name="uk.ac.ebi.spot.goci.service.SnpGenomicContextMappingService" level="WARN" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <root level="WARN">
         <appender-ref ref="FILE" />
     </root>
 </configuration> 
