@@ -9,6 +9,8 @@ package uk.ac.ebi.spot.goci.curation.model.batchloader;
  */
 public class BatchUploadRow {
 
+    private String rowNumber;
+
     private String authorReportedGene = null;
 
     private String strongestAllele = null;
@@ -56,6 +58,14 @@ public class BatchUploadRow {
     private String snpType;
 
     private String efoTrait;
+
+    public String getRowNumber() {
+        return rowNumber;
+    }
+
+    public void setRowNumber(String rowNumber) {
+        this.rowNumber = rowNumber;
+    }
 
     public String getAuthorReportedGene() {
         return authorReportedGene;
