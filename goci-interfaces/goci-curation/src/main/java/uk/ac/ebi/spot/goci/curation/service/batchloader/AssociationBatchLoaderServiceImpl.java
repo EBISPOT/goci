@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.BatchUploadError;
+import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -20,10 +20,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Created by emma on 21/03/2016.
+ *
+ * @author emma
+ *         <p>
+ *         Implementation of methods used to process associaton batch upload file
+ */
 @Service
 public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoaderService {
 
-    private AssociationSheetProcessor associationSheetProcessor;
+    private SheetProcessor sheetProcessor;
     private AssociationUploadErrorService associationUploadErrorService;
     private RowProcessor rowProcessor;
     private AssociationRepository associationRepository;
@@ -35,11 +42,11 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
     }
 
     @Autowired
-    public AssociationBatchLoaderServiceImpl(AssociationSheetProcessor associationSheetProcessor,
+    public AssociationBatchLoaderServiceImpl(SheetProcessor sheetProcessor,
                                              AssociationUploadErrorService associationUploadErrorService,
                                              RowProcessor rowProcessor,
                                              AssociationRepository associationRepository) {
-        this.associationSheetProcessor = associationSheetProcessor;
+        this.sheetProcessor = sheetProcessor;
         this.associationUploadErrorService = associationUploadErrorService;
         this.rowProcessor = rowProcessor;
         this.associationRepository = associationRepository;
@@ -50,7 +57,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      *
      * @return errors, any errors encountered
      */
-    @Override public Collection<BatchUploadError> processFile(String fileName, Study study)
+    @Override public Collection<BatchUploadRow> processFile(String fileName, Study study)
             throws IOException, InvalidFormatException {
 
         // Open file
@@ -59,48 +66,37 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
         XSSFSheet sheet = current.getSheetAt(0);
 
         // Read file rows
-        Collection<BatchUploadRow> rows = associationSheetProcessor.readSheetRows(sheet);
-
-        // Check each row for errors
-        Collection<BatchUploadError> errors = checkUploadForErrors(rows);
-
-        // Create associations
-        Collection<Association> associations = processFileRows(rows);
-
-        // Save associations
-
-        if (errors.isEmpty()) {
-            if (!associations.isEmpty()) {
-
-                saveAssociations(associations, study);
-
-                // Delete our file once associations are saved
-                File fileToDelete = new File(fileName);
-                fileToDelete.deleteOnExit();
-
-            }
-            else {
-                getLog().error("No associations created for: " + fileName);
-            }
-        }
-        else {
-            getLog().error("Errors found in file: " + fileName);
-        }
-
+        Collection<BatchUploadRow> rows = sheetProcessor.readSheetRows(sheet);
         pkg.close();
-        return errors;
+        return rows;
     }
 
-    @Override public Collection<Association> processFileRows(Collection<BatchUploadRow> batchUploadRows) {
-        return rowProcessor.createAssociationsFromUploadRows(batchUploadRows);
+    /**
+     * Process rows in uploaded file
+     *
+     * @param fileRows collection of file rows
+     * @return collection of associations to be saved
+     */
+    @Override public Collection<Association> processFileRows(Collection<BatchUploadRow> fileRows) {
+        return rowProcessor.createAssociationsFromUploadRows(fileRows);
     }
 
-    @Override public Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> sheet) {
-        Collection<BatchUploadError> errors = new ArrayList<>();
-        errors = associationUploadErrorService.checkUpload(sheet);
-        return errors;
+    /**
+     * Check rows for errors
+     *
+     * @param fileRows collection of file rows
+     * @return collection of errors
+     */
+    @Override public Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> fileRows) {
+        return associationUploadErrorService.checkRowForErrors(fileRows);
     }
 
+    /**
+     * Save associations created from file
+     *
+     * @param associations collection of associations
+     * @param study        study to assign associations to
+     */
     @Override public void saveAssociations(Collection<Association> associations, Study study) {
         Collection<Association> associationsToMap = new ArrayList<>();
         for (Association association : associations) {
@@ -112,5 +108,14 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
             association.setLastUpdateDate(new Date());
             associationRepository.save(association);
         }
+    }
+
+    /**
+     * Delete uploaded file
+     */
+    @Override public void deleteFile(String fileName) {
+        // Delete our file once associations are saved
+        File fileToDelete = new File(fileName);
+        fileToDelete.deleteOnExit();
     }
 }
