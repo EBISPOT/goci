@@ -331,9 +331,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         );
 
 
-        if(manufacturers.size() != 0){
+        if (manufacturers.size() != 0) {
             Collections.sort(manufacturers);
-            for(String m : manufacturers){
+            for (String m : manufacturers) {
                 if (platform.equals("")) {
                     platform = m;
                 }
@@ -342,29 +342,34 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                 }
             }
         }
-        else{
+        else {
             platform = "NR";
         }
 
 
-
         platform = platform.concat(" [");
 
-        if(study.getQualifier() != null){
+        if (study.getQualifier() != null) {
             platform = platform.concat(study.getQualifier()).concat(" ");
         }
 
-        if(study.getSnpCount() != null){
+        if (study.getSnpCount() != null) {
             platform = platform.concat(study.getSnpCount().toString()).concat("]");
         }
-        else{
+        else if (study.getSnpCount() == null && manufacturers.size() != 0 && study.getStudyDesignComment() != null){
+             platform = platform.concat(study.getStudyDesignComment()).concat("]");
+        }
+        else {
             platform = platform.concat("NR]");
         }
 
-        if(study.getImputed()){
+        if (study.getImputed()) {
             platform = platform.concat(" (imputed)");
         }
 
+        if (manufacturers.size() == 0 && study.getSnpCount() == null && study.getStudyDesignComment() != null) {
+            platform = study.getStudyDesignComment();
+         }
 
 
         return platform;
