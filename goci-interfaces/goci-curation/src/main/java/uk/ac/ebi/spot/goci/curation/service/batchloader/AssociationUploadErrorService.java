@@ -124,7 +124,7 @@ public class AssociationUploadErrorService {
 
         BatchUploadError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
         batchUploadErrors.add(orRecipRangeFound);
-        
+
         BatchUploadError betaFound = checkBetaValuesIsEmpty(row, rowEffectType);
         batchUploadErrors.add(betaFound);
 
