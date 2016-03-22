@@ -9,7 +9,7 @@ package uk.ac.ebi.spot.goci.curation.model.batchloader;
  */
 public class BatchUploadRow {
 
-    private String rowNumber;
+    private Integer rowNumber;
 
     private String authorReportedGene = null;
 
@@ -59,11 +59,11 @@ public class BatchUploadRow {
 
     private String efoTrait;
 
-    public String getRowNumber() {
+    public Integer getRowNumber() {
         return rowNumber;
     }
 
-    public void setRowNumber(String rowNumber) {
+    public void setRowNumber(Integer rowNumber) {
         this.rowNumber = rowNumber;
     }
 

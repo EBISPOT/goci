@@ -27,7 +27,7 @@ import java.util.Collection;
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
 @Service
-public class AssociationSheetProcessor {
+public class SheetProcessor {
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -356,7 +356,9 @@ public class AssociationSheetProcessor {
                     getLog().debug("Empty row that wasn't caught via 'row = null'");
                 }
                 else {
+                    // Create row
                     BatchUploadRow batchUploadRow = new BatchUploadRow();
+                    batchUploadRow.setRowNumber(rowNum);
                     batchUploadRow.setAuthorReportedGene(authorReportedGene);
                     batchUploadRow.setStrongestAllele(strongestAllele);
                     batchUploadRow.setSnp(snp);
@@ -384,6 +386,7 @@ public class AssociationSheetProcessor {
                     batchUploadRow.setSnpType(snpType);
                     batchUploadRow.setEfoTrait(efoTrait);
 
+                    // Add row to collection
                     batchUploadRows.add(batchUploadRow);
                 }
                 rowNum++;
