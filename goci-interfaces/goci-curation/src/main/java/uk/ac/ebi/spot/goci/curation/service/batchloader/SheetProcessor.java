@@ -385,7 +385,7 @@ public class SheetProcessor {
                     batchUploadRow.setBetaNum(betaNum);
                     batchUploadRow.setBetaUnit(betaUnit);
                     batchUploadRow.setBetaDirection(betaDirection);
-                    
+
                     // Set OR num values
                     batchUploadRow.setOrPerCopyRecip(orPerCopyRecip);
 

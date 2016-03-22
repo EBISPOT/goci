@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
-import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -30,7 +29,6 @@ import java.util.List;
 public class RowProcessor {
 
     // Services
-    private AssociationCalculationService associationCalculationService;
     private LociAttributesService lociAttributesService;
 
     // Repository
@@ -45,12 +43,9 @@ public class RowProcessor {
     }
 
     @Autowired
-    public RowProcessor(AssociationCalculationService associationCalculationService,
-                        LociAttributesService lociAttributesService,
+    public RowProcessor(LociAttributesService lociAttributesService,
                         EfoTraitRepository efoTraitRepository,
                         LocusRepository locusRepository) {
-
-        this.associationCalculationService = associationCalculationService;
         this.lociAttributesService = lociAttributesService;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
@@ -80,6 +75,17 @@ public class RowProcessor {
                 newAssociation.setEfoTraits(efoTraits);
             }
 
+
+            // Set beta
+            newAssociation.setBetaNum(row.getBetaNum());
+            newAssociation.setBetaUnit(row.getBetaUnit());
+            newAssociation.setBetaDirection(row.getBetaDirection());
+
+            // Set OR
+            newAssociation.setOrPerCopyRecip(row.getOrPerCopyRecip());
+            newAssociation.setOrPerCopyRecipRange(row.getOrPerCopyRecipRange());
+            newAssociation.setOrPerCopyNum(row.getOrPerCopyNum());
+
             // Set values common to all association types
             newAssociation.setRiskFrequency(row.getAssociationRiskFrequency());
             newAssociation.setPvalueMantissa(row.getPvalueMantissa());
@@ -88,6 +94,8 @@ public class RowProcessor {
             newAssociation.setSnpType(row.getSnpType());
             newAssociation.setStandardError(row.getStandardError());
             newAssociation.setDescription(row.getDescription());
+            newAssociation.setRange(row.getRange());
+
             if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
                 newAssociation.setMultiSnpHaplotype(true);
             }
@@ -100,39 +108,6 @@ public class RowProcessor {
             }
             else {
                 newAssociation.setSnpInteraction(false);
-            }
-
-            // Set beta
-            newAssociation.setBetaNum(row.getBetaNum());
-            newAssociation.setBetaUnit(row.getBetaUnit());
-            newAssociation.setBetaDirection(row.getBetaDirection());
-
-            // Set OR
-            newAssociation.setOrPerCopyRecip(row.getOrPerCopyRecip());
-            newAssociation.setOrPerCopyRecipRange(row.getOrPerCopyRecipRange());
-
-            // Calculate OR num if OR recip is present
-            // Otherwise set to whatever is in upload
-            boolean recipReverse = false;
-            if ((row.getOrPerCopyRecip() != null) && (row.getOrPerCopyNum() == null)) {
-                float orPerCopyNum = ((100 / row.getOrPerCopyRecip()) / 100);
-                newAssociation.setOrPerCopyNum(orPerCopyNum);
-                recipReverse = true;
-            }
-            else {
-                newAssociation.setOrPerCopyNum(row.getOrPerCopyNum());
-            }
-
-            // Calculate range
-            // (This logic is retained from Dani's original code)
-            if ((row.getOrPerCopyRecipRange() != null) && recipReverse) {
-                newAssociation.setRange(associationCalculationService.reverseCI(row.getOrPerCopyRecipRange()));
-            }
-            else if ((row.getRange() == null) && (row.getStandardError() != null)) {
-                newAssociation.setRange( associationCalculationService.setRange(row.getStandardError(), row.getOrPerCopyNum()));
-            }
-            else {
-                newAssociation.setRange(row.getRange());
             }
 
             String delimiter;
@@ -238,11 +213,7 @@ public class RowProcessor {
 
             // Add all newly created associations to collection
             newAssociations.add(newAssociation);
-
-
         }
-
-
         return newAssociations;
     }
 
@@ -409,5 +380,4 @@ public class RowProcessor {
         }
         return efoTraits;
     }
-
 }
