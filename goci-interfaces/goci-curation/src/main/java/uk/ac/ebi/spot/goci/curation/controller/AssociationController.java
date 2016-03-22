@@ -225,8 +225,9 @@ public class AssociationController {
                             associationBatchLoaderService.checkUploadForErrors(fileRows);
 
                     if (!fileErrors.isEmpty()) {
-                        // TODO RETURN ERROR VIEW
                         getLog().error("Errors found in file: " + uploadedFile.getName());
+                        model.addAttribute("fileErrors", fileErrors);
+                        return "association_file_upload_error";
                     }
                     else {
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+</head>
+<body>
+
+<div class="container" th:object="${study}">
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1">
+            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
+                                                                                                        associations</a>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+
+            <table id="mainTable"
+                   class="table table-hover table-bordered"
+                   th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
+                <br/>
+                <thead>
+                <tr>
+                    <th style="font-size: small">Row</th>
+                    <th style="font-size: small">Column Name</th>
+                    <th style="font-size: small">Error</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="fileError: ${fileErrors}">
+                    <td style="background-color: darkgrey" th:text="${fileError.row}?: '' "></td>
+                    <td style="background-color: darkgrey" th:text="${fileError.columnName}?: '' "></td>
+                    <td style="background-color: darkgrey" th:text="${fileError.error}?: '' "></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br/>
+
+<script>
+    $(document).ready(function() {
+        $('#mainTable').DataTable({
+                                      "info": false,
+                                      "paging": false,
+                                      "columnDefs": [
+                                          {'bSortable': false, 'targets': [0, 25]}
+                                      ]
+                                  });
+
+    });
+</script>
+</body>
+</html>
