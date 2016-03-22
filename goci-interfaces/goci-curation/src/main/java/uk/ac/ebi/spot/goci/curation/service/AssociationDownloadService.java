@@ -11,19 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by dwelter on 09/04/15.
+ * Created by dwelter on 09/04/15. Updated by emma
  * <p>
  * This is a service class to process a set of associations for a given study and output the result to a tsv file
  */
-
-
 @Service
 public class AssociationDownloadService {
-
-    public AssociationDownloadService() {
-
-    }
-
 
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
             throws IOException {
@@ -34,7 +27,6 @@ public class AssociationDownloadService {
         outputStream.write(file.getBytes("UTF-8"));
         outputStream.flush();
         outputStream.close();
-
     }
 
     private String processAssociations(Collection<Association> associations) {
@@ -93,6 +85,22 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
+            // Determine effect type
+            if (association.getOrPerCopyNum() == null && association.getBetaNum() == null) {
+                line.append("NR");
+            }
+            else if (association.getOrPerCopyNum() == null && association.getBetaNum() != null) {
+                line.append("Beta");
+            }
+            else if (association.getOrPerCopyNum() != null && association.getBetaNum() == null) {
+                line.append("OR");
+            }
+            else {
+                line.append("");
+            }
+            line.append("\t");
+
+            // OR
             if (association.getOrPerCopyNum() == null) {
                 line.append("");
             }
@@ -101,6 +109,7 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
+            // OR reciprocal
             if (association.getOrPerCopyRecip() == null) {
                 line.append("");
             }
@@ -109,17 +118,66 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if (association.getOrType() == null) {
+            // Beta num
+            if (association.getBetaNum() == null) {
                 line.append("");
-
             }
             else {
-                if (association.getOrType()) {
-                    line.append("Y");
-                }
-                else {
-                    line.append("N");
-                }
+                line.append(association.getBetaNum());
+            }
+            line.append("\t");
+
+            // Beta unit
+            if (association.getBetaUnit() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getBetaUnit());
+            }
+            line.append("\t");
+
+            // Beta direction
+            if (association.getBetaDirection() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getBetaDirection());
+            }
+            line.append("\t");
+
+            // Range
+            if (association.getRange() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getRange());
+            }
+            line.append("\t");
+
+            // OR recip range
+            if (association.getOrPerCopyRecipRange() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getOrPerCopyRecipRange());
+            }
+            line.append("\t");
+
+            // Standard error
+            if (association.getStandardError() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getStandardError());
+            }
+            line.append("\t");
+
+            // Description
+            if (association.getDescription() == null) {
+                line.append("");
+            }
+            else {
+                line.append(association.getDescription());
             }
             line.append("\t");
 
@@ -149,51 +207,17 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if (association.getRange() == null) {
-                line.append("");
-            }
-            else {
-                line.append(association.getRange());
-            }
-            line.append("\t");
-
-            if (association.getOrPerCopyRecipRange() == null) {
-                line.append("");
-            }
-            else {
-                line.append(association.getOrPerCopyRecipRange());
-            }
-            line.append("\t");
-
-
-            if (association.getDescription() == null) {
-                line.append("");
-            }
-            else {
-                line.append(association.getDescription());
-            }
-
-            line.append("\t");
-
-            if (association.getStandardError() == null) {
-                line.append("");
-            }
-            else {
-                line.append(association.getStandardError());
-            }
-
-            line.append("\t");
+            // SNP Status
+            extractSNPStatus(association, line);
 
             if (association.getSnpType() == null) {
                 line.append("");
             }
             else {
-                line.append(association.getSnpType());
+                line.append(association.getSnpType().toLowerCase());
             }
             line.append("\t");
 
-            // SNP Status
-            extractSNPStatus(association, line);
 
             if (association.getEfoTraits() == null) {
                 line.append("");
@@ -388,10 +412,8 @@ public class AssociationDownloadService {
         line.append("\t");
         line.append(riskAlleleFrequency.toString());
         line.append("\t");
-
     }
-
-
+    
     private void setOrAppend(StringBuilder current, String toAppend, String delim) {
         if (toAppend != null && !toAppend.isEmpty()) {
             if (current.length() == 0) {
