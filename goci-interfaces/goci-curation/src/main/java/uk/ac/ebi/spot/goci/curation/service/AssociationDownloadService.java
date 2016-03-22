@@ -413,7 +413,7 @@ public class AssociationDownloadService {
         line.append(riskAlleleFrequency.toString());
         line.append("\t");
     }
-    
+
     private void setOrAppend(StringBuilder current, String toAppend, String delim) {
         if (toAppend != null && !toAppend.isEmpty()) {
             if (current.length() == 0) {
