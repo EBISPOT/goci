@@ -29,31 +29,10 @@ import java.util.Collection;
 @Service
 public class AssociationSheetProcessor {
 
-    // Services
-    private AssociationCalculationService associationCalculationService;
-    private LociAttributesService lociAttributesService;
-
-    // Repository
-    private EfoTraitRepository efoTraitRepository;
-    private LocusRepository locusRepository;
-
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
-
     protected Logger getLog() {
         return log;
-    }
-
-    @Autowired
-    public AssociationSheetProcessor(AssociationCalculationService associationCalculationService,
-                                     LociAttributesService lociAttributesService,
-                                     EfoTraitRepository efoTraitRepository,
-                                     LocusRepository locusRepository) {
-
-        this.associationCalculationService = associationCalculationService;
-        this.lociAttributesService = lociAttributesService;
-        this.efoTraitRepository = efoTraitRepository;
-        this.locusRepository = locusRepository;
     }
 
     // Read and parse uploaded spreadsheet
@@ -109,7 +88,7 @@ public class AssociationSheetProcessor {
                     getLog().debug("Proxy SNP is null in row " + row.getRowNum());
                 }
 
-                // Get Risk Allele Frequency, will contain multiple values for haplotype or interaction
+                // Get Risk Allele Frequency, will contain multiple values for SNP interaction studies
                 String riskFrequency = null;
                 if (row.getCell(4, row.RETURN_BLANK_AS_NULL) != null) {
                     XSSFCell risk = row.getCell(4);
@@ -273,7 +252,7 @@ public class AssociationSheetProcessor {
                     getLog().debug("Beta direction is null in row " + row.getRowNum());
                 }
 
-                // Get range
+                // Get confidence interval
                 String range;
                 if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
                     range = row.getCell(15).getRichStringCellValue().getString();
