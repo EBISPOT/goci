@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
-import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,10 +26,18 @@ import java.util.Collection;
 @Service
 public class SheetProcessor {
 
+    private AssociationCalculationService associationCalculationService;
+
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
+
     protected Logger getLog() {
         return log;
+    }
+
+    @Autowired
+    public SheetProcessor(AssociationCalculationService associationCalculationService) {
+        this.associationCalculationService = associationCalculationService;
     }
 
     // Read and parse uploaded spreadsheet
@@ -369,22 +374,46 @@ public class SheetProcessor {
                     batchUploadRow.setPvalueExponent(pvalueExponent);
                     batchUploadRow.setPvalueDescription(pvalueDescription);
                     batchUploadRow.setEffectType(effectType);
-                    batchUploadRow.setOrPerCopyNum(orPerCopyNum);
-                    batchUploadRow.setOrPerCopyRecip(orPerCopyRecip);
-                    batchUploadRow.setBetaNum(betaNum);
-                    batchUploadRow.setBetaUnit(betaUnit);
-                    batchUploadRow.setBetaDirection(betaDirection);
-                    batchUploadRow.setRange(range);
-                    batchUploadRow.setOrPerCopyRecipRange(orPerCopyRecipRange);
-                    batchUploadRow.setEfoTrait(efoTrait);
-                    batchUploadRow.setRiskFrequency(associationRiskFrequency);
-                    batchUploadRow.setStandardError(standardError);
                     batchUploadRow.setDescription(description);
                     batchUploadRow.setMultiSnpHaplotype(multiSnpHaplotype);
                     batchUploadRow.setSnpInteraction(snpInteraction);
                     batchUploadRow.setSnpStatus(snpStatus);
                     batchUploadRow.setSnpType(snpType);
                     batchUploadRow.setEfoTrait(efoTrait);
+
+                    // Set beta values
+                    batchUploadRow.setBetaNum(betaNum);
+                    batchUploadRow.setBetaUnit(betaUnit);
+                    batchUploadRow.setBetaDirection(betaDirection);
+                    
+                    // Set OR num values
+                    batchUploadRow.setOrPerCopyRecip(orPerCopyRecip);
+
+                    // Calculate OR num if OR recip is present , otherwise set to whatever is in upload
+                    boolean recipReverse = false;
+                    if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
+                        batchUploadRow.setOrPerCopyNum(((100 / orPerCopyRecip) / 100));
+                        recipReverse = true;
+                    }
+                    else {
+                        batchUploadRow.setOrPerCopyNum(orPerCopyNum);
+                    }
+
+                    batchUploadRow.setOrPerCopyRecipRange(orPerCopyRecipRange);
+                    batchUploadRow.setStandardError(standardError);
+
+                    // Calculate range
+                    // (This logic is retained from Dani's original code)
+                    if ((orPerCopyRecipRange != null) && recipReverse) {
+                        batchUploadRow.setRange(associationCalculationService.reverseCI(orPerCopyRecipRange));
+                    }
+                    else if ((range == null) && (standardError != null)) {
+                        batchUploadRow.setRange(associationCalculationService.setRange(standardError,
+                                                                                       orPerCopyNum));
+                    }
+                    else {
+                        batchUploadRow.setRange(range);
+                    }
 
                     // Add row to collection
                     batchUploadRows.add(batchUploadRow);
