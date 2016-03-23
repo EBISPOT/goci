@@ -60,14 +60,14 @@ public class LociAttributesService {
 
             // Exists in database already
             if (geneInDatabase != null) {
-                getLog().debug("Gene "+ geneInDatabase +" already exists in database");
+                getLog().debug("Gene "+ geneInDatabase.getGeneName() +" already exists in database");
                 gene = geneInDatabase;
             }
 
             // If gene doesn't exist then create and save
             else {
                 // Create new gene
-                getLog().debug("Gene "+ geneInDatabase +" not found in database. Creating and saving new gene.");
+                getLog().debug("Gene "+ geneInDatabase.getGeneName() +" not found in database. Creating and saving new gene.");
                 Gene newGene = new Gene();
                 newGene.setGeneName(authorReportedGene);
 
