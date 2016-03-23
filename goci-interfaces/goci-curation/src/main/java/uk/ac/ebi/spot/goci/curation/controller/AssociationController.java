@@ -308,6 +308,7 @@ public class AssociationController {
 
         // Return form object
         SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
+        emptyForm.setMultiSnpHaplotype(true);
 
         // Measurement type determines whether we render a OR/Beta form
         model.addAttribute("form", emptyForm);
