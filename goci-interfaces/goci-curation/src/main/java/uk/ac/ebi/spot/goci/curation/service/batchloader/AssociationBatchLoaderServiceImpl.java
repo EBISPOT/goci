@@ -65,10 +65,16 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
         XSSFWorkbook current = new XSSFWorkbook(pkg);
         XSSFSheet sheet = current.getSheetAt(0);
 
-        // Read file rows
-        Collection<BatchUploadRow> rows = sheetProcessor.readSheetRows(sheet);
-        pkg.close();
-        return rows;
+        if (sheet.getFirstRowNum() == sheet.getFirstRowNum()) {
+            getLog().error(fileName + " is empty");
+            throw new IOException();
+        }
+        else {
+            // Read file rows
+            Collection<BatchUploadRow> rows = sheetProcessor.readSheetRows(sheet);
+            pkg.close();
+            return rows;
+        }
     }
 
     /**
