@@ -9,30 +9,18 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
-
-
 <div class="container">
-    <div class="col-md-12">
+    <div class="row" th:object="${study}">
         <h2>Error:</h2>
 
-        <p class="lead">There is a mistake in the data you are trying to upload. Please double check your file.</p>
+        <p class="col-md-10 lead text-left">There is a mistake in the data you are trying to upload. Please double check
+                                            your file.</p>
+
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
+                                                                                               associations</a>
     </div>
 </div>
-
-<div class="container" th:object="${study}">
-    <div class="row">
-        <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
-                                                                                                        associations</a>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
 </body>
 </html>
