@@ -25,55 +25,40 @@
 </head>
 <body>
 
-<div class="container" th:object="${study}">
-    <div class="row">
-        <div class="col-md-11 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
-                                                                                                        associations</a>
-            </div>
-        </div>
-    </div>
-</div>
-<br/>
-
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <a th:object="${study}" th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back
+                                                                                                                    to
+                                                                                                                    SNP
 
-            <table id="mainTable"
-                   class="table table-hover table-bordered"
-                   th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
-                <br/>
-                <thead>
-                <tr>
-                    <th style="font-size: small">Row</th>
-                    <th style="font-size: small">Column Name</th>
-                    <th style="font-size: small">Error</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="fileError: ${fileErrors}">
-                    <td style="background-color: darkgrey" th:text="${fileError.row}?: '' "></td>
-                    <td style="background-color: darkgrey" th:text="${fileError.columnName}?: '' "></td>
-                    <td style="background-color: darkgrey" th:text="${fileError.error}?: '' "></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+                                                                                                                    associations</a>
+        <table id="mainTable"
+               class="table table-hover table-bordered"
+               th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
+            <br/>
+            <thead>
+            <tr>
+                <th>Row</th>
+                <th>Column Name</th>
+                <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fileError: ${fileErrors}">
+                <td th:text="${fileError.row}?: '' "></td>
+                <td th:text="${fileError.columnName}?: '' "></td>
+                <td th:text="${fileError.error}?: '' "></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
-<br/>
 
 <script>
     $(document).ready(function() {
         $('#mainTable').DataTable({
-                                      "info": false,
-                                      "paging": false,
-                                      "columnDefs": [
-                                          {'bSortable': false, 'targets': [0, 25]}
-                                      ]
+                                      "info": false, "paging": false, searching: false,
                                   });
-
     });
 </script>
 </body>
