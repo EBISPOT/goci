@@ -179,7 +179,8 @@ public class SheetProcessor {
                     effectType = row.getCell(9).getRichStringCellValue().getString();
                 }
                 else {
-                    effectType = null;
+                    // Set default value
+                    effectType = "NR";
                     getLog().debug("Effect type is null in row " + row.getRowNum());
                 }
 
@@ -264,7 +265,7 @@ public class SheetProcessor {
                 }
                 else {
                     range = null;
-                    getLog().debug("CI is null in row " + row.getRowNum());
+                    getLog().debug("Range is null in row " + row.getRowNum());
                 }
 
                 // Get OR recip range
@@ -274,7 +275,7 @@ public class SheetProcessor {
                 }
                 else {
                     orPerCopyRecipRange = null;
-                    getLog().debug("CI is null in row " + row.getRowNum());
+                    getLog().debug("OR recip range is null in row " + row.getRowNum());
                 }
 
                 // Get standard error
