@@ -234,7 +234,7 @@ public class SheetProcessor {
                     }
                 }
                 else {
-                    orPerCopyRecip = null;
+                    betaNum = null;
                     getLog().debug("Beta is null in row " + row.getRowNum());
                 }
 
