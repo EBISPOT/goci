@@ -142,7 +142,7 @@ public class AssociationUploadErrorService {
         batchUploadErrors.add(standardErrorFound);
 
         BatchUploadError descriptionFound = checkDescriptionIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(standardErrorFound);
+        batchUploadErrors.add(descriptionFound);
 
         return checkForValidErrors(batchUploadErrors);
     }
