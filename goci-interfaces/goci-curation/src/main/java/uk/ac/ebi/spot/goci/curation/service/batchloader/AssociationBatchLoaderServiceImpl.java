@@ -65,7 +65,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
         XSSFWorkbook current = new XSSFWorkbook(pkg);
         XSSFSheet sheet = current.getSheetAt(0);
 
-        if (sheet.getFirstRowNum() == sheet.getFirstRowNum()) {
+        if (sheet.getFirstRowNum() == sheet.getLastRowNum()) {
             getLog().error(fileName + " is empty");
             throw new IOException();
         }
