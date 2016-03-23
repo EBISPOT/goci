@@ -59,7 +59,7 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-mail</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
