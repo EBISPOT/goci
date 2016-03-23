@@ -116,6 +116,6 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
     @Override public void deleteFile(String fileName) {
         // Delete our file once associations are saved
         File fileToDelete = new File(fileName);
-        fileToDelete.deleteOnExit();
+        fileToDelete.delete();
     }
 }
