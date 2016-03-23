@@ -67,7 +67,7 @@ public class AssociationUploadErrorService {
 
         BatchUploadError orIsPresent = checkOrIsPresent(row, rowEffectType);
         batchUploadErrors.add(orIsPresent);
-        
+
         BatchUploadError betaFoundForOr = checkBetaValuesIsEmpty(row, rowEffectType);
         batchUploadErrors.add(betaFoundForOr);
 
