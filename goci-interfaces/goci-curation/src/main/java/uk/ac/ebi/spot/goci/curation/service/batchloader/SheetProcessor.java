@@ -409,8 +409,19 @@ public class SheetProcessor {
                         batchUploadRow.setRange(associationCalculationService.reverseCI(orPerCopyRecipRange));
                     }
                     else if ((range == null) && (standardError != null)) {
-                        batchUploadRow.setRange(associationCalculationService.setRange(standardError,
-                                                                                       orPerCopyNum));
+                        if (effectType.equals("OR")) {
+                            if (orPerCopyNum != null) {
+                                batchUploadRow.setRange(associationCalculationService.setRange(standardError,
+                                                                                               orPerCopyNum));
+                            }
+                        }
+
+                        if (effectType.equals("Beta")) {
+                            if (betaNum != null) {
+                                batchUploadRow.setRange(associationCalculationService.setRange(standardError,
+                                                                                               betaNum));
+                            }
+                        }
                     }
                     else {
                         batchUploadRow.setRange(range);
