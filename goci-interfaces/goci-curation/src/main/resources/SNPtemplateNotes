@@ -1,63 +1,136 @@
-Gene(s) - must not be empty!
-       Enter NR when not recorded
-       For multi-snp haplotypes use a single comma separated list
-       For SNP interactions separate per interaction using an ‘x’ but if more than one gene is assigned to an interaction use a comma
-       e.g. NR x FRS2, SFRP1
+Columns to include in XLSX file:
 
-Strongest SNP-Risk Allele - must not be empty!
+Gene(s)
 
-SNP	- must not be empty!
+    must not be empty
 
-Proxy SNP -	must not be empty!
-            Enter NR when not recorded
-            For multi-snp haplotypes use a single comma separated list
-            For SNP interactions separate per interaction using an ‘x’
+    Enter NR when not recorded
 
-Independent SNP risk allele frequency in controls - only applies to SNP interaction associations,
-                                                    leave blank for multi-SNP and standard associations.
-                                                    Value must be present for each risk allele in the interaction,
-                                                    NR can be used if not reported e.g. NR x 1.5
+    For multi-snp haplotypes use a single comma separated list e.g. ACT1, ERT1
 
-Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls - must not be empty! enter NR if not reported
+    For SNP interactions separate per interaction using an ‘x’, if more than one gene is assigned to an interaction use a comma e.g. NR x FRS2, SFRP1
+    Enter "intergenic" when SNP reported as intergenic
 
-P-value mantissa - enter p-value mantissa only
+Strongest SNP-Risk Allele
 
-P-value exponent - enter p-value exponent only
+    must not be empty
 
-P-value description - same as in web form
+    For multi-snp haplotypes use a single semi-colon separated list e.g. rs789-?; rs111-?; rs333-?
 
-Effect type -  options are "OR", "Beta" and "NR"
+    For SNP interactions separate per interaction using an ‘x’ e.g. rs4784379-A x rs9804128-G
 
-OR - must be either numeric or empty. If reciprocal is given, program will calculate OR from that.
+SNP
 
-OR reciprocal - must be numeric or empty
+    must not be empty
 
-Beta - must be either numeric or empty
+    Enter NR when not recorded
 
-Beta unit
+    For multi-snp haplotypes use a single semi-colon separated list e.g. rs7839488; rs4395927; rs9331888
+
+    For SNP interactions separate per interaction using an ‘x’ e.g. rs456 x rs123
+
+Proxy SNP
+
+    must not be empty
+
+    Enter NR when not recorded
+
+    For multi-snp haplotypes use a single comma separated list
+
+    For SNP interactions separate per interaction using an ‘x’
+
+Independent SNP risk allele frequency in controls
+
+    only applies to SNP interaction associations
+
+    leave blank for multi-SNP and standard associations.
+
+    Value must be present for each risk allele in the interaction, NR can be used if not reported. e.g. NR x 1.5
+
+Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls
+
+    must not be empty
+
+    Enter NR if not reported
+
+    Note - In the case of single SNPs the "Independent SNP risk allele frequency" and the "Risk element (allele, haplotype or SNPxSNP interaction) frequency" are the same thing. You only need to enter a value for the "Risk element (allele, haplotype or SNPxSNP interaction) frequency"  for single SNPs. On saving the value will be set for both and stored in the database.
+
+P-value mantissa
+
+    enter p-value mantissa only
+    Round to the nearest whole number and enter one digit.
+
+P-value exponent
+
+    enter p-value exponent only
+
+P-value description
+
+    same as in web form
+    Free text should be entered within parentheses
+
+Effect type
+
+    must not be empty
+    options are "OR", "Beta" and "NR"
+
+OR
+
+    must be either numeric or empty
+
+    If OR reciprocal is given program will calculate OR from that.
+
+OR reciprocal
+
+    must be numeric or empty
+
+Beta
+
+    must be either numeric or empty
+
+Beta Unit
+
+    must contain a unit value
 
 Beta direction
 
-Range - if no range given but there is a standard error, leave blank and program will calculate range.
+    must be 'increase' or 'decrease'
+
+Range
+
+    if no range is given but there is a standard error, leave blank and program will calculate this value
 
 OR reciprocal range
 
-Standard Error	- must be numeric or empty
+Standard Error
+
+    must be numeric
 
 OR/Beta description
 
-Multi-SNP Haplotype? (Y/N) -	must not be empty!
+Multi-SNP Haplotype? (Y/N)
 
-SNP:SNP interaction? (Y/N) -	must not be empty!
+    must not be empty
+    options are "Y" and "N"
 
-SNP Status - only applies to SNP interaction associations, leave blank for multi-SNP and standard associations.
-             Value must be present for each risk allele in the interaction,
-             LL = limited list, GW = genome wide,  NR can be used if not reported.
-             e.g. NR x GL,LL x LL
+SNP:SNP interaction? (Y/N)
 
-SNP type (novel/known) - must not be empty!
+    must not be empty
+    options are "Y" and "N"
 
-EFO traits - EFO trait ID e.g. EFO_0004328
+SNP Status
+
+    only applies to SNP interaction associations, leave blank for multi-SNP and standard associations.
+    Value must be present for each risk allele in the interaction, LL = limited list, GW = genome wide, NR can be used if not reported. e.g. NR x GL,LL x LL
+
+SNP type (novel/known)
+
+    must not be empty
+
+EFO traits
+
+    Must be EFO trait ID e.g. EFO_0004328
+
 
 NOTE:
 
