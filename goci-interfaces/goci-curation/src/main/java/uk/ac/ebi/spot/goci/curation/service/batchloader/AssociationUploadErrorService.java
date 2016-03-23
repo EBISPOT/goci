@@ -67,7 +67,7 @@ public class AssociationUploadErrorService {
 
         BatchUploadError orIsPresent = checkOrIsPresent(row, rowEffectType);
         batchUploadErrors.add(orIsPresent);
-
+        
         BatchUploadError betaFoundForOr = checkBetaValuesIsEmpty(row, rowEffectType);
         batchUploadErrors.add(betaFoundForOr);
 
@@ -77,8 +77,9 @@ public class AssociationUploadErrorService {
         BatchUploadError betaDirectionFoundForOr = checkBetaDirectionIsEmpty(row, rowEffectType);
         batchUploadErrors.add(betaDirectionFoundForOr);
 
-        return batchUploadErrors;
+        return checkForValidErrors(batchUploadErrors);
     }
+
 
     /**
      * Run Beta checks on a row
@@ -104,7 +105,7 @@ public class AssociationUploadErrorService {
         BatchUploadError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
         batchUploadErrors.add(orRecipRangeFound);
 
-        return batchUploadErrors;
+        return checkForValidErrors(batchUploadErrors);
     }
 
     /**
@@ -134,7 +135,16 @@ public class AssociationUploadErrorService {
         BatchUploadError betaDirectionFound = checkBetaDirectionIsEmpty(row, rowEffectType);
         batchUploadErrors.add(betaDirectionFound);
 
-        return batchUploadErrors;
+        BatchUploadError rangeFound = checkRangeIsEmpty(row, rowEffectType);
+        batchUploadErrors.add(rangeFound);
+
+        BatchUploadError standardErrorFound = checkStandardErrorIsEmpty(row, rowEffectType);
+        batchUploadErrors.add(standardErrorFound);
+
+        BatchUploadError descriptionFound = checkDescriptionIsEmpty(row, rowEffectType);
+        batchUploadErrors.add(standardErrorFound);
+
+        return checkForValidErrors(batchUploadErrors);
     }
 
 
@@ -257,5 +267,61 @@ public class AssociationUploadErrorService {
             error.setError("Reciprocal confidence interval found for association with effect type: " + rowEffectType);
         }
         return error;
+    }
+
+    /**
+     * "Range" MUST be empty.
+     */
+    private BatchUploadError checkRangeIsEmpty(BatchUploadRow row, String rowEffectType) {
+        BatchUploadError error = new BatchUploadError();
+        if (row.getRange() != null) {
+            error.setRow(row.getRowNumber());
+            error.setColumnName("Range");
+            error.setError("Range found for association with effect type: " + rowEffectType);
+        }
+        return error;
+    }
+
+
+    /**
+     * "Standard Error" MUST be empty.
+     */
+    private BatchUploadError checkStandardErrorIsEmpty(BatchUploadRow row, String rowEffectType) {
+        BatchUploadError error = new BatchUploadError();
+        if (row.getStandardError() != null) {
+            error.setRow(row.getRowNumber());
+            error.setColumnName("Standard Error");
+            error.setError("Standard error found for association with effect type: " + rowEffectType);
+        }
+        return error;
+    }
+
+    /**
+     * "Description" MUST be empty.
+     */
+    private BatchUploadError checkDescriptionIsEmpty(BatchUploadRow row, String rowEffectType) {
+        BatchUploadError error = new BatchUploadError();
+        if (row.getDescription() != null) {
+            error.setRow(row.getRowNumber());
+            error.setColumnName("Description");
+            error.setError("Description found for association with effect type: " + rowEffectType);
+        }
+        return error;
+    }
+
+    /**
+     * Check error objects created to ensure we only return those with an actual message and location
+     *
+     * @param errors Errors to be checked
+     * @return validErrors list of errors with message and location
+     */
+    private Collection<BatchUploadError> checkForValidErrors(Collection<BatchUploadError> errors) {
+        Collection<BatchUploadError> validErrors = new ArrayList<>();
+        for (BatchUploadError error : errors) {
+            if (error.getError() != null) {
+                validErrors.add(error);
+            }
+        }
+        return validErrors;
     }
 }
