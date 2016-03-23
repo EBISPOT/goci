@@ -170,7 +170,7 @@ public class AssociationUploadErrorService {
     private BatchUploadError checkBetaUnitIsEmpty(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
 
-        if (row.getBetaUnit() != null && !row.getBetaUnit().isEmpty()) {
+        if (row.getBetaUnit() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta unit");
             error.setError("Beta unit found for association with effect type: " + rowEffectType);
@@ -185,7 +185,7 @@ public class AssociationUploadErrorService {
     private BatchUploadError checkBetaDirectionIsEmpty(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
 
-        if (row.getBetaDirection() != null && !row.getBetaDirection().isEmpty()) {
+        if (row.getBetaDirection() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta Direction");
             error.setError("Beta direction found for association with effect type: " + rowEffectType);
@@ -212,7 +212,7 @@ public class AssociationUploadErrorService {
      */
     private BatchUploadError checkBetaDirectionIsPresent(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
-        if (row.getBetaDirection() == null && row.getBetaDirection().isEmpty()) {
+        if (row.getBetaDirection() == null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta Direction");
             error.setError("Beta direction is empty for association with effect type: " + rowEffectType);
@@ -251,13 +251,11 @@ public class AssociationUploadErrorService {
      */
     private BatchUploadError checkOrPerCopyRecipRange(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
-        if (row.getOrPerCopyRecipRange() != null || !row.getOrPerCopyRecipRange().isEmpty()) {
+        if (row.getOrPerCopyRecipRange() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Reciprocal confidence interval");
             error.setError("Reciprocal confidence interval found for association with effect type: " + rowEffectType);
         }
         return error;
     }
-
-
 }
