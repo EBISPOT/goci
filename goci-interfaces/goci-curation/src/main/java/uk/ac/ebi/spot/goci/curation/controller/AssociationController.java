@@ -218,45 +218,6 @@ public class AssociationController {
 
                 // Delete file once processed
                 associationBatchLoaderService.deleteFile(uploadedFilePath);
-
-                // If the file contained something readable
-                if (!fileRows.isEmpty()) {
-                    Collection<BatchUploadError> fileErrors =
-                            associationBatchLoaderService.checkUploadForErrors(fileRows);
-
-                    if (!fileErrors.isEmpty()) {
-                        getLog().error("Errors found in file: " + uploadedFile.getName());
-                        model.addAttribute("fileErrors", fileErrors);
-                        return "association_file_upload_error";
-                    }
-                    else {
-
-                        // Create associations from rows
-                        Collection<Association> newAssociations =
-                                associationBatchLoaderService.processFileRows(fileRows);
-
-                        // Save and map associations
-                        if (!newAssociations.isEmpty()) {
-                            associationBatchLoaderService.saveAssociations(newAssociations, study);
-
-                            Curator curator = study.getHousekeeping().getCurator();
-                            String mappedBy = curator.getLastName();
-                            try {
-                                mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
-                            }
-                            catch (EnsemblMappingException e) {
-                                model.addAttribute("study", study);
-                                return "ensembl_mapping_failure";
-                            }
-                        }
-                        else {
-                            getLog().error("No associations created from " + uploadedFilePath);
-                        }
-                    }
-                }
-                else {
-                    getLog().error("File: " + uploadedFilePath + " contained no readable rows.");
-                }
             }
             catch (InvalidOperationException | InvalidFormatException | IOException e) {
                 getLog().error("Wrong file format ", e);
@@ -265,6 +226,45 @@ public class AssociationController {
             catch (RuntimeException e) {
                 getLog().error("Data upload failed ", e);
                 return "data_upload_problem";
+            }
+
+            // If the file contained something readable
+            if (!fileRows.isEmpty()) {
+                Collection<BatchUploadError> fileErrors =
+                        associationBatchLoaderService.checkUploadForErrors(fileRows);
+
+                if (!fileErrors.isEmpty()) {
+                    getLog().error("Errors found in file: " + uploadedFile.getName());
+                    model.addAttribute("fileErrors", fileErrors);
+                    return "association_file_upload_error";
+                }
+                else {
+
+                    // Create associations from rows
+                    Collection<Association> newAssociations =
+                            associationBatchLoaderService.processFileRows(fileRows);
+
+                    // Save and map associations
+                    if (!newAssociations.isEmpty()) {
+                        associationBatchLoaderService.saveAssociations(newAssociations, study);
+
+                        Curator curator = study.getHousekeeping().getCurator();
+                        String mappedBy = curator.getLastName();
+                        try {
+                            mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
+                        }
+                        catch (EnsemblMappingException e) {
+                            model.addAttribute("study", study);
+                            return "ensembl_mapping_failure";
+                        }
+                    }
+                    else {
+                        getLog().error("No associations created from " + uploadedFilePath);
+                    }
+                }
+            }
+            else {
+                getLog().error("File: " + uploadedFilePath + " contained no readable rows.");
             }
         }
         else {
