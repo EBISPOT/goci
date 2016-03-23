@@ -20,18 +20,20 @@
     <script type="text/javascript"
             charset="utf8"
             src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
-        <a th:object="${study}" th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back
-                                                                                                                    to
-                                                                                                                    SNP
+<div class="container">
+    <div class="row" th:object="${study}">
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary col-md-offset-9 col-md-3">Back to SNP
+                                                                                                        associations</a>
+    </div>
+</div>
 
-                                                                                                                    associations</a>
+
+<div class="container">
+    <div class="row">
+        <p class="col-md-10 lead text-left">Errors found in upload:</p>
         <table id="mainTable"
                class="table table-hover table-bordered"
                th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
