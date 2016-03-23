@@ -67,7 +67,7 @@ public class LociAttributesService {
             // If gene doesn't exist then create and save
             else {
                 // Create new gene
-                getLog().debug("Gene "+ geneInDatabase.getGeneName() +" not found in database. Creating and saving new gene.");
+                getLog().debug("Gene "+ authorReportedGene +" not found in database. Creating and saving new gene.");
                 Gene newGene = new Gene();
                 newGene.setGeneName(authorReportedGene);
 
