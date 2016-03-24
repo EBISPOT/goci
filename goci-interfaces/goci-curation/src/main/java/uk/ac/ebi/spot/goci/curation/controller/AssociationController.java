@@ -235,6 +235,7 @@ public class AssociationController {
 
                 if (!fileErrors.isEmpty()) {
                     getLog().error("Errors found in file: " + uploadedFile.getName());
+                    model.addAttribute("fileName", uploadedFile.getName());
                     model.addAttribute("fileErrors", fileErrors);
                     return "association_file_upload_error";
                 }
