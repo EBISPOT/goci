@@ -23,9 +23,13 @@
 </head>
 <body>
 
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
 <div class="container">
     <div class="row" th:object="${study}">
-        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary col-md-offset-9 col-md-3">Back to SNP
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary col-md-offset-10 col-md-2">Back to SNP
                                                                                                         associations</a>
     </div>
 </div>
