@@ -22,7 +22,7 @@ public class AssociationUploadErrorService {
      *
      * @return errors, any errors encountered
      */
-    public Collection<BatchUploadError> checkRowForErrors(Collection<BatchUploadRow> rows) {
+    public Collection<BatchUploadError> checkRowsForErrors(Collection<BatchUploadRow> rows) {
 
         // Create collection to store all newly created associations
         Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
