@@ -32,21 +32,21 @@ public class AssociationUploadErrorService {
             String rowEffectType = row.getEffectType();
 
             // Run checks depending on effect type
-            if (rowEffectType.equals("OR")) {
+            if (rowEffectType.equalsIgnoreCase("or")) {
                 Collection<BatchUploadError> orErrors = runOrChecks(row, rowEffectType);
                 if (!orErrors.isEmpty()) {
                     batchUploadErrors.addAll(orErrors);
                 }
             }
 
-            if (rowEffectType.equals("Beta")) {
+            if (rowEffectType.equalsIgnoreCase("beta")) {
                 Collection<BatchUploadError> betaErrors = runBetaChecks(row, rowEffectType);
                 if (!betaErrors.isEmpty()) {
                     batchUploadErrors.addAll(betaErrors);
                 }
             }
 
-            if (rowEffectType.equals("NR")) {
+            if (rowEffectType.equalsIgnoreCase("nr")) {
                 Collection<BatchUploadError> noEffectErrors = runNoEffectErrors(row, rowEffectType);
                 if (!noEffectErrors.isEmpty()) {
                     batchUploadErrors.addAll(noEffectErrors);
@@ -89,6 +89,9 @@ public class AssociationUploadErrorService {
      */
     private Collection<BatchUploadError> runBetaChecks(BatchUploadRow row, String rowEffectType) {
         Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+
+        BatchUploadError betaIsPresent = checkBetaIsPresent(row,rowEffectType);
+        batchUploadErrors.add(betaIsPresent);
 
         BatchUploadError betaUnitNotFound = checkBetaUnitIsPresent(row, rowEffectType);
         batchUploadErrors.add(betaUnitNotFound);
@@ -204,12 +207,26 @@ public class AssociationUploadErrorService {
     }
 
     /**
+     * "Beta" MUST be filled
+     */
+    private BatchUploadError checkBetaIsPresent(BatchUploadRow row, String rowEffectType) {
+        BatchUploadError error = new BatchUploadError();
+
+        if (row.getBetaNum() == null) {
+            error.setRow(row.getRowNumber());
+            error.setColumnName("Beta");
+            error.setError("Beta is empty for association with effect type: " + rowEffectType);
+        }
+        return error;
+    }
+
+    /**
      * "Beta unit" MUST be filled
      */
     private BatchUploadError checkBetaUnitIsPresent(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
 
-        if (row.getBetaNum() == null) {
+        if (row.getBetaUnit() == null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta Unit");
             error.setError("Beta unit is empty for association with effect type: " + rowEffectType);
@@ -257,7 +274,7 @@ public class AssociationUploadErrorService {
     }
 
     /**
-     * "Reciprocal CI" MUST be empty.
+     * "OR reciprocal range" MUST be empty.
      */
     private BatchUploadError checkOrPerCopyRecipRange(BatchUploadRow row, String rowEffectType) {
         BatchUploadError error = new BatchUploadError();
