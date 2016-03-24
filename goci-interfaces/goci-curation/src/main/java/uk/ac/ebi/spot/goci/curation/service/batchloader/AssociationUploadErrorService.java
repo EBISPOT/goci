@@ -250,8 +250,8 @@ public class AssociationUploadErrorService {
         BatchUploadError error = new BatchUploadError();
         if (row.getOrPerCopyRecip() != null) {
             error.setRow(row.getRowNumber());
-            error.setColumnName("Reciprocal OR");
-            error.setError("Reciprocal OR found for association with effect type: " + rowEffectType);
+            error.setColumnName("OR reciprocal");
+            error.setError("OR reciprocal found for association with effect type: " + rowEffectType);
         }
         return error;
     }
@@ -263,8 +263,8 @@ public class AssociationUploadErrorService {
         BatchUploadError error = new BatchUploadError();
         if (row.getOrPerCopyRecipRange() != null) {
             error.setRow(row.getRowNumber());
-            error.setColumnName("Reciprocal confidence interval");
-            error.setError("Reciprocal confidence interval found for association with effect type: " + rowEffectType);
+            error.setColumnName("OR reciprocal range");
+            error.setError("OR reciprocal range found for association with effect type: " + rowEffectType);
         }
         return error;
     }
@@ -303,8 +303,8 @@ public class AssociationUploadErrorService {
         BatchUploadError error = new BatchUploadError();
         if (row.getDescription() != null) {
             error.setRow(row.getRowNumber());
-            error.setColumnName("Description");
-            error.setError("Description found for association with effect type: " + rowEffectType);
+            error.setColumnName("OR/Beta description");
+            error.setError("OR/Beta description found for association with effect type: " + rowEffectType);
         }
         return error;
     }
