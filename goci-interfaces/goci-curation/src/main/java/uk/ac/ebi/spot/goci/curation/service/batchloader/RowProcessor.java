@@ -90,7 +90,7 @@ public class RowProcessor {
             newAssociation.setRiskFrequency(row.getAssociationRiskFrequency());
             newAssociation.setPvalueMantissa(row.getPvalueMantissa());
             newAssociation.setPvalueExponent(row.getPvalueExponent());
-            newAssociation.setPvalueText(row.getPvalueDescription());
+            newAssociation.setPvalueDescription(row.getPvalueDescription());
             newAssociation.setSnpType(row.getSnpType());
             newAssociation.setStandardError(row.getStandardError());
             newAssociation.setDescription(row.getDescription());

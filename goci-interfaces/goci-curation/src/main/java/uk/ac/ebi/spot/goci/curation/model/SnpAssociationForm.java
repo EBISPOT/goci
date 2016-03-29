@@ -23,7 +23,7 @@ public abstract class SnpAssociationForm {
 
     private String riskFrequency;
 
-    private String pvalueText;
+    private String pvalueDescription;
 
     private Integer pvalueMantissa;
 
@@ -65,7 +65,7 @@ public abstract class SnpAssociationForm {
 
     public SnpAssociationForm(Long associationId,
                               String riskFrequency,
-                              String pvalueText,
+                              String pvalueDescription,
                               Integer pvalueMantissa,
                               Integer pvalueExponent,
                               List<SnpMappingForm> snpMappingForms,
@@ -84,7 +84,7 @@ public abstract class SnpAssociationForm {
                               String betaUnit, String betaDirection) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
-        this.pvalueText = pvalueText;
+        this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.snpMappingForms = snpMappingForms;
@@ -239,12 +239,12 @@ public abstract class SnpAssociationForm {
         this.pvalueMantissa = pvalueMantissa;
     }
 
-    public String getPvalueText() {
-        return pvalueText;
+    public String getPvalueDescription() {
+        return pvalueDescription;
     }
 
-    public void setPvalueText(String pvalueText) {
-        this.pvalueText = pvalueText;
+    public void setPvalueDescription(String pvalueDescription) {
+        this.pvalueDescription = pvalueDescription;
     }
 
     public String getRiskFrequency() {

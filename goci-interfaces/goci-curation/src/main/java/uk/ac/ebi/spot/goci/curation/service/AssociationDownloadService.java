@@ -77,11 +77,11 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if (association.getPvalueText() == null) {
+            if (association.getPvalueDescription() == null) {
                 line.append("");
             }
             else {
-                line.append(association.getPvalueText());
+                line.append(association.getPvalueDescription());
             }
             line.append("\t");
 

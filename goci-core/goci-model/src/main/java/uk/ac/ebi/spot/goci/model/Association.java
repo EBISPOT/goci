@@ -31,7 +31,7 @@ public class Association {
 
     private String riskFrequency;
 
-    private String pvalueText;
+    private String pvalueDescription;
 
     private Integer pvalueMantissa;
 
@@ -102,7 +102,7 @@ public class Association {
     }
 
     public Association(String riskFrequency,
-                       String pvalueText,
+                       String pvalueDescription,
                        Integer pvalueMantissa,
                        Integer pvalueExponent,
                        Boolean multiSnpHaplotype,
@@ -126,7 +126,7 @@ public class Association {
                        Date lastMappingDate,
                        String lastMappingPerformedBy, Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
-        this.pvalueText = pvalueText;
+        this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.multiSnpHaplotype = multiSnpHaplotype;
@@ -168,12 +168,12 @@ public class Association {
         this.riskFrequency = riskFrequency;
     }
 
-    public String getPvalueText() {
-        return pvalueText;
+    public String getPvalueDescription() {
+        return pvalueDescription;
     }
 
-    public void setPvalueText(String pvalueText) {
-        this.pvalueText = pvalueText;
+    public void setPvalueDescription(String pvalueDescription) {
+        this.pvalueDescription = pvalueDescription;
     }
 
     public Float getOrPerCopyNum() {

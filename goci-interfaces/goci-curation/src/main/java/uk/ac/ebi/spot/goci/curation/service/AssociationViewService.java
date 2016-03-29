@@ -217,7 +217,7 @@ public class AssociationViewService {
 
         snpAssociationTableView.setPvalueMantissa(association.getPvalueMantissa());
         snpAssociationTableView.setPvalueExponent(association.getPvalueExponent());
-        snpAssociationTableView.setPvalueText(association.getPvalueText());
+        snpAssociationTableView.setPvalueText(association.getPvalueDescription());
 
 
         Collection<String> efoTraits = new ArrayList<>();

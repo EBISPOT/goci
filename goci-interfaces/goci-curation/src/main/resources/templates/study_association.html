@@ -140,7 +140,7 @@
                                                             controls
                     </th>
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
-                    <th style="font-size: small">p-Value Text</th>
+                    <th style="font-size: small">p-Value Description</th>
                     <th style="font-size: small">EFO trait</th>
                     <th style="font-size: small">OR</th>
                     <th style="font-size: small">OR reciprocal</th>
@@ -198,7 +198,7 @@
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
                             <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+                                th:text="${snpAssociationTableView.pvalueDescription} ?: ''"></td>
 
                             <!--EFO traits-->
                             <td style="background-color: darkgrey">
@@ -329,7 +329,7 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
                                 <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+                                    th:text="${snpAssociationTableView.pvalueDescription} ?: ''"></td>
 
                                 <!--EFO traits-->
                                 <td style="background-color: lightyellow">
@@ -451,7 +451,7 @@
 
                                 <!--P Value-->
                                 <td th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
-                                <td th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+                                <td th:text="${snpAssociationTableView.pvalueDescription} ?: ''"></td>
 
                                 <!--EFO traits-->
                                 <td>

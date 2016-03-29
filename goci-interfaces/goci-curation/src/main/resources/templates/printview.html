@@ -191,7 +191,7 @@
                                                  controls
                     </th>
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
-                    <th style="font-size: small">p-Value Text</th>
+                    <th style="font-size: small">p-Value Description</th>
                     <th style="font-size: small">EFO trait</th>
                     <th style="font-size: small">OR</th>
                     <th style="font-size: small">OR reciprocal</th>
@@ -235,7 +235,7 @@
                     <!--P Value-->
                     <td style="font-size: small"
                         th:text="${snpAssociationTableView.pvalueMantissa} + 'x 10' + ${snpAssociationTableView.pvalueExponent} ?: ''"></td>
-                    <td style="font-size: small" th:text="${snpAssociationTableView.pvalueText} ?: ''"></td>
+                    <td style="font-size: small" th:text="${snpAssociationTableView.pvalueDescription} ?: ''"></td>
 
                     <!--EFO traits-->
                     <td style="font-size: small" th:text="${snpAssociationTableView.efoTraits} ?: ''"></td>

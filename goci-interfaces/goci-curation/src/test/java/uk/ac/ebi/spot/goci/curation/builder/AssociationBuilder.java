@@ -32,7 +32,7 @@ public class AssociationBuilder {
     }
 
     public AssociationBuilder setPvalueText(String pvalueText) {
-        association.setPvalueText(pvalueText);
+        association.setPvalueDescription(pvalueText);
         return this;
     }
 

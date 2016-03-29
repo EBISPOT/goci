@@ -29,7 +29,7 @@ public interface SnpAssociationFormService {
         Association association = new Association();
 
         // Set common string, boolean and float association attributes
-        association.setPvalueText(form.getPvalueText());
+        association.setPvalueDescription(form.getPvalueDescription());
         association.setSnpType(form.getSnpType());
         association.setSnpApproved(form.getSnpApproved());
         association.setRange(form.getRange());
