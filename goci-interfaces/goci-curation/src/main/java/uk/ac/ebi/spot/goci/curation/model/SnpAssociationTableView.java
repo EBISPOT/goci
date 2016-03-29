@@ -34,7 +34,7 @@ public class SnpAssociationTableView {
 
     private Integer pvalueExponent;
 
-    private String pvalueText;
+    private String pvalueDescription;
 
     private String efoTraits;
 
@@ -90,7 +90,7 @@ public class SnpAssociationTableView {
                                    String riskAlleleFrequencies,
                                    Integer pvalueMantissa,
                                    Integer pvalueExponent,
-                                   String pvalueText,
+                                   String pvalueDescription,
                                    String efoTraits,
                                    Float orPerCopyNum,
                                    Float orPerCopyRecip,
@@ -120,7 +120,7 @@ public class SnpAssociationTableView {
         this.riskAlleleFrequencies = riskAlleleFrequencies;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
-        this.pvalueText = pvalueText;
+        this.pvalueDescription = pvalueDescription;
         this.efoTraits = efoTraits;
         this.orPerCopyNum = orPerCopyNum;
         this.orPerCopyRecip = orPerCopyRecip;
@@ -179,8 +179,8 @@ public class SnpAssociationTableView {
         this.pvalueExponent = pvalueExponent;
     }
 
-    public void setPvalueText(String pvalueText) {
-        this.pvalueText = pvalueText;
+    public void setPvalueDescription(String pvalueDescription) {
+        this.pvalueDescription = pvalueDescription;
     }
 
     public void setEfoTraits(String efoTraits) {
@@ -300,8 +300,8 @@ public class SnpAssociationTableView {
         return pvalueExponent;
     }
 
-    public String getPvalueText() {
-        return pvalueText;
+    public String getPvalueDescription() {
+        return pvalueDescription;
     }
 
     public String getEfoTraits() {

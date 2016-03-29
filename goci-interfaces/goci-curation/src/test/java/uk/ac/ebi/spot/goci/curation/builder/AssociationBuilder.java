@@ -31,8 +31,8 @@ public class AssociationBuilder {
         return this;
     }
 
-    public AssociationBuilder setPvalueText(String pvalueText) {
-        association.setPvalueDescription(pvalueText);
+    public AssociationBuilder setPvalueDescription(String pvalueDescription) {
+        association.setPvalueDescription(pvalueDescription);
         return this;
     }
 

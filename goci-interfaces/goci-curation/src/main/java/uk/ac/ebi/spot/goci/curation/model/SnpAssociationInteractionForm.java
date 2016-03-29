@@ -26,7 +26,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
 
     public SnpAssociationInteractionForm(Long associationId,
                                          String riskFrequency,
-                                         String pvalueText,
+                                         String pvalueDescription,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
                                          List<SnpMappingForm> snpMappingForms,
@@ -47,7 +47,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
                                          List<SnpFormColumn> snpFormColumns, Integer numOfInteractions) {
         super(associationId,
               riskFrequency,
-              pvalueText,
+              pvalueDescription,
               pvalueMantissa,
               pvalueExponent,
               snpMappingForms,

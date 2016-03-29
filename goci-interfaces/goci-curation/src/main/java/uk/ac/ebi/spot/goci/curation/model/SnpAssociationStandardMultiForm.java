@@ -31,9 +31,10 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
     public SnpAssociationStandardMultiForm() {
     }
 
+
     public SnpAssociationStandardMultiForm(Long associationId,
                                            String riskFrequency,
-                                           String pvalueText,
+                                           String pvalueDescription,
                                            Integer pvalueMantissa,
                                            Integer pvalueExponent,
                                            List<SnpMappingForm> snpMappingForms,
@@ -57,7 +58,7 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
                                            Integer multiSnpHaplotypeNum, Boolean multiSnpHaplotype) {
         super(associationId,
               riskFrequency,
-              pvalueText,
+              pvalueDescription,
               pvalueMantissa,
               pvalueExponent,
               snpMappingForms,
