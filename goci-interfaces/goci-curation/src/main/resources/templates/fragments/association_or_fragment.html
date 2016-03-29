@@ -11,12 +11,14 @@
     </div>
 
     <!--Warning if OR value is less than 1-->
-    <div class="alert alert-warning alert-dismissible col-md-offset-2 col-md-10"
-         role="alert"
-         th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="alert alert-warning alert-dismissible"
+             role="alert"
+             th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                                     aria-hidden="true">&times;</span></button>
-        <strong>Warning!</strong> OR value less than 1
+            <strong>Warning!</strong> OR value less than 1
+        </div>
     </div>
 </div>
 
