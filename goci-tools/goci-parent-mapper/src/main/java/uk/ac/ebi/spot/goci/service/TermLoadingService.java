@@ -26,13 +26,21 @@ public class TermLoadingService {
                     " JOIN STUDY_DISEASE_TRAIT SD ON SD.DISEASE_TRAIT_ID = D.ID " +
                     " JOIN STUDY_EFO_TRAIT SE ON SE.STUDY_ID = SD.STUDY_ID " +
                     " JOIN EFO_TRAIT E ON E.ID = SE.EFO_TRAIT_ID " +
+                    " JOIN STUDY S ON S.ID = SD.STUDY_ID " +
+                    " JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    " WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL " +
+                    " AND H.CATALOG_UNPUBLISH_DATE IS NULL " +
                     " UNION " +
                     " SELECT DISTINCT D.TRAIT, E.TRAIT, E.URI " +
                     " FROM DISEASE_TRAIT D " +
                     " JOIN STUDY_DISEASE_TRAIT SD ON SD.DISEASE_TRAIT_ID = D.ID " +
                     " JOIN ASSOCIATION A ON A.STUDY_ID = SD.STUDY_ID " +
                     " JOIN ASSOCIATION_EFO_TRAIT AE ON AE.ASSOCIATION_ID = A.ID " +
-                    " JOIN EFO_TRAIT E ON E.ID = AE.EFO_TRAIT_ID";
+                    " JOIN EFO_TRAIT E ON E.ID = AE.EFO_TRAIT_ID " +
+                    " JOIN STUDY S ON S.ID = SD.STUDY_ID " +
+                    " JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    " WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL " +
+                    " AND H.CATALOG_UNPUBLISH_DATE IS NULL";
 
 
     private JdbcTemplate jdbcTemplate;

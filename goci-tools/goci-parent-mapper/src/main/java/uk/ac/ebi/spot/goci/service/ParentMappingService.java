@@ -43,13 +43,19 @@ public class ParentMappingService {
         if(ontologyLoader.isReady()){
             getLog().debug("Mapping " + unmappedTraits.keySet().size() + " traits");
             for(String uri : unmappedTraits.keySet()){
-                getLog().debug("Acquiring mapping for trait " + uri);
-                String map = findParent(uri);
-                for(TraitEntity trait : unmappedTraits.get(uri)) {
-                    trait.setParentUri(map);
-                    trait.setParentName(ParentList.PARENT_URI.get(map));
-                    mappedTraits.add(trait);
+                if(existsInPublicEFO(uri)){
+                    getLog().warn("Acquiring mapping for trait " + uri);
+                    String map = findParent(uri);
+                    for(TraitEntity trait : unmappedTraits.get(uri)) {
+                        trait.setParentUri(map);
+                        trait.setParentName(ParentList.PARENT_URI.get(map));
+                        mappedTraits.add(trait);
+                    }
                 }
+                else {
+                   getLog().warn(uri + " is not yet available in public EFO");
+                }
+
             }
 
         }
@@ -67,6 +73,16 @@ public class ParentMappingService {
         }
 
         return mappedTraits;
+    }
+
+    public boolean existsInPublicEFO(String uri) {
+        boolean exists = true;
+
+        if(ontologyLoader.getLabel(IRI.create(uri)) == null){
+            exists = false;
+        }
+
+        return exists;
     }
 
 
