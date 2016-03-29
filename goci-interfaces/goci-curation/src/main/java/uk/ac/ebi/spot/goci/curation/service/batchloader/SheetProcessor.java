@@ -60,7 +60,7 @@ public class SheetProcessor {
                 // Get gene values
                 String authorReportedGene = null;
                 if (row.getCell(0, row.RETURN_BLANK_AS_NULL) != null) {
-                    authorReportedGene = row.getCell(0).getRichStringCellValue().getString();
+                    authorReportedGene = row.getCell(0).getRichStringCellValue().getString().trim();
                 }
                 else {
                     getLog().debug("Gene is null in row " + row.getRowNum());
@@ -69,7 +69,7 @@ public class SheetProcessor {
                 // Get Strongest SNP-Risk Allele
                 String strongestAllele = null;
                 if (row.getCell(1, row.RETURN_BLANK_AS_NULL) != null) {
-                    strongestAllele = row.getCell(1).getRichStringCellValue().getString();
+                    strongestAllele = row.getCell(1).getRichStringCellValue().getString().trim();
                 }
                 else {
                     getLog().debug("Risk allele is null in row " + row.getRowNum());
@@ -78,7 +78,7 @@ public class SheetProcessor {
                 // Get SNP
                 String snp = null;
                 if (row.getCell(2, row.RETURN_BLANK_AS_NULL) != null) {
-                    snp = row.getCell(2).getRichStringCellValue().getString();
+                    snp = row.getCell(2).getRichStringCellValue().getString().trim();
                 }
                 else {
                     getLog().debug("SNP is null in row " + row.getRowNum());
@@ -87,7 +87,7 @@ public class SheetProcessor {
                 // Get Proxy SNP
                 String proxy = null;
                 if (row.getCell(3, row.RETURN_BLANK_AS_NULL) != null) {
-                    proxy = row.getCell(3).getRichStringCellValue().getString();
+                    proxy = row.getCell(3).getRichStringCellValue().getString().trim();
                 }
                 else {
                     getLog().debug("Proxy SNP is null in row " + row.getRowNum());
@@ -99,7 +99,7 @@ public class SheetProcessor {
                     XSSFCell risk = row.getCell(4);
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            riskFrequency = risk.getRichStringCellValue().getString();
+                            riskFrequency = risk.getRichStringCellValue().getString().trim();
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             riskFrequency = Double.toString(risk.getNumericCellValue());
@@ -116,7 +116,7 @@ public class SheetProcessor {
                     XSSFCell risk = row.getCell(5);
                     switch (risk.getCellType()) {
                         case Cell.CELL_TYPE_STRING:
-                            associationRiskFrequency = risk.getRichStringCellValue().getString();
+                            associationRiskFrequency = risk.getRichStringCellValue().getString().trim();
                             break;
                         case Cell.CELL_TYPE_NUMERIC:
                             associationRiskFrequency = Double.toString(risk.getNumericCellValue());
@@ -166,7 +166,7 @@ public class SheetProcessor {
                 // Get P-value description
                 String pvalueDescription;
                 if (row.getCell(8, row.RETURN_BLANK_AS_NULL) != null) {
-                    pvalueDescription = row.getCell(8).getRichStringCellValue().getString();
+                    pvalueDescription = row.getCell(8).getRichStringCellValue().getString().trim();
                 }
                 else {
                     pvalueDescription = null;
@@ -176,7 +176,7 @@ public class SheetProcessor {
                 // Get Effect type, this can be "OR", "Beta" or "NR"
                 String effectType;
                 if (row.getCell(9, row.RETURN_BLANK_AS_NULL) != null) {
-                    effectType = row.getCell(9).getRichStringCellValue().getString();
+                    effectType = row.getCell(9).getRichStringCellValue().getString().trim();
                 }
                 else {
                     // Set default value
@@ -241,7 +241,7 @@ public class SheetProcessor {
                 // Get Beta unit
                 String betaUnit;
                 if (row.getCell(13, row.RETURN_BLANK_AS_NULL) != null) {
-                    betaUnit = row.getCell(13).getRichStringCellValue().getString();
+                    betaUnit = row.getCell(13).getRichStringCellValue().getString().trim();
                 }
                 else {
                     betaUnit = null;
@@ -251,7 +251,7 @@ public class SheetProcessor {
                 // Get Beta direction
                 String betaDirection;
                 if (row.getCell(14, row.RETURN_BLANK_AS_NULL) != null) {
-                    betaDirection = row.getCell(14).getRichStringCellValue().getString();
+                    betaDirection = row.getCell(14).getRichStringCellValue().getString().trim().toLowerCase();
                 }
                 else {
                     betaDirection = null;
@@ -261,7 +261,7 @@ public class SheetProcessor {
                 // Get confidence interval
                 String range;
                 if (row.getCell(15, row.RETURN_BLANK_AS_NULL) != null) {
-                    range = row.getCell(15).getRichStringCellValue().getString();
+                    range = row.getCell(15).getRichStringCellValue().getString().trim();
                 }
                 else {
                     range = null;
@@ -271,7 +271,7 @@ public class SheetProcessor {
                 // Get OR recip range
                 String orPerCopyRecipRange;
                 if (row.getCell(16, row.RETURN_BLANK_AS_NULL) != null) {
-                    orPerCopyRecipRange = row.getCell(16).getRichStringCellValue().getString();
+                    orPerCopyRecipRange = row.getCell(16).getRichStringCellValue().getString().trim();
                 }
                 else {
                     orPerCopyRecipRange = null;
@@ -299,7 +299,7 @@ public class SheetProcessor {
                 // Get description
                 String description;
                 if (row.getCell(18) != null) {
-                    description = row.getCell(18).getRichStringCellValue().getString();
+                    description = row.getCell(18).getRichStringCellValue().getString().trim();
                 }
                 else {
                     description = null;
@@ -309,7 +309,7 @@ public class SheetProcessor {
                 // Get Multi-SNP Haplotype value
                 String multiSnpHaplotype;
                 if (row.getCell(19, row.RETURN_BLANK_AS_NULL) != null) {
-                    multiSnpHaplotype = row.getCell(19).getRichStringCellValue().getString();
+                    multiSnpHaplotype = row.getCell(19).getRichStringCellValue().getString().trim();
                 }
                 else {
                     multiSnpHaplotype = null;
@@ -319,7 +319,7 @@ public class SheetProcessor {
                 // Get SNP interaction value
                 String snpInteraction;
                 if (row.getCell(20, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpInteraction = row.getCell(20).getRichStringCellValue().getString();
+                    snpInteraction = row.getCell(20).getRichStringCellValue().getString().trim();
                 }
                 else {
                     snpInteraction = null;
@@ -329,7 +329,7 @@ public class SheetProcessor {
                 // Get SNP Status
                 String snpStatus;
                 if (row.getCell(21, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpStatus = row.getCell(21).getRichStringCellValue().getString().toLowerCase();
+                    snpStatus = row.getCell(21).getRichStringCellValue().getString().toLowerCase().trim();
                 }
                 else {
                     snpStatus = null;
@@ -339,7 +339,7 @@ public class SheetProcessor {
                 // Get SNP type (novel / known)
                 String snpType;
                 if (row.getCell(22, row.RETURN_BLANK_AS_NULL) != null) {
-                    snpType = row.getCell(22).getRichStringCellValue().getString().toLowerCase();
+                    snpType = row.getCell(22).getRichStringCellValue().getString().toLowerCase().trim();
                 }
                 else {
                     snpType = null;
@@ -348,7 +348,7 @@ public class SheetProcessor {
 
                 String efoTrait;
                 if (row.getCell(23, row.RETURN_BLANK_AS_NULL) != null) {
-                    efoTrait = row.getCell(23).getRichStringCellValue().getString();
+                    efoTrait = row.getCell(23).getRichStringCellValue().getString().trim();
                 }
                 else {
                     efoTrait = null;

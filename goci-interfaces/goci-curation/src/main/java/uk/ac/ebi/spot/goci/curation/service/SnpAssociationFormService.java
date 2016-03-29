@@ -29,13 +29,9 @@ public interface SnpAssociationFormService {
         Association association = new Association();
 
         // Set common string, boolean and float association attributes
-        association.setPvalueDescription(form.getPvalueDescription());
         association.setSnpType(form.getSnpType());
         association.setSnpApproved(form.getSnpApproved());
-        association.setRange(form.getRange());
         association.setStandardError(form.getStandardError());
-        association.setDescription(form.getDescription());
-        association.setRiskFrequency(form.getRiskFrequency());
 
         // Add collection of EFO traits
         association.setEfoTraits(form.getEfoTraits());
@@ -47,10 +43,31 @@ public interface SnpAssociationFormService {
         // Set OR/Beta values
         association.setOrPerCopyNum(form.getOrPerCopyNum());
         association.setOrPerCopyRecip(form.getOrPerCopyRecip());
-        association.setOrPerCopyRecipRange(form.getOrPerCopyRecipRange());
         association.setBetaNum(form.getBetaNum());
         association.setBetaDirection(form.getBetaDirection());
-        association.setBetaUnit(form.getBetaUnit());
+
+        // Tidy up common string values
+        if (form.getPvalueDescription() != null) {
+            association.setPvalueDescription(form.getPvalueDescription().trim());
+        }
+
+        if (form.getRange() != null) {
+            association.setRange(form.getRange().trim());
+        }
+
+        if (form.getDescription() != null) {
+            association.setDescription(form.getDescription().trim());
+        }
+
+        if (form.getRiskFrequency() != null) {
+            association.setRiskFrequency(form.getRiskFrequency().trim());
+        }
+        if (form.getOrPerCopyRecipRange() != null) {
+            association.setOrPerCopyRecipRange(form.getOrPerCopyRecipRange().trim());
+        }
+        if (form.getBetaUnit() != null) {
+            association.setBetaUnit(form.getBetaUnit().trim());
+        }
         return association;
     }
 }
