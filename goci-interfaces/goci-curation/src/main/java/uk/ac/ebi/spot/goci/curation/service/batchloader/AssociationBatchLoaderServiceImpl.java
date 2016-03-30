@@ -94,7 +94,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      * @return collection of errors
      */
     @Override public Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> fileRows) {
-        return associationErrorCheckFactory.runChecks("all", fileRows);
+        return associationErrorCheckFactory.runChecks("full", fileRows);
     }
 
     /**

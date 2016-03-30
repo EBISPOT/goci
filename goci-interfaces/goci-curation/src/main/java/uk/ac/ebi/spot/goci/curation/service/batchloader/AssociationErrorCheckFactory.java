@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Factory to build various error checks
+ *         Factory to build various error checks. At present just runs  one set of checks but could could be updated to run "lite" checks just for submitter etc
  */
 @Service
 public class AssociationErrorCheckFactory {
@@ -30,7 +30,7 @@ public class AssociationErrorCheckFactory {
         Collection<BatchUploadError> errors = new ArrayList<>();
 
         switch (checkLevel) {
-            case "all":
+            case "full":
                 errors = associationErrorCheckService.runFullChecks(fileRows);
                 break;
             default:
