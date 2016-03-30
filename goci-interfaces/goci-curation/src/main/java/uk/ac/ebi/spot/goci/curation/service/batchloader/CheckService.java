@@ -150,6 +150,11 @@ public class CheckService {
                     error.setError("SNP type does not contain novel or known");
             }
         }
+        else {
+            error.setRow(row.getRowNumber());
+            error.setColumnName("SNP type");
+            error.setError("SNP type is empty");
+        }
         return error;
     }
 
