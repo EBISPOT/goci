@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
 public class BatchUploadErrorBuilder {
 
     private BatchUploadError batchUploadError = new BatchUploadError();
-    
+
     public BatchUploadErrorBuilder setRow(Integer row) {
         batchUploadError.setRow(row);
         return this;
@@ -31,6 +31,4 @@ public class BatchUploadErrorBuilder {
     public BatchUploadError build() {
         return batchUploadError;
     }
-
-
 }
