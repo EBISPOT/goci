@@ -16,12 +16,12 @@ import java.util.Collection;
  *         Error checking of uploaded spreadsheet
  */
 @Service
-public class AssociationUploadErrorService {
+public class AssociationErrorCheckService {
 
     private CheckService checkService;
 
     @Autowired
-    public AssociationUploadErrorService(CheckService checkService) {
+    public AssociationErrorCheckService(CheckService checkService) {
         this.checkService = checkService;
     }
 

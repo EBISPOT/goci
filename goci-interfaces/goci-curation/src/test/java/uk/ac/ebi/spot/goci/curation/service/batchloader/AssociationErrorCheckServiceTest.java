@@ -4,6 +4,7 @@ package uk.ac.ebi.spot.goci.curation.service.batchloader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
@@ -14,6 +15,7 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by emma on 24/03/2016.
@@ -23,9 +25,12 @@ import static org.assertj.core.api.Assertions.tuple;
  *         Test for AssociationUploadErrorService
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AssociationUploadErrorServiceTest {
+public class AssociationErrorCheckServiceTest {
 
-    private AssociationUploadErrorService associationUploadErrorService;
+    private AssociationErrorCheckService associationErrorCheckService;
+
+    @Mock
+    private CheckService checkService;
 
     private static final BatchUploadRow OR_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("OR")
@@ -73,13 +78,23 @@ public class AssociationUploadErrorServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        associationUploadErrorService = new AssociationUploadErrorService();
+        associationErrorCheckService = new AssociationErrorCheckService(checkService);
     }
+
+    @Test
+    public void testMocks() {
+        // Test mock creation
+        assertNotNull(checkService);
+    }
+
+    @Test
+    public void test
+
 
     @Test
     public void testCheckRowForErrors() throws Exception {
 
-        Collection<BatchUploadError> batchUploadErrors = associationUploadErrorService.checkRowsForErrors(Arrays.asList(
+        Collection<BatchUploadError> batchUploadErrors = associationErrorCheckService.runFullChecks(Arrays.asList(
                 OR_ERRORS, OR_NO_ERRORS, NR_ERRORS,
                 NR_NO_ERRORS, BETA_NO_ERRORS, BETA_ERRORS));
 

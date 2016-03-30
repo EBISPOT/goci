@@ -68,6 +68,11 @@ public class BatchUploadRowBuilder {
         return this;
     }
 
+    public BatchUploadRowBuilder setSnpType(String snpType){
+        batchUploadRow.setSnpType(snpType);
+        return this;
+    }
+
     public BatchUploadRow build() {
         return batchUploadRow;
     }
