@@ -31,7 +31,7 @@ import java.util.Date;
 public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoaderService {
 
     private SheetProcessor sheetProcessor;
-    private AssociationUploadErrorService associationUploadErrorService;
+    private AssociationErrorCheckFactory associationErrorCheckFactory;
     private RowProcessor rowProcessor;
     private AssociationRepository associationRepository;
 
@@ -43,11 +43,11 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
 
     @Autowired
     public AssociationBatchLoaderServiceImpl(SheetProcessor sheetProcessor,
-                                             AssociationUploadErrorService associationUploadErrorService,
+                                             AssociationErrorCheckFactory associationErrorCheckFactory,
                                              RowProcessor rowProcessor,
                                              AssociationRepository associationRepository) {
         this.sheetProcessor = sheetProcessor;
-        this.associationUploadErrorService = associationUploadErrorService;
+        this.associationErrorCheckFactory = associationErrorCheckFactory;
         this.rowProcessor = rowProcessor;
         this.associationRepository = associationRepository;
     }
@@ -94,7 +94,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      * @return collection of errors
      */
     @Override public Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> fileRows) {
-        return associationUploadErrorService.checkRowsForErrors(fileRows);
+        return associationErrorCheckFactory.runChecks("all", fileRows);
     }
 
     /**
