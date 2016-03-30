@@ -18,11 +18,11 @@ import java.util.Collection;
 @Service
 public class AssociationErrorCheckFactory {
 
-    private AssociationUploadErrorService associationUploadErrorService;
+    private AssociationErrorCheckService associationErrorCheckService;
 
     @Autowired
-    public AssociationErrorCheckFactory(AssociationUploadErrorService associationUploadErrorService) {
-        this.associationUploadErrorService = associationUploadErrorService;
+    public AssociationErrorCheckFactory(AssociationErrorCheckService associationErrorCheckService) {
+        this.associationErrorCheckService = associationErrorCheckService;
     }
 
     public Collection<BatchUploadError> runChecks(String checkLevel, Collection<BatchUploadRow> fileRows) {
@@ -31,10 +31,10 @@ public class AssociationErrorCheckFactory {
 
         switch (checkLevel) {
             case "all":
-                errors = associationUploadErrorService.runFullChecks(fileRows);
+                errors = associationErrorCheckService.runFullChecks(fileRows);
                 break;
             default:
-                errors = associationUploadErrorService.runFullChecks(fileRows);
+                errors = associationErrorCheckService.runFullChecks(fileRows);
                 break;
         }
         return errors;
