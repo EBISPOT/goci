@@ -21,8 +21,8 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-db-binding</artifactId>
         </dependency>
 
         <dependency>
@@ -43,13 +43,11 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20141113</version>
         </dependency>
 
         <dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
-            <version>1.4.6</version>
         </dependency>
     </dependencies>
 

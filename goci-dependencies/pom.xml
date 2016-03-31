@@ -41,6 +41,8 @@
         <batik.version>1.8</batik.version>
         <junit.version>4.12</junit.version>
         <assertj.version>3.3.0</assertj.version>
+        <json.version>20141113</json.version>
+        <unirest.version>1.4.6</unirest.version>
     </properties>
 
     <build>
@@ -222,6 +224,17 @@
                 <groupId>org.apache.xmlgraphics</groupId>
                 <artifactId>batik-transcoder</artifactId>
                 <version>${batik.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mashape.unirest</groupId>
+                <artifactId>unirest-java</artifactId>
+                <version>${unirest.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
