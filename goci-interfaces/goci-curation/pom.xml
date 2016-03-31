@@ -19,15 +19,6 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-model</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-repository</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
@@ -85,14 +76,12 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>${assertj.version}</version>
         </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>uk.ac.ebi.spot.goci.CurationApplication</start-class>
-        <java.version>1.8</java.version>
     </properties>
 
     <build>
