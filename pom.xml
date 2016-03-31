@@ -18,6 +18,7 @@
         <module>goci-interfaces</module>
         <module>goci-tools</module>
         <module>lodestar</module>
+        <module>goci-data-services</module>
     </modules>
 
 </project>
