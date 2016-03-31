@@ -6,16 +6,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.curation.builder.BatchUploadErrorBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by emma on 24/03/2016.
@@ -32,49 +32,49 @@ public class AssociationErrorCheckServiceTest {
     @Mock
     private CheckService checkService;
 
-    private static final BatchUploadRow OR_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
+    private static final BatchUploadRow ROW_WITH_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("OR")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
             .setBetaUnit("cm")
+            .setSnpType("UNKNOWN")
             .build();
 
-    private static final BatchUploadRow OR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(2)
-            .setEffectType("OR")
-            .setOrPerCopyNum((float) 1.22)
-            .setOrPerCopyRecip((float) 0.78)
-            .build();
 
-    private static final BatchUploadRow NR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(3)
-            .setEffectType("NR")
-            .build();
-
-    private static final BatchUploadRow NR_ERRORS = new BatchUploadRowBuilder().setRowNumber(4)
-            .setEffectType("NR")
-            .setOrPerCopyNum((float) 1.22)
-            .setOrPerCopyRecip((float) 0.78)
-            .setBetaNum((float) 0.78)
-            .setBetaDirection("increase")
-            .setBetaUnit("cm")
-            .setRange("[0.82-0.92]")
-            .setOrPerCopyRecipRange("[0.82-0.92]")
-            .setStandardError((float) 0.6)
-            .setDescription("test")
-            .build();
-
-    private static final BatchUploadRow BETA_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(5)
+    private static final BatchUploadRow ROW_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("Beta")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
             .setBetaUnit("cm")
+            .setSnpType("novel")
             .build();
 
-    private static final BatchUploadRow BETA_ERRORS = new BatchUploadRowBuilder().setRowNumber(6)
-            .setEffectType("Beta")
-            .setOrPerCopyNum((float) 1.22)
-            .setOrPerCopyRecip((float) 0.78)
-            .setOrPerCopyRecipRange("[0.82-0.92]")
-            .build();
+
+    private static final BatchUploadError ANNOTATION_ERROR1 =
+            new BatchUploadErrorBuilder().setRow(1).setColumnName("SNP type")
+                    .setError("SNP type does not contain novel or known")
+                    .build();
+
+    private static final BatchUploadError ANNOTATION_ERROR2 =
+            new BatchUploadErrorBuilder().setRow(1).setColumnName("OR")
+                    .setError("OR num is empty for association with effect type: OR")
+                    .build();
+
+    private static final BatchUploadError ANNOTATION_ERROR3 =
+            new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta")
+                    .setError("Beta value found for association with effect type: OR")
+                    .build();
+
+    private static final BatchUploadError ANNOTATION_ERROR4 =
+            new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta unit")
+                    .setError("Beta unit found for association with effect type: OR")
+                    .build();
+
+    private static final BatchUploadError ANNOTATION_ERROR5 =
+            new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta Direction")
+                    .setError("Beta direction found for association with effect type: OR")
+                    .build();
+
 
     @Before
     public void setUp() throws Exception {
@@ -88,48 +88,17 @@ public class AssociationErrorCheckServiceTest {
     }
 
     @Test
-    public void test
+    public void testRunFullChecks() {
 
-
-    @Test
-    public void testCheckRowForErrors() throws Exception {
-
-        Collection<BatchUploadError> batchUploadErrors = associationErrorCheckService.runFullChecks(Arrays.asList(
-                OR_ERRORS, OR_NO_ERRORS, NR_ERRORS,
-                NR_NO_ERRORS, BETA_NO_ERRORS, BETA_ERRORS));
-
-        assertThat(batchUploadErrors).isNotEmpty();
-        assertThat(batchUploadErrors).hasSize(19);
-        assertThat(batchUploadErrors).extracting("row").contains(1, 4, 6);
-        assertThat(batchUploadErrors).extracting("row").doesNotContain(2, 3, 5);
-        assertThat(batchUploadErrors).extracting("row", "columnName", "error")
-                .contains(tuple(1, "OR", "OR num is empty for association with effect type: OR"),
-                          tuple(1, "Beta", "Beta value found for association with effect type: OR"),
-                          tuple(1, "Beta unit", "Beta unit found for association with effect type: OR"),
-                          tuple(1, "Beta Direction", "Beta direction found for association with effect type: OR"),
-                          // row 4 checks
-                          tuple(4, "OR", "OR num found for association with effect type: NR"),
-                          tuple(4, "OR reciprocal", "OR reciprocal found for association with effect type: NR"),
-                          tuple(4,
-                                "OR reciprocal range",
-                                "OR reciprocal range found for association with effect type: NR"),
-                          tuple(4, "Beta", "Beta value found for association with effect type: NR"),
-                          tuple(4, "Beta unit", "Beta unit found for association with effect type: NR"),
-                          tuple(4, "Beta Direction", "Beta direction found for association with effect type: NR"),
-                          tuple(4, "Range", "Range found for association with effect type: NR"),
-                          tuple(4, "Standard Error", "Standard error found for association with effect type: NR"),
-                          tuple(4,
-                                "OR/Beta description",
-                                "OR/Beta description found for association with effect type: NR"),
-                          // row 6 checks
-                          tuple(6, "Beta", "Beta is empty for association with effect type: Beta"),
-                          tuple(6, "Beta Unit", "Beta unit is empty for association with effect type: Beta"),
-                          tuple(6, "Beta Direction", "Beta direction is empty for association with effect type: Beta"),
-                          tuple(6, "OR", "OR num found for association with effect type: Beta"),
-                          tuple(6, "OR reciprocal", "OR reciprocal found for association with effect type: Beta"),
-                          tuple(6,
-                                "OR reciprocal range",
-                                "OR reciprocal range found for association with effect type: Beta")
-                );
+        // Stubbing
+        when(checkService.runAnnotationChecks(ROW_WITH_ERRORS)).thenReturn(Arrays.asList(ANNOTATION_ERROR1,
+                                                                                         ANNOTATION_ERROR2,
+                                                                                         ANNOTATION_ERROR3,
+                                                                                         ANNOTATION_ERROR4,
+                                                                                         ANNOTATION_ERROR5));
+        assertThat(associationErrorCheckService.runFullChecks(Arrays.asList(ROW_WITH_ERRORS,
+                                                                            ROW_NO_ERRORS))).isNotEmpty();
+        assertThat(associationErrorCheckService.runFullChecks(Arrays.asList(ROW_WITH_ERRORS,
+                                                                            ROW_NO_ERRORS))).hasSize(5);
     }
 }
