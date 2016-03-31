@@ -252,6 +252,19 @@ public class CheckService {
             error.setColumnName("Beta Direction");
             error.setError("Beta direction is empty for association with effect type: " + rowEffectType);
         }
+        else {
+            switch (row.getBetaDirection()) {
+                case "increase":
+                    break;
+                case "decrease":
+                    break;
+                default:
+                    error.setRow(row.getRowNumber());
+                    error.setColumnName("Beta Direction");
+                    error.setError("Beta direction is not increase or decrease for association with effect type: " +
+                                           rowEffectType);
+            }
+        }
         return error;
     }
 
