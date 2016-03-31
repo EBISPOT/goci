@@ -11,8 +11,9 @@
 
     <artifactId>goci-data-services</artifactId>
     <version>2.1.2-SNAPSHOT</version>
+
+
     <modules>
-        <module>goci-catalog-io-services</module>
         <module>goci-data-validation-services</module>
         <module>goci-data-filtering-services</module>
     </modules>
