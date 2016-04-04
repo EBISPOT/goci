@@ -46,45 +46,48 @@ public class MappingDetailsService {
         MappingDetails mappingSummary = new MappingDetails();
         Collection<Association> studyAssociations = associationRepository.findByStudyId(study.getId());
 
-        // Determine if we have more than one performer
-        Set<String> allAssociationMappingPerformers = new HashSet<String>();
-        for (Association association : studyAssociations) {
-            allAssociationMappingPerformers.add(association.getLastMappingPerformedBy());
-        }
+        if (studyAssociations != null && !studyAssociations.isEmpty()) {
 
-        Map<String, String> mappingDateToPerformerMap = new HashMap<>();
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+            // Determine if we have more than one performer
+            Set<String> allAssociationMappingPerformers = new HashSet<String>();
+            for (Association association : studyAssociations) {
+                allAssociationMappingPerformers.add(association.getLastMappingPerformedBy());
+            }
 
-        // If only one performer we need to check dates to see mapping didn't happen at different times
-        if (allAssociationMappingPerformers.size() == 1) {
-            String performer = allAssociationMappingPerformers.iterator().next();
+            Map<String, String> mappingDateToPerformerMap = new HashMap<>();
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
-            // Only care about automated mapping
-            if (performer != null) {
-                if (performer.equals("automatic_mapping_process")) {
+            // If only one performer we need to check dates to see mapping didn't happen at different times
+            if (allAssociationMappingPerformers.size() == 1) {
+                String performer = allAssociationMappingPerformers.iterator().next();
 
-                    // Go through all associations and store mapping performer and date
-                    for (Association association : studyAssociations) {
-                        String date = dt.format(association.getLastMappingDate());
-                        mappingDateToPerformerMap.put(date, performer);
+                // Only care about automated mapping
+                if (performer != null) {
+                    if (performer.equals("automatic_mapping_process")) {
+
+                        // Go through all associations and store mapping performer and date
+                        for (Association association : studyAssociations) {
+                            String date = dt.format(association.getLastMappingDate());
+                            mappingDateToPerformerMap.put(date, performer);
+                        }
                     }
                 }
             }
-        }
 
-        // If its only been mapped by an automated process, all with same date
-        if (mappingDateToPerformerMap.size() == 1) {
-            for (String date : mappingDateToPerformerMap.keySet()) {
-                Date newDate = null;
-                try {
-                    newDate = dt.parse(date);
+            // If its only been mapped by an automated process, all with same date
+            if (mappingDateToPerformerMap.size() == 1) {
+                for (String date : mappingDateToPerformerMap.keySet()) {
+                    Date newDate = null;
+                    try {
+                        newDate = dt.parse(date);
 
+                    }
+                    catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    mappingSummary.setMappingDate(newDate);
+                    mappingSummary.setPerformer(mappingDateToPerformerMap.get(date));
                 }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                mappingSummary.setMappingDate(newDate);
-                mappingSummary.setPerformer(mappingDateToPerformerMap.get(date));
             }
         }
         return mappingSummary;
