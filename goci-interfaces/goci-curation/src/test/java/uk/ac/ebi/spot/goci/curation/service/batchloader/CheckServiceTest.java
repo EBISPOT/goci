@@ -74,6 +74,13 @@ public class CheckServiceTest {
     private static final BatchUploadRow
             ROW_WITH_EMPTY_SNP_TYPE = new BatchUploadRowBuilder().setRowNumber(9).build();
 
+    private static final BatchUploadRow BETA_DIRECTION_ERRORS = new BatchUploadRowBuilder().setRowNumber(10)
+            .setEffectType("Beta")
+            .setBetaNum((float) 0.78)
+            .setBetaDirection("down")
+            .setBetaUnit("cm")
+            .build();
+
     @Before
     public void setUp() throws Exception {
         checkService = new CheckService();
@@ -138,6 +145,14 @@ public class CheckServiceTest {
                           tuple(6,
                                 "OR reciprocal range",
                                 "OR reciprocal range found for association with effect type: Beta"));
+
+        assertThat(checkService.runBetaChecks(BETA_DIRECTION_ERRORS, "Beta")).isNotEmpty();
+        assertThat(checkService.runBetaChecks(BETA_DIRECTION_ERRORS, "Beta")).hasSize(1);
+        assertThat(checkService.runBetaChecks(BETA_DIRECTION_ERRORS, "Beta")).extracting("row").containsOnly(10);
+        assertThat(checkService.runBetaChecks(BETA_DIRECTION_ERRORS, "Beta")).extracting("row", "columnName", "error")
+                .contains(tuple(10,
+                                "Beta Direction",
+                                "Beta direction is not increase or decrease for association with effect type: Beta"));
     }
 
     @Test
