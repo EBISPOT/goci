@@ -27,5 +27,6 @@
         <module>goci-urilabelchecker</module>
         <module>goci-ancestry-mapper</module>
         <module>goci-parent-mapper</module>
+        <module>goci-association-filter</module>
     </modules>
 </project>
