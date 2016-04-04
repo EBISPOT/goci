@@ -816,6 +816,10 @@ public class StudyController {
 
         model.addAttribute("studyHousekeeping", housekeepingAttachedToStudy);
         model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Return a DTO that holds a summary of any automated mappings
+        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
+
         return "study_housekeeping";
     }
 
