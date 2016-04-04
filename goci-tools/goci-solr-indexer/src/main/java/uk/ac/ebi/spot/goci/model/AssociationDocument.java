@@ -27,8 +27,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private Integer pValueMantissa;
     @Field @NonEmbeddableField private Integer pValueExponent;
     @Field @NonEmbeddableField private Float orPerCopyNum;
-    @Field @NonEmbeddableField private String orPerCopyUnitDescr;
-    @Field @NonEmbeddableField private String orPerCopyRange;
+    @Field @NonEmbeddableField private Float betaNum;
+    @Field @NonEmbeddableField private String betaUnit;
+    @Field @NonEmbeddableField private String betaDirection;
+    @Field @NonEmbeddableField private String description;
+    @Field @NonEmbeddableField private String range;
     @Field @NonEmbeddableField private String orType;
 
     // additional included genetic data...
@@ -92,12 +95,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         super(association);
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueDescription();
-        this.orPerCopyUnitDescr = association.getDescription();
+        this.description = association.getDescription();
         this.orType = String.valueOf(association.getOrType());
-        this.orPerCopyRange = association.getRange();
+        this.range = association.getRange();
+        this.betaUnit = association.getBetaUnit();
+        this.betaDirection = association.getBetaDirection();
 
         if (association.getOrPerCopyNum() != null) {
             this.orPerCopyNum = association.getOrPerCopyNum();
+        }
+        if (association.getBetaNum() != null) {
+            this.betaNum = association.getBetaNum();
         }
         if (association.getPvalueMantissa() != null) {
             this.pValueMantissa = association.getPvalueMantissa();
@@ -163,12 +171,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return qualifier;
     }
 
-    public String getOrPerCopyUnitDescr() {
-        return orPerCopyUnitDescr;
+    public String getDescription() {
+        return description;
     }
 
-    public String getOrPerCopyRange() {
-        return orPerCopyRange;
+    public String getRange() {
+        return range;
     }
 
     public String getContext() {
@@ -886,5 +894,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void setLocusDescription(String locusDescription) {
         this.locusDescription = locusDescription;
+    }
+
+    public Float getBetaNum() {
+        return betaNum;
+    }
+
+    public String getBetaUnit() {
+        return betaUnit;
+    }
+
+    public String getBetaDirection() {
+        return betaDirection;
     }
 }

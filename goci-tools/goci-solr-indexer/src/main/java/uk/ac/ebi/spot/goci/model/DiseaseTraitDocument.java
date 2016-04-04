@@ -35,12 +35,6 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
-    //    @Field("association_pValueMantissa") private Collection<Integer> pValueMantissas;
-    //    @Field("association_pValueExponent") private Collection<Integer> pValueExponents;
-    //    @Field("association_orPerCopyNum") private Collection<Float> orPerCopyNums;
-    //    @Field("association_orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
-    //    @Field("association_orPerCopyRange") private Collection<String> orPerCopyRanges;
-    //    @Field("association_orType") private Collection<String> orTypes;
     @Field("association_rsId") private Collection<String> rsIds;
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
@@ -83,12 +77,6 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestryLinks = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
-        //        this.pValueMantissas = new LinkedHashSet<>();
-        //        this.pValueExponents = new LinkedHashSet<>();
-        //        this.orPerCopyNums = new LinkedHashSet<>();
-        //        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
-        //        this.orPerCopyRanges = new LinkedHashSet<>();
-        //        this.orTypes = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
         this.contexts = new LinkedHashSet<>();
@@ -188,30 +176,6 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
     }
-
-    //    public void addPValueMantissa(int pValueMantissa) {
-    //        this.pValueMantissas.add(pValueMantissa);
-    //    }
-    //
-    //    public void addPValueExponent(int pValueExponent) {
-    //        this.pValueExponents.add(pValueExponent);
-    //    }
-
-    //    public void addOrPerCopyNum(float orPerCopyNum) {
-    //        this.orPerCopyNums.add(orPerCopyNum);
-    //    }
-    //
-    //    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-    //        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
-    //    }
-    //
-    //    public void addOrPerCopyRange(String orPerCopyRange) {
-    //        this.orPerCopyRanges.add(orPerCopyRange);
-    //    }
-    //
-    //    public void addOrType(String orType) {
-    //        this.orTypes.add(orType);
-    //    }
 
     public void addRsId(String rsId) {
         this.rsIds.add(rsId);

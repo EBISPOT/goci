@@ -323,21 +323,34 @@ function processAssociation(association, table) {
     }
     row.append($("<td>").html(pval));
 
-    if (association.orType == true) {
-        row.append($("<td>").html(association.orPerCopyNum));
+    if (association.orPerCopyNum != null) {
+        var or = (association.orPerCopyNum).toString();
+        if (association.description != null) {
+            var or = or.concat(" ").concat(association.description);
+        }
+        row.append($("<td>").html(or));
         row.append($("<td>").html(''));
     }
-    else {
+    else if (association.betaNum != null){
         row.append($("<td>").html(''));
-        if (association.orPerCopyUnitDescr != null) {
-            var beta = (association.orPerCopyNum).toString().concat(" ").concat(association.orPerCopyUnitDescr);
-            row.append($("<td>").html(beta));
+        var beta = (association.betaNum).toString();
+        if (association.betaUnit != null) {
+            var beta = beta.toString().concat(" ").concat(association.betaUnit);
         }
-        else {
-            row.append($("<td>").html(association.orPerCopyNum));
+        if (association.betaDirection != null) {
+            var beta = beta.toString().concat(" ").concat(association.betaDirection);
         }
+        if (association.description != null) {
+            var beta = beta.toString().concat(" ").concat(association.description);
+        }
+        row.append($("<td>").html(beta));
+
     }
-    row.append($("<td>").html(association.orPerCopyRange));
+    else{
+        row.append($("<td>").html(''));
+        row.append($("<td>").html(''));
+    }
+    row.append($("<td>").html(association.range));
     if (association.region != null) {
         if (association.region[0].indexOf('[') != -1) {
             var region = association.region[0].split('[')[0];
