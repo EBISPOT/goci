@@ -189,6 +189,9 @@
     <field name="pValueMantissa" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="pValueExponent" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="orPerCopyNum" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="betaNum" type="float" indexed="true" stored="true" multiValued="false" />
+    <field name="betaUnit" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="betaDirection" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="description" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="range" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
