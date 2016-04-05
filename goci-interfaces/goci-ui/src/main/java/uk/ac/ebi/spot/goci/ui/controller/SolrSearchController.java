@@ -318,13 +318,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
-            addFilterQuery(solrSearchBuilder, "orType", "false");
+            addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -431,13 +431,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
-            addFilterQuery(solrSearchBuilder, "orType", "false");
+            addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -563,13 +563,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
-            addFilterQuery(solrSearchBuilder, "orType", "false");
+            addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -830,13 +830,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
-            addFilterQuery(solrSearchBuilder, "orPerCopyNum", betaRange);
-            addFilterQuery(solrSearchBuilder, "orType", "false");
+            addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);

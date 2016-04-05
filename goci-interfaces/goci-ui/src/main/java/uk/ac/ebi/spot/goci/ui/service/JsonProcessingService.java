@@ -333,16 +333,21 @@ public class JsonProcessingService {
 
 
     private String getCI(JsonNode doc) {
-        String ci;
-        if (doc.get("orPerCopyRange") != null) {
-            ci = doc.get("orPerCopyRange").asText().trim();
+        String ci = "";
+        if (doc.get("range") != null) {
+            ci = ci.concat(doc.get("range").asText().trim()).concat(" ");
         }
-        else {
-            ci = "";
+        if (doc.get("betaUnit") != null) {
+            ci = ci.concat(doc.get("betaUnit").asText().trim()).concat(" ");
         }
-        if(doc.get("orPerCopyUnitDescr") != null){
-            ci = ci.concat(doc.get("orPerCopyUnitDescr").asText().trim());
+
+        if (doc.get("betaDirection") != null) {
+            ci = ci.concat(doc.get("betaDirection").asText().trim()).concat(" ");
         }
+        if(doc.get("orDescription") != null){
+            ci = ci.concat(doc.get("orDescription").asText().trim());
+        }
+        ci = ci.trim();
         return ci;
     }
 
@@ -350,6 +355,9 @@ public class JsonProcessingService {
         String or;
         if (doc.get("orPerCopyNum") != null) {
             or = doc.get("orPerCopyNum").asText().trim();
+        }
+        else if (doc.get("betaNum") != null) {
+            or = doc.get("betaNum").asText().trim();
         }
         else {
             or = "";
