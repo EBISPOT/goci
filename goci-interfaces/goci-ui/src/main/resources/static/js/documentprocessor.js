@@ -325,8 +325,8 @@ function processAssociation(association, table) {
 
     if (association.orPerCopyNum != null) {
         var or = (association.orPerCopyNum).toString();
-        if (association.description != null) {
-            var or = or.concat(" ").concat(association.description);
+        if (association.orDescription != null) {
+            var or = or.concat(" ").concat(association.orDescription);
         }
         row.append($("<td>").html(or));
         row.append($("<td>").html(''));
@@ -340,8 +340,8 @@ function processAssociation(association, table) {
         if (association.betaDirection != null) {
             var beta = beta.toString().concat(" ").concat(association.betaDirection);
         }
-        if (association.description != null) {
-            var beta = beta.toString().concat(" ").concat(association.description);
+        if (association.orDescription != null) {
+            var beta = beta.toString().concat(" ").concat(association.orDescription);
         }
         row.append($("<td>").html(beta));
 

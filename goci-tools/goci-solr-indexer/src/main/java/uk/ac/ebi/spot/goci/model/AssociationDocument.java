@@ -30,7 +30,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private Float betaNum;
     @Field @NonEmbeddableField private String betaUnit;
     @Field @NonEmbeddableField private String betaDirection;
-    @Field @NonEmbeddableField private String description;
+    @Field("orDescription") @NonEmbeddableField private String description;
     @Field @NonEmbeddableField private String range;
     @Field @NonEmbeddableField private String orType;
 
