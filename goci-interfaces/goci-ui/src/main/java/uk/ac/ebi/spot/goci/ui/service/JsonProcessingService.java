@@ -344,8 +344,8 @@ public class JsonProcessingService {
         if (doc.get("betaDirection") != null) {
             ci = ci.concat(doc.get("betaDirection").asText().trim()).concat(" ");
         }
-        if(doc.get("description") != null){
-            ci = ci.concat(doc.get("description").asText().trim());
+        if(doc.get("orDescription") != null){
+            ci = ci.concat(doc.get("orDescription").asText().trim());
         }
         ci = ci.trim();
         return ci;
