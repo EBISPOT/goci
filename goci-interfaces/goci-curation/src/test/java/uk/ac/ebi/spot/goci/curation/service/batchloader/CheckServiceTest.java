@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 
@@ -16,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.tuple;
  *         <p>
  *         Test for goci/goci-interfaces/goci-curation/src/main/java/uk/ac/ebi/spot/goci/curation/service/batchloader/CheckService.java
  */
-
+@RunWith(MockitoJUnitRunner.class)
 public class CheckServiceTest {
 
     private CheckService checkService;
