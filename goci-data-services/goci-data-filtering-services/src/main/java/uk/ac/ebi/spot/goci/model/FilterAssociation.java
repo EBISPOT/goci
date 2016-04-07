@@ -19,9 +19,21 @@ public class FilterAssociation {
 
     private String chromosomePosition;
 
-    private Boolean isSignificant = true;
-
     private Boolean isTopAssociation = false;
+
+    public FilterAssociation(Integer rowNumber,
+                             String strongestAllele,
+                             Integer pvalueMantissa,
+                             Integer pvalueExponent,
+                             String chromosomeName,
+                             String chromosomePosition){
+        this.rowNumber = rowNumber;
+        this.strongestAllele = strongestAllele;
+        this.pvalueMantissa = pvalueMantissa;
+        this.pvalueExponent = pvalueExponent;
+        this.chromosomeName = chromosomeName;
+        this.chromosomePosition = chromosomePosition;
+    }
 
     public Integer getRowNumber() {
         return rowNumber;
@@ -78,14 +90,6 @@ public class FilterAssociation {
 
     public void setChromosomePosition(String chromosomePosition) {
         this.chromosomePosition = chromosomePosition;
-    }
-
-    public Boolean getIsSignificant() {
-        return isSignificant;
-    }
-
-    public void setIsSignificant(Boolean isSignificant) {
-        this.isSignificant = isSignificant;
     }
 
     public Boolean getIsTopAssociation() {
