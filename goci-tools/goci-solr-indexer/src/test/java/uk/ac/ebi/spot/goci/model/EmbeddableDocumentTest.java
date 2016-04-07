@@ -67,7 +67,6 @@ public class EmbeddableDocumentTest {
                                            false,
                                            false,
                                            "snpType",
-                                           false,
                                            (float) 1.01,
                                            "[NR]",
                                            "description",
