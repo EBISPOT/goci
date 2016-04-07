@@ -7,16 +7,17 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.LocusBuilder;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -59,9 +60,9 @@ public class SingleSnpMultiSnpAssociationServiceTest {
             .setUri("http://www.ebi.ac.uk/efo/EFO_0001185")
             .build();
 
-    private static final Study STUDY =
-            new StudyBuilder().setId(802L)
-                    .setEfoTraits(Arrays.asList(EFO1, EFO2))
+    private static final Locus LOCUS_01 =
+            new LocusBuilder().setId(111L)
+                    .setDescription("Single variant")
                     .build();
 
     private static final Association BETA_SINGLE_ASSOCIATION =
@@ -84,6 +85,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                     .setRiskFrequency(String.valueOf(0.93))
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setDescription("this is a test")
+                    .setLoci(Collections.singletonList(LOCUS_01))
                     .build();
 
     @Before
@@ -146,8 +148,10 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         assertNull(form.getOrPerCopyRecip());
         assertNull(form.getOrPerCopyRecipRange());
 
-
         //todo test how SNP, genes and risk allele appear in form
+        // Test locus attributes
+        assertThat(form.getMultiSnpHaplotypeDescr()).as("Check form MULTI HAPLOTYPE DESCRIPTION")
+                .isEqualTo("Single variant");
     }
 
     @Test
