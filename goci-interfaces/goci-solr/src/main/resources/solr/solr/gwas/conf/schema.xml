@@ -194,7 +194,7 @@
     <field name="betaDirection" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="orDescription" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="range" type="text_general" indexed="false" stored="true" multiValued="false" />
-    <field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <!--<field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />-->
     <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />

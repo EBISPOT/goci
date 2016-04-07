@@ -32,7 +32,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private String betaDirection;
     @Field("orDescription") @NonEmbeddableField private String description;
     @Field @NonEmbeddableField private String range;
-    @Field @NonEmbeddableField private String orType;
+//    @Field @NonEmbeddableField private String orType;
 
     // additional included genetic data...
     // capture loci/risk alleles for association;
@@ -96,7 +96,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.riskFrequency = association.getRiskFrequency();
         this.qualifier = association.getPvalueDescription();
         this.description = association.getDescription();
-        this.orType = String.valueOf(association.getOrType());
         this.range = association.getRange();
         this.betaUnit = association.getBetaUnit();
         this.betaDirection = association.getBetaDirection();
@@ -219,9 +218,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return orPerCopyNum;
     }
 
-    public String getOrType() {
+/*    public String getOrType() {
         return orType;
-    }
+    }*/
 
     public void addPubmedId(String pubmedId) {
         this.pubmedId = pubmedId;

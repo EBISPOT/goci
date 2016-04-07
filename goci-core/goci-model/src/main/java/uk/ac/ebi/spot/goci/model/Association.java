@@ -45,9 +45,6 @@ public class Association {
 
     private String snpType;
 
-    // TODO REMOVE
-    private Boolean orType = false;
-
     private Float standardError;
 
     private String range;
@@ -109,7 +106,6 @@ public class Association {
                        Boolean snpInteraction,
                        Boolean snpApproved,
                        String snpType,
-                       Boolean orType,
                        Float standardError,
                        String range,
                        String description,
@@ -124,7 +120,8 @@ public class Association {
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
                        Date lastMappingDate,
-                       String lastMappingPerformedBy, Date lastUpdateDate) {
+                       String lastMappingPerformedBy,
+                       Date lastUpdateDate) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -133,7 +130,6 @@ public class Association {
         this.snpInteraction = snpInteraction;
         this.snpApproved = snpApproved;
         this.snpType = snpType;
-        this.orType = orType;
         this.standardError = standardError;
         this.range = range;
         this.description = description;
@@ -182,14 +178,6 @@ public class Association {
 
     public void setOrPerCopyNum(Float orPerCopyNum) {
         this.orPerCopyNum = orPerCopyNum;
-    }
-
-    public Boolean getOrType() {
-        return orType;
-    }
-
-    public void setOrType(Boolean orType) {
-        this.orType = orType;
     }
 
     public String getSnpType() {
