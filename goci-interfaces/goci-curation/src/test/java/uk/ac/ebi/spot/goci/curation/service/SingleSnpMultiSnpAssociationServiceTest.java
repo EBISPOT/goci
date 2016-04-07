@@ -85,7 +85,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setDescription("this is a test")
                     .build();
-    
+
     @Before
     public void setUp() throws Exception {
         singleSnpMultiSnpAssociationService = new SingleSnpMultiSnpAssociationService(associationRepository,
