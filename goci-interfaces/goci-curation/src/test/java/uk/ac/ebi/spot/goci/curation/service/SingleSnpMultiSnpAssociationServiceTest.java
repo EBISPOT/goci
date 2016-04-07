@@ -7,20 +7,26 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.GeneBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.LocusBuilder;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
+import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
+import static com.google.common.collect.Lists.newLinkedList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.assertj.core.util.Lists.newArrayList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -48,21 +54,26 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
 
-    private static final EfoTrait EFO1 = new EfoTraitBuilder()
+    private static final EfoTrait EFO_01 = new EfoTraitBuilder()
             .setId(988L)
             .setTrait("atrophic rhinitis")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0007159")
             .build();
 
-    private static final EfoTrait EFO2 = new EfoTraitBuilder()
+    private static final EfoTrait EFO_02 = new EfoTraitBuilder()
             .setId(989L)
             .setTrait("HeLa")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0001185")
             .build();
 
+    private static final Gene GENE_01 = new GeneBuilder().setId(112L).setGeneName("NEGR1").build();
+
+    private static final Gene GENE_02 = new GeneBuilder().setId(113L).setGeneName("FRS2").build();
+
     private static final Locus LOCUS_01 =
             new LocusBuilder().setId(111L)
                     .setDescription("Single variant")
+                    .setAuthorReportedGenes(Arrays.asList(GENE_01, GENE_02))
                     .build();
 
     private static final Association BETA_SINGLE_ASSOCIATION =
@@ -83,7 +94,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                     .setOrPerCopyRecipRange(null)
                     .setPvalueDescription("(ferritin)")
                     .setRiskFrequency(String.valueOf(0.93))
-                    .setEfoTraits(Arrays.asList(EFO1, EFO2))
+                    .setEfoTraits(Arrays.asList(EFO_01, EFO_02))
                     .setDescription("this is a test")
                     .setLoci(Collections.singletonList(LOCUS_01))
                     .build();
@@ -152,6 +163,11 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         // Test locus attributes
         assertThat(form.getMultiSnpHaplotypeDescr()).as("Check form MULTI HAPLOTYPE DESCRIPTION")
                 .isEqualTo("Single variant");
+
+
+        assertThat(form.getAuthorReportedGenes()).isInstanceOf(Collection.class);
+        assertThat(form.getAuthorReportedGenes()).contains("NEGR1", "FRS2");
+
     }
 
     @Test
