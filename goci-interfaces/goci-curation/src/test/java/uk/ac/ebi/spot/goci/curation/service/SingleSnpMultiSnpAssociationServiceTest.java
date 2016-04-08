@@ -110,12 +110,12 @@ public class SingleSnpMultiSnpAssociationServiceTest {
             .setRsId("rs579459")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_02 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static final SingleNucleotidePolymorphism SNP_02 = new SingleNucleotidePolymorphismBuilder().setId(321L)
             .setLastUpdateDate(new Date())
             .setRsId("rs9533090")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_03 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static final SingleNucleotidePolymorphism SNP_03 = new SingleNucleotidePolymorphismBuilder().setId(391L)
             .setLastUpdateDate(new Date())
             .setRsId("rs114205691")
             .build();
