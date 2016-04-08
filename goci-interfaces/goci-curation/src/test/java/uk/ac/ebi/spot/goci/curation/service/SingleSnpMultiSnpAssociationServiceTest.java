@@ -86,7 +86,8 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     private static final Location LOCATION_01 =
             new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
 
-    private static final SingleNucleotidePolymorphism PROXY_SNP = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static final SingleNucleotidePolymorphism
+            PROXY_SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)
             .setLastUpdateDate(new Date())
             .setRsId("rs6538678")
             .build();
@@ -137,7 +138,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         SNP_01.setRiskAlleles(Collections.singletonList(RISK_ALLELE_01));
         SNP_01.setLocations(Collections.singletonList(LOCATION_01));
 
-        RISK_ALLELE_01.setProxySnps(Collections.singletonList(PROXY_SNP));
+        RISK_ALLELE_01.setProxySnps(Collections.singletonList(PROXY_SNP_01));
         RISK_ALLELE_01.setSnp(SNP_01);
 
         LOCUS_01.setAuthorReportedGenes(Arrays.asList(GENE_01, GENE_02));
