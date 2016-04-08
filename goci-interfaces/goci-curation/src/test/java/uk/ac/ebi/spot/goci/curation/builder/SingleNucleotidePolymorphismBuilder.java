@@ -53,7 +53,7 @@ public class SingleNucleotidePolymorphismBuilder {
         singleNucleotidePolymorphism.setGenomicContexts(genomicContexts);
         return this;
     }
-    
+
     public SingleNucleotidePolymorphismBuilder setRiskAlleles(Collection<RiskAllele> riskAlleles) {
         singleNucleotidePolymorphism.setRiskAlleles(riskAlleles);
         return this;
