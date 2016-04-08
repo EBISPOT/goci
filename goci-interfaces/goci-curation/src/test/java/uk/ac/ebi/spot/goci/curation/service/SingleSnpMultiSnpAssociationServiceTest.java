@@ -153,16 +153,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                                                                                       genomicContextRepository,
                                                                                       lociAttributesService);
     }
-
-    @Test
-    public void testMocks() {
-        // Test mock creation
-        assertNotNull(associationRepository);
-        assertNotNull(locusRepository);
-        assertNotNull(genomicContextRepository);
-        assertNotNull(lociAttributesService);
-    }
-
+    
     @Test
     public void testCreateForm() throws Exception {
         assertThat(singleSnpMultiSnpAssociationService.createForm(BETA_SINGLE_ASSOCIATION)).isInstanceOf(
