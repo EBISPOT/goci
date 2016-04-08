@@ -153,7 +153,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                                                                                       genomicContextRepository,
                                                                                       lociAttributesService);
     }
-    
+
     @Test
     public void testCreateForm() throws Exception {
         assertThat(singleSnpMultiSnpAssociationService.createForm(BETA_SINGLE_ASSOCIATION)).isInstanceOf(
@@ -196,7 +196,8 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         assertNull(form.getOrPerCopyNum());
         assertNull(form.getOrPerCopyRecip());
         assertNull(form.getOrPerCopyRecipRange());
-
+        assertNull(form.getMultiSnpHaplotypeNum());
+       
         // Test locus attributes
         assertThat(form.getMultiSnpHaplotypeDescr()).as("Check form MULTI HAPLOTYPE DESCRIPTION")
                 .isEqualTo("Single variant");
