@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -8,25 +9,34 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.GeneBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.LocationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.LocusBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.RegionBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.RiskAlleleBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
+import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.Region;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-import static com.google.common.collect.Lists.newLinkedList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
-import static org.assertj.core.util.Lists.newArrayList;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -54,6 +64,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
 
+    // Entity objects
     private static final EfoTrait EFO_01 = new EfoTraitBuilder()
             .setId(988L)
             .setTrait("atrophic rhinitis")
@@ -70,10 +81,28 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     private static final Gene GENE_02 = new GeneBuilder().setId(113L).setGeneName("FRS2").build();
 
+    private static final Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
+
+    private static final Location LOCATION_01 =
+            new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
+
+    private static final SingleNucleotidePolymorphism PROXY_SNP = new SingleNucleotidePolymorphismBuilder().setId(311L)
+            .setLastUpdateDate(new Date())
+            .setRsId("rs6538678")
+            .build();
+
+    private static final SingleNucleotidePolymorphism SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+            .setLastUpdateDate(new Date())
+            .setRsId("rs579459")
+            .build();
+
+    private static final RiskAllele RISK_ALLELE_01 = new RiskAlleleBuilder().setId(411L)
+            .setRiskAlleleName("rs579459-?")
+            .build();
+
     private static final Locus LOCUS_01 =
             new LocusBuilder().setId(111L)
                     .setDescription("Single variant")
-                    .setAuthorReportedGenes(Arrays.asList(GENE_01, GENE_02))
                     .build();
 
     private static final Association BETA_SINGLE_ASSOCIATION =
@@ -96,8 +125,25 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                     .setRiskFrequency(String.valueOf(0.93))
                     .setEfoTraits(Arrays.asList(EFO_01, EFO_02))
                     .setDescription("this is a test")
-                    .setLoci(Collections.singletonList(LOCUS_01))
                     .build();
+
+    @BeforeClass
+    public static void setUpModelObjects() throws Exception {
+        // Create the links between all our objects
+
+        REGION_01.setLocations(Collections.singletonList(LOCATION_01));
+        LOCATION_01.setRegion(REGION_01);
+
+        SNP_01.setRiskAlleles(Collections.singletonList(RISK_ALLELE_01));
+        SNP_01.setLocations(Collections.singletonList(LOCATION_01));
+
+        RISK_ALLELE_01.setProxySnps(Collections.singletonList(PROXY_SNP));
+        RISK_ALLELE_01.setSnp(SNP_01);
+
+        LOCUS_01.setAuthorReportedGenes(Arrays.asList(GENE_01, GENE_02));
+        LOCUS_01.setStrongestRiskAlleles(Collections.singletonList(RISK_ALLELE_01));
+        BETA_SINGLE_ASSOCIATION.setLoci(Collections.singletonList(LOCUS_01));
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -159,19 +205,25 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         assertNull(form.getOrPerCopyRecip());
         assertNull(form.getOrPerCopyRecipRange());
 
-        //todo test how SNP, genes and risk allele appear in form
         // Test locus attributes
         assertThat(form.getMultiSnpHaplotypeDescr()).as("Check form MULTI HAPLOTYPE DESCRIPTION")
                 .isEqualTo("Single variant");
-
-
         assertThat(form.getAuthorReportedGenes()).isInstanceOf(Collection.class);
         assertThat(form.getAuthorReportedGenes()).contains("NEGR1", "FRS2");
 
-    }
 
-    @Test
-    public void testCreateAssociation() throws Exception {
+        // Test the row values
+        Collection<SnpFormRow> rows = form.getSnpFormRows();
+        assertThat(rows).hasSize(1);
+        assertThat(rows).extracting("snp", "strongestRiskAllele")
+                .containsExactly(tuple("rs579459", "rs579459-?"));
 
+        assertThat(rows).extracting("proxySnps").isNotEmpty();
+        List<String> proxyNames = new ArrayList<String>();
+        for (SnpFormRow row : rows) {
+            proxyNames.addAll(row.getProxySnps());
+        }
+
+        assertThat(proxyNames).containsOnlyOnce("rs6538678");
     }
 }
