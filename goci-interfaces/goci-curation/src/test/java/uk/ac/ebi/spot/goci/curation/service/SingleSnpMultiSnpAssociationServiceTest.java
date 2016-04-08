@@ -81,7 +81,6 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     private static final Gene GENE_02 = new GeneBuilder().setId(113L).setGeneName("FRS2").build();
 
     private static final Gene GENE_03 = new GeneBuilder().setId(113L).setGeneName("ELF1").build();
-    ;
 
     private static final Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
 
