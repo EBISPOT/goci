@@ -216,7 +216,6 @@ public class SnpInteractionAssociationServiceTest {
         // Test the column values
         Collection<SnpFormColumn> columns = form.getSnpFormColumns();
         assertThat(columns).hasSize(2);
-
         assertThat(columns).extracting("snp",
                                        "strongestRiskAllele",
                                        "riskFrequency",

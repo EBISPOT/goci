@@ -28,12 +28,10 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -64,86 +62,86 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     private SnpAssociationFormService snpAssociationFormService;
 
     // Entity objects
-    private static final EfoTrait EFO_01 = new EfoTraitBuilder()
+    private static EfoTrait EFO_01 = new EfoTraitBuilder()
             .setId(988L)
             .setTrait("atrophic rhinitis")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0007159")
             .build();
 
-    private static final EfoTrait EFO_02 = new EfoTraitBuilder()
+    private static EfoTrait EFO_02 = new EfoTraitBuilder()
             .setId(989L)
             .setTrait("HeLa")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0001185")
             .build();
 
-    private static final Gene GENE_01 = new GeneBuilder().setId(112L).setGeneName("NEGR1").build();
+    private static Gene GENE_01 = new GeneBuilder().setId(112L).setGeneName("NEGR1").build();
 
-    private static final Gene GENE_02 = new GeneBuilder().setId(113L).setGeneName("FRS2").build();
+    private static Gene GENE_02 = new GeneBuilder().setId(113L).setGeneName("FRS2").build();
 
-    private static final Gene GENE_03 = new GeneBuilder().setId(113L).setGeneName("ELF1").build();
+    private static Gene GENE_03 = new GeneBuilder().setId(113L).setGeneName("ELF1").build();
 
-    private static final Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
+    private static Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
 
-    private static final Location LOCATION_01 =
+    private static Location LOCATION_01 =
             new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
 
-    private static final SingleNucleotidePolymorphism
+    private static SingleNucleotidePolymorphism
             PROXY_SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)
             .setLastUpdateDate(new Date())
             .setRsId("rs6538678")
             .build();
 
-    private static final SingleNucleotidePolymorphism
+    private static SingleNucleotidePolymorphism
             PROXY_SNP_02 = new SingleNucleotidePolymorphismBuilder().setId(311L)
             .setLastUpdateDate(new Date())
             .setRsId("rs7329174")
             .build();
 
-    private static final SingleNucleotidePolymorphism
+    private static SingleNucleotidePolymorphism
             PROXY_SNP_03 = new SingleNucleotidePolymorphismBuilder().setId(311L)
             .setLastUpdateDate(new Date())
             .setRsId("rs1234567")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static SingleNucleotidePolymorphism SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)
             .setLastUpdateDate(new Date())
             .setRsId("rs579459")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_02 = new SingleNucleotidePolymorphismBuilder().setId(321L)
+    private static SingleNucleotidePolymorphism SNP_02 = new SingleNucleotidePolymorphismBuilder().setId(321L)
             .setLastUpdateDate(new Date())
             .setRsId("rs9533090")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_03 = new SingleNucleotidePolymorphismBuilder().setId(391L)
+    private static SingleNucleotidePolymorphism SNP_03 = new SingleNucleotidePolymorphismBuilder().setId(391L)
             .setLastUpdateDate(new Date())
             .setRsId("rs114205691")
             .build();
 
-    private static final RiskAllele RISK_ALLELE_01 = new RiskAlleleBuilder().setId(411L)
+    private static RiskAllele RISK_ALLELE_01 = new RiskAlleleBuilder().setId(411L)
             .setRiskAlleleName("rs579459-?")
             .build();
 
-    private static final RiskAllele RISK_ALLELE_02 = new RiskAlleleBuilder().setId(412L)
+    private static RiskAllele RISK_ALLELE_02 = new RiskAlleleBuilder().setId(412L)
             .setRiskAlleleName("rs9533090-?")
             .build();
 
-    private static final RiskAllele RISK_ALLELE_03 = new RiskAlleleBuilder().setId(413L)
+    private static RiskAllele RISK_ALLELE_03 = new RiskAlleleBuilder().setId(413L)
             .setRiskAlleleName("rs114205691-?")
             .build();
 
-    private static final Locus LOCUS_01 =
+    private static Locus LOCUS_01 =
             new LocusBuilder().setId(111L)
                     .setDescription("Single variant")
                     .build();
 
-    private static final Locus LOCUS_02 =
+    private static Locus LOCUS_02 =
             new LocusBuilder().setId(121L)
                     .setDescription("2-SNP haplotype")
                     .setHaplotypeSnpCount(2)
                     .build();
 
-    private static final Association BETA_SINGLE_ASSOCIATION =
+    private static Association BETA_SINGLE_ASSOCIATION =
             new AssociationBuilder().setId((long) 100)
                     .setBetaDirection("decrease")
                     .setBetaUnit("mm Hg")
@@ -279,20 +277,11 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         assertThat(form.getAuthorReportedGenes()).isInstanceOf(Collection.class);
         assertThat(form.getAuthorReportedGenes()).contains("NEGR1", "FRS2");
 
-
         // Test the row values
         Collection<SnpFormRow> rows = form.getSnpFormRows();
         assertThat(rows).hasSize(1);
-        assertThat(rows).extracting("snp", "strongestRiskAllele")
-                .containsExactly(tuple("rs579459", "rs579459-?"));
-
-        assertThat(rows).extracting("proxySnps").isNotEmpty();
-        List<String> proxyNames = new ArrayList<String>();
-        for (SnpFormRow row : rows) {
-            proxyNames.addAll(row.getProxySnps());
-        }
-
-        assertThat(proxyNames).containsOnlyOnce("rs6538678");
+        assertThat(rows).extracting("snp", "strongestRiskAllele", "proxySnps")
+                .containsExactly(tuple("rs579459", "rs579459-?", Collections.singletonList("rs6538678")));
     }
 
     @Test
@@ -334,7 +323,6 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         assertNull(form.getBetaNum());
         assertNull(form.getBetaUnit());
 
-
         // Test locus attributes
         assertThat(form.getMultiSnpHaplotypeDescr()).as("Check form MULTI HAPLOTYPE DESCRIPTION")
                 .isEqualTo("2-SNP haplotype");
@@ -346,16 +334,14 @@ public class SingleSnpMultiSnpAssociationServiceTest {
         // Test the row values
         Collection<SnpFormRow> rows = form.getSnpFormRows();
         assertThat(rows).hasSize(2);
-        assertThat(rows).extracting("proxySnps").isNotEmpty();
-        assertThat(rows).extracting("snp").isNotEmpty();
-        assertThat(rows).extracting("strongestRiskAllele").isNotEmpty();
-        assertThat(rows).extracting("snp").containsExactly("rs9533090", "rs114205691");
-        assertThat(rows).extracting("strongestRiskAllele").containsExactly("rs9533090-?", "rs114205691-?");
-
-        List<String> proxyNames = new ArrayList<String>();
-        for (SnpFormRow row : rows) {
-            proxyNames.addAll(row.getProxySnps());
-        }
-        assertThat(proxyNames).containsExactly("rs7329174", "rs1234567");
+        assertThat(rows).extracting("snp",
+                                    "strongestRiskAllele",
+                                    "proxySnps")
+                .contains(tuple("rs9533090",
+                                "rs9533090-?",
+                                Collections.singletonList("rs7329174")),
+                          tuple("rs114205691",
+                                "rs114205691-?",
+                                Collections.singletonList("rs1234567")));
     }
 }
