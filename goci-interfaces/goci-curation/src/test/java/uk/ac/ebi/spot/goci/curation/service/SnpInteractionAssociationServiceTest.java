@@ -63,32 +63,32 @@ public class SnpInteractionAssociationServiceTest {
 
     // Entity objects
     private static final EfoTrait EFO_01 = new EfoTraitBuilder()
-            .setId(988L)
+            .setId(1001L)
             .setTrait("atrophic rhinitis")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0007159")
             .build();
 
     private static final EfoTrait EFO_02 = new EfoTraitBuilder()
-            .setId(989L)
+            .setId(1002L)
             .setTrait("HeLa")
             .setUri("http://www.ebi.ac.uk/efo/EFO_0001185")
             .build();
 
     private static final Gene GENE_04 = new GeneBuilder().setId(113L).setGeneName("WBP4").build();
 
-    private static final Gene GENE_05 = new GeneBuilder().setId(113L).setGeneName("SLC25A15").build();
+    private static final Gene GENE_05 = new GeneBuilder().setId(114L).setGeneName("SLC25A15").build();
 
-    private static final Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
+    private static final Region REGION_01 = new RegionBuilder().setId(655L).setName("9q33.1").build();
 
     private static final Location LOCATION_01 =
             new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
 
-    private static final SingleNucleotidePolymorphism SNP_04 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static final SingleNucleotidePolymorphism SNP_04 = new SingleNucleotidePolymorphismBuilder().setId(378L)
             .setLastUpdateDate(new Date())
             .setRsId("rs9788721")
             .build();
 
-    private static final SingleNucleotidePolymorphism SNP_05 = new SingleNucleotidePolymorphismBuilder().setId(311L)
+    private static final SingleNucleotidePolymorphism SNP_05 = new SingleNucleotidePolymorphismBuilder().setId(356L)
             .setLastUpdateDate(new Date())
             .setRsId("rs8042374")
             .build();
@@ -106,16 +106,16 @@ public class SnpInteractionAssociationServiceTest {
             .build();
 
     private static final Locus LOCUS_03 =
-            new LocusBuilder().setId(111L)
+            new LocusBuilder().setId(121L)
                     .setDescription("SNP x SNP interaction")
                     .build();
 
     private static final Locus LOCUS_04 =
-            new LocusBuilder().setId(111L)
+            new LocusBuilder().setId(131L)
                     .setDescription("SNP x SNP interaction")
                     .build();
 
-    private static final GenomicContext GC_01 = new GenomicContextBuilder().setId(789L)
+/*    private static final GenomicContext GC_01 = new GenomicContextBuilder().setId(789L)
             .setDistance((long) 1000)
             .setIsClosestGene(true)
             .setIsUpstream(true)
@@ -131,7 +131,7 @@ public class SnpInteractionAssociationServiceTest {
             .setIsDownstream(true)
             .setIsIntergenic(true)
             .setMappingMethod("Ensembl pipeline")
-            .setSource("NCBI").build();
+            .setSource("NCBI").build();*/
 
     private static final Association OR_INTERACTION_ASSOCIATION =
             new AssociationBuilder().setId((long) 103)
@@ -165,7 +165,7 @@ public class SnpInteractionAssociationServiceTest {
         SNP_04.setRiskAlleles(Collections.singletonList(RISK_ALLELE_04));
         SNP_05.setRiskAlleles(Collections.singletonList(RISK_ALLELE_05));
 
-        // Set genomic context
+/*      // Set genomic context
         GC_01.setSnp(SNP_04);
         GC_02.setSnp(SNP_05);
         GC_01.setGene(GENE_04);
@@ -176,7 +176,7 @@ public class SnpInteractionAssociationServiceTest {
         GENE_04.setGenomicContexts(Collections.singletonList(GC_01));
         GENE_05.setGenomicContexts(Collections.singletonList(GC_02));
         SNP_04.setGenomicContexts(Collections.singletonList(GC_01));
-        SNP_05.setGenomicContexts(Collections.singletonList(GC_02));
+        SNP_05.setGenomicContexts(Collections.singletonList(GC_02));*/
 
         // Set risk allele snp
         RISK_ALLELE_04.setSnp(SNP_04);
@@ -204,9 +204,6 @@ public class SnpInteractionAssociationServiceTest {
 
     @Test
     public void testCreateInteractionForm() throws Exception {
-
-  /*      when(genomicContextRepository.findBySnpId(SNP_04.getId())).thenReturn(Collections.singletonList(GC_01));
-        when(genomicContextRepository.findBySnpId(SNP_05.getId())).thenReturn(Collections.singletonList(GC_02));*/
 
         assertThat(snpAssociationFormService.createForm(OR_INTERACTION_ASSOCIATION)).isInstanceOf(
                 SnpAssociationInteractionForm.class);
