@@ -201,8 +201,8 @@ public class SnpInteractionAssociationServiceTest {
 
         // Check EFO traits
         assertThat(form.getEfoTraits()).extracting("id", "trait", "uri")
-                .contains(tuple(988L, "atrophic rhinitis", "http://www.ebi.ac.uk/efo/EFO_0007159"),
-                          tuple(989L, "HeLa", "http://www.ebi.ac.uk/efo/EFO_0001185"));
+                .contains(tuple(1001L, "atrophic rhinitis", "http://www.ebi.ac.uk/efo/EFO_0007159"),
+                          tuple(1002L, "HeLa", "http://www.ebi.ac.uk/efo/EFO_0001185"));
 
         // Check null values
         assertNull(form.getBetaNum());
@@ -217,21 +217,26 @@ public class SnpInteractionAssociationServiceTest {
         Collection<SnpFormColumn> columns = form.getSnpFormColumns();
         assertThat(columns).hasSize(2);
 
-        assertThat(columns).extracting("snp").isNotEmpty();
-        assertThat(columns).extracting("strongestRiskAllele").isNotEmpty();
-        assertThat(columns).extracting("riskFrequency").isNotEmpty();
-        assertThat(columns).extracting("authorReportedGenes").isNotEmpty();
-        assertThat(columns).extracting("proxySnps").isNotEmpty();
-        assertThat(columns).extracting("genomeWide").isNotEmpty();
-        assertThat(columns).extracting("limitedList").isEmpty();
-
-       /* assertThat(rows).extracting("snp").containsExactly("rs9533090", "rs114205691");
-        assertThat(rows).extracting("strongestRiskAllele").containsExactly("rs9533090-?", "rs114205691-?");
-
-        List<String> proxyNames = new ArrayList<String>();
-        for (SnpFormRow row : rows) {
-            proxyNames.addAll(row.getProxySnps());
-        }
-        assertThat(proxyNames).containsExactly("rs7329174", "rs1234567");*/
+        assertThat(columns).extracting("snp",
+                                       "strongestRiskAllele",
+                                       "riskFrequency",
+                                       "authorReportedGenes",
+                                       "proxySnps",
+                                       "genomeWide",
+                                       "limitedList")
+                .contains(tuple("rs9788721",
+                                "rs9788721-?",
+                                "0.6",
+                                Collections.singletonList("WBP4"),
+                                Collections.emptyList(),
+                                true,
+                                false),
+                          tuple("rs8042374",
+                                "rs8042374-?",
+                                "0.4",
+                                Collections.singletonList("SLC25A15"),
+                                Collections.emptyList(),
+                                true,
+                                false));
     }
 }
