@@ -138,7 +138,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
                     .build();
 
     private static final Locus LOCUS_02 =
-            new LocusBuilder().setId(111L)
+            new LocusBuilder().setId(121L)
                     .setDescription("2-SNP haplotype")
                     .setHaplotypeSnpCount(2)
                     .build();
