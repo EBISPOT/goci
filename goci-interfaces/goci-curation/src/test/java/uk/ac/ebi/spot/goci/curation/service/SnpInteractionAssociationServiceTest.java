@@ -3,11 +3,12 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.GeneBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.GenomicContextBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.LocationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.LocusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.RegionBuilder;
@@ -18,7 +19,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
@@ -36,7 +36,6 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by emma on 08/04/2016.
@@ -45,6 +44,7 @@ import static org.mockito.Mockito.when;
  *         <p>
  *         Test for SnpInteractionAssociationServiceTest
  */
+@RunWith(MockitoJUnitRunner.class)
 public class SnpInteractionAssociationServiceTest {
 
     @Mock
@@ -115,24 +115,6 @@ public class SnpInteractionAssociationServiceTest {
                     .setDescription("SNP x SNP interaction")
                     .build();
 
-/*    private static final GenomicContext GC_01 = new GenomicContextBuilder().setId(789L)
-            .setDistance((long) 1000)
-            .setIsClosestGene(true)
-            .setIsUpstream(true)
-            .setIsDownstream(false)
-            .setIsIntergenic(true)
-            .setMappingMethod("Ensembl pipeline")
-            .setSource("NCBI").build();
-
-    private static final GenomicContext GC_02 = new GenomicContextBuilder().setId(790L)
-            .setDistance((long) 1000)
-            .setIsClosestGene(true)
-            .setIsUpstream(false)
-            .setIsDownstream(true)
-            .setIsIntergenic(true)
-            .setMappingMethod("Ensembl pipeline")
-            .setSource("NCBI").build();*/
-
     private static final Association OR_INTERACTION_ASSOCIATION =
             new AssociationBuilder().setId((long) 103)
                     .setSnpType("novel")
@@ -164,19 +146,6 @@ public class SnpInteractionAssociationServiceTest {
         // Set snp risk alleles
         SNP_04.setRiskAlleles(Collections.singletonList(RISK_ALLELE_04));
         SNP_05.setRiskAlleles(Collections.singletonList(RISK_ALLELE_05));
-
-/*      // Set genomic context
-        GC_01.setSnp(SNP_04);
-        GC_02.setSnp(SNP_05);
-        GC_01.setGene(GENE_04);
-        GC_02.setGene(GENE_05);
-        GC_01.setLocation(LOCATION_01);
-        GC_02.setLocation(LOCATION_01);
-
-        GENE_04.setGenomicContexts(Collections.singletonList(GC_01));
-        GENE_05.setGenomicContexts(Collections.singletonList(GC_02));
-        SNP_04.setGenomicContexts(Collections.singletonList(GC_01));
-        SNP_05.setGenomicContexts(Collections.singletonList(GC_02));*/
 
         // Set risk allele snp
         RISK_ALLELE_04.setSnp(SNP_04);
