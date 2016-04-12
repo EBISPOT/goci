@@ -17,8 +17,8 @@ import java.util.Collection;
 /**
  * @author emma
  *         <p>
- *         This class takes an Excel spreadsheet sheet and extracts all the association records.
- *         For each association, a row object is created.
+ *         This class takes an Excel spreadsheet sheet and extracts all the association records. For each association, a
+ *         row object is created.
  *         <p>
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
