@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class AssociationFileUploadService {
 
     private AssociationRowProcessor associationRowProcessor;
 
+    private AssociationValidationService associationValidationService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -37,9 +40,11 @@ public class AssociationFileUploadService {
 
     @Autowired
     public AssociationFileUploadService(SheetProcessor sheetProcessor,
-                                        AssociationRowProcessor associationRowProcessor) {
+                                        AssociationRowProcessor associationRowProcessor,
+                                        AssociationValidationService associationValidationService) {
         this.sheetProcessor = sheetProcessor;
         this.associationRowProcessor = associationRowProcessor;
+        this.associationValidationService = associationValidationService;
     }
 
     /**
@@ -53,6 +58,7 @@ public class AssociationFileUploadService {
             // Create sheet
             XSSFSheet sheet = null;
             try {
+                // Create a sheet for reading
                 sheet = createSheet(file.getAbsolutePath());
 
                 // Process file
@@ -60,14 +66,18 @@ public class AssociationFileUploadService {
 
                 // Error check each row
                 // Create a map of row and resulting association
-                for (AssociationUploadRow row: fileRows){
+                for (AssociationUploadRow row : fileRows) {
 
                     Integer rowNumber = row.getRowNumber();
                     String effectType = row.getEffectType();
                     Association association = associationRowProcessor.createAssociationFromUploadRow(row);
 
+                    // TODO - should check level be supplied by user?
+                    // TODO - will author spreadsheet have an effect type?
+                    Collection<AssociationValidationError> errors =
+                            associationValidationService.runAssociationValidation(association, "full", effectType);
 
-
+                    // TODO - We need to collate all errors and present in log
                 }
             }
             catch (InvalidFormatException | IOException e) {
