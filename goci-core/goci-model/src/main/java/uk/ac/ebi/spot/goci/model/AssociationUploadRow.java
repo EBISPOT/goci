@@ -11,17 +11,17 @@ public class AssociationUploadRow {
 
     private Integer rowNumber;
 
-    private String authorReportedGene = null;
+    private String authorReportedGene;
 
-    private String strongestAllele = null;
+    private String strongestAllele;
 
-    private String snp = null;
+    private String snp;
 
-    private String proxy = null;
+    private String proxy;
 
-    private String riskFrequency = null;
+    private String riskFrequency;
 
-    private String associationRiskFrequency = null;
+    private String associationRiskFrequency;
 
     private Integer pvalueMantissa = null;
 
