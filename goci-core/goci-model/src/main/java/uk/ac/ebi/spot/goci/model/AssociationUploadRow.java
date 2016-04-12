@@ -23,19 +23,19 @@ public class AssociationUploadRow {
 
     private String associationRiskFrequency;
 
-    private Integer pvalueMantissa = null;
+    private Integer pvalueMantissa;
 
-    private Integer pvalueExponent = null;
+    private Integer pvalueExponent;
 
     private String pvalueDescription;
 
     private String effectType;
 
-    private Float orPerCopyNum = null;
+    private Float orPerCopyNum;
 
-    private Float orPerCopyRecip = null;
+    private Float orPerCopyRecip;
 
-    private Float betaNum = null;
+    private Float betaNum;
 
     private String betaUnit;
 
@@ -45,7 +45,7 @@ public class AssociationUploadRow {
 
     private String orPerCopyRecipRange;
 
-    private Float standardError = null;
+    private Float standardError;
 
     private String description;
 
