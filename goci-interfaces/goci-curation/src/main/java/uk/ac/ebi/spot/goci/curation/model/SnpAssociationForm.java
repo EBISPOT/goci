@@ -73,7 +73,6 @@ public abstract class SnpAssociationForm {
                               Collection<GenomicContext> genomicContexts,
                               String snpType,
                               Boolean snpApproved,
-                              Boolean orType,
                               Float standardError,
                               String range,
                               String description,
@@ -81,7 +80,8 @@ public abstract class SnpAssociationForm {
                               Float orPerCopyRecip,
                               String orPerCopyRecipRange,
                               Float betaNum,
-                              String betaUnit, String betaDirection) {
+                              String betaUnit,
+                              String betaDirection) {
         this.associationId = associationId;
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;

@@ -31,7 +31,6 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
     public SnpAssociationStandardMultiForm() {
     }
 
-
     public SnpAssociationStandardMultiForm(Long associationId,
                                            String riskFrequency,
                                            String pvalueDescription,
@@ -42,7 +41,6 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
                                            Collection<GenomicContext> genomicContexts,
                                            String snpType,
                                            Boolean snpApproved,
-                                           Boolean orType,
                                            Float standardError,
                                            String range,
                                            String description,
@@ -66,7 +64,6 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
               genomicContexts,
               snpType,
               snpApproved,
-              orType,
               standardError,
               range,
               description,
