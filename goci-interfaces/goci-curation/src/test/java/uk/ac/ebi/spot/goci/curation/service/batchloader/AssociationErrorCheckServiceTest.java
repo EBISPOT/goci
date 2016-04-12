@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadErrorBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import java.util.Arrays;
 
@@ -32,7 +32,7 @@ public class AssociationErrorCheckServiceTest {
     @Mock
     private CheckService checkService;
 
-    private static final BatchUploadRow ROW_WITH_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
+    private static final AssociationUploadRow ROW_WITH_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("OR")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
@@ -41,7 +41,7 @@ public class AssociationErrorCheckServiceTest {
             .build();
 
 
-    private static final BatchUploadRow ROW_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
+    private static final AssociationUploadRow ROW_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("Beta")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
@@ -50,27 +50,27 @@ public class AssociationErrorCheckServiceTest {
             .build();
 
 
-    private static final BatchUploadError ANNOTATION_ERROR1 =
+    private static final AssociationValidationError ANNOTATION_ERROR1 =
             new BatchUploadErrorBuilder().setRow(1).setColumnName("SNP type")
                     .setError("SNP type does not contain novel or known")
                     .build();
 
-    private static final BatchUploadError ANNOTATION_ERROR2 =
+    private static final AssociationValidationError ANNOTATION_ERROR2 =
             new BatchUploadErrorBuilder().setRow(1).setColumnName("OR")
                     .setError("OR num is empty for association with effect type: OR")
                     .build();
 
-    private static final BatchUploadError ANNOTATION_ERROR3 =
+    private static final AssociationValidationError ANNOTATION_ERROR3 =
             new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta")
                     .setError("Beta value found for association with effect type: OR")
                     .build();
 
-    private static final BatchUploadError ANNOTATION_ERROR4 =
+    private static final AssociationValidationError ANNOTATION_ERROR4 =
             new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta unit")
                     .setError("Beta unit found for association with effect type: OR")
                     .build();
 
-    private static final BatchUploadError ANNOTATION_ERROR5 =
+    private static final AssociationValidationError ANNOTATION_ERROR5 =
             new BatchUploadErrorBuilder().setRow(1).setColumnName("Beta Direction")
                     .setError("Beta direction found for association with effect type: OR")
                     .build();

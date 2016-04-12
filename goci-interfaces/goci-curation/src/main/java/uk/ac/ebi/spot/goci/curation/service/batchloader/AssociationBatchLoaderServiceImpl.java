@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -57,7 +57,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      *
      * @return errors, any errors encountered
      */
-    @Override public Collection<BatchUploadRow> processFile(String fileName, Study study)
+    @Override public Collection<AssociationUploadRow> processFile(String fileName, Study study)
             throws IOException, InvalidFormatException {
 
         // Open file
@@ -71,7 +71,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
         }
         else {
             // Read file rows
-            Collection<BatchUploadRow> rows = sheetProcessor.readSheetRows(sheet);
+            Collection<AssociationUploadRow> rows = sheetProcessor.readSheetRows(sheet);
             pkg.close();
             return rows;
         }
@@ -83,7 +83,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      * @param fileRows collection of file rows
      * @return collection of associations to be saved
      */
-    @Override public Collection<Association> processFileRows(Collection<BatchUploadRow> fileRows) {
+    @Override public Collection<Association> processFileRows(Collection<AssociationUploadRow> fileRows) {
         return rowProcessor.createAssociationsFromUploadRows(fileRows);
     }
 
@@ -93,7 +93,7 @@ public class AssociationBatchLoaderServiceImpl implements AssociationBatchLoader
      * @param fileRows collection of file rows
      * @return collection of errors
      */
-    @Override public Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> fileRows) {
+    @Override public Collection<AssociationValidationError> checkUploadForErrors(Collection<AssociationUploadRow> fileRows) {
         return associationErrorCheckFactory.runChecks("full", fileRows);
     }
 

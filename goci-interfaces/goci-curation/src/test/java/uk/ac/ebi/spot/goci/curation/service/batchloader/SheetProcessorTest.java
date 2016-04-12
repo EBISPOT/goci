@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
 
 import java.util.Collection;
@@ -47,6 +47,6 @@ public class SheetProcessorTest {
     @Test
     public void testReadSheetRows() throws Exception {
         assertThat(sheetProcessor.readSheetRows(sheet)).isInstanceOf(Collection.class);
-        assertThat(sheetProcessor.readSheetRows(sheet)).hasOnlyElementsOfType(BatchUploadRow.class);
+        assertThat(sheetProcessor.readSheetRows(sheet)).hasOnlyElementsOfType(AssociationUploadRow.class);
     }
 }

@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.builder;
 
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
 
 /**
  * Created by emma on 30/03/2016.
@@ -11,24 +11,24 @@ import uk.ac.ebi.spot.goci.model.BatchUploadError;
  */
 public class BatchUploadErrorBuilder {
 
-    private BatchUploadError batchUploadError = new BatchUploadError();
+    private AssociationValidationError associationValidationError = new AssociationValidationError();
 
     public BatchUploadErrorBuilder setRow(Integer row) {
-        batchUploadError.setRow(row);
+        associationValidationError.setRow(row);
         return this;
     }
 
     public BatchUploadErrorBuilder setColumnName(String columnName) {
-        batchUploadError.setColumnName(columnName);
+        associationValidationError.setColumnName(columnName);
         return this;
     }
 
     public BatchUploadErrorBuilder setError(String error) {
-        batchUploadError.setError(error);
+        associationValidationError.setError(error);
         return this;
     }
 
-    public BatchUploadError build() {
-        return batchUploadError;
+    public AssociationValidationError build() {
+        return associationValidationError;
     }
 }

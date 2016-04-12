@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -23,24 +23,24 @@ public class CheckServiceTest {
 
     private CheckService checkService;
 
-    private static final BatchUploadRow OR_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
+    private static final AssociationUploadRow OR_ERRORS = new BatchUploadRowBuilder().setRowNumber(1)
             .setEffectType("OR")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
             .setBetaUnit("cm")
             .build();
 
-    private static final BatchUploadRow OR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(2)
+    private static final AssociationUploadRow OR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(2)
             .setEffectType("OR")
             .setOrPerCopyNum((float) 1.22)
             .setOrPerCopyRecip((float) 0.78)
             .build();
 
-    private static final BatchUploadRow NR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(3)
+    private static final AssociationUploadRow NR_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(3)
             .setEffectType("NR")
             .build();
 
-    private static final BatchUploadRow NR_ERRORS = new BatchUploadRowBuilder().setRowNumber(4)
+    private static final AssociationUploadRow NR_ERRORS = new BatchUploadRowBuilder().setRowNumber(4)
             .setEffectType("NR")
             .setOrPerCopyNum((float) 1.22)
             .setOrPerCopyRecip((float) 0.78)
@@ -53,30 +53,30 @@ public class CheckServiceTest {
             .setDescription("test")
             .build();
 
-    private static final BatchUploadRow BETA_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(5)
+    private static final AssociationUploadRow BETA_NO_ERRORS = new BatchUploadRowBuilder().setRowNumber(5)
             .setEffectType("Beta")
             .setBetaNum((float) 0.78)
             .setBetaDirection("increase")
             .setBetaUnit("cm")
             .build();
 
-    private static final BatchUploadRow BETA_ERRORS = new BatchUploadRowBuilder().setRowNumber(6)
+    private static final AssociationUploadRow BETA_ERRORS = new BatchUploadRowBuilder().setRowNumber(6)
             .setEffectType("Beta")
             .setOrPerCopyNum((float) 1.22)
             .setOrPerCopyRecip((float) 0.78)
             .setOrPerCopyRecipRange("[0.82-0.92]")
             .build();
 
-    private static final BatchUploadRow
+    private static final AssociationUploadRow
             ROW_WITH_INCORRECT_SNP_TYPE = new BatchUploadRowBuilder().setRowNumber(7).setSnpType("error").build();
 
-    private static final BatchUploadRow
+    private static final AssociationUploadRow
             ROW_WITH_CORRECT_SNP_TYPE = new BatchUploadRowBuilder().setRowNumber(8).setSnpType("novel").build();
 
-    private static final BatchUploadRow
+    private static final AssociationUploadRow
             ROW_WITH_EMPTY_SNP_TYPE = new BatchUploadRowBuilder().setRowNumber(9).build();
 
-    private static final BatchUploadRow BETA_DIRECTION_ERRORS = new BatchUploadRowBuilder().setRowNumber(10)
+    private static final AssociationUploadRow BETA_DIRECTION_ERRORS = new BatchUploadRowBuilder().setRowNumber(10)
             .setEffectType("Beta")
             .setBetaNum((float) 0.78)
             .setBetaDirection("down")

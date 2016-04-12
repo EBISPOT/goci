@@ -5,9 +5,9 @@ package uk.ac.ebi.spot.goci.model;
  *
  * @author emma
  *         <p>
- *         Object that represents a row in the batch upload spreadsheet
+ *         Object that represents a row in an upload spreadsheet containing association data
  */
-public class BatchUploadRow {
+public class AssociationUploadRow {
 
     private Integer rowNumber;
 

@@ -5,9 +5,9 @@ package uk.ac.ebi.spot.goci.model;
  *
  * @author emma
  *         <p>
- *         Model class used to represent errors generated after a failed upload of file containing SNP association values
+ *         Model class used to represent errors generated after validation of SNP association values
  */
-public class BatchUploadError {
+public class AssociationValidationError {
 
     private Integer row;
 

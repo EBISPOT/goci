@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.builder;
 
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 /**
  * Created by emma on 24/03/2016.
@@ -11,69 +11,69 @@ import uk.ac.ebi.spot.goci.model.BatchUploadRow;
  */
 public class BatchUploadRowBuilder {
 
-    BatchUploadRow batchUploadRow = new BatchUploadRow();
+    AssociationUploadRow associationUploadRow = new AssociationUploadRow();
 
     public BatchUploadRowBuilder setRowNumber(Integer rowNumber) {
-        batchUploadRow.setRowNumber(rowNumber);
+        associationUploadRow.setRowNumber(rowNumber);
         return this;
     }
 
     public BatchUploadRowBuilder setEffectType(String effectType) {
-        batchUploadRow.setEffectType(effectType);
+        associationUploadRow.setEffectType(effectType);
         return this;
     }
 
     public BatchUploadRowBuilder setOrPerCopyNum(Float orPerCopyNum) {
-        batchUploadRow.setOrPerCopyNum(orPerCopyNum);
+        associationUploadRow.setOrPerCopyNum(orPerCopyNum);
         return this;
     }
 
     public BatchUploadRowBuilder setOrPerCopyRecip(Float orPerCopyRecip) {
-        batchUploadRow.setOrPerCopyRecip(orPerCopyRecip);
+        associationUploadRow.setOrPerCopyRecip(orPerCopyRecip);
         return this;
     }
 
     public BatchUploadRowBuilder setBetaNum(Float betaNum) {
-        batchUploadRow.setBetaNum(betaNum);
+        associationUploadRow.setBetaNum(betaNum);
         return this;
     }
 
     public BatchUploadRowBuilder setBetaUnit(String betaUnit) {
-        batchUploadRow.setBetaUnit(betaUnit);
+        associationUploadRow.setBetaUnit(betaUnit);
         return this;
     }
 
     public BatchUploadRowBuilder setBetaDirection(String betaDirection) {
-        batchUploadRow.setBetaDirection(betaDirection);
+        associationUploadRow.setBetaDirection(betaDirection);
         return this;
     }
 
     public BatchUploadRowBuilder setRange(String range) {
-        batchUploadRow.setRange(range);
+        associationUploadRow.setRange(range);
         return this;
     }
 
     public BatchUploadRowBuilder setOrPerCopyRecipRange(String orPerCopyRecipRange) {
-        batchUploadRow.setOrPerCopyRecipRange(orPerCopyRecipRange);
+        associationUploadRow.setOrPerCopyRecipRange(orPerCopyRecipRange);
         return this;
     }
 
     public BatchUploadRowBuilder setStandardError(Float standardError) {
-        batchUploadRow.setStandardError(standardError);
+        associationUploadRow.setStandardError(standardError);
         return this;
     }
 
     public BatchUploadRowBuilder setDescription(String description) {
-        batchUploadRow.setDescription(description);
+        associationUploadRow.setDescription(description);
         return this;
     }
 
     public BatchUploadRowBuilder setSnpType(String snpType){
-        batchUploadRow.setSnpType(snpType);
+        associationUploadRow.setSnpType(snpType);
         return this;
     }
 
-    public BatchUploadRow build() {
-        return batchUploadRow;
+    public AssociationUploadRow build() {
+        return associationUploadRow;
     }
 }

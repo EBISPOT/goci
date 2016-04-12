@@ -2,8 +2,8 @@ package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +25,9 @@ public class AssociationErrorCheckFactory {
         this.associationErrorCheckService = associationErrorCheckService;
     }
 
-    public Collection<BatchUploadError> runChecks(String checkLevel, Collection<BatchUploadRow> fileRows) {
+    public Collection<AssociationValidationError> runChecks(String checkLevel, Collection<AssociationUploadRow> fileRows) {
 
-        Collection<BatchUploadError> errors = new ArrayList<>();
+        Collection<AssociationValidationError> errors = new ArrayList<>();
 
         switch (checkLevel) {
             case "full":

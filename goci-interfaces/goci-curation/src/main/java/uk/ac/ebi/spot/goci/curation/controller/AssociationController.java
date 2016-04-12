@@ -29,8 +29,8 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
@@ -212,7 +212,7 @@ public class AssociationController {
             uploadedFile.setWritable(true, false);
 
             // Send file, including path, to SNP batch loader process
-            Collection<BatchUploadRow> fileRows = new ArrayList<>();
+            Collection<AssociationUploadRow> fileRows = new ArrayList<>();
             try {
                 fileRows = associationBatchLoaderService.processFile(uploadedFilePath, study);
 
@@ -230,7 +230,7 @@ public class AssociationController {
 
             // If the file contained something readable
             if (!fileRows.isEmpty()) {
-                Collection<BatchUploadError> fileErrors =
+                Collection<AssociationValidationError> fileErrors =
                         associationBatchLoaderService.checkUploadForErrors(fileRows);
 
                 if (!fileErrors.isEmpty()) {

@@ -2,8 +2,8 @@ package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,41 +30,41 @@ public class AssociationErrorCheckService {
      *
      * @return errors, any errors encountered
      */
-    public Collection<BatchUploadError> runFullChecks(Collection<BatchUploadRow> rows) {
+    public Collection<AssociationValidationError> runFullChecks(Collection<AssociationUploadRow> rows) {
 
         // Create collection to store all newly created associations
-        Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        for (BatchUploadRow row : rows) {
+        for (AssociationUploadRow row : rows) {
 
-            Collection<BatchUploadError> annotationErrors = checkService.runAnnotationChecks(row);
+            Collection<AssociationValidationError> annotationErrors = checkService.runAnnotationChecks(row);
             if (!annotationErrors.isEmpty()) {
-                batchUploadErrors.addAll(annotationErrors);
+                associationValidationErrors.addAll(annotationErrors);
             }
 
             // Run checks depending on effect type
             String rowEffectType = row.getEffectType();
             if (rowEffectType.equalsIgnoreCase("or")) {
-                Collection<BatchUploadError> orErrors = checkService.runOrChecks(row, rowEffectType);
+                Collection<AssociationValidationError> orErrors = checkService.runOrChecks(row, rowEffectType);
                 if (!orErrors.isEmpty()) {
-                    batchUploadErrors.addAll(orErrors);
+                    associationValidationErrors.addAll(orErrors);
                 }
             }
 
             if (rowEffectType.equalsIgnoreCase("beta")) {
-                Collection<BatchUploadError> betaErrors = checkService.runBetaChecks(row, rowEffectType);
+                Collection<AssociationValidationError> betaErrors = checkService.runBetaChecks(row, rowEffectType);
                 if (!betaErrors.isEmpty()) {
-                    batchUploadErrors.addAll(betaErrors);
+                    associationValidationErrors.addAll(betaErrors);
                 }
             }
 
             if (rowEffectType.equalsIgnoreCase("nr")) {
-                Collection<BatchUploadError> noEffectErrors = checkService.runNoEffectErrors(row, rowEffectType);
+                Collection<AssociationValidationError> noEffectErrors = checkService.runNoEffectErrors(row, rowEffectType);
                 if (!noEffectErrors.isEmpty()) {
-                    batchUploadErrors.addAll(noEffectErrors);
+                    associationValidationErrors.addAll(noEffectErrors);
                 }
             }
         }
-        return batchUploadErrors;
+        return associationValidationErrors;
     }
 }

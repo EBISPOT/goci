@@ -1,8 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,16 +23,16 @@ public class CheckService {
      * @param row row to be checked
      */
 
-    public Collection<BatchUploadError> runAnnotationChecks(BatchUploadRow row) {
+    public Collection<AssociationValidationError> runAnnotationChecks(AssociationUploadRow row) {
 
-        Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        BatchUploadError snpTypeError = checkSnpType(row);
+        AssociationValidationError snpTypeError = checkSnpType(row);
         if (snpTypeError.getError() != null) {
-            batchUploadErrors.add(snpTypeError);
+            associationValidationErrors.add(snpTypeError);
         }
 
-        return checkForValidErrors(batchUploadErrors);
+        return checkForValidErrors(associationValidationErrors);
     }
 
     /**
@@ -41,22 +41,22 @@ public class CheckService {
      * @param row           row to be checked
      * @param rowEffectType
      */
-    public Collection<BatchUploadError> runOrChecks(BatchUploadRow row, String rowEffectType) {
-        Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+    public Collection<AssociationValidationError> runOrChecks(AssociationUploadRow row, String rowEffectType) {
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        BatchUploadError orIsPresent = checkOrIsPresent(row, rowEffectType);
-        batchUploadErrors.add(orIsPresent);
+        AssociationValidationError orIsPresent = checkOrIsPresent(row, rowEffectType);
+        associationValidationErrors.add(orIsPresent);
 
-        BatchUploadError betaFoundForOr = checkBetaValuesIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaFoundForOr);
+        AssociationValidationError betaFoundForOr = checkBetaValuesIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaFoundForOr);
 
-        BatchUploadError betaUnitFoundForOr = checkBetaUnitIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaUnitFoundForOr);
+        AssociationValidationError betaUnitFoundForOr = checkBetaUnitIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaUnitFoundForOr);
 
-        BatchUploadError betaDirectionFoundForOr = checkBetaDirectionIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaDirectionFoundForOr);
+        AssociationValidationError betaDirectionFoundForOr = checkBetaDirectionIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaDirectionFoundForOr);
 
-        return checkForValidErrors(batchUploadErrors);
+        return checkForValidErrors(associationValidationErrors);
     }
 
 
@@ -66,28 +66,28 @@ public class CheckService {
      * @param row           row to be checked
      * @param rowEffectType
      */
-    public Collection<BatchUploadError> runBetaChecks(BatchUploadRow row, String rowEffectType) {
-        Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+    public Collection<AssociationValidationError> runBetaChecks(AssociationUploadRow row, String rowEffectType) {
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        BatchUploadError betaIsPresent = checkBetaIsPresent(row, rowEffectType);
-        batchUploadErrors.add(betaIsPresent);
+        AssociationValidationError betaIsPresent = checkBetaIsPresent(row, rowEffectType);
+        associationValidationErrors.add(betaIsPresent);
 
-        BatchUploadError betaUnitNotFound = checkBetaUnitIsPresent(row, rowEffectType);
-        batchUploadErrors.add(betaUnitNotFound);
+        AssociationValidationError betaUnitNotFound = checkBetaUnitIsPresent(row, rowEffectType);
+        associationValidationErrors.add(betaUnitNotFound);
 
-        BatchUploadError betaDirectionNotFound = checkBetaDirectionIsPresent(row, rowEffectType);
-        batchUploadErrors.add(betaDirectionNotFound);
+        AssociationValidationError betaDirectionNotFound = checkBetaDirectionIsPresent(row, rowEffectType);
+        associationValidationErrors.add(betaDirectionNotFound);
 
-        BatchUploadError orFound = checkOrEmpty(row, rowEffectType);
-        batchUploadErrors.add(orFound);
+        AssociationValidationError orFound = checkOrEmpty(row, rowEffectType);
+        associationValidationErrors.add(orFound);
 
-        BatchUploadError orRecipFound = checkOrRecipEmpty(row, rowEffectType);
-        batchUploadErrors.add(orRecipFound);
+        AssociationValidationError orRecipFound = checkOrRecipEmpty(row, rowEffectType);
+        associationValidationErrors.add(orRecipFound);
 
-        BatchUploadError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
-        batchUploadErrors.add(orRecipRangeFound);
+        AssociationValidationError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
+        associationValidationErrors.add(orRecipRangeFound);
 
-        return checkForValidErrors(batchUploadErrors);
+        return checkForValidErrors(associationValidationErrors);
     }
 
     /**
@@ -96,37 +96,37 @@ public class CheckService {
      * @param row           row to be checked
      * @param rowEffectType
      */
-    public Collection<BatchUploadError> runNoEffectErrors(BatchUploadRow row, String rowEffectType) {
-        Collection<BatchUploadError> batchUploadErrors = new ArrayList<>();
+    public Collection<AssociationValidationError> runNoEffectErrors(AssociationUploadRow row, String rowEffectType) {
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        BatchUploadError orFound = checkOrEmpty(row, rowEffectType);
-        batchUploadErrors.add(orFound);
+        AssociationValidationError orFound = checkOrEmpty(row, rowEffectType);
+        associationValidationErrors.add(orFound);
 
-        BatchUploadError orRecipFound = checkOrRecipEmpty(row, rowEffectType);
-        batchUploadErrors.add(orRecipFound);
+        AssociationValidationError orRecipFound = checkOrRecipEmpty(row, rowEffectType);
+        associationValidationErrors.add(orRecipFound);
 
-        BatchUploadError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
-        batchUploadErrors.add(orRecipRangeFound);
+        AssociationValidationError orRecipRangeFound = checkOrPerCopyRecipRange(row, rowEffectType);
+        associationValidationErrors.add(orRecipRangeFound);
 
-        BatchUploadError betaFound = checkBetaValuesIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaFound);
+        AssociationValidationError betaFound = checkBetaValuesIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaFound);
 
-        BatchUploadError betaUnitFound = checkBetaUnitIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaUnitFound);
+        AssociationValidationError betaUnitFound = checkBetaUnitIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaUnitFound);
 
-        BatchUploadError betaDirectionFound = checkBetaDirectionIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(betaDirectionFound);
+        AssociationValidationError betaDirectionFound = checkBetaDirectionIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(betaDirectionFound);
 
-        BatchUploadError rangeFound = checkRangeIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(rangeFound);
+        AssociationValidationError rangeFound = checkRangeIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(rangeFound);
 
-        BatchUploadError standardErrorFound = checkStandardErrorIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(standardErrorFound);
+        AssociationValidationError standardErrorFound = checkStandardErrorIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(standardErrorFound);
 
-        BatchUploadError descriptionFound = checkDescriptionIsEmpty(row, rowEffectType);
-        batchUploadErrors.add(descriptionFound);
+        AssociationValidationError descriptionFound = checkDescriptionIsEmpty(row, rowEffectType);
+        associationValidationErrors.add(descriptionFound);
 
-        return checkForValidErrors(batchUploadErrors);
+        return checkForValidErrors(associationValidationErrors);
     }
 
 
@@ -135,8 +135,8 @@ public class CheckService {
      *
      * @param row row to be checked
      */
-    private BatchUploadError checkSnpType(BatchUploadRow row) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkSnpType(AssociationUploadRow row) {
+        AssociationValidationError error = new AssociationValidationError();
 
         if (row.getSnpType() != null) {
             switch (row.getSnpType()) {
@@ -162,8 +162,8 @@ public class CheckService {
     /**
      * "OR" MUST be filled.
      */
-    private BatchUploadError checkOrIsPresent(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkOrIsPresent(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getOrPerCopyNum() == null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("OR");
@@ -175,8 +175,8 @@ public class CheckService {
     /**
      * "Beta" columns MUST be empty
      */
-    private BatchUploadError checkBetaValuesIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaValuesIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getBetaNum() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta");
@@ -188,8 +188,8 @@ public class CheckService {
     /**
      * "Beta unit" columns MUST be empty
      */
-    private BatchUploadError checkBetaUnitIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaUnitIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
 
         if (row.getBetaUnit() != null) {
             error.setRow(row.getRowNumber());
@@ -203,8 +203,8 @@ public class CheckService {
     /**
      * "Beta direction" columns MUST be empty
      */
-    private BatchUploadError checkBetaDirectionIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaDirectionIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
 
         if (row.getBetaDirection() != null) {
             error.setRow(row.getRowNumber());
@@ -217,8 +217,8 @@ public class CheckService {
     /**
      * "Beta" MUST be filled
      */
-    private BatchUploadError checkBetaIsPresent(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaIsPresent(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
 
         if (row.getBetaNum() == null) {
             error.setRow(row.getRowNumber());
@@ -231,8 +231,8 @@ public class CheckService {
     /**
      * "Beta unit" MUST be filled
      */
-    private BatchUploadError checkBetaUnitIsPresent(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaUnitIsPresent(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
 
         if (row.getBetaUnit() == null) {
             error.setRow(row.getRowNumber());
@@ -245,8 +245,8 @@ public class CheckService {
     /**
      * "Beta direction" MUST be filled
      */
-    private BatchUploadError checkBetaDirectionIsPresent(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkBetaDirectionIsPresent(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getBetaDirection() == null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Beta Direction");
@@ -271,8 +271,8 @@ public class CheckService {
     /**
      * "OR" MUST be empty.
      */
-    private BatchUploadError checkOrEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkOrEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getOrPerCopyNum() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("OR");
@@ -284,8 +284,8 @@ public class CheckService {
     /**
      * "Reciprocal OR" MUST be empty.
      */
-    private BatchUploadError checkOrRecipEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkOrRecipEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getOrPerCopyRecip() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("OR reciprocal");
@@ -297,8 +297,8 @@ public class CheckService {
     /**
      * "OR reciprocal range" MUST be empty.
      */
-    private BatchUploadError checkOrPerCopyRecipRange(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkOrPerCopyRecipRange(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getOrPerCopyRecipRange() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("OR reciprocal range");
@@ -310,8 +310,8 @@ public class CheckService {
     /**
      * "Range" MUST be empty.
      */
-    private BatchUploadError checkRangeIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkRangeIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getRange() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Range");
@@ -324,8 +324,8 @@ public class CheckService {
     /**
      * "Standard Error" MUST be empty.
      */
-    private BatchUploadError checkStandardErrorIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkStandardErrorIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getStandardError() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("Standard Error");
@@ -337,8 +337,8 @@ public class CheckService {
     /**
      * "Description" MUST be empty.
      */
-    private BatchUploadError checkDescriptionIsEmpty(BatchUploadRow row, String rowEffectType) {
-        BatchUploadError error = new BatchUploadError();
+    private AssociationValidationError checkDescriptionIsEmpty(AssociationUploadRow row, String rowEffectType) {
+        AssociationValidationError error = new AssociationValidationError();
         if (row.getDescription() != null) {
             error.setRow(row.getRowNumber());
             error.setColumnName("OR/Beta description");
@@ -353,9 +353,9 @@ public class CheckService {
      * @param errors Errors to be checked
      * @return validErrors list of errors with message and location
      */
-    private Collection<BatchUploadError> checkForValidErrors(Collection<BatchUploadError> errors) {
-        Collection<BatchUploadError> validErrors = new ArrayList<>();
-        for (BatchUploadError error : errors) {
+    private Collection<AssociationValidationError> checkForValidErrors(Collection<AssociationValidationError> errors) {
+        Collection<AssociationValidationError> validErrors = new ArrayList<>();
+        for (AssociationValidationError error : errors) {
             if (error.getError() != null) {
                 validErrors.add(error);
             }

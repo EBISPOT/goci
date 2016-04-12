@@ -1,8 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import uk.ac.ebi.spot.goci.model.BatchUploadError;
-import uk.ac.ebi.spot.goci.model.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -21,11 +21,11 @@ import java.util.Collection;
  */
 public interface AssociationBatchLoaderService {
 
-    Collection<BatchUploadRow> processFile(String fileName, Study study) throws InvalidFormatException, IOException;
+    Collection<AssociationUploadRow> processFile(String fileName, Study study) throws InvalidFormatException, IOException;
 
-    Collection<Association> processFileRows(Collection<BatchUploadRow> batchUploadRows);
+    Collection<Association> processFileRows(Collection<AssociationUploadRow> associationUploadRows);
 
-    Collection<BatchUploadError> checkUploadForErrors(Collection<BatchUploadRow> batchUploadRows);
+    Collection<AssociationValidationError> checkUploadForErrors(Collection<AssociationUploadRow> associationUploadRows);
 
     void saveAssociations(Collection<Association> associations, Study study);
 
