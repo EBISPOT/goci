@@ -24,4 +24,4 @@
     <root level="WARN">
         <appender-ref ref="FILE" />
     </root>
-</configuration> 
+</configuration>
