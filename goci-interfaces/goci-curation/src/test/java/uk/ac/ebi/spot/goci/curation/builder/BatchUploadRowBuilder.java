@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.builder;
 
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.BatchUploadRow;
 
 /**
  * Created by emma on 24/03/2016.

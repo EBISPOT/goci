@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.builder;
 
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
+import uk.ac.ebi.spot.goci.model.BatchUploadError;
 
 /**
  * Created by emma on 30/03/2016.

@@ -2,8 +2,8 @@ package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.BatchUploadError;
+import uk.ac.ebi.spot.goci.model.BatchUploadRow;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,8 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.service.batchloader;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.BatchUploadError;
+import uk.ac.ebi.spot.goci.model.BatchUploadRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 

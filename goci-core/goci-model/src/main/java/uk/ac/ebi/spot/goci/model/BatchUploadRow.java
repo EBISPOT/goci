@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.model.batchloader;
+package uk.ac.ebi.spot.goci.model;
 
 /**
  * Created by emma on 21/03/2016.

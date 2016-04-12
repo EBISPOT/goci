@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadErrorBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.BatchUploadRowBuilder;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadError;
-import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
+import uk.ac.ebi.spot.goci.model.BatchUploadError;
+import uk.ac.ebi.spot.goci.model.BatchUploadRow;
 
 import java.util.Arrays;
 
