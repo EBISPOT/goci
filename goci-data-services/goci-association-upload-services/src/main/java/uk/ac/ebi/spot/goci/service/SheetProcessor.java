@@ -13,7 +13,6 @@ import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
  * @author emma
  *         <p>
@@ -297,7 +296,7 @@ public class SheetProcessor {
 
                 // Get description
                 String description;
-                if (row.getCell(18) != null) {
+                if (row.getCell(18, row.RETURN_BLANK_AS_NULL) != null) {
                     description = row.getCell(18).getRichStringCellValue().getString().trim();
                 }
                 else {
