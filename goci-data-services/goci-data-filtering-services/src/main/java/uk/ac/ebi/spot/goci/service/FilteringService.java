@@ -90,16 +90,16 @@ public class FilteringService {
                     }
 
 
-                    if (distToPrev != null && distToNext != null && distToPrev > 10000 && distToNext > 10000) {
+                    if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
                         current.setIsTopAssociation(true);
                     }
-                    else if (distToPrev == null && distToNext != null && distToNext > 10000) {
+                    else if (distToPrev == null && distToNext != null && distToNext > 100000) {
                         current.setIsTopAssociation(true);
                     }
-                    else if (distToPrev != null && distToNext == null && distToPrev > 10000) {
+                    else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
                         current.setIsTopAssociation(true);
                     }
-                    else if (distToNext != null && distToNext < 10000) {
+                    else if (distToNext != null && distToNext < 100000) {
                         FilterAssociation next = associations.get(i + 1);
                         Integer cpe = current.getPvalueExponent();
                         Integer npe = next.getPvalueExponent();
