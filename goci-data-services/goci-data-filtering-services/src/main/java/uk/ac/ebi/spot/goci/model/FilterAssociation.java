@@ -17,7 +17,7 @@ public class FilterAssociation {
 
     private String chromosomeName;
 
-    private String chromosomePosition;
+    private Integer chromosomePosition;
 
     private Boolean isTopAssociation = false;
 
@@ -32,7 +32,7 @@ public class FilterAssociation {
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
         this.chromosomeName = chromosomeName;
-        this.chromosomePosition = chromosomePosition;
+        this.chromosomePosition = Integer.parseInt(chromosomePosition);
     }
 
     public Integer getRowNumber() {
@@ -84,11 +84,15 @@ public class FilterAssociation {
         this.chromosomeName = chromosomeName;
     }
 
-    public String getChromosomePosition() {
+    public Integer getChromosomePosition() {
         return chromosomePosition;
     }
 
     public void setChromosomePosition(String chromosomePosition) {
+        this.chromosomePosition = Integer.parseInt(chromosomePosition);
+    }
+
+    public void setChromosomePosition(Integer chromosomePosition) {
         this.chromosomePosition = chromosomePosition;
     }
 
