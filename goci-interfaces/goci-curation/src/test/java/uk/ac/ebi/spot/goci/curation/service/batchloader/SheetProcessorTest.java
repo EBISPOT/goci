@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.curation.model.batchloader.BatchUploadRow;
-import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
+import uk.ac.ebi.spot.goci.service.AssociationCalculationService;
 
 import java.util.Collection;
 
