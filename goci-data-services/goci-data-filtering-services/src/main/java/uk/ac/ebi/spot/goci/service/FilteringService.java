@@ -69,7 +69,7 @@ public class FilteringService {
 
         byChrom.forEach((chromName, associations) -> {
 
-            if(associations.size() == 1){
+            if(associations.size() == 1 && associations.get(0).getPvalueExponent() < -5){
                 associations.get(0).setIsTopAssociation(true);
             }
             else {
@@ -79,49 +79,52 @@ public class FilteringService {
 
                     FilterAssociation current = associations.get(i);
 
-                    Integer distToPrev = null;
-                    if (i > 0) {
-                        distToPrev = current.getChromosomePosition() - associations.get(i - 1).getChromosomePosition();
-                    }
+                    if(current.getPvalueExponent() < -5) {
 
-                    Integer distToNext = null;
-                    if (i < associations.size() - 1) {
-                        distToNext = associations.get(i + 1).getChromosomePosition() - current.getChromosomePosition();
-                    }
+                        Integer distToPrev = null;
+                        if (i > 0) {
+                            distToPrev = current.getChromosomePosition() - associations.get(i - 1).getChromosomePosition();
+                        }
+
+                        Integer distToNext = null;
+                        if (i < associations.size() - 1) {
+                            distToNext = associations.get(i + 1).getChromosomePosition() - current.getChromosomePosition();
+                        }
 
 
-                    if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
-                        current.setIsTopAssociation(true);
-                    }
-                    else if (distToPrev == null && distToNext != null && distToNext > 100000) {
-                        current.setIsTopAssociation(true);
-                    }
-                    else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
-                        current.setIsTopAssociation(true);
-                    }
-                    else if (distToNext != null && distToNext < 100000) {
-                        FilterAssociation next = associations.get(i + 1);
-                        Integer cpe = current.getPvalueExponent();
-                        Integer npe = next.getPvalueExponent();
-                        //TO DO: what if two associations in LD have the same p-value???
-                        if (cpe == npe) {
-                            Integer cpm = current.getPvalueMantissa();
-                            Integer npm = next.getPvalueMantissa();
+                        if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
+                            current.setIsTopAssociation(true);
+                        }
+                        else if (distToPrev == null && distToNext != null && distToNext > 100000) {
+                            current.setIsTopAssociation(true);
+                        }
+                        else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
+                            current.setIsTopAssociation(true);
+                        }
+                        else if (distToNext != null && distToNext < 100000) {
+                            FilterAssociation next = associations.get(i + 1);
+                            Integer cpe = current.getPvalueExponent();
+                            Integer npe = next.getPvalueExponent();
+                            //TO DO: what if two associations in LD have the same p-value???
+                            if (cpe == npe) {
+                                Integer cpm = current.getPvalueMantissa();
+                                Integer npm = next.getPvalueMantissa();
 
-                            if (cpm < npm) {
+                                if (cpm < npm) {
+                                    current.setIsTopAssociation(true);
+                                }
+                                else {
+                                    next.setIsTopAssociation(true);
+                                    current.setIsTopAssociation(false);
+                                }
+                            }
+                            else if (cpe < npe) {
                                 current.setIsTopAssociation(true);
                             }
                             else {
                                 next.setIsTopAssociation(true);
                                 current.setIsTopAssociation(false);
                             }
-                        }
-                        else if (cpe < npe) {
-                            current.setIsTopAssociation(true);
-                        }
-                        else {
-                            next.setIsTopAssociation(true);
-                            current.setIsTopAssociation(false);
                         }
                     }
                     i++;
