@@ -12,6 +12,8 @@ import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author emma
@@ -22,7 +24,7 @@ import java.util.Collection;
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
 @Service
-public class SheetProcessorImpl implements UploadSheetProcessor{
+public class SheetProcessorImpl implements UploadSheetProcessor {
 
     private AssociationCalculationService associationCalculationService;
 
@@ -39,7 +41,10 @@ public class SheetProcessorImpl implements UploadSheetProcessor{
     }
 
     // Read and parse uploaded spreadsheet
-    public Collection<AssociationUploadRow> readSheetRows(XSSFSheet sheet) {
+    @Override public Collection<AssociationUploadRow> readSheetRows(XSSFSheet sheet) {
+
+        XSSFRow headerRow = sheet.getRow(0);
+        Map<Integer, String> headerRowMap = createHeaderMap(headerRow);
 
         // Create collection to store all newly created associations
         Collection<AssociationUploadRow> associationUploadRows = new ArrayList<>();
@@ -433,5 +438,23 @@ public class SheetProcessorImpl implements UploadSheetProcessor{
             }
         }
         return associationUploadRows;
+    }
+
+    @Override public Map<Integer, String> createHeaderMap(XSSFRow row) {
+        Map<Integer, String> headerMap = new HashMap<>();
+
+        if (row.getPhysicalNumberOfCells() != 0) {
+
+            short minColIx = row.getFirstCellNum();
+            short maxColIx = row.getLastCellNum();
+            for (short colIx = minColIx; colIx < maxColIx; colIx++) {
+                XSSFCell cell = row.getCell(colIx);
+                headerMap.put((int) colIx, cell.getStringCellValue());
+            }
+        }
+        else {
+            getLog().error("Header column contains no cells");
+        }
+        return headerMap;
     }
 }
