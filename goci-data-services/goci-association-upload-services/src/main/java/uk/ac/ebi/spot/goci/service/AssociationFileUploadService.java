@@ -1,9 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +24,13 @@ import java.util.Collection;
 @Service
 public class AssociationFileUploadService {
 
-    private SheetProcessor sheetProcessor;
+    private UploadSheetProcessor uploadSheetProcessor;
 
     private AssociationRowProcessor associationRowProcessor;
 
     private AssociationValidationService associationValidationService;
+
+    private SheetCreationService sheetCreationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -39,12 +39,14 @@ public class AssociationFileUploadService {
     }
 
     @Autowired
-    public AssociationFileUploadService(SheetProcessor sheetProcessor,
+    public AssociationFileUploadService(UploadSheetProcessor uploadSheetProcessor,
                                         AssociationRowProcessor associationRowProcessor,
-                                        AssociationValidationService associationValidationService) {
-        this.sheetProcessor = sheetProcessor;
+                                        AssociationValidationService associationValidationService,
+                                        SheetCreationService sheetCreationService) {
+        this.uploadSheetProcessor = uploadSheetProcessor;
         this.associationRowProcessor = associationRowProcessor;
         this.associationValidationService = associationValidationService;
+        this.sheetCreationService = sheetCreationService;
     }
 
     /**
@@ -59,10 +61,10 @@ public class AssociationFileUploadService {
             XSSFSheet sheet = null;
             try {
                 // Create a sheet for reading
-                sheet = createSheet(file.getAbsolutePath());
+                sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
                 // Process file
-                Collection<AssociationUploadRow> fileRows = sheetProcessor.readSheetRows(sheet);
+                Collection<AssociationUploadRow> fileRows = uploadSheetProcessor.readSheetRows(sheet);
 
                 // Error check each row
                 // Create a map of row and resulting association
@@ -87,19 +89,5 @@ public class AssociationFileUploadService {
         else {
             getLog().error("File: " + file.getName() + " cannot be found");
         }
-    }
-
-    /**
-     * Create sheet from file, this is then used to read through each row
-     *
-     * @param fileName Name of XLSX file supplied by user
-     */
-    private XSSFSheet createSheet(String fileName) throws InvalidFormatException, IOException {
-
-        // Open file
-        OPCPackage pkg = OPCPackage.open(fileName);
-        XSSFWorkbook current = new XSSFWorkbook(pkg);
-        pkg.close(); // TODO WILL THIS CAUSE ISSUES?
-        return current.getSheetAt(0);
     }
 }
