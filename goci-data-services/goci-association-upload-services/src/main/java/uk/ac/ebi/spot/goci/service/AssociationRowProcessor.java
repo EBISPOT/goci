@@ -11,7 +11,6 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,22 +21,25 @@ import java.util.List;
  * Created by emma on 21/03/2016.
  *
  * @author emma
+ *         <p>
+ *         Service to create an association from each row of an uploaded spreadsheet, which can then be passed to the
+ *         validator.
  */
 @Service
 public class AssociationRowProcessor {
 
-    private EfoTraitRepository efoTraitRepository;
+    private AssociationAttributeService associationAttributeService;
+
+    @Autowired
+    public AssociationRowProcessor(AssociationAttributeService associationAttributeService) {
+        this.associationAttributeService = associationAttributeService;
+    }
 
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
-    }
-
-    @Autowired
-    public AssociationRowProcessor(EfoTraitRepository efoTraitRepository) {
-        this.efoTraitRepository = efoTraitRepository;
     }
 
     public Association createAssociationFromUploadRow(AssociationUploadRow row) {
@@ -54,7 +56,7 @@ public class AssociationRowProcessor {
                 efoUris.add(trimmedUri);
             }
 
-            Collection<EfoTrait> efoTraits = getEfoTraitsFromRepository(efoUris);
+            Collection<EfoTrait> efoTraits = associationAttributeService.getEfoTraitsFromRepository(efoUris);
             newAssociation.setEfoTraits(efoTraits);
         }
 
@@ -126,7 +128,7 @@ public class AssociationRowProcessor {
 
                 // Set gene
                 String interactionGene = separatedGenes[geneIndex];
-                Collection<Gene> locusGenes = createLocusGenes(interactionGene, ",");
+                Collection<Gene> locusGenes = associationAttributeService.createLocusGenes(interactionGene, ",");
                 locus.setAuthorReportedGenes(locusGenes);
                 geneIndex++;
 
@@ -144,7 +146,8 @@ public class AssociationRowProcessor {
             Locus locus = new Locus();
 
             // Handle curator entered genes, for haplotype they are separated by a comma
-            Collection<Gene> locusGenes = createLocusGenes(row.getAuthorReportedGene(), ",");
+            Collection<Gene> locusGenes =
+                    associationAttributeService.createLocusGenes(row.getAuthorReportedGene(), ",");
             locus.setAuthorReportedGenes(locusGenes);
 
             // Handle curator entered risk allele
@@ -253,10 +256,10 @@ public class AssociationRowProcessor {
                 String riskAlleleValue = riskAlleleIterator.next().trim();
                 String proxyValue = proxyIterator.next().trim();
 
-                SingleNucleotidePolymorphism newSnp = createSnp(snpValue);
+                SingleNucleotidePolymorphism newSnp = associationAttributeService.createSnp(snpValue);
 
                 // Create a new risk allele and assign newly created snp
-                RiskAllele newRiskAllele = createRiskAllele(riskAlleleValue, newSnp);
+                RiskAllele newRiskAllele = associationAttributeService.createRiskAllele(riskAlleleValue, newSnp);
 
                 // Check for proxies and if we have one create a proxy snp
                 Collection<SingleNucleotidePolymorphism> newRiskAlleleProxies = new ArrayList<>();
@@ -264,7 +267,8 @@ public class AssociationRowProcessor {
                     String[] splitProxyValues = proxyValue.split(":");
 
                     for (String splitProxyValue : splitProxyValues) {
-                        SingleNucleotidePolymorphism proxySnp = createSnp(splitProxyValue.trim());
+                        SingleNucleotidePolymorphism proxySnp =
+                                associationAttributeService.createSnp(splitProxyValue.trim());
                         newRiskAlleleProxies.add(proxySnp);
                     }
                 }
@@ -273,13 +277,14 @@ public class AssociationRowProcessor {
                     String[] splitProxyValues = proxyValue.split(",");
 
                     for (String splitProxyValue : splitProxyValues) {
-                        SingleNucleotidePolymorphism proxySnp = createSnp(splitProxyValue.trim());
+                        SingleNucleotidePolymorphism proxySnp =
+                                associationAttributeService.createSnp(splitProxyValue.trim());
                         newRiskAlleleProxies.add(proxySnp);
                     }
                 }
 
                 else {
-                    SingleNucleotidePolymorphism proxySnp = createSnp(proxyValue);
+                    SingleNucleotidePolymorphism proxySnp = associationAttributeService.createSnp(proxyValue);
                     newRiskAlleleProxies.add(proxySnp);
                 }
                 newRiskAllele.setProxySnps(newRiskAlleleProxies);
@@ -316,78 +321,5 @@ public class AssociationRowProcessor {
         }
 
         return locusRiskAlleles;
-    }
-
-    private Collection<Gene> createLocusGenes(String authorReportedGene, String delimiter) {
-
-        String[] genes = authorReportedGene.split(delimiter);
-        Collection<String> genesToCreate = new ArrayList<>();
-
-        for (String gene : genes) {
-            String trimmedGene = gene.trim();
-            genesToCreate.add(trimmedGene);
-        }
-
-        return createGene(genesToCreate);
-    }
-
-    private Collection<Gene> createGene(Collection<String> authorReportedGenes) {
-        Collection<Gene> locusGenes = new ArrayList<Gene>();
-        for (String authorReportedGene : authorReportedGenes) {
-            authorReportedGene = tidy_curator_entered_string(authorReportedGene);
-            Gene gene = new Gene();
-            gene.setGeneName(authorReportedGene);
-            locusGenes.add(gene);
-        }
-        return locusGenes;
-    }
-
-    private RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
-
-        //Create new risk allele, at present we always create a new risk allele for each locus within an association
-        RiskAllele riskAllele = new RiskAllele();
-        riskAllele.setRiskAlleleName(tidy_curator_entered_string(curatorEnteredRiskAllele));
-        riskAllele.setSnp(snp);
-        return riskAllele;
-    }
-
-    private SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
-        curatorEnteredSNP = tidy_curator_entered_string(curatorEnteredSNP);
-        SingleNucleotidePolymorphism snp = new SingleNucleotidePolymorphism();
-        snp.setRsId(curatorEnteredSNP);
-        return snp;
-    }
-
-    private String tidy_curator_entered_string(String string) {
-        String newString = string.trim();
-        String newline = System.getProperty("line.separator");
-
-        if (newString.contains(newline)) {
-            newString = newString.replace(newline, "");
-        }
-        return newString;
-    }
-
-    private Collection<EfoTrait> getEfoTraitsFromRepository(Collection<String> efoUris) {
-        Collection<EfoTrait> efoTraits = new ArrayList<>();
-        for (String uri : efoUris) {
-            String fullUri;
-            if (uri.contains("EFO")) {
-                fullUri = "http://www.ebi.ac.uk/efo/".concat(uri);
-            }
-            else if (uri.contains("Orphanet")) {
-                fullUri = "http://www.orpha.net/ORDO/".concat(uri);
-            }
-            else {
-                fullUri = "http://purl.obolibrary.org/obo/".concat(uri);
-            }
-
-            Collection<EfoTrait> traits = efoTraitRepository.findByUri(fullUri);
-
-            for (EfoTrait trait : traits) {
-                efoTraits.add(trait);
-            }
-        }
-        return efoTraits;
     }
 }
