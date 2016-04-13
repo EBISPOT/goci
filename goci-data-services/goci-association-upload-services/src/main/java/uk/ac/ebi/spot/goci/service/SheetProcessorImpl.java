@@ -22,7 +22,7 @@ import java.util.Collection;
  *         Created from code originally written by Dani/Tony. Adapted to fit with new curation system.
  */
 @Service
-public class SheetProcessor {
+public class SheetProcessorImpl implements UploadSheetProcessor{
 
     private AssociationCalculationService associationCalculationService;
 
@@ -34,7 +34,7 @@ public class SheetProcessor {
     }
 
     @Autowired
-    public SheetProcessor(AssociationCalculationService associationCalculationService) {
+    public SheetProcessorImpl(AssociationCalculationService associationCalculationService) {
         this.associationCalculationService = associationCalculationService;
     }
 
