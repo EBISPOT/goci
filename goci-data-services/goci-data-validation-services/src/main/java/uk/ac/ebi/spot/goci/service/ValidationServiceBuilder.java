@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Service;
  *         Builder that returns the required validation service based on the level set by client input
  */
 @Service
-public class ValidationBuilder {
-
+public class ValidationServiceBuilder {
 
     /**
      * Create sheet from file, this is then used to read through each row

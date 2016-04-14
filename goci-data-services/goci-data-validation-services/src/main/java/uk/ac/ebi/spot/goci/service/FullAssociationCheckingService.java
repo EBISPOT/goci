@@ -16,14 +16,7 @@ import java.util.Collection;
 @Service
 public class FullAssociationCheckingService implements AssociationCheckingService {
 
-    private CheckingService checkingService;
-
-    @Autowired
-    public void setCheckingService(CheckingService checkingService) {
-        this.checkingService = checkingService;
-    }
-
-    @Override public Collection<AssociationValidationError> runChecks(Association association, String effectType) {
+    @Override public Collection<AssociationValidationError> runChecks(Association association, CheckingService checkingService) {
 
         // Create collection to store all newly created associations
         Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();

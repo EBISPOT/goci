@@ -13,5 +13,5 @@ import java.util.Collection;
  *         Interface that defines method(s) to run error ckecking of an association and then return a collection of errors.
  */
 public interface AssociationCheckingService {
-    Collection<AssociationValidationError> runChecks(Association association, String effectType);
+    Collection<AssociationValidationError> runChecks(Association association, CheckingService checkingService);
 }

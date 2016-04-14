@@ -13,11 +13,15 @@ import java.util.Collection;
  * Created by emma on 11/04/2016.
  *
  * @author emma
+ *         <p>
+ *         Entry point for validation system
  */
 @Service
 public class AssociationValidationService {
 
-    private ValidationBuilder validationBuilder;
+    private ValidationServiceBuilder validationBuilder;
+
+    private CheckingService checkingService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -26,16 +30,17 @@ public class AssociationValidationService {
     }
 
     @Autowired
-    public AssociationValidationService(ValidationBuilder validationBuilder) {
+    public AssociationValidationService(ValidationServiceBuilder validationBuilder,
+                                        CheckingService checkingService) {
         this.validationBuilder = validationBuilder;
+        this.checkingService = checkingService;
     }
 
     public Collection<AssociationValidationError> runAssociationValidation(Association association,
-                                                                           String validationLevel,
-                                                                           String effectType) {
+                                                                           String validationLevel) {
 
         // Determine validation type
         AssociationCheckingService associationCheckingService = validationBuilder.buildValidator(validationLevel);
-        return associationCheckingService.runChecks(association, effectType);
+        return associationCheckingService.runChecks(association, checkingService);
     }
 }
