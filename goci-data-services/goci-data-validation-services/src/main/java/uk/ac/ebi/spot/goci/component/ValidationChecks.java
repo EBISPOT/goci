@@ -229,4 +229,23 @@ public class ValidationChecks {
         }
         return error;
     }
+
+    /**
+     * "P-value mantissa" check number of digits.
+     *
+     * @param value Value to be checked
+     */
+    public String checkMantissaIsLessThan10(Integer value) {
+        String error = null;
+
+        if (value != null) {
+            if (value > 9) {
+                error = "P-value mantisaa not valid";
+            }
+        }
+        else {
+            error = "P-value mantissa is empty";
+        }
+        return error;
+    }
 }
