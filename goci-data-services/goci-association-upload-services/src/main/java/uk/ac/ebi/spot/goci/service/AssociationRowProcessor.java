@@ -30,9 +30,13 @@ public class AssociationRowProcessor {
 
     private AssociationAttributeService associationAttributeService;
 
+    private AssociationCalculationService associationCalculationService;
+
     @Autowired
-    public AssociationRowProcessor(AssociationAttributeService associationAttributeService) {
+    public AssociationRowProcessor(AssociationAttributeService associationAttributeService,
+                                   AssociationCalculationService associationCalculationService) {
         this.associationAttributeService = associationAttributeService;
+        this.associationCalculationService = associationCalculationService;
     }
 
     // Logging
@@ -60,15 +64,47 @@ public class AssociationRowProcessor {
             newAssociation.setEfoTraits(efoTraits);
         }
 
+        /// Set OR
+        newAssociation.setOrPerCopyRecip(row.getOrPerCopyRecip());
+        newAssociation.setOrPerCopyRecipRange(row.getOrPerCopyRecipRange());
+
         // Set beta
         newAssociation.setBetaNum(row.getBetaNum());
         newAssociation.setBetaUnit(row.getBetaUnit());
         newAssociation.setBetaDirection(row.getBetaDirection());
 
-        // Set OR
-        newAssociation.setOrPerCopyRecip(row.getOrPerCopyRecip());
-        newAssociation.setOrPerCopyRecipRange(row.getOrPerCopyRecipRange());
-        newAssociation.setOrPerCopyNum(row.getOrPerCopyNum());
+        // Calculate OR num if OR recip is present , otherwise set to whatever is in upload
+        boolean recipReverse = false;
+        if ((row.getOrPerCopyRecip() != null) && (row.getOrPerCopyNum() == null)) {
+            getLog().info("Calculating OR from OR recip value");
+            newAssociation.setOrPerCopyNum(((100 / row.getOrPerCopyRecip()) / 100));
+            recipReverse = true;
+        }
+        else {
+            newAssociation.setOrPerCopyNum(row.getOrPerCopyNum());
+        }
+
+        // Calculate range
+        // (This logic is retained from Dani's original code)
+        if ((row.getOrPerCopyRecipRange() != null) && recipReverse) {
+            newAssociation.setRange(associationCalculationService.reverseCI(row.getOrPerCopyRecipRange()));
+        }
+        else if ((row.getRange() == null) && (row.getStandardError() != null)) {
+
+            if (row.getOrPerCopyNum() != null) {
+                newAssociation.setRange(associationCalculationService.setRange(row.getStandardError(),
+                                                                               row.getOrPerCopyNum()));
+            }
+            else {
+                if (row.getBetaNum() != null) {
+                    newAssociation.setRange(associationCalculationService.setRange(row.getStandardError(),
+                                                                                   row.getBetaNum()));
+                }
+            }
+        }
+        else {
+            newAssociation.setRange(row.getRange());
+        }
 
         // Set values common to all association types
         newAssociation.setRiskFrequency(row.getAssociationRiskFrequency());
@@ -78,7 +114,6 @@ public class AssociationRowProcessor {
         newAssociation.setSnpType(row.getSnpType());
         newAssociation.setStandardError(row.getStandardError());
         newAssociation.setDescription(row.getDescription());
-        newAssociation.setRange(row.getRange());
 
         if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
             newAssociation.setMultiSnpHaplotype(true);
