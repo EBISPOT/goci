@@ -16,7 +16,6 @@
         <version>2.1.2-SNAPSHOT</version>
     </parent>
 
-
     <modules>
         <module>goci-solr-indexer</module>
         <module>goci-catalog-io</module>
@@ -27,6 +26,6 @@
         <module>goci-urilabelchecker</module>
         <module>goci-ancestry-mapper</module>
         <module>goci-parent-mapper</module>
-        <module>goci-association-file-upload</module>
+        <module>goci-association-file-validator</module>
     </modules>
 </project>

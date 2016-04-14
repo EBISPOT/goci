@@ -26,7 +26,7 @@ import java.io.File;
  *         Application that can be used to upload a spreadsheet and validate it
  */
 @SpringBootApplication
-public class UploadApplication {
+public class ValidatorApplication {
 
     private File inputFile;
 
@@ -42,7 +42,7 @@ public class UploadApplication {
 
     public static void main(String... args) {
         System.out.println("Starting association validator service...");
-        ApplicationContext ctx = SpringApplication.run(UploadApplication.class, args);
+        ApplicationContext ctx = SpringApplication.run(ValidatorApplication.class, args);
         int code = SpringApplication.exit(ctx, () -> exitCode);
         if (code > 0) {
             System.exit(code);

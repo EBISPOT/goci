@@ -173,7 +173,7 @@
 
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
-                <artifactId>goci-association-file-upload</artifactId>
+                <artifactId>goci-association-file-validator</artifactId>
                 <version>${goci.version}</version>
             </dependency>
 
