@@ -19,9 +19,15 @@
 
 
     <dependencies>
+
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>

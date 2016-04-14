@@ -18,15 +18,17 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-data-validation-services</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -43,6 +45,10 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+    </dependencies>
 </project>
