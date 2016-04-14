@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
+            <artifactId>goci-association-upload-services</artifactId>
         </dependency>
 
         <dependency>

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service;
+package uk.ac.ebi.spot.goci.utils;
 
 import org.springframework.stereotype.Service;
 
