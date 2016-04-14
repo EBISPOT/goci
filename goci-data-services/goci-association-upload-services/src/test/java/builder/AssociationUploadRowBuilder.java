@@ -43,10 +43,26 @@ public class AssociationUploadRowBuilder {
         return this;
     }
 
-    public AssociationUploadRowBuilder setEffectType(String effectType) {
-        associationUploadRow.setEffectType(effectType);
+    public AssociationUploadRowBuilder setAssociationRiskFrequency(String associationRiskFrequency) {
+        associationUploadRow.setAssociationRiskFrequency(associationRiskFrequency);
         return this;
     }
+
+    public AssociationUploadRowBuilder setPvalueMantissa(Integer pvalueMantissa) {
+        associationUploadRow.setPvalueMantissa(pvalueMantissa);
+        return this;
+    }
+
+    public AssociationUploadRowBuilder setPvalueExponent(Integer pvalueExponent) {
+        associationUploadRow.setPvalueExponent(pvalueExponent);
+        return this;
+    }
+
+    public AssociationUploadRowBuilder setPvalueDescription(String pvalueDescription) {
+        associationUploadRow.setPvalueDescription(pvalueDescription);
+        return this;
+    }
+
 
     public AssociationUploadRowBuilder setOrPerCopyNum(Float orPerCopyNum) {
         associationUploadRow.setOrPerCopyNum(orPerCopyNum);
@@ -93,8 +109,29 @@ public class AssociationUploadRowBuilder {
         return this;
     }
 
+    public AssociationUploadRowBuilder setMultiSnpHaplotype(String multiSnpHaplotype) {
+        associationUploadRow.setMultiSnpHaplotype(multiSnpHaplotype);
+        return this;
+    }
+
+    public AssociationUploadRowBuilder setSnpInteraction(String snpInteraction) {
+        associationUploadRow.setSnpInteraction(snpInteraction);
+        return this;
+    }
+
+    public AssociationUploadRowBuilder setSnpStatus(String snpStatus) {
+        associationUploadRow.setSnpStatus(snpStatus);
+        return this;
+
+    }
+
     public AssociationUploadRowBuilder setSnpType(String snpType) {
         associationUploadRow.setSnpType(snpType);
+        return this;
+    }
+
+    public AssociationUploadRowBuilder setEfoTrait(String efoTrait) {
+        associationUploadRow.setEfoTrait(efoTrait);
         return this;
     }
 
