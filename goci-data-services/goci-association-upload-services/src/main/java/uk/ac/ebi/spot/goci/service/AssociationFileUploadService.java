@@ -71,13 +71,10 @@ public class AssociationFileUploadService {
                 for (AssociationUploadRow row : fileRows) {
 
                     Integer rowNumber = row.getRowNumber();
-                    String effectType = row.getEffectType();
                     Association association = associationRowProcessor.createAssociationFromUploadRow(row);
 
-                    // TODO - should check level be supplied by user?
-                    // TODO - will author spreadsheet have an effect type?
                     Collection<AssociationValidationError> errors =
-                            associationValidationService.runAssociationValidation(association, "full", effectType);
+                            associationValidationService.runAssociationValidation(association, "full");
 
                     // TODO - We need to collate all errors and present in log
                 }
