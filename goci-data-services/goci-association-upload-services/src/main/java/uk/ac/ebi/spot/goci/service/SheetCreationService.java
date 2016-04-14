@@ -10,21 +10,19 @@ import java.io.IOException;
 
 /**
  * Created by emma on 13/04/2016.
+ *
  * @author emma
+ *         <p>
+ *         Create sheet from file, this is then used to read through each row
  */
 @Service
 public class SheetCreationService {
 
-    /**
-     * Create sheet from file, this is then used to read through each row
-     *
-     * @param fileName Name of XLSX file supplied by user
-     */
     public XSSFSheet createSheet(String fileName) throws InvalidFormatException, IOException {
         // Open file
         OPCPackage pkg = OPCPackage.open(fileName);
         XSSFWorkbook current = new XSSFWorkbook(pkg);
-        pkg.close(); 
+        pkg.close();
         return current.getSheetAt(0);
     }
 }
