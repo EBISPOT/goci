@@ -24,7 +24,7 @@ public class SheetCreationService {
         // Open file
         OPCPackage pkg = OPCPackage.open(fileName);
         XSSFWorkbook current = new XSSFWorkbook(pkg);
-        pkg.close(); // TODO WILL THIS CAUSE ISSUES?
+        pkg.close(); 
         return current.getSheetAt(0);
     }
 }
