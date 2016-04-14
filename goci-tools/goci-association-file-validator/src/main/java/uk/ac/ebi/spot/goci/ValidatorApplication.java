@@ -80,7 +80,8 @@ public class ValidatorApplication {
     }
 
     private void runUpload(File file) {
-        //      associationFileUploadService.processAssociationFile(file);
+        // TODO DECIDE WHAT TO DO WITH ERRORS
+        associationFileUploadService.processAssociationFile(file);
     }
 
     private Options bindOptions() {
@@ -170,5 +171,4 @@ public class ValidatorApplication {
     private enum OperationMode {
         RUN
     }
-
 }
