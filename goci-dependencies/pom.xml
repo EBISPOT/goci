@@ -171,6 +171,12 @@
                 <version>${goci.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-association-file-upload</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+
             <!--  additional external dependencies -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
