@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.ValidationChecks;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +27,19 @@ public class CheckingService {
         this.validationChecks = validationChecks;
     }
 
+
+    /**
+     * Run p-value checks on a row annotation
+     *
+     * @param association association to be checked
+     */
+    public Collection<AssociationValidationError> runPvalueChecks(Association association) {
+
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
+        associationValidationErrors.add(checkMantissaIsLessThan10(association));
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
+    }
+
     /**
      * Run general checks on a row annotation
      *
@@ -40,7 +54,7 @@ public class CheckingService {
             associationValidationErrors.add(snpTypeError);
         }
 
-        return checkForValidErrors(associationValidationErrors);
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
     }
 
     /**
@@ -65,7 +79,7 @@ public class CheckingService {
         AssociationValidationError betaDirectionFoundForOr = checkBetaDirectionIsEmpty(association, effectType);
         associationValidationErrors.add(betaDirectionFoundForOr);
 
-        return checkForValidErrors(associationValidationErrors);
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
     }
 
     /**
@@ -96,7 +110,7 @@ public class CheckingService {
         AssociationValidationError orRecipRangeFound = checkOrPerCopyRecipRange(association, effectType);
         associationValidationErrors.add(orRecipRangeFound);
 
-        return checkForValidErrors(associationValidationErrors);
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
     }
 
     /**
@@ -136,111 +150,83 @@ public class CheckingService {
         AssociationValidationError descriptionFound = checkDescriptionIsEmpty(association, effectType);
         associationValidationErrors.add(descriptionFound);
 
-        return checkForValidErrors(associationValidationErrors);
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
     }
 
     private AssociationValidationError checkSnpType(Association association) {
         String errorMessage = validationChecks.checkSnpType(association.getSnpType());
-        return createError(errorMessage, "SNP type");
+        return ErrorProcessingService.createError(errorMessage, "SNP type");
     }
 
     private AssociationValidationError checkOrIsPresent(Association association, String effectType) {
         String errorMessage = validationChecks.checkOrIsPresent(association.getOrPerCopyNum());
-        return createError(errorMessage + "with effect type: " + effectType, "OR");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR");
     }
 
     private AssociationValidationError checkBetaValuesIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaValueIsEmpty(association.getBetaNum());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta");
     }
 
     private AssociationValidationError checkBetaUnitIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaUnitIsEmpty(association.getBetaUnit());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
     }
 
     private AssociationValidationError checkBetaDirectionIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaDirectionIsEmpty(association.getBetaDirection());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
     }
 
     private AssociationValidationError checkBetaIsPresent(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaIsPresent(association.getBetaNum());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta");
     }
 
     private AssociationValidationError checkBetaUnitIsPresent(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaUnitIsPresent(association.getBetaUnit());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
     }
 
     private AssociationValidationError checkBetaDirectionIsPresent(Association association, String effectType) {
         String errorMessage = validationChecks.checkBetaDirectionIsPresent(association.getBetaDirection());
-        return createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
     }
 
     private AssociationValidationError checkOrEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkOrEmpty(association.getOrPerCopyNum());
-        return createError(errorMessage + "with effect type: " + effectType, "OR");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR");
     }
 
     private AssociationValidationError checkOrRecipEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkOrRecipEmpty(association.getOrPerCopyRecip());
-        return createError(errorMessage + "with effect type: " + effectType, "OR reciprocal");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR reciprocal");
     }
 
     private AssociationValidationError checkOrPerCopyRecipRange(Association association, String effectType) {
         String errorMessage = validationChecks.checkOrPerCopyRecipRangeIsEmpty(association.getOrPerCopyRecipRange());
-        return createError(errorMessage + "with effect type: " + effectType,
-                           "OR reciprocal range");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType,
+                                                  "OR reciprocal range");
     }
 
     private AssociationValidationError checkRangeIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkRangeIsEmpty(association.getRange());
-        return createError(errorMessage + "with effect type: " + effectType, "Range");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Range");
     }
 
     private AssociationValidationError checkStandardErrorIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkStandardErrorIsEmpty(association.getStandardError());
-        return createError(errorMessage + "with effect type: " + effectType, "Standard Error");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Standard Error");
     }
 
     private AssociationValidationError checkDescriptionIsEmpty(Association association, String effectType) {
         String errorMessage = validationChecks.checkDescriptionIsEmpty(association.getDescription());
-        return createError(errorMessage + "with effect type: " + effectType,
-                           "OR/Beta description");
+        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType,
+                                                  "OR/Beta description");
     }
 
-    /**
-     * Create error object
-     *
-     * @param message       Error message
-     * @param columnChecked Name of the column checked
-     */
-    private AssociationValidationError createError(String message, String columnChecked) {
-        AssociationValidationError error = new AssociationValidationError();
-
-        // If there is an error create a fully formed object
-        if (message != null) {
-            error.setColumnName(columnChecked);
-            error.setError(message);
-        }
-        return error;
-    }
-
-    /**
-     * Check error objects created to ensure we only return those with an actual message and location
-     *
-     * @param errors Errors to be checked
-     * @return validErrors list of errors with message and location
-     */
-    private Collection<AssociationValidationError> checkForValidErrors(Collection<AssociationValidationError> errors) {
-        Collection<AssociationValidationError> validErrors = new ArrayList<>();
-        for (AssociationValidationError error : errors) {
-            if (error.getError() != null) {
-                validErrors.add(error);
-            }
-        }
-        return validErrors;
+    private AssociationValidationError checkMantissaIsLessThan10(Association association) {
+        String errorMessage = validationChecks.checkMantissaIsLessThan10(association.getPvalueMantissa());
+        return ErrorProcessingService.createError(errorMessage, "P-value Mantissa");
     }
 }

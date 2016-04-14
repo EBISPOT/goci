@@ -12,6 +12,8 @@ import java.util.Collection;
  * Created by emma on 01/04/2016.
  *
  * @author emma
+ *
+ * Full checking service will run all checks
  */
 @Service
 public class FullAssociationCheckingService implements AssociationCheckingService {
@@ -21,7 +23,9 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
         // Create collection to store all newly created associations
         Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        Collection<AssociationValidationError> annotationErrors = checkingService.runAnnotationChecks(association);
+        Collection<AssociationValidationError> pvalueErrors = checkingService.runPvalueChecks(association);
+
+      /*  Collection<AssociationValidationError> annotationErrors = checkingService.runAnnotationChecks(association);
         if (!annotationErrors.isEmpty()) {
             associationValidationErrors.addAll(annotationErrors);
         }
@@ -47,7 +51,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
             if (!noEffectErrors.isEmpty()) {
                 associationValidationErrors.addAll(noEffectErrors);
             }
-        }
+        }*/
         return associationValidationErrors;
     }
 }
