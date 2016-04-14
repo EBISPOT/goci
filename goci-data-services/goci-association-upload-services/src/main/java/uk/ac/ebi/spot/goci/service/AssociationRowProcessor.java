@@ -255,9 +255,11 @@ public class AssociationRowProcessor {
         }
 
         List<String> proxies = new ArrayList<>();
-        String[] separatedProxies = proxy.split(delimiter);
-        for (String separatedProxy : separatedProxies) {
-            proxies.add(separatedProxy.trim());
+        if (proxy != null) {
+            String[] separatedProxies = proxy.split(delimiter);
+            for (String separatedProxy : separatedProxies) {
+                proxies.add(separatedProxy.trim());
+            }
         }
 
         // Value is only recorded for SNP interaction associations
@@ -293,7 +295,6 @@ public class AssociationRowProcessor {
 
                 String snpValue = snpIterator.next().trim();
                 String riskAlleleValue = riskAlleleIterator.next().trim();
-                String proxyValue = proxyIterator.next().trim();
 
                 SingleNucleotidePolymorphism newSnp = associationAttributeService.createSnp(snpValue);
 
@@ -301,32 +302,42 @@ public class AssociationRowProcessor {
                 RiskAllele newRiskAllele = associationAttributeService.createRiskAllele(riskAlleleValue, newSnp);
 
                 // Check for proxies and if we have one create a proxy snp
-                Collection<SingleNucleotidePolymorphism> newRiskAlleleProxies = new ArrayList<>();
-                if (proxyValue.contains(":")) {
-                    String[] splitProxyValues = proxyValue.split(":");
+                if (proxies.size() != 0) {
+                    if (proxies.size() ==snps.size()){
 
-                    for (String splitProxyValue : splitProxyValues) {
-                        SingleNucleotidePolymorphism proxySnp =
-                                associationAttributeService.createSnp(splitProxyValue.trim());
-                        newRiskAlleleProxies.add(proxySnp);
+                        String proxyValue = proxyIterator.next().trim();
+
+                        Collection<SingleNucleotidePolymorphism> newRiskAlleleProxies = new ArrayList<>();
+                        if (proxyValue.contains(":")) {
+                            String[] splitProxyValues = proxyValue.split(":");
+
+                            for (String splitProxyValue : splitProxyValues) {
+                                SingleNucleotidePolymorphism proxySnp =
+                                        associationAttributeService.createSnp(splitProxyValue.trim());
+                                newRiskAlleleProxies.add(proxySnp);
+                            }
+                        }
+
+                        else if (proxyValue.contains(",")) {
+                            String[] splitProxyValues = proxyValue.split(",");
+
+                            for (String splitProxyValue : splitProxyValues) {
+                                SingleNucleotidePolymorphism proxySnp =
+                                        associationAttributeService.createSnp(splitProxyValue.trim());
+                                newRiskAlleleProxies.add(proxySnp);
+                            }
+                        }
+
+                        else {
+                            SingleNucleotidePolymorphism proxySnp = associationAttributeService.createSnp(proxyValue);
+                            newRiskAlleleProxies.add(proxySnp);
+                        }
+                        newRiskAllele.setProxySnps(newRiskAlleleProxies);
+                    }
+                    else{
+                        getLog().error("Proxy SNP number and SNP number do not match");
                     }
                 }
-
-                else if (proxyValue.contains(",")) {
-                    String[] splitProxyValues = proxyValue.split(",");
-
-                    for (String splitProxyValue : splitProxyValues) {
-                        SingleNucleotidePolymorphism proxySnp =
-                                associationAttributeService.createSnp(splitProxyValue.trim());
-                        newRiskAlleleProxies.add(proxySnp);
-                    }
-                }
-
-                else {
-                    SingleNucleotidePolymorphism proxySnp = associationAttributeService.createSnp(proxyValue);
-                    newRiskAlleleProxies.add(proxySnp);
-                }
-                newRiskAllele.setProxySnps(newRiskAlleleProxies);
 
                 // If there is no curator entered value for risk allele frequency don't save
                 String riskFrequencyValue = null;
