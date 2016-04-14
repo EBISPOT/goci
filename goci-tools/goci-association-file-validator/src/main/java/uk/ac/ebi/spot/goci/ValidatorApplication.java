@@ -10,11 +10,13 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 
 import java.io.File;
 
@@ -27,6 +29,9 @@ import java.io.File;
  */
 @SpringBootApplication
 public class ValidatorApplication {
+
+    @Autowired
+    private AssociationFileUploadService associationFileUploadService;
 
     private File inputFile;
 
@@ -75,7 +80,7 @@ public class ValidatorApplication {
     }
 
     private void runUpload(File file) {
-        // TODO DO ERRORS GET PASSED TO HERE AND IT CREATES LOG
+        //      associationFileUploadService.processAssociationFile(file);
     }
 
     private Options bindOptions() {
