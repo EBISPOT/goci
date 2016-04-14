@@ -56,7 +56,7 @@ public class AssociationFileUploadService {
      */
     public void processAssociationFile(File file) {
 
-        if (!file.exists()) {
+        if (file.exists()) {
             // Create sheet
             XSSFSheet sheet = null;
             try {
