@@ -45,6 +45,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
         while (rowNum <= lastRow) {
 
             AssociationUploadRow associationUploadRow = new AssociationUploadRow();
+            associationUploadRow.setRowNumber(rowNum);
 
             for (Map.Entry<Integer, String> heading : headerRowMap.entrySet()) {
                 Integer colNum = heading.getKey();
