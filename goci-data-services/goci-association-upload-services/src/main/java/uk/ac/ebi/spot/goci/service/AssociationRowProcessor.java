@@ -115,15 +115,19 @@ public class AssociationRowProcessor {
         newAssociation.setStandardError(row.getStandardError());
         newAssociation.setDescription(row.getDescription());
 
-        if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
-            newAssociation.setMultiSnpHaplotype(true);
+        if (row.getMultiSnpHaplotype() != null) {
+            if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
+                newAssociation.setMultiSnpHaplotype(true);
+            }
         }
         else {
             newAssociation.setMultiSnpHaplotype(false);
         }
 
-        if (row.getSnpInteraction().equalsIgnoreCase("Y")) {
-            newAssociation.setSnpInteraction(true);
+        if (row.getSnpInteraction() != null) {
+            if (row.getSnpInteraction().equalsIgnoreCase("Y")) {
+                newAssociation.setSnpInteraction(true);
+            }
         }
         else {
             newAssociation.setSnpInteraction(false);
