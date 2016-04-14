@@ -1,4 +1,4 @@
-package utils;
+package uk.ac.ebi.spot.goci.utils;
 
 /**
  * Created by emma on 13/04/2016.

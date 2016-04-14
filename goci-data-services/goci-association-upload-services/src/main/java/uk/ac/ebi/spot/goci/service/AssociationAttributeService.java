@@ -7,7 +7,7 @@ import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import utils.StringProcessingService;
+import uk.ac.ebi.spot.goci.utils.StringProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;

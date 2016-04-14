@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
-import utils.SheetCellProcessingService;
+import uk.ac.ebi.spot.goci.utils.SheetCellProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;

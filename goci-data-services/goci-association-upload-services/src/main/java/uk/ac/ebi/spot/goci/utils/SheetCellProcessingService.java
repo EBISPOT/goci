@@ -1,4 +1,4 @@
-package utils;
+package uk.ac.ebi.spot.goci.utils;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;

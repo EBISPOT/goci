@@ -1,4 +1,4 @@
-package utils;
+package uk.ac.ebi.spot.goci.utils;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -11,8 +11,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
-import static utils.SheetCellProcessingService.processFloatValues;
-import static utils.SheetCellProcessingService.processIntValues;
+import static uk.ac.ebi.spot.goci.utils.SheetCellProcessingService.processFloatValues;
+import static uk.ac.ebi.spot.goci.utils.SheetCellProcessingService.processIntValues;
 
 /**
  * Created by emma on 14/04/2016.

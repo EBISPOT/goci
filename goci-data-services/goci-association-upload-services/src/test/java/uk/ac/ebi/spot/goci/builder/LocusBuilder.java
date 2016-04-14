@@ -1,4 +1,4 @@
-package builder;
+package uk.ac.ebi.spot.goci.builder;
 
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
