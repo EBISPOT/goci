@@ -4,9 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +48,14 @@ public class StudyFileService {
             }
             else {
                 getLog().error("Directory not created for study with ID: " + studyId);
+                throw new NoStudyDirectoryException("Directory not created for study");
             }
         }
 
         boolean success = getStudyDirPath(studyId).mkdir();
         if (!success) {
-            getLog().error("Could not create directory for a study");
+            getLog().error("Could not create directory for study with ID " + studyId);
+            throw new NoStudyDirectoryException("Could not create directory for a study");
         }
     }
 
@@ -69,12 +75,29 @@ public class StudyFileService {
         }
         else {
             getLog().error("No study directory found for study with ID: " + studyId);
+            throw new NoStudyDirectoryException("No study directory found for study");
         }
         return files;
     }
 
-    public File getStudyDirRoot() {
-        return studyDirRoot;
+    public synchronized void upload(MultipartFile fileFromUpload, Long studyId) throws IOException {
+
+        if (!fileFromUpload.isEmpty()) {
+            File file = createFileInStudyDir(fileFromUpload.getOriginalFilename(), studyId);
+
+            // Copy contents of multipart request to newly created file
+            try {
+                fileFromUpload.transferTo(file);
+            }
+            catch (IOException e) {
+                getLog().error("Unable to copy file: " + fileFromUpload.getName() + " to study dir");
+                throw new FileUploadException("Unable to copy file");
+            }
+        }
+        else {
+            getLog().error(fileFromUpload.getName() + " is empty");
+            throw new FileUploadException("Upload file is empty");
+        }
     }
 
     /**
@@ -85,5 +108,26 @@ public class StudyFileService {
     private File getStudyDirPath(Long id) {
         String uploadDirName = getStudyDirRoot() + File.separator + id;
         return new File(uploadDirName);
+    }
+
+    /**
+     * Create a file object
+     *
+     * @param name Name of file
+     */
+    private File createFileInStudyDir(String name, Long id) throws IOException {
+        String fileName = getStudyDirRoot() + File.separator + id + File.separator + name;
+        File file = new File(fileName);
+        boolean success = file.createNewFile();
+
+        if (!success) {
+            getLog().error("Could not create a file: " + fileName);
+            throw new FileUploadException("Could not create a file");
+        }
+        return file;
+    }
+
+    public File getStudyDirRoot() {
+        return studyDirRoot;
     }
 }

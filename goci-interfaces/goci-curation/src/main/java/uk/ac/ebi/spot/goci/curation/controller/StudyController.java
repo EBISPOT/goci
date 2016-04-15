@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
@@ -479,7 +481,7 @@ public class StudyController {
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport)
-            throws PubmedImportException {
+            throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
@@ -489,7 +491,6 @@ public class StudyController {
         if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
-
         // Pass to importer
         Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
 
@@ -511,7 +512,7 @@ public class StudyController {
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
+    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) throws NoStudyDirectoryException{
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -964,8 +965,9 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId)
-            throws IOException {
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId) throws
+                                                                                                        FileUploadException,
+                                                                                                        IOException {
         studyFileService.upload(file, studyId);
         return "redirect:/studies/" + studyId + "/studyfiles";
     }
@@ -985,6 +987,21 @@ public class StudyController {
         getLog().error("pubmed import exception", pubmedImportException);
         return "pubmed_import_warning";
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FileUploadException.class)
+    public String handleFileUploadExceptions(FileUploadException fileUploadException ) {
+        getLog().error("File upload exception", fileUploadException);
+        return "error_pages/study_dir_failure";
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoStudyDirectoryException.class)
+    public String handleNoStudyDirException(NoStudyDirectoryException noStudyDirectoryException ) {
+        getLog().error("No study directory exception",noStudyDirectoryException );
+        return "error_pages/study_dir_failure";
+    }
+
 
 
     /* Model Attributes :
