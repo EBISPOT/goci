@@ -87,6 +87,9 @@ public class StudyFileService {
             // Copy contents of multipart request to newly created file
             try {
                 fileFromUpload.transferTo(file);
+                // Set some permissions
+                file.setWritable(true, false);
+                file.setReadable(true, false);
             }
             catch (IOException e) {
                 getLog().error("Unable to copy file: " + fileFromUpload.getName() + " to study dir");
