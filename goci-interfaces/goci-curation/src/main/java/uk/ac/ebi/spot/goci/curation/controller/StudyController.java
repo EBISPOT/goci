@@ -491,28 +491,31 @@ public class StudyController {
         if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
-        // Pass to importer
-        Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+        else {
+            // Pass to importer
+            Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
 
-        // Create housekeeping object
-        Housekeeping studyHousekeeping = createHousekeeping();
+            // Create housekeeping object
+            Housekeeping studyHousekeeping = createHousekeeping();
 
-        // Update and save study
-        importedStudy.setHousekeeping(studyHousekeeping);
+            // Update and save study
+            importedStudy.setHousekeeping(studyHousekeeping);
 
-        // Save new study
-        studyRepository.save(importedStudy);
+            // Save new study
+            studyRepository.save(importedStudy);
 
-        // Create directory to store associated files
-        studyFileService.createStudyDir(importedStudy.getId());
-        return "redirect:/studies/" + importedStudy.getId();
+            // Create directory to store associated files
+            studyFileService.createStudyDir(importedStudy.getId());
+            return "redirect:/studies/" + importedStudy.getId();
+        }
     }
 
 
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) throws NoStudyDirectoryException{
+    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model)
+            throws NoStudyDirectoryException {
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -990,15 +993,15 @@ public class StudyController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(FileUploadException.class)
-    public String handleFileUploadExceptions(FileUploadException fileUploadException ) {
+    public String handleFileUploadExceptions(FileUploadException fileUploadException) {
         getLog().error("File upload exception", fileUploadException);
         return "error_pages/study_dir_failure";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NoStudyDirectoryException.class)
-    public String handleNoStudyDirException(NoStudyDirectoryException noStudyDirectoryException ) {
-        getLog().error("No study directory exception",noStudyDirectoryException );
+    public String handleNoStudyDirException(NoStudyDirectoryException noStudyDirectoryException) {
+        getLog().error("No study directory exception", noStudyDirectoryException);
         return "error_pages/study_dir_failure";
     }
 
