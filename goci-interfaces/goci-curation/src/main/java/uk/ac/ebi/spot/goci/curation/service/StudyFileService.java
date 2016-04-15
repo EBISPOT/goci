@@ -113,8 +113,16 @@ public class StudyFileService {
      * Create a file object
      *
      * @param name Name of file
+     * @param id   Study ID
      */
     private File createFileInStudyDir(String name, Long id) throws IOException {
+
+        // Check study dir exists, if not create it
+        File studyDirPath = getStudyDirPath(id);
+        if (!studyDirPath.exists()) {
+            createStudyDir(id);
+        }
+
         String fileName = getStudyDirRoot() + File.separator + id + File.separator + name;
         File file = new File(fileName);
         boolean success = file.createNewFile();
