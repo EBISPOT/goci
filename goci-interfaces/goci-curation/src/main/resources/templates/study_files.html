@@ -31,7 +31,10 @@
                 </thead>
                 <tbody>
                 <tr th:each="file : ${files}">
-                    <td th:text="">file.pdf</td>
+                    <td th:text="${file.fileName} ?: '' ">Test.txt</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(files)}">
+                    <td colspan="10"><p style=" font-weight: bold; text-align: center;">No files found</p></td>
                 </tr>
                 </tbody>
             </table>
@@ -39,13 +42,11 @@
         <div class="col-md-6">
             <div class="form-group">
                 <div id="uploadFileForm">
-
                     <!--Form object is a study, this is so we can pass back ID which can be used-->
                     <!--in URLs created by controller-->
                     <form class="form-inline" name="uploadFileForm" role="form" method="post"
                           th:action="@{/studies/{studyId}/studyfiles/upload(studyId=${study.id})}"
                           enctype="multipart/form-data" th:object="${study} ">
-
                         <div class="form-group">
                             <input type="file" name="file" class="form-control" id="uploadSNPs"/>
                         </div>
