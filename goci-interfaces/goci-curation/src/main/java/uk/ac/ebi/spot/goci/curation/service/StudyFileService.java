@@ -75,7 +75,6 @@ public class StudyFileService {
         }
         else {
             getLog().error("No study directory found for study with ID: " + studyId);
-            throw new NoStudyDirectoryException("No study directory found for study");
         }
         return files;
     }
