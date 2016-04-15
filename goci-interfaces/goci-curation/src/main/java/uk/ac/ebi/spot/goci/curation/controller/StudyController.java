@@ -480,7 +480,7 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport)
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
@@ -505,7 +505,14 @@ public class StudyController {
             studyRepository.save(importedStudy);
 
             // Create directory to store associated files
-            studyFileService.createStudyDir(importedStudy.getId());
+            try {
+                studyFileService.createStudyDir(importedStudy.getId());
+            }
+            catch (NoStudyDirectoryException e) {
+                getLog().error("No study directory exception");
+                model.addAttribute("study", importedStudy);
+                return "error_pages/study_dir_failure";
+            }
             return "redirect:/studies/" + importedStudy.getId();
         }
     }
@@ -968,11 +975,18 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId) throws
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) throws
                                                                                                         FileUploadException,
                                                                                                         IOException {
-        studyFileService.upload(file, studyId);
-        return "redirect:/studies/" + studyId + "/studyfiles";
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        try {
+            studyFileService.upload(file, studyId);
+            return "redirect:/studies/" + studyId + "/studyfiles";
+        }
+        catch (FileUploadException | IOException e) {
+            getLog().error("File upload exception", e);
+            return "error_pages/study_file_upload_failure";
+        }
     }
 
 
@@ -990,21 +1004,6 @@ public class StudyController {
         getLog().error("pubmed import exception", pubmedImportException);
         return "pubmed_import_warning";
     }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(FileUploadException.class)
-    public String handleFileUploadExceptions(FileUploadException fileUploadException) {
-        getLog().error("File upload exception", fileUploadException);
-        return "error_pages/study_dir_failure";
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NoStudyDirectoryException.class)
-    public String handleNoStudyDirException(NoStudyDirectoryException noStudyDirectoryException) {
-        getLog().error("No study directory exception", noStudyDirectoryException);
-        return "error_pages/study_dir_failure";
-    }
-
 
 
     /* Model Attributes :
