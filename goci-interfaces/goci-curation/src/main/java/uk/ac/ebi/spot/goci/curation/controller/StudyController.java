@@ -455,7 +455,11 @@ public class StudyController {
 
 
 
-   /* New Study*/
+   /* New Study:
+   *
+   * Adding a study is synchronised to ensure the method can only be accessed once.
+   *
+   * */
 
     // Add a new study
     // Directs user to an empty form to which they can create a new study
@@ -472,7 +476,8 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) throws PubmedImportException {
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport)
+            throws PubmedImportException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
@@ -494,6 +499,9 @@ public class StudyController {
 
         // Save new study
         studyRepository.save(importedStudy);
+
+        // Create directory to store associated files
+        studyFileService.createStudyDir(importedStudy.getId());
         return "redirect:/studies/" + importedStudy.getId();
     }
 
@@ -501,7 +509,7 @@ public class StudyController {
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
+    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -520,10 +528,12 @@ public class StudyController {
         study.setHousekeeping(studyHousekeeping);
         Study newStudy = studyRepository.save(study);
 
+        // Create directory to store associated files
+        studyFileService.createStudyDir(newStudy.getId());
         return "redirect:/studies/" + newStudy.getId();
     }
 
-   /* Exitsing study*/
+   /* Existing study*/
 
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
