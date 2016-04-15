@@ -953,10 +953,11 @@ public class StudyController {
         return sort;
     }
 
-    /* Functionality to view, upload and download a study file*/
+    /* Functionality to view, upload and download a study file(s)*/
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getStudyFiles(Model model) {
-        model.addAttribute("files", studyFileService.getStudyFiles());
+    public String getStudyFiles(Model model, @PathVariable Long studyId) {
+        model.addAttribute("files", studyFileService.getStudyFiles(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_files";
     }
 
