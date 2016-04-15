@@ -45,7 +45,7 @@
                     <!--Form object is a study, this is so we can pass back ID which can be used-->
                     <!--in URLs created by controller-->
                     <form class="form-inline" name="uploadFileForm" role="form" method="post"
-                          th:action="@{/studies/{studyId}/studyfiles/upload(studyId=${study.id})}"
+                          th:action="@{/studies/{studyId}/studyfiles(studyId=${study.id})}"
                           enctype="multipart/form-data" th:object="${study} ">
                         <div class="form-group">
                             <input type="file" name="file" class="form-control" id="uploadSNPs"/>
