@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
@@ -52,6 +53,7 @@ import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -960,6 +962,14 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_files";
     }
+
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId)
+            throws IOException {
+        studyFileService.upload(file, studyId);
+        return "redirect:/studies/" + studyId + "/studyfiles";
+    }
+
 
     /* Exception handling */
 
