@@ -38,27 +38,52 @@ public class StudyFileService {
 
         if (!getStudyDirRoot().exists()) {
             getLog().debug("Making root directory '" + getStudyDirRoot().getAbsolutePath() + "'...");
-            getStudyDirRoot().mkdirs();
-            getLog().debug("Directory created!");
+            boolean success = getStudyDirRoot().mkdirs();
+            if (success) {
+                getLog().debug("Directory created!");
+            }
+            else {
+                getLog().error("Directory not created for study with ID: " + studyId);
+            }
         }
 
-        String uploadDirName = getStudyDirRoot() + File.separator + studyId;
-
-        // Create a subdir based on the study id
-        File uploadDir = new File(uploadDirName);
-        boolean success = uploadDir.mkdir();
+        boolean success = getStudyDirPath(studyId).mkdir();
         if (!success) {
             getLog().error("Could not create directory for a study");
         }
     }
 
 
-    public List<StudyFileSummary> getStudyFiles() {
+    public List<StudyFileSummary> getStudyFiles(Long studyId) {
         List<StudyFileSummary> files = new ArrayList<>();
+
+        File pathToStudyDir = getStudyDirPath(studyId);
+
+        if (pathToStudyDir.exists()) {
+            String[] fileNames = pathToStudyDir.list();
+
+            for (String filename : fileNames) {
+                StudyFileSummary studyFileSummary = new StudyFileSummary(filename);
+                files.add(studyFileSummary);
+            }
+        }
+        else {
+            getLog().error("No study directory found for study with ID: " + studyId);
+        }
         return files;
     }
 
     public File getStudyDirRoot() {
         return studyDirRoot;
+    }
+
+    /**
+     * Create a subdir based on the study id
+     *
+     * @param id Study ID
+     */
+    private File getStudyDirPath(Long id) {
+        String uploadDirName = getStudyDirRoot() + File.separator + id;
+        return new File(uploadDirName);
     }
 }
