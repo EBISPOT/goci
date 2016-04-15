@@ -26,6 +26,7 @@ import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -87,6 +88,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
+    private StudyFileService studyFileService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -109,7 +111,8 @@ public class StudyController {
                            UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
-                           MappingDetailsService mappingDetailsService) {
+                           MappingDetailsService mappingDetailsService,
+                           StudyFileService studyFileService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -123,6 +126,7 @@ public class StudyController {
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
+        this.studyFileService = studyFileService;
     }
 
     /* All studies and various filtered lists */
@@ -637,7 +641,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-       // Add duplicate message
+        // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
@@ -818,7 +822,8 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
+        model.addAttribute("mappingDetails",
+                           mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
 
         return "study_housekeeping";
     }
@@ -879,7 +884,7 @@ public class StudyController {
         Collection<Platform> platforms = studyToDuplicate.getPlatforms();
         Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
 
-        if(platforms != null && !platforms.isEmpty()){
+        if (platforms != null && !platforms.isEmpty()) {
             platformsDuplicateStudy.addAll(platforms);
             duplicateStudy.setPlatforms(platformsDuplicateStudy);
         }
@@ -937,6 +942,14 @@ public class StudyController {
 
         return sort;
     }
+
+    /* Functionality to view, upload and download a study file*/
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudyFiles(Model model) {
+        model.addAttribute("files", studyFileService.getStudyFiles());
+        return "study_files";
+    }
+
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -977,10 +990,8 @@ public class StudyController {
 
     //Platforms
     @ModelAttribute("platforms")
-//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    //    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
     public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
-
-
 
 
     // Curation statuses
@@ -1011,7 +1022,7 @@ public class StudyController {
     }
 
     @ModelAttribute("qualifiers")
-    public List<String> populateQualifierOptions(Model model){
+    public List<String> populateQualifierOptions(Model model) {
         List<String> qualifierOptions = new ArrayList<>();
         qualifierOptions.add("up to");
         qualifierOptions.add("at least");
@@ -1091,13 +1102,13 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
 
-//    private Sort sortByPlatformAsc() {
-//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
-//    }
-//
-//    private Sort sortByPlatformDesc() {
-//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
-//    }
+    //    private Sort sortByPlatformAsc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+    //    }
+    //
+    //    private Sort sortByPlatformDesc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+    //    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
