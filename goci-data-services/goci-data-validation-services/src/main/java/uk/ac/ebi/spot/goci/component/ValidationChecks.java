@@ -248,4 +248,23 @@ public class ValidationChecks {
         }
         return error;
     }
+
+    /**
+     * "P-value exponent" check
+     *
+     * @param value Value to be checked
+     */
+    public String checkExponentIsPresent(Integer value) {
+        String error = null;
+
+        if (value == null) {
+            error = "P-value exponent is empty";
+        }
+        else {
+            if (value == 0) {
+                error = "P-value exponent is zero";
+            }
+        }
+        return error;
+    }
 }
