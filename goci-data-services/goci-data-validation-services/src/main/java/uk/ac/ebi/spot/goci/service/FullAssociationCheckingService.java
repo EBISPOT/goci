@@ -20,6 +20,8 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
     @Override
     public Collection<AssociationValidationError> runChecks(Association association, CheckingService checkingService) {
 
+        // TODO ADD COMPLETE LIST OF CHECKS
+
         // Create collection to store all newly created associations
         Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
