@@ -14,7 +14,7 @@ import java.util.Collection;
  *         errors.
  */
 public interface AssociationCheckingService {
-    Collection<AssociationValidationError> runChecks(Association association, CheckingService checkingService);
+    Collection<AssociationValidationError> runChecks(Association association, ValidationChecksBuilder validationChecksBuilder);
 
     /**
      * Check if association is an OR or BETA type association

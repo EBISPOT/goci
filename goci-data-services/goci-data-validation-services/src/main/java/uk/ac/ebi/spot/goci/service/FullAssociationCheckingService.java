@@ -18,16 +18,18 @@ import java.util.Collection;
 public class FullAssociationCheckingService implements AssociationCheckingService {
 
     @Override
-    public Collection<AssociationValidationError> runChecks(Association association, CheckingService checkingService) {
+    public Collection<AssociationValidationError> runChecks(Association association,
+                                                            ValidationChecksBuilder validationChecksBuilder) {
 
         // TODO ADD COMPLETE LIST OF CHECKS
 
         // Create collection to store all newly created associations
         Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
 
-        Collection<AssociationValidationError> pvalueErrors = checkingService.runPvalueChecks(association);
+        Collection<AssociationValidationError> pvalueErrors = validationChecksBuilder.runPvalueChecks(association);
 
-        Collection<AssociationValidationError> annotationErrors = checkingService.runAnnotationChecks(association);
+        Collection<AssociationValidationError> annotationErrors =
+                validationChecksBuilder.runAnnotationChecks(association);
         if (!annotationErrors.isEmpty()) {
             associationValidationErrors.addAll(annotationErrors);
         }
@@ -36,14 +38,16 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
         // Run checks depending on effect type
         if (effectType.equalsIgnoreCase("or")) {
-            Collection<AssociationValidationError> orErrors = checkingService.runOrChecks(association, effectType);
+            Collection<AssociationValidationError> orErrors =
+                    validationChecksBuilder.runOrChecks(association, effectType);
             if (!orErrors.isEmpty()) {
                 associationValidationErrors.addAll(orErrors);
             }
         }
 
         if (effectType.equalsIgnoreCase("beta")) {
-            Collection<AssociationValidationError> betaErrors = checkingService.runBetaChecks(association, effectType);
+            Collection<AssociationValidationError> betaErrors =
+                    validationChecksBuilder.runBetaChecks(association, effectType);
             if (!betaErrors.isEmpty()) {
                 associationValidationErrors.addAll(betaErrors);
             }
@@ -51,7 +55,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
         if (effectType.equalsIgnoreCase("nr")) {
             Collection<AssociationValidationError> noEffectErrors =
-                    checkingService.runNoEffectErrors(association, effectType);
+                    validationChecksBuilder.runNoEffectErrors(association, effectType);
             if (!noEffectErrors.isEmpty()) {
                 associationValidationErrors.addAll(noEffectErrors);
             }
