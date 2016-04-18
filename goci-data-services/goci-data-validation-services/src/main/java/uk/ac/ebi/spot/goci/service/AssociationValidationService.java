@@ -21,7 +21,7 @@ public class AssociationValidationService {
 
     private ValidationServiceBuilder validationBuilder;
 
-    private CheckingService checkingService;
+    private ValidationChecksBuilder validationChecksBuilder;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -31,16 +31,16 @@ public class AssociationValidationService {
 
     @Autowired
     public AssociationValidationService(ValidationServiceBuilder validationBuilder,
-                                        CheckingService checkingService) {
+                                        ValidationChecksBuilder validationChecksBuilder) {
         this.validationBuilder = validationBuilder;
-        this.checkingService = checkingService;
+        this.validationChecksBuilder = validationChecksBuilder;
     }
 
-    public Collection<AssociationValidationError> runAssociationValidation(Association association,
-                                                                           String validationLevel) {
+    public synchronized Collection<AssociationValidationError> runAssociationValidation(Association association,
+                                                                                        String validationLevel) {
 
         // Determine validation type
         AssociationCheckingService associationCheckingService = validationBuilder.buildValidator(validationLevel);
-        return associationCheckingService.runChecks(association, checkingService);
+        return associationCheckingService.runChecks(association, validationChecksBuilder);
     }
 }
