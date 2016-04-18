@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.ValidationChecks;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 /**
@@ -104,5 +106,15 @@ public class CheckingService {
     public AssociationValidationError checkExponentIsPresent(Association association) {
         String errorMessage = validationChecks.checkExponentIsPresent(association.getPvalueExponent());
         return ErrorProcessingService.createError(errorMessage, "P-value exponent");
+    }
+
+    public AssociationValidationError checkGene(Gene gene) {
+        String errorMessage = validationChecks.checkGene(gene.getGeneName());
+        return ErrorProcessingService.createError(errorMessage, "Gene");
+    }
+
+    public AssociationValidationError checkRiskAllele(RiskAllele riskAllele) {
+        String errorMessage = validationChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
     }
 }

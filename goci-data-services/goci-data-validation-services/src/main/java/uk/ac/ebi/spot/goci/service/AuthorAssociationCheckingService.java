@@ -29,6 +29,11 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             associationValidationErrors.addAll(pvalueErrors);
         }
 
+        Collection<AssociationValidationError> snpErrors = validationChecksBuilder.runLociAttributeChecks(association);
+        if (!snpErrors.isEmpty()) {
+            associationValidationErrors.addAll(snpErrors);
+        }
+
         String effectType = determineIfAssociationIsOrType(association);
 
         // Run checks depending on effect type

@@ -2,6 +2,9 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by emma on 01/04/2016.
  *
@@ -263,6 +266,54 @@ public class ValidationChecks {
         else {
             if (value == 0) {
                 error = "P-value exponent is zero";
+            }
+        }
+        return error;
+    }
+
+    /**
+     * "Gene" check
+     *
+     * @param geneName Gene name to be checked
+     */
+    public String checkGene(String geneName) {
+        String error = null;
+        if (geneName == null) {
+            error = "Gene name is empty";
+        }
+        else {
+            if (geneName.isEmpty()) {
+                error = "Gene name is empty";
+            }
+            // Check gene name in Ensembl
+            else {
+                // TODO WILL NEED TO RUN MAPPING
+            }
+        }
+        return error;
+    }
+
+    public String checkRiskAllele(String riskAlleleName) {
+        String error = null;
+        List<String> acceptableValues = new ArrayList<>();
+        acceptableValues.add("A");
+        acceptableValues.add("T");
+        acceptableValues.add("G");
+        acceptableValues.add("C");
+        acceptableValues.add("?");
+
+        if (riskAlleleName == null) {
+            error = "Risk allele is empty";
+        }
+        else {
+            if (riskAlleleName.isEmpty()) {
+                error = "Risk allele is empty";
+            }
+            // Check  risk allele is one of the accepted types
+            else {
+                if (!acceptableValues.contains(riskAlleleName)) {
+                    error = "Risk allele is not one of ".concat(acceptableValues.toString());
+                }
             }
         }
         return error;

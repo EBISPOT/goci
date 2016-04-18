@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 import java.util.ArrayList;
@@ -180,6 +183,31 @@ public class ValidationChecksBuilder {
         AssociationValidationError descriptionFound = checkingService.checkDescriptionIsEmpty(association, effectType);
         associationValidationErrors.add(descriptionFound);
 
+        return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
+    }
+
+    public Collection<AssociationValidationError> runLociAttributeChecks(Association association) {
+
+        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
+        Collection<Locus> loci = association.getLoci();
+
+        if (loci == null) {
+            for (Locus locus : association.getLoci()) {
+                Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
+                Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
+
+                for (Gene gene : authorReportedGenes) {
+                    AssociationValidationError geneError = checkingService.checkGene(gene);
+                    associationValidationErrors.add(geneError);
+                }
+
+                for(RiskAllele riskAllele: riskAlleles){
+                    AssociationValidationError riskAlleleError = checkingService.checkRiskAllele(riskAllele);
+                    associationValidationErrors.add(riskAlleleError);
+                }
+
+            }
+        }
         return ErrorProcessingService.checkForValidErrors(associationValidationErrors);
     }
 }
