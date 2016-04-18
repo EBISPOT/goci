@@ -46,6 +46,8 @@ public class ValidatorApplication {
 
     private OperationMode opMode;
 
+    private String validationLevel;
+
     private static int exitCode;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -72,7 +74,7 @@ public class ValidatorApplication {
                 switch (opMode) {
                     case RUN:
                         try {
-                            runUpload(inputFile);
+                            runUpload(inputFile, validationLevel);
                         }
                         catch (Exception e) {
                             System.err.println("Validation failed (" + e.getMessage() + ")");
@@ -88,10 +90,10 @@ public class ValidatorApplication {
         };
     }
 
-    private void runUpload(File file) throws FileNotFoundException {
+    private void runUpload(File file, String validationLevel) throws FileNotFoundException {
 
         Collection<AssociationSummary> associationSummaries =
-                associationFileUploadService.processAssociationFile(file);
+                associationFileUploadService.processAssociationFile(file, validationLevel);
         System.out.println("Validation log written to " + inputFile.getAbsolutePath());
         getLog().info("Validation log written to " + inputFile.getAbsolutePath());
         validationLogService.createLog(inputFile, associationSummaries);
@@ -105,8 +107,6 @@ public class ValidatorApplication {
         options.addOption(helpOption);
 
         // options are...
-        // -v do validation
-        // -f file to validate
         OptionGroup modeGroup = new OptionGroup();
         modeGroup.setRequired(true);
 
@@ -120,6 +120,27 @@ public class ValidatorApplication {
         modeGroup.addOption(validatorOptions);
         options.addOptionGroup(modeGroup);
 
+        OptionGroup validationGroup = new OptionGroup();
+        modeGroup.setRequired(true);
+        Option lightOption = new Option(
+                "a",
+                "author checking",
+                false,
+                "Runs light checking over the uploaded association file, used mainly for author submission spreadsheets");
+
+        lightOption.setRequired(false);
+        validationGroup.addOption(lightOption);
+        options.addOptionGroup(validationGroup);
+
+        Option fullOption = new Option(
+                "c",
+                "curator checking",
+                false,
+                "Runs full checking over the uploaded association file, used mainly for curator submission spreadsheets");
+
+        fullOption.setRequired(false);
+        validationGroup.addOption(fullOption);
+        options.addOptionGroup(validationGroup);
 
         // add input file arguments
         OptionGroup fileGroup = new OptionGroup();
@@ -170,6 +191,15 @@ public class ValidatorApplication {
                 // file options
                 if (cl.hasOption("f")) {
                     this.inputFile = new File(cl.getOptionValue("f"));
+                }
+
+                // set validation level
+                if (cl.hasOption("a")) {
+                    this.validationLevel = "author";
+                }
+
+                if (cl.hasOption("c")) {
+                    this.validationLevel = "full";
                 }
             }
         }
