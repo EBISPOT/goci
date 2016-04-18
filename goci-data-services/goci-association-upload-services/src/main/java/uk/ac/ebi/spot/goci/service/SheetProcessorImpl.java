@@ -55,7 +55,6 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
 
                 switch (headerName) {
                     case "SNP ID":
-
                         if (cell != null) {
                             associationUploadRow.setSnp(cell.getRichStringCellValue()
                                                                 .getString()
@@ -74,9 +73,8 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                         break;
                     case "effect allele frequency in controls":
                         if (cell != null) {
-                            associationUploadRow.setAssociationRiskFrequency(cell.getRichStringCellValue()
-                                                                                     .getString()
-                                                                                     .trim());
+                            associationUploadRow.setAssociationRiskFrequency(SheetCellProcessingService.processStringValue(
+                                    cell));
                         }
                         break;
                     case "gene":

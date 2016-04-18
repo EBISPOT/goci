@@ -12,6 +12,21 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
  */
 public class SheetCellProcessingService {
 
+    public static String processStringValue(XSSFCell cell) {
+        String stringValue = null;
+        if (cell != null) {
+            switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_STRING:
+                    stringValue = cell.getRichStringCellValue().getString().trim();
+                    break;
+                case Cell.CELL_TYPE_NUMERIC:
+                    stringValue = Double.toString(cell.getNumericCellValue());
+                    break;
+            }
+        }
+        return stringValue;
+    }
+
     public static Integer processIntValues(XSSFCell cell) {
         Integer intValue = null;
         if (cell != null) {
