@@ -27,7 +27,6 @@ public class CheckingService {
         this.validationChecks = validationChecks;
     }
 
-
     /**
      * Run p-value checks on a row annotation
      *
