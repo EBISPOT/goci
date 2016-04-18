@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.AssociationValidationError;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -50,12 +52,13 @@ public class AssociationFileUploadService {
     }
 
     /**
-     * Process uploaded file
+     * Process uploaded file and return a list of its errors
      *
      * @param file XLSX file supplied by user
      */
-    public void processAssociationFile(File file) {
+    public Collection<AssociationSummary> processAssociationFile(File file) {
 
+        Collection<AssociationSummary> associationSummaries = new ArrayList<>();
         if (file.exists()) {
             // Create sheet
             XSSFSheet sheet = null;
@@ -67,16 +70,16 @@ public class AssociationFileUploadService {
                 Collection<AssociationUploadRow> fileRows = uploadSheetProcessor.readSheetRows(sheet);
 
                 // Error check each row
-                // Create a map of row and resulting association
                 for (AssociationUploadRow row : fileRows) {
-
-                    Integer rowNumber = row.getRowNumber();
+                    getLog().debug("Error checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
                     Association association = associationRowProcessor.createAssociationFromUploadRow(row);
-
                     Collection<AssociationValidationError> errors =
                             associationValidationService.runAssociationValidation(association, "full");
 
-                    // TODO - We need to collate all errors and present in log
+                    AssociationSummary associationSummary = new AssociationSummary();
+                    associationSummary.setAssociation(association);
+                    associationSummary.setAssociationValidationErrors(errors);
+                    associationSummaries.add(associationSummary);
                 }
             }
             catch (InvalidFormatException | IOException e) {
@@ -86,5 +89,6 @@ public class AssociationFileUploadService {
         else {
             getLog().error("File: " + file.getName() + " cannot be found");
         }
+        return associationSummaries;
     }
 }
