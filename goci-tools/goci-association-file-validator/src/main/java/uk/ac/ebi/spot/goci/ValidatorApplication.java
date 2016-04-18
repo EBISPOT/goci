@@ -16,9 +16,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
+import uk.ac.ebi.spot.goci.service.ValidationLogService;
 
 import java.io.File;
+import java.util.Collection;
 
 /**
  * Created by emma on 14/04/2016.
@@ -33,7 +36,12 @@ public class ValidatorApplication {
     @Autowired
     private AssociationFileUploadService associationFileUploadService;
 
+    @Autowired
+    private ValidationLogService validationLogService;
+
     private File inputFile;
+
+    private File outputFile;
 
     private OperationMode opMode;
 
@@ -80,8 +88,10 @@ public class ValidatorApplication {
     }
 
     private void runUpload(File file) {
-        // TODO DECIDE WHAT TO DO WITH ERRORS
-        associationFileUploadService.processAssociationFile(file);
+        Collection<AssociationSummary> associationSummaries = associationFileUploadService.processAssociationFile(file);
+        System.out.println("Validation log written to "+ inputFile.getAbsolutePath());
+        getLog().info("Validation log written to "+ inputFile.getAbsolutePath());
+        validationLogService.createLog(inputFile, associationSummaries);
     }
 
     private Options bindOptions() {
