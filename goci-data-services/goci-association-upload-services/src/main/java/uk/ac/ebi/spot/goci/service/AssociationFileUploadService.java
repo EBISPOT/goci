@@ -57,7 +57,7 @@ public class AssociationFileUploadService {
      *
      * @param file XLSX file supplied by user
      */
-    public Collection<AssociationSummary> processAssociationFile(File file) throws FileNotFoundException {
+    public Collection<AssociationSummary> processAssociationFile(File file, String validationLevel) throws FileNotFoundException {
 
         Collection<AssociationSummary> associationSummaries = new ArrayList<>();
         if (file.exists()) {
@@ -75,7 +75,7 @@ public class AssociationFileUploadService {
                     getLog().debug("Error checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
                     Association association = associationRowProcessor.createAssociationFromUploadRow(row);
                     Collection<AssociationValidationError> errors =
-                            associationValidationService.runAssociationValidation(association, "full");
+                            associationValidationService.runAssociationValidation(association, validationLevel);
 
                     AssociationSummary associationSummary = new AssociationSummary();
                     associationSummary.setAssociation(association);
