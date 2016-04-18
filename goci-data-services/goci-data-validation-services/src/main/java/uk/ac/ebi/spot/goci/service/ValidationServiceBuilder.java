@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,6 +23,9 @@ public class ValidationServiceBuilder {
         switch (validationLevel) {
             case "full":
                 service = new FullAssociationCheckingService();
+                break;
+            case "author":
+                service = new AuthorAssociationCheckingService();
                 break;
             default:
                 service = new FullAssociationCheckingService();
