@@ -21,6 +21,7 @@ import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 import uk.ac.ebi.spot.goci.service.ValidationLogService;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 
 /**
@@ -74,23 +75,25 @@ public class ValidatorApplication {
                             runUpload(inputFile);
                         }
                         catch (Exception e) {
-                            System.err.println("Validation failed(" + e.getMessage() + ")");
+                            System.err.println("Validation failed (" + e.getMessage() + ")");
                             getLog().error("Validation failed", e);
                             exitCode += 2;
                         }
                         break;
                     default:
-                        System.err.println("No file argument supplied");
+                        System.err.println("No operation mode supplied");
                         exitCode += 1;
                 }
             }
         };
     }
 
-    private void runUpload(File file) {
-        Collection<AssociationSummary> associationSummaries = associationFileUploadService.processAssociationFile(file);
-        System.out.println("Validation log written to "+ inputFile.getAbsolutePath());
-        getLog().info("Validation log written to "+ inputFile.getAbsolutePath());
+    private void runUpload(File file) throws FileNotFoundException {
+
+        Collection<AssociationSummary> associationSummaries =
+                associationFileUploadService.processAssociationFile(file);
+        System.out.println("Validation log written to " + inputFile.getAbsolutePath());
+        getLog().info("Validation log written to " + inputFile.getAbsolutePath());
         validationLogService.createLog(inputFile, associationSummaries);
     }
 

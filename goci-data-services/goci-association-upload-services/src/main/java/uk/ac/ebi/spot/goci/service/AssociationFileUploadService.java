@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.AssociationValidationError;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,7 +57,7 @@ public class AssociationFileUploadService {
      *
      * @param file XLSX file supplied by user
      */
-    public Collection<AssociationSummary> processAssociationFile(File file) {
+    public Collection<AssociationSummary> processAssociationFile(File file) throws FileNotFoundException {
 
         Collection<AssociationSummary> associationSummaries = new ArrayList<>();
         if (file.exists()) {
@@ -88,6 +89,7 @@ public class AssociationFileUploadService {
         }
         else {
             getLog().error("File: " + file.getName() + " cannot be found");
+            throw new FileNotFoundException("File does not exist");
         }
         return associationSummaries;
     }
