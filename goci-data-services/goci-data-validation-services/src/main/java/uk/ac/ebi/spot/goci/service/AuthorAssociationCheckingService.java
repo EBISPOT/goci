@@ -42,19 +42,12 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
 
         if (effectType.equalsIgnoreCase("beta")) {
             Collection<AssociationValidationError> betaErrors =
-                    validationChecksBuilder.runBetaChecks(association, effectType);
+                    validationChecksBuilder.runAuthorLevelBetaChecks(association, effectType);
             if (!betaErrors.isEmpty()) {
                 associationValidationErrors.addAll(betaErrors);
             }
         }
 
-        if (effectType.equalsIgnoreCase("nr")) {
-            Collection<AssociationValidationError> noEffectErrors =
-                    validationChecksBuilder.runNoEffectErrors(association, effectType);
-            if (!noEffectErrors.isEmpty()) {
-                associationValidationErrors.addAll(noEffectErrors);
-            }
-        }
         return associationValidationErrors;
     }
 }
