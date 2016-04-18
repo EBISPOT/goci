@@ -51,22 +51,20 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                 Integer colNum = heading.getKey();
                 String headerName = heading.getValue();
                 XSSFRow row = sheet.getRow(rowNum);
+                XSSFCell cell = row.getCell(colNum, Row.RETURN_BLANK_AS_NULL);
 
                 switch (headerName) {
                     case "SNP ID":
 
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setSnp(row.getCell(colNum)
-                                                                .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setSnp(cell.getRichStringCellValue()
                                                                 .getString()
                                                                 .trim());
                         }
-
                         break;
                     case "effect allele":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setStrongestAllele(row.getCell(colNum)
-                                                                            .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setStrongestAllele(cell.getRichStringCellValue()
                                                                             .getString()
                                                                             .trim());
                         }
@@ -75,66 +73,51 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                         // TODO ADD
                         break;
                     case "effect allele frequency in controls":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setAssociationRiskFrequency(row.getCell(colNum)
-                                                                                     .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setAssociationRiskFrequency(cell.getRichStringCellValue()
                                                                                      .getString()
                                                                                      .trim());
                         }
                         break;
                     case "gene":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setAuthorReportedGene(row.getCell(colNum)
-                                                                               .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setAuthorReportedGene(cell.getRichStringCellValue()
                                                                                .getString()
                                                                                .trim());
                         }
                         break;
                     case "p-value mantissa":
-                        associationUploadRow.setPvalueMantissa(SheetCellProcessingService.processIntValues(row.getCell(
-                                colNum,
-                                Row.RETURN_BLANK_AS_NULL)));
+                        associationUploadRow.setPvalueMantissa(SheetCellProcessingService.processIntValues(cell));
                         break;
                     case "p-value exponent":
-                        associationUploadRow.setPvalueExponent(SheetCellProcessingService.processIntValues(row.getCell(
-                                colNum,
-                                Row.RETURN_BLANK_AS_NULL)));
+                        associationUploadRow.setPvalueExponent(SheetCellProcessingService.processIntValues(cell));
                         break;
                     case "OR":
-                        associationUploadRow.setOrPerCopyNum(SheetCellProcessingService.processFloatValues(row.getCell(
-                                colNum,
-                                Row.RETURN_BLANK_AS_NULL)));
+                        associationUploadRow.setOrPerCopyNum(SheetCellProcessingService.processFloatValues(cell));
                         break;
                     case "beta":
-                        associationUploadRow.setBetaNum(SheetCellProcessingService.processFloatValues(row.getCell(
-                                colNum,
-                                Row.RETURN_BLANK_AS_NULL)));
+                        associationUploadRow.setBetaNum(SheetCellProcessingService.processFloatValues(cell));
                         break;
                     case "beta unit":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setBetaUnit(row.getCell(colNum)
-                                                                     .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setBetaUnit(cell.getRichStringCellValue()
                                                                      .getString()
                                                                      .trim());
                         }
                         break;
                     case "beta direction":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setBetaDirection(row.getCell(colNum)
-                                                                          .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setBetaDirection(cell.getRichStringCellValue()
                                                                           .getString()
                                                                           .trim());
                         }
                         break;
                     case "OR/beta SE":
-                        associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(row.getCell(
-                                colNum,
-                                Row.RETURN_BLANK_AS_NULL)));
+                        associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(cell));
                         break;
                     case "OR/beta range":
-                        if (row.getCell(colNum, Row.RETURN_BLANK_AS_NULL) != null) {
-                            associationUploadRow.setRange(row.getCell(colNum)
-                                                                  .getRichStringCellValue()
+                        if (cell != null) {
+                            associationUploadRow.setRange(cell.getRichStringCellValue()
                                                                   .getString()
                                                                   .trim());
                         }
