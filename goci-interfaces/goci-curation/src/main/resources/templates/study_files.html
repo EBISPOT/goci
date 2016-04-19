@@ -11,6 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
 <body>
 
@@ -27,11 +28,16 @@
                 <thead>
                 <tr>
                     <th>Study files</th>
+                    <th>Download</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="file : ${files}">
                     <td th:text="${file.fileName} ?: '' ">Test.txt</td>
+                    <td><a th:if="${not #strings.isEmpty(file.fileName)}"
+                           th:href="@{/studies/{studyId}/studyfiles/{fileName}(studyId=${study.id}, fileName=${file.fileName})}"><i
+                            class="fa fa-external-link"
+                            aria-hidden="true"></i></a></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(files)}">
                     <td colspan="10"><p style=" font-weight: bold; text-align: center;">No files found</p></td>
