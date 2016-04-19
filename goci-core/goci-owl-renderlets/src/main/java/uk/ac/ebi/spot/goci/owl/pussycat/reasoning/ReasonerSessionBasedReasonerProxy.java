@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.ontology.owl.pussycat.reasoning;
 
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +33,8 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
 
     private OWLReasoner lazyloadReasoner() {
         if (!getReasonerSession().isReasonerInitialized()) {
-            getLog().debug("Received a request that requires delegation to the reasoner, but the reasoner is not yet initialized.");
+            getLog().debug(
+                    "Received a request that requires delegation to the reasoner, but the reasoner is not yet initialized.");
         }
 
         while (!getReasonerSession().isReasonerInitialized()) {
@@ -109,7 +108,7 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
 
     @Override public boolean isSatisfiable(OWLClassExpression classExpression)
             throws ReasonerInterruptedException, TimeOutException, ClassExpressionNotInProfileException,
-            FreshEntitiesException, InconsistentOntologyException {
+                   FreshEntitiesException, InconsistentOntologyException {
         return lazyloadReasoner().isSatisfiable(classExpression);
     }
 
@@ -120,13 +119,13 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
 
     @Override public boolean isEntailed(OWLAxiom owlAxiom)
             throws ReasonerInterruptedException, UnsupportedEntailmentTypeException, TimeOutException,
-            AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
+                   AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
         return lazyloadReasoner().isEntailed(owlAxiom);
     }
 
     @Override public boolean isEntailed(Set<? extends OWLAxiom> owlAxioms)
             throws ReasonerInterruptedException, UnsupportedEntailmentTypeException, TimeOutException,
-            AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
+                   AxiomNotInProfileException, FreshEntitiesException, InconsistentOntologyException {
         return lazyloadReasoner().isEntailed(owlAxioms);
     }
 
@@ -144,25 +143,25 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
 
     @Override public NodeSet<OWLClass> getSubClasses(OWLClassExpression classExpression, boolean b)
             throws ReasonerInterruptedException, TimeOutException, FreshEntitiesException,
-            InconsistentOntologyException, ClassExpressionNotInProfileException {
+                   InconsistentOntologyException, ClassExpressionNotInProfileException {
         return lazyloadReasoner().getSubClasses(classExpression, b);
     }
 
     @Override public NodeSet<OWLClass> getSuperClasses(OWLClassExpression classExpression, boolean b)
             throws InconsistentOntologyException, ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+                   ReasonerInterruptedException, TimeOutException {
         return lazyloadReasoner().getSuperClasses(classExpression, b);
     }
 
     @Override public Node<OWLClass> getEquivalentClasses(OWLClassExpression classExpression)
             throws InconsistentOntologyException, ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+                   ReasonerInterruptedException, TimeOutException {
         return lazyloadReasoner().getEquivalentClasses(classExpression);
     }
 
     @Override public NodeSet<OWLClass> getDisjointClasses(OWLClassExpression classExpression)
             throws ReasonerInterruptedException, TimeOutException, FreshEntitiesException,
-            InconsistentOntologyException {
+                   InconsistentOntologyException {
         return lazyloadReasoner().getDisjointClasses(classExpression);
     }
 
@@ -174,49 +173,54 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
         return lazyloadReasoner().getBottomObjectPropertyNode();
     }
 
-    @Override public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression,
-                                                                                 boolean b)
+    @Override
+    public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression,
+                                                                       boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getSubObjectProperties(owlObjectPropertyExpression, b);
     }
 
-    @Override public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression,
-                                                                                   boolean b)
+    @Override
+    public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression,
+                                                                         boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getSuperObjectProperties(owlObjectPropertyExpression, b);
     }
 
-    @Override public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
+    @Override
+    public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getEquivalentObjectProperties(owlObjectPropertyExpression);
     }
 
-    @Override public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
+    @Override
+    public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getDisjointObjectProperties(owlObjectPropertyExpression);
     }
 
-    @Override public Node<OWLObjectPropertyExpression> getInverseObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
+    @Override
+    public Node<OWLObjectPropertyExpression> getInverseObjectProperties(OWLObjectPropertyExpression owlObjectPropertyExpression)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getInverseObjectProperties(owlObjectPropertyExpression);
     }
 
     @Override public NodeSet<OWLClass> getObjectPropertyDomains(OWLObjectPropertyExpression owlObjectPropertyExpression,
                                                                 boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getObjectPropertyDomains(owlObjectPropertyExpression, b);
     }
 
     @Override public NodeSet<OWLClass> getObjectPropertyRanges(OWLObjectPropertyExpression owlObjectPropertyExpression,
                                                                boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getObjectPropertyRanges(owlObjectPropertyExpression, b);
     }
 
@@ -230,69 +234,70 @@ public class ReasonerSessionBasedReasonerProxy implements OWLReasoner {
 
     @Override public NodeSet<OWLDataProperty> getSubDataProperties(OWLDataProperty owlDataProperty, boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getSubDataProperties(owlDataProperty, b);
     }
 
     @Override public NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty owlDataProperty, boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getSuperDataProperties(owlDataProperty, b);
     }
 
     @Override public Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty owlDataProperty)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getEquivalentDataProperties(owlDataProperty);
     }
 
-    @Override public NodeSet<OWLDataProperty> getDisjointDataProperties(OWLDataPropertyExpression owlDataPropertyExpression)
+    @Override
+    public NodeSet<OWLDataProperty> getDisjointDataProperties(OWLDataPropertyExpression owlDataPropertyExpression)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getDisjointDataProperties(owlDataPropertyExpression);
     }
 
     @Override public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty owlDataProperty, boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getDataPropertyDomains(owlDataProperty, b);
     }
 
     @Override public NodeSet<OWLClass> getTypes(OWLNamedIndividual owlNamedIndividual, boolean b)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getTypes(owlNamedIndividual, b);
     }
 
     @Override public NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression classExpression, boolean b)
             throws InconsistentOntologyException, ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+                   ReasonerInterruptedException, TimeOutException {
         return lazyloadReasoner().getInstances(classExpression, b);
     }
 
     @Override public NodeSet<OWLNamedIndividual> getObjectPropertyValues(OWLNamedIndividual owlNamedIndividual,
                                                                          OWLObjectPropertyExpression owlObjectPropertyExpression)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getObjectPropertyValues(owlNamedIndividual, owlObjectPropertyExpression);
     }
 
     @Override public Set<OWLLiteral> getDataPropertyValues(OWLNamedIndividual owlNamedIndividual,
                                                            OWLDataProperty owlDataProperty)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getDataPropertyValues(owlNamedIndividual, owlDataProperty);
     }
 
     @Override public Node<OWLNamedIndividual> getSameIndividuals(OWLNamedIndividual owlNamedIndividual)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getSameIndividuals(owlNamedIndividual);
     }
 
     @Override public NodeSet<OWLNamedIndividual> getDifferentIndividuals(OWLNamedIndividual owlNamedIndividual)
             throws InconsistentOntologyException, FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
+                   TimeOutException {
         return lazyloadReasoner().getDifferentIndividuals(owlNamedIndividual);
     }
 

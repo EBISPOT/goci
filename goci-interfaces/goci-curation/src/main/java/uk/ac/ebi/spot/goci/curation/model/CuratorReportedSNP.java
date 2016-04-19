@@ -6,9 +6,8 @@ import java.util.Collection;
  * Created by emma on 07/01/15.
  *
  * @author emma
- *
- *         Service class used to deal with curator reported SNPs,
- *         which are entered as separate tags
+ *         <p>
+ *         Service class used to deal with curator reported SNPs, which are entered as separate tags
  */
 public class CuratorReportedSNP {
 

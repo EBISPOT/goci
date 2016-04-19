@@ -1,12 +1,17 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by emma on 09/02/15.
- * @author emma
  *
- * Model object representing a user
+ * @author emma
+ *         <p>
+ *         Model object representing a user
  */
 @Entity
 public class SecureUser {
@@ -16,7 +21,7 @@ public class SecureUser {
     private Long id;
 
     // Email must be unique
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
 
     private String passwordHash;

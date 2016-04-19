@@ -8,7 +8,7 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository to access CurationStatus entity object
  */
 @RepositoryRestResource

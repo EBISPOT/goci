@@ -11,7 +11,7 @@ public class CoOAnnotation {
 
     private String ontologyURI;
 
-    public CoOAnnotation(Long id, String coo, String uri){
+    public CoOAnnotation(Long id, String coo, String uri) {
         this.id = id;
         this.countryOfOrigin = coo;
         this.ontologyURI = uri;

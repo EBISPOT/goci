@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>goci-platform-mapper</artifactId>
+    <version>2.1.1</version>
+    <packaging>jar</packaging>
+
+    <name>GOCI Platform Mapper</name>
+    <description>Decomposes the legacy platform field into its component parts and writes them back to the database</description>
+
+    <parent>
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>goci-parent</artifactId>
+        <version>2.1.1</version>
+        <relativePath>../../goci-parent/pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-service</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.spot</groupId>-->
+            <!--<artifactId>goci-db-binding</artifactId>-->
+        <!--</dependency>-->
+
+
+    </dependencies>
+
+    <build>
+        <finalName>gwas-platform-mapper</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>uk.ac.ebi.spot.goci.GOCIPlatformMapperDriver</start-class>
+        <java.version>1.8</java.version>
+    </properties>
+
+</project>

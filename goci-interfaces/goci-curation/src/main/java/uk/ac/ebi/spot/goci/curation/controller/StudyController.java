@@ -12,28 +12,59 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.model.*;
-import uk.ac.ebi.spot.goci.curation.service.MailService;
-import uk.ac.ebi.spot.goci.curation.service.StudyAssociationTableViewService;
+import uk.ac.ebi.spot.goci.curation.model.Assignee;
+import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
+import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
-import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Platform;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.PlatformRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by emma on 20/11/14.
  *
  * @author emma
  *         <p>
- *         Study Controller interprets user input and transform it into a study model that is represented to the
- *         user by the associated HTML page.
+ *         Study Controller interprets user input and transform it into a study model that is represented to the user by
+ *         the associated HTML page.
  */
 
 @Controller
@@ -47,15 +78,15 @@ public class StudyController {
     private EfoTraitRepository efoTraitRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
+    private PlatformRepository platformRepository;
     private AssociationRepository associationRepository;
     private EthnicityRepository ethnicityRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
 
     // Pubmed ID lookup service
     private DefaultPubMedSearchService defaultPubMedSearchService;
-    private MailService mailService;
-    private StudyAssociationTableViewService studyAssociationTableViewService;
-    private StudyOperationsService studyService;
+    private StudyOperationsService studyOperationsService;
+    private MappingDetailsService mappingDetailsService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -66,20 +97,32 @@ public class StudyController {
     }
 
     @Autowired
-    public StudyController(StudyRepository studyRepository, StudyOperationsService studyService, StudyAssociationTableViewService studyAssociationTableViewService, MailService mailService, DefaultPubMedSearchService defaultPubMedSearchService, UnpublishReasonRepository unpublishReasonRepository, EthnicityRepository ethnicityRepository, AssociationRepository associationRepository, CurationStatusRepository curationStatusRepository, CuratorRepository curatorRepository, EfoTraitRepository efoTraitRepository, DiseaseTraitRepository diseaseTraitRepository, HousekeepingRepository housekeepingRepository) {
+    public StudyController(StudyRepository studyRepository,
+                           HousekeepingRepository housekeepingRepository,
+                           DiseaseTraitRepository diseaseTraitRepository,
+                           EfoTraitRepository efoTraitRepository,
+                           CuratorRepository curatorRepository,
+                           CurationStatusRepository curationStatusRepository,
+                           PlatformRepository platformRepository,
+                           AssociationRepository associationRepository,
+                           EthnicityRepository ethnicityRepository,
+                           UnpublishReasonRepository unpublishReasonRepository,
+                           DefaultPubMedSearchService defaultPubMedSearchService,
+                           StudyOperationsService studyOperationsService,
+                           MappingDetailsService mappingDetailsService) {
         this.studyRepository = studyRepository;
-        this.studyService = studyService;
-        this.studyAssociationTableViewService = studyAssociationTableViewService;
-        this.mailService = mailService;
-        this.defaultPubMedSearchService = defaultPubMedSearchService;
-        this.unpublishReasonRepository = unpublishReasonRepository;
-        this.ethnicityRepository = ethnicityRepository;
-        this.associationRepository = associationRepository;
-        this.curationStatusRepository = curationStatusRepository;
-        this.curatorRepository = curatorRepository;
-        this.efoTraitRepository = efoTraitRepository;
-        this.diseaseTraitRepository = diseaseTraitRepository;
         this.housekeepingRepository = housekeepingRepository;
+        this.diseaseTraitRepository = diseaseTraitRepository;
+        this.efoTraitRepository = efoTraitRepository;
+        this.curatorRepository = curatorRepository;
+        this.curationStatusRepository = curationStatusRepository;
+        this.platformRepository = platformRepository;
+        this.associationRepository = associationRepository;
+        this.ethnicityRepository = ethnicityRepository;
+        this.unpublishReasonRepository = unpublishReasonRepository;
+        this.defaultPubMedSearchService = defaultPubMedSearchService;
+        this.studyOperationsService = studyOperationsService;
+        this.mappingDetailsService = mappingDetailsService;
     }
 
     /* All studies and various filtered lists */
@@ -98,6 +141,9 @@ public class StudyController {
                                  @RequestParam(required = false) Integer year,
                                  @RequestParam(required = false) Integer month) {
 
+
+        // This is passed back to model and determines if pagination is applied
+        Boolean pagination = true;
 
         // Return all studies ordered by date if no page number given
         if (page == null) {
@@ -119,8 +165,11 @@ public class StudyController {
         }
 
         // This is the default study page will all studies
-        Page<Study> studyPage =
-                studyRepository.findAll(constructPageSpecification(page - 1, sort));
+        Page<Study> studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
+
+        // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
+        List<Study> studies = null;
+
 
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
@@ -133,7 +182,7 @@ public class StudyController {
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
             studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
-                    sort));
+                                                                                                            sort));
             filters = filters + "&author=" + author;
             studySearchFilter.setAuthor(author);
         }
@@ -143,39 +192,35 @@ public class StudyController {
 
             if (studyType.equals("GXE")) {
                 studyPage = studyRepository.findByGxe(true, constructPageSpecification(page - 1,
-                        sort));
+                                                                                       sort));
             }
             if (studyType.equals("GXG")) {
                 studyPage = studyRepository.findByGxg(true, constructPageSpecification(page - 1,
-                        sort));
+                                                                                       sort));
             }
 
             if (studyType.equals("CNV")) {
                 studyPage = studyRepository.findByCnv(true, constructPageSpecification(page - 1,
-                        sort));
-            }
-
-            // Include the studies with status "NCBI pipeline error"
-            // plus the ones that have the box "checked NCBI error" ticked
-            if (studyType.equals("Studies with errors")) {
-                CurationStatus errorStatus = curationStatusRepository.findByStatus("NCBI pipeline error");
-                Long errorStatusId = errorStatus.getId();
-                studyPage = studyRepository.findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(true,
-                        errorStatusId,
-                        constructPageSpecification(
-                                page -
-                                        1,
-                                sort));
+                                                                                       sort));
             }
 
             if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
                 studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
-                        constructPageSpecification(
-                                page -
-                                        1,
-                                sort));
+                                                                                  constructPageSpecification(
+                                                                                          page -
+                                                                                                  1,
+                                                                                          sort));
+            }
+            if (studyType.equals("Multi-SNP haplotype studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(sort);
+                pagination = false;
+            }
+
+            if (studyType.equals("SNP Interaction studies")) {
+                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue(sort);
+                pagination = false;
             }
 
             studySearchFilter.setStudyType(studyType);
@@ -185,7 +230,7 @@ public class StudyController {
         // Search by efo trait id
         if (efoTraitId != null) {
             studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
-                    sort));
+                                                                                                 sort));
             studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
             filters = filters + "&efotraitid=" + efoTraitId;
         }
@@ -193,7 +238,7 @@ public class StudyController {
         // Search by disease trait id
         if (diseaseTraitId != null) {
             studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
-                    sort));
+                                                                                                        sort));
             studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
             filters = filters + "&diseasetraitid=" + diseaseTraitId;
         }
@@ -201,8 +246,9 @@ public class StudyController {
 
         // Search by notes for entered string
         if (notesQuery != null && !notesQuery.isEmpty()) {
-            studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery, constructPageSpecification(page - 1,
-                    sort));
+            studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery,
+                                                                                    constructPageSpecification(page - 1,
+                                                                                                               sort));
             studySearchFilter.setNotesQuery(notesQuery);
             filters = filters + "&notesquery=" + notesQuery;
         }
@@ -214,21 +260,28 @@ public class StudyController {
 
                 // This is just used to link from reports tab
                 if (year != null && month != null) {
-                    studyPage = studyRepository.findByPublicationDateAndCuratorAndStatus(curator, status, year, month, constructPageSpecification(
-                            page - 1,
-                            sort));
+                    studyPage = studyRepository.findByPublicationDateAndCuratorAndStatus(curator,
+                                                                                         status,
+                                                                                         year,
+                                                                                         month,
+                                                                                         constructPageSpecification(
+                                                                                                 page - 1,
+                                                                                                 sort));
 
                     studySearchFilter.setMonthFilter(month);
                     studySearchFilter.setYearFilter(year);
-                    filters = filters + "&status=" + status + "&curator=" + curator + "&year=" + year + "&month=" + month;
+                    filters =
+                            filters + "&status=" + status + "&curator=" + curator + "&year=" + year + "&month=" + month;
 
-                } else {
+                }
+                else {
 
                     studyPage = studyRepository.findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(status,
-                            curator,
-                            constructPageSpecification(
-                                    page - 1,
-                                    sort));
+                                                                                                           curator,
+                                                                                                           constructPageSpecification(
+                                                                                                                   page -
+                                                                                                                           1,
+                                                                                                                   sort));
                     filters = filters + "&status=" + status + "&curator=" + curator;
                 }
 
@@ -236,7 +289,8 @@ public class StudyController {
                 studySearchFilter.setCuratorSearchFilterId(curator);
                 studySearchFilter.setStatusSearchFilterId(status);
 
-            } else {
+            }
+            else {
                 studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
                         page - 1,
                         sort));
@@ -285,18 +339,32 @@ public class StudyController {
             }
         }
         model.addAttribute("filters", filters);
-        model.addAttribute("studies", studyPage);
 
-        //Pagination variables
-        long totalStudies = studyPage.getTotalElements();
-        int current = studyPage.getNumber() + 1;
-        int begin = Math.max(1, current - 5); // Returns the greater of two values
-        int end = Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+        long totalStudies;
+        int current = 1;
 
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
+        // Construct table using pagination
+        if (studies == null) {
+            model.addAttribute("studies", studyPage);
+            //Pagination variables
+            totalStudies = studyPage.getTotalElements();
+            current = studyPage.getNumber() + 1;
+
+            int begin = Math.max(1, current - 5); // Returns the greater of two values
+            int end =
+                    Math.min(begin + 10, studyPage.getTotalPages()); // how many pages to display in the pagination bar
+
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+
+        }
+        else {
+            model.addAttribute("studies", studies);
+            totalStudies = studies.size();
+        }
         model.addAttribute("totalStudies", totalStudies);
+        model.addAttribute("pagination", pagination);
 
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
@@ -316,9 +384,7 @@ public class StudyController {
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
-                                         Model model,
-                                         @RequestParam(required = true) String filters) {
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
 
         // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
@@ -365,7 +431,8 @@ public class StudyController {
             // If we have curator and status find by both
             if (curator != null) {
                 return "redirect:/studies?page=1&status=" + status + "&curator=" + curator;
-            } else {
+            }
+            else {
                 return "redirect:/studies?page=1&status=" + status;
             }
         }
@@ -383,29 +450,6 @@ public class StudyController {
     }
 
 
-    // View all studies with associations annotated as multi-SNP haplotype
-    @RequestMapping(value = "/haplotype", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getHaplotypeStudies(Model model) {
-
-        List<Study> haplotypeStudies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(haplotypeStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", haplotypeStudies.size());
-        return "studies_by_association_type";
-    }
-
-    // View all studies with associations annotated as SNP interaction
-    @RequestMapping(value = "/snp_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getSnpInteractionStudies(Model model) {
-
-        List<Study> interactionStudies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue();
-
-        List<StudyAssociationTableView> studies = studyAssociationTableViewService.createViews(interactionStudies);
-        model.addAttribute("studies", studies);
-        model.addAttribute("totalStudies", interactionStudies.size());
-        return "studies_by_association_type";
-    }
 
    /* New Study*/
 
@@ -528,10 +572,12 @@ public class StudyController {
         if (!associations.isEmpty()) {
             return "delete_study_with_associations_warning";
 
-        } else if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
+        }
+        else if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
             model.addAttribute("studyToDelete", studyToDelete);
             return "delete_published_study_warning";
-        } else {
+        }
+        else {
             model.addAttribute("studyToDelete", studyToDelete);
             return "delete_study";
         }
@@ -553,6 +599,7 @@ public class StudyController {
         for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
             ethnicityRepository.delete(ethnicity);
         }
+
 
         // Delete study
         studyRepository.delete(studyToDelete);
@@ -590,7 +637,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-        // Add duplicate message
+       // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
@@ -600,15 +647,20 @@ public class StudyController {
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudyCurator(@PathVariable Long studyId, @ModelAttribute Assignee assignee, RedirectAttributes redirectAttributes) {
+    public String assignStudyCurator(@PathVariable Long studyId,
+                                     @ModelAttribute Assignee assignee,
+                                     RedirectAttributes redirectAttributes) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
 
         if (assignee.getCuratorId() == null) {
-            String blankAssignee = "Cannot assign a blank value as a curator for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId();
+            String blankAssignee =
+                    "Cannot assign a blank value as a curator for study: " + study.getAuthor() + ", " + " pubmed = " +
+                            study.getPubmedId();
             redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
-        } else {
+        }
+        else {
             Long curatorId = assignee.getCuratorId();
             Curator curator = curatorRepository.findOne(curatorId);
 
@@ -621,22 +673,29 @@ public class StudyController {
     }
 
     // Assign a status to a study
-    @RequestMapping(value = "/{studyId}/status_update", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudyStatus(@PathVariable Long studyId, @ModelAttribute StatusAssignment statusAssignment, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/{studyId}/status_update",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String assignStudyStatus(@PathVariable Long studyId,
+                                    @ModelAttribute StatusAssignment statusAssignment,
+                                    RedirectAttributes redirectAttributes) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
 
         if (statusAssignment.getStatusId() == null) {
-            String blankStatus = "Cannot assign a blank value as a status for study: " + study.getAuthor() + ", " + " pubmed = " + study.getPubmedId();
+            String blankStatus =
+                    "Cannot assign a blank value as a status for study: " + study.getAuthor() + ", " + " pubmed = " +
+                            study.getPubmedId();
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
-        } else {
+        }
+        else {
             Long statusId = statusAssignment.getStatusId();
             CurationStatus status = curationStatusRepository.findOne(statusId);
             CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
             // Handles status change
-            String studySnpsNotApproved = studyService.updateStatus(status, study, currentStudyStatus);
+            String studySnpsNotApproved = studyOperationsService.updateStatus(status, study, currentStudyStatus);
             study.getHousekeeping().setLastUpdateDate(new Date());
             studyRepository.save(study);
 
@@ -658,20 +717,25 @@ public class StudyController {
         // If we don't have a housekeeping object create one, this should not occur though as they are created when study is created
         if (study.getHousekeeping() == null) {
             model.addAttribute("studyHousekeeping", new Housekeeping());
-        } else {
+        }
+        else {
             model.addAttribute("studyHousekeeping", study.getHousekeeping());
         }
 
         // Return the housekeeping object attached to study and return the study
         model.addAttribute("study", study);
+
+        // Return a DTO that holds a summary of any automated mappings
+        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(study));
+
         return "study_housekeeping";
     }
 
 
     // Update page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping",
-            produces = MediaType.TEXT_HTML_VALUE,
-            method = RequestMethod.POST)
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping,
                                           @PathVariable Long studyId,
                                           RedirectAttributes redirectAttributes) {
@@ -680,7 +744,7 @@ public class StudyController {
         // Establish linked study
         Study study = studyRepository.findOne(studyId);
 
-        // Get current study status
+        // Before we save housekeeping get the status in database so we can check for a change
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
         // Save housekeeping returned from form straight away to save any curator entered details like notes etc
@@ -688,7 +752,8 @@ public class StudyController {
         housekeepingRepository.save(housekeeping);
 
         // Update status
-        String message = studyService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
+        String message =
+                studyOperationsService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
 
         // Add save message
         if (message == null) {
@@ -716,8 +781,9 @@ public class StudyController {
             model.addAttribute("study", studyToUnpublish);
             return "unpublish_study_with_associations_warning";
 
-        } else {
-//            model.addAttribute("studyHousekeeping", studyToUnpublish.getHousekeeping());
+        }
+        else {
+            //            model.addAttribute("studyHousekeeping", studyToUnpublish.getHousekeeping());
             model.addAttribute("studyToUnpublish", studyToUnpublish);
             return "unpublish_study";
         }
@@ -786,12 +852,15 @@ public class StudyController {
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
         duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
         duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
-        duplicateStudy.setPlatform(studyToDuplicate.getPlatform());
         duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
+        duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
+        duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
+        duplicateStudy.setImputed(studyToDuplicate.getImputed());
+        duplicateStudy.setPooled(studyToDuplicate.getPooled());
 
         // Deal with EFO traits
         Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
@@ -802,6 +871,14 @@ public class StudyController {
             duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
         }
 
+        //Deal with platforms
+        Collection<Platform> platforms = studyToDuplicate.getPlatforms();
+        Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
+
+        if(platforms != null && !platforms.isEmpty()){
+            platformsDuplicateStudy.addAll(platforms);
+            duplicateStudy.setPlatforms(platformsDuplicateStudy);
+        }
 
         return duplicateStudy;
     }
@@ -821,6 +898,7 @@ public class StudyController {
         return duplicateEthnicity;
 
     }
+
 
     // Find correct sorting type and direction
     private Sort findSort(String sortType) {
@@ -848,13 +926,13 @@ public class StudyController {
         sortTypeMap.put("curationstatussortasc", sortByCurationStatusAsc());
         sortTypeMap.put("curationstatussortdesc", sortByCurationStatusDesc());
 
+
         if (sortType != null && !sortType.isEmpty()) {
             sort = sortTypeMap.get(sortType);
         }
 
         return sort;
     }
-
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -893,6 +971,13 @@ public class StudyController {
         return curatorRepository.findAll(sortByLastNameAsc());
     }
 
+    //Platforms
+    @ModelAttribute("platforms")
+//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
+
+
+
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
@@ -915,9 +1000,21 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Studies with errors");
         studyTypesOptions.add("Studies in curation queue");
+        studyTypesOptions.add("Multi-SNP haplotype studies");
+        studyTypesOptions.add("SNP Interaction studies");
         return studyTypesOptions;
+    }
+
+    @ModelAttribute("qualifiers")
+    public List<String> populateQualifierOptions(Model model){
+        List<String> qualifierOptions = new ArrayList<>();
+        qualifierOptions.add("up to");
+        qualifierOptions.add("at least");
+        qualifierOptions.add("~");
+        qualifierOptions.add(">");
+
+        return qualifierOptions;
     }
 
     // Authors
@@ -990,6 +1087,14 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
 
+//    private Sort sortByPlatformAsc() {
+//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+//    }
+//
+//    private Sort sortByPlatformDesc() {
+//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+//    }
+
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
     }
@@ -1008,18 +1113,17 @@ public class StudyController {
 
     private Sort sortByCurationStatusAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC,
-                "housekeeping.curationStatus.status"));
+                                       "housekeeping.curationStatus.status"));
     }
 
     private Sort sortByCurationStatusDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC,
-                "housekeeping.curationStatus.status"));
+                                       "housekeeping.curationStatus.status"));
     }
 
     /* Pagination */
-    // Pagination, method passed page index and inlcudes max number of studies, sorted by study date, to return
+    // Pagination, method passed page index and includes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }
-
 }

@@ -127,6 +127,9 @@ apoA-1: apolipoprotein A-1
 aPTT: activated partial thromboplastin time
 
 
+ARC: AR-C124910XX
+
+
 ASD: Ostium secundum atrial septal defect
 
 
@@ -413,6 +416,9 @@ ER -ve: Estrogen receptor negative
 ET-1: Endothelin-1
 
 
+ET: endocrine treatment
+
+
 ESCC: esophageal squamous cell carcinoma
 
 
@@ -557,6 +563,9 @@ Hcy:  homocysteine
 HDL-C:  Total cholesterol in HDL
 
 
+HER2: human epidermal growth factor receptor 2
+
+
 Hgb: Hemoglobin
 
 
@@ -573,6 +582,9 @@ HDL: high density lipoprotein
 
 
 HOMA-B: beta-cell function
+
+
+HR: hormone receptor
 
 
 HRmax: maximum heart rate during treadmill fitness test
@@ -1169,6 +1181,9 @@ SRM: spatial recognition memory
 
 
 SSP: spatial span
+
+
+SSRI: selective serotonin reuptake inhibitor
 
 
 sTfR: Soluble Transferrin Receptor

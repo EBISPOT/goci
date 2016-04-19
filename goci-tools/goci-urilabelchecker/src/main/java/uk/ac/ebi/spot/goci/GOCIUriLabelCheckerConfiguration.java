@@ -24,8 +24,7 @@ public class GOCIUriLabelCheckerConfiguration {
     private Resource efoResource;
 
 
-    @Bean
-    OntologyLoader ontologyLoader() {
+    @Bean OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
         loader.setOntologyName("efo");
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));

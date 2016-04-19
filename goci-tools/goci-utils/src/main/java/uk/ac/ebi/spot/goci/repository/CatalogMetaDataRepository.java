@@ -23,33 +23,48 @@ public class CatalogMetaDataRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    private static final String STUDY_COUNT = 
+    private static final String STUDY_COUNT =
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT S.PUBMED_ID " +
-                "FROM STUDY S " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+                    "SELECT DISTINCT S.PUBMED_ID " +
+                    "FROM STUDY S " +
+                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
     private static final String SNP_COUNT = "" +
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT SNP.RS_ID " +
-                "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-                "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-                "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
-    
-    
+            "SELECT DISTINCT SNP.RS_ID " +
+            "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+            "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+            "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+            "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+            "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+
+
     private static final String ASSOCIATION_COUNT =
             "SELECT COUNT(*) FROM(" +
-                "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
-                "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-                "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-                "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
-                "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
-                "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
-                "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+                    "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
+                    "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+                    "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+                    "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
+                    "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
+                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+
+    private static final String ENSEMBL_BUILD_VERSION =
+            "SELECT ENSEMBL_RELEASE_NUMBER " +
+                    "FROM MAPPING_METADATA " +
+                    "WHERE USAGE_START_DATE = (SELECT MAX(USAGE_START_DATE) FROM MAPPING_METADATA)";
+
+    private static final String GENOME_BUILD_VERSION =
+            "SELECT GENOME_BUILD_VERSION " +
+                    "FROM MAPPING_METADATA " +
+                    "WHERE USAGE_START_DATE = (SELECT MAX(USAGE_START_DATE) FROM MAPPING_METADATA)";
+
+    private static final String DBSNP_VERSION =
+            "SELECT DBSNP_VERSION " +
+                    "FROM MAPPING_METADATA " +
+                    "WHERE USAGE_START_DATE = (SELECT MAX(USAGE_START_DATE) FROM MAPPING_METADATA)";
 
 
     @Autowired//(required = false)
@@ -57,7 +72,6 @@ public class CatalogMetaDataRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.df = new SimpleDateFormat("yyyy-MM-dd");
     }
-
 
 
     public void getMetaData(File statsFile) throws IOException {
@@ -73,6 +87,12 @@ public class CatalogMetaDataRepository {
         System.out.println(snpcount);
         Integer associationCount = getAssociationCount();
         System.out.println(associationCount);
+        Integer ensemblBuild = getEnsemblBuild();
+        System.out.println(ensemblBuild);
+        String genomeBuild = getGenomeBuild();
+        System.out.println(genomeBuild);
+        Integer dbSnpVersion = getDBSnpVersion();
+        System.out.println(dbSnpVersion);
 
 
         Date date = new Date();
@@ -88,8 +108,12 @@ public class CatalogMetaDataRepository {
         props.setProperty("studycount", studycount.toString());
         props.setProperty("snpcount", snpcount.toString());
         props.setProperty("associationcount", associationCount.toString());
+        props.setProperty("dbsnpbuild", dbSnpVersion.toString());
+        props.setProperty("genomebuild", genomeBuild);
+        props.setProperty("ensemblbuild", ensemblBuild.toString());
         props.store(out, null);
         out.close();
+
 
     }
 
@@ -104,4 +128,17 @@ public class CatalogMetaDataRepository {
     private Integer getStudyCount() {
         return jdbcTemplate.queryForObject(STUDY_COUNT, Integer.class);
     }
+
+    private Integer getEnsemblBuild() {
+        return jdbcTemplate.queryForObject(ENSEMBL_BUILD_VERSION, Integer.class);
+    }
+
+    private String getGenomeBuild() {
+        return jdbcTemplate.queryForObject(GENOME_BUILD_VERSION, String.class);
+    }
+
+    private Integer getDBSnpVersion() {
+        return jdbcTemplate.queryForObject(DBSNP_VERSION, Integer.class);
+    }
+
 }

@@ -5,9 +5,8 @@ package uk.ac.ebi.spot.goci.curation.model;
  *
  * @author emma
  *         <p>
- *         Service class used to deal with curator inputed pubmed id,
- *         the id will be used to query pubmed. In order to return this value
- *         from a html form it must be warapped in an object.
+ *         Service class used to deal with curator inputed pubmed id, the id will be used to query pubmed. In order to
+ *         return this value from a html form it must be warapped in an object.
  */
 public class PubmedIdForImport {
 

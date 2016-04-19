@@ -41,7 +41,7 @@
     </bean>
 
     <!--<bean id="pussycatSession" class="uk.ac.ebi.spot.goci.pussycat.session.GOCIDataPublisherPussycatSession">-->
-        <!--<property name="reasonerSession" ref="reasonerSession" />-->
+    <!--<property name="reasonerSession" ref="reasonerSession" />-->
     <!--</bean>-->
 
 </beans>

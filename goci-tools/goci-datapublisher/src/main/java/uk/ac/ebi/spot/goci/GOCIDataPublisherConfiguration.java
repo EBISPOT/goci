@@ -22,7 +22,6 @@ public class GOCIDataPublisherConfiguration {
     private Resource efoResource;
 
 
-
     @Bean OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
         loader.setOntologyName("efo");

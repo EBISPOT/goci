@@ -10,7 +10,12 @@ import uk.ac.ebi.spot.goci.sparql.pussycat.query.QueryManager;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Javadocs go here!
@@ -35,7 +40,8 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected Set<URI> getAssociationsForTrait(RenderletNexus nexus, SparqlTemplate sparqlTemplate, URI trait)
             throws DataIntegrityViolationException {
-        return QueryManager.getCachingInstance().getAssociationsForTrait(sparqlTemplate, trait, nexus.getRenderingContext());
+        return QueryManager.getCachingInstance()
+                .getAssociationsForTrait(sparqlTemplate, trait, nexus.getRenderingContext());
     }
 
     protected URI getBandForAssociation(SparqlTemplate sparqlTemplate, URI association)
@@ -52,7 +58,7 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
             throws DataIntegrityViolationException {
         Set<URI> allTraits =
                 QueryManager.getCachingInstance()
-                            .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band, nexus.getRenderingContext());
+                        .getTraitsLocatedInCytogeneticBand(sparqlTemplate, band, nexus.getRenderingContext());
         getLog().trace("Identified " + allTraits.size() + " traits in band '" + band + "'");
 
         List<SVGArea> locations = new ArrayList<SVGArea>();
@@ -93,16 +99,18 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
                                              URI band,
                                              List<SVGArea> locations) {
         List<URI> dateOrderedTraits =
-                QueryManager.getCachingInstance().getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band, nexus.getRenderingContext());
+                QueryManager.getCachingInstance()
+                        .getTraitsOrderedByIdentificationDateForBand(sparqlTemplate, band, nexus.getRenderingContext());
 
-//        if(dateOrderedTraits.contains(trait)){
-//            return dateOrderedTraits.indexOf(trait);
-//        }
+        //        if(dateOrderedTraits.contains(trait)){
+        //            return dateOrderedTraits.indexOf(trait);
+        //        }
         List<URI> renderableDateOrderedTraits = new ArrayList<URI>();
-        for(URI t : dateOrderedTraits){
-            List<URI> associations = QueryManager.getCachingInstance().getAssociationForTraitAndBand(sparqlTemplate, t, band, nexus.getRenderingContext());
-            for(URI a : associations){
-                if(nexus.getLocationOfRenderedEntity(a) != null && !renderableDateOrderedTraits.contains(t)){
+        for (URI t : dateOrderedTraits) {
+            List<URI> associations = QueryManager.getCachingInstance()
+                    .getAssociationForTraitAndBand(sparqlTemplate, t, band, nexus.getRenderingContext());
+            for (URI a : associations) {
+                if (nexus.getLocationOfRenderedEntity(a) != null && !renderableDateOrderedTraits.contains(t)) {
                     renderableDateOrderedTraits.add(t);
                 }
             }
@@ -133,9 +141,9 @@ public class SparqlTraitRenderlet extends TraitRenderlet<SparqlTemplate, URI> {
 
     protected String getTraitLabel(SparqlTemplate sparqlTemplate, URI individual) {
         String traitName = sparqlTemplate.label(individual);
-//        if (traitName.contains("'")) {
-//            traitName = traitName.replace("'", "\\'");
-//        }
+        //        if (traitName.contains("'")) {
+        //            traitName = traitName.replace("'", "\\'");
+        //        }
         return traitName;
     }
 

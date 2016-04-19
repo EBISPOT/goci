@@ -13,19 +13,23 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Repository accessing Single Nucloetide Polymorphism entity objectls
+ *         Repository accessing Single Nucleotide Polymorphism entity objectls
  */
 
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
     SingleNucleotidePolymorphism findByRsId(String rsId);
 
-    List<SingleNucleotidePolymorphism> findByRsIdIgnoreCase(String rsId);
+    SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyId(Long studyId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
+
+    List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
+
+    Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId);
 }
 

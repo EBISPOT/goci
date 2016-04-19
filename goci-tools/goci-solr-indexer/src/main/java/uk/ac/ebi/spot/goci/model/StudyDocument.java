@@ -4,10 +4,12 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.TimeZone;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -24,8 +26,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
-
     @Field private String platform;
+
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -42,16 +44,20 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_rsId") private Collection<String> rsIds;
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
-    @Field("association_region") private Collection<String> regions;
-    @Field("association_mappedGene") private Collection<String> mappedGenes;
-    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
+    @Field("association_regions") private Collection<String> regions;
+    @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
+    @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
+    //    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+    //    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
-//    @Field("association_locusDescription") private Collection<String> locusDescriptions;
-//    @Field("association_merged") private Long merged;
+    @Field("association_positionLinks") private Collection<String> positionLinks;
+
+    //    @Field("association_locusDescription") private Collection<String> locusDescriptions;
+    //    @Field("association_merged") private Long merged;
 
     // embedded DiseaseTrait info
     @Field("traitName") private Collection<String> traitNames;
@@ -67,13 +73,11 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.author = study.getAuthor();
         this.publication = study.getPublication();
 
-        this.platform = study.getPlatform();
-
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         if (study.getPublicationDate() != null) {
             this.publicationDate = df.format(study.getPublicationDate());
         }
@@ -92,6 +96,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
 
+        this.platform = embedPlatformField(study);
+
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
         this.numberOfIndividuals = new LinkedHashSet<>();
@@ -103,14 +109,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.strongestAlleles = new LinkedHashSet<>();
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
-        this.mappedGenes = new LinkedHashSet<>();
-        this.mappedGeneLinks = new LinkedHashSet<>();
+        this.entrezMappedGenes = new LinkedHashSet<>();
+        this.entrezMappedGeneLinks = new LinkedHashSet<>();
+        //        this.ensemblMappedGenes = new LinkedHashSet<>();
+        //        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
-//        this.locusDescriptions = new LinkedHashSet<>();
+        //        this.locusDescriptions = new LinkedHashSet<>();
 
         this.traitNames = new LinkedHashSet<>();
 
@@ -146,10 +155,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return publicationLink;
     }
 
-    public String getPlatform() {
-        return platform;
-    }
-
     public String getInitialSampleDescription() {
         return initialSampleDescription;
     }
@@ -182,17 +187,26 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.contexts.add(context);
     }
 
-    public void addRegion(String region) {
-        this.regions.add(region);
+    public void addRegion(Collection<String> regions) {
+        this.regions.addAll(regions);
     }
 
-    public void addMappedGene(String mappedGene) {
-        this.mappedGenes.add(mappedGene);
+    public void addEntrezMappedGenes(Collection<String> mappedGenes) {
+        this.entrezMappedGenes.addAll(mappedGenes);
     }
 
-    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
-        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    public void addEntrezMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
+
+    //    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+    //        this.ensemblMappedGenes.addAll(mappedGenes);
+    //    }
+    //
+    //    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+    //        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+    //    }
+
 
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
@@ -210,13 +224,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.chromosomePositions.addAll(chromosomePositions);
     }
 
+    public void addPositionLinks(Collection<String> positionLinks) {
+        this.positionLinks.addAll(positionLinks);
+    }
+
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
     }
 
-//    public void addMerged(Long merged){
-//        this.merged = merged;
-//    }
+    //    public void addMerged(Long merged){
+    //        this.merged = merged;
+    //    }
 
     public void addTraitName(String traitName) {
         this.traitNames.add(traitName);
@@ -251,50 +269,111 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     private void embedAncestryData(Study study) {
         study.getEthnicities().forEach(
-               ethnicity -> {
-                   String ancestryLink = "";
+                ethnicity -> {
+                    String ancestryLink = "";
 
-                   String type = ethnicity.getType();
+                    String type = ethnicity.getType();
 
-                   ancestryLink = type;
+                    ancestryLink = type;
 
-                   String cor;
+                    String cor;
 
-                   if(ethnicity.getCountryOfRecruitment() != null){
-                       cor = ethnicity.getCountryOfRecruitment();
-                   }
-                   else {
-                       cor = "NR";
-                   }
-                   countriesOfRecruitment.add(cor);
-                   ancestryLink = ancestryLink.concat("|").concat(cor);
+                    if (ethnicity.getCountryOfRecruitment() != null) {
+                        cor = ethnicity.getCountryOfRecruitment();
+                    }
+                    else {
+                        cor = "NR";
+                    }
+                    countriesOfRecruitment.add(cor);
+                    ancestryLink = ancestryLink.concat("|").concat(cor);
 
-                   String ancestry = "";
+                    String ancestry = "";
 
-                   if(ethnicity.getEthnicGroup() != null){
-                       ancestry = ethnicity.getEthnicGroup();
-                   }
+                    if (ethnicity.getEthnicGroup() != null) {
+                        ancestry = ethnicity.getEthnicGroup();
+                    }
 
-                   ancestralGroups.add(ancestry);
-                   ancestryLink = ancestryLink.concat("|").concat(ancestry);
+                    ancestralGroups.add(ancestry);
+                    ancestryLink = ancestryLink.concat("|").concat(ancestry);
 
-                   String noInds = "";
+                    String noInds = "";
 
-                   if(ethnicity.getNumberOfIndividuals() != null){
-                       numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
-                       noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
-                   }
+                    if (ethnicity.getNumberOfIndividuals() != null) {
+                        numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
+                        noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
+                    }
 
-                   ancestryLink = ancestryLink.concat("|").concat(noInds);
+                    ancestryLink = ancestryLink.concat("|").concat(noInds);
 
-                   ancestryLinks.add(ancestryLink);
+                    ancestryLinks.add(ancestryLink);
 
-               }
+                }
         );
+    }
+
+    public String getPlatform() {
+        return platform;
     }
 
 
     //    public void addLocusDescription(String locusDescription){
-//        this.locusDescriptions.add(locusDescription);
-//    }
+    //        this.locusDescriptions.add(locusDescription);
+    //    }
+
+    private String embedPlatformField(Study study) {
+        String platform = "";
+        List<String> manufacturers = new ArrayList<>();
+        study.getPlatforms().forEach(
+                p -> {
+                    String manufacturer = p.getManufacturer();
+                    manufacturers.add(manufacturer);
+                }
+        );
+
+
+        if (manufacturers.size() != 0) {
+            Collections.sort(manufacturers);
+            for (String m : manufacturers) {
+                if (platform.equals("")) {
+                    platform = m;
+                }
+                else {
+                    platform = platform.concat(", ").concat(m);
+                }
+            }
+        }
+        else {
+            platform = "NR";
+        }
+
+
+        platform = platform.concat(" [");
+
+        if (study.getQualifier() != null) {
+            platform = platform.concat(study.getQualifier()).concat(" ");
+        }
+
+        if (study.getSnpCount() != null) {
+            platform = platform.concat(study.getSnpCount().toString()).concat("]");
+        }
+        else if (study.getSnpCount() == null && manufacturers.size() != 0 && study.getStudyDesignComment() != null){
+             platform = platform.concat(study.getStudyDesignComment()).concat("]");
+        }
+        else {
+            platform = platform.concat("NR]");
+        }
+
+        if (study.getImputed()) {
+            platform = platform.concat(" (imputed)");
+        }
+
+        if (manufacturers.size() == 0 && study.getSnpCount() == null && study.getStudyDesignComment() != null) {
+            platform = study.getStudyDesignComment();
+         }
+
+
+        return platform;
+    }
+
+
 }

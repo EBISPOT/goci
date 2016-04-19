@@ -14,13 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
 import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,6 +83,7 @@ public class SolrSearchController {
         else {
             addRowsAndPage(solrSearchBuilder, maxResults, page);
         }
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -86,7 +96,7 @@ public class SolrSearchController {
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "fieldList", required = false) Collection<String> fieldList,
-//            @RequestParam(value = "childrenOf", required = false) Collection<String> childrenOf,
+            //            @RequestParam(value = "childrenOf", required = false) Collection<String> childrenOf,
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response
@@ -112,12 +122,12 @@ public class SolrSearchController {
             fieldList.add("label");
             fieldList.add("traitUri");
             fieldList.add("id");
-//            fieldList.add("type");
+            //            fieldList.add("type");
             fieldList.add("shortForm");
             fieldList.add("parent");
 
-//            fieldList.add("ontology_name");
-//            fieldList.add("ontology_prefix");
+            //            fieldList.add("ontology_name");
+            //            fieldList.add("ontology_prefix");
         }
 
         addReturnFields(solrSearchBuilder, fieldList);
@@ -135,8 +145,6 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
 
     }
-
-
 
 
     @RequestMapping(value = "api/search/study", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -198,6 +206,7 @@ public class SolrSearchController {
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -252,7 +261,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
-        if(dateRange != "") {
+        if (dateRange != "") {
             addFilterQuery(solrSearchBuilder, "catalogPublishDate", "study_catalogPublishDate", dateRange);
         }
         addQuery(solrSearchBuilder, query);
@@ -335,12 +344,12 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
-
 
 
     @RequestMapping(value = "api/search/traits", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -374,6 +383,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
+        addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -439,7 +449,7 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
-        if(sort != ""){
+        if (sort != "") {
             addSortQuery(solrSearchBuilder, sort);
         }
 
@@ -451,13 +461,19 @@ public class SolrSearchController {
 
     @RequestMapping(value = "api/search/latest", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doLatestSolrSearch(@RequestParam("q") String query,
-                                   @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+                                   @RequestParam(value = "jsonp",
+                                                 required = false,
+                                                 defaultValue = "false") boolean useJsonp,
                                    @RequestParam(value = "callback", required = false) String callbackFunction,
                                    @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                   @RequestParam(value = "group", required = false, defaultValue = "false") boolean useGroups,
+                                   @RequestParam(value = "group",
+                                                 required = false,
+                                                 defaultValue = "false") boolean useGroups,
                                    @RequestParam(value = "group.by", required = false) String groupBy,
-                                   @RequestParam(value = "group.limit", required = false, defaultValue = "10") int groupLimit,
+                                   @RequestParam(value = "group.limit",
+                                                 required = false,
+                                                 defaultValue = "10") int groupLimit,
                                    @RequestParam(value = "dateFilter", required = false) String dateRange,
                                    @RequestParam(value = "sort", required = false) String sort,
                                    HttpServletResponse response) throws IOException {
@@ -535,7 +551,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
-         addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
 
 
         if (pval != "") {
@@ -558,8 +574,8 @@ public class SolrSearchController {
         if (dateRange != "") {
             getLog().debug(dateRange);
 
-            if(dateRange.contains("NOW")){
-                if(facet.equals("diseasetrait")){
+            if (dateRange.contains("NOW")) {
+                if (facet.equals("diseasetrait")) {
                     addFilterQuery(solrSearchBuilder, "study_catalogPublishDate", dateRange);
                 }
                 else {
@@ -576,10 +592,13 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
-        if(sort != ""){
+        if (sort != "") {
             addSortQuery(solrSearchBuilder, sort);
         }
 
+        if(facet.equals("association")){
+            addDefaultSort(solrSearchBuilder);
+        }
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -587,8 +606,10 @@ public class SolrSearchController {
     }
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
-        if(sort.contains("pValue")){
-            String dir = sort.substring(sort.length()-4);
+        if (sort.contains("pValue")) {
+//            String dir = sort.substring(sort.length() - 4);
+            String dir = sort.substring(6);
+
 
             String pvalsort = "pValueExponent".concat(dir).concat("%2C+pValueMantissa").concat(dir);
 
@@ -599,10 +620,16 @@ public class SolrSearchController {
         }
     }
 
+    private void addDefaultSort(StringBuilder solrSearchBuilder){
+        String pvalsort = "pValueExponent+asc%2C+pValueMantissa+asc";
+
+        solrSearchBuilder.append("&sort=").append(pvalsort);
+    }
+
     private void addSelectFields(StringBuilder solrSearchBuilder, String query) {
         solrSearchBuilder.append("&defType=edismax" +
-                        "&qf=label%20synonym%20label_autosuggest_ws%20label_autosuggest_e%20label_autosuggest%20synonym_autosuggest_ws%20synonym_autosuggest_e%20synonym_autosuggest%20shortform_autosuggest" +
-                        "&bq=label_s%3A%22" + query + "%22%5E2%20synonym_s%3A%22" + query + "%22");
+                                         "&qf=label%20synonym%20label_autosuggest_ws%20label_autosuggest_e%20label_autosuggest%20synonym_autosuggest_ws%20synonym_autosuggest_e%20synonym_autosuggest%20shortform_autosuggest" +
+                                         "&bq=label_s%3A%22" + query + "%22%5E2%20synonym_s%3A%22" + query + "%22");
 
 
     }
@@ -612,21 +639,21 @@ public class SolrSearchController {
         solrSearchBuilder.append("&facet=true&facet.field=").append(facet);
     }
 
-    private void addFacetMincount(StringBuilder solrSearchBuilder, int min){
+    private void addFacetMincount(StringBuilder solrSearchBuilder, int min) {
         solrSearchBuilder.append("&facet.mincount=").append(min);
     }
 
-    private void addFacetLimit(StringBuilder solrSearchBuilder, int limit){
+    private void addFacetLimit(StringBuilder solrSearchBuilder, int limit) {
         solrSearchBuilder.append("&facet.limit=").append(limit);
     }
 
-    private void addFacetSort(StringBuilder solrSearchBuilder, String sort){
+    private void addFacetSort(StringBuilder solrSearchBuilder, String sort) {
         solrSearchBuilder.append("&facet.sort=").append(sort);
     }
 
     private void addReturnFields(StringBuilder solrSearchBuilder, Collection<String> fieldList) {
         String list = "";
-        for(String field : fieldList){
+        for (String field : fieldList) {
             list.concat(field).concat("+");
         }
         solrSearchBuilder.append("&fl=").append(list);
@@ -640,7 +667,7 @@ public class SolrSearchController {
 
         String hlfs = "";
 
-        for(String highlight : highlights){
+        for (String highlight : highlights) {
             hlfs.concat(highlight).concat("+");
         }
 
@@ -677,12 +704,14 @@ public class SolrSearchController {
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String[] filterBy) {
         int counter = 0;
         String filterString = "";
-        for(String filter : filterBy) {
-            if(counter == 0){
+        for (String filter : filterBy) {
+            if (counter == 0) {
                 filterString = filterString.concat(filterOn).concat("%3A%22").concat(filter).concat("%22");
                 counter++;
-            } else{
-                filterString = filterString.concat("+OR+").concat(filterOn).concat("%3A%22").concat(filter).concat("%22");
+            }
+            else {
+                filterString =
+                        filterString.concat("+OR+").concat(filterOn).concat("%3A%22").concat(filter).concat("%22");
                 counter++;
             }
         }
@@ -692,25 +721,32 @@ public class SolrSearchController {
     }
 
     private void addPvalueFilterQuery(StringBuilder solrSearchBuilder, String pval) {
-       String mant = pval.split("e")[0];
-       String exp = pval.split("e")[1];
+        String mant = pval.split("e")[0];
+        String exp = pval.split("e")[1];
 
-       String filterString = "pValueExponent:%7B*%20TO%20"  //{* TO
-               .concat(exp)
-               .concat("%7D+OR+(pValueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
-               .concat(mant)
-               .concat("%5D+AND+pValueExponent%3A%5B")
-               .concat(exp)
-               .concat("%20TO%20")
-               .concat(exp)
-               .concat("%5D)");
+        String filterString = "pValueExponent:%7B*%20TO%20"  //{* TO
+                .concat(exp)
+                .concat("%7D+OR+(pValueMantissa%3A%5B*%20TO%20")   //}+OR+(pvalue_mantissa:[* TO%
+                .concat(mant)
+                .concat("%5D+AND+pValueExponent%3A%5B")
+                .concat(exp)
+                .concat("%20TO%20")
+                .concat(exp)
+                .concat("%5D)");
 
         solrSearchBuilder.append("&fq=").append(filterString);
     }
 
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterOnAlt, String filterBy) {
-        solrSearchBuilder.append("&fq=").append(filterOn).append("%3A").append(filterBy).append("+OR+").append(filterOnAlt).append("%3A").append(filterBy);
+        solrSearchBuilder.append("&fq=")
+                .append(filterOn)
+                .append("%3A")
+                .append(filterBy)
+                .append("+OR+")
+                .append(filterOnAlt)
+                .append("%3A")
+                .append(filterBy);
 
     }
 
@@ -763,7 +799,7 @@ public class SolrSearchController {
                 "to rectify the problem as soon as possible.  If problems persist, please email gwas-info@ebi.ac.uk";
     }
 
-//    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
+    //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
     @RequestMapping(value = "api/search/downloads")
     public void getSearchResults(
             @RequestParam("q") String query,
@@ -773,13 +809,15 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
+            @RequestParam(value = "efo", defaultValue = "false") boolean efo,
+            @RequestParam(value = "facet", required = true) String facet,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         int maxResults = 1000000;
         int page = 1;
-        String facet = "association";
+
         addFilterQuery(solrSearchBuilder, "resourcename", facet);
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 
@@ -809,7 +847,7 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
-        if(addedDateRange != ""){
+        if (addedDateRange != "") {
             getLog().debug(addedDateRange);
             addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
@@ -825,33 +863,44 @@ public class SolrSearchController {
         searchString = searchString.replace(" ", "+");
 
         // dispatch search
-//        return dispatchSearch(searchString);
+        //        return dispatchSearch(searchString);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String now = dateFormat.format(date);
         String fileName;
 
-        if(query.contains("*")){
-            if(addedDateRange != "") {
+        if (query.contains("*")) {
+            if (addedDateRange != "") {
                 fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
             }
-            else{
+            else if (traits != null && traits.length != 0){
                 fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
             }
+            else{
+                if(efo){
+                    fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+                }
+                else {
+                    fileName = "gwas_catalog_v1.0-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+                }
+            }
         }
-        else{
-            fileName = "gwas-downloaded_".concat(now).concat("-").concat(query.substring(6, query.length() - 1)).concat(".tsv");
+        else {
+            fileName = "gwas-".concat(facet).concat("-downloaded_").concat(now)
+                    .concat("-")
+                    .concat(query.substring(6, query.length() - 1))
+                    .concat(".tsv");
         }
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
-        dispatchDownloadSearch(searchString, response.getOutputStream());
+        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet);
 
 
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -877,17 +926,18 @@ public class SolrSearchController {
             String output;
             while ((output = br.readLine()) != null) {
 
-                JsonProcessingService jsonProcessor = new JsonProcessingService(output);
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet);
                 file = jsonProcessor.processJson();
 
             }
 
             EntityUtils.consume(entity);
         }
-        if(file == null){
+        if (file == null) {
 
             //TO DO throw exception here and add error handler
-            file = "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
+            file =
+                    "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
         PrintWriter outputWriter = new PrintWriter(outputStream);

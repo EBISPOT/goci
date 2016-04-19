@@ -37,12 +37,31 @@ var loadDocumentation = function(pagename, content) {
             $("#help-item").addClass("active");
         }
         $("#current-page").text(displayName);
+
+
+
         console.log("Updated breadcrumb (" + displayName + ")");
         // load the data content
         console.log("Updating " + content + "...");
-        console.log(data);
+        //console.log(data);
         content.html(data);
+
+        $.getJSON('../api/search/stats')
+                .done(function(stats) {
+                          setBuilds(stats);
+                      });
+
         console.log("Done!");
 
+    }
+
+    function setBuilds(data) {
+        try {
+            $('#genomeBuild').text(data.genebuild);
+            $('#dbSNP').text(data.dbsnpbuild);
+        }
+        catch (ex) {
+            console.log("Failure to process build variables " + ex);
+        }
     }
 };

@@ -50,20 +50,32 @@ public class Study {
 
     private String replicateSampleSize;
 
-    private String platform;
-
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
     // Defaults set as false
-    private Boolean cnv=false;
+    private Boolean cnv = false;
 
-    private Boolean gxe=false;
+    private Boolean gxe = false;
 
-    private Boolean gxg=false;
+    private Boolean gxg = false;
 
-    @OneToOne
-    private ArrayInfo arrayInfo;
+    private Integer snpCount;
+
+    private String qualifier;
+
+    private Boolean imputed = false;
+
+    private Boolean pooled = false;
+
+    private String studyDesignComment;
+
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_PLATFORM",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
+    private Collection<Platform> platforms;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
@@ -73,20 +85,20 @@ public class Study {
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
@@ -99,44 +111,49 @@ public class Study {
     public Study() {
     }
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping) {
+
+    public Study(String author,
+                 Date publicationDate,
+                 String publication,
+                 String title,
+                 String initialSampleSize,
+                 String replicateSampleSize,
+                 Collection<Platform> platforms,
+                 String pubmedId,
+                 Boolean cnv,
+                 Boolean gxe,
+                 Boolean gxg,
+                 Integer snpCount,
+                 String qualifier,
+                 Boolean imputed,
+                 Boolean pooled,
+                 String studyDesignComment,
+                 DiseaseTrait diseaseTrait,
+                 Collection<EfoTrait> efoTraits,
+                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+                 Collection<Ethnicity> ethnicities,
+                 Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platform = platform;
+        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.snpCount = snpCount;
+        this.qualifier = qualifier;
+        this.imputed = imputed;
+        this.pooled = pooled;
+        this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
-    }
-
-
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Collection<Ethnicity> ethnicities, Housekeeping housekeeping, ArrayInfo arrayInfo) {
-        this.author = author;
-        this.publicationDate = publicationDate;
-        this.publication = publication;
-        this.title = title;
-        this.initialSampleSize = initialSampleSize;
-        this.replicateSampleSize = replicateSampleSize;
-        this.platform = platform;
-        this.pubmedId = pubmedId;
-        this.cnv = cnv;
-        this.gxe = gxe;
-        this.gxg = gxg;
-        this.diseaseTrait = diseaseTrait;
-        this.efoTraits = efoTraits;
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-        this.ethnicities = ethnicities;
-        this.housekeeping = housekeeping;
-        this.arrayInfo = arrayInfo;
     }
 
     public Long getId() {
@@ -195,12 +212,12 @@ public class Study {
         this.replicateSampleSize = replicateSampleSize;
     }
 
-    public String getPlatform() {
-        return platform;
+    public Collection<Platform> getPlatforms() {
+        return platforms;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setPlatforms(Collection<Platform> platforms) {
+        this.platforms = platforms;
     }
 
     public String getPubmedId() {
@@ -283,10 +300,6 @@ public class Study {
         this.studyReport = studyReport;
     }
 
-    public ArrayInfo getArrayInfo(){ return arrayInfo;    }
-
-    public void setArrayInfo(ArrayInfo arrayInfo) {this.arrayInfo = arrayInfo; }
-
     @Override public String toString() {
         return "Study{" +
                 "id=" + id +
@@ -304,5 +317,46 @@ public class Study {
 
     public void setEthnicities(Collection<Ethnicity> ethnicities) {
         this.ethnicities = ethnicities;
+    }
+
+
+    public Integer getSnpCount() {
+        return snpCount;
+    }
+
+    public void setSnpCount(Integer snpCount) {
+        this.snpCount = snpCount;
+    }
+
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    public boolean getImputed() {
+        return imputed;
+    }
+
+    public void setImputed(boolean imputed) {
+        this.imputed = imputed;
+    }
+
+    public boolean getPooled() {
+        return pooled;
+    }
+
+    public void setPooled(boolean pooled) {
+        this.pooled = pooled;
+    }
+
+    public String getStudyDesignComment() {
+        return studyDesignComment;
+    }
+
+    public void setStudyDesignComment(String studyDesignComment) {
+        this.studyDesignComment = studyDesignComment;
     }
 }

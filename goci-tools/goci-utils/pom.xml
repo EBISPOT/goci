@@ -2,48 +2,52 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>goci-utils</artifactId>
-  <version>2.0.8</version>
-  <packaging>jar</packaging>
+    <artifactId>goci-utils</artifactId>
+    <version>2.1.1</version>
+    <packaging>jar</packaging>
 
-  <name>GOCI Utility Classes</name>
-  <description>Extensions to core classes that may be used across tools</description>
+    <name>GOCI Utility Classes</name>
+    <description>Extensions to core classes that may be used across tools</description>
 
-  <parent>
-    <groupId>uk.ac.ebi.spot</groupId>
-    <artifactId>goci-parent</artifactId>
-    <version>2.0.8</version>
-    <relativePath>../../goci-parent/pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>uk.ac.ebi.spot</groupId>
+        <artifactId>goci-parent</artifactId>
+        <version>2.1.1</version>
+        <relativePath>../../goci-parent/pom.xml</relativePath>
+    </parent>
 
-  <dependencies>
+    <dependencies>
 
-    <dependency>
-      <groupId>uk.ac.ebi.spot</groupId>
-      <artifactId>goci-service</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-service</artifactId>
+        </dependency>
 
-    <dependency>
-      <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-distribution</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>net.sourceforge.owlapi</groupId>
+            <artifactId>owlapi-distribution</artifactId>
+        </dependency>
 
-    <dependency>
-      <groupId>com.hermit-reasoner</groupId>
-      <artifactId>org.semanticweb.hermit</artifactId>
-    </dependency>
-      <dependency>
-          <groupId>org.flywaydb</groupId>
-          <artifactId>flyway-core</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>com.hermit-reasoner</groupId>
+            <artifactId>org.semanticweb.hermit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
 
-      <dependency>
-          <groupId>uk.ac.ebi.spot</groupId>
-          <artifactId>goci-db-binding</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-db-binding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
 </project>

@@ -136,8 +136,8 @@ public class JsonBuilder {
                             //If the study is in gwas then it means, the author looked at at least 100 000 snps.
                             //If the number exact of snp is not specified then we put 100000.
                             long snpCount = 100000;
-                            if (association.getStudy().getArrayInfo().getSnpCount() != null) {
-                                snpCount = association.getStudy().getArrayInfo().getSnpCount();
+                            if (association.getStudy().getSnpCount() != null) {
+                                snpCount = association.getStudy().getSnpCount();
                             }
                             if (association.getPvalueMantissa() != null && association.getPvalueExponent()<0) {
 

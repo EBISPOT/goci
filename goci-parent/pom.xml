@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-parent</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.1</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-dependencies</artifactId>
-        <version>2.0.8</version>
+        <version>2.1.1</version>
         <relativePath>../goci-dependencies/pom.xml</relativePath>
         <!-- lookup parent from repository -->
     </parent>

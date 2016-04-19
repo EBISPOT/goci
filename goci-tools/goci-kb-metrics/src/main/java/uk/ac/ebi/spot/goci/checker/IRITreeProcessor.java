@@ -41,8 +41,8 @@ public class IRITreeProcessor {
     }
 
     public IRITreeProcessor() {
-//        n = Integer.parseInt(cutoff);
-//        n = Integer.parseInt(System.getProperty("watershed.cutoff"));
+        //        n = Integer.parseInt(cutoff);
+        //        n = Integer.parseInt(System.getProperty("watershed.cutoff"));
         this.watershedNodeCounts = new HashMap<IRINode, Integer>();
     }
 

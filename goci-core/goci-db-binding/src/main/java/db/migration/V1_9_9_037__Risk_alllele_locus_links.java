@@ -3,7 +3,6 @@ package db.migration;
 import org.flywaydb.core.api.migration.spring.SpringJdbcMigration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.HashMap;
@@ -52,7 +51,7 @@ public class V1_9_9_037__Risk_alllele_locus_links implements SpringJdbcMigration
         final Map<Long, Long> riskAlleleIdToSnpId = new HashMap<>();
         final Map<Long, Set<Long>> riskAlleleIdToLociIds = new HashMap<>();
 
-        jdbcTemplate.query(SELECT_DATA_FOR_UPDATE,(resultSet, i) -> {
+        jdbcTemplate.query(SELECT_DATA_FOR_UPDATE, (resultSet, i) -> {
             String riskAlleleName = resultSet.getString(1);
             long riskAlleleId = resultSet.getLong(2);
             long locusId = resultSet.getLong(3);

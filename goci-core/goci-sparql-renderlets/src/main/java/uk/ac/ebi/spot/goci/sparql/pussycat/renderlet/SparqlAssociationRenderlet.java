@@ -77,10 +77,10 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
         URI bandIndividual =
                 QueryManager.getCachingInstance().getCytogeneticBandForAssociation(sparqlTemplate, association);
         if (bandIndividual != null) {
-//            Set<URI> associations =
-//                    QueryManager.getCachingInstance()
-//                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
-//            return associations.size();
+            //            Set<URI> associations =
+            //                    QueryManager.getCachingInstance()
+            //                            .getAssociationsLocatedInCytogeneticBand(sparqlTemplate, bandIndividual);
+            //            return associations.size();
             Set<URI> currentBandTraits =
                     QueryManager.getCachingInstance().getTraitsLocatedInCytogeneticBand(sparqlTemplate,
                                                                                         bandIndividual,
@@ -160,7 +160,7 @@ public class SparqlAssociationRenderlet extends AssociationRenderlet<SparqlTempl
                     return null;
                 }
 
-                if(!previousBand.getChromosome().equals(current.getChromosome())){
+                if (!previousBand.getChromosome().equals(current.getChromosome())) {
                     done = true;
                     return null;
                 }

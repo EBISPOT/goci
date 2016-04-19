@@ -7,11 +7,11 @@ var SearchState = {
     RESULTS: {value: 2}
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     console.log("solr search loaded and ready");
 
     //toggle the +/- sign on the expand study button and expand the appropriate study
-    $('#study-table-body').on('click', 'button.row-toggle', function () {
+    $('#study-table-body').on('click', 'button.row-toggle', function() {
         $(this).find('span').toggleClass('glyphicon-plus glyphicon-minus');
         var target = $(this).attr('data-target');
         $(target).collapse('toggle');
@@ -19,24 +19,24 @@ $(document).ready(function () {
     });
 
     $.getJSON('api/search/stats')
-            .done(function (data) {
-                      setStats(data);
-                  });
+            .done(function(data) {
+                setStats(data);
+            });
 
 
     // Tooltips for various filter and table headings
     $('[data-toggle="tooltip"]').tooltip({
-        placement: 'top',
-        container: 'body'
-    });
+                                             placement: 'top',
+                                             container: 'body'
+                                         });
 
     if (window.history && window.history.pushState) {
-        $(window).on('popstate', function () {
+        $(window).on('popstate', function() {
             applyFacet();
         });
     }
 
-    if($('#query').text() != '') {
+    if ($('#query').text() != '') {
         loadResults();
     }
 });
@@ -47,7 +47,7 @@ function loadResults() {
     console.log("Loading results for " + searchTerm);
     buildBreadcrumbs();
 
-    if(searchTerm == '*') {
+    if (searchTerm == '*') {
         if ($('#filter').text() == 'recent') {
             $('#search-term').text('most recent studies');
 
@@ -60,8 +60,8 @@ function loadResults() {
     $('#search-results-container').show();
     $('#loadingResults').show();
 
-    if($('#filter').text() != ''){
-        if($('#filter').text() == 'recent'){
+    if ($('#filter').text() != '') {
+        if ($('#filter').text() == 'recent') {
             getMostRecentStudies();
         }
         else {
@@ -71,7 +71,7 @@ function loadResults() {
         }
 
     }
-    else{
+    else {
         $('#welcome-container').hide();
         $('#search-results-container').show();
         $('#loadingResults').show();
@@ -81,7 +81,7 @@ function loadResults() {
             console.log("Applying a facet");
             applyFacet();
         }
-        else{
+        else {
             $('#facet').text();
         }
 
@@ -98,7 +98,7 @@ function buildBreadcrumbs() {
     breadcrumbs.append('<li><a href="search">Search</a></li>');
     var searchTerm = $('#query').text();
 
-    if (searchTerm == '*'){
+    if (searchTerm == '*') {
         searchTerm = '';
     }
     if (!window.location.hash) {
@@ -126,18 +126,18 @@ function buildBreadcrumbs() {
 
 function solrSearch(queryTerm) {
     console.log("Solr research request received for " + queryTerm);
-    if(queryTerm == '*'){
+    if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
     }
-    else{
+    else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
     }
     setState(SearchState.LOADING);
     $.getJSON('api/search', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5})
-        .done(function (data) {
-            console.log(data);
-            processData(data);
-        });
+            .done(function(data) {
+                console.log(data);
+                processData(data);
+            });
 }
 
 function traitOnlySearch(traits) {
@@ -151,10 +151,17 @@ function traitOnlySearch(traits) {
     var searchTraits = traits.split('|');
     var searchTerm = 'text:*'
 
-    $.getJSON('api/search/traits', {'q': searchTerm, 'group': 'true', 'group.by': 'resourcename', 'group.limit': 5, 'traitfilter[]': searchTraits}).done(function (data) {
-                      console.log(data);
-                      processData(data);
-                  });
+    $.getJSON('api/search/traits',
+              {
+                  'q': searchTerm,
+                  'group': 'true',
+                  'group.by': 'resourcename',
+                  'group.limit': 5,
+                  'traitfilter[]': searchTraits
+              }).done(function(data) {
+        console.log(data);
+        processData(data);
+    });
 }
 
 function getMostRecentStudies() {
@@ -165,16 +172,18 @@ function getMostRecentStudies() {
     var dateRange = "[NOW-3MONTH+TO+*]";
     var sort = "catalogPublishDate+desc"
 
-    $.getJSON('api/search/latest', {'q': searchTerm,
-        'group': 'true',
-        'group.by': 'resourcename',
-        'group.limit': 5,
-        'dateFilter': dateRange,
-        'sort': sort})
-            .done(function (data) {
-        console.log(data);
-        processData(data);
-    });
+    $.getJSON('api/search/latest', {
+                'q': searchTerm,
+                'group': 'true',
+                'group.by': 'resourcename',
+                'group.limit': 5,
+                'dateFilter': dateRange,
+                'sort': sort
+            })
+            .done(function(data) {
+                console.log(data);
+                processData(data);
+            });
 }
 
 function processData(data) {
@@ -184,11 +193,15 @@ function processData(data) {
     console.log("Solr search returned " + documents.length + " documents");
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
 
-    if(!$('#filter-form').hasClass('in-use')){
-        if(data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null){
+    if(data.responseHeader.params.sort != null && data.responseHeader.params.sort.indexOf('pValue') != -1 && data.responseHeader.params.sort.indexOf('asc') != -1){
+        $('#pValue').find('span.unsorted').removeClass('glyphicon-sort').addClass('glyphicon-arrow-up').removeClass('unsorted').addClass('sorted asc');
+    }
+
+    if (!$('#filter-form').hasClass('in-use')) {
+        if (data.responseHeader.params.q.indexOf('*') != -1 && data.responseHeader.params.fq != null) {
             var fq = data.responseHeader.params.fq;
 
-            if(fq.indexOf("catalogPublishDate") != -1){
+            if (fq.indexOf("catalogPublishDate") != -1) {
                 var dateRange = "[NOW-3MONTH+TO+*]";
                 generateTraitDropdown(data.responseHeader.params.q, null, dateRange);
             }
@@ -209,7 +222,7 @@ function processData(data) {
                 generateTraitDropdown(data.responseHeader.params.q, traits, null);
             }
         }
-        else{
+        else {
             generateTraitDropdown(data.responseHeader.params.q, null, null);
         }
     }
@@ -224,12 +237,12 @@ function processData(data) {
                 var studyTable = $('#study-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
                         processStudy(doc, studyTable);
                     }
-                    catch (ex){
-                       console.log("Failure to process document " + ex);
+                    catch (ex) {
+                        console.log("Failure to process document " + ex);
                     }
                 }
                 if (group.doclist.numFound > 5) {
@@ -237,7 +250,7 @@ function processData(data) {
                     $('#study-summaries').addClass("more-results");
                     $('.study-toggle').empty().text("Show more results");
 
-                    if($('#expand-table').hasClass('table-expanded')){
+                    if ($('#expand-table').hasClass('table-expanded')) {
                         $('#expand-table').addClass('table-collapsed');
                         $('#expand-table').empty().text("Expand all studies");
                     }
@@ -247,11 +260,11 @@ function processData(data) {
                 var associationTable = $('#association-table-body').empty();
 
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
                         processAssociation(doc, associationTable);
                     }
-                    catch (ex){
+                    catch (ex) {
                         console.log("Failure to process document " + ex);
                     }
                 }
@@ -265,11 +278,11 @@ function processData(data) {
             else if (group.groupValue == "diseasetrait") {
                 var traitTable = $('#diseasetrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
-                    try{
+                    try {
                         var doc = group.doclist.docs[k];
-                         processTrait(doc, traitTable);
+                        processTrait(doc, traitTable);
                     }
-                    catch (ex){
+                    catch (ex) {
                         console.log("Failure to process document " + ex);
                     }
                 }
@@ -349,10 +362,10 @@ function updateCountBadges(countArray) {
 
 function generateTraitDropdown(queryTrait, subTraits, dateFilter) {
     $.getJSON('api/search/traitcount', {'q': queryTrait, 'traitfilter[]': subTraits, dateFilter: dateFilter})
-        .done(function (data) {
-            console.log(data);
-            processTraitCounts(data);
-        });
+            .done(function(data) {
+                console.log(data);
+                processTraitCounts(data);
+            });
 }
 
 function processTraitCounts(data) {
@@ -363,14 +376,15 @@ function processTraitCounts(data) {
     for (var i = 0; i < traits.length; i = i + 2) {
         var trait = traits[i];
         var count = traits[i + 1];
-        $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(trait).concat("'/>&nbsp;").concat(trait).concat(" (").concat(count).concat(")</a>")));
+        $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(trait).concat(
+                "'/>&nbsp;").concat(trait).concat(" (").concat(count).concat(")</a>")));
     }
 }
 
-function setDownloadLink(searchParams){
+function setDownloadLink(searchParams) {
     console.log(searchParams);
     var baseUrl = 'api/search/downloads?';
-    var q= "q=".concat(searchParams.q);
+    var q = "q=".concat(searchParams.q);
 
     var trait = '';
     var traitFilter = '&traitfilter[]=';
@@ -379,6 +393,7 @@ function setDownloadLink(searchParams){
     var beta = '&betafilter=';
     var date = '&datefilter=';
     var addeddate = '&dateaddedfilter=';
+    var facet = '&facet=association';
 
     pval = pval.concat(processPval());
     or = or.concat(processOR());
@@ -396,23 +411,23 @@ function setDownloadLink(searchParams){
         trait = traitFilter;
     }
 
-    if(searchParams.q.indexOf('*') != -1 && $('#filter').text() != ''){
+    if (searchParams.q.indexOf('*') != -1 && $('#filter').text() != '') {
 
         console.log('Need to build the download link a bit differently because of ' + $('#filter').text());
 
-        if($('#filter').text() != 'recent' && traits == '') {
+        if ($('#filter').text() != 'recent' && traits == '') {
             console.log("Generating trait-based download link for " + $('#filter').text());
             var terms = $('#filter').text();
             terms = terms.replace(/\s/g, '+');
             var traits = terms.split('|');
 
-            for(var i=0; i<traits.length; i++){
+            for (var i = 0; i < traits.length; i++) {
                 console.log(traits[i]);
                 trait = trait.concat(traitFilter).concat(traits[i]);
             }
 
         }
-        else if($('#filter').text() == 'recent'){
+        else if ($('#filter').text() == 'recent') {
             console.log("Generating date-based download link for " + $('#filter').text());
 
             var addeddate = addeddate.concat("[NOW-3MONTH+TO+*]");
@@ -420,23 +435,24 @@ function setDownloadLink(searchParams){
 
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate).concat(facet);
     $('#results-download').removeAttr('href').attr('href', url);
 
 }
 
 
-function setStats(data){
-    try{
+function setStats(data) {
+    try {
         $('#releasedate-stat').text("Last data release on " + data.date);
         $('#studies-stat').text(data.studies + " studies");
         $('#snps-stat').text(data.snps + " SNPs");
         $('#associations-stat').text(data.associations + " SNP-trait associations");
         $('#genomebuild').text("Genome assembly " + data.genebuild);
         $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
+        $('#ensemblbuild').text("Ensembl Build " + data.ensemblbuild);
         $('#catalog-stats').show();
     }
-    catch (ex){
+    catch (ex) {
         console.log("Failure to process stats " + ex);
     }
 }

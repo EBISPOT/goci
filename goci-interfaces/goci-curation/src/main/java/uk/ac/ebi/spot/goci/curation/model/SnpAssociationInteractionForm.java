@@ -1,18 +1,18 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by emma on 12/02/15.
- * @author emma
  *
- * Service class to deal with form used by curators to enter snp/association details for interaction studies
+ * @author emma
+ *         <p>
+ *         Service class to deal with form used by curators to enter snp/association details for interaction studies
  */
 public class SnpAssociationInteractionForm {
 
@@ -26,7 +26,7 @@ public class SnpAssociationInteractionForm {
 
     private String snpType;
 
-    private Boolean snpChecked;
+    private Boolean snpApproved = false;
 
     private Boolean orType;
 
@@ -46,6 +46,10 @@ public class SnpAssociationInteractionForm {
 
     private List<SnpFormColumn> snpFormColumns = new ArrayList<>();
 
+    private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
+
+    private Collection<GenomicContext> genomicContexts = new ArrayList<>();
+
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     private Integer numOfInteractions;
@@ -61,7 +65,7 @@ public class SnpAssociationInteractionForm {
                                          String pvalueText,
                                          Float orPerCopyNum,
                                          String snpType,
-                                         Boolean snpChecked,
+                                         Boolean snpApproved,
                                          Boolean orType,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
@@ -71,6 +75,8 @@ public class SnpAssociationInteractionForm {
                                          String orPerCopyRecipRange,
                                          String orPerCopyUnitDescr,
                                          List<SnpFormColumn> snpFormColumns,
+                                         List<SnpMappingForm> snpMappingForms,
+                                         Collection<GenomicContext> genomicContexts,
                                          Collection<EfoTrait> efoTraits,
                                          Integer numOfInteractions,
                                          String riskFrequency) {
@@ -78,7 +84,7 @@ public class SnpAssociationInteractionForm {
         this.pvalueText = pvalueText;
         this.orPerCopyNum = orPerCopyNum;
         this.snpType = snpType;
-        this.snpChecked = snpChecked;
+        this.snpApproved = snpApproved;
         this.orType = orType;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -88,6 +94,8 @@ public class SnpAssociationInteractionForm {
         this.orPerCopyRecipRange = orPerCopyRecipRange;
         this.orPerCopyUnitDescr = orPerCopyUnitDescr;
         this.snpFormColumns = snpFormColumns;
+        this.snpMappingForms = snpMappingForms;
+        this.genomicContexts = genomicContexts;
         this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
         this.riskFrequency = riskFrequency;
@@ -189,6 +197,22 @@ public class SnpAssociationInteractionForm {
         this.snpFormColumns = snpFormColumns;
     }
 
+    public List<SnpMappingForm> getSnpMappingForms() {
+        return snpMappingForms;
+    }
+
+    public void setSnpMappingForms(List<SnpMappingForm> snpMappingForms) {
+        this.snpMappingForms = snpMappingForms;
+    }
+
+    public Collection<GenomicContext> getGenomicContexts() {
+        return genomicContexts;
+    }
+
+    public void setGenomicContexts(Collection<GenomicContext> genomicContexts) {
+        this.genomicContexts = genomicContexts;
+    }
+
     public Collection<EfoTrait> getEfoTraits() {
         return efoTraits;
     }
@@ -205,12 +229,12 @@ public class SnpAssociationInteractionForm {
         this.numOfInteractions = numOfInteractions;
     }
 
-    public Boolean getSnpChecked() {
-        return snpChecked;
+    public Boolean getSnpApproved() {
+        return snpApproved;
     }
 
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
+    public void setSnpApproved(Boolean snpApproved) {
+        this.snpApproved = snpApproved;
     }
 
     public Boolean getOrType() {
@@ -228,4 +252,5 @@ public class SnpAssociationInteractionForm {
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
     }
+
 }

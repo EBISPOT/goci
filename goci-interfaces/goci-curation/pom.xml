@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-curation</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.1</version>
     <packaging>war</packaging>
 
     <name>GOCI Curation Interface</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.8</version>
+        <version>2.1.1</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
@@ -26,12 +26,17 @@
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-mapper</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-db-binding</artifactId>
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>com.oracle</groupId>-->
-            <!--<artifactId>ojdbc7</artifactId>-->
+        <!--<groupId>com.oracle</groupId>-->
+        <!--<artifactId>ojdbc7</artifactId>-->
         <!--</dependency>-->
 
         <dependency>
@@ -42,11 +47,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -75,29 +76,26 @@
         </dependency>
 
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.3.5</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20141113</version>
         </dependency>
 
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>2.1.4</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>bootstrap-tagsinput</artifactId>
-            <version>0.4.2</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>bootstrap-table</artifactId>
-            <version>1.9.0</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
         </dependency>
-
     </dependencies>
 
     <properties>

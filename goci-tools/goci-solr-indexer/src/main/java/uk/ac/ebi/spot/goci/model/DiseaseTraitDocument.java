@@ -35,22 +35,25 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
-//    @Field("association_pValueMantissa") private Collection<Integer> pValueMantissas;
-//    @Field("association_pValueExponent") private Collection<Integer> pValueExponents;
-//    @Field("association_orPerCopyNum") private Collection<Float> orPerCopyNums;
-//    @Field("association_orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
-//    @Field("association_orPerCopyRange") private Collection<String> orPerCopyRanges;
-//    @Field("association_orType") private Collection<String> orTypes;
+    //    @Field("association_pValueMantissa") private Collection<Integer> pValueMantissas;
+    //    @Field("association_pValueExponent") private Collection<Integer> pValueExponents;
+    //    @Field("association_orPerCopyNum") private Collection<Float> orPerCopyNums;
+    //    @Field("association_orPerCopyUnitDescr") private Collection<String> orPerCopyUnitDescrs;
+    //    @Field("association_orPerCopyRange") private Collection<String> orPerCopyRanges;
+    //    @Field("association_orType") private Collection<String> orTypes;
     @Field("association_rsId") private Collection<String> rsIds;
     @Field("association_strongestAllele") private Collection<String> strongestAlleles;
     @Field("association_context") private Collection<String> contexts;
-    @Field("association_region") private Collection<String> regions;
-    @Field("association_mappedGene") private Collection<String> mappedGenes;
-    @Field("association_mappedGeneLinks") private Collection<String> mappedGeneLinks;
+    @Field("association_regions") private Collection<String> regions;
+    @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
+    @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
+    //    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+    //    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
+    @Field("association_positionLinks") private Collection<String> positionLinks;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
 
     // embedded EfoTrait info
@@ -80,22 +83,25 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestryLinks = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
-//        this.pValueMantissas = new LinkedHashSet<>();
-//        this.pValueExponents = new LinkedHashSet<>();
-//        this.orPerCopyNums = new LinkedHashSet<>();
-//        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
-//        this.orPerCopyRanges = new LinkedHashSet<>();
-//        this.orTypes = new LinkedHashSet<>();
+        //        this.pValueMantissas = new LinkedHashSet<>();
+        //        this.pValueExponents = new LinkedHashSet<>();
+        //        this.orPerCopyNums = new LinkedHashSet<>();
+        //        this.orPerCopyUnitDescrs = new LinkedHashSet<>();
+        //        this.orPerCopyRanges = new LinkedHashSet<>();
+        //        this.orTypes = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
         this.contexts = new LinkedHashSet<>();
         this.regions = new LinkedHashSet<>();
-        this.mappedGenes = new LinkedHashSet<>();
-        this.mappedGeneLinks = new LinkedHashSet<>();
+        this.entrezMappedGenes = new LinkedHashSet<>();
+        this.entrezMappedGeneLinks = new LinkedHashSet<>();
+        //        this.ensemblMappedGenes = new LinkedHashSet<>();
+        //        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
 
         this.mappedLabels = new LinkedHashSet<>();
@@ -147,33 +153,35 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.replicateSampleDescriptions.add(replicateSampleDescription);
     }
 
-    public void addAncestralGroups(Collection<String> ancestralGroups){
+    public void addAncestralGroups(Collection<String> ancestralGroups) {
         this.ancestralGroups.addAll(ancestralGroups);
     }
 
-    public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment){
+    public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment) {
         this.countriesOfRecruitment.addAll(countriesOfRecruitment);
     }
 
-    public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals){
+    public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals) {
         this.numberOfIndividuals.addAll(numberOfIndividuals);
     }
 
-    public void addAncestryLinks(Collection<String> ancestryLinks){
+    public void addAncestryLinks(Collection<String> ancestryLinks) {
         this.ancestryLinks.addAll(ancestryLinks);
     }
 
-    public void addAncestralGroup(String ancestralGroup){
+    public void addAncestralGroup(String ancestralGroup) {
         this.ancestralGroups.add(ancestralGroup);
     }
-    public void addCountryOfRecruitment(String countryOfRecruitment){
+
+    public void addCountryOfRecruitment(String countryOfRecruitment) {
         this.countriesOfRecruitment.add(countryOfRecruitment);
     }
 
-    public void addNumberOfIndiviuals(int numberOfIndividuals){
+    public void addNumberOfIndiviuals(int numberOfIndividuals) {
         this.numberOfIndividuals.add(numberOfIndividuals);
     }
-    public void addAncestryLink(String ancestryLink){
+
+    public void addAncestryLink(String ancestryLink) {
         this.ancestryLinks.add(ancestryLink);
     }
 
@@ -181,29 +189,29 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.qualifiers.add(qualifier);
     }
 
-//    public void addPValueMantissa(int pValueMantissa) {
-//        this.pValueMantissas.add(pValueMantissa);
-//    }
-//
-//    public void addPValueExponent(int pValueExponent) {
-//        this.pValueExponents.add(pValueExponent);
-//    }
+    //    public void addPValueMantissa(int pValueMantissa) {
+    //        this.pValueMantissas.add(pValueMantissa);
+    //    }
+    //
+    //    public void addPValueExponent(int pValueExponent) {
+    //        this.pValueExponents.add(pValueExponent);
+    //    }
 
-//    public void addOrPerCopyNum(float orPerCopyNum) {
-//        this.orPerCopyNums.add(orPerCopyNum);
-//    }
-//
-//    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-//        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
-//    }
-//
-//    public void addOrPerCopyRange(String orPerCopyRange) {
-//        this.orPerCopyRanges.add(orPerCopyRange);
-//    }
-//
-//    public void addOrType(String orType) {
-//        this.orTypes.add(orType);
-//    }
+    //    public void addOrPerCopyNum(float orPerCopyNum) {
+    //        this.orPerCopyNums.add(orPerCopyNum);
+    //    }
+    //
+    //    public void addOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
+    //        this.orPerCopyUnitDescrs.add(orPerCopyUnitDescr);
+    //    }
+    //
+    //    public void addOrPerCopyRange(String orPerCopyRange) {
+    //        this.orPerCopyRanges.add(orPerCopyRange);
+    //    }
+    //
+    //    public void addOrType(String orType) {
+    //        this.orTypes.add(orType);
+    //    }
 
     public void addRsId(String rsId) {
         this.rsIds.add(rsId);
@@ -217,17 +225,26 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.contexts.add(context);
     }
 
-    public void addRegion(String region) {
-        this.regions.add(region);
+    public void addRegion(Collection<String> regions) {
+        this.regions.addAll(regions);
     }
 
-    public void addMappedGene(String mappedGene) {
-        this.mappedGenes.add(mappedGene);
+    public void addEntrezMappedGenes(Collection<String> mappedGenes) {
+        this.entrezMappedGenes.addAll(mappedGenes);
     }
 
-    public void addMappedGeneLinks(Collection<String> mappedGeneLinks) {
-        this.mappedGeneLinks.addAll(mappedGeneLinks);
+    public void addEntrezMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
+
+    //    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+    //        this.ensemblMappedGenes.addAll(mappedGenes);
+    //    }
+    //
+    //    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+    //        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+    //    }
+
 
     public void addReportedGenes(Collection<String> reportedGenes) {
         this.reportedGenes.addAll(reportedGenes);
@@ -243,6 +260,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addChromosomePositions(Collection<Integer> chromosomePositions) {
         this.chromosomePositions.addAll(chromosomePositions);
+    }
+
+    public void addPositionLinks(Collection<String> positionLinks) {
+        this.positionLinks.addAll(positionLinks);
     }
 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {

@@ -6,11 +6,10 @@ import javax.persistence.Id;
 
 /**
  * Created by dwelter on 04/06/15.
- * 
- * @author Dani
- * 
- *  *         Model object representing reason for unpublishing a study
  *
+ * @author Dani
+ *         <p>
+ *         *         Model object representing reason for unpublishing a study
  */
 @Entity
 public class UnpublishReason {

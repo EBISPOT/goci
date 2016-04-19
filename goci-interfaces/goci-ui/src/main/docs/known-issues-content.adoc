@@ -4,4 +4,4 @@ Please refer to https://www.ebi.ac.uk/panda/jira/browse/GOCI/component/11750[our
 
 If you find an issue not documented in the tracker, please submit a bug report to gwas-info@ebi.ac.uk.
 
-Updated: 31 March 2015
+Updated: 11 January 2016
