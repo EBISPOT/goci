@@ -11,11 +11,8 @@ public class StudyFileSummary {
 
     private String fileName;
 
-    private String link;
-    
-    public StudyFileSummary(String fileName, String link) {
+    public StudyFileSummary(String fileName) {
         this.fileName = fileName;
-        this.link = link;
     }
 
     public String getFileName() {
@@ -24,13 +21,5 @@ public class StudyFileSummary {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
     }
 }
