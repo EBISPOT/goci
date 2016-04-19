@@ -71,22 +71,21 @@ public class StudyFileService {
                 for (File file : filesInDir) {
                     // Ignore any hidden files
                     if (!file.isHidden()) {
-
-                        try {
+                        if (file.exists()) {
                             StudyFileSummary studyFileSummary =
-                                    new StudyFileSummary(file.getName(), file.getCanonicalPath());
+                                    new StudyFileSummary(file.getName());
                             files.add(studyFileSummary);
-                        }
-                        catch (IOException e) {
-                            getLog().error("Unable to get details of files in directory");
-                            throw new FileUploadException("Unable to get details of files in directory");
                         }
                     }
                 }
             }
+            else {
+                getLog().error("No study directory found for study with ID: " + studyId);
+            }
         }
         else {
-            getLog().error("No study directory found for study with ID: " + studyId);
+            getLog().error("No study directory found");
+            throw new NoStudyDirectoryException("No study directory found");
         }
         return files;
     }
@@ -146,6 +145,18 @@ public class StudyFileService {
             getLog().error("Could not create a file: " + fileName);
             throw new FileUploadException("Could not create a file");
         }
+        return file;
+    }
+
+    /**
+     * Get file by study ID and path
+     *
+     * @param studyId  Study ID, this will help locate dir
+     * @param fileName Name of file to return
+     */
+    public File getFileFromFileName(Long studyId, String fileName) {
+        String fileNameWithFullPath = getStudyDirRoot() + File.separator + studyId + File.separator + fileName;
+        File file = new File(fileNameWithFullPath);
         return file;
     }
 
