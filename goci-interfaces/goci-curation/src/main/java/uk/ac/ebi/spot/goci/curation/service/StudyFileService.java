@@ -89,8 +89,10 @@ public class StudyFileService {
             }
         }
         else {
-            getLog().error("No study directory found");
-            throw new NoStudyDirectoryException("No study directory found");
+            getLog().warn("No study directory found for study with ID: "+studyId);
+
+            // create a study dir
+            createStudyDir(studyId);
         }
         return files;
     }
