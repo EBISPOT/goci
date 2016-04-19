@@ -62,15 +62,27 @@ public class StudyFileService {
 
     public List<StudyFileSummary> getStudyFiles(Long studyId) {
         List<StudyFileSummary> files = new ArrayList<>();
-
         File pathToStudyDir = getStudyDirPath(studyId);
 
         if (pathToStudyDir.exists()) {
-            String[] fileNames = pathToStudyDir.list();
+            File[] filesInDir = pathToStudyDir.listFiles();
 
-            for (String filename : fileNames) {
-                StudyFileSummary studyFileSummary = new StudyFileSummary(filename);
-                files.add(studyFileSummary);
+            if (filesInDir != null) {
+                for (File file : filesInDir) {
+                    // Ignore any hidden files
+                    if (!file.isHidden()) {
+
+                        try {
+                            StudyFileSummary studyFileSummary =
+                                    new StudyFileSummary(file.getName(), file.getCanonicalPath());
+                            files.add(studyFileSummary);
+                        }
+                        catch (IOException e) {
+                            getLog().error("Unable to get details of files in directory");
+                            throw new FileUploadException("Unable to get details of files in directory");
+                        }
+                    }
+                }
             }
         }
         else {
