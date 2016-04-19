@@ -11,7 +11,10 @@ import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,7 +92,7 @@ public class StudyFileService {
             }
         }
         else {
-            getLog().warn("No study directory found for study with ID: "+studyId);
+            getLog().warn("No study directory found for study with ID: " + studyId);
 
             // create a study dir
             createStudyDir(studyId);
@@ -150,10 +153,27 @@ public class StudyFileService {
             createStudyDir(id);
         }
 
+        // Create our new file
         String fileName = getStudyDirRoot() + File.separator + id + File.separator + name;
         File file = new File(fileName);
-        boolean success = file.createNewFile();
 
+        // If file already exists, backup current file
+        if (file.exists()) {
+            getLog().info("File " + file.getName() + " already exists, will backup current file");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            String now = dateFormat.format(new Date());
+            String newFileName =
+                    getStudyDirRoot() + File.separator + id + File.separator + file.getName().concat("_").concat(now);
+            File backUpExistingFile = new File(newFileName);
+            boolean fileBackupSuccess = file.renameTo(backUpExistingFile);
+
+            if (!fileBackupSuccess) {
+                getLog().error("Could not create a backup of file " + file.getName());
+                throw new FileUploadException("Could not create a backup of file");
+            }
+        }
+
+        boolean success = file.createNewFile();
         if (!success) {
             getLog().error("Could not create a file: " + fileName);
             throw new FileUploadException("Could not create a file");
