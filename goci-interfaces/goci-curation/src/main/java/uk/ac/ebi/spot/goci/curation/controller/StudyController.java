@@ -3,10 +3,12 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -54,6 +57,8 @@ import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -974,10 +979,28 @@ public class StudyController {
         return "study_files";
     }
 
+    @RequestMapping(value = "/{studyId}/studyfiles/{fileName}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
+        String path = request.getServletPath();
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
+    }
+
+
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) throws
-                                                                                                        FileUploadException,
-                                                                                                        IOException {
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+            throws
+            FileUploadException,
+            IOException {
         model.addAttribute("study", studyRepository.findOne(studyId));
         try {
             studyFileService.upload(file, studyId);
