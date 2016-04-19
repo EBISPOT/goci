@@ -41,17 +41,18 @@ public class StudyFileService {
         }
 
         if (!getStudyDirRoot().exists()) {
-            getLog().debug("Making root directory '" + getStudyDirRoot().getAbsolutePath() + "'...");
+            getLog().info("Making root directory '" + getStudyDirRoot().getAbsolutePath() + "'...");
             boolean success = getStudyDirRoot().mkdirs();
             if (success) {
-                getLog().debug("Directory created!");
+                getLog().debug("Root directory created!");
             }
             else {
-                getLog().error("Directory not created for study with ID: " + studyId);
-                throw new NoStudyDirectoryException("Directory not created for study");
+                getLog().error("Root directory not created");
+                throw new NoStudyDirectoryException("Root directory not created");
             }
         }
 
+        // Make a study specific dir based on study ID
         boolean success = getStudyDirPath(studyId).mkdir();
         if (!success) {
             getLog().error("Could not create directory for study with ID " + studyId);
@@ -59,7 +60,11 @@ public class StudyFileService {
         }
     }
 
-
+    /**
+     * Get all files in a study directory
+     *
+     * @param studyId Study ID which is used to find study specific dir
+     */
     public List<StudyFileSummary> getStudyFiles(Long studyId) {
         List<StudyFileSummary> files = new ArrayList<>();
         File pathToStudyDir = getStudyDirPath(studyId);
@@ -80,7 +85,7 @@ public class StudyFileService {
                 }
             }
             else {
-                getLog().error("No study directory found for study with ID: " + studyId);
+                getLog().error("No files in study directory for study with ID: " + studyId);
             }
         }
         else {
@@ -90,6 +95,12 @@ public class StudyFileService {
         return files;
     }
 
+    /**
+     * Upload a file to a study specific dir
+     *
+     * @param fileFromUpload File user is uploading
+     * @param studyId        Study ID which is used to find study specific dir
+     */
     public synchronized void upload(MultipartFile fileFromUpload, Long studyId) throws IOException {
 
         if (!fileFromUpload.isEmpty()) {
@@ -114,7 +125,7 @@ public class StudyFileService {
     }
 
     /**
-     * Create a subdir based on the study id
+     * Return a subdir based on the study id
      *
      * @param id Study ID
      */
