@@ -8,17 +8,27 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Am abstract class used to represent a summary of a validated object and its errors
+ *         A class used to represent a summary of a validated submission and its errors
  */
-abstract public class ValidationSummary {
+public class ValidationSummary {
 
-    private Collection<ValidationError> errors = new ArrayList<>();
+    private Collection<AssociationSummary> associationSummaries = new ArrayList<>();
 
-    public Collection<ValidationError> getErrors() {
-        return errors;
+    private Collection<RowValidationSummary> rowValidationSummaries = new ArrayList<>();
+
+    public Collection<AssociationSummary> getAssociationSummaries() {
+        return associationSummaries;
     }
 
-    public void setErrors(Collection<ValidationError> errors) {
-        this.errors = errors;
+    public void setAssociationSummaries(Collection<AssociationSummary> associationSummaries) {
+        this.associationSummaries = associationSummaries;
+    }
+
+    public Collection<RowValidationSummary> getRowValidationSummaries() {
+        return rowValidationSummaries;
+    }
+
+    public void setRowValidationSummaries(Collection<RowValidationSummary> rowValidationSummaries) {
+        this.rowValidationSummaries = rowValidationSummaries;
     }
 }
