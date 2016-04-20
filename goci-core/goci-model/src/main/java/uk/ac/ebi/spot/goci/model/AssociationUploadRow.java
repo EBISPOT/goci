@@ -15,6 +15,8 @@ public class AssociationUploadRow {
 
     private String strongestAllele;
 
+    private String otherAllele;
+
     private String snp;
 
     private String proxy;
@@ -257,5 +259,13 @@ public class AssociationUploadRow {
 
     public void setEfoTrait(String efoTrait) {
         this.efoTrait = efoTrait;
+    }
+
+    public String getOtherAllele() {
+        return otherAllele;
+    }
+
+    public void setOtherAllele(String otherAllele) {
+        this.otherAllele = otherAllele;
     }
 }
