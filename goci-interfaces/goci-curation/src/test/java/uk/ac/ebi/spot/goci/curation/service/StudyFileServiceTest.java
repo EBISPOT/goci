@@ -86,12 +86,6 @@ public class StudyFileServiceTest {
         studyFileService.upload(file, STUDY_ID);
     }
 
-
-    @Test
-    public void testGetFileFromFileName() throws Exception {
-
-    }
-
     @Test
     public void testGetStudyDirRoot() throws Exception {
         studyFileService.setStudyDirRoot(testFolder.newFolder("test"));
