@@ -5,16 +5,15 @@ package uk.ac.ebi.spot.goci.model;
  *
  * @author emma
  *         <p>
- *         A more specialised class used to represent errors generated after validation of an upload spreadsheet
- *         containing association values
+ *         Class used to represent errors generated after validation of an upload spreadsheet containing association
+ *         values
  */
 public class ValidationError {
 
     private String field;
 
     private String error;
-
-
+    
     public String getField() {
         return field;
     }
