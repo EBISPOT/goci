@@ -69,7 +69,11 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                         }
                         break;
                     case "other allele":
-                        // TODO ADD
+                        if (cell != null) {
+                            associationUploadRow.setOtherAllele(cell.getRichStringCellValue()
+                                                                        .getString()
+                                                                        .trim());
+                        }
                         break;
                     case "effect allele frequency in controls":
                         if (cell != null) {
