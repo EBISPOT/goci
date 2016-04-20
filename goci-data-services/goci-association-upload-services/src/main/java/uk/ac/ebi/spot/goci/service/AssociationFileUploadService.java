@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.RowValidationSummary;
+import uk.ac.ebi.spot.goci.model.ValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationSummary;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,9 +59,14 @@ public class AssociationFileUploadService {
      *
      * @param file XLSX file supplied by user
      */
-    public Collection<AssociationSummary> processAssociationFile(File file, String validationLevel) throws FileNotFoundException {
+    public ValidationSummary processAssociationFile(File file, String validationLevel)
+            throws FileNotFoundException {
 
+        ValidationSummary validationSummary = new ValidationSummary();
+        Collection<RowValidationSummary> rowValidationSummaries = new ArrayList<>();
         Collection<AssociationSummary> associationSummaries = new ArrayList<>();
+
+        Collection<AssociationUploadRow> fileRows = new ArrayList<>();
         if (file.exists()) {
             // Create sheet
             XSSFSheet sheet = null;
@@ -68,20 +75,7 @@ public class AssociationFileUploadService {
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
                 // Process file
-                Collection<AssociationUploadRow> fileRows = uploadSheetProcessor.readSheetRows(sheet);
-
-                // Error check each row
-                for (AssociationUploadRow row : fileRows) {
-                    getLog().debug("Error checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-                    Association association = associationRowProcessor.createAssociationFromUploadRow(row);
-                    Collection<AssociationValidationError> errors =
-                            associationValidationService.runAssociationValidation(association, validationLevel);
-
-                    AssociationSummary associationSummary = new AssociationSummary();
-                    associationSummary.setAssociation(association);
-                    associationSummary.setAssociationValidationErrors(errors);
-                    associationSummaries.add(associationSummary);
-                }
+                fileRows = uploadSheetProcessor.readSheetRows(sheet);
             }
             catch (InvalidFormatException | IOException e) {
                 getLog().error("File: " + file.getName() + " cannot be processed", e);
@@ -91,6 +85,46 @@ public class AssociationFileUploadService {
             getLog().error("File: " + file.getName() + " cannot be found");
             throw new FileNotFoundException("File does not exist");
         }
-        return associationSummaries;
+
+        if (!fileRows.isEmpty()) {
+            // Error check each row
+
+
+            // Check for missing values and syntax errors that would prevent code creating an association
+            for (AssociationUploadRow row : fileRows) {
+                getLog().debug("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
+                // TODO CHECK EACH ROW FOR MAJOR SYNTAX ERRORS, THESE WILL BE ERRORS IN FIELDS EXPECTED BY ASSOCIATION ROW PROCESSOR
+            }
+
+            if (rowValidationSummaries.isEmpty()) {
+                //Proceed to carry out full checks of values
+                for (AssociationUploadRow row : fileRows) {
+                    associationSummaries.add(createAssociationSummary(row, validationLevel));
+                }
+            }
+        }
+        else {
+            getLog().error("Parsing file failed");
+        }
+
+        validationSummary.setAssociationSummaries(associationSummaries);
+        validationSummary.setRowValidationSummaries(rowValidationSummaries);
+        return validationSummary;
+    }
+
+    /**
+     * Process uploaded file and return a list of its errors
+     *
+     * @param row             Row to validate and convert into an association
+     * @param validationLevel level of validation to run
+     */
+    private AssociationSummary createAssociationSummary(AssociationUploadRow row, String validationLevel) {
+        Association association = associationRowProcessor.createAssociationFromUploadRow(row);
+        Collection<ValidationError> errors =
+                associationValidationService.runAssociationValidation(association, validationLevel);
+        AssociationSummary associationSummary = new AssociationSummary();
+        associationSummary.setAssociation(association);
+        associationSummary.setErrors(errors);
+        return associationSummary;
     }
 }
