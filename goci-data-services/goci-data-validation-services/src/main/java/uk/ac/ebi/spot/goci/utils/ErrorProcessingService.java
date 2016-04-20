@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.utils;
 
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,12 +19,12 @@ public class ErrorProcessingService {
      * @param message       Error message
      * @param columnChecked Name of the column checked
      */
-    public static AssociationValidationError createError(String message, String columnChecked) {
-        AssociationValidationError error = new AssociationValidationError();
+    public static ValidationError createError(String message, String columnChecked) {
+        ValidationError error = new ValidationError();
 
         // If there is an error create a fully formed object
         if (message != null) {
-            error.setColumnName(columnChecked);
+            error.setField(columnChecked);
             error.setError(message);
         }
         return error;
@@ -36,9 +36,9 @@ public class ErrorProcessingService {
      * @param errors Errors to be checked
      * @return validErrors list of errors with message and location
      */
-    public static Collection<AssociationValidationError> checkForValidErrors(Collection<AssociationValidationError> errors) {
-        Collection<AssociationValidationError> validErrors = new ArrayList<>();
-        for (AssociationValidationError error : errors) {
+    public static Collection<ValidationError> checkForValidErrors(Collection<ValidationError> errors) {
+        Collection<ValidationError> validErrors = new ArrayList<>();
+        for (ValidationError error : errors) {
             if (error.getError() != null) {
                 validErrors.add(error);
             }

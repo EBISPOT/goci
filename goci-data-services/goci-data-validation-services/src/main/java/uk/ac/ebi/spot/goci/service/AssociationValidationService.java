@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 
 import java.util.Collection;
 
@@ -36,8 +36,8 @@ public class AssociationValidationService {
         this.validationChecksBuilder = validationChecksBuilder;
     }
 
-    public synchronized Collection<AssociationValidationError> runAssociationValidation(Association association,
-                                                                                        String validationLevel) {
+    public synchronized Collection<ValidationError> runAssociationValidation(Association association,
+                                                                             String validationLevel) {
 
         // Determine validation type
         AssociationCheckingService associationCheckingService = validationBuilder.buildValidator(validationLevel);

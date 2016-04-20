@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,18 +18,18 @@ import java.util.Collection;
 public class AuthorAssociationCheckingService implements AssociationCheckingService {
 
     @Override
-    public Collection<AssociationValidationError> runChecks(Association association,
-                                                            ValidationChecksBuilder validationChecksBuilder) {
+    public Collection<ValidationError> runChecks(Association association,
+                                                 ValidationChecksBuilder validationChecksBuilder) {
 
         // Create collection to store all newly created associations
-        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
+        Collection<ValidationError> associationValidationErrors = new ArrayList<>();
 
-        Collection<AssociationValidationError> pvalueErrors = validationChecksBuilder.runPvalueChecks(association);
+        Collection<ValidationError> pvalueErrors = validationChecksBuilder.runPvalueChecks(association);
         if (!pvalueErrors.isEmpty()) {
             associationValidationErrors.addAll(pvalueErrors);
         }
 
-        Collection<AssociationValidationError> snpErrors = validationChecksBuilder.runLociAttributeChecks(association);
+       /* Collection<AssociationValidationError> snpErrors = validationChecksBuilder.runLociAttributeChecks(association);
         if (!snpErrors.isEmpty()) {
             associationValidationErrors.addAll(snpErrors);
         }
@@ -51,7 +51,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             if (!betaErrors.isEmpty()) {
                 associationValidationErrors.addAll(betaErrors);
             }
-        }
+        }*/
 
         return associationValidationErrors;
     }

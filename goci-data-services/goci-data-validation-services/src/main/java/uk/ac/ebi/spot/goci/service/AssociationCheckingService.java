@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 
 import java.util.Collection;
 
@@ -14,7 +14,7 @@ import java.util.Collection;
  *         errors.
  */
 public interface AssociationCheckingService {
-    Collection<AssociationValidationError> runChecks(Association association, ValidationChecksBuilder validationChecksBuilder);
+    Collection<ValidationError> runChecks(Association association, ValidationChecksBuilder validationChecksBuilder);
 
     /**
      * Check if association is an OR or BETA type association
