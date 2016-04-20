@@ -196,4 +196,8 @@ public class StudyFileService {
     public File getStudyDirRoot() {
         return studyDirRoot;
     }
+
+    public void setStudyDirRoot(File studyDirRoot) {
+        this.studyDirRoot = studyDirRoot;
+    }
 }
