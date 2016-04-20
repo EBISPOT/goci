@@ -1,3 +1,4 @@
+/*
 package uk.ac.ebi.spot.goci.service;
 
 import org.junit.Before;
@@ -13,11 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by emma on 14/04/2016.
  *
  * @author emma
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class CheckingServiceTest {
 
@@ -64,4 +67,4 @@ public class CheckingServiceTest {
     public void testRunNoEffectErrors() throws Exception {
 
     }
-}
+}*/
