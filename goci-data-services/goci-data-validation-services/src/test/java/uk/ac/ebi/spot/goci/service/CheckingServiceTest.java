@@ -29,7 +29,7 @@ public class CheckingServiceTest {
     private CheckingService checkingService;
 
 
-    private AssociationUploadRow EMPTY_ROW = new AssociationUploadRowBuilder().setRowNumber(1).build();
+    private static final AssociationUploadRow EMPTY_ROW = new AssociationUploadRowBuilder().setRowNumber(1).build();
 
     @Mock
     private ValidationChecks validationChecks;
