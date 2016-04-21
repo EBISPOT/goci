@@ -59,7 +59,7 @@ public class AssociationFileUploadService {
     }
 
     /**
-     * Process uploaded file and return a list of its errors
+     * Process uploaded file and return a list of errors
      *
      * @param file XLSX file supplied by user
      */
@@ -69,8 +69,8 @@ public class AssociationFileUploadService {
         ValidationSummary validationSummary = new ValidationSummary();
         Collection<RowValidationSummary> rowValidationSummaries = new ArrayList<>();
         Collection<AssociationSummary> associationSummaries = new ArrayList<>();
-
         Collection<AssociationUploadRow> fileRows = new ArrayList<>();
+
         if (file.exists()) {
             // Create sheet
             XSSFSheet sheet = null;
@@ -78,7 +78,7 @@ public class AssociationFileUploadService {
                 // Create a sheet for reading
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
-                // Process file
+                // Process file into a generic row object
                 fileRows = uploadSheetProcessor.readSheetRows(sheet);
             }
             catch (InvalidFormatException | IOException e) {

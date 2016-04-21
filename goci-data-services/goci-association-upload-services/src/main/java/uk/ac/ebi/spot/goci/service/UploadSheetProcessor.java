@@ -17,7 +17,17 @@ import java.util.Map;
  */
 public interface UploadSheetProcessor {
 
+    /**
+     * Create a map of each header so as we read the file we can determine which value is being read
+     *
+     * @param row XLSX row created from a file supplied by user
+     */
     Map<Integer, String> createHeaderMap(XSSFRow row);
 
+    /**
+     * Create a map of each header so as we read the file we can determine which value is being read
+     *
+     * @param sheet Sheet created from a file supplied by user
+     */
     Collection<AssociationUploadRow> readSheetRows(XSSFSheet sheet);
 }
