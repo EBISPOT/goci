@@ -150,9 +150,6 @@ public class AssociationRowProcessor {
                                            row.getSnpStatus(),
                                            delimiter);
 
-            // Add genes to relevant loci, split by 'x' delimiter first
-            Collection<Locus> lociWithAddedGenes = new ArrayList<>();
-
             // Deal with genes for each interaction which should be
             // separated by 'x'
             String[] separatedGenes = row.getAuthorReportedGene().split(delimiter);
