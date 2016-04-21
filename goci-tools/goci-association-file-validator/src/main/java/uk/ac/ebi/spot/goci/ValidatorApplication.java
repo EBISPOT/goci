@@ -16,13 +16,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 import uk.ac.ebi.spot.goci.service.ValidationLogService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Collection;
 
 /**
  * Created by emma on 14/04/2016.
@@ -92,11 +91,11 @@ public class ValidatorApplication {
 
     private void runUpload(File file, String validationLevel) throws FileNotFoundException {
 
-        Collection<AssociationSummary> associationSummaries =
+        ValidationSummary validationSummary =
                 associationFileUploadService.processAssociationFile(file, validationLevel);
         System.out.println("Validation log written to " + inputFile.getAbsolutePath());
         getLog().info("Validation log written to " + inputFile.getAbsolutePath());
-        validationLogService.createLog(inputFile, associationSummaries);
+        validationLogService.processErrors(inputFile, validationSummary);
     }
 
     private Options bindOptions() {

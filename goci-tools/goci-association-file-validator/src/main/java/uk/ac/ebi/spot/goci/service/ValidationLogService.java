@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
+import uk.ac.ebi.spot.goci.model.RowValidationSummary;
+import uk.ac.ebi.spot.goci.model.ValidationError;
+import uk.ac.ebi.spot.goci.model.ValidationSummary;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -34,10 +35,10 @@ public class ValidationLogService {
         return log;
     }
 
-    public void createLog(File checkedFile, Collection<AssociationSummary> associationSummaries) {
+    public void processErrors(File checkedFile, ValidationSummary validationSummary) {
 
-        // Get all errors
-        Collection<AssociationValidationError> errors = getAllErrors(associationSummaries);
+        Collection<AssociationSummary> associationSummaries = validationSummary.getAssociationSummaries();
+        Collection<RowValidationSummary> rowValidationSummaries = validationSummary.getRowValidationSummaries();
 
         /// Create the log file
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -54,55 +55,76 @@ public class ValidationLogService {
                 .concat(("Validation_results_").concat(now).concat(".txt"));
 
         // Write errors to file
-        try {
-            File file = new File(logName);
+        boolean fileCreationSuccess = false;
+        File file = new File(logName);
 
-            boolean fileCreationSuccess = false;
+        try {
             if (!file.exists()) {
                 fileCreationSuccess = file.createNewFile();
-            }
-
-            if (fileCreationSuccess) {
-                FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                BufferedWriter bw = new BufferedWriter(fw);
-
-                bw.write("Validation results for file: " + checkedFile.getName() + "\n\n");
-                if (!errors.isEmpty()) {
-
-                    for (AssociationValidationError associationValidationError : errors) {
-                        bw.write(associationValidationError.getRow() + "\t" +
-                                         associationValidationError.getColumnName() +
-                                         "\t" + associationValidationError.getError() + "\n");
-                    }
-                }
-                else {
-                    bw.write("No errors found" + "\n");
-                }
-                bw.close();
-            }
-            else {
-                getLog().error("Creating validation log failed");
             }
         }
         catch (IOException e) {
             getLog().error("Creating validation log failed");
             e.printStackTrace();
         }
+
+        if (fileCreationSuccess) {
+            FileWriter fw = null;
+            try {
+                fw = new FileWriter(file.getAbsoluteFile());
+            }
+            catch (IOException e) {
+                getLog().error("Accessing validation log failed");
+                e.printStackTrace();
+            }
+            BufferedWriter bw = new BufferedWriter(fw);
+            try {
+                writeErrorToFile(bw, associationSummaries, rowValidationSummaries);
+            }
+            catch (IOException e) {
+                getLog().error("Writing to validation log failed");
+                e.printStackTrace();
+            }
+        }
+        else {
+            getLog().error("Creating validation log failed");
+        }
     }
 
-    /**
-     * Get all errors which can then be added to a log
-     *
-     * @param associationSummaries collection of association summaries which contain an association and its associated
-     *                             collection of errors
-     */
-    private Collection<AssociationValidationError> getAllErrors(Collection<AssociationSummary> associationSummaries) {
 
-        Collection<AssociationValidationError> associationValidationErrors = new ArrayList<>();
+    private void writeErrorToFile(BufferedWriter bw,
+                                  Collection<AssociationSummary> associationSummaries,
+                                  Collection<RowValidationSummary> rowValidationSummaries) throws IOException {
+
+
+        bw.write("Validation results:" + "\n\n");
+
+        for (RowValidationSummary rowValidationSummary : rowValidationSummaries) {
+
+            if (!rowValidationSummary.getErrors().isEmpty()) {
+                for (ValidationError rowError : rowValidationSummary.getErrors()) {
+                    bw.write("Row number: " + rowValidationSummary.getRow() + "\t" +
+                                     rowError.getField() +
+                                     "\t" + rowError.getError() + "\n");
+                }
+            }
+            else {
+                bw.write("No syntax errors found in row");
+            }
+        }
 
         for (AssociationSummary associationSummary : associationSummaries) {
-            associationValidationErrors.addAll(associationSummary.getAssociationValidationErrors());
+            if (!associationSummary.getErrors().isEmpty()) {
+                for (ValidationError associationError : associationSummary.getErrors()) {
+                    bw.write(associationError.getField() +
+                                     "\t" + associationError.getError() + "\n");
+                }
+            }
+            else {
+                bw.write("No error found in association values");
+            }
         }
-        return associationValidationErrors;
+
+        bw.close();
     }
 }
