@@ -13,6 +13,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
 import static uk.ac.ebi.spot.goci.utils.SheetCellProcessingService.processFloatValues;
 import static uk.ac.ebi.spot.goci.utils.SheetCellProcessingService.processIntValues;
+import static uk.ac.ebi.spot.goci.utils.SheetCellProcessingService.processStringValue;
 
 /**
  * Created by emma on 14/04/2016.
@@ -32,6 +33,8 @@ public class SheetCellProcessingServiceTest {
 
     XSSFCell blankCell;
 
+    XSSFCell cellWithNumericString;
+
     @Before
     public void setUp() throws Exception {
         // Create spreadsheet for testing
@@ -42,11 +45,13 @@ public class SheetCellProcessingServiceTest {
         row.createCell(1).setCellValue(12);
         row.createCell(2).setCellValue(1.22);
         row.createCell(3);
+        row.createCell(4).setCellValue("1.22");
 
         cellWithString = row.getCell(0);
         cellWithInteger = row.getCell(1);
         cellWithFloat = row.getCell(2);
         blankCell = row.getCell(3, row.RETURN_BLANK_AS_NULL);
+        cellWithNumericString = row.getCell(4);
     }
 
     @Test
@@ -61,5 +66,12 @@ public class SheetCellProcessingServiceTest {
         assertNull(processFloatValues(cellWithString));
         assertNull(processFloatValues(blankCell));
         assertEquals(Float.valueOf(String.valueOf(1.22)), processFloatValues(cellWithFloat));
+    }
+
+    @Test
+    public void testProcessStringValue() throws Exception {
+        assertNull(processStringValue(blankCell));
+        assertEquals("1.22", processStringValue(cellWithNumericString));
+        assertEquals("1.22", processStringValue(cellWithFloat));
     }
 }
