@@ -95,7 +95,13 @@ public class AssociationFileUploadService {
             // Check for missing values and syntax errors that would prevent code creating an association
             for (AssociationUploadRow row : fileRows) {
                 getLog().debug("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-                rowValidationSummaries.add(createRowValidationSummary(row));
+
+                RowValidationSummary rowValidationSummary = createRowValidationSummary(row);
+
+                // Only store summary if there is an error
+                if (!rowValidationSummary.getErrors().isEmpty()) {
+                    rowValidationSummaries.add(createRowValidationSummary(row));
+                }
             }
 
             if (rowValidationSummaries.isEmpty()) {
@@ -115,8 +121,8 @@ public class AssociationFileUploadService {
     }
 
     /**
-     * Return a list of syntax errors. These error checks will look for things that would
-     * prevent creation of an association which could then be carried forward to full validation
+     * Return a list of syntax errors. These error checks will look for things that would prevent creation of an
+     * association which could then be carried forward to full validation
      *
      * @param row Row to validate
      */
