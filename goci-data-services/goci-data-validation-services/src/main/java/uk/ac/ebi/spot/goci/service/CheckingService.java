@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.ValidationChecks;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.ValidationError;
@@ -24,6 +25,16 @@ public class CheckingService {
     @Autowired
     public CheckingService(ValidationChecks validationChecks) {
         this.validationChecks = validationChecks;
+    }
+
+    public ValidationError checkSnpValueIsPresent(AssociationUploadRow row) {
+        String errorMessage = validationChecks.checkValueIsPresent(row.getSnp());
+        return ErrorProcessingService.createError(errorMessage, "SNP");
+    }
+
+    public ValidationError checkStrongestAlleleValueIsPresent(AssociationUploadRow row) {
+        String errorMessage = validationChecks.checkValueIsPresent(row.getStrongestAllele());
+        return ErrorProcessingService.createError(errorMessage, "Strongest SNP-Risk Allele/Effect Allele");
     }
 
     public ValidationError checkSnpType(Association association) {
