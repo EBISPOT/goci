@@ -73,6 +73,7 @@ public class ValidatorApplication {
                 switch (opMode) {
                     case RUN:
                         try {
+                            getLog().info("Beginning validation");
                             runUpload(inputFile, validationLevel);
                         }
                         catch (Exception e) {
