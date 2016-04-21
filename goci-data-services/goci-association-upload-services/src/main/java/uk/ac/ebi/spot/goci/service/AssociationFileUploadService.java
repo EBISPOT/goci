@@ -37,6 +37,8 @@ public class AssociationFileUploadService {
 
     private SheetCreationService sheetCreationService;
 
+    private RowValidationService rowValidationService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -47,11 +49,13 @@ public class AssociationFileUploadService {
     public AssociationFileUploadService(UploadSheetProcessor uploadSheetProcessor,
                                         AssociationRowProcessor associationRowProcessor,
                                         AssociationValidationService associationValidationService,
-                                        SheetCreationService sheetCreationService) {
+                                        SheetCreationService sheetCreationService,
+                                        RowValidationService rowValidationService) {
         this.uploadSheetProcessor = uploadSheetProcessor;
         this.associationRowProcessor = associationRowProcessor;
         this.associationValidationService = associationValidationService;
         this.sheetCreationService = sheetCreationService;
+        this.rowValidationService = rowValidationService;
     }
 
     /**
@@ -93,7 +97,7 @@ public class AssociationFileUploadService {
             // Check for missing values and syntax errors that would prevent code creating an association
             for (AssociationUploadRow row : fileRows) {
                 getLog().debug("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-                // TODO CHECK EACH ROW FOR MAJOR SYNTAX ERRORS, THESE WILL BE ERRORS IN FIELDS EXPECTED BY ASSOCIATION ROW PROCESSOR
+                rowValidationSummaries.add(createRowValidationSummary(row));
             }
 
             if (rowValidationSummaries.isEmpty()) {
@@ -113,7 +117,21 @@ public class AssociationFileUploadService {
     }
 
     /**
-     * Process uploaded file and return a list of its errors
+     * Process uploaded file and return a list of syntax errors. These error checks will look for things that would
+     * prevent creation of an association which could then be carried forward to full validation
+     *
+     * @param row Row to validate
+     */
+    private RowValidationSummary createRowValidationSummary(AssociationUploadRow row) {
+        Collection<ValidationError> errors = rowValidationService.runRowValidation(row);
+        RowValidationSummary rowValidationSummary = new RowValidationSummary();
+        rowValidationSummary.setRow(row);
+        rowValidationSummary.setErrors(errors);
+        return rowValidationSummary;
+    }
+
+    /**
+     * Process uploaded file, create an association and return a list of its errors
      *
      * @param row             Row to validate and convert into an association
      * @param validationLevel level of validation to run
