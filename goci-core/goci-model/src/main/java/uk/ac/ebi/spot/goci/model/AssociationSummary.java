@@ -11,6 +11,9 @@ import java.util.Collection;
  */
 public class AssociationSummary {
 
+    // Row  number is only set if creating an association from an upload file
+    private Integer rowNumber;
+
     private Association association;
 
     private Collection<ValidationError> errors;
@@ -29,5 +32,13 @@ public class AssociationSummary {
 
     public void setErrors(Collection<ValidationError> errors) {
         this.errors = errors;
+    }
+
+    public Integer getRowNumber() {
+        return rowNumber;
+    }
+
+    public void setRowNumber(Integer rowNumber) {
+        this.rowNumber = rowNumber;
     }
 }

@@ -123,6 +123,7 @@ public class AssociationFileUploadService {
         Collection<ValidationError> errors =
                 associationValidationService.runAssociationValidation(association, validationLevel);
         AssociationSummary associationSummary = new AssociationSummary();
+        associationSummary.setRowNumber(row.getRowNumber());
         associationSummary.setAssociation(association);
         associationSummary.setErrors(errors);
         return associationSummary;

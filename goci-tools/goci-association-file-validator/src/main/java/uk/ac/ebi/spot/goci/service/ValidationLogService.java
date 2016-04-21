@@ -91,12 +91,17 @@ public class ValidationLogService {
         }
     }
 
-
+    /**
+     * Write errors to log
+     *
+     * @param bw                     buffer to write to
+     * @param associationSummaries   summary of validation run of associations
+     * @param rowValidationSummaries summary of validation run of rows
+     */
     private void writeErrorToFile(BufferedWriter bw,
                                   Collection<AssociationSummary> associationSummaries,
                                   Collection<RowValidationSummary> rowValidationSummaries) throws IOException {
-
-
+        
         bw.write("Validation results:" + "\n\n");
 
         for (RowValidationSummary rowValidationSummary : rowValidationSummaries) {
@@ -115,8 +120,11 @@ public class ValidationLogService {
 
         for (AssociationSummary associationSummary : associationSummaries) {
             if (!associationSummary.getErrors().isEmpty()) {
+
+                bw.write("\n\n");
                 for (ValidationError associationError : associationSummary.getErrors()) {
-                    bw.write(associationError.getField() +
+                    bw.write("Row number: " + associationSummary.getRowNumber() + "\t" +
+                                     associationError.getField() +
                                      "\t" + associationError.getError() + "\n");
                 }
             }
