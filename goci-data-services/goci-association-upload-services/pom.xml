@@ -30,6 +30,11 @@
         </dependency>
 
         <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-utils</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc7</artifactId>
         </dependency>

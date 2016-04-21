@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import uk.ac.ebi.spot.goci.builder.AssociationUploadRowBuilder;
 import uk.ac.ebi.spot.goci.builder.GeneBuilder;
 import uk.ac.ebi.spot.goci.builder.RiskAlleleBuilder;
 import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
