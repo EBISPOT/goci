@@ -63,7 +63,7 @@ public class AssociationFileUploadService {
      *
      * @param file XLSX file supplied by user
      */
-    public ValidationSummary processAssociationFile(File file, String validationLevel)
+    public synchronized ValidationSummary processAssociationFile(File file, String validationLevel)
             throws FileNotFoundException {
 
         ValidationSummary validationSummary = new ValidationSummary();
