@@ -16,6 +16,27 @@ import java.util.List;
 public class ValidationChecks {
 
     /**
+     * Check value is populated
+     *
+     * @param value Value to be checked
+     */
+    public String checkValueIsPresent(String value) {
+        String error = null;
+
+        if (value == null) {
+            error = "Empty value";
+
+        }
+        else {
+            if (value.isEmpty()) {
+                error = "Empty value";
+            }
+
+        }
+        return error;
+    }
+
+    /**
      * Check snp type contains only values 'novel' or 'known'
      *
      * @param value Value to be checked
