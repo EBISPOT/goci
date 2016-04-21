@@ -90,10 +90,8 @@ public class AssociationFileUploadService {
             throw new FileNotFoundException("File does not exist");
         }
 
+        // Error check each row
         if (!fileRows.isEmpty()) {
-            // Error check each row
-
-
             // Check for missing values and syntax errors that would prevent code creating an association
             for (AssociationUploadRow row : fileRows) {
                 getLog().debug("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
@@ -117,7 +115,7 @@ public class AssociationFileUploadService {
     }
 
     /**
-     * Process uploaded file and return a list of syntax errors. These error checks will look for things that would
+     * Return a list of syntax errors. These error checks will look for things that would
      * prevent creation of an association which could then be carried forward to full validation
      *
      * @param row Row to validate
