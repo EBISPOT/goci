@@ -101,7 +101,7 @@ public class ValidationLogService {
     private void writeErrorToFile(BufferedWriter bw,
                                   Collection<AssociationSummary> associationSummaries,
                                   Collection<RowValidationSummary> rowValidationSummaries) throws IOException {
-        
+
         bw.write("Validation results:" + "\n\n");
 
         for (RowValidationSummary rowValidationSummary : rowValidationSummaries) {
