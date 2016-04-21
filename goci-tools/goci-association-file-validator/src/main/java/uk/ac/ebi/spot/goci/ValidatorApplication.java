@@ -94,8 +94,6 @@ public class ValidatorApplication {
 
         ValidationSummary validationSummary =
                 associationFileUploadService.processAssociationFile(file, validationLevel);
-        System.out.println("Validation log written to " + inputFile.getAbsolutePath());
-        getLog().info("Validation log written to " + inputFile.getAbsolutePath());
         validationLogService.processErrors(inputFile, validationSummary);
     }
 

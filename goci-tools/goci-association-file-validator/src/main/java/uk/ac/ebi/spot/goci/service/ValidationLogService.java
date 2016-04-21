@@ -54,6 +54,9 @@ public class ValidationLogService {
                 .concat(File.separator)
                 .concat(("Validation_results_").concat(now).concat(".txt"));
 
+        System.out.println("Validation log written to " + logName);
+        getLog().info("Validation log written to " + logName);
+
         // Write errors to file
         boolean fileCreationSuccess = false;
         File file = new File(logName);
@@ -108,7 +111,7 @@ public class ValidationLogService {
 
             if (!rowValidationSummary.getErrors().isEmpty()) {
                 for (ValidationError rowError : rowValidationSummary.getErrors()) {
-                    bw.write("Row number: " + rowValidationSummary.getRow() + "\t" +
+                    bw.write("Row number: " + rowValidationSummary.getRow().getRowNumber() + "\t" +
                                      rowError.getField() +
                                      "\t" + rowError.getError() + "\n");
                 }
