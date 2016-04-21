@@ -14,9 +14,10 @@ import java.util.Collection;
 
 /**
  * Created by emma on 12/04/2016.
- * @author emma
  *
- * Creates common association attributes
+ * @author emma
+ *         <p>
+ *         Creates common association attributes
  */
 @Service
 public class AssociationAttributeService {
@@ -30,15 +31,19 @@ public class AssociationAttributeService {
 
     public Collection<Gene> createLocusGenes(String authorReportedGene, String delimiter) {
 
-        String[] genes = authorReportedGene.split(delimiter);
-        Collection<String> genesToCreate = new ArrayList<>();
+        Collection<Gene> locusGene = new ArrayList<>();
 
-        for (String gene : genes) {
-            String trimmedGene = gene.trim();
-            genesToCreate.add(trimmedGene);
+        if (authorReportedGene != null && !authorReportedGene.isEmpty()) {
+
+            String[] genes = authorReportedGene.split(delimiter);
+            Collection<String> genesToCreate = new ArrayList<>();
+
+            for (String gene : genes) {
+                genesToCreate.add(gene.trim());
+            }
+            locusGene = createGene(genesToCreate);
         }
-
-        return createGene(genesToCreate);
+        return locusGene;
     }
 
     public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
