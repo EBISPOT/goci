@@ -1,13 +1,14 @@
 package uk.ac.ebi.spot.goci.service;
 
-import uk.ac.ebi.spot.goci.builder.GeneBuilder;
-import uk.ac.ebi.spot.goci.builder.RiskAlleleBuilder;
-import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.builder.AssociationUploadRowBuilder;
+import uk.ac.ebi.spot.goci.builder.GeneBuilder;
+import uk.ac.ebi.spot.goci.builder.RiskAlleleBuilder;
+import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Gene;
