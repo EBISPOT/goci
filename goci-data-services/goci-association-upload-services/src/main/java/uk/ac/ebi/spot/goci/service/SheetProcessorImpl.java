@@ -123,6 +123,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                                                   .getString()
                                                                   .trim());
                         }
+                        break;
                     default:
                         getLog().warn("Column with heading " + headerName + " found in file.");
                         break;
