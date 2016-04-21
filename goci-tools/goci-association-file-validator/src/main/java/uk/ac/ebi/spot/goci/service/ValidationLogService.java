@@ -41,7 +41,7 @@ public class ValidationLogService {
         Collection<RowValidationSummary> rowValidationSummaries = validationSummary.getRowValidationSummaries();
 
         /// Create the log file
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'-T'HH-mm-ss");
         String now = dateFormat.format(new Date());
         String filePath = checkedFile.getParent();
 
@@ -105,15 +105,19 @@ public class ValidationLogService {
                                   Collection<AssociationSummary> associationSummaries,
                                   Collection<RowValidationSummary> rowValidationSummaries) throws IOException {
 
-        bw.write("Validation results:" + "\n\n");
+        bw.write("Validation results:".concat("\n\n"));
+        bw.write("Row        ".concat("\t").concat("Field").concat("\t").concat("Error").concat("\n"));
 
         for (RowValidationSummary rowValidationSummary : rowValidationSummaries) {
 
             if (!rowValidationSummary.getErrors().isEmpty()) {
                 for (ValidationError rowError : rowValidationSummary.getErrors()) {
-                    bw.write("Row number: " + rowValidationSummary.getRow().getRowNumber() + "\t" +
-                                     rowError.getField() +
-                                     "\t" + rowError.getError() + "\n");
+                    bw.write("Row number: ".concat(String.valueOf(rowValidationSummary.getRow().getRowNumber()))
+                                     .concat("\t")
+                                     .concat(rowError.getField())
+                                     .concat("\t")
+                                     .concat(rowError.getError())
+                                     .concat("\n"));
                 }
             }
             else {
@@ -126,16 +130,18 @@ public class ValidationLogService {
 
                 bw.write("\n\n");
                 for (ValidationError associationError : associationSummary.getErrors()) {
-                    bw.write("Row number: " + associationSummary.getRowNumber() + "\t" +
-                                     associationError.getField() +
-                                     "\t" + associationError.getError() + "\n");
+                    bw.write("Row number: ".concat(String.valueOf(associationSummary.getRowNumber())
+                                                           .concat("\t")
+                                                           .concat(associationError.getField())
+                                                           .concat("\t")
+                                                           .concat(associationError.getError())
+                                                           .concat("\n")));
                 }
             }
             else {
                 bw.write("No error found in association values");
             }
         }
-
         bw.close();
     }
 }
