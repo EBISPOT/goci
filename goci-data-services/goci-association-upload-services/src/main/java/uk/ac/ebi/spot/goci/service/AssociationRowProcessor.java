@@ -134,10 +134,20 @@ public class AssociationRowProcessor {
             newAssociation.setSnpInteraction(false);
         }
 
+        // If there is a risk allele proceed to create loci
+        if (row.getStrongestAllele() != null) {
+            newAssociation.setLoci(createLoci(row,
+                                              newAssociation.getSnpInteraction(),
+                                              newAssociation.getMultiSnpHaplotype()));
+        }
+        return newAssociation;
+    }
+
+    private Collection<Locus> createLoci(AssociationUploadRow row, Boolean snpInteraction, Boolean multiSnpHaplotype) {
         String delimiter;
         Collection<Locus> loci = new ArrayList<>();
 
-        if (newAssociation.getSnpInteraction()) {
+        if (snpInteraction) {
             delimiter = "x";
 
             // For SNP interaction studies we need to create a locus per risk allele
@@ -200,7 +210,7 @@ public class AssociationRowProcessor {
             // For standard associations set the risk allele frequency to the
             // same value as the overall association frequency
             Collection<RiskAllele> locusRiskAllelesWithRiskFrequencyValues = new ArrayList<>();
-            if (!newAssociation.getMultiSnpHaplotype()) {
+            if (!multiSnpHaplotype) {
                 for (RiskAllele riskAllele : locusRiskAlleles) {
                     riskAllele.setRiskFrequency(row.getAssociationRiskFrequency());
                     locusRiskAllelesWithRiskFrequencyValues.add(riskAllele);
@@ -225,9 +235,7 @@ public class AssociationRowProcessor {
 
             loci.add(locus);
         }
-
-        newAssociation.setLoci(loci);
-        return newAssociation;
+        return loci;
     }
 
     private Collection<RiskAllele> createLocusRiskAlleles(String strongestAllele,
@@ -301,7 +309,7 @@ public class AssociationRowProcessor {
 
                 // Check for proxies and if we have one create a proxy snp
                 if (proxies.size() != 0) {
-                    if (proxies.size() ==snps.size()){
+                    if (proxies.size() == snps.size()) {
 
                         String proxyValue = proxyIterator.next().trim();
 
@@ -332,7 +340,7 @@ public class AssociationRowProcessor {
                         }
                         newRiskAllele.setProxySnps(newRiskAlleleProxies);
                     }
-                    else{
+                    else {
                         getLog().error("Proxy SNP number and SNP number do not match");
                     }
                 }
