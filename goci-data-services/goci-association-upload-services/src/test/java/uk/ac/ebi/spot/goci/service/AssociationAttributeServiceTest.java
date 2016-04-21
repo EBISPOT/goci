@@ -3,7 +3,10 @@ package uk.ac.ebi.spot.goci.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.Collection;
@@ -23,6 +26,9 @@ public class AssociationAttributeServiceTest {
 
     @Mock
     private EfoTraitRepository efoTraitRepository;
+
+    private static final SingleNucleotidePolymorphism SNP =
+            new SingleNucleotidePolymorphismBuilder().setRsId("rs345612").build();
 
     @Before
     public void setUp() throws Exception {
@@ -45,17 +51,21 @@ public class AssociationAttributeServiceTest {
     }
 
     @Test
-    public void testCreateGene() throws Exception {
-
-    }
-
-    @Test
     public void testCreateRiskAllele() throws Exception {
 
+        // Test with valid string as risk allele name
+        assertThat(associationAttributeService.createRiskAllele("rs345789-G", SNP)).isInstanceOf(RiskAllele.class);
+        assertThat(associationAttributeService.createRiskAllele("rs345789-G", SNP)).extracting("riskAlleleName")
+                .contains("rs345789-G");
+        assertThat(associationAttributeService.createRiskAllele("rs345789-G", SNP)).extracting("snp")
+                .extracting("rsId")
+                .contains("rs345612");
     }
 
     @Test
     public void testCreateSnp() throws Exception {
-
+        // Test with valid string as an rsId
+        assertThat(associationAttributeService.createSnp("rs345789")).isInstanceOf(SingleNucleotidePolymorphism.class);
+        assertThat(associationAttributeService.createSnp("rs345789")).extracting("rsId").contains("rs345789");
     }
 }

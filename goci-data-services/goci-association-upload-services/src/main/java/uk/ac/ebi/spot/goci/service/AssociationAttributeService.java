@@ -46,7 +46,7 @@ public class AssociationAttributeService {
         return locusGene;
     }
 
-    public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
+    private Collection<Gene> createGene(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
         for (String authorReportedGene : authorReportedGenes) {
             authorReportedGene = StringProcessingService.tidy_curator_entered_string(authorReportedGene);
