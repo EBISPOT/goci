@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.ValidationError;
@@ -17,9 +18,21 @@ import java.util.Collection;
 @Service
 public class RowCheckingService {
 
+    private RowChecksBuilder rowChecksBuilder;
+
+    @Autowired
+    public RowCheckingService(RowChecksBuilder rowChecksBuilder) {
+        this.rowChecksBuilder = rowChecksBuilder;
+    }
+
     public Collection<ValidationError> runChecks(AssociationUploadRow row) {
         // Create collection to store all newly created associations
         Collection<ValidationError> errors = new ArrayList<>();
+
+        Collection<ValidationError> emptyValuesErrors = rowChecksBuilder.runEmptyValueChecks(row);
+        if (!emptyValuesErrors.isEmpty()) {
+            errors.addAll(emptyValuesErrors);
+        }
         return errors;
     }
 }
