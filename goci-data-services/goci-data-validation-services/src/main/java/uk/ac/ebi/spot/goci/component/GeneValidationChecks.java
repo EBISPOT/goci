@@ -2,13 +2,9 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
-import uk.ac.ebi.spot.goci.model.EnsemblDbsnpVersionJson;
-
-import javax.validation.constraints.NotNull;
+import uk.ac.ebi.spot.goci.model.GeneLookupJson;
 
 /**
  * Created by Laurent on 28/09/15.
@@ -22,11 +18,11 @@ import javax.validation.constraints.NotNull;
 @Service
 public class GeneValidationChecks {
 
-    @NotNull @Value("${mapping.dbsnp_endpoint}")
+/*    @NotNull @Value("${mapping.gene_lookup_endpoint}")
     private String endpoint;
 
     @NotNull @Value("${ensembl.server}")
-    private String server;
+    private String server;*/
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -35,42 +31,41 @@ public class GeneValidationChecks {
     }
 
     /**
-     * Getter for the dbSNP version
+     * Check gene name returns a response
      *
      * @return the dbSNP version
      */
-    public int getDbsnpVersion() throws EnsemblRestIOException {
+    public String checkGeneSymbolIsValid(String gene) {
+
+        String error = null;
 
         RestTemplate restTemplate = new RestTemplate();
-        String url = getServer() + getEndpoint();
-        String version = "";
+        String url = "http://rest.ensembl.org/lookup/symbol/homo_sapiens/SFRP1?content-type=application/json";
+        GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
-            getLog().info("Querying " + url);
+            geneLookupJson = restTemplate.getForObject(url, GeneLookupJson.class);
+            String objectType = geneLookupJson.getObject_type();
+            getLog().info("Checking gene: " + url);
 
-            //Ensembl returns an array data structure for this call
-            // Have to do some wrangling to get dbSNP version
-            EnsemblDbsnpVersionJson[] response = restTemplate.getForObject(url, EnsemblDbsnpVersionJson[].class);
-            version = response[0].getVersion();
-
-            if (version.isEmpty()) {
-                throw new EnsemblRestIOException("Unable to determine Ensembl dbSNP version");
+            if (!objectType.equalsIgnoreCase("gene")) {
+                error = "Gene symbol not valid";
             }
         }
 
         catch (Exception e) {
-            throw new EnsemblRestIOException("Problem querying Ensembl API for dbSNP version");
+            getLog().error("Checking gene symbol failed", e);
         }
 
-        return Integer.parseInt(version);
+        return error;
     }
 
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    public String getServer() {
-        return server;
-    }
+//    public String getEndpoint() {
+//        return endpoint;
+//    }
+//
+//    public String getServer() {
+//        return server;
+//    }
 
 }

@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.component;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +15,13 @@ import java.util.List;
  */
 @Component
 public class ValidationChecks {
+
+    private GeneValidationChecks geneValidationChecks;
+
+    @Autowired
+    public ValidationChecks(GeneValidationChecks geneValidationChecks) {
+        this.geneValidationChecks = geneValidationChecks;
+    }
 
     /**
      * Check value is populated
@@ -318,7 +326,7 @@ public class ValidationChecks {
             }
             // Check gene name in Ensembl
             else {
-                // TODO WILL NEED TO RUN MAPPING
+                error = geneValidationChecks.checkGeneSymbolIsValid(geneName);
             }
         }
         return error;
