@@ -42,7 +42,7 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "SNP type");
     }
 
-    public ValidationError checkOrIsPresent(Association association) {
+    public ValidationError checkOrIsPresentAndLessThanOne(Association association) {
         String errorMessage = validationChecks.checkOrIsPresentAndLessThanOne(association.getOrPerCopyNum());
         return ErrorProcessingService.createError(errorMessage, "OR");
     }
@@ -62,8 +62,8 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
-    public ValidationError checkBetaIsPresent(Association association) {
-        String errorMessage = validationChecks.checkBetaIsPresent(association.getBetaNum());
+    public ValidationError checkBetaIsPresentAndIsNotNegative(Association association) {
+        String errorMessage = validationChecks.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
         return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
@@ -109,6 +109,7 @@ public class ErrorCreationService {
                                                   "OR/Beta description");
     }
 
+    // Pvalue checks
     public ValidationError checkMantissaIsLessThan10(Association association) {
         String errorMessage = validationChecks.checkMantissaIsLessThan10(association.getPvalueMantissa());
         return ErrorProcessingService.createError(errorMessage, "P-value Mantissa");
