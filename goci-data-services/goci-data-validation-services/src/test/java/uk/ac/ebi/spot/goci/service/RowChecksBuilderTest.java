@@ -47,7 +47,7 @@ public class RowChecksBuilderTest {
 
     private static final ValidationError ERROR_03 =
             new ValidationErrorBuilder().build();
-    
+
     @Before
     public void setUp() throws Exception {
         rowChecksBuilder = new RowChecksBuilder(checkingService);
