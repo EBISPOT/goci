@@ -123,15 +123,20 @@ public class ValidationChecks {
     }
 
     /**
-     * "Beta" MUST be filled
+     * Beta MUST be filled
      *
      * @param value Value to be checked
      */
-    public String checkBetaIsPresent(Float value) {
+    public String checkBetaIsPresentAndIsNotNegative(Float value) {
         String error = null;
 
         if (value == null) {
-            error = "Beta is empty for association";
+            error = "Beta is empty";
+        }
+        else{
+            if(value < 0){
+                error = "Beta is less than 0";
+            }
         }
         return error;
     }
@@ -217,7 +222,7 @@ public class ValidationChecks {
     }
 
     /**
-     * "Range" MUST be empty.
+     * Range MUST be empty.
      *
      * @param value Value to be checked
      */
