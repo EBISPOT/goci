@@ -29,30 +29,32 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             associationValidationErrors.addAll(pvalueErrors);
         }
 
-       /* Collection<AssociationValidationError> snpErrors = validationChecksBuilder.runLociAttributeChecks(association);
-        if (!snpErrors.isEmpty()) {
-            associationValidationErrors.addAll(snpErrors);
-        }
-
         String effectType = determineIfAssociationIsOrType(association);
 
         // Run checks depending on effect type
         if (effectType.equalsIgnoreCase("or")) {
-            Collection<AssociationValidationError> orErrors =
-                    validationChecksBuilder.runOrChecks(association, effectType);
+            Collection<ValidationError> orErrors =
+                    validationChecksBuilder.runOrChecks(association);
             if (!orErrors.isEmpty()) {
                 associationValidationErrors.addAll(orErrors);
             }
         }
 
         if (effectType.equalsIgnoreCase("beta")) {
-            Collection<AssociationValidationError> betaErrors =
-                    validationChecksBuilder.runAuthorLevelBetaChecks(association, effectType);
+            Collection<ValidationError> betaErrors =
+                    validationChecksBuilder.runAuthorLevelBetaChecks(association);
             if (!betaErrors.isEmpty()) {
                 associationValidationErrors.addAll(betaErrors);
             }
-        }*/
+        }
 
+        if (effectType.equalsIgnoreCase("none")) {
+            Collection<ValidationError> noEffectErrors =
+                    validationChecksBuilder.runAuthorLevelNoEffectChecks(association);
+            if (!noEffectErrors.isEmpty()) {
+                associationValidationErrors.addAll(noEffectErrors);
+            }
+        }
         return associationValidationErrors;
     }
 }
