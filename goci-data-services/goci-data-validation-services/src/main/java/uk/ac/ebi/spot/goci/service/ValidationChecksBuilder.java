@@ -68,7 +68,7 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError orIsPresent = errorCreationService.checkOrIsPresent(association);
+        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndLessThanOne(association);
         ValidationErrors.add(orIsPresent);
 
         ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association);
@@ -84,6 +84,30 @@ public class ValidationChecksBuilder {
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
 
+
+    /**
+     * Run OR checks on a row
+     *
+     * @param association association to be checked
+     */
+    public Collection<ValidationError> runAuthorLevelOrChecks(Association association) {
+
+        Collection<ValidationError> ValidationErrors = new ArrayList<>();
+
+        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationErrors.add(betaFoundForOr);
+
+        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationErrors.add(betaUnitFoundForOr);
+
+        ValidationError betaDirectionFoundForOr =
+                errorCreationService.checkBetaDirectionIsEmpty(association);
+        ValidationErrors.add(betaDirectionFoundForOr);
+
+        return ErrorProcessingService.checkForValidErrors(ValidationErrors);
+    }
+
+
     /**
      * Run Beta checks on a row
      *
@@ -93,7 +117,7 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresent(association);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association);
         ValidationErrors.add(betaIsPresent);
 
         ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association);
@@ -124,7 +148,7 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAuthorLevelBetaChecks(Association association) {
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresent(association);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association);
         ValidationErrors.add(betaIsPresent);
 
         ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association);
@@ -181,6 +205,35 @@ public class ValidationChecksBuilder {
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
+
+    /**
+     * Run no effect checks on a row
+     *
+     * @param association row to be checked
+     */
+    public Collection<ValidationError> runAuthorLevelNoEffectChecks(Association association) {
+
+        Collection<ValidationError> ValidationErrors = new ArrayList<>();
+
+        ValidationError orFound = errorCreationService.checkOrEmpty(association);
+        ValidationErrors.add(orFound);
+
+        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationErrors.add(betaFound);
+
+        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationErrors.add(betaUnitFound);
+
+        ValidationError betaDirectionFound =
+                errorCreationService.checkBetaDirectionIsEmpty(association);
+        ValidationErrors.add(betaDirectionFound);
+
+        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association);
+        ValidationErrors.add(rangeFound);
+
+        return ErrorProcessingService.checkForValidErrors(ValidationErrors);
+    }
+
 
     public Collection<ValidationError> runLociAttributeChecks(Association association) {
 
