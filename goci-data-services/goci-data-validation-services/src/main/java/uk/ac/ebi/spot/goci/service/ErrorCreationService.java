@@ -42,70 +42,70 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "SNP type");
     }
 
-    public ValidationError checkOrIsPresent(Association association, String effectType) {
-        String errorMessage = validationChecks.checkOrIsPresent(association.getOrPerCopyNum());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR");
+    public ValidationError checkOrIsPresent(Association association) {
+        String errorMessage = validationChecks.checkOrIsPresentAndLessThanOne(association.getOrPerCopyNum());
+        return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
-    public ValidationError checkBetaValuesIsEmpty(Association association, String effectType) {
+    public ValidationError checkBetaValuesIsEmpty(Association association) {
         String errorMessage = validationChecks.checkBetaValueIsEmpty(association.getBetaNum());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta");
+        return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
-    public ValidationError checkBetaUnitIsEmpty(Association association, String effectType) {
+    public ValidationError checkBetaUnitIsEmpty(Association association) {
         String errorMessage = validationChecks.checkBetaUnitIsEmpty(association.getBetaUnit());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
-    public ValidationError checkBetaDirectionIsEmpty(Association association, String effectType) {
+    public ValidationError checkBetaDirectionIsEmpty(Association association) {
         String errorMessage = validationChecks.checkBetaDirectionIsEmpty(association.getBetaDirection());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
-    public ValidationError checkBetaIsPresent(Association association, String effectType) {
+    public ValidationError checkBetaIsPresent(Association association) {
         String errorMessage = validationChecks.checkBetaIsPresent(association.getBetaNum());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta");
+        return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
-    public ValidationError checkBetaUnitIsPresent(Association association, String effectType) {
+    public ValidationError checkBetaUnitIsPresent(Association association) {
         String errorMessage = validationChecks.checkBetaUnitIsPresent(association.getBetaUnit());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
-    public ValidationError checkBetaDirectionIsPresent(Association association, String effectType) {
+    public ValidationError checkBetaDirectionIsPresent(Association association) {
         String errorMessage = validationChecks.checkBetaDirectionIsPresent(association.getBetaDirection());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
-    public ValidationError checkOrEmpty(Association association, String effectType) {
+    public ValidationError checkOrEmpty(Association association) {
         String errorMessage = validationChecks.checkOrEmpty(association.getOrPerCopyNum());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR");
+        return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
-    public ValidationError checkOrRecipEmpty(Association association, String effectType) {
+    public ValidationError checkOrRecipEmpty(Association association) {
         String errorMessage = validationChecks.checkOrRecipEmpty(association.getOrPerCopyRecip());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "OR reciprocal");
+        return ErrorProcessingService.createError(errorMessage, "OR reciprocal");
     }
 
-    public ValidationError checkOrPerCopyRecipRange(Association association, String effectType) {
+    public ValidationError checkOrPerCopyRecipRange(Association association) {
         String errorMessage = validationChecks.checkOrPerCopyRecipRangeIsEmpty(association.getOrPerCopyRecipRange());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType,
+        return ErrorProcessingService.createError(errorMessage,
                                                   "OR reciprocal range");
     }
 
-    public ValidationError checkRangeIsEmpty(Association association, String effectType) {
+    public ValidationError checkRangeIsEmpty(Association association) {
         String errorMessage = validationChecks.checkRangeIsEmpty(association.getRange());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Range");
+        return ErrorProcessingService.createError(errorMessage, "Range");
     }
 
-    public ValidationError checkStandardErrorIsEmpty(Association association, String effectType) {
+    public ValidationError checkStandardErrorIsEmpty(Association association) {
         String errorMessage = validationChecks.checkStandardErrorIsEmpty(association.getStandardError());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType, "Standard Error");
+        return ErrorProcessingService.createError(errorMessage, "Standard Error");
     }
 
-    public ValidationError checkDescriptionIsEmpty(Association association, String effectType) {
+    public ValidationError checkDescriptionIsEmpty(Association association) {
         String errorMessage = validationChecks.checkDescriptionIsEmpty(association.getDescription());
-        return ErrorProcessingService.createError(errorMessage + "with effect type: " + effectType,
+        return ErrorProcessingService.createError(errorMessage,
                                                   "OR/Beta description");
     }
 

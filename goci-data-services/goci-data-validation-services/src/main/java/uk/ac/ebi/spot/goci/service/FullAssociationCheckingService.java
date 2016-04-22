@@ -39,7 +39,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
         // Run checks depending on effect type
         if (effectType.equalsIgnoreCase("or")) {
             Collection<ValidationError> orErrors =
-                    validationChecksBuilder.runOrChecks(association, effectType);
+                    validationChecksBuilder.runOrChecks(association);
             if (!orErrors.isEmpty()) {
                 associationValidationErrors.addAll(orErrors);
             }
@@ -47,7 +47,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
         if (effectType.equalsIgnoreCase("beta")) {
             Collection<ValidationError> betaErrors =
-                    validationChecksBuilder.runBetaChecks(association, effectType);
+                    validationChecksBuilder.runBetaChecks(association);
             if (!betaErrors.isEmpty()) {
                 associationValidationErrors.addAll(betaErrors);
             }
@@ -55,7 +55,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
         if (effectType.equalsIgnoreCase("nr")) {
             Collection<ValidationError> noEffectErrors =
-                    validationChecksBuilder.runNoEffectErrors(association, effectType);
+                    validationChecksBuilder.runNoEffectErrors(association);
             if (!noEffectErrors.isEmpty()) {
                 associationValidationErrors.addAll(noEffectErrors);
             }

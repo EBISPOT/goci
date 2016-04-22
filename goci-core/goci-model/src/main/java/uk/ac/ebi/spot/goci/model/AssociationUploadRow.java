@@ -31,8 +31,6 @@ public class AssociationUploadRow {
 
     private String pvalueDescription;
 
-    private String effectType;
-
     private Float orPerCopyNum;
 
     private Float orPerCopyRecip;
@@ -139,14 +137,6 @@ public class AssociationUploadRow {
 
     public void setPvalueDescription(String pvalueDescription) {
         this.pvalueDescription = pvalueDescription;
-    }
-
-    public String getEffectType() {
-        return effectType;
-    }
-
-    public void setEffectType(String effectType) {
-        this.effectType = effectType;
     }
 
     public Float getOrPerCopyNum() {
