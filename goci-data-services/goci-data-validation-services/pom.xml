@@ -17,13 +17,7 @@
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
-
     <dependencies>
-
-        <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-model</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
