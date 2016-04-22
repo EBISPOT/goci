@@ -240,7 +240,7 @@ public class ValidationChecksBuilder {
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
         Collection<Locus> loci = association.getLoci();
 
-        if (loci == null) {
+        if (loci != null) {
             for (Locus locus : association.getLoci()) {
                 Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
                 Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
