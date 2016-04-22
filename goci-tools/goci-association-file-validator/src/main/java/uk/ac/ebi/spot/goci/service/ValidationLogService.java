@@ -135,7 +135,7 @@ public class ValidationLogService {
             });
         }
         else {
-            bw.write("No syntax errors found in row. Proceeding to full checking".concat("\n"));
+            getLog().info("No syntax errors found in row. Proceeding to full checking");
         }
 
         // Only report association errors if there are no row error
