@@ -61,15 +61,20 @@ public class ValidationChecks {
     }
 
     /**
-     * "OR" MUST be filled
+     * OR MUST be filled and less than 1
      *
      * @param value Value to be checked
      */
-    public String checkOrIsPresent(Float value) {
+    public String checkOrIsPresentAndLessThanOne(Float value) {
         String error = null;
 
         if (value == null) {
             error = "OR num is empty for association";
+        }
+        else {
+            if (value > 1) {
+                error = "OR num is more than 1 for association";
+            }
         }
         return error;
     }
