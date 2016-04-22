@@ -32,7 +32,8 @@ public class SheetCellProcessingService {
         if (cell != null) {
             switch (cell.getCellType()) {
                 case Cell.CELL_TYPE_NUMERIC:
-                    intValue = (int) cell.getNumericCellValue();
+                    Long roundedValue = Math.round(cell.getNumericCellValue());
+                    intValue = roundedValue.intValue();
                     break;
                 default:
                     intValue = null;
