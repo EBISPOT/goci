@@ -94,8 +94,7 @@ public class AssociationFileUploadService {
         if (!fileRows.isEmpty()) {
             // Check for missing values and syntax errors that would prevent code creating an association
             for (AssociationUploadRow row : fileRows) {
-                getLog().debug("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-
+                getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
                 RowValidationSummary rowValidationSummary = createRowValidationSummary(row);
 
                 // Only store summary if there is an error
@@ -106,9 +105,9 @@ public class AssociationFileUploadService {
 
             if (rowValidationSummaries.isEmpty()) {
                 //Proceed to carry out full checks of values
-                for (AssociationUploadRow row : fileRows) {
+                fileRows.forEach(row -> {
                     associationSummaries.add(createAssociationSummary(row, validationLevel));
-                }
+                });
             }
         }
         else {
@@ -127,6 +126,7 @@ public class AssociationFileUploadService {
      * @param row Row to validate
      */
     private RowValidationSummary createRowValidationSummary(AssociationUploadRow row) {
+        getLog().info("Creating row summary for row " + row.getRowNumber());
         Collection<ValidationError> errors = rowValidationService.runRowValidation(row);
         RowValidationSummary rowValidationSummary = new RowValidationSummary();
         rowValidationSummary.setRow(row);
@@ -141,6 +141,7 @@ public class AssociationFileUploadService {
      * @param validationLevel level of validation to run
      */
     private AssociationSummary createAssociationSummary(AssociationUploadRow row, String validationLevel) {
+        getLog().info("Creating association summary for row " + row.getRowNumber());
         Association association = associationRowProcessor.createAssociationFromUploadRow(row);
         Collection<ValidationError> errors =
                 associationValidationService.runAssociationValidation(association, validationLevel);
