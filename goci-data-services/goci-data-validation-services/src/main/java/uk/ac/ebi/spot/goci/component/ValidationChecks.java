@@ -133,8 +133,8 @@ public class ValidationChecks {
         if (value == null) {
             error = "Beta is empty";
         }
-        else{
-            if(value < 0){
+        else {
+            if (value < 0) {
                 error = "Beta is less than 0";
             }
         }
@@ -265,7 +265,7 @@ public class ValidationChecks {
     }
 
     /**
-     * "P-value mantissa" check number of digits.
+     * P-value mantissa check number of digits.
      *
      * @param value Value to be checked
      */
@@ -284,7 +284,7 @@ public class ValidationChecks {
     }
 
     /**
-     * "P-value exponent" check
+     * P-value exponent check
      *
      * @param value Value to be checked
      */
@@ -303,7 +303,7 @@ public class ValidationChecks {
     }
 
     /**
-     * "Gene" check
+     * Gene  check
      *
      * @param geneName Gene name to be checked
      */
