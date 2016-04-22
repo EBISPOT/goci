@@ -27,7 +27,7 @@ public class RowChecksBuilderTest {
     private RowChecksBuilder rowChecksBuilder;
 
     @Mock
-    private CheckingService checkingService;
+    private ErrorCreationService errorCreationService;
 
     private static final AssociationUploadRow EMPTY_ROW = new AssociationUploadRowBuilder().setRowNumber(1).build();
 
@@ -50,21 +50,21 @@ public class RowChecksBuilderTest {
 
     @Before
     public void setUp() throws Exception {
-        rowChecksBuilder = new RowChecksBuilder(checkingService);
+        rowChecksBuilder = new RowChecksBuilder(errorCreationService);
     }
 
     @Test
     public void testRunEmptyValueChecks() throws Exception {
 
         // Stubbing
-        when(checkingService.checkSnpValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_SNP);
-        when(checkingService.checkStrongestAlleleValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_RA);
+        when(errorCreationService.checkSnpValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_SNP);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_RA);
 
-        when(checkingService.checkSnpValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_MISSING_SNP);
-        when(checkingService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_03);
+        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_MISSING_SNP);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_03);
 
-        when(checkingService.checkSnpValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_03);
-        when(checkingService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_MISSING_RA);
+        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_03);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_MISSING_RA);
 
         // Test of no SNP and Risk allele
         assertThat(rowChecksBuilder.runEmptyValueChecks(EMPTY_ROW)).hasSize(2);

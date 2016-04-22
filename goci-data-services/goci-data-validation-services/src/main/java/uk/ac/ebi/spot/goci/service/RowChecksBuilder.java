@@ -19,11 +19,11 @@ import java.util.Collection;
 @Service
 public class RowChecksBuilder {
 
-    private CheckingService checkingService;
+    private ErrorCreationService errorCreationService;
 
     @Autowired
-    public RowChecksBuilder(CheckingService checkingService) {
-        this.checkingService = checkingService;
+    public RowChecksBuilder(ErrorCreationService errorCreationService) {
+        this.errorCreationService = errorCreationService;
     }
 
     /**
@@ -34,8 +34,8 @@ public class RowChecksBuilder {
     public Collection<ValidationError> runEmptyValueChecks(AssociationUploadRow row) {
 
         Collection<ValidationError> errors = new ArrayList<>();
-        errors.add(checkingService.checkSnpValueIsPresent(row));
-        errors.add(checkingService.checkStrongestAlleleValueIsPresent(row));
+        errors.add(errorCreationService.checkSnpValueIsPresent(row));
+        errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row));
         return ErrorProcessingService.checkForValidErrors(errors);
     }
 }

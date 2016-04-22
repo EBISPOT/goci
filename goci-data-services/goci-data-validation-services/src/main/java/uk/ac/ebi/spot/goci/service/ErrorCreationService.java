@@ -18,12 +18,12 @@ import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
  *         Runs checks and creates error messages that can then by returned to client
  */
 @Service
-public class CheckingService {
+public class ErrorCreationService {
 
     private ValidationChecks validationChecks;
 
     @Autowired
-    public CheckingService(ValidationChecks validationChecks) {
+    public ErrorCreationService(ValidationChecks validationChecks) {
         this.validationChecks = validationChecks;
     }
 

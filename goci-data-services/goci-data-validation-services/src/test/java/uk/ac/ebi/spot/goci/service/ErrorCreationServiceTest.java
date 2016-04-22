@@ -10,10 +10,7 @@ import uk.ac.ebi.spot.goci.component.ValidationChecks;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 
-import java.util.Collection;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.Mockito.when;
 
 /**
@@ -24,9 +21,9 @@ import static org.mockito.Mockito.when;
  *         Test of CheckingService
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CheckingServiceTest {
+public class ErrorCreationServiceTest {
 
-    private CheckingService checkingService;
+    private ErrorCreationService errorCreationService;
 
 
     private static final AssociationUploadRow EMPTY_ROW = new AssociationUploadRowBuilder().setRowNumber(1).build();
@@ -36,20 +33,20 @@ public class CheckingServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        checkingService = new CheckingService(validationChecks);
+        errorCreationService = new ErrorCreationService(validationChecks);
     }
 
     @Test
     public void testCheckSnpValueIsPresent() throws Exception {
         when(validationChecks.checkValueIsPresent(EMPTY_ROW.getSnp())).thenReturn("Empty value");
-        ValidationError error = checkingService.checkSnpValueIsPresent(EMPTY_ROW);
+        ValidationError error = errorCreationService.checkSnpValueIsPresent(EMPTY_ROW);
         assertThat(error).extracting("field", "error").contains("SNP","Empty value");
     }
 
     @Test
     public void testCheckStrongestAlleleValueIsPresent() throws Exception {
         when(validationChecks.checkValueIsPresent(EMPTY_ROW.getStrongestAllele())).thenReturn("Empty value");
-        ValidationError error = checkingService.checkStrongestAlleleValueIsPresent(EMPTY_ROW);
+        ValidationError error = errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW);
         assertThat(error).extracting("field", "error").contains("Strongest SNP-Risk Allele/Effect Allele","Empty value");
     }
 

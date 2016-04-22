@@ -22,11 +22,11 @@ import java.util.Collection;
 @Service
 public class ValidationChecksBuilder {
 
-    private CheckingService checkingService;
+    private ErrorCreationService errorCreationService;
 
     @Autowired
-    public ValidationChecksBuilder(CheckingService checkingService) {
-        this.checkingService = checkingService;
+    public ValidationChecksBuilder(ErrorCreationService errorCreationService) {
+        this.errorCreationService = errorCreationService;
     }
 
     /**
@@ -37,8 +37,8 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runPvalueChecks(Association association) {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
-        ValidationErrors.add(checkingService.checkMantissaIsLessThan10(association));
-        ValidationErrors.add(checkingService.checkExponentIsPresent(association));
+        ValidationErrors.add(errorCreationService.checkMantissaIsLessThan10(association));
+        ValidationErrors.add(errorCreationService.checkExponentIsPresent(association));
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
 
@@ -51,7 +51,7 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError snpTypeError = checkingService.checkSnpType(association);
+        ValidationError snpTypeError = errorCreationService.checkSnpType(association);
         if (snpTypeError.getError() != null) {
             ValidationErrors.add(snpTypeError);
         }
@@ -69,17 +69,17 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError orIsPresent = checkingService.checkOrIsPresent(association, effectType);
+        ValidationError orIsPresent = errorCreationService.checkOrIsPresent(association, effectType);
         ValidationErrors.add(orIsPresent);
 
-        ValidationError betaFoundForOr = checkingService.checkBetaValuesIsEmpty(association, effectType);
+        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association, effectType);
         ValidationErrors.add(betaFoundForOr);
 
-        ValidationError betaUnitFoundForOr = checkingService.checkBetaUnitIsEmpty(association, effectType);
+        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association, effectType);
         ValidationErrors.add(betaUnitFoundForOr);
 
         ValidationError betaDirectionFoundForOr =
-                checkingService.checkBetaDirectionIsEmpty(association, effectType);
+                errorCreationService.checkBetaDirectionIsEmpty(association, effectType);
         ValidationErrors.add(betaDirectionFoundForOr);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
@@ -95,24 +95,24 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = checkingService.checkBetaIsPresent(association, effectType);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresent(association, effectType);
         ValidationErrors.add(betaIsPresent);
 
-        ValidationError betaUnitNotFound = checkingService.checkBetaUnitIsPresent(association, effectType);
+        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association, effectType);
         ValidationErrors.add(betaUnitNotFound);
 
         ValidationError betaDirectionNotFound =
-                checkingService.checkBetaDirectionIsPresent(association, effectType);
+                errorCreationService.checkBetaDirectionIsPresent(association, effectType);
         ValidationErrors.add(betaDirectionNotFound);
 
-        ValidationError orFound = checkingService.checkOrEmpty(association, effectType);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association, effectType);
         ValidationErrors.add(orFound);
 
-        ValidationError orRecipFound = checkingService.checkOrRecipEmpty(association, effectType);
+        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association, effectType);
         ValidationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                checkingService.checkOrPerCopyRecipRange(association, effectType);
+                errorCreationService.checkOrPerCopyRecipRange(association, effectType);
         ValidationErrors.add(orRecipRangeFound);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
@@ -127,17 +127,17 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAuthorLevelBetaChecks(Association association, String effectType) {
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = checkingService.checkBetaIsPresent(association, effectType);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresent(association, effectType);
         ValidationErrors.add(betaIsPresent);
 
-        ValidationError betaUnitNotFound = checkingService.checkBetaUnitIsPresent(association, effectType);
+        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association, effectType);
         ValidationErrors.add(betaUnitNotFound);
 
         ValidationError betaDirectionNotFound =
-                checkingService.checkBetaDirectionIsPresent(association, effectType);
+                errorCreationService.checkBetaDirectionIsPresent(association, effectType);
         ValidationErrors.add(betaDirectionNotFound);
 
-        ValidationError orFound = checkingService.checkOrEmpty(association, effectType);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association, effectType);
         ValidationErrors.add(orFound);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
@@ -153,34 +153,34 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError orFound = checkingService.checkOrEmpty(association, effectType);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association, effectType);
         ValidationErrors.add(orFound);
 
-        ValidationError orRecipFound = checkingService.checkOrRecipEmpty(association, effectType);
+        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association, effectType);
         ValidationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                checkingService.checkOrPerCopyRecipRange(association, effectType);
+                errorCreationService.checkOrPerCopyRecipRange(association, effectType);
         ValidationErrors.add(orRecipRangeFound);
 
-        ValidationError betaFound = checkingService.checkBetaValuesIsEmpty(association, effectType);
+        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association, effectType);
         ValidationErrors.add(betaFound);
 
-        ValidationError betaUnitFound = checkingService.checkBetaUnitIsEmpty(association, effectType);
+        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association, effectType);
         ValidationErrors.add(betaUnitFound);
 
         ValidationError betaDirectionFound =
-                checkingService.checkBetaDirectionIsEmpty(association, effectType);
+                errorCreationService.checkBetaDirectionIsEmpty(association, effectType);
         ValidationErrors.add(betaDirectionFound);
 
-        ValidationError rangeFound = checkingService.checkRangeIsEmpty(association, effectType);
+        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association, effectType);
         ValidationErrors.add(rangeFound);
 
         ValidationError standardErrorFound =
-                checkingService.checkStandardErrorIsEmpty(association, effectType);
+                errorCreationService.checkStandardErrorIsEmpty(association, effectType);
         ValidationErrors.add(standardErrorFound);
 
-        ValidationError descriptionFound = checkingService.checkDescriptionIsEmpty(association, effectType);
+        ValidationError descriptionFound = errorCreationService.checkDescriptionIsEmpty(association, effectType);
         ValidationErrors.add(descriptionFound);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
@@ -197,12 +197,12 @@ public class ValidationChecksBuilder {
                 Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
 
                 for (Gene gene : authorReportedGenes) {
-                    ValidationError geneError = checkingService.checkGene(gene);
+                    ValidationError geneError = errorCreationService.checkGene(gene);
                     ValidationErrors.add(geneError);
                 }
 
                 for(RiskAllele riskAllele: riskAlleles){
-                    ValidationError riskAlleleError = checkingService.checkRiskAllele(riskAllele);
+                    ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
                     ValidationErrors.add(riskAlleleError);
                 }
 
