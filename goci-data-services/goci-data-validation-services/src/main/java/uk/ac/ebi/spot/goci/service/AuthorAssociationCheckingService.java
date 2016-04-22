@@ -34,7 +34,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
         // Run checks depending on effect type
         if (effectType.equalsIgnoreCase("or")) {
             Collection<ValidationError> orErrors =
-                    validationChecksBuilder.runOrChecks(association);
+                    validationChecksBuilder.runAuthorLevelOrChecks(association);
             if (!orErrors.isEmpty()) {
                 associationValidationErrors.addAll(orErrors);
             }
