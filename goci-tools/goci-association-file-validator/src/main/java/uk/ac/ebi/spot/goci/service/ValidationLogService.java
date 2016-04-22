@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.RowValidationSummary;
-import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
 
 import java.io.BufferedWriter;
@@ -106,41 +105,61 @@ public class ValidationLogService {
                                   Collection<RowValidationSummary> rowValidationSummaries) throws IOException {
 
         bw.write("Validation results:".concat("\n\n"));
-        bw.write("Row        ".concat("\t").concat("Field").concat("\t").concat("Error").concat("\n"));
+        bw.write("Row".concat("\t").concat("Field").concat("\t").concat("Error Message").concat("\n"));
 
-        for (RowValidationSummary rowValidationSummary : rowValidationSummaries) {
+        // Check if we have any errors
+        long rowErrorCount = rowValidationSummaries.parallelStream()
+                .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
+                .count();
 
-            if (!rowValidationSummary.getErrors().isEmpty()) {
-                for (ValidationError rowError : rowValidationSummary.getErrors()) {
-                    bw.write("Row number: ".concat(String.valueOf(rowValidationSummary.getRow().getRowNumber()))
-                                     .concat("\t")
-                                     .concat(rowError.getField())
-                                     .concat("\t")
-                                     .concat(rowError.getError())
-                                     .concat("\n"));
-                }
-            }
-            else {
-                bw.write("No syntax errors found in row");
-            }
+        long associationErrorCount = associationSummaries.parallelStream()
+                .filter(associationSummary -> !associationSummary.getErrors().isEmpty())
+                .count();
+
+        if (rowErrorCount > 0) {
+            rowValidationSummaries.forEach(rowValidationSummary -> {
+                rowValidationSummary.getErrors().forEach(validationError -> {
+                    try {
+                        bw.write("Row number: ".concat(String.valueOf(rowValidationSummary.getRow().getRowNumber()))
+                                         .concat("\t")
+                                         .concat(validationError.getField())
+                                         .concat("\t")
+                                         .concat(validationError.getError())
+                                         .concat("\n"));
+                    }
+                    catch (IOException e) {
+                        getLog().error("Writing errors to file failed");
+                        e.printStackTrace();
+                    }
+                });
+            });
+        }
+        else {
+            bw.write("No syntax errors found in row. Proceeding to full checking".concat("\n"));
         }
 
-        for (AssociationSummary associationSummary : associationSummaries) {
-            if (!associationSummary.getErrors().isEmpty()) {
-
-                bw.write("\n\n");
-                for (ValidationError associationError : associationSummary.getErrors()) {
-                    bw.write("Row number: ".concat(String.valueOf(associationSummary.getRowNumber())
-                                                           .concat("\t")
-                                                           .concat(associationError.getField())
-                                                           .concat("\t")
-                                                           .concat(associationError.getError())
-                                                           .concat("\n")));
-                }
-            }
-            else {
-                bw.write("No error found in association values");
-            }
+        // Only report association errors if there are no row error
+        if (associationErrorCount > 0 && rowErrorCount == 0) {
+            bw.write("\n\n");
+            associationSummaries.forEach(associationSummary -> {
+                associationSummary.getErrors().forEach(validationError -> {
+                    try {
+                        bw.write("Row number: ".concat(String.valueOf(associationSummary.getRowNumber())
+                                                               .concat("\t")
+                                                               .concat(validationError.getField())
+                                                               .concat("\t")
+                                                               .concat(validationError.getError())
+                                                               .concat("\n")));
+                    }
+                    catch (IOException e) {
+                        getLog().error("Writing errors to file failed");
+                        e.printStackTrace();
+                    }
+                });
+            });
+        }
+        else {
+            bw.write("No error found in association values".concat("\n"));
         }
         bw.close();
     }
