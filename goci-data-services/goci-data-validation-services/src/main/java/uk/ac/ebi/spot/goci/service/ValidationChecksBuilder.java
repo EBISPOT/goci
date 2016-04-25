@@ -6,6 +6,7 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
@@ -245,16 +246,19 @@ public class ValidationChecksBuilder {
                 Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
                 Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
 
-                for (Gene gene : authorReportedGenes) {
+                authorReportedGenes.forEach(gene -> {
                     ValidationError geneError = errorCreationService.checkGene(gene);
                     ValidationErrors.add(geneError);
-                }
+                });
 
-                for (RiskAllele riskAllele : riskAlleles) {
+                riskAlleles.forEach(riskAllele -> {
                     ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
                     ValidationErrors.add(riskAlleleError);
-                }
 
+                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+                    ValidationError snpError = errorCreationService.checkSnp(snp);
+                    ValidationErrors.add(snpError);
+                });
             }
         }
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);

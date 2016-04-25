@@ -18,9 +18,13 @@ public class ValidationChecks {
 
     private GeneValidationChecks geneValidationChecks;
 
+    private SnpValidationChecks snpValidationChecks;
+
     @Autowired
-    public ValidationChecks(GeneValidationChecks geneValidationChecks) {
+    public ValidationChecks(GeneValidationChecks geneValidationChecks,
+                            SnpValidationChecks snpValidationChecks) {
         this.geneValidationChecks = geneValidationChecks;
+        this.snpValidationChecks = snpValidationChecks;
     }
 
     /**
@@ -311,7 +315,7 @@ public class ValidationChecks {
     }
 
     /**
-     * Gene  check
+     * Gene check
      *
      * @param geneName Gene name to be checked
      */
@@ -353,6 +357,28 @@ public class ValidationChecks {
                 if (!acceptableValues.contains(riskAlleleName)) {
                     error = "Risk allele is not one of ".concat(acceptableValues.toString());
                 }
+            }
+        }
+        return error;
+    }
+
+    /**
+     * Snp check
+     *
+     * @param snp Snp identifier to be checked
+     */
+    public String checkSnp(String snp) {
+        String error = null;
+        if (snp == null) {
+            error = "SNP identifier is empty";
+        }
+        else {
+            if (snp.isEmpty()) {
+                error = "SNP identifier is empty";
+            }
+            // Check SNP in Ensembl
+            else {
+                error = snpValidationChecks.checkSnpIdentifierIsValid(snp);
             }
         }
         return error;

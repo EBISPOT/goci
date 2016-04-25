@@ -7,6 +7,7 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
@@ -128,5 +129,10 @@ public class ErrorCreationService {
     public ValidationError checkRiskAllele(RiskAllele riskAllele) {
         String errorMessage = validationChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
         return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+    }
+
+    public ValidationError checkSnp(SingleNucleotidePolymorphism snp) {
+        String errorMessage = validationChecks.checkSnp(snp.getRsId());
+        return ErrorProcessingService.createError(errorMessage, "SNP");
     }
 }
