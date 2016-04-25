@@ -33,11 +33,9 @@ public class AssociationFileUploadService {
 
     private AssociationRowProcessor associationRowProcessor;
 
-    private AssociationValidationService associationValidationService;
+    private ValidationService validationService;
 
     private SheetCreationService sheetCreationService;
-
-    private RowValidationService rowValidationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,14 +46,12 @@ public class AssociationFileUploadService {
     @Autowired
     public AssociationFileUploadService(UploadSheetProcessor uploadSheetProcessor,
                                         AssociationRowProcessor associationRowProcessor,
-                                        AssociationValidationService associationValidationService,
-                                        SheetCreationService sheetCreationService,
-                                        RowValidationService rowValidationService) {
+                                        ValidationService validationService,
+                                        SheetCreationService sheetCreationService) {
         this.uploadSheetProcessor = uploadSheetProcessor;
         this.associationRowProcessor = associationRowProcessor;
-        this.associationValidationService = associationValidationService;
+        this.validationService = validationService;
         this.sheetCreationService = sheetCreationService;
-        this.rowValidationService = rowValidationService;
     }
 
     /**
@@ -127,7 +123,7 @@ public class AssociationFileUploadService {
      */
     private RowValidationSummary createRowValidationSummary(AssociationUploadRow row) {
         getLog().info("Creating row summary for row " + row.getRowNumber());
-        Collection<ValidationError> errors = rowValidationService.runRowValidation(row);
+        Collection<ValidationError> errors = validationService.runRowValidation(row);
         RowValidationSummary rowValidationSummary = new RowValidationSummary();
         rowValidationSummary.setRow(row);
         rowValidationSummary.setErrors(errors);
@@ -144,7 +140,7 @@ public class AssociationFileUploadService {
         getLog().info("Creating association summary for row " + row.getRowNumber());
         Association association = associationRowProcessor.createAssociationFromUploadRow(row);
         Collection<ValidationError> errors =
-                associationValidationService.runAssociationValidation(association, validationLevel);
+                validationService.runAssociationValidation(association, validationLevel);
         AssociationSummary associationSummary = new AssociationSummary();
         associationSummary.setRowNumber(row.getRowNumber());
         associationSummary.setAssociation(association);
