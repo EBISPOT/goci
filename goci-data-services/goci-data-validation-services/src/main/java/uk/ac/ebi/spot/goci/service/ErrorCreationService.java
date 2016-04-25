@@ -140,4 +140,9 @@ public class ErrorCreationService {
         String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
         return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
     }
+
+    public ValidationError checkRangeIsPresent(Association association) {
+        String errorMessage = validationChecks.checkValueIsPresent(association.getRange());
+        return ErrorProcessingService.createError(errorMessage, "Range");
+    }
 }

@@ -105,6 +105,10 @@ public class ValidationChecksBuilder {
                 errorCreationService.checkBetaDirectionIsEmpty(association);
         ValidationErrors.add(betaDirectionFoundForOr);
 
+        ValidationError rangeNotFound =
+                errorCreationService.checkRangeIsPresent(association);
+        ValidationErrors.add(rangeNotFound);
+
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
 
@@ -161,6 +165,10 @@ public class ValidationChecksBuilder {
 
         ValidationError orFound = errorCreationService.checkOrEmpty(association);
         ValidationErrors.add(orFound);
+
+        ValidationError rangeNotFound =
+                errorCreationService.checkRangeIsPresent(association);
+        ValidationErrors.add(rangeNotFound);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
