@@ -267,4 +267,16 @@ public class ValidationChecksBuilder {
         }
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
+
+    /**
+     * Run risk frequency checks on association
+     *
+     * @param association row to be checked
+     */
+    public Collection<ValidationError> runRiskFrequencyChecks(Association association) {
+        Collection<ValidationError> ValidationErrors = new ArrayList<>();
+        ValidationError error = errorCreationService.checkRiskFrequency(association);
+        ValidationErrors.add(error);
+        return ErrorProcessingService.checkForValidErrors(ValidationErrors);
+    }
 }

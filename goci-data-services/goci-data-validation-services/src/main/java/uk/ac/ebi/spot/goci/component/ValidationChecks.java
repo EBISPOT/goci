@@ -389,4 +389,34 @@ public class ValidationChecks {
         }
         return error;
     }
+
+    /**
+     * Risk frequency check
+     *
+     * @param riskFrequency Risk frequency value to be checked
+     */
+    public String checkRiskFrequency(String riskFrequency) {
+        String error = null;
+        if (riskFrequency == null) {
+            error = "Empty value";
+        }
+        else if (riskFrequency.isEmpty()) {
+            error = "Empty value";
+        }
+        else {
+            try {
+                float f = Float.parseFloat(riskFrequency);
+                // if string contains only numbers then check its value is between valid range
+                if (f < 0 || f > 1) {
+                    error = "Value is invalid i.e. not less than 0 or more than 1";
+                }
+            }
+            catch (NumberFormatException e) {
+                if (!riskFrequency.contentEquals("NR")) {
+                    error = "Value is invalid i.e. not equal to NR or a number";
+                }
+            }
+        }
+        return error;
+    }
 }

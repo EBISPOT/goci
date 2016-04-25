@@ -24,6 +24,11 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
         // Create collection to store all newly created associations
         Collection<ValidationError> associationValidationErrors = new ArrayList<>();
 
+        Collection<ValidationError> riskFrequencyErrors = validationChecksBuilder.runRiskFrequencyChecks(association);
+        if (!riskFrequencyErrors.isEmpty()) {
+            associationValidationErrors.addAll(riskFrequencyErrors);
+        }
+
         Collection<ValidationError> lociAttributeErrors = validationChecksBuilder.runLociAttributeChecks(association);
         if (!lociAttributeErrors.isEmpty()) {
             associationValidationErrors.addAll(lociAttributeErrors);

@@ -135,4 +135,9 @@ public class ErrorCreationService {
         String errorMessage = validationChecks.checkSnp(snp.getRsId());
         return ErrorProcessingService.createError(errorMessage, "SNP");
     }
+
+    public ValidationError checkRiskFrequency(Association association) {
+        String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
+        return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
+    }
 }
