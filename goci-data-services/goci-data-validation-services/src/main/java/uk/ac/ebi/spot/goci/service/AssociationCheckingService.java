@@ -24,12 +24,12 @@ public interface AssociationCheckingService {
     default String determineIfAssociationIsOrType(Association association) {
 
         String effectType = "none";
-        if (association.getBetaNum() != null) {
-            effectType = "beta";
+        if (association.getOrPerCopyNum() != null) {
+            effectType = "or";
         }
         else {
-            if (association.getOrPerCopyNum() != null) {
-                effectType = "or";
+            if (association.getBetaNum() != null) {
+                effectType = "beta";
             }
         }
         return effectType;
