@@ -139,7 +139,7 @@ public class ValidationChecksBuilder {
         ValidationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                errorCreationService.checkOrPerCopyRecipRange(association);
+                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association);
         ValidationErrors.add(orRecipRangeFound);
 
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
@@ -189,7 +189,7 @@ public class ValidationChecksBuilder {
         ValidationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                errorCreationService.checkOrPerCopyRecipRange(association);
+                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association);
         ValidationErrors.add(orRecipRangeFound);
 
         ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association);
