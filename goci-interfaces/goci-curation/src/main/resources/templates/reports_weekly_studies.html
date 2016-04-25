@@ -44,7 +44,7 @@
 </div>
 
 <!--Include filter options-->
-<div th:include="fragments/reports_filter :: weekly_search_filter"></div>
+<!--<div th:include="fragments/reports_filter :: weekly_search_filter"></div>-->
 
 <div class="container-fluid">
     <div class="row">
@@ -53,26 +53,24 @@
                    data-toggle="table" data-show-columns="true">
                 <thead>
                 <tr>
-                    <th class="col-md-1" data-sortable="true">Year</th>
-                    <th class="col-md-1" data-sortable="true">Month</th>
-                    <th class="col-md-2" data-sortable="true">Curator</th>
-                    <th class="col-md-2" data-sortable="true">Total number per curator</th>
-                    <th class="col-md-2" data-sortable="true">Curation Status</th>
-                    <th class="col-md-2">Link to studies</th>
-                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
+                    <th class="col-md-4" data-sortable="true">Week commencing</th>
+                    <th class="col-md-4" data-sortable="true">Studies</th>
+                    <th class="col-md-4" data-sortable="true">Entries</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="weeklyTotalsSummaryView: ${weeklyTotalsSummaryViews}">
-                    <td th:text="${weeklyTotalsSummaryView.year} ?: 'null'"></td>
+                    <td th:text="${weeklyTotalsSummaryView.week} ?: 'null'"></td>
                     <!--Some thymeleaf wrangling to get the month name for a date-->
-                    <td th:text="${#dates.monthName(#dates.create(weeklyTotalsSummaryView.year,weeklyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
-                    <td th:text="${weeklyTotalsSummaryView.curator} ?: 'null'"></td>
-                    <td th:text="${weeklyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
-                    <td th:text="${weeklyTotalsSummaryView.curationStatus} ?: 'null'"></td>
-                    <td><a th:href="@{/reports/weekly/{reportId}(reportId=${weeklyTotalsSummaryView.id})}"
-                           class="btn btn-link">Show studies</a></td>
-                    <td th:text="${weeklyTotalsSummaryView.weeklyTotal} ?: 'null'"></td>
+                    <!--<td th:text="${#dates.monthName(#dates.create(weeklyTotalsSummaryView.year,weeklyTotalsSummaryView.month, '01'))} ?: 'null'"></td>-->
+                    <td th:text="${weeklyTotalsSummaryView.studies} ?: 'null'"></td>
+                    <td th:text="${weeklyTotalsSummaryView.entries} ?: 'null'"></td>
+                </tr>
+                <tr>
+                    <td>Average</td>
+                    <td th:text="${weeklyTotalsSummaryViews.studiesAverage} ?: 'null'"></td>
+                    <td th:text="${weeklyTotalsSummaryView.entriesAverage} ?: 'null'"></td>
+
                 </tr>
                 </tbody>
             </table>
