@@ -12,6 +12,16 @@ public interface WeeklyTotalsSummaryViewRepository extends JpaRepository<WeeklyT
 
     //query to get studies grouped by start day of the week
 //    select trunc(study_added_date, 'D'), count(*) from housekeeping
-//    group by trunc(study_added_date, 'D')
+////    group by trunc(study_added_date, 'D')
+//
+//
+//    select trunc(h.study_added_date, 'D'), count(*) as entries, count(distinct s.pubmed_id) as studies
+//    from housekeeping h
+//    join study s on s.housekeeping_id = h.id
+//    where h.study_added_date is not null
+//    group by trunc(h.study_added_date, 'D')
+//    order by trunc(h.study_added_date, 'D') desc
+
+
 
 }

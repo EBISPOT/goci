@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 @Entity
 public class WeeklyTotalsSummaryView extends TotalsSummaryView{
 
-    private Integer month;
+    private Integer week;
 
     private Integer weeklyTotal;
 
@@ -24,16 +24,16 @@ public class WeeklyTotalsSummaryView extends TotalsSummaryView{
                                     Integer month,
                                     Integer weeklyTotal) {
         super(year, curator, curatorTotal, curationStatus);
-        this.month = month;
+        this.week = week;
         this.weeklyTotal = weeklyTotal;
     }
 
-    public Integer getMonth() {
-        return month;
+    public Integer getweek() {
+        return week;
     }
 
-    public void setMonth(Integer month) {
-        this.month = month;
+    public void setweek(Integer week) {
+        this.week = week;
     }
 
     public Integer getWeeklyTotal() {
