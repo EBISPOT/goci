@@ -50,7 +50,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             }
         }
 
-        if (effectType.equalsIgnoreCase("beta")) {
+        else if (effectType.equalsIgnoreCase("beta")) {
             Collection<ValidationError> betaErrors =
                     validationChecksBuilder.runAuthorLevelBetaChecks(association);
             if (!betaErrors.isEmpty()) {
@@ -58,7 +58,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             }
         }
 
-        if (effectType.equalsIgnoreCase("none")) {
+        else {
             Collection<ValidationError> noEffectErrors =
                     validationChecksBuilder.runAuthorLevelNoEffectChecks(association);
             if (!noEffectErrors.isEmpty()) {
