@@ -235,7 +235,11 @@ public class ValidationChecksBuilder {
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }
 
-
+    /**
+     * Run loci attributes checks on association
+     *
+     * @param association row to be checked
+     */
     public Collection<ValidationError> runLociAttributeChecks(Association association) {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();

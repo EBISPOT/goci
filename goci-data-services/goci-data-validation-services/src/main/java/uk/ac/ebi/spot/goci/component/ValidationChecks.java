@@ -336,6 +336,12 @@ public class ValidationChecks {
         return error;
     }
 
+
+    /**
+     * Risk allele check
+     *
+     * @param riskAlleleName to be checked
+     */
     public String checkRiskAllele(String riskAlleleName) {
         String error = null;
         List<String> acceptableValues = new ArrayList<>();
