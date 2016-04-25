@@ -49,17 +49,17 @@ public class ErrorCreationService {
     }
 
     public ValidationError checkBetaValuesIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkBetaValueIsEmpty(association.getBetaNum());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaNum());
         return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
     public ValidationError checkBetaUnitIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkBetaUnitIsEmpty(association.getBetaUnit());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaUnit());
         return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
     public ValidationError checkBetaDirectionIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkBetaDirectionIsEmpty(association.getBetaDirection());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaDirection());
         return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
@@ -69,7 +69,7 @@ public class ErrorCreationService {
     }
 
     public ValidationError checkBetaUnitIsPresent(Association association) {
-        String errorMessage = validationChecks.checkBetaUnitIsPresent(association.getBetaUnit());
+        String errorMessage = validationChecks.checkValueIsPresent(association.getBetaUnit());
         return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
@@ -79,33 +79,33 @@ public class ErrorCreationService {
     }
 
     public ValidationError checkOrEmpty(Association association) {
-        String errorMessage = validationChecks.checkOrEmpty(association.getOrPerCopyNum());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyNum());
         return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
     public ValidationError checkOrRecipEmpty(Association association) {
-        String errorMessage = validationChecks.checkOrRecipEmpty(association.getOrPerCopyRecip());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyRecip());
         return ErrorProcessingService.createError(errorMessage, "OR reciprocal");
     }
 
-    public ValidationError checkOrPerCopyRecipRange(Association association) {
-        String errorMessage = validationChecks.checkOrPerCopyRecipRangeIsEmpty(association.getOrPerCopyRecipRange());
+    public ValidationError checkOrPerCopyRecipRangeIsEmpty(Association association) {
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyRecipRange());
         return ErrorProcessingService.createError(errorMessage,
                                                   "OR reciprocal range");
     }
 
     public ValidationError checkRangeIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkRangeIsEmpty(association.getRange());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getRange());
         return ErrorProcessingService.createError(errorMessage, "Range");
     }
 
     public ValidationError checkStandardErrorIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkStandardErrorIsEmpty(association.getStandardError());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getStandardError());
         return ErrorProcessingService.createError(errorMessage, "Standard Error");
     }
 
     public ValidationError checkDescriptionIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkDescriptionIsEmpty(association.getDescription());
+        String errorMessage = validationChecks.checkValueIsEmpty(association.getDescription());
         return ErrorProcessingService.createError(errorMessage,
                                                   "OR/Beta description");
     }
@@ -121,6 +121,7 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "P-value exponent");
     }
 
+    // Loci attributes checks
     public ValidationError checkGene(Gene gene) {
         String errorMessage = validationChecks.checkGene(gene.getGeneName());
         return ErrorProcessingService.createError(errorMessage, "Gene");
@@ -136,11 +137,13 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "SNP");
     }
 
+    // Check risk frequency
     public ValidationError checkRiskFrequency(Association association) {
         String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
         return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
     }
 
+    // Check range
     public ValidationError checkRangeIsPresent(Association association) {
         String errorMessage = validationChecks.checkValueIsPresent(association.getRange());
         return ErrorProcessingService.createError(errorMessage, "Range");

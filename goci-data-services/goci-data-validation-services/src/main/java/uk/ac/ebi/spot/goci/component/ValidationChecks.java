@@ -30,20 +30,46 @@ public class ValidationChecks {
     /**
      * Check value is populated
      *
-     * @param value Value to be checked
+     * @param value Value to be check presence
      */
     public String checkValueIsPresent(String value) {
         String error = null;
 
         if (value == null) {
             error = "Empty value";
-
         }
         else {
             if (value.isEmpty()) {
                 error = "Empty value";
             }
+        }
+        return error;
+    }
 
+    /**
+     * Check value is empty
+     *
+     * @param value Value to be checked
+     */
+    public String checkValueIsEmpty(String value) {
+        String error = null;
+
+        if (value != null && !value.isEmpty()) {
+            error = "Value is not empty";
+        }
+        return error;
+    }
+
+    /**
+     * Check value is empty
+     *
+     * @param value Value to be checked
+     */
+    public String checkValueIsEmpty(Float value) {
+        String error = null;
+
+        if (value != null) {
+            error = "Value is not empty";
         }
         return error;
     }
@@ -63,11 +89,11 @@ public class ValidationChecks {
                 case "known":
                     break;
                 default:
-                    error = "SNP type does not contain novel or known";
+                    error = "Value does not contain novel or known";
             }
         }
         else {
-            error = "SNP type is empty";
+            error = "Value is empty";
         }
         return error;
     }
@@ -81,55 +107,12 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "OR num is empty for association";
+            error = "Value is empty";
         }
         else {
             if (value > 1) {
-                error = "OR num is more than 1 for association";
+                error = "Value is more than 1";
             }
-        }
-        return error;
-    }
-
-    /**
-     * "Beta" columns MUST be empty
-     *
-     * @param value Value to be checked
-     */
-    public String checkBetaValueIsEmpty(Float value) {
-
-        String error = null;
-
-        if (value != null) {
-            error = ("Beta value found");
-        }
-        return error;
-    }
-
-    /**
-     * "Beta unit" columns MUST be empty
-     *
-     * @param value Value to be checked
-     */
-    public String checkBetaUnitIsEmpty(String value) {
-        String error = null;
-
-        if (value != null) {
-            error = "Beta unit found for association";
-        }
-        return error;
-    }
-
-    /**
-     * "Beta direction" columns MUST be empty
-     *
-     * @param value Value to be checked
-     */
-    public String checkBetaDirectionIsEmpty(String value) {
-        String error = null;
-
-        if (value != null) {
-            error = "Beta direction found for association";
         }
         return error;
     }
@@ -143,26 +126,12 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "Beta is empty";
+            error = "Value is empty";
         }
         else {
             if (value < 0) {
-                error = "Beta is less than 0";
+                error = "Value is less than 0";
             }
-        }
-        return error;
-    }
-
-    /**
-     * "Beta unit" MUST be filled
-     *
-     * @param value Value to be checked
-     */
-    public String checkBetaUnitIsPresent(String value) {
-        String error = null;
-
-        if (value == null) {
-            error = "Beta unit is empty for association";
         }
         return error;
     }
@@ -176,7 +145,7 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "Beta direction is empty for association";
+            error = "Empty value";
         }
         else {
             switch (value) {
@@ -185,93 +154,8 @@ public class ValidationChecks {
                 case "decrease":
                     break;
                 default:
-                    error = "Beta direction is not increase or decrease for association";
+                    error = "Value is not increase or decrease";
             }
-        }
-        return error;
-    }
-
-    /**
-     * "OR" MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkOrEmpty(Float value) {
-        String error = null;
-
-        if (value != null) {
-            error = "OR num found for association";
-        }
-        return error;
-    }
-
-    /**
-     * "Reciprocal OR" MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkOrRecipEmpty(Float value) {
-        String error = null;
-
-        if (value != null) {
-            error = "OR reciprocal found for association";
-        }
-        return error;
-    }
-
-    /**
-     * "OR reciprocal range" MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkOrPerCopyRecipRangeIsEmpty(String value) {
-        String error = null;
-
-        if (value != null) {
-            error = "OR reciprocal range found for association";
-        }
-        return error;
-    }
-
-    /**
-     * Range MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkRangeIsEmpty(String value) {
-
-        String error = null;
-
-        if (value != null) {
-            error = "Range found for association";
-        }
-        return error;
-    }
-
-    /**
-     * "Standard Error" MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkStandardErrorIsEmpty(Float value) {
-
-        String error = null;
-        if (value != null) {
-            error = "Standard error found for association";
-        }
-        return error;
-    }
-
-    /**
-     * "Description" MUST be empty.
-     *
-     * @param value Value to be checked
-     */
-    public String checkDescriptionIsEmpty(String value) {
-        String error = null;
-
-        if (value != null) {
-            error = "OR/Beta description found for association";
         }
         return error;
     }
@@ -286,11 +170,11 @@ public class ValidationChecks {
 
         if (value != null) {
             if (value > 9) {
-                error = "P-value mantisaa not valid";
+                error = "Value not valid i.e. greater than 9";
             }
         }
         else {
-            error = "P-value mantissa is empty";
+            error = "Value is empty";
         }
         return error;
     }
@@ -304,11 +188,11 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "P-value exponent is empty";
+            error = "Value is empty";
         }
         else {
             if (value == 0) {
-                error = "P-value exponent is zero";
+                error = "Value is zero";
             }
         }
         return error;
@@ -335,7 +219,6 @@ public class ValidationChecks {
         }
         return error;
     }
-
 
     /**
      * Risk allele check
