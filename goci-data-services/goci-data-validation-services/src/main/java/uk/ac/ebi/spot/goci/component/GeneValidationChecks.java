@@ -55,12 +55,12 @@ public class GeneValidationChecks {
             geneLookupJson = restTemplate.getForObject(url, GeneLookupJson.class);
 
             if (!geneLookupJson.getObject_type().equalsIgnoreCase("gene")) {
-                error = "Gene symbol is not valid";
+                error = "Gene symbol ".concat(gene).concat(" is not valid");
             }
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            error = "Gene symbol is not valid";
+            error = "Gene symbol ".concat(gene).concat(" is not valid");
             getLog().error("Checking gene symbol failed", e);
         }
         return error;
