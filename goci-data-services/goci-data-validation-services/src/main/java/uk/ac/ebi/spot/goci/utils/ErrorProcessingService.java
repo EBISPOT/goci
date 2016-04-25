@@ -2,8 +2,8 @@ package uk.ac.ebi.spot.goci.utils;
 
 import uk.ac.ebi.spot.goci.model.ValidationError;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 14/04/2016.
@@ -34,15 +34,10 @@ public class ErrorProcessingService {
      * Check error objects created to ensure we only return those with an actual message and location
      *
      * @param errors Errors to be checked
-     * @return validErrors list of errors with message and location
+     * @return list of errors with message and field
      */
     public static Collection<ValidationError> checkForValidErrors(Collection<ValidationError> errors) {
-        Collection<ValidationError> validErrors = new ArrayList<>();
-        for (ValidationError error : errors) {
-            if (error.getError() != null) {
-                validErrors.add(error);
-            }
-        }
-        return validErrors;
+        return errors.stream()
+                .filter(validationError -> validationError.getError() != null).collect(Collectors.toList());
     }
 }
