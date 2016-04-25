@@ -19,18 +19,18 @@ public class ValidationServiceBuilder {
      *                        different flavours of checking
      */
     public AssociationCheckingService buildValidator(String validationLevel) {
-        AssociationCheckingService service;
+        AssociationServiceCheckingFactory factory;
         switch (validationLevel) {
             case "full":
-                service = new FullAssociationCheckingService();
+                factory = new FullAssociationServiceCheckingFactory();
                 break;
             case "author":
-                service = new AuthorAssociationCheckingService();
+                factory = new AuthorAssociationCheckingServiceFactory();
                 break;
             default:
-                service = new FullAssociationCheckingService();
+                factory = new FullAssociationServiceCheckingFactory();
                 break;
         }
-        return service;
+        return factory.create();
     }
 }
