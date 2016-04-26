@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.1.2-SNAPSHOT</version>
+        <version>2.1.2</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-datapublisher</artifactId>
-    <version>2.1.2-SNAPSHOT</version>
+    <version>2.1.2</version>
     <packaging>jar</packaging>
 
     <name>GOCI DataPublisher (converts GWAS data to OWL)</name>
