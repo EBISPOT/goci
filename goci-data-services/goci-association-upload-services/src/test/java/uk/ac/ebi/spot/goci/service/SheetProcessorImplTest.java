@@ -90,7 +90,6 @@ public class SheetProcessorImplTest {
                                     "pvalueMantissa",
                                     "pvalueExponent",
                                     "pvalueDescription",
-                                    "effectType",
                                     "orPerCopyNum",
                                     "orPerCopyRecip",
                                     "betaNum",
@@ -114,7 +113,6 @@ public class SheetProcessorImplTest {
                                        "0.6",
                                        1,
                                        -9,
-                                       null,
                                        null, (float) 2.48, null, null, null, null, "[1.22-1.43]",
                                        null, (float) 0.01, null, null, null, null, null, null));
 
