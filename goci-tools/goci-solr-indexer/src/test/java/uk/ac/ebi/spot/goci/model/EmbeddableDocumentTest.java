@@ -34,6 +34,7 @@ public class EmbeddableDocumentTest {
         Housekeeping h = new Housekeeping();
         h.setLastUpdateDate(new Date());
         h.setCatalogPublishDate(new Date());
+
         this.study = new Study("author",
                                new Date(),
                                "publication",
