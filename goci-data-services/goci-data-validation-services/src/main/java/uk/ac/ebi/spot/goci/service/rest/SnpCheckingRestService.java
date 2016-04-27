@@ -47,15 +47,20 @@ public class SnpCheckingRestService {
     public String checkSnpIdentifierIsValid(String snp) {
 
         String error = null;
-
+        String response = null;
         try {
-            restUrlBuilder.getRestTemplate().getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
+            response = restUrlBuilder.getRestTemplate()
+                    .getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
+
+            if (response.contains("error")) {
+                error = "SNP identifier ".concat(snp).concat(" is not valid");
+            }
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            error = "SNP identifier ".concat(snp).concat(" is not valid");
             getLog().error("Checking SNP identifier failed", e);
         }
+
         return error;
     }
 
@@ -86,5 +91,9 @@ public class SnpCheckingRestService {
 
     public String getEndpoint() {
         return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 }
