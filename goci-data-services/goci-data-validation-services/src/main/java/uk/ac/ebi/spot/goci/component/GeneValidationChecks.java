@@ -2,11 +2,13 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.GeneLookupJson;
+import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
 
 import javax.validation.constraints.NotNull;
 
@@ -23,13 +25,17 @@ public class GeneValidationChecks {
     @NotNull @Value("${mapping.gene_lookup_endpoint}")
     private String endpoint;
 
-    @NotNull @Value("${ensembl.server}")
-    private String server;
+    private RestUrlBuilder restUrlBuilder;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
+    }
+
+    @Autowired
+    public GeneValidationChecks(RestUrlBuilder restUrlBuilder) {
+        this.restUrlBuilder = restUrlBuilder;
     }
 
     /**
@@ -41,8 +47,6 @@ public class GeneValidationChecks {
     public String checkGeneSymbolIsValid(String gene) {
 
         String error = null;
-        String url = getServer().concat(getEndpoint()).concat(gene);
-        getLog().info("Checking gene: " + url);
 
         // Create a new RestTemplate instance
         RestTemplate restTemplate = new RestTemplate();
@@ -52,7 +56,8 @@ public class GeneValidationChecks {
         GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
-            geneLookupJson = restTemplate.getForObject(url, GeneLookupJson.class);
+            geneLookupJson =
+                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
 
             if (!geneLookupJson.getObject_type().equalsIgnoreCase("gene")) {
                 error = "Gene symbol ".concat(gene).concat(" is not valid");
@@ -66,11 +71,36 @@ public class GeneValidationChecks {
         return error;
     }
 
+    /**
+     * Get the chromosome a SNP resides on
+     *
+     * @param gene Gene name/symbol
+     * @return The name of the chromosome the gene is located on
+     */
+    public String getGeneLocation(String gene) {
+
+        String geneChromosome = null;
+        // Create a new RestTemplate instance
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Add the Jackson message converter
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        GeneLookupJson geneLookupJson = new GeneLookupJson();
+
+        try {
+            geneLookupJson =
+                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
+            geneChromosome = geneLookupJson.getSeq_region_name();
+        }
+        // The query returns a 400 error if response returns an error
+        catch (Exception e) {
+            getLog().error("Getting locations for gene ".concat(gene).concat("failed"), e);
+        }
+        return geneChromosome;
+    }
+
     public String getEndpoint() {
         return endpoint;
     }
 
-    public String getServer() {
-        return server;
-    }
 }
