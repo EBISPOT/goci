@@ -270,8 +270,7 @@ public class ValidationChecks {
                 String geneChromosome = geneValidationChecks.getGeneLocation(gene);
                 if (!snpChromosomeNames.contains(geneChromosome)) {
                     error = "Gene ".concat(gene)
-                            .concat(" and ")
-                            .concat("SNP ")
+                            .concat(" and SNP ")
                             .concat(snp)
                             .concat(" are not on same chromosome");
                 }
