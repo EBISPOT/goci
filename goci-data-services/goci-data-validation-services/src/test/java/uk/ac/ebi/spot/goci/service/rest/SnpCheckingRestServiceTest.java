@@ -68,7 +68,7 @@ public class SnpCheckingRestServiceTest {
         Set<String> snpLocations = snpCheckingRestService.getSnpLocations(VALID_RSID);
         assertThat(snpLocations).isNotEmpty();
     }
-    
+
     @Test
     public void getSnpLocationsForInvalidSnp() throws Exception {
         when(restUrlBuilder.createUrl(ENDPOINT, INVALID_RSID)).thenReturn(URL2);
