@@ -120,7 +120,7 @@ public class ValidationLogService {
             rowValidationSummaries.forEach(rowValidationSummary -> {
                 rowValidationSummary.getErrors().forEach(validationError -> {
                     try {
-                        bw.write("Row number: ".concat(String.valueOf(rowValidationSummary.getRow().getRowNumber()))
+                        bw.write(String.valueOf(rowValidationSummary.getRow().getRowNumber())
                                          .concat("\t")
                                          .concat(validationError.getField())
                                          .concat("\t")
@@ -144,12 +144,12 @@ public class ValidationLogService {
             associationSummaries.forEach(associationSummary -> {
                 associationSummary.getErrors().forEach(validationError -> {
                     try {
-                        bw.write("Row number: ".concat(String.valueOf(associationSummary.getRowNumber())
-                                                               .concat("\t")
-                                                               .concat(validationError.getField())
-                                                               .concat("\t")
-                                                               .concat(validationError.getError())
-                                                               .concat("\n")));
+                        bw.write(String.valueOf(associationSummary.getRowNumber())
+                                         .concat("\t")
+                                         .concat(validationError.getField())
+                                         .concat("\t")
+                                         .concat(validationError.getError())
+                                         .concat("\n"));
                     }
                     catch (IOException e) {
                         getLog().error("Writing errors to file failed");
