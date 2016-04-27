@@ -257,11 +257,11 @@ public class ValidationChecks {
         String geneError = checkGene(gene);
 
         if (snpError != null) {
-            error = "SNP value not valid, cannot check if gene is on same chromosome";
+            error = "SNP ".concat(snp).concat(" is not valid, cannot check if gene is on same chromosome as SNP");
 
         }
         else if (geneError != null) {
-            error = "Gene value not valid, cannot check if gene is on same chromosome";
+            error = "Gene ".concat(gene).concat(" is not valid, cannot check if gene is on same chromosome as SNP");
         }
         else {
             // Get all SNP locations and check gene location is one of them
@@ -269,7 +269,11 @@ public class ValidationChecks {
             if (!snpChromosomeNames.isEmpty()) {
                 String geneChromosome = geneValidationChecks.getGeneLocation(gene);
                 if (!snpChromosomeNames.contains(geneChromosome)) {
-                    error = "Gene ".concat(gene).concat(" and ").concat("SNP ").concat(snp).concat(" are not on same chromosome");
+                    error = "Gene ".concat(gene)
+                            .concat(" and ")
+                            .concat("SNP ")
+                            .concat(snp)
+                            .concat(" are not on same chromosome");
                 }
             }
         }

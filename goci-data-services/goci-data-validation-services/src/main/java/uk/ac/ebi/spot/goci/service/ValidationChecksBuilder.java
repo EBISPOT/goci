@@ -246,7 +246,7 @@ public class ValidationChecksBuilder {
     /**
      * Run loci attributes checks on association
      *
-     * @param association row to be checked
+     * @param association association to be checked
      */
     public Collection<ValidationError> runLociAttributeChecks(Association association) {
 
@@ -258,11 +258,13 @@ public class ValidationChecksBuilder {
                 Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
                 Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
 
+                // Check genes are valid
                 authorReportedGenes.forEach(gene -> {
                     ValidationError geneError = errorCreationService.checkGene(gene);
                     ValidationErrors.add(geneError);
                 });
 
+                // Check risk allele attributes
                 riskAlleles.forEach(riskAllele -> {
                     ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
                     ValidationErrors.add(riskAlleleError);
@@ -275,7 +277,6 @@ public class ValidationChecksBuilder {
                                 errorCreationService.checkSnpGeneLocation(snp, gene);
                         ValidationErrors.add(snpGeneLocationError);
                     });
-
                     ValidationErrors.add(snpError);
                 });
             }
