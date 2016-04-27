@@ -21,7 +21,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
     public Collection<ValidationError> runChecks(Association association,
                                                  ValidationChecksBuilder validationChecksBuilder) {
 
-        // Create collection to store all newly created associations
+        // Create collection to store all newly created errors
         Collection<ValidationError> associationValidationErrors = new ArrayList<>();
 
         Collection<ValidationError> riskFrequencyErrors = validationChecksBuilder.runRiskFrequencyChecks(association);
@@ -29,6 +29,7 @@ public class AuthorAssociationCheckingService implements AssociationCheckingServ
             associationValidationErrors.addAll(riskFrequencyErrors);
         }
 
+        // Run loci attribute checks i.e. risk allele, snp amd author reported genes
         Collection<ValidationError> lociAttributeErrors = validationChecksBuilder.runLociAttributeChecks(association);
         if (!lociAttributeErrors.isEmpty()) {
             associationValidationErrors.addAll(lociAttributeErrors);
