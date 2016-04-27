@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.SnpLookupJson;
 import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
 
@@ -50,14 +48,8 @@ public class SnpCheckingRestService {
 
         String error = null;
 
-        // Create a new RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Add the Jackson message converter
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
         try {
-            String response = restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
+            restUrlBuilder.getRestTemplate().getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
@@ -76,17 +68,11 @@ public class SnpCheckingRestService {
     public Set<String> getSnpLocations(String snp) {
 
         Set<String> snpChromosomeNames = new HashSet<>();
-
-        // Create a new RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Add the Jackson message converter
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
         SnpLookupJson snpLookupJson = new SnpLookupJson();
         try {
             snpLookupJson =
-                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), SnpLookupJson.class);
+                    restUrlBuilder.getRestTemplate()
+                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), SnpLookupJson.class);
             snpLookupJson.getMappings().forEach(snpMappingsJson -> {
                 snpChromosomeNames.add(snpMappingsJson.getSeq_region_name());
             });
@@ -95,7 +81,6 @@ public class SnpCheckingRestService {
         catch (Exception e) {
             getLog().error("Getting locations for SNP ".concat(snp).concat("failed"), e);
         }
-
         return snpChromosomeNames;
     }
 

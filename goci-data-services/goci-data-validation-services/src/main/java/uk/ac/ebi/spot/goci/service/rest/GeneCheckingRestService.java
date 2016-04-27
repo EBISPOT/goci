@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.GeneLookupJson;
 import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
 
@@ -47,17 +45,12 @@ public class GeneCheckingRestService {
     public String checkGeneSymbolIsValid(String gene) {
 
         String error = null;
-
-        // Create a new RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Add the Jackson message converter
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
             geneLookupJson =
-                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
+                    restUrlBuilder.getRestTemplate()
+                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
 
             if (!geneLookupJson.getObject_type().equalsIgnoreCase("gene")) {
                 error = "Gene symbol ".concat(gene).concat(" is not valid");
@@ -80,16 +73,12 @@ public class GeneCheckingRestService {
     public String getGeneLocation(String gene) {
 
         String geneChromosome = null;
-        // Create a new RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Add the Jackson message converter
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
             geneLookupJson =
-                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
+                    restUrlBuilder.getRestTemplate()
+                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
             geneChromosome = geneLookupJson.getSeq_region_name();
         }
         // The query returns a 400 error if response returns an error

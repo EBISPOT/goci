@@ -277,6 +277,10 @@ public class ValidationChecks {
                             .concat(" are not on same chromosome");
                 }
             }
+            else {
+                error = "SNP ".concat(snp)
+                        .concat(" has no location details, cannot check if gene is on same chromosome as SNP");
+            }
         }
         return error;
     }

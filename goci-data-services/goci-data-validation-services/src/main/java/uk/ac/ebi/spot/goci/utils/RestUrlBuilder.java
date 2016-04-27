@@ -3,7 +3,9 @@ package uk.ac.ebi.spot.goci.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
 
@@ -30,6 +32,16 @@ public class RestUrlBuilder {
         String url = getServer().concat(endpoint).concat(query);
         getLog().info("Checking url: " + url);
         return url;
+    }
+
+    public RestTemplate getRestTemplate() {
+        // Create a new RestTemplate instance
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Add the Jackson message converter
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        return restTemplate;
     }
 
     public String getServer() {
