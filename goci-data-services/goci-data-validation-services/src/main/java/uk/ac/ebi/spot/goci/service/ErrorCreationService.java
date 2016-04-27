@@ -148,4 +148,10 @@ public class ErrorCreationService {
         String errorMessage = validationChecks.checkValueIsPresent(association.getRange());
         return ErrorProcessingService.createError(errorMessage, "Range");
     }
+
+    // Check Gene and SNP are on same chromosome
+    public ValidationError checkSnpGeneLocation(SingleNucleotidePolymorphism snp, Gene gene) {
+        String errorMessage = validationChecks.checkSnpGeneLocation(snp.getRsId(), gene.getGeneName());
+        return ErrorProcessingService.createError(errorMessage, "Gene");
+    }
 }

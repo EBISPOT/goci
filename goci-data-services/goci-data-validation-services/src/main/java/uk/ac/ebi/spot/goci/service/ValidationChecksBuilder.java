@@ -269,6 +269,13 @@ public class ValidationChecksBuilder {
 
                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                     ValidationError snpError = errorCreationService.checkSnp(snp);
+
+                    authorReportedGenes.forEach(gene -> {
+                        ValidationError snpGeneLocationError =
+                                errorCreationService.checkSnpGeneLocation(snp, gene);
+                        ValidationErrors.add(snpGeneLocationError);
+                    });
+
                     ValidationErrors.add(snpError);
                 });
             }
