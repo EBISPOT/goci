@@ -9,6 +9,8 @@ import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.SnpLookupJson;
 
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Emma on 22/04/16.
@@ -41,8 +43,6 @@ public class SnpValidationChecks {
     public String checkSnpIdentifierIsValid(String snp) {
 
         String error = null;
-        String url = getServer().concat(getEndpoint()).concat(snp);
-        getLog().info("Checking url: " + url);
 
         // Create a new RestTemplate instance
         RestTemplate restTemplate = new RestTemplate();
@@ -51,7 +51,7 @@ public class SnpValidationChecks {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         try {
-            String response = restTemplate.getForObject(url, String.class);
+            String response = restTemplate.getForObject(createUrl(snp), String.class);
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
@@ -61,11 +61,15 @@ public class SnpValidationChecks {
         return error;
     }
 
-    public void getSnpLocations(String snp) {
+    /**
+     * Get the chromosome a SNP resides on
+     *
+     * @param snp Snp identifier to check
+     * @return Error message
+     */
+    public Set<String> getSnpLocations(String snp) {
 
-        String error = null;
-        String url = getServer().concat(getEndpoint()).concat(snp);
-        getLog().info("Checking url: " + url);
+        Set<String> snpChromosomeNames = new HashSet<>();
 
         // Create a new RestTemplate instance
         RestTemplate restTemplate = new RestTemplate();
@@ -73,16 +77,25 @@ public class SnpValidationChecks {
         // Add the Jackson message converter
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        SnpLookupJson snpLookupJson =  new SnpLookupJson();
+        SnpLookupJson snpLookupJson = new SnpLookupJson();
         try {
-            snpLookupJson = restTemplate.getForObject(url, SnpLookupJson.class);
+            snpLookupJson = restTemplate.getForObject(createUrl(createUrl(snp)), SnpLookupJson.class);
+            snpLookupJson.getMappings().forEach(snpMappingsJson -> {
+                snpChromosomeNames.add(snpMappingsJson.getSeq_region_name());
+            });
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            getLog().error("Checking SNP identifier failed", e);
+            getLog().error("Getting locations for SNP ".concat(snp).concat("failed"), e);
         }
 
+        return snpChromosomeNames;
+    }
 
+    private String createUrl(String query) {
+        String url = getServer().concat(getEndpoint()).concat(query);
+        getLog().info("Checking url: " + url);
+        return url;
     }
 
 
