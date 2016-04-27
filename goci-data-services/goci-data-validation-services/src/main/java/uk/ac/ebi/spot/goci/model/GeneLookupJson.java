@@ -20,15 +20,7 @@ public class GeneLookupJson {
         return object_type;
     }
 
-    public void setObject_type(String object_type) {
-        this.object_type = object_type;
-    }
-
     public String getSeq_region_name() {
         return seq_region_name;
-    }
-
-    public void setSeq_region_name(String seq_region_name) {
-        this.seq_region_name = seq_region_name;
     }
 }
