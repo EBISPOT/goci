@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by emma on 01/04/2016.
@@ -221,6 +222,62 @@ public class ValidationChecks {
     }
 
     /**
+     * Snp check
+     *
+     * @param snp Snp identifier to be checked
+     */
+    public String checkSnp(String snp) {
+        String error = null;
+        if (snp == null) {
+            error = "SNP identifier is empty";
+        }
+        else {
+            if (snp.isEmpty()) {
+                error = "SNP identifier is empty";
+            }
+            // Check SNP in Ensembl
+            else {
+                error = snpValidationChecks.checkSnpIdentifierIsValid(snp);
+            }
+        }
+        return error;
+    }
+
+    /**
+     * Gene and SNP not on same Chr
+     *
+     * @param snp  Snp identifier to be checked
+     * @param gene Gene name to be checked
+     */
+    public String checkSnpGeneLocation(String snp, String gene) {
+        String error = null;
+
+        // Ensure valid gene and snp
+        String snpError = checkSnp(snp);
+        String geneError = checkGene(gene);
+
+        if (snpError != null) {
+            error = "SNP value not valid, cannot check if gene is on same chromosome";
+
+        }
+        else if (geneError != null) {
+            error = "Gene value not valid, cannot check if gene is on same chromosome";
+        }
+        else {
+            // Get all SNP locations and check gene location is one of them
+            Set<String> snpChromosomeNames = snpValidationChecks.getSnpLocations(snp);
+            if (!snpChromosomeNames.isEmpty()) {
+                String geneChromosome = geneValidationChecks.getGeneLocation(gene);
+                if (!snpChromosomeNames.contains(geneChromosome)) {
+                    error = "Gene and SNP are not on same chromosome";
+                }
+            }
+        }
+        return error;
+    }
+
+
+    /**
      * Risk allele check
      *
      * @param riskAlleleName to be checked
@@ -251,27 +308,6 @@ public class ValidationChecks {
         return error;
     }
 
-    /**
-     * Snp check
-     *
-     * @param snp Snp identifier to be checked
-     */
-    public String checkSnp(String snp) {
-        String error = null;
-        if (snp == null) {
-            error = "SNP identifier is empty";
-        }
-        else {
-            if (snp.isEmpty()) {
-                error = "SNP identifier is empty";
-            }
-            // Check SNP in Ensembl
-            else {
-                error = snpValidationChecks.checkSnpIdentifierIsValid(snp);
-            }
-        }
-        return error;
-    }
 
     /**
      * Risk frequency check
