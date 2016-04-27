@@ -269,7 +269,7 @@ public class ValidationChecks {
             if (!snpChromosomeNames.isEmpty()) {
                 String geneChromosome = geneValidationChecks.getGeneLocation(gene);
                 if (!snpChromosomeNames.contains(geneChromosome)) {
-                    error = "Gene and SNP are not on same chromosome";
+                    error = "Gene ".concat(gene).concat(" and ").concat("SNP ").concat(snp).concat(" are not on same chromosome");
                 }
             }
         }
