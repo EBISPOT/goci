@@ -2,11 +2,13 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.SnpLookupJson;
+import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -25,13 +27,17 @@ public class SnpValidationChecks {
     @NotNull @Value("${mapping.snp_lookup_endpoint}")
     private String endpoint;
 
-    @NotNull @Value("${ensembl.server}")
-    private String server;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
+    }
+
+    private RestUrlBuilder restUrlBuilder;
+
+    @Autowired
+    public SnpValidationChecks(RestUrlBuilder restUrlBuilder) {
+        this.restUrlBuilder = restUrlBuilder;
     }
 
     /**
@@ -51,7 +57,7 @@ public class SnpValidationChecks {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         try {
-            String response = restTemplate.getForObject(createUrl(snp), String.class);
+            String response = restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
@@ -79,7 +85,8 @@ public class SnpValidationChecks {
 
         SnpLookupJson snpLookupJson = new SnpLookupJson();
         try {
-            snpLookupJson = restTemplate.getForObject(createUrl(createUrl(snp)), SnpLookupJson.class);
+            snpLookupJson =
+                    restTemplate.getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), SnpLookupJson.class);
             snpLookupJson.getMappings().forEach(snpMappingsJson -> {
                 snpChromosomeNames.add(snpMappingsJson.getSeq_region_name());
             });
@@ -92,18 +99,7 @@ public class SnpValidationChecks {
         return snpChromosomeNames;
     }
 
-    private String createUrl(String query) {
-        String url = getServer().concat(getEndpoint()).concat(query);
-        getLog().info("Checking url: " + url);
-        return url;
-    }
-
-
     public String getEndpoint() {
         return endpoint;
-    }
-
-    public String getServer() {
-        return server;
     }
 }
