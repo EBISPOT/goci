@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.model.SnpLookupJson;
 
 import javax.validation.constraints.NotNull;
 
@@ -59,6 +60,31 @@ public class SnpValidationChecks {
         }
         return error;
     }
+
+    public void getSnpLocations(String snp) {
+
+        String error = null;
+        String url = getServer().concat(getEndpoint()).concat(snp);
+        getLog().info("Checking url: " + url);
+
+        // Create a new RestTemplate instance
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Add the Jackson message converter
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        SnpLookupJson snpLookupJson =  new SnpLookupJson();
+        try {
+            snpLookupJson = restTemplate.getForObject(url, SnpLookupJson.class);
+        }
+        // The query returns a 400 error if response returns an error
+        catch (Exception e) {
+            getLog().error("Checking SNP identifier failed", e);
+        }
+
+
+    }
+
 
     public String getEndpoint() {
         return endpoint;
