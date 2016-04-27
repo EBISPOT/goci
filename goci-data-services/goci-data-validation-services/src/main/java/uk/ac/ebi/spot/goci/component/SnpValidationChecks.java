@@ -71,7 +71,7 @@ public class SnpValidationChecks {
      * Get the chromosome a SNP resides on
      *
      * @param snp Snp identifier to check
-     * @return Error message
+     * @return Set of all SNP chromosome names
      */
     public Set<String> getSnpLocations(String snp) {
 
