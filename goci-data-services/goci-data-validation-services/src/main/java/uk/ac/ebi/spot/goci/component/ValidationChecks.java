@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.ac.ebi.spot.goci.service.rest.GeneCheckingRestService;
+import uk.ac.ebi.spot.goci.service.rest.SnpCheckingRestService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +19,15 @@ import java.util.Set;
 @Component
 public class ValidationChecks {
 
-    private GeneValidationChecks geneValidationChecks;
+    private GeneCheckingRestService geneCheckingRestService;
 
-    private SnpValidationChecks snpValidationChecks;
+    private SnpCheckingRestService snpCheckingRestService;
 
     @Autowired
-    public ValidationChecks(GeneValidationChecks geneValidationChecks,
-                            SnpValidationChecks snpValidationChecks) {
-        this.geneValidationChecks = geneValidationChecks;
-        this.snpValidationChecks = snpValidationChecks;
+    public ValidationChecks(GeneCheckingRestService geneCheckingRestService,
+                            SnpCheckingRestService snpCheckingRestService) {
+        this.geneCheckingRestService = geneCheckingRestService;
+        this.snpCheckingRestService = snpCheckingRestService;
     }
 
     /**
@@ -215,7 +217,7 @@ public class ValidationChecks {
             }
             // Check gene name in Ensembl
             else {
-                error = geneValidationChecks.checkGeneSymbolIsValid(geneName);
+                error = geneCheckingRestService.checkGeneSymbolIsValid(geneName);
             }
         }
         return error;
@@ -237,7 +239,7 @@ public class ValidationChecks {
             }
             // Check SNP in Ensembl
             else {
-                error = snpValidationChecks.checkSnpIdentifierIsValid(snp);
+                error = snpCheckingRestService.checkSnpIdentifierIsValid(snp);
             }
         }
         return error;
@@ -265,9 +267,9 @@ public class ValidationChecks {
         }
         else {
             // Get all SNP locations and check gene location is one of them
-            Set<String> snpChromosomeNames = snpValidationChecks.getSnpLocations(snp);
+            Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
             if (!snpChromosomeNames.isEmpty()) {
-                String geneChromosome = geneValidationChecks.getGeneLocation(gene);
+                String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
                 if (!snpChromosomeNames.contains(geneChromosome)) {
                     error = "Gene ".concat(gene)
                             .concat(" and SNP ")
