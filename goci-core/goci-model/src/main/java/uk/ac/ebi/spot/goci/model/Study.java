@@ -102,10 +102,10 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Housekeeping housekeeping;
 
-    @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "study", orphanRemoval = true)
     private StudyReport studyReport;
 
     @OneToMany
