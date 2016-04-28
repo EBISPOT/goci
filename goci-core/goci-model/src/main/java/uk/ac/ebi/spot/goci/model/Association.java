@@ -127,7 +127,7 @@ public class Association {
                        AssociationReport associationReport,
                        Date lastMappingDate,
                        String lastMappingPerformedBy,
-                       Date lastUpdateDate) {
+                       Date lastUpdateDate, Collection<Event> events) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -152,6 +152,7 @@ public class Association {
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastUpdateDate = lastUpdateDate;
+        this.events = events;
     }
 
     public Long getId() {
@@ -360,5 +361,13 @@ public class Association {
 
     public void setBetaDirection(String betaDirection) {
         this.betaDirection = betaDirection;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
     }
 }

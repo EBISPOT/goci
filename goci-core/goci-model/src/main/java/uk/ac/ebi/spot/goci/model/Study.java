@@ -118,14 +118,12 @@ public class Study {
     public Study() {
     }
 
-
     public Study(String author,
                  Date publicationDate,
                  String publication,
                  String title,
                  String initialSampleSize,
                  String replicateSampleSize,
-                 Collection<Platform> platforms,
                  String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
@@ -135,18 +133,21 @@ public class Study {
                  Boolean imputed,
                  Boolean pooled,
                  String studyDesignComment,
+                 Collection<Platform> platforms,
+                 Collection<Association> associations,
+                 Collection<Ethnicity> ethnicities,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
                  Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
-                 Collection<Ethnicity> ethnicities,
-                 Housekeeping housekeeping) {
+                 Housekeeping housekeeping,
+                 StudyReport studyReport,
+                 Collection<Event> events) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
@@ -156,11 +157,15 @@ public class Study {
         this.imputed = imputed;
         this.pooled = pooled;
         this.studyDesignComment = studyDesignComment;
+        this.platforms = platforms;
+        this.associations = associations;
+        this.ethnicities = ethnicities;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-        this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
+        this.studyReport = studyReport;
+        this.events = events;
     }
 
     public Long getId() {
@@ -307,17 +312,6 @@ public class Study {
         this.studyReport = studyReport;
     }
 
-    @Override public String toString() {
-        return "Study{" +
-                "id=" + id +
-                ", author='" + author + '\'' +
-                ", publicationDate=" + publicationDate +
-                ", publication='" + publication + '\'' +
-                ", title='" + title + '\'' +
-                ", pubmedId='" + pubmedId + '\'' +
-                '}';
-    }
-
     public Collection<Ethnicity> getEthnicities() {
         return ethnicities;
     }
@@ -365,5 +359,13 @@ public class Study {
 
     public void setStudyDesignComment(String studyDesignComment) {
         this.studyDesignComment = studyDesignComment;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
     }
 }
