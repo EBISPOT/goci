@@ -83,7 +83,7 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
