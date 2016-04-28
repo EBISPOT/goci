@@ -24,7 +24,7 @@ import java.util.Date;
  *         Model object representing an association
  */
 @Entity
-public class Association {
+public class Association implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -369,5 +369,11 @@ public class Association {
 
     public void setEvents(Collection<Event> events) {
         this.events = events;
+    }
+
+    @Override public synchronized void addEvent(Event event) {
+        Collection<Event> currentEvents = getEvents();
+        currentEvents.add(event);
+        setEvents((currentEvents));
     }
 }

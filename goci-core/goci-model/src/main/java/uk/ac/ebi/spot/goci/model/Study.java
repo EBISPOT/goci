@@ -29,7 +29,7 @@ import java.util.Date;
  */
 
 @Entity
-public class Study {
+public class Study implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -367,5 +367,11 @@ public class Study {
 
     public void setEvents(Collection<Event> events) {
         this.events = events;
+    }
+
+    @Override public synchronized void addEvent(Event event) {
+        Collection<Event> currentEvents = getEvents();
+        currentEvents.add(event);
+        setEvents((currentEvents));
     }
 }
