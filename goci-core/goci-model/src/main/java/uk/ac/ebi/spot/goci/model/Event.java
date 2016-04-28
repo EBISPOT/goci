@@ -7,6 +7,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 
 /**
@@ -29,13 +30,17 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
+    @ManyToOne
+    private SecureUser secureUser;
+
     // JPA no-args constructor
     public Event() {
     }
 
-    public Event(Date eventDate, EventType eventType) {
+    public Event(Date eventDate, EventType eventType, SecureUser secureUser) {
         this.eventDate = eventDate;
         this.eventType = eventType;
+        this.secureUser = secureUser;
     }
 
     public Long getId() {
@@ -60,5 +65,13 @@ public class Event {
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
+    }
+
+    public SecureUser getSecureUser() {
+        return secureUser;
+    }
+
+    public void setSecureUser(SecureUser secureUser) {
+        this.secureUser = secureUser;
     }
 }
