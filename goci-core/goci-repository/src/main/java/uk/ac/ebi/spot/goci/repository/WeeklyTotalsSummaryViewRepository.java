@@ -13,7 +13,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface WeeklyTotalsSummaryViewRepository extends JpaRepository<WeeklyTotalsSummaryView, Long> {
 
-    @Query("select week, studies, entries from WeeklyTotalsSummaryView where rownum < 9") List<WeeklyTotalsSummaryView> getLastEightWeeks();
+    @Query("select week, weekly_studies, weekly_entries from WeeklyTotalsSummaryView where rownum < 9") List<WeeklyTotalsSummaryView> getLastEightWeeks();
 
 
 
