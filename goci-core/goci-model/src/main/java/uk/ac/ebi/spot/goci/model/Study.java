@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -106,6 +107,12 @@ public class Study {
 
     @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
     private StudyReport studyReport;
+
+    @OneToMany
+    @JoinTable(name = "STUDY_EVENT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    private Collection<Event> events = new ArrayList<>();
 
     // JPA no-args constructor
     public Study() {

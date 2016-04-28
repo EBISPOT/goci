@@ -94,6 +94,12 @@ public class Association {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
 
+    @OneToMany
+    @JoinTable(name = "ASSOCIATION_EVENT",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    private Collection<Event> events = new ArrayList<>();
+
     // JPA no-args constructor
     public Association() {
     }
