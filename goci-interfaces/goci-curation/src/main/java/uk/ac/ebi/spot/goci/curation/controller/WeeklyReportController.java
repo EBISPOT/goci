@@ -43,7 +43,9 @@ public class WeeklyReportController {
 
         List<WeeklyTotalsSummaryView> weeklyTotalsSummaryViews = new ArrayList<>();
 
-        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.getLastEightWeeks();
+//        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.getLastEightWeeks();
+
+        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.findAll();
 
         Integer studiesTotal = null;
         Integer entriesTotal = null;
