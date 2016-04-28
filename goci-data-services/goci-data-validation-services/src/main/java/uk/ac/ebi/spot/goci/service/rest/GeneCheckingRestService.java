@@ -92,4 +92,7 @@ public class GeneCheckingRestService {
         return endpoint;
     }
 
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 }
