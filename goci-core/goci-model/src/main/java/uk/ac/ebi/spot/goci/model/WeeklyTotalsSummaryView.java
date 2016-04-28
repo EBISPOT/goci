@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Date;
 
 /**
@@ -8,7 +9,10 @@ import java.sql.Date;
  */
 
 @Entity
-public class WeeklyTotalsSummaryView extends TotalsSummaryView{
+public class WeeklyTotalsSummaryView{ //extends TotalsSummaryView{
+
+    @Id
+    private Long id;
 
     private Date week;
 
@@ -31,6 +35,14 @@ public class WeeklyTotalsSummaryView extends TotalsSummaryView{
         this.week = week;
         this.weeklyStudies = weeklyStudies;
         this.weeklyEntries = weeklyEntries;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Date getweek() {
