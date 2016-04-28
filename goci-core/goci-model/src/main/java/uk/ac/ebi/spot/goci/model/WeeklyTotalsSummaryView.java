@@ -8,7 +8,7 @@ import java.sql.Date;
  */
 
 @Entity
-public class WeeklyTotalsSummaryView{// extends TotalsSummaryView{
+public class WeeklyTotalsSummaryView extends TotalsSummaryView{
 
     private Date week;
 
