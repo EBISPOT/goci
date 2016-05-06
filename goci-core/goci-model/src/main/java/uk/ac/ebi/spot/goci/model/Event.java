@@ -25,22 +25,22 @@ public class Event {
     private Long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date eventDate;
+    private Date date;
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
     @ManyToOne
-    private SecureUser secureUser;
+    private SecureUser user;
 
     // JPA no-args constructor
     public Event() {
     }
 
-    public Event(Date eventDate, EventType eventType, SecureUser secureUser) {
-        this.eventDate = eventDate;
+    public Event(Date date, EventType eventType, SecureUser user) {
+        this.date = date;
         this.eventType = eventType;
-        this.secureUser = secureUser;
+        this.user = user;
     }
 
     public Long getId() {
@@ -51,12 +51,12 @@ public class Event {
         this.id = id;
     }
 
-    public Date getEventDate() {
-        return eventDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setEventDate(Date eventDate) {
-        this.eventDate = eventDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public EventType getEventType() {
@@ -67,11 +67,11 @@ public class Event {
         this.eventType = eventType;
     }
 
-    public SecureUser getSecureUser() {
-        return secureUser;
+    public SecureUser getUser() {
+        return user;
     }
 
-    public void setSecureUser(SecureUser secureUser) {
-        this.secureUser = secureUser;
+    public void setUser(SecureUser user) {
+        this.user = user;
     }
 }
