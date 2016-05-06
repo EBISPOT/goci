@@ -49,6 +49,7 @@ public class AssociationFilterApplication {
 
     public static void main(String... args) {
         System.out.println("Starting Association Filter...");
+
         ApplicationContext ctx = SpringApplication.run(AssociationFilterApplication.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
@@ -57,6 +58,8 @@ public class AssociationFilterApplication {
     @Bean CommandLineRunner run() {
         return strings -> {
             System.out.println("About to filter the input list");
+            getLog().debug("About to filter the input list");
+
             int parseArgs = parseArguments(strings);
             if (parseArgs == 0) {
                 // execute mapper
@@ -68,6 +71,8 @@ public class AssociationFilterApplication {
                 System.exit(1 + parseArgs);
             }
             System.out.println("Filtering complete");
+            getLog().debug("Filtering complete");
+
         };
     }
 
@@ -141,14 +146,39 @@ public class AssociationFilterApplication {
             String[][] data = catalogSpreadsheetExporter.readFromFile(inputFile);
 
             List<FilterAssociation> associations = processData(data);
-
+            getLog().info("Starting sorting by chromosome");
             Map<String, List<FilterAssociation>> byChrom = filteringService.groupByChromosomeName(associations);
+
+            getLog().info("Sorting by chromosome done");
+            for(String k : byChrom.keySet()){
+                getLog().debug("Chromosome " + k + "-");
+
+                for(FilterAssociation a : byChrom.get(k)){
+                    getLog().debug("\t" + a.getRowNumber());
+                }
+            }
+
+            getLog().info("Starting sorting by bp location");
 
             Map<String, List<FilterAssociation>> byLoc = filteringService.sortByBPLocation(byChrom);
 
+            for(String k : byLoc.keySet()){
+                getLog().debug(k + "-");
+
+                for(FilterAssociation a : byLoc.get(k)){
+                    getLog().debug("\t" + a.getRowNumber());
+                }
+            }
+            getLog().info("Sorting by bp location done");
+
+
+            getLog().info("Starting filtering process");
+
             List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLoc);
+            getLog().info("Filtering process complete");
 
             String[][] transformAssocations = transformAssociations(filtered);
+            getLog().info("Exporting filtered data to file");
             catalogSpreadsheetExporter.writeToFile(transformAssocations, outputFile);
         }
         catch (IOException e) {
