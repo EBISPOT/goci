@@ -13,8 +13,8 @@ public interface Trackable {
     /**
      * Add event to an objects current collection of events
      *
-     * @param event  the event to add
+     * @param type  the type of event to add
      */
-     void addEvent(Event event);
+     void addEvent(EventType type);
 }
 

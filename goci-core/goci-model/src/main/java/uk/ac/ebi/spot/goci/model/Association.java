@@ -371,7 +371,12 @@ public class Association implements Trackable {
         this.events = events;
     }
 
-    @Override public synchronized void addEvent(Event event) {
+    @Override public synchronized void addEvent(EventType eventType) {
+        // Create event
+        Event event = new Event();
+        event.setDate(new Date());
+        event.setEventType(eventType);
+
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
