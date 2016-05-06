@@ -17,13 +17,15 @@ import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,6 +52,15 @@ public class StudyOperationServiceTest {
 
     @Mock
     private PublishStudyCheckService publishStudyCheckService;
+
+    @Mock
+    private StudyRepository studyRepository;
+
+    @Mock
+    private CuratorRepository curatorRepository;
+
+    @Mock
+    private CurationStatusRepository curationStatusRepository;
 
     private StudyOperationsService studyOperationsService;
 
@@ -94,17 +105,11 @@ public class StudyOperationServiceTest {
     public void setUpMock() {
         studyOperationsService = new StudyOperationsService(associationRepository,
                                                             mailService,
-                                                            housekeepingRepository, publishStudyCheckService);
-
-    }
-
-    @Test
-    public void testMocks() {
-        // Test mock creation
-        assertNotNull(associationRepository);
-        assertNotNull(mailService);
-        assertNotNull(housekeepingRepository);
-        assertNotNull(publishStudyCheckService);
+                                                            housekeepingRepository,
+                                                            studyRepository,
+                                                            publishStudyCheckService,
+                                                            curatorRepository,
+                                                            curationStatusRepository);
     }
 
     @Test
