@@ -62,6 +62,9 @@ public class StudyOperationServiceTest {
     @Mock
     private CurationStatusRepository curationStatusRepository;
 
+    @Mock
+    private EventOperationsService eventOperationsService;
+
     private StudyOperationsService studyOperationsService;
 
     private static final CurationStatus NEW_STATUS1 =
@@ -106,10 +109,11 @@ public class StudyOperationServiceTest {
         studyOperationsService = new StudyOperationsService(associationRepository,
                                                             mailService,
                                                             housekeepingRepository,
-                                                            studyRepository,
                                                             publishStudyCheckService,
+                                                            studyRepository,
                                                             curatorRepository,
-                                                            curationStatusRepository);
+                                                            curationStatusRepository,
+                                                            eventOperationsService);
     }
 
     @Test
