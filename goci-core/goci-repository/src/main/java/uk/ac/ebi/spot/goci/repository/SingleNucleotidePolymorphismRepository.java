@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Repository accessing Single Nucloetide Polymorphism entity objectls
+ *         Repository accessing Single Nucleotide Polymorphism entity objectls
  */
 
 @RepositoryRestResource

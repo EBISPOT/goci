@@ -159,7 +159,7 @@ public class MonthlyReportController {
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
         model.addAttribute("monthlyTotalsSummaryViews", monthlyTotalsSummaryViews);
-        return "reports";
+        return "reports_monthly";
     }
 
     // Takes filters supplied and creates appropriate redirect

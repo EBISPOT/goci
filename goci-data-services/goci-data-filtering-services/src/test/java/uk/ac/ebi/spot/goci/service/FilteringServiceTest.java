@@ -4,10 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.ac.ebi.spot.goci.model.FilterAssociation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by dwelter on 07/04/16.
@@ -17,6 +21,7 @@ public class FilteringServiceTest {
 
     private List<FilterAssociation> assocs;
 
+    @Autowired
     private FilteringService filteringService;
 
 
@@ -76,21 +81,69 @@ public class FilteringServiceTest {
         assocs.add(new FilterAssociation(50, "rs552707-T", 9, -46, "7", "28165684"));
 
 
-        filteringService = new FilteringService(assocs);
-
+        filteringService = new FilteringService();
     }
 
 
     @Test
     public void testChromGroup(){
         System.out.println("Grouping by chromosome");
-        filteringService.groupByChromosomeName();
+        Map<String, List<FilterAssociation>> byChrom = filteringService.groupByChromosomeName(assocs);
+
+        Integer e = 30;
+        assertEquals("By chromosome sort correct", e, byChrom.get("12").get(1).getRowNumber());
+
+        for(String k : byChrom.keySet()){
+            System.out.print(k + "-");
+
+            for(FilterAssociation a : byChrom.get(k)){
+                System.out.print("\t" + a.getRowNumber());
+            }
+            System.out.print("\n");
+
+        }
+
 
         System.out.println("Sorting by BP location");
-        filteringService.sortByBPLocation();
+        Map<String, List<FilterAssociation>> byLocation = filteringService.sortByBPLocation(byChrom);
+
+        for(String k : byLocation.keySet()){
+            System.out.print(k + "-");
+
+            for(FilterAssociation a : byLocation.get(k)){
+                System.out.print("\t" + a.getRowNumber());
+            }
+            System.out.print("\n");
+
+        }
+
+        Integer l = 32;
+        assertEquals("By location sort correct", l, byLocation.get("12").get(1).getRowNumber());
+
 
         System.out.println("Determining SNPs in LD");
-        filteringService.filterTopAssociations();
+        List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLocation);
+
+        int ldCount = 0;
+
+        for(FilterAssociation f : filtered){
+
+            if(f.getIsTopAssociation()) {
+                System.out.print(f.getChromosomeName() + " top -");
+
+                System.out.print("\t" + f.getRowNumber());
+            }
+            else{
+                System.out.print(f.getChromosomeName() + " in LD -");
+                System.out.print("\t" + f.getRowNumber());
+                ldCount++;
+
+            }
+            System.out.print("\n");
+
+        }
+
+        assertEquals("SNPs in LD", 6, ldCount);
 
     }
 }

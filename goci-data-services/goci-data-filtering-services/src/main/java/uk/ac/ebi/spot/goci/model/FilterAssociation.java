@@ -9,7 +9,7 @@ public class FilterAssociation {
 
     private String strongestAllele = null;
 
-    private String snp = null;
+//    private String snp = null;
 
     private Integer pvalueMantissa = null;
 
@@ -51,13 +51,9 @@ public class FilterAssociation {
         this.strongestAllele = strongestAllele;
     }
 
-    public String getSnp() {
-        return snp;
-    }
-
-    public void setSnp(String snp) {
-        this.snp = snp;
-    }
+//   n public void setSnp(String snp) {
+//        this.snp = snp;
+//    }
 
     public Integer getPvalueMantissa() {
         return pvalueMantissa;

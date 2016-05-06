@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"
+            th:src="@{https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css"
+          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
+          rel="stylesheet"/>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
+            <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
+            <li class="active"><a href="#">Weekly Curator Totals</a></li>
+        </ul>
+    </div>
+</div>
+
+<!--Include filter options-->
+<!--<div th:include="fragments/reports_filter :: weekly_search_filter"></div>-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table" data-show-columns="true">
+                <thead>
+                <tr>
+                    <th class="col-md-4" data-sortable="true">Week commencing</th>
+                    <th class="col-md-4" data-sortable="true">Studies</th>
+                    <th class="col-md-4" data-sortable="true">Entries</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="weeklyTotalsSummaryView: ${weeklyTotalsSummaryViews}">
+                    <td th:text="${weeklyTotalsSummaryView.week} ?: 'null'"></td>
+                    <!--Some thymeleaf wrangling to get the month name for a date-->
+                    <!--<td th:text="${#dates.monthName(#dates.create(weeklyTotalsSummaryView.year,weeklyTotalsSummaryView.month, '01'))} ?: 'null'"></td>-->
+                    <td th:text="${weeklyTotalsSummaryView.studies} ?: 'null'"></td>
+                    <td th:text="${weeklyTotalsSummaryView.entries} ?: 'null'"></td>
+                </tr>
+                <tr>
+                    <td>Average</td>
+                    <td th:text="${weeklyTotalsSummaryViews.studiesAverage} ?: 'null'"></td>
+                    <td th:text="${weeklyTotalsSummaryView.entriesAverage} ?: 'null'"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
