@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.model;
 
-import java.util.Collection;
-
 /**
  * Created by emma on 28/04/2016.
  *
@@ -13,8 +11,7 @@ public interface Trackable {
     /**
      * Add event to an objects current collection of events
      *
-     * @param type  the type of event to add
+     * @param event the event to add to study
      */
-     void addEvent(EventType type);
+    void addEvent(Event event);
 }
-

@@ -4,7 +4,6 @@ package uk.ac.ebi.spot.goci.model;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -369,12 +368,7 @@ public class Study implements Trackable {
         this.events = events;
     }
 
-    @Override public synchronized void addEvent(EventType eventType) {
-        // Create event
-        Event event = new Event();
-        event.setDate(new Date());
-        event.setEventType(eventType);
-
+    @Override public synchronized void addEvent(Event event) {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
