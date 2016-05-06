@@ -81,9 +81,9 @@ public class StudyOperationsService {
         study.setHousekeeping(studyHousekeeping);
         Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, user);
         study.addEvent(studyCreationEvent);
-        Study newStudy = studyRepository.save(study);
+        studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
-        return newStudy.getId();
+        return study.getId();
     }
 
     /**
