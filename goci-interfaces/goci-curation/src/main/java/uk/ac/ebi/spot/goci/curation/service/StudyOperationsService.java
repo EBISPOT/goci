@@ -1,14 +1,23 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.Event;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
+import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Collection;
 import java.util.Date;
@@ -27,20 +36,58 @@ public class StudyOperationsService {
     private MailService mailService;
     private HousekeepingRepository housekeepingRepository;
     private PublishStudyCheckService publishStudyCheckService;
+    private StudyRepository studyRepository;
+    private CuratorRepository curatorRepository;
+    private CurationStatusRepository curationStatusRepository;
+    private EventOperationsService eventOperationsService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
                                   MailService mailService,
                                   HousekeepingRepository housekeepingRepository,
-                                  PublishStudyCheckService publishStudyCheckService) {
+                                  PublishStudyCheckService publishStudyCheckService,
+                                  StudyRepository studyRepository,
+                                  CuratorRepository curatorRepository,
+                                  CurationStatusRepository curationStatusRepository,
+                                  EventOperationsService eventOperationsService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
         this.publishStudyCheckService = publishStudyCheckService;
+        this.studyRepository = studyRepository;
+        this.curatorRepository = curatorRepository;
+        this.curationStatusRepository = curationStatusRepository;
+        this.eventOperationsService = eventOperationsService;
+    }
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
     }
 
     /**
-     * Update a studies status
+     * Update a study status
+     *
+     * @param study Study to save
+     * @return ID of study to save
+     */
+    public Long saveStudy(Study study, SecureUser user) {
+
+        // Create housekeeping object
+        Housekeeping studyHousekeeping = createHousekeeping();
+
+        // Update and save study
+        study.setHousekeeping(studyHousekeeping);
+        Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, user);
+        study.addEvent(studyCreationEvent);
+        Study newStudy = studyRepository.save(study);
+        getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
+        return newStudy.getId();
+    }
+
+    /**
+     * Update a study status
      *
      * @param newStatus          New status to apply to study
      * @param study              Study to update
@@ -87,5 +134,31 @@ public class StudyOperationsService {
             housekeepingRepository.save(housekeeping);
         }
         return message;
+    }
+
+    /**
+     * Create study housekeeping
+     *
+     * @return Housekeeping object
+     */
+    private Housekeeping createHousekeeping() {
+        // Create housekeeping object and create the study added date
+        Housekeeping housekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        housekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
+        // Save housekeeping
+        housekeepingRepository.save(housekeeping);
+
+        // Save housekeeping
+        return housekeeping;
     }
 }
