@@ -8,6 +8,9 @@ import uk.ac.ebi.spot.goci.curation.model.CurrentUser;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+
 /**
  * Created by emma on 10/02/15.
  *
@@ -38,5 +41,17 @@ public class CurrentUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with email: " + email + " " +
                                                         "was not found");
         }
+    }
+
+    /**
+     * Update a study status
+     *
+     * @param request request from which to obtain current user
+     * @return SecureUser that represents currently logged in user
+     */
+    public SecureUser getUserFromRequest(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String name = principal.getName();
+        return secureUserRepository.findByEmail(name);
     }
 }
