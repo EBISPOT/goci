@@ -31,7 +31,7 @@ public class SecureUser {
     @OneToOne
     private SecureRole role;
 
-    @OneToMany(mappedBy = "secureUser")
+    @OneToMany(mappedBy = "user")
     private Collection<Event> events;
 
     // JPA no-args constructor
