@@ -17,37 +17,37 @@ public class TranslateUploadHeaders {
         value = value.toLowerCase();
         UploadFileHeader enumValue;
 
-        if (value.startsWith("snp id")) {
+        if (value.equals("snp id(ideally rsid)(mandatory)")) {
             enumValue = UploadFileHeader.SNP_ID;
         }
-        else if (value.startsWith("chr")) {
+        else if (value.equals("chr(optional)")) {
             enumValue = UploadFileHeader.CHR;
         }
-        else if (value.startsWith("bp")) {
+        else if (value.equals("bp(optional)")) {
             enumValue = UploadFileHeader.BP;
         }
-        else if (value.startsWith("genome")) {
+        else if (value.equals("genome build(optional)")) {
             enumValue = UploadFileHeader.GENOME_BUILD;
         }
-        else if (value.startsWith("effect allele")) {
+        else if (value.equals("effect allele(optional)")) {
             enumValue = UploadFileHeader.EFFECT_ALLELE;
         }
-        else if (value.startsWith("other alleles")) {
+        else if (value.equals("other alleles(optional)")) {
             enumValue = UploadFileHeader.OTHER_ALLELES;
         }
-        else if (value.startsWith("effect allele frequency in controls")) {
+        else if (value.startsWith("effect allele frequency")) {
             enumValue = UploadFileHeader.EFFECT_ALLELE_FREQUENCY_IN_CONTROLS;
         }
-        else if (value.startsWith("p-value mantissa")) {
+        else if (value.equals("p-value mantissa(mandatory)")) {
             enumValue = UploadFileHeader.PVALUE_MANTISSA;
         }
-        else if (value.startsWith("p-value exponent")) {
+        else if (value.equals("p-value exponent(mandatory)")) {
             enumValue = UploadFileHeader.PVALUE_EXPONENT;
         }
-        else if (value.startsWith("or")) {
+        else if (value.equals("or(optional)")) {
             enumValue = UploadFileHeader.OR;
         }
-        else if (value.startsWith("beta")) {
+        else if (value.equals("beta(optional)")) {
             enumValue = UploadFileHeader.BETA;
         }
         else if (value.startsWith("beta unit")) {
@@ -56,19 +56,18 @@ public class TranslateUploadHeaders {
         else if (value.startsWith("beta direction")) {
             enumValue = UploadFileHeader.BETA_DIRECTION;
         }
-        else if (value.startsWith("OR/beta SE")) {
+        else if (value.equals("or/beta se(optional)")) {
             enumValue = UploadFileHeader.STANDARD_ERROR;
         }
-        else if (value.startsWith("OR/beta range")) {
+        else if (value.startsWith("or/beta range")) {
             enumValue = UploadFileHeader.RANGE;
         }
-        else if (value.startsWith("Association description")) {
+        else if (value.equals("association description(optional)")) {
             enumValue = UploadFileHeader.PVALUE_DESCRIPTION;
         }
         else {
             enumValue = UploadFileHeader.UNKNOWN;
         }
-
         return enumValue;
     }
 }
