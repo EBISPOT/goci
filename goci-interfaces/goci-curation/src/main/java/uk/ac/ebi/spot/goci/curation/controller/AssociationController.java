@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
@@ -29,8 +26,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
-import uk.ac.ebi.spot.goci.model.AssociationValidationError;
-import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
@@ -39,7 +34,6 @@ import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
-import uk.ac.ebi.spot.goci.curation.service.batchloader.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -55,7 +49,6 @@ import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,7 +80,6 @@ public class AssociationController {
     private LocusRepository locusRepository;
 
     // Services
-    private AssociationBatchLoaderService associationBatchLoaderService;
     private AssociationDownloadService associationDownloadService;
     private AssociationViewService associationViewService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
@@ -109,7 +101,6 @@ public class AssociationController {
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
                                  LocusRepository locusRepository,
-                                 AssociationBatchLoaderService associationBatchLoaderService,
                                  AssociationDownloadService associationDownloadService,
                                  AssociationViewService associationViewService,
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -123,7 +114,6 @@ public class AssociationController {
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.locusRepository = locusRepository;
-        this.associationBatchLoaderService = associationBatchLoaderService;
         this.associationDownloadService = associationDownloadService;
         this.associationViewService = associationViewService;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
@@ -173,7 +163,7 @@ public class AssociationController {
     }
 
 
-    // Upload a spreadsheet of snp association information
+/*    // Upload a spreadsheet of snp association information
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
@@ -273,7 +263,7 @@ public class AssociationController {
             return "empty_snpfile_upload_warning";
         }
         return "redirect:/studies/" + studyId + "/associations";
-    }
+    }*/
 
     // Generate a empty form page to add standard snp
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
