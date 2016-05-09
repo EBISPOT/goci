@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
+import uk.ac.ebi.spot.goci.utils.UploadFileHeader;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,7 +23,7 @@ public interface UploadSheetProcessor {
      *
      * @param row XLSX row created from a file supplied by user
      */
-    Map<Integer, String> createHeaderMap(XSSFRow row);
+    Map<Integer, UploadFileHeader> createHeaderMap(XSSFRow row);
 
     /**
      * Create a map of each header so as we read the file we can determine which value is being read
