@@ -117,6 +117,11 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                                                   .getString()
                                                                   .trim());
                             break;
+                        case PVALUE_DESCRIPTION:
+                            associationUploadRow.setPvalueDescription(cell.getRichStringCellValue()
+                                                                  .getString()
+                                                                  .trim());
+                            break;
                         default:
                             getLog().warn("Column with unknown heading found in file.");
                             break;

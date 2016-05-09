@@ -18,12 +18,12 @@ public enum UploadFileHeader {
     GENES,
     PVALUE_MANTISSA,
     PVALUE_EXPONENT,
+    PVALUE_DESCRIPTION,
     OR,
     BETA,
     BETA_UNIT,
     BETA_DIRECTION,
     STANDARD_ERROR,
     RANGE,
-    DESCRIPTION,
     UNKNOWN
 }

@@ -63,7 +63,7 @@ public class TranslateUploadHeaders {
             enumValue = UploadFileHeader.RANGE;
         }
         else if (value.startsWith("Association description")) {
-            enumValue = UploadFileHeader.DESCRIPTION;
+            enumValue = UploadFileHeader.PVALUE_DESCRIPTION;
         }
         else {
             enumValue = UploadFileHeader.UNKNOWN;
