@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
+import uk.ac.ebi.spot.goci.curation.model.CurrentUser;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -50,6 +52,7 @@ import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,10 +86,11 @@ public class StudyController {
     private EthnicityRepository ethnicityRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
 
-    // Pubmed ID lookup service
+    // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
+    private CurrentUserDetailsService currentUserDetailsService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -109,7 +113,8 @@ public class StudyController {
                            UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
-                           MappingDetailsService mappingDetailsService) {
+                           MappingDetailsService mappingDetailsService,
+                           CurrentUserDetailsService currentUserDetailsService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -123,6 +128,7 @@ public class StudyController {
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
+        this.currentUserDetailsService = currentUserDetailsService;
     }
 
     /* All studies and various filtered lists */
@@ -450,7 +456,6 @@ public class StudyController {
     }
 
 
-
    /* New Study*/
 
     // Add a new study
@@ -468,7 +473,8 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) throws PubmedImportException {
+    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request)
+            throws PubmedImportException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
@@ -479,25 +485,23 @@ public class StudyController {
             throw new PubmedImportException();
         }
 
-        // Pass to importer
-        Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-
-        // Create housekeeping object
-        Housekeeping studyHousekeeping = createHousekeeping();
-
-        // Update and save study
-        importedStudy.setHousekeeping(studyHousekeeping);
-
-        // Save new study
-        studyRepository.save(importedStudy);
-        return "redirect:/studies/" + importedStudy.getId();
+        else {
+            // Pass to importer
+            Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+            Long studyId = studyOperationsService.saveStudy(importedStudy,
+                                                            currentUserDetailsService.getUserFromRequest(request));
+            return "redirect:/studies/" + studyId;
+        }
     }
 
 
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
+    public String addStudy(@Valid @ModelAttribute Study study,
+                           BindingResult bindingResult,
+                           Model model,
+                           HttpServletRequest request) {
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -509,17 +513,11 @@ public class StudyController {
             return "add_study";
         }
 
-        // Create housekeeping object
-        Housekeeping studyHousekeeping = createHousekeeping();
-
-        // Update and save study
-        study.setHousekeeping(studyHousekeeping);
-        Study newStudy = studyRepository.save(study);
-
-        return "redirect:/studies/" + newStudy.getId();
+        Long studyId = studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
+        return "redirect:/studies/" + studyId;
     }
 
-   /* Exitsing study*/
+   /* Existing study*/
 
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -610,7 +608,7 @@ public class StudyController {
         return "redirect:/studies";
     }
 
-    // Duplicate a study
+/*    // Duplicate a study
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
 
@@ -637,13 +635,13 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-       // Add duplicate message
+        // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
         return "redirect:/studies/" + duplicateStudy.getId();
-    }
+    }*/
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
@@ -818,7 +816,8 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
+        model.addAttribute("mappingDetails",
+                           mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
 
         return "study_housekeeping";
     }
@@ -826,26 +825,6 @@ public class StudyController {
 
     /* General purpose methods */
 
-    private Housekeeping createHousekeeping() {
-        // Create housekeeping object and create the study added date
-        Housekeeping housekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        housekeeping.setStudyAddedDate(studyAddedDate);
-
-        // Set status
-        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
-        housekeeping.setCurationStatus(status);
-
-        // Set curator
-        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
-        housekeeping.setCurator(curator);
-
-        // Save housekeeping
-        housekeepingRepository.save(housekeeping);
-
-        // Save housekeeping
-        return housekeeping;
-    }
 
     private Study copyStudy(Study studyToDuplicate) {
 
@@ -879,7 +858,7 @@ public class StudyController {
         Collection<Platform> platforms = studyToDuplicate.getPlatforms();
         Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
 
-        if(platforms != null && !platforms.isEmpty()){
+        if (platforms != null && !platforms.isEmpty()) {
             platformsDuplicateStudy.addAll(platforms);
             duplicateStudy.setPlatforms(platformsDuplicateStudy);
         }
@@ -977,10 +956,8 @@ public class StudyController {
 
     //Platforms
     @ModelAttribute("platforms")
-//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    //    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
     public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
-
-
 
 
     // Curation statuses
@@ -1011,7 +988,7 @@ public class StudyController {
     }
 
     @ModelAttribute("qualifiers")
-    public List<String> populateQualifierOptions(Model model){
+    public List<String> populateQualifierOptions(Model model) {
         List<String> qualifierOptions = new ArrayList<>();
         qualifierOptions.add("up to");
         qualifierOptions.add("at least");
@@ -1091,13 +1068,13 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
 
-//    private Sort sortByPlatformAsc() {
-//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
-//    }
-//
-//    private Sort sortByPlatformDesc() {
-//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
-//    }
+    //    private Sort sortByPlatformAsc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+    //    }
+    //
+    //    private Sort sortByPlatformDesc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+    //    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
