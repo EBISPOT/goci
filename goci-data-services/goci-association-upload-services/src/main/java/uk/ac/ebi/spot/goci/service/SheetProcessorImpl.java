@@ -6,9 +6,12 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.utils.SheetCellProcessingService;
+import uk.ac.ebi.spot.goci.utils.TranslateUploadHeaders;
+import uk.ac.ebi.spot.goci.utils.UploadFileHeader;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +27,8 @@ import java.util.Map;
 @Service
 public class SheetProcessorImpl implements UploadSheetProcessor {
 
+    private TranslateUploadHeaders translateUploadHeaders;
+
     // Logging
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -31,11 +36,16 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
         return log;
     }
 
+    @Autowired
+    public SheetProcessorImpl(TranslateUploadHeaders translateUploadHeaders) {
+        this.translateUploadHeaders = translateUploadHeaders;
+    }
+
     // Read and parse uploaded spreadsheet
     @Override public Collection<AssociationUploadRow> readSheetRows(XSSFSheet sheet) {
 
         XSSFRow headerRow = sheet.getRow(0);
-        Map<Integer, String> headerRowMap = createHeaderMap(headerRow);
+        Map<Integer, UploadFileHeader> headerRowMap = createHeaderMap(headerRow);
 
         // Create collection to store all newly created rows
         Collection<AssociationUploadRow> associationUploadRows = new ArrayList<>();
@@ -43,100 +53,88 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
         Integer rowNum = 1;
 
         while (rowNum <= lastRow) {
-
             AssociationUploadRow associationUploadRow = new AssociationUploadRow();
             associationUploadRow.setRowNumber(rowNum);
+            int blankCellCount = 0;
+            XSSFRow row = sheet.getRow(rowNum);
 
-            for (Map.Entry<Integer, String> heading : headerRowMap.entrySet()) {
+            for (Map.Entry<Integer, UploadFileHeader> heading : headerRowMap.entrySet()) {
                 Integer colNum = heading.getKey();
-                String headerName = heading.getValue();
-                XSSFRow row = sheet.getRow(rowNum);
+                UploadFileHeader headerName = heading.getValue();
                 XSSFCell cell = row.getCell(colNum, Row.RETURN_BLANK_AS_NULL);
 
-                switch (headerName) {
-                    case "SNP ID":
-                        if (cell != null) {
+                if (cell == null) {
+                    blankCellCount++;
+                }
+                else {
+                    switch (headerName) {
+                        case SNP_ID:
                             associationUploadRow.setSnp(cell.getRichStringCellValue()
                                                                 .getString()
                                                                 .trim());
-                        }
-                        break;
-                    case "effect allele":
-                        if (cell != null) {
+                            break;
+                        case EFFECT_ALLELE:
                             associationUploadRow.setStrongestAllele(cell.getRichStringCellValue()
                                                                             .getString()
                                                                             .trim());
-                        }
-                        break;
-                    case "other allele":
-                        if (cell != null) {
+                            break;
+                        case OTHER_ALLELES:
                             associationUploadRow.setOtherAllele(cell.getRichStringCellValue()
                                                                         .getString()
                                                                         .trim());
-                        }
-                        break;
-                    case "effect allele frequency in controls":
-                        if (cell != null) {
+                            break;
+                        case EFFECT_ALLELE_FREQUENCY_IN_CONTROLS:
                             associationUploadRow.setAssociationRiskFrequency(SheetCellProcessingService.processStringValue(
                                     cell));
-                        }
-                        break;
-                    case "gene":
-                        if (cell != null) {
-                            associationUploadRow.setAuthorReportedGene(cell.getRichStringCellValue()
-                                                                               .getString()
-                                                                               .trim());
-                        }
-                        break;
-                    case "p-value mantissa":
-                        associationUploadRow.setPvalueMantissa(SheetCellProcessingService.processIntValues(cell));
-                        break;
-                    case "p-value exponent":
-                        associationUploadRow.setPvalueExponent(SheetCellProcessingService.processIntValues(cell));
-                        break;
-                    case "OR":
-                        associationUploadRow.setOrPerCopyNum(SheetCellProcessingService.processFloatValues(cell));
-                        break;
-                    case "beta":
-                        associationUploadRow.setBetaNum(SheetCellProcessingService.processFloatValues(cell));
-                        break;
-                    case "beta unit":
-                        if (cell != null) {
+                            break;
+                        case PVALUE_MANTISSA:
+                            associationUploadRow.setPvalueMantissa(SheetCellProcessingService.processIntValues(cell));
+                            break;
+                        case PVALUE_EXPONENT:
+                            associationUploadRow.setPvalueExponent(SheetCellProcessingService.processIntValues(cell));
+                            break;
+                        case OR:
+                            associationUploadRow.setOrPerCopyNum(SheetCellProcessingService.processFloatValues(cell));
+                            break;
+                        case BETA:
+                            associationUploadRow.setBetaNum(SheetCellProcessingService.processFloatValues(cell));
+                            break;
+                        case BETA_UNIT:
                             associationUploadRow.setBetaUnit(cell.getRichStringCellValue()
                                                                      .getString()
                                                                      .trim());
-                        }
-                        break;
-                    case "beta direction":
-                        if (cell != null) {
+                            break;
+                        case BETA_DIRECTION:
                             associationUploadRow.setBetaDirection(cell.getRichStringCellValue()
                                                                           .getString()
                                                                           .trim());
-                        }
-                        break;
-                    case "OR/beta SE":
-                        associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(cell));
-                        break;
-                    case "OR/beta range":
-                        if (cell != null) {
+                            break;
+                        case STANDARD_ERROR:
+                            associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(cell));
+                            break;
+                        case RANGE:
                             associationUploadRow.setRange(cell.getRichStringCellValue()
                                                                   .getString()
                                                                   .trim());
-                        }
-                        break;
-                    default:
-                        getLog().warn("Column with heading " + headerName + " found in file.");
-                        break;
+                            break;
+                        default:
+                            getLog().warn("Column with unknown heading found in file.");
+                            break;
+                    }
                 }
             }
-            associationUploadRows.add(associationUploadRow);
+
+            // If all cells in line aren't blank
+            if (blankCellCount != row.getPhysicalNumberOfCells()) {
+                associationUploadRows.add(associationUploadRow);
+            }
             rowNum++;
         }
         return associationUploadRows;
     }
 
-    @Override public Map<Integer, String> createHeaderMap(XSSFRow row) {
-        Map<Integer, String> headerMap = new HashMap<>();
+    @Override public Map<Integer, UploadFileHeader> createHeaderMap(XSSFRow row) {
+        Map<Integer, UploadFileHeader> headerMap = new HashMap<>();
 
         if (row.getPhysicalNumberOfCells() != 0) {
 
@@ -144,7 +142,9 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
             short maxColIx = row.getLastCellNum();
             for (short colIx = minColIx; colIx < maxColIx; colIx++) {
                 XSSFCell cell = row.getCell(colIx);
-                headerMap.put((int) colIx, cell.getStringCellValue());
+                UploadFileHeader headerType =
+                        translateUploadHeaders.translateToEnumValue(cell.getStringCellValue().trim());
+                headerMap.put((int) colIx, headerType);
             }
         }
         else {
