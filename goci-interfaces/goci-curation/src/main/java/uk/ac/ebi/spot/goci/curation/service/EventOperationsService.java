@@ -35,7 +35,7 @@ public class EventOperationsService {
     public synchronized Event createEvent(EventType eventType, SecureUser user) {
         // Create and save event
         Event event = new Event();
-        event.setDate(new Date());
+        event.setEventDate(new Date());
         event.setEventType(eventType);
         event.setUser(user);
         eventRepository.save(event);
