@@ -11,10 +11,10 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
@@ -57,11 +57,10 @@ public class ValidatorApplication {
 
     public static void main(String... args) {
         System.out.println("Starting association validator service...");
-        ApplicationContext ctx = SpringApplication.run(ValidatorApplication.class, args);
-        int code = SpringApplication.exit(ctx, () -> exitCode);
-        if (code > 0) {
-            System.exit(code);
-        }
+        SpringApplication app = new SpringApplication(ValidatorApplication.class);
+        app.setBannerMode(Banner.Mode.OFF);
+        app.setLogStartupInfo(false);
+        app.run(args);
     }
 
     @Bean CommandLineRunner run() {
