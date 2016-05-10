@@ -61,6 +61,7 @@ public class ValidatorApplication {
         app.setBannerMode(Banner.Mode.OFF);
         app.setLogStartupInfo(false);
         app.run(args);
+        System.exit(exitCode);
     }
 
     @Bean CommandLineRunner run() {
