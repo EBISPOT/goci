@@ -26,7 +26,7 @@ public class FilteringService {
     }
 
     public Map<String, List<FilterAssociation>> sortByBPLocation(Map<String, List<FilterAssociation>> byChrom){
-        Map<String, List<FilterAssociation>> byBPLocation = new HashMap<String, List<FilterAssociation>>();
+        Map<String, List<FilterAssociation>> byBPLocation = new HashMap<>();
         byChrom.forEach((k, v) -> {
             List<FilterAssociation> byChromBP = v.stream()
                     .sorted((v1, v2) -> Integer.compare(v1.getChromosomePosition(), v2.getChromosomePosition()))
@@ -70,44 +70,85 @@ public class FilteringService {
 
                         if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
                             current.setIsTopAssociation(true);
+//                            filtered.add(current);
                         }
                         else if (distToPrev == null && distToNext != null && distToNext > 100000) {
                             current.setIsTopAssociation(true);
+//                            filtered.add(current);
                         }
                         else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
                             current.setIsTopAssociation(true);
+//                            filtered.add(current);
+                        }
+                        else if (distToPrev != null && distToPrev < 100000 && !(associations.get(i-1).getPvalueExponent() < -5)
+                                && ((distToNext != null && distToNext > 100000) || distToNext == null)){
+                            current.setIsTopAssociation(true);
                         }
                         else if (distToNext != null && distToNext < 100000) {
-                            FilterAssociation next = associations.get(i + 1);
-                            Integer cpe = current.getPvalueExponent();
-                            Integer npe = next.getPvalueExponent();
-                            //TO DO: what if two associations in LD have the same p-value???
-                            if (cpe == npe) {
-                                Integer cpm = current.getPvalueMantissa();
-                                Integer npm = next.getPvalueMantissa();
+                            int j = i;
+                            boolean end = false;
 
-                                if (cpm < npm) {
-                                    current.setIsTopAssociation(true);
+                            List<FilterAssociation> ldBlock = new ArrayList<>();
+                            ldBlock.add(current);
+
+                            while (!end){
+                                FilterAssociation a = associations.get(j);
+                                FilterAssociation b = associations.get(j+1);
+
+                                Integer dist = b.getChromosomePosition() - a.getChromosomePosition();
+
+                                if(dist < 100000){
+                                    ldBlock.add(b);
+                                    j++;
                                 }
                                 else {
-                                    next.setIsTopAssociation(true);
-                                    current.setIsTopAssociation(false);
+                                    end = true;
+                                }
+
+                                if(j == associations.size()-1){
+                                    end = true;
                                 }
                             }
-                            else if (cpe < npe) {
-                                current.setIsTopAssociation(true);
+
+
+                            FilterAssociation mostSignificant;
+                            if(ldBlock.size() > 1) {
+                                List<FilterAssociation> byPval = ldBlock.stream()
+                                        .sorted((fa1, fa2) -> Integer.compare(fa1.getPvalueExponent(),
+                                                                              fa2.getPvalueExponent()))
+                                        .collect(Collectors.toList());
+
+
+                                mostSignificant = byPval.get(0);
+
+                                for (int k = 1; k < byPval.size(); k++) {
+                                    FilterAssociation fa = byPval.get(k);
+                                    if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
+                                        if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
+                                            mostSignificant = fa;
+                                        }
+                                    }
+                                    else {
+                                        break;
+                                    }
+                                }
                             }
                             else {
-                                next.setIsTopAssociation(true);
-                                current.setIsTopAssociation(false);
+                                mostSignificant = ldBlock.get(0);
                             }
+                            if(mostSignificant.getPvalueExponent() < -5) {
+                                mostSignificant.setIsTopAssociation(true);
+                            }
+
+                            i = j;
                         }
                     }
+//                    else {
+//                        System.out.println(current.getStrongestAllele() + "\t" + current.getPvalueExponent());
+//                    }
                     i++;
-                    filtered.add(current);
-
                 }
-
+                filtered.addAll(associations);
             }
         });
 

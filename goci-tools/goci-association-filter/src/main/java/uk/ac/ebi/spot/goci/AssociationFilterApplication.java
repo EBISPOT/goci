@@ -213,7 +213,7 @@ public class AssociationFilterApplication {
         for(int i = 0; i < data.length; i++){
             Integer rowNumber = Integer.parseInt(data[i][0]);
             String strongestAllele = data[i][1];
-            Integer pvalueMantissa = Integer.parseInt(data[i][2]);
+            Double pvalueMantissa = Double.parseDouble(data[i][2]);
             Integer pvalueExponent = Integer.parseInt(data[i][3]);
             String chromosomeName = data[i][4];
             String chromosomePosition  = data[i][5];

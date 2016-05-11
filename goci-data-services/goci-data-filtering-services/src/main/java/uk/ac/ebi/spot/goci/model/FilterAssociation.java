@@ -9,9 +9,7 @@ public class FilterAssociation {
 
     private String strongestAllele = null;
 
-//    private String snp = null;
-
-    private Integer pvalueMantissa = null;
+    private Double pvalueMantissa = null;
 
     private Integer pvalueExponent = null;
 
@@ -23,7 +21,7 @@ public class FilterAssociation {
 
     public FilterAssociation(Integer rowNumber,
                              String strongestAllele,
-                             Integer pvalueMantissa,
+                             Double pvalueMantissa,
                              Integer pvalueExponent,
                              String chromosomeName,
                              String chromosomePosition){
@@ -51,15 +49,11 @@ public class FilterAssociation {
         this.strongestAllele = strongestAllele;
     }
 
-//   n public void setSnp(String snp) {
-//        this.snp = snp;
-//    }
-
-    public Integer getPvalueMantissa() {
+    public Double getPvalueMantissa() {
         return pvalueMantissa;
     }
 
-    public void setPvalueMantissa(Integer pvalueMantissa) {
+    public void setPvalueMantissa(Double pvalueMantissa) {
         this.pvalueMantissa = pvalueMantissa;
     }
 
