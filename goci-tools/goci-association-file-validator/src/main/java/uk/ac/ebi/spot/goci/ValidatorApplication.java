@@ -101,22 +101,15 @@ public class ValidatorApplication {
         Options options = new Options();
 
         // help
-        Option helpOption = new Option("h", "help", false, "Use -v option to upload and validate your file");
+        Option helpOption = new Option("h",
+                                       "help",
+                                       false,
+                                       "Use -a run author submission validation of your file, use -c to run curation level validation");
         options.addOption(helpOption);
 
         // options are...
         OptionGroup modeGroup = new OptionGroup();
         modeGroup.setRequired(true);
-
-        Option validatorOptions = new Option(
-                "v",
-                "validate",
-                false,
-                "Validate supplied file");
-
-        validatorOptions.setRequired(true);
-        modeGroup.addOption(validatorOptions);
-        options.addOptionGroup(modeGroup);
 
         OptionGroup validationGroup = new OptionGroup();
         modeGroup.setRequired(true);
@@ -180,12 +173,6 @@ public class ValidatorApplication {
                                                " (" + opt.getArgName() + ")");
                 }
 
-                // required options
-                if (cl.hasOption("v")) {
-                    this.opMode = OperationMode.RUN;
-                }
-
-
                 // file options
                 if (cl.hasOption("f")) {
                     this.inputFile = new File(cl.getOptionValue("f"));
@@ -194,10 +181,12 @@ public class ValidatorApplication {
                 // set validation level
                 if (cl.hasOption("a")) {
                     this.validationLevel = "author";
+                    this.opMode = OperationMode.RUN;
                 }
 
                 if (cl.hasOption("c")) {
                     this.validationLevel = "full";
+                    this.opMode = OperationMode.RUN;
                 }
             }
         }
