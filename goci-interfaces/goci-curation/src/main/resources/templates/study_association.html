@@ -39,6 +39,14 @@
             src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css"/>
+
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
 </head>
 <body>
 
@@ -89,34 +97,6 @@
                 <br/>
                 <caption id="total" th:text="'Total number of SNP associations = '+ ${totalAssociations}"></caption>
                 <thead>
-                <tr>
-                    <th></th>
-                    <th><a class="toggle-vis" data-column="1"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="2"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="3"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="4"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="5"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="6"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="7"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="8"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="9"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="10"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="11"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="12"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="13"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="14"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="15"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="16"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="17"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="18"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="19"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="20"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="21"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="22"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="23"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th><a class="toggle-vis" data-column="24"><i class="fa fa-compress fa-lg"></i></a></th>
-                    <th></th>
-                </tr>
                 <tr>
                     <th style="font-size: small">Edit</th>
                     <th style="font-size: small">Gene(s)</th>
@@ -523,22 +503,16 @@
 <script>
     $(document).ready(function() {
         var table = $('#mainTable').DataTable({
-                                                  "info": false,
-                                                  "paging": false,
-                                                  "columnDefs": [
-                                                      {'bSortable': false, 'targets': [0, 25]}
+                                                  info: false,
+                                                  paging: false,
+                                                  dom: 'Bfrtip',
+                                                  buttons: [
+                                                      {
+                                                          extend: 'colvis',
+                                                          columns: ':gt(0)'
+                                                      }
                                                   ]
                                               });
-
-        $('a.toggle-vis').on('click', function(e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column = table.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column.visible(!column.visible());
-        });
     });
 </script>
 
