@@ -41,7 +41,6 @@ public class StudyOperationsService {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private EventOperationsService eventOperationsService;
-    private StudyFileService studyFileService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -51,8 +50,7 @@ public class StudyOperationsService {
                                   StudyRepository studyRepository,
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
-                                  EventOperationsService eventOperationsService,
-                                  StudyFileService studyFileService) {
+                                  EventOperationsService eventOperationsService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -61,7 +59,6 @@ public class StudyOperationsService {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.eventOperationsService = eventOperationsService;
-        this.studyFileService = studyFileService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -86,6 +83,9 @@ public class StudyOperationsService {
         Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, user);
         study.addEvent(studyCreationEvent);
         studyRepository.save(study);
+        // test orphan removal
+        study.setHousekeeping(createHousekeeping());
+
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
         return study;
     }
