@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -40,6 +41,7 @@ public class StudyOperationsService {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private EventOperationsService eventOperationsService;
+    private StudyFileService studyFileService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -49,7 +51,8 @@ public class StudyOperationsService {
                                   StudyRepository studyRepository,
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
-                                  EventOperationsService eventOperationsService) {
+                                  EventOperationsService eventOperationsService,
+                                  StudyFileService studyFileService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -58,6 +61,7 @@ public class StudyOperationsService {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.eventOperationsService = eventOperationsService;
+        this.studyFileService = studyFileService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -72,7 +76,7 @@ public class StudyOperationsService {
      * @param study Study to save
      * @return ID of study to save
      */
-    public Long saveStudy(Study study, SecureUser user) {
+    public Study saveStudy(Study study, SecureUser user) {
 
         // Create housekeeping object
         Housekeeping studyHousekeeping = createHousekeeping();
@@ -83,7 +87,7 @@ public class StudyOperationsService {
         study.addEvent(studyCreationEvent);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
-        return study.getId();
+        return study;
     }
 
     /**
