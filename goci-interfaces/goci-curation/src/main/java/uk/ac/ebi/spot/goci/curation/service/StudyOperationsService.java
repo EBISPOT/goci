@@ -75,17 +75,11 @@ public class StudyOperationsService {
      */
     public Study saveStudy(Study study, SecureUser user) {
 
-        // Create housekeeping object
-        Housekeeping studyHousekeeping = createHousekeeping();
-
         // Update and save study
-        study.setHousekeeping(studyHousekeeping);
+        study.setHousekeeping(createHousekeeping());
         Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, user);
         study.addEvent(studyCreationEvent);
         studyRepository.save(study);
-        // test orphan removal
-        study.setHousekeeping(createHousekeeping());
-
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
         return study;
     }
