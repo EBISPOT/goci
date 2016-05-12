@@ -9,12 +9,14 @@ import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
@@ -66,6 +68,8 @@ public class StudyOperationServiceTest {
     private EventOperationsService eventOperationsService;
 
     private StudyOperationsService studyOperationsService;
+
+    private static final SecureUser SECURE_USER = new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
     private static final CurationStatus NEW_STATUS1 =
             new CurationStatusBuilder().setId(804L).setStatus("Level 1 curation done").build();
@@ -119,7 +123,8 @@ public class StudyOperationServiceTest {
     @Test
     public void testUpdateStatus() {
         // Test changing status
-        studyOperationsService.updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS3, STU1, CURRENT_STATUS1,
+                                            SECURE_USER);
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
         assertEquals("Study status must be " + NEW_STATUS3.getStatus(),
                      STU1.getHousekeeping().getCurationStatus(),
@@ -130,7 +135,8 @@ public class StudyOperationServiceTest {
     public void testUpdateStatusToLevelOneCurationDone() {
 
         // Test changing status to "Level 1 curation done"
-        studyOperationsService.updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS1, STU1, CURRENT_STATUS1,
+                                            SECURE_USER);
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS1.getStatus());
         verify(housekeepingRepository, times(1)).save(HOUSEKEEPING1);
         assertEquals("Study status must be " + NEW_STATUS1.getStatus(),
@@ -151,7 +157,8 @@ public class StudyOperationServiceTest {
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
 
         // Test changing status to "Publish study"
-        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1,
+                                            SECURE_USER);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
@@ -174,7 +181,8 @@ public class StudyOperationServiceTest {
                 "No EFO trait assigned and some SNP associations have not been approved for study");
 
         // Test changing status to "Publish study" where SNPs are unapproved
-        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1);
+        studyOperationsService.updateStatus(NEW_STATUS2, STU1, CURRENT_STATUS1,
+                                            SECURE_USER);
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService, never()).sendEmailNotification(STU1, NEW_STATUS2.getStatus());
