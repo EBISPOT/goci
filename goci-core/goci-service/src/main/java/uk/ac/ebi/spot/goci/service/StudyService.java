@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -208,10 +209,29 @@ public class StudyService {
     public void deepLoadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        int snpCount = study.getSingleNucleotidePolymorphisms().size();
+//        int snpCount = study.getSingleNucleotidePolymorphisms().size();
         int platformCount = study.getPlatforms().size();
 
-        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
+        Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+        study.getAssociations().forEach(
+                association -> {
+                    association.getLoci().forEach(
+                            locus -> {
+                                locus.getStrongestRiskAlleles().forEach(
+                                        riskAllele -> {
+                                            snps.add(riskAllele.getSnp());
+                                        }
+                                );
+                            }
+                    );
+                }
+        );
+        int snpCount = snps.size();
+
+
+//        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
+        for (SingleNucleotidePolymorphism snp : snps) {
+
             int locationCount = snp.getLocations().size();
             getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
 

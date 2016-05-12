@@ -95,11 +95,11 @@ public class Study {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-    @ManyToMany
-    @JoinTable(name = "STUDY_SNP",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
+//    @ManyToMany
+//    @JoinTable(name = "STUDY_SNP",
+//               joinColumns = @JoinColumn(name = "STUDY_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
     private Housekeeping housekeeping;
@@ -130,7 +130,7 @@ public class Study {
                  String studyDesignComment,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
-                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+//                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Collection<Ethnicity> ethnicities,
                  Housekeeping housekeeping) {
         this.author = author;
@@ -151,7 +151,7 @@ public class Study {
         this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
     }
@@ -276,13 +276,13 @@ public class Study {
         this.efoTraits = efoTraits;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-        return singleNucleotidePolymorphisms;
-    }
-
-    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-    }
+//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+//        return singleNucleotidePolymorphisms;
+//    }
+//
+//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//    }
 
     public Housekeeping getHousekeeping() {
         return housekeeping;

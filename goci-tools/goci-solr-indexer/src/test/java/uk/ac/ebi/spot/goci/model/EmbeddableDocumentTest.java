@@ -53,7 +53,7 @@ public class EmbeddableDocumentTest {
                                "study design comment",
                                null,
                                Collections.<EfoTrait>emptyList(),
-                               Collections.<SingleNucleotidePolymorphism>emptyList(),
+//                               Collections.<SingleNucleotidePolymorphism>emptyList(),
                                Collections.<Ethnicity>emptyList(),
                                h);
 
