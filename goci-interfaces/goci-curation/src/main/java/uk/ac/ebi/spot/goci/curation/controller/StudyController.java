@@ -713,7 +713,7 @@ public class StudyController {
                     method = RequestMethod.POST)
     public String assignStudyStatus(@PathVariable Long studyId,
                                     @ModelAttribute StatusAssignment statusAssignment,
-                                    RedirectAttributes redirectAttributes) {
+                                    RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
@@ -730,7 +730,7 @@ public class StudyController {
             CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
             // Handles status change
-            String studySnpsNotApproved = studyOperationsService.updateStatus(status, study, currentStudyStatus);
+            String studySnpsNotApproved = studyOperationsService.updateStatus(status, study, currentStudyStatus, currentUserDetailsService.getUserFromRequest(request));
             study.getHousekeeping().setLastUpdateDate(new Date());
             studyRepository.save(study);
 
@@ -773,7 +773,7 @@ public class StudyController {
                     method = RequestMethod.POST)
     public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping,
                                           @PathVariable Long studyId,
-                                          RedirectAttributes redirectAttributes) {
+                                          RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
 
         // Establish linked study
@@ -788,7 +788,8 @@ public class StudyController {
 
         // Update status
         String message =
-                studyOperationsService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus);
+                studyOperationsService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus,
+                                                    currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         if (message == null) {
