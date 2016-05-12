@@ -489,7 +489,7 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request)
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request, Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
@@ -504,9 +504,20 @@ public class StudyController {
         else {
             // Pass to importer
             Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-            Long studyId = studyOperationsService.saveStudy(importedStudy,
+            Study savedStudy= studyOperationsService.saveStudy(importedStudy,
                                                             currentUserDetailsService.getUserFromRequest(request));
-            return "redirect:/studies/" + studyId;
+
+            // Create directory to store associated files
+            try {
+                studyFileService.createStudyDir(savedStudy.getId());
+            }
+            catch (NoStudyDirectoryException e) {
+                getLog().error("No study directory exception");
+                model.addAttribute("study", savedStudy);
+                return "error_pages/study_dir_failure";
+            }
+
+            return "redirect:/studies/" + savedStudy.getId();
         }
     }
 
@@ -530,8 +541,17 @@ public class StudyController {
             return "add_study";
         }
 
-        Long studyId = studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
-        return "redirect:/studies/" + studyId;
+        Study savedStudy = studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
+        // Create directory to store associated files
+        try {
+            studyFileService.createStudyDir(savedStudy.getId());
+        }
+        catch (NoStudyDirectoryException e) {
+            getLog().error("No study directory exception");
+            model.addAttribute("study", savedStudy);
+            return "error_pages/study_dir_failure";
+        }
+        return "redirect:/studies/" + savedStudy.getId();
     }
 
    /* Existing study*/
