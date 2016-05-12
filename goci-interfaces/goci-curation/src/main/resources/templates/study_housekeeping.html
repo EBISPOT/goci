@@ -17,20 +17,8 @@
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
 
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li class="active"><a href="#">Curator Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
-
-        </ul>
-    </div>
-</div>
-
-<br/>
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <div class="container-fluid">
     <div class="row">

@@ -45,6 +45,7 @@
         <unirest.version>1.4.6</unirest.version>
         <apache.poi.version>3.7</apache.poi.version>
         <commons.io.version>1.3.2</commons.io.version>
+        <powermock.version>1.6.4</powermock.version>
     </properties>
 
     <build>
@@ -258,6 +259,19 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

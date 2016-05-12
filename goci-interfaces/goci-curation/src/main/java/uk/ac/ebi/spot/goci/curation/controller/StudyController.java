@@ -3,10 +3,12 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,16 +20,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
-import uk.ac.ebi.spot.goci.curation.model.CurrentUser;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -53,7 +59,9 @@ import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -91,6 +99,7 @@ public class StudyController {
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
     private CurrentUserDetailsService currentUserDetailsService;
+    private StudyFileService studyFileService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -114,6 +123,7 @@ public class StudyController {
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
+                           StudyFileService studyFileService,
                            CurrentUserDetailsService currentUserDetailsService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
@@ -128,6 +138,7 @@ public class StudyController {
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
+        this.studyFileService = studyFileService;
         this.currentUserDetailsService = currentUserDetailsService;
     }
 
@@ -456,7 +467,12 @@ public class StudyController {
     }
 
 
-   /* New Study*/
+
+   /* New Study:
+   *
+   * Adding a study is synchronised to ensure the method can only be accessed once.
+   *
+   * */
 
     // Add a new study
     // Directs user to an empty form to which they can create a new study
@@ -473,8 +489,8 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request)
-            throws PubmedImportException {
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request)
+            throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
@@ -498,10 +514,11 @@ public class StudyController {
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@Valid @ModelAttribute Study study,
-                           BindingResult bindingResult,
-                           Model model,
-                           HttpServletRequest request) {
+    public synchronized String addStudy(@Valid @ModelAttribute Study study,
+                                        BindingResult bindingResult,
+                                        Model model,
+                                        HttpServletRequest request) throws NoStudyDirectoryException {
+
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -916,6 +933,49 @@ public class StudyController {
 
         return sort;
     }
+
+    /* Functionality to view, upload and download a study file(s)*/
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudyFiles(Model model, @PathVariable Long studyId) {
+        model.addAttribute("files", studyFileService.getStudyFiles(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_files";
+    }
+
+    @RequestMapping(value = "/{studyId}/studyfiles/{fileName}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
+        String path = request.getServletPath();
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
+    }
+
+
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+            throws
+            FileUploadException,
+            IOException {
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        try {
+            studyFileService.upload(file, studyId);
+            return "redirect:/studies/" + studyId + "/studyfiles";
+        }
+        catch (FileUploadException | IOException e) {
+            getLog().error("File upload exception", e);
+            return "error_pages/study_file_upload_failure";
+        }
+    }
+
+
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

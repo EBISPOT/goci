@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>Study files</th>
+                    <th>Download</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="file : ${files}">
+                    <td th:text="${file.fileName} ?: '' ">Test.txt</td>
+                    <td><a th:if="${not #strings.isEmpty(file.fileName)}"
+                           th:href="@{/studies/{studyId}/studyfiles/{fileName}(studyId=${study.id}, fileName=${file.fileName})}"><i
+                            class="fa fa-external-link"
+                            aria-hidden="true"></i></a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(files)}">
+                    <td colspan="10"><p style=" font-weight: bold; text-align: center;">No files found</p></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <div id="uploadFileForm">
+                    <!--Form object is a study, this is so we can pass back ID which can be used-->
+                    <!--in URLs created by controller-->
+                    <form class="form-inline" name="uploadFileForm" role="form" method="post"
+                          th:action="@{/studies/{studyId}/studyfiles(studyId=${study.id})}"
+                          enctype="multipart/form-data" th:object="${study} ">
+                        <div class="form-group">
+                            <input type="file" name="file" class="form-control" id="uploadSNPs"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload File</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
