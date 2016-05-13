@@ -725,16 +725,8 @@ public class StudyController {
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
         }
         else {
-            Long statusId = statusAssignment.getStatusId();
-            CurationStatus status = curationStatusRepository.findOne(statusId);
-            CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
-
-            // Handles status change
-            String studySnpsNotApproved = studyOperationsService.updateStatus(status, study, currentStudyStatus, currentUserDetailsService.getUserFromRequest(request));
-            study.getHousekeeping().setLastUpdateDate(new Date());
-            studyRepository.save(study);
-
-            redirectAttributes.addFlashAttribute("studySnpsNotApproved", studySnpsNotApproved);
+            String message = studyOperationsService.assignStudyStatus(study, statusAssignment,currentUserDetailsService.getUserFromRequest(request) );
+            redirectAttributes.addFlashAttribute("studySnpsNotApproved", message);
         }
         return "redirect:" + statusAssignment.getUri();
     }
@@ -779,17 +771,8 @@ public class StudyController {
         // Establish linked study
         Study study = studyRepository.findOne(studyId);
 
-        // Before we save housekeeping get the status in database so we can check for a change
-        CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
-
-        // Save housekeeping returned from form straight away to save any curator entered details like notes etc
-        housekeeping.setLastUpdateDate(new Date());
-        housekeepingRepository.save(housekeeping);
-
-        // Update status
-        String message =
-                studyOperationsService.updateStatus(housekeeping.getCurationStatus(), study, currentStudyStatus,
-                                                    currentUserDetailsService.getUserFromRequest(request));
+        // Update housekeeping
+        String message = studyOperationsService.updateHousekeeping(housekeeping, study, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         if (message == null) {

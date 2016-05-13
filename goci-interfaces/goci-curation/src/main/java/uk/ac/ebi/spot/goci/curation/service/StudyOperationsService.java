@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -134,12 +135,70 @@ public class StudyOperationsService {
             }
             // Save changes
             housekeepingRepository.save(housekeeping);
+            housekeeping.setLastUpdateDate(new Date());
 
             // Create event
             EventType eventType = determineEventTypeFromStatus(newStatus);
             trackingOperationService.update(study, user, eventType);
             studyRepository.save(study);
             getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
+        }
+        return message;
+    }
+
+    /**
+     * Create study housekeeping
+     */
+    private Housekeeping createHousekeeping() {
+        // Create housekeeping object and create the study added date
+        Housekeeping housekeeping = new Housekeeping();
+        java.util.Date studyAddedDate = new java.util.Date();
+        housekeeping.setStudyAddedDate(studyAddedDate);
+
+        // Set status
+        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
+        housekeeping.setCurationStatus(status);
+
+        // Set curator
+        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
+        housekeeping.setCurator(curator);
+
+        // Save housekeeping
+        housekeepingRepository.save(housekeeping);
+
+        // Save housekeeping
+        return housekeeping;
+    }
+
+    /**
+     * Assign status to a study
+     */
+    public String assignStudyStatus(Study study, StatusAssignment statusAssignment, SecureUser userFromRequest) {
+        Long statusId = statusAssignment.getStatusId();
+        CurationStatus status = curationStatusRepository.findOne(statusId);
+        CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
+        return updateStatus(status, study, currentStudyStatus, userFromRequest);
+    }
+
+    /**
+     * Update housekeeping
+     */
+    public String updateHousekeeping(Housekeeping housekeeping, Study study, SecureUser userFromRequest) {
+
+        String message = null;
+
+        // Before we save housekeeping get the status in database so we can check for a change
+        CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
+
+        // Save housekeeping returned from form straight away to save any curator entered details like notes etc
+        housekeeping.setLastUpdateDate(new Date());
+        housekeepingRepository.save(housekeeping);
+
+        // Update status
+        CurationStatus newStatus = housekeeping.getCurationStatus();
+        if (newStatus != null && newStatus != currentStudyStatus) {
+            message = updateStatus(newStatus, study, currentStudyStatus,
+                                   userFromRequest);
         }
         return message;
     }
@@ -197,31 +256,5 @@ public class StudyOperationsService {
                 break;
         }
         return eventType;
-    }
-
-    /**
-     * Create study housekeeping
-     *
-     * @return Housekeeping object
-     */
-    private Housekeeping createHousekeeping() {
-        // Create housekeeping object and create the study added date
-        Housekeeping housekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        housekeeping.setStudyAddedDate(studyAddedDate);
-
-        // Set status
-        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
-        housekeeping.setCurationStatus(status);
-
-        // Set curator
-        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
-        housekeeping.setCurator(curator);
-
-        // Save housekeeping
-        housekeepingRepository.save(housekeeping);
-
-        // Save housekeeping
-        return housekeeping;
     }
 }
