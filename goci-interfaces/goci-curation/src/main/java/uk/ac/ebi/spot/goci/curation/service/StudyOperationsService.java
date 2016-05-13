@@ -6,17 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
-import uk.ac.ebi.spot.goci.curation.service.tracking.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.Trackable;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -138,12 +135,11 @@ public class StudyOperationsService {
             // Save changes
             housekeepingRepository.save(housekeeping);
 
-          /*  // Create event
+            // Create event
             EventType eventType = determineEventTypeFromStatus(newStatus);
-            Event studyStatusChangeEvent = eventOperationsService.createEvent(eventType, user);
-            study.addEvent(studyStatusChangeEvent);
+            trackingOperationService.update(study, user, eventType);
             studyRepository.save(study);
-            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));*/
+            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
         }
         return message;
     }

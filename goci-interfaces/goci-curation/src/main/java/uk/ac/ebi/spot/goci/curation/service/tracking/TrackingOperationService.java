@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service.tracking;
 
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Trackable;
 
@@ -11,10 +12,27 @@ import uk.ac.ebi.spot.goci.model.Trackable;
  *         A component that manages operations on objects that require event tracking
  */
 public interface TrackingOperationService {
-
+    /**
+     * Determine event type based on status
+     *
+     * @param trackable  Trackable object that requires event tracking
+     * @param secureUser User initiating event
+     */
     void create(Trackable trackable, SecureUser secureUser);
 
+    /**
+     * Determine event type based on status
+     *
+     * @param trackable  Trackable object that requires event tracking
+     * @param secureUser User initiating event
+     */
     void delete(Trackable trackable, SecureUser secureUser);
 
-    void update(Trackable trackable, SecureUser secureUser);
+    /**
+     * Determine event type based on status
+     *
+     * @param trackable  Trackable object that requires event tracking
+     * @param secureUser User initiating event
+     */
+    void update(Trackable trackable, SecureUser secureUser, EventType eventType);
 }
