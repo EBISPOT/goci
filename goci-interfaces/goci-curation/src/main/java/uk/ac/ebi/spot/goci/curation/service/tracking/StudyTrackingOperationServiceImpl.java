@@ -35,6 +35,6 @@ public class StudyTrackingOperationServiceImpl implements TrackingOperationServi
     }
 
     @Override public void update(Trackable trackable, SecureUser secureUser) {
-        return null;
+        
     }
 }
