@@ -217,6 +217,11 @@ public class StudyController {
                                                                                        sort));
             }
 
+            if (studyType.equals("Targeted array studies")) {
+                studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
+                                                                                       sort));
+            }
+
             if (studyType.equals("Studies in curation queue")) {
                 CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
                 Long errorStatusId = errorStatus.getId();
@@ -893,6 +898,7 @@ public class StudyController {
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
+        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
         duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
         duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
@@ -1078,6 +1084,7 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
+        studyTypesOptions.add("Targeted array studies");
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");

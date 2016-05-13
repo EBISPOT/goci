@@ -60,6 +60,8 @@ public class Study {
 
     private Boolean gxg = false;
 
+    private Boolean targetedArray = false;
+
     private Integer snpCount;
 
     private String qualifier;
@@ -123,6 +125,7 @@ public class Study {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -144,6 +147,7 @@ public class Study {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -250,6 +254,14 @@ public class Study {
 
     public void setGxg(Boolean gxg) {
         this.gxg = gxg;
+    }
+
+    public Boolean getTargetedArray() {
+        return targetedArray;
+    }
+
+    public void setTargetedArray(Boolean targetedArray) {
+        this.targetedArray = targetedArray;
     }
 
     public Collection<Association> getAssociations() {
@@ -359,4 +371,5 @@ public class Study {
     public void setStudyDesignComment(String studyDesignComment) {
         this.studyDesignComment = studyDesignComment;
     }
+
 }

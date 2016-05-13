@@ -39,12 +39,22 @@ public class PublishStudyCheckService {
         // Check all associations approved
         int snpNotApproved = studyAssociationCheck(associations);
 
-        if (snpNotApproved == 1 && !efoTermsAssigned) {
+        Boolean targetedArrayStudy = study.getTargetedArray();
+
+        if (targetedArrayStudy) {
+            message = "Study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", is a targeted array study and should not be published.";
+        }
+
+        else if (snpNotApproved == 1 && !efoTermsAssigned) {
             message = "No EFO trait assigned and some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
                     + ", please review before changing the status.";
         }
+
         else if (snpNotApproved == 1) {
             message = "Some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
