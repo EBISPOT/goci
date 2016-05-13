@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -67,9 +68,13 @@ public class StudyOperationServiceTest {
     @Mock
     private EventOperationsService eventOperationsService;
 
+    @Mock
+    private TrackingOperationService trackingOperationService;
+
     private StudyOperationsService studyOperationsService;
 
-    private static final SecureUser SECURE_USER = new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
+    private static final SecureUser SECURE_USER =
+            new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
     private static final CurationStatus NEW_STATUS1 =
             new CurationStatusBuilder().setId(804L).setStatus("Level 1 curation done").build();
@@ -116,8 +121,7 @@ public class StudyOperationServiceTest {
                                                             publishStudyCheckService,
                                                             studyRepository,
                                                             curatorRepository,
-                                                            curationStatusRepository,
-                                                            eventOperationsService);
+                                                            curationStatusRepository, trackingOperationService);
     }
 
     @Test

@@ -25,17 +25,16 @@ public class StudyTrackingOperationServiceImpl implements TrackingOperationServi
         this.eventOperationsService = eventOperationsService;
     }
 
-    @Override public Trackable create(Trackable trackable, SecureUser secureUser) {
+    @Override public void create(Trackable trackable, SecureUser secureUser) {
         Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, secureUser);
         trackable.addEvent(studyCreationEvent);
-        return trackable;
     }
 
     @Override public void delete(Trackable trackable, SecureUser secureUser) {
 
     }
 
-    @Override public Trackable update(Trackable trackable, SecureUser secureUser) {
+    @Override public void update(Trackable trackable, SecureUser secureUser) {
         return null;
     }
 }

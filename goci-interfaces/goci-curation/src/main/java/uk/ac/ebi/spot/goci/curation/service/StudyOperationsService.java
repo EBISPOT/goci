@@ -3,8 +3,11 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.curation.service.tracking.StudyTrackingOperationServiceImpl;
+import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -13,6 +16,7 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.Trackable;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -39,7 +43,7 @@ public class StudyOperationsService {
     private StudyRepository studyRepository;
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
-    private EventOperationsService eventOperationsService;
+    private TrackingOperationService trackingOperationService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -49,7 +53,7 @@ public class StudyOperationsService {
                                   StudyRepository studyRepository,
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
-                                  EventOperationsService eventOperationsService) {
+                                  @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -57,7 +61,7 @@ public class StudyOperationsService {
         this.studyRepository = studyRepository;
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
-        this.eventOperationsService = eventOperationsService;
+        this.trackingOperationService = trackingOperationService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -77,8 +81,7 @@ public class StudyOperationsService {
 
         // Update and save study
         study.setHousekeeping(createHousekeeping());
-        Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, user);
-        study.addEvent(studyCreationEvent);
+        trackingOperationService.create(study, user);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
         return study;
@@ -135,12 +138,12 @@ public class StudyOperationsService {
             // Save changes
             housekeepingRepository.save(housekeeping);
 
-            // Create event
+          /*  // Create event
             EventType eventType = determineEventTypeFromStatus(newStatus);
             Event studyStatusChangeEvent = eventOperationsService.createEvent(eventType, user);
             study.addEvent(studyStatusChangeEvent);
             studyRepository.save(study);
-            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
+            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));*/
         }
         return message;
     }
