@@ -6,7 +6,6 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
@@ -78,6 +77,11 @@ public class StudyBuilder {
         return this;
     }
 
+    public StudyBuilder setTargetedArray(Boolean targetedArray) {
+        study.setTargetedArray(targetedArray);
+        return this;
+    }
+
     public StudyBuilder setDiseaseTrait(DiseaseTrait diseaseTrait) {
         study.setDiseaseTrait(diseaseTrait);
         return this;
@@ -88,10 +92,10 @@ public class StudyBuilder {
         return this;
     }
 
-    public StudyBuilder setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-        study.setSingleNucleotidePolymorphisms(singleNucleotidePolymorphisms);
-        return this;
-    }
+//    public StudyBuilder setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+//        study.setSingleNucleotidePolymorphisms(singleNucleotidePolymorphisms);
+//        return this;
+//    }
 
     public StudyBuilder setEthnicities(Collection<Ethnicity> ethnicities) {
         study.setEthnicities(ethnicities);

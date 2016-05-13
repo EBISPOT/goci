@@ -60,6 +60,8 @@ public class Study implements Trackable {
 
     private Boolean gxg = false;
 
+    private Boolean targetedArray = false;
+
     private Integer snpCount;
 
     private String qualifier;
@@ -95,11 +97,11 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-    @ManyToMany
-    @JoinTable(name = "STUDY_SNP",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
+//    @ManyToMany
+//    @JoinTable(name = "STUDY_SNP",
+//               joinColumns = @JoinColumn(name = "STUDY_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne(orphanRemoval = true)
     private Housekeeping housekeeping;
@@ -127,6 +129,7 @@ public class Study implements Trackable {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -137,10 +140,8 @@ public class Study implements Trackable {
                  Collection<Ethnicity> ethnicities,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
-                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Housekeeping housekeeping,
-                 StudyReport studyReport,
-                 Collection<Event> events) {
+                 StudyReport studyReport, Collection<Event> events) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -151,6 +152,7 @@ public class Study implements Trackable {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -161,7 +163,6 @@ public class Study implements Trackable {
         this.ethnicities = ethnicities;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.housekeeping = housekeeping;
         this.studyReport = studyReport;
         this.events = events;
@@ -263,6 +264,14 @@ public class Study implements Trackable {
         this.gxg = gxg;
     }
 
+    public Boolean getTargetedArray() {
+        return targetedArray;
+    }
+
+    public void setTargetedArray(Boolean targetedArray) {
+        this.targetedArray = targetedArray;
+    }
+
     public Collection<Association> getAssociations() {
         return associations;
     }
@@ -287,13 +296,13 @@ public class Study implements Trackable {
         this.efoTraits = efoTraits;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-        return singleNucleotidePolymorphisms;
-    }
-
-    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-    }
+//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+//        return singleNucleotidePolymorphisms;
+//    }
+//
+//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//    }
 
     public Housekeeping getHousekeeping() {
         return housekeeping;
