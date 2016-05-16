@@ -25,13 +25,8 @@ public class WeeklyTotalsSummaryView{ //extends TotalsSummaryView{
     }
 
     public WeeklyTotalsSummaryView(Date week,
-//                                    String curator,
-//                                    Integer curatorTotal,
-//                                    String curationStatus,
-//                                    Integer month,
                                     Integer weeklyStudies,
                                     Integer weeklyEntries) {
-//        super(year, curator, curatorTotal, curationStatus);
         this.week = week;
         this.weeklyStudies = weeklyStudies;
         this.weeklyEntries = weeklyEntries;
@@ -45,11 +40,11 @@ public class WeeklyTotalsSummaryView{ //extends TotalsSummaryView{
         this.id = id;
     }
 
-    public Date getweek() {
+    public Date getWeek() {
         return week;
     }
 
-    public void setweek(Date week) {
+    public void setWeek(Date week) {
         this.week = week;
     }
 

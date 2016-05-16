@@ -52,27 +52,29 @@
             <table id="mainTable" class="table table-hover table-bordered"
                    data-toggle="table" data-show-columns="true">
                 <thead>
-                <tr>
-                    <th class="col-md-4" data-sortable="true">Week commencing</th>
-                    <th class="col-md-4" data-sortable="true">Studies</th>
-                    <th class="col-md-4" data-sortable="true">Entries</th>
-                </tr>
+                    <tr>
+                        <th class="col-md-4" data-sortable="true">Week commencing</th>
+                        <th class="col-md-4" data-sortable="true">Studies</th>
+                        <th class="col-md-4" data-sortable="true">Entries</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="weeklyTotalsSummaryView: ${weeklyTotalsSummaryViews}">
-                    <td th:text="${weeklyTotalsSummaryView.week} ?: 'null'"></td>
-                    <!--Some thymeleaf wrangling to get the month name for a date-->
-                    <!--<td th:text="${#dates.monthName(#dates.create(weeklyTotalsSummaryView.year,weeklyTotalsSummaryView.month, '01'))} ?: 'null'"></td>-->
-                    <td th:text="${weeklyTotalsSummaryView.studies} ?: 'null'"></td>
-                    <td th:text="${weeklyTotalsSummaryView.entries} ?: 'null'"></td>
-                </tr>
+                    <tr th:each="weeklyTotalsSummaryView: ${weeklyTotalsSummaryViews}">
+                        <td th:text="${weeklyTotalsSummaryView.week} ?: 'null'"></td>
+                        <!--Some thymeleaf wrangling to get the month name for a date-->
+                        <!--<td th:text="${#dates.monthName(#dates.create(weeklyTotalsSummaryView.year,weeklyTotalsSummaryView.month, '01'))} ?: 'null'"></td>-->
+                        <td th:text="${weeklyTotalsSummaryView.weeklyStudies} ?: 'null'"></td>
+                        <td th:text="${weeklyTotalsSummaryView.weeklyEntries} ?: 'null'"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
                 <tr>
-                    <td>Average</td>
-                    <td th:text="${weeklyTotalsSummaryViews.studiesAverage} ?: 'null'"></td>
-                    <td th:text="${weeklyTotalsSummaryView.entriesAverage} ?: 'null'"></td>
+                    <td><b>Average number of studies per week for the last 8 weeks</b></td>
+                    <td th:text="${studiesAverage} ?: 'null'"></td>
+                    <td th:text="${entriesAverage} ?: 'null'"></td>
 
                 </tr>
-                </tbody>
+                </tfoot>
             </table>
         </div>
     </div>
