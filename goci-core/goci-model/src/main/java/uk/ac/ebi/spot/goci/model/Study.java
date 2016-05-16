@@ -60,6 +60,8 @@ public class Study {
 
     private Boolean gxg = false;
 
+    private Boolean targetedArray = false;
+
     private Integer snpCount;
 
     private String qualifier;
@@ -95,11 +97,11 @@ public class Study {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-    @ManyToMany
-    @JoinTable(name = "STUDY_SNP",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
+//    @ManyToMany
+//    @JoinTable(name = "STUDY_SNP",
+//               joinColumns = @JoinColumn(name = "STUDY_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
     private Housekeeping housekeeping;
@@ -123,6 +125,7 @@ public class Study {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -130,7 +133,7 @@ public class Study {
                  String studyDesignComment,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
-                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+//                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
                  Collection<Ethnicity> ethnicities,
                  Housekeeping housekeeping) {
         this.author = author;
@@ -144,6 +147,7 @@ public class Study {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -151,7 +155,7 @@ public class Study {
         this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
         this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
     }
@@ -252,6 +256,14 @@ public class Study {
         this.gxg = gxg;
     }
 
+    public Boolean getTargetedArray() {
+        return targetedArray;
+    }
+
+    public void setTargetedArray(Boolean targetedArray) {
+        this.targetedArray = targetedArray;
+    }
+
     public Collection<Association> getAssociations() {
         return associations;
     }
@@ -276,13 +288,13 @@ public class Study {
         this.efoTraits = efoTraits;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-        return singleNucleotidePolymorphisms;
-    }
-
-    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-    }
+//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+//        return singleNucleotidePolymorphisms;
+//    }
+//
+//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//    }
 
     public Housekeeping getHousekeeping() {
         return housekeeping;
@@ -359,4 +371,5 @@ public class Study {
     public void setStudyDesignComment(String studyDesignComment) {
         this.studyDesignComment = studyDesignComment;
     }
+
 }

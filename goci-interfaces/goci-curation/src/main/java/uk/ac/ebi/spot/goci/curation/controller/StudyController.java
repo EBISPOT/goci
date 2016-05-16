@@ -3,10 +3,12 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,14 +20,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -50,7 +57,10 @@ import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -87,6 +97,7 @@ public class StudyController {
     private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
+    private StudyFileService studyFileService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -109,7 +120,8 @@ public class StudyController {
                            UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
-                           MappingDetailsService mappingDetailsService) {
+                           MappingDetailsService mappingDetailsService,
+                           StudyFileService studyFileService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -123,6 +135,7 @@ public class StudyController {
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
+        this.studyFileService = studyFileService;
     }
 
     /* All studies and various filtered lists */
@@ -201,6 +214,11 @@ public class StudyController {
 
             if (studyType.equals("CNV")) {
                 studyPage = studyRepository.findByCnv(true, constructPageSpecification(page - 1,
+                                                                                       sort));
+            }
+
+            if (studyType.equals("Targeted array studies")) {
+                studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
                                                                                        sort));
             }
 
@@ -451,7 +469,11 @@ public class StudyController {
 
 
 
-   /* New Study*/
+   /* New Study:
+   *
+   * Adding a study is synchronised to ensure the method can only be accessed once.
+   *
+   * */
 
     // Add a new study
     // Directs user to an empty form to which they can create a new study
@@ -468,7 +490,8 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) throws PubmedImportException {
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, Model model)
+            throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
@@ -478,26 +501,38 @@ public class StudyController {
         if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
+        else {
+            // Pass to importer
+            Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
 
-        // Pass to importer
-        Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+            // Create housekeeping object
+            Housekeeping studyHousekeeping = createHousekeeping();
 
-        // Create housekeeping object
-        Housekeeping studyHousekeeping = createHousekeeping();
+            // Update and save study
+            importedStudy.setHousekeeping(studyHousekeeping);
 
-        // Update and save study
-        importedStudy.setHousekeeping(studyHousekeeping);
+            // Save new study
+            studyRepository.save(importedStudy);
 
-        // Save new study
-        studyRepository.save(importedStudy);
-        return "redirect:/studies/" + importedStudy.getId();
+            // Create directory to store associated files
+            try {
+                studyFileService.createStudyDir(importedStudy.getId());
+            }
+            catch (NoStudyDirectoryException e) {
+                getLog().error("No study directory exception");
+                model.addAttribute("study", importedStudy);
+                return "error_pages/study_dir_failure";
+            }
+            return "redirect:/studies/" + importedStudy.getId();
+        }
     }
 
 
     // Save newly added study details
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model) {
+    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model)
+            throws NoStudyDirectoryException {
 
         // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
@@ -516,10 +551,12 @@ public class StudyController {
         study.setHousekeeping(studyHousekeeping);
         Study newStudy = studyRepository.save(study);
 
+        // Create directory to store associated files
+        studyFileService.createStudyDir(newStudy.getId());
         return "redirect:/studies/" + newStudy.getId();
     }
 
-   /* Exitsing study*/
+   /* Existing study*/
 
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -637,7 +674,7 @@ public class StudyController {
             ethnicityRepository.save(duplicateEthnicity);
         }
 
-       // Add duplicate message
+        // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
@@ -818,7 +855,8 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
+        model.addAttribute("mappingDetails",
+                           mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
 
         return "study_housekeeping";
     }
@@ -860,6 +898,7 @@ public class StudyController {
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
+        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
         duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
         duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
@@ -879,7 +918,7 @@ public class StudyController {
         Collection<Platform> platforms = studyToDuplicate.getPlatforms();
         Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
 
-        if(platforms != null && !platforms.isEmpty()){
+        if (platforms != null && !platforms.isEmpty()) {
             platformsDuplicateStudy.addAll(platforms);
             duplicateStudy.setPlatforms(platformsDuplicateStudy);
         }
@@ -937,6 +976,49 @@ public class StudyController {
 
         return sort;
     }
+
+    /* Functionality to view, upload and download a study file(s)*/
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudyFiles(Model model, @PathVariable Long studyId) {
+        model.addAttribute("files", studyFileService.getStudyFiles(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_files";
+    }
+
+    @RequestMapping(value = "/{studyId}/studyfiles/{fileName}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
+        String path = request.getServletPath();
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
+    }
+
+
+    @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+            throws
+            FileUploadException,
+            IOException {
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        try {
+            studyFileService.upload(file, studyId);
+            return "redirect:/studies/" + studyId + "/studyfiles";
+        }
+        catch (FileUploadException | IOException e) {
+            getLog().error("File upload exception", e);
+            return "error_pages/study_file_upload_failure";
+        }
+    }
+
+
     /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -977,10 +1059,8 @@ public class StudyController {
 
     //Platforms
     @ModelAttribute("platforms")
-//    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
+    //    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
     public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
-
-
 
 
     // Curation statuses
@@ -1004,6 +1084,7 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
+        studyTypesOptions.add("Targeted array studies");
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");
@@ -1011,7 +1092,7 @@ public class StudyController {
     }
 
     @ModelAttribute("qualifiers")
-    public List<String> populateQualifierOptions(Model model){
+    public List<String> populateQualifierOptions(Model model) {
         List<String> qualifierOptions = new ArrayList<>();
         qualifierOptions.add("up to");
         qualifierOptions.add("at least");
@@ -1091,13 +1172,13 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
 
-//    private Sort sortByPlatformAsc() {
-//        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
-//    }
-//
-//    private Sort sortByPlatformDesc() {
-//        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
-//    }
+    //    private Sort sortByPlatformAsc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
+    //    }
+    //
+    //    private Sort sortByPlatformDesc() {
+    //        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
+    //    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
