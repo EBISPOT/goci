@@ -95,6 +95,10 @@ public class StudyOperationsService {
 
         String message = null;
 
+        // Create new housekeeping object
+        Housekeeping newHousekeeping = study.getHousekeeping();
+        newHousekeeping.setCurationStatus(newStatus);
+
         // If the current and new status are different
         if (newStatus != null && newStatus != currentStudyStatus) {
             if (newStatus.getStatus().equals("Publish study")) {
@@ -103,11 +107,11 @@ public class StudyOperationsService {
                 message = publishStudyCheckService.runChecks(study, associations);
                 // if checks pass then update the status
                 if (message == null) {
-                    updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                    updateStatus(study, newHousekeeping, userFromRequest);
                 }
             }
             else {
-                updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                updateStatus(study, newHousekeeping, userFromRequest);
             }
         }
         else {
@@ -126,9 +130,6 @@ public class StudyOperationsService {
 
         String message = null;
 
-        // Save housekeeping returned from form
-        saveHousekeeping(housekeeping);
-
         // If the current and new status are different
         if (newStatus != null && newStatus != currentStudyStatus) {
             if (newStatus.getStatus().equals("Publish study")) {
@@ -137,12 +138,22 @@ public class StudyOperationsService {
                 message = publishStudyCheckService.runChecks(study, associations);
                 // if checks pass then update the status
                 if (message == null) {
-                    updateStatus(newStatus, study, housekeeping, userFromRequest);
+                    updateStatus(study, housekeeping, userFromRequest);
+                }
+                // restore old status
+                else {
+                    housekeeping.setCurationStatus(currentStudyStatus);
+                    saveHousekeeping(study, housekeeping);
                 }
             }
             else {
-                updateStatus(newStatus, study, housekeeping, userFromRequest);
+                updateStatus(study, housekeeping, userFromRequest);
             }
+        }
+        // TODO WRITE TEST
+        else {
+            // Save housekeeping returned from form
+            saveHousekeeping(study, housekeeping);
         }
         return message;
     }
@@ -151,11 +162,15 @@ public class StudyOperationsService {
      * Save housekeepoing
      *
      * @param housekeeping
+     * @param study
      */
-    private void saveHousekeeping(Housekeeping housekeeping) {
+    private void saveHousekeeping(Study study, Housekeeping housekeeping) {
         // Save housekeeping returned from form
+        // todo TEST SETTING STUDY ATTRIBUTE
         housekeeping.setLastUpdateDate(new Date());
         housekeepingRepository.save(housekeeping);
+        study.setHousekeeping(housekeeping);
+        studyRepository.save(study);
     }
 
     /**
@@ -176,41 +191,32 @@ public class StudyOperationsService {
     /**
      * Update a study status
      *
-     * @param newStatus    New status to apply to study
      * @param study        Study to update
      * @param housekeeping Study housekeeping object to apply status change to
      * @param user         User preforming request
      */
-    private void updateStatus(CurationStatus newStatus,
-                              Study study, Housekeeping housekeeping,
+    private void updateStatus(Study study, Housekeeping housekeeping,
                               SecureUser user) {
 
-        switch (newStatus.getStatus()) {
+        switch (housekeeping.getCurationStatus().getStatus()) {
             case "Publish study":
-
                 // If there is no existing publish date then update
                 if (housekeeping.getCatalogPublishDate() == null) {
                     Date publishDate = new Date();
                     housekeeping.setCatalogPublishDate(publishDate);
                 }
-                mailService.sendEmailNotification(study, newStatus.getStatus());
-                housekeeping.setCurationStatus(newStatus);
+                mailService.sendEmailNotification(study, "Publish study");
                 break;
-
             // Send notification email to curators
             case "Level 1 curation done":
-                mailService.sendEmailNotification(study, newStatus.getStatus());
-                housekeeping.setCurationStatus(newStatus);
+                mailService.sendEmailNotification(study, "Level 1 curation done");
                 break;
             default:
-                housekeeping.setCurationStatus(newStatus);
                 break;
         }
         // Save and create event
-        saveHousekeeping(housekeeping);
-        // TODO TEST THIS
-        study.setHousekeeping(housekeeping);
-        recordStudyStatusChange(study, user, newStatus);
+        saveHousekeeping(study, housekeeping);
+        recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
     }
 
 
