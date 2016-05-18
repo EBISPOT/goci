@@ -132,6 +132,8 @@ public class FilterDataProcessingService {
             for(int o : other){
                 otherVals.add(data[i][o]);
             }
+            
+            fa.setOtherInformation(otherVals);
 
             associations.add(fa);
         }
