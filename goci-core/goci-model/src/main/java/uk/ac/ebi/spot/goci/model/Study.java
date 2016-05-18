@@ -60,6 +60,8 @@ public class Study {
 
     private Boolean gxg = false;
 
+    private Boolean genomewideArray = true;
+
     private Boolean targetedArray = false;
 
     private Integer snpCount;
@@ -125,6 +127,7 @@ public class Study {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Boolean genomewideArray,
                  Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
@@ -148,6 +151,7 @@ public class Study {
         this.gxe = gxe;
         this.gxg = gxg;
         this.targetedArray = targetedArray;
+        this.genomewideArray = genomewideArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -372,4 +376,11 @@ public class Study {
         this.studyDesignComment = studyDesignComment;
     }
 
+    public Boolean getGenomewideArray() {
+        return genomewideArray;
+    }
+
+    public void setGenomewideArray(Boolean genomewideArray) {
+        this.genomewideArray = genomewideArray;
+    }
 }

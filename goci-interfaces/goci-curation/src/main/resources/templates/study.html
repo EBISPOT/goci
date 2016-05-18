@@ -255,7 +255,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="targetedArray" class="control-label col-md-2">Targeted Array Study</label>
+                    <label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>
+
+                    <input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>
 
                     <input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>
                 </div>
