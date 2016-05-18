@@ -168,6 +168,7 @@ public class StudyOperationsService {
                     break;
             }
 
+            // Study passed pre-publish checks
             if (message == null) {
                 housekeeping.setLastUpdateDate(new Date());
                 housekeepingRepository.save(housekeeping);
