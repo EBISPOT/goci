@@ -137,11 +137,11 @@ public class StudyOperationsService {
                 message = publishStudyCheckService.runChecks(study, associations);
                 // if checks pass then update the status
                 if (message == null) {
-                    updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                    updateStatus(newStatus, study, housekeeping, userFromRequest);
                 }
             }
             else {
-                updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                updateStatus(newStatus, study, housekeeping, userFromRequest);
             }
         }
         return message;
@@ -208,6 +208,8 @@ public class StudyOperationsService {
         }
         // Save and create event
         saveHousekeeping(housekeeping);
+        // TODO TEST THIS
+        study.setHousekeeping(housekeeping);
         recordStudyStatusChange(study, user, newStatus);
     }
 
