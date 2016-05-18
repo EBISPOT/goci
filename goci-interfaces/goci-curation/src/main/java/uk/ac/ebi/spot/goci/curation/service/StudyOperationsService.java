@@ -89,10 +89,31 @@ public class StudyOperationsService {
      * Assign status to a study
      */
     public String assignStudyStatus(Study study, StatusAssignment statusAssignment, SecureUser userFromRequest) {
-        Long statusId = statusAssignment.getStatusId();
-        CurationStatus status = curationStatusRepository.findOne(statusId);
+
+        CurationStatus newStatus = curationStatusRepository.findOne(statusAssignment.getStatusId());
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
-        return updateStatus(status, study, currentStudyStatus, userFromRequest);
+
+        String message = null;
+
+        // If the current and new status are different
+        if (newStatus != null && newStatus != currentStudyStatus) {
+            if (newStatus.getStatus().equals("Publish study")) {
+                // Run pre-publish checks first
+                Collection<Association> associations = associationRepository.findByStudyId(study.getId());
+                message = publishStudyCheckService.runChecks(study, associations);
+                // if checks pass then update the status
+                if (message == null) {
+                    updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                }
+            }
+            else {
+                updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+            }
+        }
+        else {
+            message = "Current status and new status are the same, no change required";
+        }
+        return message;
     }
 
     /**
@@ -100,87 +121,94 @@ public class StudyOperationsService {
      */
     public String updateHousekeeping(Housekeeping housekeeping, Study study, SecureUser userFromRequest) {
 
-        String message = null;
-
-        // Before we save housekeeping get the status in database so we can check for a change
+        CurationStatus newStatus = housekeeping.getCurationStatus();
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
-        // Save housekeeping returned from form straight away to save any curator entered details like notes etc
-        housekeeping.setLastUpdateDate(new Date());
-        housekeepingRepository.save(housekeeping);
+        String message = null;
 
-        // Update status
-        CurationStatus newStatus = housekeeping.getCurationStatus();
+        // Save housekeeping returned from form
+        saveHousekeeping(housekeeping);
+
+        // If the current and new status are different
         if (newStatus != null && newStatus != currentStudyStatus) {
-            message = updateStatus(newStatus, study, currentStudyStatus,
-                                   userFromRequest);
+            if (newStatus.getStatus().equals("Publish study")) {
+                // Run pre-publish checks first
+                Collection<Association> associations = associationRepository.findByStudyId(study.getId());
+                message = publishStudyCheckService.runChecks(study, associations);
+                // if checks pass then update the status
+                if (message == null) {
+                    updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+                }
+            }
+            else {
+                updateStatus(newStatus, study, study.getHousekeeping(), userFromRequest);
+            }
         }
         return message;
     }
 
     /**
+     * Save housekeepoing
+     *
+     * @param housekeeping
+     */
+    private void saveHousekeeping(Housekeeping housekeeping) {
+        // Save housekeeping returned from form
+        housekeeping.setLastUpdateDate(new Date());
+        housekeepingRepository.save(housekeeping);
+    }
+
+    /**
+     * Record a study status change
+     *
+     * @param newStatus New status to apply to study
+     * @param study     Study to update
+     * @param user      User preforming request
+     */
+    private void recordStudyStatusChange(Study study, SecureUser user, CurationStatus newStatus) {
+        // Create syudy event
+        EventType eventType = determineEventTypeFromStatus(newStatus);
+        trackingOperationService.update(study, user, eventType);
+        studyRepository.save(study);
+        getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
+    }
+
+    /**
      * Update a study status
      *
-     * @param newStatus          New status to apply to study
-     * @param study              Study to update
-     * @param currentStudyStatus Current status of the study to update
-     * @param user               User preforming request
+     * @param newStatus    New status to apply to study
+     * @param study        Study to update
+     * @param housekeeping Study housekeeping object to apply status change to
+     * @param user         User preforming request
      */
-    private String updateStatus(CurationStatus newStatus,
-                                Study study,
-                                CurationStatus currentStudyStatus,
-                                SecureUser user) {
+    private void updateStatus(CurationStatus newStatus,
+                              Study study, Housekeeping housekeeping,
+                              SecureUser user) {
 
-        Housekeeping housekeeping = study.getHousekeeping();
-        String message = null;
-        // If the status has changed
-        if (newStatus != null && newStatus != currentStudyStatus) {
-            switch (newStatus.getStatus()) {
-                case "Publish study":
+        switch (newStatus.getStatus()) {
+            case "Publish study":
 
-                    // Run pre-publish checks
-                    Collection<Association> associations = associationRepository.findByStudyId(study.getId());
-                    message = publishStudyCheckService.runChecks(study, associations);
+                // If there is no existing publish date then update
+                if (housekeeping.getCatalogPublishDate() == null) {
+                    Date publishDate = new Date();
+                    housekeeping.setCatalogPublishDate(publishDate);
+                }
+                mailService.sendEmailNotification(study, newStatus.getStatus());
+                housekeeping.setCurationStatus(newStatus);
+                break;
 
-                    if (message == null) {
-                        // If there is no existing publish date then update
-                        if (study.getHousekeeping().getCatalogPublishDate() == null) {
-                            Date publishDate = new Date();
-                            housekeeping.setCatalogPublishDate(publishDate);
-                        }
-                        mailService.sendEmailNotification(study, newStatus.getStatus());
-                        housekeeping.setCurationStatus(newStatus);
-                    }
-                    // restore previous status
-                    else {
-                        housekeeping.setCurationStatus(currentStudyStatus);
-                        housekeepingRepository.save(housekeeping);
-                    }
-                    break;
-
-                // Send notification email to curators
-                case "Level 1 curation done":
-                    mailService.sendEmailNotification(study, newStatus.getStatus());
-                    housekeeping.setCurationStatus(newStatus);
-                    break;
-                default:
-                    housekeeping.setCurationStatus(newStatus);
-                    break;
-            }
-
-            // Study passed pre-publish checks
-            if (message == null) {
-                housekeeping.setLastUpdateDate(new Date());
-                housekeepingRepository.save(housekeeping);
-
-                // Create event
-                EventType eventType = determineEventTypeFromStatus(newStatus);
-                trackingOperationService.update(study, user, eventType);
-                studyRepository.save(study);
-                getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
-            }
+            // Send notification email to curators
+            case "Level 1 curation done":
+                mailService.sendEmailNotification(study, newStatus.getStatus());
+                housekeeping.setCurationStatus(newStatus);
+                break;
+            default:
+                housekeeping.setCurationStatus(newStatus);
+                break;
         }
-        return message;
+        // Save and create event
+        saveHousekeeping(housekeeping);
+        recordStudyStatusChange(study, user, newStatus);
     }
 
 
