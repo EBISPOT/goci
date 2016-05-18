@@ -86,7 +86,18 @@
                 </tr>
 
                 <tr>
-                    <th>Targeted Array Study</th>
+                    <th>Genomewide Genotyping Array</th>
+                    <td th:switch="${study.targetedArray}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Targeted Genotyping Array</th>
                     <td th:switch="${study.targetedArray}">
                         <p th:case="'null'"></p>
 

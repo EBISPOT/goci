@@ -77,6 +77,11 @@ public class StudyBuilder {
         return this;
     }
 
+    public StudyBuilder setGenomewideArray(Boolean genomewideArray) {
+        study.setGenomewideArray(genomewideArray);
+        return this;
+    }
+
     public StudyBuilder setTargetedArray(Boolean targetedArray) {
         study.setTargetedArray(targetedArray);
         return this;

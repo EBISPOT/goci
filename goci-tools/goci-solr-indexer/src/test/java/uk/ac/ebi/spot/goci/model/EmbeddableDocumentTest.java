@@ -46,6 +46,7 @@ public class EmbeddableDocumentTest {
                                false,
                                false,
                                false,
+                               true,
                                false,
                                null,
                                "qualifier",
