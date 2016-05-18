@@ -114,22 +114,24 @@ public class FilteringService {
                             FilterAssociation mostSignificant;
                             if(ldBlock.size() > 1) {
                                 List<FilterAssociation> byPval = ldBlock.stream()
-                                        .sorted((fa1, fa2) -> Integer.compare(fa1.getPvalueExponent(),
-                                                                              fa2.getPvalueExponent()))
+                                        .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
+                                                                              fa2.getPvalue()))
                                         .collect(Collectors.toList());
 
 
                                 mostSignificant = byPval.get(0);
 
-                                for (int k = 1; k < byPval.size(); k++) {
-                                    FilterAssociation fa = byPval.get(k);
-                                    if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
-                                        if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
-                                            mostSignificant = fa;
+                                if(mostSignificant.getPrecisionConcern()) {
+                                    for (int k = 1; k < byPval.size(); k++) {
+                                        FilterAssociation fa = byPval.get(k);
+                                        if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
+                                            if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
+                                                mostSignificant = fa;
+                                            }
                                         }
-                                    }
-                                    else {
-                                        break;
+                                        else {
+                                            break;
+                                        }
                                     }
                                 }
                             }

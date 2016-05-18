@@ -1,11 +1,11 @@
 package uk.ac.ebi.spot.goci.model;
 
+import java.util.List;
+
 /**
  * Created by dwelter on 05/04/16.
  */
 public class FilterAssociation {
-
-    private Integer rowNumber;
 
     private String strongestAllele = null;
 
@@ -13,19 +13,23 @@ public class FilterAssociation {
 
     private Integer pvalueExponent = null;
 
+    private double pvalue;
+
     private String chromosomeName;
 
     private Integer chromosomePosition;
 
     private Boolean isTopAssociation = false;
 
-    public FilterAssociation(Integer rowNumber,
-                             String strongestAllele,
+    private List<String> otherInformation;
+
+    private Boolean precisionConcern = false;
+
+    public FilterAssociation(String strongestAllele,
                              Double pvalueMantissa,
                              Integer pvalueExponent,
                              String chromosomeName,
                              String chromosomePosition){
-        this.rowNumber = rowNumber;
         this.strongestAllele = strongestAllele;
         this.pvalueMantissa = pvalueMantissa;
         this.pvalueExponent = pvalueExponent;
@@ -33,13 +37,6 @@ public class FilterAssociation {
         this.chromosomePosition = Integer.parseInt(chromosomePosition);
     }
 
-    public Integer getRowNumber() {
-        return rowNumber;
-    }
-
-    public void setRowNumber(Integer rowNumber) {
-        this.rowNumber = rowNumber;
-    }
 
    public String getStrongestAllele() {
         return strongestAllele;
@@ -92,5 +89,29 @@ public class FilterAssociation {
 
     public void setIsTopAssociation(Boolean isTopAssociation) {
         this.isTopAssociation = isTopAssociation;
+    }
+
+    public double getPvalue() {
+        return pvalue;
+    }
+
+    public void setPvalue(double pvalue) {
+        this.pvalue = pvalue;
+    }
+
+    public List<String> getOtherInformation() {
+        return otherInformation;
+    }
+
+    public void setOtherInformation(List<String> otherInformation) {
+        this.otherInformation = otherInformation;
+    }
+
+    public Boolean getPrecisionConcern() {
+        return precisionConcern;
+    }
+
+    public void setPrecisionConcern(Boolean precisionConcern) {
+        this.precisionConcern = precisionConcern;
     }
 }

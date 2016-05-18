@@ -16,14 +16,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
-import uk.ac.ebi.spot.goci.model.FilterAssociation;
-import uk.ac.ebi.spot.goci.service.FilteringService;
+import uk.ac.ebi.spot.goci.service.FilterDataProcessingService;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by dwelter on 05/04/16.
@@ -38,8 +34,7 @@ public class AssociationFilterApplication {
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
 
     @Autowired
-    private FilteringService filteringService;
-
+    private FilterDataProcessingService filterDataProcessingService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -143,41 +138,10 @@ public class AssociationFilterApplication {
 
     private void doFiltering(File inputFile, File outputFile) {
         try {
+            getLog().info("Reading input file");
             String[][] data = catalogSpreadsheetExporter.readFromFile(inputFile);
-
-            List<FilterAssociation> associations = processData(data);
-            getLog().info("Starting sorting by chromosome");
-            Map<String, List<FilterAssociation>> byChrom = filteringService.groupByChromosomeName(associations);
-
-            getLog().info("Sorting by chromosome done");
-            for(String k : byChrom.keySet()){
-                getLog().debug("Chromosome " + k + "-");
-
-                for(FilterAssociation a : byChrom.get(k)){
-                    getLog().debug("\t" + a.getRowNumber());
-                }
-            }
-
-            getLog().info("Starting sorting by bp location");
-
-            Map<String, List<FilterAssociation>> byLoc = filteringService.sortByBPLocation(byChrom);
-
-            for(String k : byLoc.keySet()){
-                getLog().debug(k + "-");
-
-                for(FilterAssociation a : byLoc.get(k)){
-                    getLog().debug("\t" + a.getRowNumber());
-                }
-            }
-            getLog().info("Sorting by bp location done");
-
-
-            getLog().info("Starting filtering process");
-
-            List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLoc);
-            getLog().info("Filtering process complete");
-
-            String[][] transformAssocations = transformAssociations(filtered);
+            getLog().info("Input file processed, starting data transformation and filtering process");
+            String[][] transformAssocations = filterDataProcessingService.filterInputData(data);
             getLog().info("Exporting filtered data to file");
             catalogSpreadsheetExporter.writeToFile(transformAssocations, outputFile);
         }
@@ -186,42 +150,8 @@ public class AssociationFilterApplication {
         }
     }
 
-    private String[][] transformAssociations(List<FilterAssociation> filtered) {
-        List<String[]> lines = new ArrayList<>();
-        String[] header = {"RowNum", "Strongest allele", "p_mant", "p_exp", "Chromosome", "BP location", "isTopAssociation"};
 
-        lines.add(header);
-        for(FilterAssociation f : filtered){
-            String[] line = new String[7];
 
-            line[0] = f.getRowNumber().toString();
-            line[1] = f.getStrongestAllele();
-            line[2] = f.getPvalueMantissa().toString();
-            line[3] = f.getPvalueExponent().toString();
-            line[4] = f.getChromosomeName();
-            line[5] = f.getChromosomePosition().toString();
-            line[6] = f.getIsTopAssociation().toString();
-
-            lines.add(line);
-        }
-        return lines.toArray(new String[lines.size()][]);
-    }
-
-    private List<FilterAssociation> processData(String[][] data) {
-        List<FilterAssociation> associations = new ArrayList<>();
-
-        for(int i = 0; i < data.length; i++){
-            Integer rowNumber = Integer.parseInt(data[i][0]);
-            String strongestAllele = data[i][1];
-            Double pvalueMantissa = Double.parseDouble(data[i][2]);
-            Integer pvalueExponent = Integer.parseInt(data[i][3]);
-            String chromosomeName = data[i][4];
-            String chromosomePosition  = data[i][5];
-
-            associations.add(new FilterAssociation(rowNumber, strongestAllele, pvalueMantissa, pvalueExponent, chromosomeName, chromosomePosition));
-        }
-        return associations;
-    }
 
 
 }
