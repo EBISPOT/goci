@@ -25,6 +25,8 @@ public class FilterAssociation {
 
     private Boolean precisionConcern = false;
 
+    private String ldBlock;
+
     public FilterAssociation(String strongestAllele,
                              Double pvalueMantissa,
                              Integer pvalueExponent,
@@ -113,5 +115,13 @@ public class FilterAssociation {
 
     public void setPrecisionConcern(Boolean precisionConcern) {
         this.precisionConcern = precisionConcern;
+    }
+
+    public String getLdBlock() {
+        return ldBlock;
+    }
+
+    public void setLdBlock(String ldBlock) {
+        this.ldBlock = ldBlock;
     }
 }

@@ -70,15 +70,12 @@ public class FilteringService {
 
                         if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
                             current.setIsTopAssociation(true);
-//                            filtered.add(current);
                         }
                         else if (distToPrev == null && distToNext != null && distToNext > 100000) {
                             current.setIsTopAssociation(true);
-//                            filtered.add(current);
                         }
                         else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
                             current.setIsTopAssociation(true);
-//                            filtered.add(current);
                         }
                         else if (distToPrev != null && distToPrev < 100000 && !(associations.get(i-1).getPvalueExponent() < -5)
                                 && ((distToNext != null && distToNext > 100000) || distToNext == null)){
@@ -95,23 +92,39 @@ public class FilteringService {
                                 FilterAssociation a = associations.get(j);
                                 FilterAssociation b = associations.get(j+1);
 
-                                Integer dist = b.getChromosomePosition() - a.getChromosomePosition();
-
-                                if(dist < 100000){
-                                    ldBlock.add(b);
-                                    j++;
+                                if(a.getLdBlock() != null){
+                                    if(a.getLdBlock().equals(b.getLdBlock())){
+                                        ldBlock.add(b);
+                                        j++;
+                                    }
+                                    else {
+                                        end = true;
+                                    }
+                                    if (j == associations.size() - 1) {
+                                        end = true;
+                                    }
                                 }
                                 else {
-                                    end = true;
-                                }
 
-                                if(j == associations.size()-1){
-                                    end = true;
+                                    Integer dist = b.getChromosomePosition() - a.getChromosomePosition();
+
+                                    if (dist < 100000) {
+                                        ldBlock.add(b);
+                                        j++;
+                                    }
+                                    else {
+                                        end = true;
+                                    }
+
+                                    if (j == associations.size() - 1) {
+                                        end = true;
+                                    }
                                 }
                             }
 
 
                             FilterAssociation mostSignificant;
+                            FilterAssociation secondary = null;
                             if(ldBlock.size() > 1) {
                                 List<FilterAssociation> byPval = ldBlock.stream()
                                         .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
@@ -128,11 +141,17 @@ public class FilteringService {
                                             if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
                                                 mostSignificant = fa;
                                             }
+                                            else if (fa.getPvalueMantissa() == mostSignificant.getPvalueMantissa()){
+                                                secondary = fa;
+                                            }
                                         }
                                         else {
                                             break;
                                         }
                                     }
+                                }
+                                else if(byPval.get(0).getPvalue() == byPval.get(1).getPvalue()){
+                                    secondary = byPval.get(1);
                                 }
                             }
                             else {
@@ -141,13 +160,14 @@ public class FilteringService {
                             if(mostSignificant.getPvalueExponent() < -5) {
                                 mostSignificant.setIsTopAssociation(true);
                             }
+//account for the case where to p-values within the same LD block are identical
+                            if(secondary != null && secondary.getPvalue() == mostSignificant.getPvalue()){
+                                secondary.setIsTopAssociation(true);
+                            }
 
                             i = j;
                         }
                     }
-//                    else {
-//                        System.out.println(current.getStrongestAllele() + "\t" + current.getPvalueExponent());
-//                    }
                     i++;
                 }
                 filtered.addAll(associations);

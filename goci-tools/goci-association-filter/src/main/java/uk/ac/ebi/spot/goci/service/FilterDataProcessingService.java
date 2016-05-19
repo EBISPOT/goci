@@ -16,10 +16,11 @@ import java.util.Map;
 @Service
 public class FilterDataProcessingService {
 
-    private static int rs_id;
-    private static int bp_location;
-    private static int chromosome;
-    private static int pvalue;
+    private static Integer rs_id;
+    private static Integer bp_location;
+    private static Integer chromosome;
+    private static Integer pvalue;
+    private static Integer ld_block = null;
     private static List<Integer> other;
     private static String[] headers;
 
@@ -75,6 +76,9 @@ public class FilterDataProcessingService {
                 case "bp_location":
                     bp_location = h;
                     break;
+                case "ld_block":
+                    ld_block = h;
+                    break;
                 default:
                     other.add(h);
                     break;
@@ -117,12 +121,14 @@ public class FilterDataProcessingService {
                 pvalueExponent = Integer.parseInt(p[1]);
             }
 
-
-
             FilterAssociation fa = new FilterAssociation(strongestAllele, pvalueMantissa, pvalueExponent, chromosomeName, chromosomePosition);
 
             if(pvalueExponent < -323){
                 fa.setPrecisionConcern(true);
+            }
+
+            if(ld_block != null){
+                fa.setLdBlock(data[i][ld_block]);
             }
 
             fa.setPvalue(pvalueFull);
@@ -172,8 +178,11 @@ public class FilterDataProcessingService {
                 line[o] = f.getOtherInformation().get(other.indexOf(o));
             }
 
+            if(ld_block != null){
+                line[ld_block] = f.getLdBlock();
+            }
+
             lines.add(line);
-            System.out.println(line);
         }
         return lines.toArray(new String[lines.size()][]);
     }
