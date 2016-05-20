@@ -29,6 +29,7 @@ public class AssociationFilterApplication {
 
     private static File outputFile;
     private static File inputFile;
+    private static Boolean prune = false;
 
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
@@ -95,6 +96,9 @@ public class AssociationFilterApplication {
                 if (cl.hasOption("f")) {
                     inputFile = new File(cl.getOptionValue("f"));
                 }
+                if(cl.hasOption("p")) {
+                    prune = true;
+                }
                 else {
                     System.err.println("-o (output file) argument is required");
                     help.printHelp("filter", options, true);
@@ -133,6 +137,14 @@ public class AssociationFilterApplication {
         inOption.setRequired(true);
         options.addOption(inOption);
 
+        Option pruneOption = new Option(
+                "p",
+                "prune",
+                false,
+                "Prune output - removes associations with p-value < 1E-5 from the result output");
+        inOption.setArgName("file");
+        inOption.setRequired(false);
+
         return options;
     }
 
@@ -141,7 +153,7 @@ public class AssociationFilterApplication {
             getLog().info("Reading input file");
             String[][] data = catalogSpreadsheetExporter.readFromFile(inputFile);
             getLog().info("Input file processed, starting data transformation and filtering process");
-            String[][] transformAssocations = filterDataProcessingService.filterInputData(data);
+            String[][] transformAssocations = filterDataProcessingService.filterInputData(data, prune);
             getLog().info("Exporting filtered data to file");
             catalogSpreadsheetExporter.writeToFile(transformAssocations, outputFile);
         }

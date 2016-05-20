@@ -56,55 +56,70 @@ public class FilteringService {
                     FilterAssociation current = associations.get(i);
 
                     if(current.getPvalueExponent() < -5) {
+                        List<FilterAssociation> ldBlock = new ArrayList<>();
 
-                        Integer distToPrev = null;
-                        if (i > 0) {
-                            distToPrev = current.getChromosomePosition() - associations.get(i - 1).getChromosomePosition();
-                        }
-
-                        Integer distToNext = null;
-                        if (i < associations.size() - 1) {
-                            distToNext = associations.get(i + 1).getChromosomePosition() - current.getChromosomePosition();
-                        }
-
-
-                        if (distToPrev != null && distToNext != null && distToPrev > 100000 && distToNext > 100000) {
-                            current.setIsTopAssociation(true);
-                        }
-                        else if (distToPrev == null && distToNext != null && distToNext > 100000) {
-                            current.setIsTopAssociation(true);
-                        }
-                        else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
-                            current.setIsTopAssociation(true);
-                        }
-                        else if (distToPrev != null && distToPrev < 100000 && !(associations.get(i-1).getPvalueExponent() < -5)
-                                && ((distToNext != null && distToNext > 100000) || distToNext == null)){
-                            current.setIsTopAssociation(true);
-                        }
-                        else if (distToNext != null && distToNext < 100000) {
-                            int j = i;
+                        if(current.getLdBlock() != null){
                             boolean end = false;
-
-                            List<FilterAssociation> ldBlock = new ArrayList<>();
                             ldBlock.add(current);
 
-                            while (!end){
-                                FilterAssociation a = associations.get(j);
-                                FilterAssociation b = associations.get(j+1);
+                            while (!end) {
+                                if (i == associations.size() - 1) {
+                                    end = true;
+                                }
+                                else {
+                                    FilterAssociation b = associations.get(i + 1);
 
-                                if(a.getLdBlock() != null){
-                                    if(a.getLdBlock().equals(b.getLdBlock())){
+                                    if (current.getLdBlock().equals(b.getLdBlock())) {
                                         ldBlock.add(b);
-                                        j++;
+                                        i++;
                                     }
                                     else {
                                         end = true;
                                     }
-                                    if (j == associations.size() - 1) {
-                                        end = true;
-                                    }
                                 }
-                                else {
+                            }
+
+                        }
+
+                        else {
+                            Integer distToPrev = null;
+                            if (i > 0) {
+                                distToPrev = current.getChromosomePosition() -
+                                        associations.get(i - 1).getChromosomePosition();
+                            }
+
+                            Integer distToNext = null;
+                            if (i < associations.size() - 1) {
+                                distToNext = associations.get(i + 1).getChromosomePosition() -
+                                        current.getChromosomePosition();
+                            }
+
+
+                            if (distToPrev != null && distToNext != null && distToPrev > 100000 &&
+                                    distToNext > 100000) {
+                                current.setIsTopAssociation(true);
+                            }
+                            else if (distToPrev == null && distToNext != null && distToNext > 100000) {
+                                current.setIsTopAssociation(true);
+                            }
+                            else if (distToPrev != null && distToNext == null && distToPrev > 100000) {
+                                current.setIsTopAssociation(true);
+                            }
+                            else if (distToPrev != null && distToPrev < 100000 &&
+                                    !(associations.get(i - 1).getPvalueExponent() < -5)
+                                    && ((distToNext != null && distToNext > 100000) || distToNext == null)) {
+                                current.setIsTopAssociation(true);
+                            }
+                            else if (distToNext != null && distToNext < 100000) {
+                                int j = i;
+                                boolean end = false;
+
+                                ldBlock.add(current);
+
+                                while (!end) {
+                                    FilterAssociation a = associations.get(j);
+                                    FilterAssociation b = associations.get(j + 1);
+
 
                                     Integer dist = b.getChromosomePosition() - a.getChromosomePosition();
 
@@ -119,30 +134,34 @@ public class FilteringService {
                                     if (j == associations.size() - 1) {
                                         end = true;
                                     }
+
                                 }
+                                i = j;
                             }
+                        }
 
-
+                        if(ldBlock.size() != 0) {
                             FilterAssociation mostSignificant;
-                            FilterAssociation secondary = null;
-                            if(ldBlock.size() > 1) {
+                            List<FilterAssociation> secondary = new ArrayList<>();
+                            if (ldBlock.size() > 1) {
                                 List<FilterAssociation> byPval = ldBlock.stream()
                                         .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
-                                                                              fa2.getPvalue()))
+                                                                             fa2.getPvalue()))
                                         .collect(Collectors.toList());
 
 
                                 mostSignificant = byPval.get(0);
 
-                                if(mostSignificant.getPrecisionConcern()) {
+                                if (mostSignificant.getPrecisionConcern()) {
                                     for (int k = 1; k < byPval.size(); k++) {
                                         FilterAssociation fa = byPval.get(k);
                                         if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
                                             if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
                                                 mostSignificant = fa;
                                             }
-                                            else if (fa.getPvalueMantissa() == mostSignificant.getPvalueMantissa()){
-                                                secondary = fa;
+                                            else if (fa.getPvalueMantissa() ==
+                                                    mostSignificant.getPvalueMantissa()) {
+                                                secondary.add(fa);
                                             }
                                         }
                                         else {
@@ -150,28 +169,43 @@ public class FilteringService {
                                         }
                                     }
                                 }
-                                else if(byPval.get(0).getPvalue() == byPval.get(1).getPvalue()){
-                                    secondary = byPval.get(1);
+                                else {
+                                    boolean done = false;
+                                    int p = 0;
+                                    while(!done && p < byPval.size()-1) {
+                                        if (byPval.get(p).getPvalue() == byPval.get(p+1).getPvalue()) {
+                                            secondary.add(byPval.get(p+1));
+                                            p++;
+                                        }
+                                        else{
+                                            done = true;
+                                        }
+                                    }
                                 }
                             }
                             else {
                                 mostSignificant = ldBlock.get(0);
                             }
-                            if(mostSignificant.getPvalueExponent() < -5) {
+                            if (mostSignificant.getPvalueExponent() < -5) {
                                 mostSignificant.setIsTopAssociation(true);
                             }
-//account for the case where to p-values within the same LD block are identical
-                            if(secondary != null && secondary.getPvalue() == mostSignificant.getPvalue()){
-                                secondary.setIsTopAssociation(true);
+                            //account for the case where multiple p-values within the same LD block are identical
+                            if (secondary.size() != 0){
+                                for(FilterAssociation s : secondary){
+                                    if(s.getPvalue() == mostSignificant.getPvalue()){
+                                        s.setIsTopAssociation(true);
+                                    }
+                                }
                             }
-
-                            i = j;
                         }
                     }
                     i++;
+
                 }
-                filtered.addAll(associations);
+
             }
+            filtered.addAll(associations);
+
         });
 
         return filtered;

@@ -80,6 +80,9 @@ public class FilteringServiceTest {
         assocs.add(new FilterAssociation("rs6919534-A", 8.0, -31, "6", "35279126"));
         assocs.add(new FilterAssociation("rs552707-T", 9.0, -46, "7", "28165684"));
 
+        for(FilterAssociation fa : assocs){
+            fa.setPvalue(fa.getPvalueMantissa()*Math.pow(10,(double)fa.getPvalueExponent()));
+        }
 
         filteringService = new FilteringService();
     }

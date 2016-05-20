@@ -25,7 +25,7 @@ public class FilterAssociation {
 
     private Boolean precisionConcern = false;
 
-    private String ldBlock;
+    private String ldBlock = null;
 
     public FilterAssociation(String strongestAllele,
                              Double pvalueMantissa,

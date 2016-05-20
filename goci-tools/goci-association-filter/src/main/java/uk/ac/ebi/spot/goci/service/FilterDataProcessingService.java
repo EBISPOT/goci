@@ -16,13 +16,14 @@ import java.util.Map;
 @Service
 public class FilterDataProcessingService {
 
-    private static Integer rs_id;
-    private static Integer bp_location;
-    private static Integer chromosome;
-    private static Integer pvalue;
-    private static Integer ld_block = null;
-    private static List<Integer> other;
-    private static String[] headers;
+    private Integer rs_id;
+    private Integer bp_location;
+    private Integer chromosome;
+    private Integer pvalue;
+    private Integer ld_block = null;
+    private List<Integer> other;
+    private String[] headers;
+
 
     @Autowired
     private FilteringService filteringService;
@@ -33,7 +34,7 @@ public class FilterDataProcessingService {
         return log;
     }
 
-    public String[][] filterInputData(String[][] data){
+    public String[][] filterInputData(String[][] data, Boolean pruneOutput){
         headers = data[0];
 
         processHeaders();
@@ -56,7 +57,7 @@ public class FilterDataProcessingService {
         List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLoc);
         getLog().info("Filtering process complete");
 
-        String[][] output = transformAssociations(filtered);
+        String[][] output = transformAssociations(filtered, pruneOutput);
         return output;
     }
 
@@ -147,7 +148,7 @@ public class FilterDataProcessingService {
     }
 
 
-    public String[][] transformAssociations(List<FilterAssociation> filtered) {
+    public String[][] transformAssociations(List<FilterAssociation> filtered, Boolean pruneOutput) {
         List<String[]> lines = new ArrayList<>();
 
         String[] newHeaders = new String[headers.length+1];
@@ -158,31 +159,33 @@ public class FilterDataProcessingService {
         newHeaders[headers.length] = "isTopAssociation";
         lines.add(newHeaders);
         for(FilterAssociation f : filtered){
-            String[] line = new String[headers.length+1];
+            if(!pruneOutput || (pruneOutput && f.getPvalueExponent() < -5)) {
+                String[] line = new String[headers.length + 1];
 
-            line[rs_id] = f.getStrongestAllele();
-            line[chromosome] = f.getChromosomeName();
-            line[bp_location] = f.getChromosomePosition().toString();
-            line[headers.length] = f.getIsTopAssociation().toString();
+                line[rs_id] = f.getStrongestAllele();
+                line[chromosome] = f.getChromosomeName();
+                line[bp_location] = f.getChromosomePosition().toString();
+                line[headers.length] = f.getIsTopAssociation().toString();
 
-            if(f.getPrecisionConcern()){
-                String m = f.getPvalueMantissa().toString();
-                String e = f.getPvalueExponent().toString();
-                line[pvalue] = m+"e"+e;
+                if (f.getPrecisionConcern()) {
+                    String m = f.getPvalueMantissa().toString();
+                    String e = f.getPvalueExponent().toString();
+                    line[pvalue] = m + "e" + e;
+                }
+                else {
+                    line[pvalue] = String.valueOf(f.getPvalue());
+                }
+
+                for (int o : other) {
+                    line[o] = f.getOtherInformation().get(other.indexOf(o));
+                }
+
+                if (ld_block != null) {
+                    line[ld_block] = f.getLdBlock();
+                }
+
+                lines.add(line);
             }
-            else {
-                line[pvalue] = String.valueOf(f.getPvalue());
-            }
-
-            for(int o : other){
-                line[o] = f.getOtherInformation().get(other.indexOf(o));
-            }
-
-            if(ld_block != null){
-                line[ld_block] = f.getLdBlock();
-            }
-
-            lines.add(line);
         }
         return lines.toArray(new String[lines.size()][]);
     }
