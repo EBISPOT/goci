@@ -95,23 +95,26 @@ public class StudyOperationsService {
 
         String message = null;
 
-        // Create new housekeeping object
-        Housekeeping newHousekeeping = study.getHousekeeping();
-        newHousekeeping.setCurationStatus(newStatus);
-
         // If the current and new status are different
         if (newStatus != null && newStatus != currentStudyStatus) {
+
+            // Get housekeeping object and assign new status
+            Housekeeping housekeeping = study.getHousekeeping();
+
             if (newStatus.getStatus().equals("Publish study")) {
                 // Run pre-publish checks first
                 Collection<Association> associations = associationRepository.findByStudyId(study.getId());
                 message = publishStudyCheckService.runChecks(study, associations);
-                // if checks pass then update the status
+
+                // if checks pass then update the status and save objects
                 if (message == null) {
-                    updateStatus(study, newHousekeeping, userFromRequest);
+                    housekeeping.setCurationStatus(newStatus);
+                    updateStatus(study, housekeeping, userFromRequest);
                 }
             }
             else {
-                updateStatus(study, newHousekeeping, userFromRequest);
+                housekeeping.setCurationStatus(newStatus);
+                updateStatus(study, housekeeping, userFromRequest);
             }
         }
         else {
@@ -133,9 +136,11 @@ public class StudyOperationsService {
         // If the current and new status are different
         if (newStatus != null && newStatus != currentStudyStatus) {
             if (newStatus.getStatus().equals("Publish study")) {
+
                 // Run pre-publish checks first
                 Collection<Association> associations = associationRepository.findByStudyId(study.getId());
                 message = publishStudyCheckService.runChecks(study, associations);
+
                 // if checks pass then update the status
                 if (message == null) {
                     updateStatus(study, housekeeping, userFromRequest);
@@ -150,7 +155,6 @@ public class StudyOperationsService {
                 updateStatus(study, housekeeping, userFromRequest);
             }
         }
-        // TODO WRITE TEST
         else {
             // Save housekeeping returned from form
             saveHousekeeping(study, housekeeping);
@@ -166,7 +170,6 @@ public class StudyOperationsService {
      */
     private void saveHousekeeping(Study study, Housekeeping housekeeping) {
         // Save housekeeping returned from form
-        // todo TEST SETTING STUDY ATTRIBUTE
         housekeeping.setLastUpdateDate(new Date());
         housekeepingRepository.save(housekeeping);
         study.setHousekeeping(housekeeping);

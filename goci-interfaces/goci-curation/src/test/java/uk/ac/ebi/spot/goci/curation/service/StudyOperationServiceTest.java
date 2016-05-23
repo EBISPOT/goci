@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,6 +127,16 @@ public class StudyOperationServiceTest {
                     .setStudyAddedDate(new Date())
                     .build();
 
+    private static final Housekeeping NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH =
+            new HousekeepingBuilder()
+                    .setId(799L)
+                    .setCurationStatus(PUBLISH)
+                    .setCurator(CURATOR1)
+                    .setNotes("Some notes")
+                    .setEthnicityCheckedLevelOne(true)
+                    .setStudyAddedDate(new Date())
+                    .build();
+
     private static final Study STU1 =
             new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
 
@@ -162,6 +173,12 @@ public class StudyOperationServiceTest {
                                                             curationStatusRepository,
                                                             trackingOperationService);
     }
+    @After
+    public void restoreTestStudy(){
+        CURRENT_HOUSEKEEPING.setCurationStatus(CURRENT_STATUS1);
+        CURRENT_HOUSEKEEPING.setCurator(CURATOR1);
+        STU1.setHousekeeping(CURRENT_HOUSEKEEPING);
+    }
 
     @Test
     public void testSaveStudy() {
@@ -178,46 +195,58 @@ public class StudyOperationServiceTest {
 
     @Test
     public void testAssignStudyStatusToLevelOneCurationDone() {
+
         // Change assignment from "Level 2 ancestry done" to "Level 1 curation done"
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_01);
+
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
         verify(mailService).sendEmailNotification(STU1, LEVEL_01.getStatus());
         verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(1)).save(STU1);
+        verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+
+        verifyZeroInteractions(publishStudyCheckService);
+
         assertEquals("Study status must be " + LEVEL_01.getStatus(),
-                     STU1.getHousekeeping().getCurationStatus(),
-                     LEVEL_01);
+                     LEVEL_01,
+                     STU1.getHousekeeping().getCurationStatus());
         assertNull(message);
     }
 
     @Test
-    public void testAssignStudyStatus() {
+    public void testAssignStudyStatusToLevelTwoCurationDone() {
+
         // Change assignment from "Level 2 ancestry done" to "Level 2 curation done"
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_02);
+
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
         verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(1)).save(STU1);
+        verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE);
+
         verifyZeroInteractions(mailService);
+        verifyZeroInteractions(publishStudyCheckService);
+
         assertEquals("Study status must be " + LEVEL_02.getStatus(),
-                     STU1.getHousekeeping().getCurationStatus(),
-                     LEVEL_02);
+                     LEVEL_02,
+                     STU1.getHousekeeping().getCurationStatus());
         assertNull(message);
     }
 
     @Test
     public void testAssignStudyStatusNoChange() {
+
         // No change to status
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(CURRENT_STATUS1);
+
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
 
@@ -225,11 +254,14 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(studyRepository);
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(trackingOperationService);
+        verifyZeroInteractions(publishStudyCheckService);
+
         assertEquals("Current status and new status are the same, no change required", message);
     }
 
     @Test
     public void testAssignStudyStatusPublishStudy() {
+
         Collection<Association> associations = new ArrayList<>();
         associations.add(ASS1);
         associations.add(ASS2);
@@ -243,13 +275,13 @@ public class StudyOperationServiceTest {
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
         verify(mailService, times(1)).sendEmailNotification(STU1, PUBLISH.getStatus());
         verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(1)).save(STU1);
+        verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+
         assertEquals("Study status must be " + PUBLISH.getStatus(),
-                     STU1.getHousekeeping().getCurationStatus(),
-                     PUBLISH);
+                     PUBLISH, STU1.getHousekeeping().getCurationStatus());
         assertNull(message);
     }
 
@@ -262,8 +294,7 @@ public class StudyOperationServiceTest {
         // Stub behaviour
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(PUBLISH);
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
-        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(
-                "No EFO trait assigned and some SNP associations have not been approved for study");
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(Matchers.anyString());
 
         String message = studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
 
@@ -273,23 +304,20 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(trackingOperationService);
 
         assertEquals("Study status must be " + CURRENT_STATUS1,
-                     STU1.getHousekeeping().getCurationStatus(),
-                     CURRENT_STATUS1);
+                     CURRENT_STATUS1, STU1.getHousekeeping().getCurationStatus());
         assertNotNull(message);
-        assertEquals("No EFO trait assigned and some SNP associations have not been approved for study", message);
     }
 
 
     @Test
-    public void testUpdateHousekeeping() {
+    public void testUpdateHousekeepingWithStatusChange() {
 
         // Test updating housekeeping where the status has changed
-
         String message =
                 studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING, STU1, SECURE_USER);
 
-        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING);
         verify(mailService).sendEmailNotification(STU1, NEW_HOUSEKEEPING.getCurationStatus().getStatus());
+        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING);
         verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
@@ -297,8 +325,7 @@ public class StudyOperationServiceTest {
 
         // Assert results
         assertEquals("Study status must be " + LEVEL_01.getStatus(),
-                     STU1.getHousekeeping().getCurationStatus(),
-                     LEVEL_01);
+                     LEVEL_01, STU1.getHousekeeping().getCurationStatus());
         assertNull(message);
 
         // Check housekeeping was saved
@@ -313,6 +340,7 @@ public class StudyOperationServiceTest {
     @Test
     public void testUpdateHousekeepingNoStatusChange() {
 
+        // Test updating housekeeping where the status has not changed
         String message =
                 studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_NO_STATUS_CHANGE, STU1, SECURE_USER);
 
@@ -320,8 +348,8 @@ public class StudyOperationServiceTest {
         verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(mailService);
-        verifyZeroInteractions(associationRepository);
         verifyZeroInteractions(trackingOperationService);
+        verifyZeroInteractions(publishStudyCheckService);
 
         // Check housekeeping was saved
         assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
@@ -333,8 +361,82 @@ public class StudyOperationServiceTest {
 
         // Assert results
         assertEquals("Study status must be " + NEW_HOUSEKEEPING_NO_STATUS_CHANGE.getCurationStatus(),
-                     STU1.getHousekeeping().getCurationStatus(),
-                     CURRENT_STATUS1);
+                     CURRENT_STATUS1, STU1.getHousekeeping().getCurationStatus());
         assertNull(message);
+    }
+
+    @Test
+    public void testUpdateHousekeepingWithStatusChangeToPublish() {
+
+        Collection<Association> associations = new ArrayList<>();
+        associations.add(ASS1);
+        associations.add(ASS2);
+
+        // Stub behaviour
+        when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
+
+        // Test updating housekeeping where the status has changed
+        String message =
+                studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH, STU1, SECURE_USER);
+
+        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
+        verify(mailService).sendEmailNotification(STU1,
+                                                  NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()
+                                                          .getStatus());
+        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH);
+        verify(studyRepository, times(2)).save(STU1);
+        verify(trackingOperationService, times(1)).update(STU1,
+                                                          SECURE_USER,
+                                                          EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+
+        // Assert results
+        assertEquals("Study status must be " + PUBLISH.getStatus(),
+                     PUBLISH, STU1.getHousekeeping().getCurationStatus());
+        assertNull(message);
+
+        // Check housekeeping was saved
+        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
+                .contains("Some notes", true);
+        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
+        assertThat(STU1.getHousekeeping().getCurator()).extracting("firstName", "lastName", "email", "userName")
+                .contains("test", "Test", "gwas-dev@ebi.ac.uk", "testing");
+    }
+
+    @Test
+    public void testUpdateHousekeepingWithStatusChangeToPublishyWithStudyThatDoesNotPassPublishCheck() {
+
+        Collection<Association> associations = new ArrayList<>();
+        associations.add(ASS1);
+        associations.add(ASS3);
+
+        // Stub behaviour
+        when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(Matchers.anyString());
+
+        // Test updating housekeeping where the status has changed
+        String message =
+                studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH, STU1, SECURE_USER);
+
+        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
+        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH);
+        verify(studyRepository, times(1)).save(STU1);
+
+        verifyZeroInteractions(mailService);
+        verifyZeroInteractions(trackingOperationService);
+
+        // Assert results
+        assertEquals("Study status must be " + CURRENT_STATUS1.getStatus(),
+                     CURRENT_STATUS1, STU1.getHousekeeping().getCurationStatus());
+        assertNotNull(message);
+
+        // Check housekeeping was saved
+        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
+                .contains("Some notes", true);
+        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
+        assertThat(STU1.getHousekeeping().getCurator()).extracting("firstName", "lastName", "email", "userName")
+                .contains("test", "Test", "gwas-dev@ebi.ac.uk", "testing");
     }
 }
