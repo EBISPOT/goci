@@ -11,6 +11,7 @@ import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -18,6 +19,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -42,6 +44,7 @@ public class StudyOperationsService {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private TrackingOperationService trackingOperationService;
+    private EthnicityRepository ethnicityRepository;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -51,7 +54,8 @@ public class StudyOperationsService {
                                   StudyRepository studyRepository,
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
-                                  @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService) {
+                                  @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
+                                  EthnicityRepository ethnicityRepository) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -60,6 +64,7 @@ public class StudyOperationsService {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.trackingOperationService = trackingOperationService;
+        this.ethnicityRepository = ethnicityRepository;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -160,6 +165,33 @@ public class StudyOperationsService {
             saveHousekeeping(study, housekeeping);
         }
         return message;
+    }
+
+
+    /**
+     * Update a study status
+     *
+     * @param study Study to delete
+     */
+    public void deleteStudy(Study study, SecureUser user) {
+
+        // Before we delete the study get its associated housekeeping and ethnicity
+        Long housekeepingId = study.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(study.getId());
+
+        // Delete ethnicity information linked to this study
+        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
+            ethnicityRepository.delete(ethnicity);
+        }
+
+        // Delete study
+        studyRepository.delete(study);
+
+        // Delete housekeeping
+        housekeepingRepository.delete(housekeepingAttachedToStudy);
+        trackingOperationService.delete(study, user);
+
     }
 
     /**

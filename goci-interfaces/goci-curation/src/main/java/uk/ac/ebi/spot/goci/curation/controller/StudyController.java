@@ -630,28 +630,11 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String deleteStudy(@PathVariable Long studyId) {
+    public String deleteStudy(@PathVariable Long studyId, HttpServletRequest request) {
 
         // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
-
-        // Before we delete the study get its associated housekeeping and ethnicity
-        Long housekeepingId = studyToDelete.getHousekeeping().getId();
-        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
-        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(studyId);
-
-        // Delete ethnicity information linked to this study
-        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
-            ethnicityRepository.delete(ethnicity);
-        }
-
-
-        // Delete study
-        studyRepository.delete(studyToDelete);
-
-        // Delete housekeeping
-        housekeepingRepository.delete(housekeepingAttachedToStudy);
-
+        studyOperationsService.deleteStudy(studyToDelete,  currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies";
     }
 

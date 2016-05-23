@@ -27,6 +27,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -79,6 +80,9 @@ public class StudyOperationServiceTest {
 
     @Mock
     private TrackingOperationService trackingOperationService;
+
+    @Mock
+    private EthnicityRepository ethnicityRepository;
 
     private StudyOperationsService studyOperationsService;
 
@@ -171,10 +175,11 @@ public class StudyOperationServiceTest {
                                                             studyRepository,
                                                             curatorRepository,
                                                             curationStatusRepository,
-                                                            trackingOperationService);
+                                                            trackingOperationService, ethnicityRepository);
     }
+
     @After
-    public void restoreTestStudy(){
+    public void restoreTestStudy() {
         CURRENT_HOUSEKEEPING.setCurationStatus(CURRENT_STATUS1);
         CURRENT_HOUSEKEEPING.setCurator(CURATOR1);
         STU1.setHousekeeping(CURRENT_HOUSEKEEPING);

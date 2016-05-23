@@ -34,8 +34,8 @@ public class StudyTrackingOperationServiceImpl implements TrackingOperationServi
         trackable.addEvent(updateEvent);
     }
 
-
     @Override public void delete(Trackable trackable, SecureUser secureUser) {
-
+        Event deleteEvent = eventOperationsService.createEvent(EventType.STUDY_DELETION, secureUser);
+        trackable.addEvent(deleteEvent);
     }
 }
