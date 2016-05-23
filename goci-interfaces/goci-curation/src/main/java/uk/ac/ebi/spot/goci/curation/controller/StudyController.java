@@ -64,7 +64,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +227,7 @@ public class StudyController {
 
             if (studyType.equals("Targeted array studies")) {
                 studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
-                                                                                       sort));
+                                                                                                 sort));
             }
 
             if (studyType.equals("Studies in curation queue")) {
@@ -499,7 +498,9 @@ public class StudyController {
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport, HttpServletRequest request, Model model)
+    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
+                                           HttpServletRequest request,
+                                           Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
         // Remove whitespace
@@ -514,8 +515,8 @@ public class StudyController {
         else {
             // Pass to importer
             Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-            Study savedStudy= studyOperationsService.saveStudy(importedStudy,
-                                                            currentUserDetailsService.getUserFromRequest(request));
+            Study savedStudy = studyOperationsService.saveStudy(importedStudy,
+                                                                currentUserDetailsService.getUserFromRequest(request));
 
             // Create directory to store associated files
             try {
@@ -551,7 +552,8 @@ public class StudyController {
             return "add_study";
         }
 
-        Study savedStudy = studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
+        Study savedStudy =
+                studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
         // Create directory to store associated files
         try {
             studyFileService.createStudyDir(savedStudy.getId());
@@ -634,7 +636,7 @@ public class StudyController {
 
         // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
-        studyOperationsService.deleteStudy(studyToDelete,  currentUserDetailsService.getUserFromRequest(request));
+        studyOperationsService.deleteStudy(studyToDelete, currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies";
     }
 
@@ -677,7 +679,7 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String assignStudyCurator(@PathVariable Long studyId,
                                      @ModelAttribute Assignee assignee,
-                                     RedirectAttributes redirectAttributes) {
+                                     RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
@@ -689,13 +691,9 @@ public class StudyController {
             redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
         }
         else {
-            Long curatorId = assignee.getCuratorId();
-            Curator curator = curatorRepository.findOne(curatorId);
-
-            // Set new curator
-            study.getHousekeeping().setCurator(curator);
-            study.getHousekeeping().setLastUpdateDate(new Date());
-            studyRepository.save(study);
+            studyOperationsService.assignStudyCurator(study,
+                                                      assignee,
+                                                      currentUserDetailsService.getUserFromRequest(request));
         }
         return "redirect:" + assignee.getUri();
     }
@@ -718,7 +716,10 @@ public class StudyController {
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
         }
         else {
-            String message = studyOperationsService.assignStudyStatus(study, statusAssignment,currentUserDetailsService.getUserFromRequest(request) );
+            String message = studyOperationsService.assignStudyStatus(study,
+                                                                      statusAssignment,
+                                                                      currentUserDetailsService.getUserFromRequest(
+                                                                              request));
             redirectAttributes.addFlashAttribute("studySnpsNotApproved", message);
         }
         return "redirect:" + statusAssignment.getUri();
@@ -765,7 +766,9 @@ public class StudyController {
         Study study = studyRepository.findOne(studyId);
 
         // Update housekeeping
-        String message = studyOperationsService.updateHousekeeping(housekeeping, study, currentUserDetailsService.getUserFromRequest(request));
+        String message = studyOperationsService.updateHousekeeping(housekeeping,
+                                                                   study,
+                                                                   currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         if (message == null) {
