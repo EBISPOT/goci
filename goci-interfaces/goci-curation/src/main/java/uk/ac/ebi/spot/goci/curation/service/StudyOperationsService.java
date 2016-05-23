@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.curation.service.tracking.EventTypeService;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -45,6 +47,7 @@ public class StudyOperationsService {
     private CurationStatusRepository curationStatusRepository;
     private TrackingOperationService trackingOperationService;
     private EthnicityRepository ethnicityRepository;
+    private EventTypeService eventTypeService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -55,7 +58,8 @@ public class StudyOperationsService {
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
-                                  EthnicityRepository ethnicityRepository) {
+                                  EthnicityRepository ethnicityRepository,
+                                  EventTypeService eventTypeService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -65,6 +69,7 @@ public class StudyOperationsService {
         this.curationStatusRepository = curationStatusRepository;
         this.trackingOperationService = trackingOperationService;
         this.ethnicityRepository = ethnicityRepository;
+        this.eventTypeService = eventTypeService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -129,16 +134,40 @@ public class StudyOperationsService {
     }
 
     /**
+     * Assign curator to a study
+     */
+    public void assignStudyCurator(Study study, Assignee assignee, SecureUser user) {
+
+        Long curatorId = assignee.getCuratorId();
+        Curator curator = curatorRepository.findOne(curatorId);
+
+        // Set new curator
+        Housekeeping housekeeping = study.getHousekeeping();
+        housekeeping.setCurator(curator);
+        saveHousekeeping(study, housekeeping);
+
+        // Add event
+        recordStudyCuratorChange(study, user, curator);
+    }
+
+    /**
      * Update housekeeping
      */
-    public String updateHousekeeping(Housekeeping housekeeping, Study study, SecureUser userFromRequest) {
+    public String updateHousekeeping(Housekeeping housekeeping, Study study, SecureUser user) {
 
         CurationStatus newStatus = housekeeping.getCurationStatus();
         CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
 
-        String message = null;
+        Curator newCurator = housekeeping.getCurator();
+        Curator currentCurator = study.getHousekeeping().getCurator();
+
+        // If curator has changed, record the curator change event
+        if (newCurator != null && newCurator != currentCurator) {
+            recordStudyCuratorChange(study, user, newCurator);
+        }
 
         // If the current and new status are different
+        String message = null;
         if (newStatus != null && newStatus != currentStudyStatus) {
             if (newStatus.getStatus().equals("Publish study")) {
 
@@ -148,7 +177,7 @@ public class StudyOperationsService {
 
                 // if checks pass then update the status
                 if (message == null) {
-                    updateStatus(study, housekeeping, userFromRequest);
+                    updateStatus(study, housekeeping, user);
                 }
                 // restore old status
                 else {
@@ -157,7 +186,7 @@ public class StudyOperationsService {
                 }
             }
             else {
-                updateStatus(study, housekeeping, userFromRequest);
+                updateStatus(study, housekeeping, user);
             }
         }
         else {
@@ -166,7 +195,6 @@ public class StudyOperationsService {
         }
         return message;
     }
-
 
     /**
      * Update a study status
@@ -191,7 +219,6 @@ public class StudyOperationsService {
         // Delete housekeeping
         housekeepingRepository.delete(housekeepingAttachedToStudy);
         trackingOperationService.delete(study, user);
-
     }
 
     /**
@@ -217,7 +244,23 @@ public class StudyOperationsService {
      */
     private void recordStudyStatusChange(Study study, SecureUser user, CurationStatus newStatus) {
         // Create syudy event
-        EventType eventType = determineEventTypeFromStatus(newStatus);
+        EventType eventType = eventTypeService.determineEventTypeFromStatus(newStatus);
+        trackingOperationService.update(study, user, eventType);
+        studyRepository.save(study);
+        getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
+    }
+
+    /**
+     * Record a study curator change
+     *
+     * @param curator New curator to apply to study
+     * @param study   Study to update
+     * @param user    User preforming request
+     */
+    private void recordStudyCuratorChange(Study study, SecureUser user, Curator curator) {
+
+        // Create study event
+        EventType eventType = eventTypeService.determineEventTypeFromCurator(curator);
         trackingOperationService.update(study, user, eventType);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
@@ -277,60 +320,5 @@ public class StudyOperationsService {
 
         // Save housekeeping
         return housekeeping;
-    }
-
-    /**
-     * Determine event type based on status
-     *
-     * @param status curation status to determine event type from
-     * @return eventType
-     */
-    private EventType determineEventTypeFromStatus(CurationStatus status) {
-        EventType eventType = null;
-        switch (status.getStatus()) {
-            case "Level 1 ancestry done":
-                eventType = EventType.STUDY_STATUS_CHANGE_LEVEL_1_ANCESTRY_DONE;
-                break;
-            case "Level 2 ancestry done":
-                eventType = EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE;
-                break;
-            case "Level 1 curation done":
-                eventType = EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE;
-                break;
-            case "Level 2 curation done":
-                eventType = EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE;
-                break;
-            case "Publish study":
-                eventType = EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY;
-                break;
-            case "Awaiting Curation":
-                eventType = EventType.STUDY_STATUS_CHANGE_AWAITING_CURATION;
-                break;
-            case "Outstanding Query":
-                eventType = EventType.STUDY_STATUS_CHANGE_OUTSTANDING_QUERY;
-                break;
-            case "CNV Paper":
-                eventType = EventType.STUDY_STATUS_CHANGE_CNV_PAPER;
-                break;
-            case "Curation Abandoned":
-                eventType = EventType.STUDY_STATUS_CHANGE_CURATION_ABANDONED;
-                break;
-            case "Conversion Problem":
-                eventType = EventType.STUDY_STATUS_CHANGE_CONVERSION_PROBLEM;
-                break;
-            case "Unpublished from catalog":
-                eventType = EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG;
-                break;
-            case "Pending author query":
-                eventType = EventType.STUDY_STATUS_CHANGE_PENDING_AUTHOR_QUERY;
-                break;
-            case "Awaiting EFO assignment":
-                eventType = EventType.STUDY_STATUS_CHANGE_AWAITING_EFO_ASSIGNMENT;
-                break;
-            default:
-                eventType = EventType.STUDY_STATUS_CHANGE_UNKNOWN;
-                break;
-        }
-        return eventType;
     }
 }
