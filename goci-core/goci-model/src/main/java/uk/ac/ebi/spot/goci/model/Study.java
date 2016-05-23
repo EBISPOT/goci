@@ -60,6 +60,8 @@ public class Study implements Trackable {
 
     private Boolean gxg = false;
 
+    private Boolean genomewideArray = true;
+
     private Boolean targetedArray = false;
 
     private Integer snpCount;
@@ -71,8 +73,7 @@ public class Study implements Trackable {
     private Boolean pooled = false;
 
     private String studyDesignComment;
-
-
+    
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -96,12 +97,6 @@ public class Study implements Trackable {
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
-
-//    @ManyToMany
-//    @JoinTable(name = "STUDY_SNP",
-//               joinColumns = @JoinColumn(name = "STUDY_ID"),
-//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne(orphanRemoval = true)
     private Housekeeping housekeeping;
@@ -129,6 +124,7 @@ public class Study implements Trackable {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
+                 Boolean genomewideArray,
                  Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
@@ -152,6 +148,7 @@ public class Study implements Trackable {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.genomewideArray = genomewideArray;
         this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
@@ -296,14 +293,6 @@ public class Study implements Trackable {
         this.efoTraits = efoTraits;
     }
 
-//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-//        return singleNucleotidePolymorphisms;
-//    }
-//
-//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-//    }
-
     public Housekeeping getHousekeeping() {
         return housekeeping;
     }
@@ -369,6 +358,13 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
     }
 
+    public Boolean getGenomewideArray() {
+        return genomewideArray;
+    }
+
+    public void setGenomewideArray(Boolean genomewideArray) {
+        this.genomewideArray = genomewideArray;
+    }
     public Collection<Event> getEvents() {
         return events;
     }

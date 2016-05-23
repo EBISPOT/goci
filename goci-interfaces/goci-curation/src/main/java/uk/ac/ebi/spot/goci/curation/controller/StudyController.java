@@ -221,6 +221,11 @@ public class StudyController {
                                                                                        sort));
             }
 
+            if (studyType.equals("Genomewide array studies")) {
+                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
+                                                                                                   sort));
+            }
+
             if (studyType.equals("Targeted array studies")) {
                 studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
                                                                                        sort));
@@ -865,6 +870,7 @@ public class StudyController {
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
+        duplicateStudy.setGenomewideArray(studyToDuplicate.getGenomewideArray());
         duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
         duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
@@ -1051,6 +1057,7 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
+        studyTypesOptions.add("Genomewide array studies");
         studyTypesOptions.add("Targeted array studies");
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");

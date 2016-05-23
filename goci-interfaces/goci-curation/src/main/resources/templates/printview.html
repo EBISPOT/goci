@@ -57,13 +57,53 @@
                 </tr>
 
                 <tr>
-                    <th>Platform</th>
+                    <th>Platform Manufacturer</th>
                     <td><span th:each="platform: ${study.platforms}"
                               th:if="${#arrays.length(study.platforms) &gt; 1}"
                               th:text="${platform.manufacturer}+', ' ?: ''"></span>
                         <span th:each="platform: ${study.platforms}"
                               th:if="${#arrays.length(study.platforms) == 1}"
                               th:text="${platform.manufacturer} ?: ''"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>SNPs Passing QC</th>
+                    <td>
+                        <span th:text="${study.qualifier != null} ? ${study.qualifier} : ''"></span>
+                        <span th:text="${study.snpCount} ?: ''"></span>
+                        <span th:switch="${study.imputed}">
+                            <span th:case="'null'"></span>
+
+                            <span th:case="false"></span>
+
+                            <span th:case="true">(imputed)</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Additional Array Information</th>
+                    <td th:text="${study.studyDesignComment != null} ? ${study.studyDesignComment} : ''"></td>
+                </tr>
+
+                <tr>
+                    <th>Genomewide Genotyping Array</th>
+                    <td th:switch="${study.targetedArray}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Targeted Genotyping Array</th>
+                    <td th:switch="${study.targetedArray}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
                     </td>
                 </tr>
 
@@ -100,6 +140,17 @@
                     </td>
                 </tr>
 
+
+                <tr>
+                    <th>Pooled</th>
+                    <td th:switch="${study.pooled}">
+                        <p th:case="'null'"></p>
+
+                        <p th:case="false">No</p>
+
+                        <p th:case="true">Yes</p>
+                    </td>
+                </tr>
 
                 <tr>
                     <th>Initial Sample Description</th>

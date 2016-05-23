@@ -43,12 +43,12 @@ public class WeeklyReportController {
 
         List<WeeklyTotalsSummaryView> weeklyTotalsSummaryViews = new ArrayList<>();
 
-//        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.getLastEightWeeks();
+        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.getLastEightWeeks();
 
-        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.findAll();
+//        weeklyTotalsSummaryViews = weeklyTotalsSummaryViewRepository.findAll();
 
-        Integer studiesTotal = null;
-        Integer entriesTotal = null;
+        Integer studiesTotal = 0;
+        Integer entriesTotal = 0;
 
         for(WeeklyTotalsSummaryView w : weeklyTotalsSummaryViews){
             studiesTotal = studiesTotal + w.getWeeklyStudies();
