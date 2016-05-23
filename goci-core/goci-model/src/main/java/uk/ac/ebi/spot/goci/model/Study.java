@@ -73,7 +73,7 @@ public class Study implements Trackable {
     private Boolean pooled = false;
 
     private String studyDesignComment;
-    
+
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
