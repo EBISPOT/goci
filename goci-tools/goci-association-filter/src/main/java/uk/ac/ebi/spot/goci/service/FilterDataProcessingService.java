@@ -91,7 +91,14 @@ public class FilterDataProcessingService {
     public List<FilterAssociation> processInputData(String[][] data) {
         List<FilterAssociation> associations = new ArrayList<>();
 
+        System.out.println("About to process " + data.length + " entries");
+
         for(int i = 1; i < data.length; i++){
+
+            if((i*100)%data.length == 0) {
+                System.out.println((i*100)/data.length + " % done");
+            }
+
             String strongestAllele = data[i][rs_id];
             String chromosomeName = data[i][chromosome];
             String chromosomePosition  = data[i][bp_location];
@@ -104,8 +111,6 @@ public class FilterDataProcessingService {
             Integer pvalueExponent;
 
             if(!pval.contains("e")){
-
-                pval = pvalueFull.toString().toLowerCase();
                 double m = pvalueFull;
                 int e = 0;
 
@@ -158,7 +163,15 @@ public class FilterDataProcessingService {
         }
         newHeaders[headers.length] = "isTopAssociation";
         lines.add(newHeaders);
+
+        System.out.println("About to prepare " + filtered.size() + " entries for export");
+
+
         for(FilterAssociation f : filtered){
+            if((filtered.indexOf(f)*100)%filtered.size() == 0.0) {
+                System.out.println((filtered.indexOf(f)*100)/filtered.size() + " % done");
+            }
+
             if(!pruneOutput || (pruneOutput && f.getPvalueExponent() < -5)) {
                 String[] line = new String[headers.length + 1];
 

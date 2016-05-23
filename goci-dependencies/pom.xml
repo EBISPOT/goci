@@ -153,10 +153,14 @@
                 <artifactId>goci-renderlets-core</artifactId>
                 <version>${goci.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-catalog-io-services</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-data-filtering-services</artifactId>
                 <version>${goci.version}</version>
             </dependency>
             <!--  additional external dependencies -->

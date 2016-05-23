@@ -142,8 +142,8 @@ public class AssociationFilterApplication {
                 "prune",
                 false,
                 "Prune output - removes associations with p-value < 1E-5 from the result output");
-        inOption.setArgName("prune");
-        inOption.setRequired(false);
+        pruneOption.setRequired(false);
+        options.addOption(pruneOption);
 
         return options;
     }

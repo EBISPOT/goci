@@ -43,6 +43,7 @@ public class FilteringService {
 
         List<FilterAssociation> filtered = new ArrayList<>();
         byBPLocation.forEach((chromName, associations) -> {
+            System.out.println("Processing chromosome " + chromName + " with " + associations.size() + " associations");
 
             if(associations.size() == 1 && associations.get(0).getPvalueExponent() < -5){
                 associations.get(0).setIsTopAssociation(true);
