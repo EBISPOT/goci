@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
@@ -14,8 +15,10 @@ import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.curation.service.tracking.EventTypeService;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
@@ -84,6 +87,9 @@ public class StudyOperationServiceTest {
     @Mock
     private EthnicityRepository ethnicityRepository;
 
+    @Mock
+    private EventTypeService eventTypeService;
+
     private StudyOperationsService studyOperationsService;
 
     private static final SecureUser SECURE_USER =
@@ -106,6 +112,13 @@ public class StudyOperationServiceTest {
             .setFirstName("test")
             .setLastName("Test")
             .setUserName("testing")
+            .build();
+
+    private static final Curator NEW_CURATOR = new CuratorBuilder().setId(803L)
+            .setEmail("gwas-dev@ebi.ac.uk")
+            .setFirstName("Level 1 Curator")
+            .setLastName("Level 1 Curator")
+            .setUserName("Level 1 Curator")
             .build();
 
     private static final Housekeeping CURRENT_HOUSEKEEPING =
@@ -166,6 +179,8 @@ public class StudyOperationServiceTest {
     private static final StatusAssignment STATUS_ASSIGNMENT =
             new StatusAssignmentBuilder().build();
 
+    private static final Assignee ASSIGNEE = new AssigneeBuilder().build();
+
     @Before
     public void setUpMock() {
         studyOperationsService = new StudyOperationsService(associationRepository,
@@ -175,7 +190,9 @@ public class StudyOperationServiceTest {
                                                             studyRepository,
                                                             curatorRepository,
                                                             curationStatusRepository,
-                                                            trackingOperationService, ethnicityRepository);
+                                                            trackingOperationService,
+                                                            ethnicityRepository,
+                                                            eventTypeService);
     }
 
     @After
@@ -316,6 +333,22 @@ public class StudyOperationServiceTest {
         assertNotNull(message);
     }
 
+
+    @Test
+    public void testAssignStudyCurator(){
+
+        // Stubbing
+        when(curatorRepository.findOne(Matchers.anyLong())).thenReturn(NEW_CURATOR);
+        when(eventTypeService.determineEventTypeFromCurator(NEW_CURATOR)).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+
+        studyOperationsService.assignStudyCurator(STU1, ASSIGNEE, SECURE_USER);
+        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
+        verify(studyRepository, times(2)).save(STU1);
+        verify(trackingOperationService, times(1)).update(STU1,
+                                                          SECURE_USER,
+                                                          EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+
+    }
 
     @Test
     public void testUpdateHousekeepingWithStatusChange() {
