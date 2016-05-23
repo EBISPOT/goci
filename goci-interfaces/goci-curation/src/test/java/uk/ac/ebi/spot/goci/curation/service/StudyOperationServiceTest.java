@@ -210,6 +210,7 @@ public class StudyOperationServiceTest {
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
 
         verifyZeroInteractions(publishStudyCheckService);
+        verifyZeroInteractions(associationRepository);
 
         assertEquals("Study status must be " + LEVEL_01.getStatus(),
                      LEVEL_01,
@@ -234,6 +235,7 @@ public class StudyOperationServiceTest {
 
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(publishStudyCheckService);
+        verifyZeroInteractions(associationRepository);
 
         assertEquals("Study status must be " + LEVEL_02.getStatus(),
                      LEVEL_02,
@@ -255,6 +257,7 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(trackingOperationService);
         verifyZeroInteractions(publishStudyCheckService);
+        verifyZeroInteractions(associationRepository);
 
         assertEquals("Current status and new status are the same, no change required", message);
     }
@@ -323,6 +326,8 @@ public class StudyOperationServiceTest {
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
 
+        verifyZeroInteractions(associationRepository);
+
         // Assert results
         assertEquals("Study status must be " + LEVEL_01.getStatus(),
                      LEVEL_01, STU1.getHousekeeping().getCurationStatus());
@@ -350,6 +355,7 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(trackingOperationService);
         verifyZeroInteractions(publishStudyCheckService);
+        verifyZeroInteractions(associationRepository);
 
         // Check housekeeping was saved
         assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
