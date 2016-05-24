@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -292,6 +293,7 @@ public class StudyOperationServiceTest {
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(CURRENT_STATUS1);
         when(eventTypeService.determineEventTypeFromStatus(CURRENT_STATUS1)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE);
 
+        Study studyBeforeAssignStatus = STU1;
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
 
@@ -303,6 +305,8 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(associationRepository);
         verifyZeroInteractions(eventTypeService);
 
+        // Assert there has been no change
+        assertThat(STU1).isEqualToComparingFieldByFieldRecursively(studyBeforeAssignStatus);
         assertEquals("Current status and new status are the same, no change required", message);
     }
 
