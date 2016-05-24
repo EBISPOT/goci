@@ -582,23 +582,13 @@ public class StudyController {
     public String updateStudy(@ModelAttribute Study study,
                               Model model,
                               @PathVariable Long studyId,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        // Use id in URL to get study and then its associated housekeeping
-        Study existingStudy = studyRepository.findOne(studyId);
-        Housekeeping existingHousekeeping = existingStudy.getHousekeeping();
-
-        // Set the housekeeping of the study returned to one already linked to it in database
-        // Need to do this as we don't return housekeeping in form
-        study.setHousekeeping(existingHousekeeping);
-
-        // Saves the new information returned from form
-        studyRepository.save(study);
+        studyOperationsService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request) );
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + study.getId();
     }
 
