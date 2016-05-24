@@ -41,7 +41,6 @@ public class EmbeddableDocumentTest {
                                "title",
                                "initial sample size",
                                "replicate sample size",
-                               Collections.<Platform>emptyList(),
                                "123456",
                                false,
                                false,
@@ -53,11 +52,12 @@ public class EmbeddableDocumentTest {
                                false,
                                false,
                                "study design comment",
+                               Collections.EMPTY_LIST,
+                               Collections.EMPTY_LIST,
+                               Collections.EMPTY_LIST,
                                null,
-                               Collections.<EfoTrait>emptyList(),
-//                               Collections.<SingleNucleotidePolymorphism>emptyList(),
-                               Collections.<Ethnicity>emptyList(),
-                               h);
+                               Collections.EMPTY_LIST,
+                               null, null, Collections.EMPTY_LIST);
 
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
@@ -80,7 +80,8 @@ public class EmbeddableDocumentTest {
                                            null,
                                            null,
                                            study,
-                                           Collections.emptyList(), Collections.emptyList(), null, null, null, null);
+                                           Collections.EMPTY_LIST, Collections.EMPTY_LIST,
+                                           null, null, null, null, Collections.EMPTY_LIST);
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
 
