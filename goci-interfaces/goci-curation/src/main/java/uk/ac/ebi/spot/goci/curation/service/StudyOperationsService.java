@@ -79,15 +79,13 @@ public class StudyOperationsService {
     }
 
     /**
-     * Update a study status
+     * Create a study entry in the database
      *
      * @param study Study to save
      * @param user  User preforming request
-     * @return ID of study to save
+     * @return study
      */
     public Study createStudy(Study study, SecureUser user) {
-        // TODO RENAME AS CREATE AND WRITE NEW METHOD TO SAVE A STUDY
-        // Update and save study
         study.setHousekeeping(createHousekeeping());
         trackingOperationService.create(study, user);
         studyRepository.save(study);
