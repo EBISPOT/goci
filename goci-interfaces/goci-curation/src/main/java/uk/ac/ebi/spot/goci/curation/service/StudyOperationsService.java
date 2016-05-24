@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -98,7 +99,7 @@ public class StudyOperationsService {
      *
      * @param existingStudyId ID of study being edited
      * @param study           Study to update
-     * @param user            User preforming request
+     * @param user            User performing request
      */
     public void updateStudy(Long existingStudyId, Study study, SecureUser user) {
 
@@ -218,9 +219,37 @@ public class StudyOperationsService {
     }
 
     /**
-     * Update a study status
+     * Unpublish a study entry in the database
+     *
+     * @param study Study to unpublish
+     * @param user  User performing request
+     */
+    public void unpublishStudy(Study study, SecureUser user) {
+
+        // Before we unpublish the study get its associated housekeeping
+        Long housekeepingId = study.getHousekeeping().getId();
+        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
+
+        //Set the unpublishDate and a new lastUpdateDate in houskeeping
+        java.util.Date unpublishDate = new java.util.Date();
+        housekeepingAttachedToStudy.setCatalogUnpublishDate(unpublishDate);
+        housekeepingAttachedToStudy.setLastUpdateDate(unpublishDate);
+
+        //Set the reason for unpublishing
+        UnpublishReason unpublishReason = study.getHousekeeping().getUnpublishReason();
+        housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
+
+        //Set the unpublised status in housekeeping
+        CurationStatus status = curationStatusRepository.findByStatus("Unpublished from catalog");
+        housekeepingAttachedToStudy.setCurationStatus(status);
+        updateStatus(study, housekeepingAttachedToStudy, user);
+    }
+
+    /**
+     * Delete a study
      *
      * @param study Study to delete
+     * @param user  User
      */
     public void deleteStudy(Study study, SecureUser user) {
 

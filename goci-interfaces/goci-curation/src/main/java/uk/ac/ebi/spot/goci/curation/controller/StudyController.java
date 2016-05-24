@@ -796,37 +796,10 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId) {
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId,  HttpServletRequest request) {
 
-
-        // Before we unpublish the study get its associated housekeeping
-        Long housekeepingId = studyToUnpublish.getHousekeeping().getId();
-        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
-
-        //Set the unpublishDate and a new lastUpdateDate in houskeeping
-        java.util.Date unpublishDate = new java.util.Date();
-        housekeepingAttachedToStudy.setCatalogUnpublishDate(unpublishDate);
-        housekeepingAttachedToStudy.setLastUpdateDate(unpublishDate);
-
-        //Set the unpublised status in housekeeping
-        CurationStatus status = curationStatusRepository.findByStatus("Unpublished from catalog");
-        housekeepingAttachedToStudy.setCurationStatus(status);
-
-        //Set the reason for unpublishing
-        UnpublishReason unpublishReason = studyToUnpublish.getHousekeeping().getUnpublishReason();
-        housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
-
-        // Unpublish housekeeping  by saving the new dates and status info
-        housekeepingRepository.save(housekeepingAttachedToStudy);
-
-        model.addAttribute("studyHousekeeping", housekeepingAttachedToStudy);
-        model.addAttribute("study", studyRepository.findOne(studyId));
-
-        // Return a DTO that holds a summary of any automated mappings
-        model.addAttribute("mappingDetails",
-                           mappingDetailsService.createMappingSummary(studyRepository.findOne(studyId)));
-
-        return "study_housekeeping";
+        studyOperationsService.unpublishStudy(studyToUnpublish, currentUserDetailsService.getUserFromRequest(request));
+        return "redirect:/studies/" + studyToUnpublish.getId() + "/housekeeping";
     }
 
 
