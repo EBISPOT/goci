@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.EventBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.EventBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.service.EventOperationsService;
@@ -14,11 +14,9 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 
-import java.util.Collection;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

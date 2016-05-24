@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation;
+package uk.ac.ebi.spot.goci.curation.builder;
 
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
