@@ -515,8 +515,8 @@ public class StudyController {
         else {
             // Pass to importer
             Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-            Study savedStudy = studyOperationsService.saveStudy(importedStudy,
-                                                                currentUserDetailsService.getUserFromRequest(request));
+            Study savedStudy = studyOperationsService.createStudy(importedStudy,
+                                                                  currentUserDetailsService.getUserFromRequest(request));
 
             // Create directory to store associated files
             try {
@@ -553,7 +553,7 @@ public class StudyController {
         }
 
         Study savedStudy =
-                studyOperationsService.saveStudy(study, currentUserDetailsService.getUserFromRequest(request));
+                studyOperationsService.createStudy(study, currentUserDetailsService.getUserFromRequest(request));
         // Create directory to store associated files
         try {
             studyFileService.createStudyDir(savedStudy.getId());

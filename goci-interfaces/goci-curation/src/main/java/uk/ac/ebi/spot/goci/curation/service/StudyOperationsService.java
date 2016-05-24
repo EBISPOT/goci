@@ -85,7 +85,7 @@ public class StudyOperationsService {
      * @param user  User preforming request
      * @return ID of study to save
      */
-    public Study saveStudy(Study study, SecureUser user) {
+    public Study createStudy(Study study, SecureUser user) {
         // TODO RENAME AS CREATE AND WRITE NEW METHOD TO SAVE A STUDY
         // Update and save study
         study.setHousekeeping(createHousekeeping());

@@ -203,7 +203,7 @@ public class StudyOperationServiceTest {
     @Test
     public void testSaveStudy() {
         // Test saving a study
-        Study study = studyOperationsService.saveStudy(NEW_STUDY, SECURE_USER);
+        Study study = studyOperationsService.createStudy(NEW_STUDY, SECURE_USER);
         verify(housekeepingRepository, times(1)).save(Matchers.any(Housekeeping.class));
         verify(studyRepository, times(1)).save(NEW_STUDY);
         verify(trackingOperationService, times(1)).create(NEW_STUDY, SECURE_USER);
