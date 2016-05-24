@@ -86,7 +86,7 @@ public class StudyOperationsService {
      * @return ID of study to save
      */
     public Study saveStudy(Study study, SecureUser user) {
-
+        // TODO RENAME AS CREATE AND WRITE NEW METHOD TO SAVE A STUDY
         // Update and save study
         study.setHousekeeping(createHousekeeping());
         trackingOperationService.create(study, user);
@@ -141,7 +141,7 @@ public class StudyOperationsService {
         Long curatorId = assignee.getCuratorId();
         Curator curator = curatorRepository.findOne(curatorId);
 
-        // Set new curator
+        // Set new curator on the study housekeeping
         Housekeeping housekeeping = study.getHousekeeping();
         housekeeping.setCurator(curator);
         saveHousekeeping(study, housekeeping);
@@ -284,17 +284,26 @@ public class StudyOperationsService {
                     housekeeping.setCatalogPublishDate(publishDate);
                 }
                 mailService.sendEmailNotification(study, "Publish study");
+
+                // Save and create event
+                saveHousekeeping(study, housekeeping);
+                recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
             // Send notification email to curators
             case "Level 1 curation done":
                 mailService.sendEmailNotification(study, "Level 1 curation done");
+
+                // Save and create event
+                saveHousekeeping(study, housekeeping);
+                recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
             default:
+
+                // Save and create event
+                saveHousekeeping(study, housekeeping);
+                recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
         }
-        // Save and create event
-        saveHousekeeping(study, housekeeping);
-        recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
     }
 
 
