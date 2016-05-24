@@ -11,6 +11,7 @@ import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
@@ -23,6 +24,7 @@ import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -162,6 +164,12 @@ public class StudyOperationServiceTest {
             .setTitle("Test")
             .build();
 
+    private static final DiseaseTrait DISEASE_TRAIT =
+            new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
+
+    private static final Study UPDATED_STUDY =
+            new StudyBuilder().setId(802L).setAuthor("Test").setPubmedId("1000").setDiseaseTrait(DISEASE_TRAIT).build();
+
     private static final Association ASS1 =
             new AssociationBuilder().setId(800L)
                     .setSnpApproved(true).build();
@@ -201,8 +209,8 @@ public class StudyOperationServiceTest {
     }
 
     @Test
-    public void testSaveStudy() {
-        // Test saving a study
+    public void testCreateStudy() {
+        // Test creating a study
         Study study = studyOperationsService.createStudy(NEW_STUDY, SECURE_USER);
         verify(housekeepingRepository, times(1)).save(Matchers.any(Housekeeping.class));
         verify(studyRepository, times(1)).save(NEW_STUDY);
@@ -211,6 +219,20 @@ public class StudyOperationServiceTest {
         assertThat(study).extracting("author", "title", "publication", "pubmedId")
                 .contains("Smith X", "Test", "Nature", "1001002");
         assertThat(study).extracting("publicationDate").isNotNull();
+    }
+
+    @Test
+    public void testUpdateStudy() {
+
+        // Stubbing
+        when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
+
+        // Test updating a study
+        studyOperationsService.updateStudy(STU1.getId(), UPDATED_STUDY, SECURE_USER);
+        verify(studyRepository, times(1)).save(UPDATED_STUDY);
+        verify(trackingOperationService, times(1)).update(UPDATED_STUDY, SECURE_USER, EventType.STUDY_UPDATE);
+        assertThat(UPDATED_STUDY).extracting("id", "author", "pubmedId").contains(802L, "Test", "1000");
+        assertThat(UPDATED_STUDY.getDiseaseTrait()).extracting("trait").contains("Asthma");
     }
 
     @Test
@@ -478,7 +500,9 @@ public class StudyOperationServiceTest {
         verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH);
         verify(studyRepository, times(2)).save(STU1);
-        verify(trackingOperationService, times(1)).update(STU1, SECURE_USER, EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
+        verify(trackingOperationService, times(1)).update(STU1,
+                                                          SECURE_USER,
+                                                          EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
 
         verifyZeroInteractions(mailService);
 
