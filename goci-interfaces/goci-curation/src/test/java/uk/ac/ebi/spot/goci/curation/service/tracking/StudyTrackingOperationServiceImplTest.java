@@ -73,9 +73,9 @@ public class StudyTrackingOperationServiceImplTest {
         verify(eventOperationsService, times(1)).createEvent(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE, SECURE_USER);
         verify(eventOperationsService, times(1)).createEvent(EventType.STUDY_UPDATE, SECURE_USER);
 
-        assertThat(STUDY.getEvents()).hasSize(2);
+        assertThat(STUDY.getEvents()).hasSize(3);
         assertThat(STUDY.getEvents()).extracting(event->event.getUser().getEmail()).containsOnly("test@test.com");
-        assertThat(STUDY.getEvents()).extracting(event->event.getEventType()).containsOnly(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE, EventType.STUDY_UPDATE);
+        assertThat(STUDY.getEvents()).extracting(event->event.getEventType()).containsOnly(EventType.STUDY_CREATION,EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE, EventType.STUDY_UPDATE);
         assertThat(STUDY.getEvents()).extracting(event->event.getEventDate()).isNotNull();
     }
 
