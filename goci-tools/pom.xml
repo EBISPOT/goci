@@ -29,5 +29,6 @@
         <module>goci-cttv-snpExport</module>
         <module>goci-cttv-jsonGeneration</module>
         <module>goci-parent-mapper</module>
+        <module>goci-association-filter</module>
     </modules>
 </project>
