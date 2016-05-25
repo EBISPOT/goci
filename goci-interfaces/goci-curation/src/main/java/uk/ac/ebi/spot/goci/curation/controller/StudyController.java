@@ -42,6 +42,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -865,7 +866,13 @@ public class StudyController {
             return "error_pages/study_file_upload_failure";
         }
     }
-
+    
+    @RequestMapping(value = "/{studyId}/tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudyEvents(Model model, @PathVariable Long studyId) {
+        model.addAttribute("events", studyRepository.findOne(studyId).getEvents());
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "study_events";
+    }
 
     /* Exception handling */
 
