@@ -33,6 +33,7 @@ import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -99,6 +100,7 @@ public class StudyController {
     private MappingDetailsService mappingDetailsService;
     private CurrentUserDetailsService currentUserDetailsService;
     private StudyFileService studyFileService;
+    private StudyDuplicationService studyDuplicationService;
 
     public static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -122,8 +124,9 @@ public class StudyController {
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
+                           CurrentUserDetailsService currentUserDetailsService,
                            StudyFileService studyFileService,
-                           CurrentUserDetailsService currentUserDetailsService) {
+                           StudyDuplicationService studyDuplicationService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -137,8 +140,9 @@ public class StudyController {
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
-        this.studyFileService = studyFileService;
         this.currentUserDetailsService = currentUserDetailsService;
+        this.studyFileService = studyFileService;
+        this.studyDuplicationService = studyDuplicationService;
     }
 
     /* All studies and various filtered lists */
@@ -584,7 +588,7 @@ public class StudyController {
                               @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        studyOperationsService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request) );
+        studyOperationsService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -630,40 +634,21 @@ public class StudyController {
         return "redirect:/studies";
     }
 
-/*    // Duplicate a study
+    // Duplicate a study
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
-
-        // New study will be created by copying existing study details
-        Study duplicateStudy = copyStudy(studyToDuplicate);
-
-        // Create housekeeping object and add duplicate message
-        Housekeeping studyHousekeeping = createHousekeeping();
-        studyHousekeeping.setNotes(
-                "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
-        duplicateStudy.setHousekeeping(studyHousekeeping);
-
-        // Save newly duplicated study
-        studyRepository.save(duplicateStudy);
-
-        // Copy existing ethnicity
-        Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyId);
-        for (Ethnicity studyToDuplicateEthnicity : studyToDuplicateEthnicities) {
-            Ethnicity duplicateEthnicity = copyEthnicity(studyToDuplicateEthnicity);
-            duplicateEthnicity.setStudy(duplicateStudy);
-            ethnicityRepository.save(duplicateEthnicity);
-        }
+        Long duplicateStudyId = studyDuplicationService.duplicateStudy(studyToDuplicate, currentUserDetailsService.getUserFromRequest(request));
 
         // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
-        return "redirect:/studies/" + duplicateStudy.getId();
-    }*/
+        return "redirect:/studies/" +duplicateStudyId;
+    }
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
@@ -793,73 +778,16 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId,  HttpServletRequest request) {
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish,
+                                 Model model,
+                                 @PathVariable Long studyId,
+                                 HttpServletRequest request) {
 
         // studyToUnpuplish attribute is used simply to retrieve unpublsih reason
-        studyOperationsService.unpublishStudy(studyId, studyToUnpublish.getHousekeeping().getUnpublishReason(), currentUserDetailsService.getUserFromRequest(request));
+        studyOperationsService.unpublishStudy(studyId,
+                                              studyToUnpublish.getHousekeeping().getUnpublishReason(),
+                                              currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies/" + studyToUnpublish.getId() + "/housekeeping";
-    }
-
-
-    /* General purpose methods */
-
-
-    private Study copyStudy(Study studyToDuplicate) {
-
-        Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
-        duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
-        duplicateStudy.setPublication(studyToDuplicate.getPublication());
-        duplicateStudy.setTitle(studyToDuplicate.getTitle());
-        duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
-        duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
-        duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
-        duplicateStudy.setCnv(studyToDuplicate.getCnv());
-        duplicateStudy.setGxe(studyToDuplicate.getGxe());
-        duplicateStudy.setGxg(studyToDuplicate.getGxg());
-        duplicateStudy.setGenomewideArray(studyToDuplicate.getGenomewideArray());
-        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
-        duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
-        duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
-        duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
-        duplicateStudy.setImputed(studyToDuplicate.getImputed());
-        duplicateStudy.setPooled(studyToDuplicate.getPooled());
-
-        // Deal with EFO traits
-        Collection<EfoTrait> efoTraits = studyToDuplicate.getEfoTraits();
-        Collection<EfoTrait> efoTraitsDuplicateStudy = new ArrayList<EfoTrait>();
-
-        if (efoTraits != null && !efoTraits.isEmpty()) {
-            efoTraitsDuplicateStudy.addAll(efoTraits);
-            duplicateStudy.setEfoTraits(efoTraitsDuplicateStudy);
-        }
-
-        //Deal with platforms
-        Collection<Platform> platforms = studyToDuplicate.getPlatforms();
-        Collection<Platform> platformsDuplicateStudy = new ArrayList<>();
-
-        if (platforms != null && !platforms.isEmpty()) {
-            platformsDuplicateStudy.addAll(platforms);
-            duplicateStudy.setPlatforms(platformsDuplicateStudy);
-        }
-
-        return duplicateStudy;
-    }
-
-    private Ethnicity copyEthnicity(Ethnicity studyToDuplicateEthnicity) {
-        Ethnicity duplicateEthnicity = new Ethnicity();
-        duplicateEthnicity.setType(studyToDuplicateEthnicity.getType());
-        duplicateEthnicity.setNumberOfIndividuals(studyToDuplicateEthnicity.getNumberOfIndividuals());
-        duplicateEthnicity.setEthnicGroup(studyToDuplicateEthnicity.getEthnicGroup());
-        duplicateEthnicity.setCountryOfOrigin(studyToDuplicateEthnicity.getCountryOfOrigin());
-        duplicateEthnicity.setCountryOfRecruitment(studyToDuplicateEthnicity.getCountryOfRecruitment());
-        duplicateEthnicity.setDescription(studyToDuplicateEthnicity.getDescription());
-        duplicateEthnicity.setPreviouslyReported(studyToDuplicateEthnicity.getPreviouslyReported());
-        duplicateEthnicity.setSampleSizesMatch(studyToDuplicateEthnicity.getSampleSizesMatch());
-        duplicateEthnicity.setNotes(studyToDuplicateEthnicity.getNotes());
-
-        return duplicateEthnicity;
-
     }
 
 
