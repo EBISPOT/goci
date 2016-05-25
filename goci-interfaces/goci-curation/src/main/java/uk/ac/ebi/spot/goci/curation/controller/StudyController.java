@@ -775,11 +775,9 @@ public class StudyController {
 
         Study studyToUnpublish = studyRepository.findOne(studyId);
 
-        // Check if it has any associations
+        // Check if it has any associations or ethnicity information
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
-
         Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
-
 
         // If so warn the curator
         if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
@@ -788,7 +786,6 @@ public class StudyController {
 
         }
         else {
-            //            model.addAttribute("studyHousekeeping", studyToUnpublish.getHousekeeping());
             model.addAttribute("studyToUnpublish", studyToUnpublish);
             return "unpublish_study";
         }
@@ -798,7 +795,8 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String unpublishStudy(@ModelAttribute Study studyToUnpublish, Model model, @PathVariable Long studyId,  HttpServletRequest request) {
 
-        studyOperationsService.unpublishStudy(studyToUnpublish, currentUserDetailsService.getUserFromRequest(request));
+        // studyToUnpuplish attribute is used simply to retrieve unpublsih reason
+        studyOperationsService.unpublishStudy(studyId, studyToUnpublish.getHousekeeping().getUnpublishReason(), currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies/" + studyToUnpublish.getId() + "/housekeeping";
     }
 

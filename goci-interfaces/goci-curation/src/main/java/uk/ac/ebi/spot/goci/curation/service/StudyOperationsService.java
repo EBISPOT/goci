@@ -221,10 +221,13 @@ public class StudyOperationsService {
     /**
      * Unpublish a study entry in the database
      *
-     * @param study Study to unpublish
-     * @param user  User performing request
+     * @param studyId         ID of study to unpublish
+     * @param unpublishReason Reason the study is being unpublished
+     * @param user            User performing request
      */
-    public void unpublishStudy(Study study, SecureUser user) {
+    public void unpublishStudy(Long studyId, UnpublishReason unpublishReason, SecureUser user) {
+
+        Study study = studyRepository.findOne(studyId);
 
         // Before we unpublish the study get its associated housekeeping
         Long housekeepingId = study.getHousekeeping().getId();
@@ -236,7 +239,6 @@ public class StudyOperationsService {
         housekeepingAttachedToStudy.setLastUpdateDate(unpublishDate);
 
         //Set the reason for unpublishing
-        UnpublishReason unpublishReason = study.getHousekeeping().getUnpublishReason();
         housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
 
         //Set the unpublised status in housekeeping
@@ -333,14 +335,16 @@ public class StudyOperationsService {
                     Date publishDate = new Date();
                     housekeeping.setCatalogPublishDate(publishDate);
                 }
+                // Send notification email to curators
                 mailService.sendEmailNotification(study, "Publish study");
 
                 // Save and create event
                 saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
-            // Send notification email to curators
+
             case "Level 1 curation done":
+                // Send notification email to curators
                 mailService.sendEmailNotification(study, "Level 1 curation done");
 
                 // Save and create event
@@ -348,7 +352,6 @@ public class StudyOperationsService {
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
             default:
-
                 // Save and create event
                 saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
