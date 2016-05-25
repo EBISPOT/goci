@@ -13,7 +13,7 @@ import uk.ac.ebi.spot.goci.model.Trackable;
  */
 public interface TrackingOperationService {
     /**
-     * Determine event type based on status
+     * Method to create a creation event
      *
      * @param trackable  Trackable object that requires event tracking
      * @param secureUser User initiating event
@@ -21,7 +21,7 @@ public interface TrackingOperationService {
     void create(Trackable trackable, SecureUser secureUser);
 
     /**
-     * Determine event type based on status
+     * Method to create an update event
      *
      * @param trackable  Trackable object that requires event tracking
      * @param secureUser User initiating event
@@ -29,7 +29,7 @@ public interface TrackingOperationService {
     void delete(Trackable trackable, SecureUser secureUser);
 
     /**
-     * Determine event type based on status
+     * Method to create an update event
      *
      * @param trackable  Trackable object that requires event tracking
      * @param secureUser User initiating event
