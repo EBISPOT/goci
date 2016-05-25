@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
-import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +28,7 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -108,7 +107,10 @@ public class StudyOperationServiceTest {
             new CurationStatusBuilder().setId(806L).setStatus("Level 2 curation done").build();
 
     private static final CurationStatus CURRENT_STATUS1 =
-            new CurationStatusBuilder().setId(806L).setStatus("Level 2 ancestry done").build();
+            new CurationStatusBuilder().setId(816L).setStatus("Level 2 ancestry done").build();
+
+    private static final CurationStatus UNPUBLISH =
+            new CurationStatusBuilder().setId(811L).setStatus("Unpublished from catalog").build();
 
     private static final Curator CURATOR1 = new CuratorBuilder().setId(803L)
             .setLastName("Unassigned")
@@ -121,9 +123,6 @@ public class StudyOperationServiceTest {
     private static final Curator PUBLISH_CURATOR = new CuratorBuilder().setId(803L)
             .setLastName("GWAS Catalog")
             .build();
-
-    private static final Housekeeping CURRENT_HOUSEKEEPING =
-            new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
 
     private static final Housekeeping NEW_HOUSEKEEPING =
             new HousekeepingBuilder()
@@ -155,9 +154,6 @@ public class StudyOperationServiceTest {
                     .setStudyAddedDate(new Date())
                     .build();
 
-    private static final Study STU1 =
-            new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
-
     private static final Study NEW_STUDY = new StudyBuilder().setAuthor("Smith X")
             .setPubmedId("1001002")
             .setPublication("Nature")
@@ -188,6 +184,10 @@ public class StudyOperationServiceTest {
 
     private static final Assignee ASSIGNEE = new AssigneeBuilder().build();
 
+    private static Housekeeping CURRENT_HOUSEKEEPING;
+
+    private static Study STU1;
+
     @Before
     public void setUpMock() {
         studyOperationsService = new StudyOperationsService(associationRepository,
@@ -200,14 +200,12 @@ public class StudyOperationServiceTest {
                                                             trackingOperationService,
                                                             ethnicityRepository,
                                                             eventTypeService);
+
+        CURRENT_HOUSEKEEPING =
+                new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
+        STU1 = new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
     }
 
-    @After
-    public void restoreTestStudy() {
-        CURRENT_HOUSEKEEPING.setCurationStatus(CURRENT_STATUS1);
-        CURRENT_HOUSEKEEPING.setCurator(CURATOR1);
-        STU1.setHousekeeping(CURRENT_HOUSEKEEPING);
-    }
 
     @Test
     public void testCreateStudy() {
@@ -518,5 +516,43 @@ public class StudyOperationServiceTest {
                 .contains("GWAS Catalog");
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Level 2 ancestry done");
         assertNotNull(message);
+    }
+
+    @Test
+    public void testUnpublishStudy() {
+
+        // Create copies of our study/housekeeping before the method runs
+        Housekeeping housekeepingBeforeUnpublish =
+                new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
+        Study beforeUnPublish = new StudyBuilder().setId(802L).setHousekeeping(housekeepingBeforeUnpublish).build();
+        
+        // Stubbing
+        when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
+        when(housekeepingRepository.findOne(STU1.getHousekeeping().getId())).thenReturn(STU1.getHousekeeping());
+        when(curationStatusRepository.findByStatus("Unpublished from catalog")).thenReturn(UNPUBLISH);
+        when(eventTypeService.determineEventTypeFromStatus(UNPUBLISH)).thenReturn(EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG);
+
+        studyOperationsService.unpublishStudy(STU1.getId(), Matchers.any(UnpublishReason.class), SECURE_USER);
+
+        verify(studyRepository, times(1)).findOne(STU1.getId());
+        verify(housekeepingRepository, times(1)).findOne(STU1.getHousekeeping().getId());
+        verify(curationStatusRepository, times(1)).findByStatus("Unpublished from catalog");
+        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
+        verify(studyRepository, times(2)).save(STU1);
+        verify(eventTypeService, times(1)).determineEventTypeFromStatus(STU1.getHousekeeping().getCurationStatus());
+        verify(trackingOperationService, times(1)).update(STU1,
+                                                          SECURE_USER,
+                                                          EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG);
+
+        verifyZeroInteractions(mailService);
+        verifyZeroInteractions(publishStudyCheckService);
+        verifyZeroInteractions(associationRepository);
+
+        // Check housekeeping was saved
+        assertThat(beforeUnPublish).isEqualToIgnoringGivenFields(STU1, "housekeeping");
+        assertThat(housekeepingBeforeUnpublish).isEqualToIgnoringGivenFields(STU1.getHousekeeping(), "catalogUnpublishDate", "lastUpdateDate", "curationStatus");
+        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status")
+                .contains("Unpublished from catalog");
+        assertThat(STU1.getHousekeeping().getCatalogUnpublishDate()).isInThePast();
     }
 }
