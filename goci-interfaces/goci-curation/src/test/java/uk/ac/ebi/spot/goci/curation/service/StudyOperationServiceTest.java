@@ -525,7 +525,7 @@ public class StudyOperationServiceTest {
         Housekeeping housekeepingBeforeUnpublish =
                 new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
         Study beforeUnPublish = new StudyBuilder().setId(802L).setHousekeeping(housekeepingBeforeUnpublish).build();
-        
+
         // Stubbing
         when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
         when(housekeepingRepository.findOne(STU1.getHousekeeping().getId())).thenReturn(STU1.getHousekeeping());
