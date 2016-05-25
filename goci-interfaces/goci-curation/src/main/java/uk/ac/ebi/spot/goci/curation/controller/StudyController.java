@@ -102,7 +102,7 @@ public class StudyController {
     private StudyFileService studyFileService;
     private StudyDuplicationService studyDuplicationService;
 
-    public static final int MAX_PAGE_ITEM_DISPLAY = 25;
+    private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -583,9 +583,7 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study,
-                              Model model,
-                              @PathVariable Long studyId,
+    public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         studyOperationsService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
@@ -636,18 +634,22 @@ public class StudyController {
 
     // Duplicate a study
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String duplicateStudy(@PathVariable Long studyId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String duplicateStudy(@PathVariable Long studyId,
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) {
 
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
-        Long duplicateStudyId = studyDuplicationService.duplicateStudy(studyToDuplicate, currentUserDetailsService.getUserFromRequest(request));
+        Long duplicateStudyId = studyDuplicationService.duplicateStudy(studyToDuplicate,
+                                                                       currentUserDetailsService.getUserFromRequest(
+                                                                               request));
 
         // Add duplicate message
         String message =
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
-        return "redirect:/studies/" +duplicateStudyId;
+        return "redirect:/studies/" + duplicateStudyId;
     }
 
     // Assign a curator to a study
@@ -778,9 +780,7 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String unpublishStudy(@ModelAttribute Study studyToUnpublish,
-                                 Model model,
-                                 @PathVariable Long studyId,
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, @PathVariable Long studyId,
                                  HttpServletRequest request) {
 
         // studyToUnpuplish attribute is used simply to retrieve unpublsih reason
@@ -889,44 +889,43 @@ public class StudyController {
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
-    public List<DiseaseTrait> populateDiseaseTraits(Model model) {
+    public List<DiseaseTrait> populateDiseaseTraits() {
         return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 
     // EFO traits
     @ModelAttribute("efoTraits")
-    public List<EfoTrait> populateEFOTraits(Model model) {
+    public List<EfoTrait> populateEFOTraits() {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
     // Curators
     @ModelAttribute("curators")
-    public List<Curator> populateCurators(Model model) {
+    public List<Curator> populateCurators() {
         return curatorRepository.findAll(sortByLastNameAsc());
     }
 
     //Platforms
     @ModelAttribute("platforms")
-    //    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(sortByPlatformAsc()); }
-    public List<Platform> populatePlatforms(Model model) {return platformRepository.findAll(); }
+    public List<Platform> populatePlatforms() {return platformRepository.findAll(); }
 
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
-    public List<CurationStatus> populateCurationStatuses(Model model) {
+    public List<CurationStatus> populateCurationStatuses() {
         return curationStatusRepository.findAll(sortByStatusAsc());
     }
 
     // Unpublish reasons
     @ModelAttribute("unpublishreasons")
-    public List<UnpublishReason> populateUnpublishReasons(Model model) {
+    public List<UnpublishReason> populateUnpublishReasons() {
         return unpublishReasonRepository.findAll();
     }
 
 
     // Study types
     @ModelAttribute("studyTypes")
-    public List<String> populateStudyTypeOptions(Model model) {
+    public List<String> populateStudyTypeOptions() {
 
         List<String> studyTypesOptions = new ArrayList<String>();
         studyTypesOptions.add("GXE");
@@ -941,7 +940,7 @@ public class StudyController {
     }
 
     @ModelAttribute("qualifiers")
-    public List<String> populateQualifierOptions(Model model) {
+    public List<String> populateQualifierOptions() {
         List<String> qualifierOptions = new ArrayList<>();
         qualifierOptions.add("up to");
         qualifierOptions.add("at least");
@@ -953,7 +952,7 @@ public class StudyController {
 
     // Authors
     @ModelAttribute("authors")
-    public List<String> populateAuthors(Model model) {
+    public List<String> populateAuthors() {
         return studyRepository.findAllStudyAuthors(sortByAuthorAsc());
     }
 
@@ -1020,14 +1019,6 @@ public class StudyController {
     private Sort sortByDiseaseTraitDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
     }
-
-    //    private Sort sortByPlatformAsc() {
-    //        return new Sort(new Sort.Order(Sort.Direction.ASC, "platform.manufacturer").ignoreCase());
-    //    }
-    //
-    //    private Sort sortByPlatformDesc() {
-    //        return new Sort(new Sort.Order(Sort.Direction.DESC, "platform.manufacturer").ignoreCase());
-    //    }
 
     private Sort sortByEfoTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
