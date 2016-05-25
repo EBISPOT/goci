@@ -49,6 +49,7 @@ public class StudyOperationsService {
     private TrackingOperationService trackingOperationService;
     private EthnicityRepository ethnicityRepository;
     private EventTypeService eventTypeService;
+    private HousekeepingOperationsService housekeepingOperationsService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -60,7 +61,8 @@ public class StudyOperationsService {
                                   CurationStatusRepository curationStatusRepository,
                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                   EthnicityRepository ethnicityRepository,
-                                  EventTypeService eventTypeService) {
+                                  EventTypeService eventTypeService,
+                                  HousekeepingOperationsService housekeepingOperationsService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -71,6 +73,7 @@ public class StudyOperationsService {
         this.trackingOperationService = trackingOperationService;
         this.ethnicityRepository = ethnicityRepository;
         this.eventTypeService = eventTypeService;
+        this.housekeepingOperationsService = housekeepingOperationsService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -87,7 +90,7 @@ public class StudyOperationsService {
      * @return study
      */
     public Study createStudy(Study study, SecureUser user) {
-        study.setHousekeeping(createHousekeeping());
+        study.setHousekeeping(housekeepingOperationsService.createHousekeeping());
         trackingOperationService.create(study, user);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" created"));
@@ -166,7 +169,7 @@ public class StudyOperationsService {
         // Set new curator on the study housekeeping
         Housekeeping housekeeping = study.getHousekeeping();
         housekeeping.setCurator(curator);
-        saveHousekeeping(study, housekeeping);
+        housekeepingOperationsService.saveHousekeeping(study, housekeeping);
 
         // Add event
         recordStudyCuratorChange(study, user, curator);
@@ -204,7 +207,7 @@ public class StudyOperationsService {
                 // restore old status
                 else {
                     housekeeping.setCurationStatus(currentStudyStatus);
-                    saveHousekeeping(study, housekeeping);
+                    housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 }
             }
             else {
@@ -213,7 +216,7 @@ public class StudyOperationsService {
         }
         else {
             // Save housekeeping returned from form
-            saveHousekeeping(study, housekeeping);
+            housekeepingOperationsService.saveHousekeeping(study, housekeeping);
         }
         return message;
     }
@@ -274,20 +277,6 @@ public class StudyOperationsService {
     }
 
     /**
-     * Save housekeepoing
-     *
-     * @param housekeeping
-     * @param study
-     */
-    private void saveHousekeeping(Study study, Housekeeping housekeeping) {
-        // Save housekeeping returned from form
-        housekeeping.setLastUpdateDate(new Date());
-        housekeepingRepository.save(housekeeping);
-        study.setHousekeeping(housekeeping);
-        studyRepository.save(study);
-    }
-
-    /**
      * Record a study status change
      *
      * @param newStatus New status to apply to study
@@ -339,7 +328,7 @@ public class StudyOperationsService {
                 mailService.sendEmailNotification(study, "Publish study");
 
                 // Save and create event
-                saveHousekeeping(study, housekeeping);
+                housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
 
@@ -348,39 +337,14 @@ public class StudyOperationsService {
                 mailService.sendEmailNotification(study, "Level 1 curation done");
 
                 // Save and create event
-                saveHousekeeping(study, housekeeping);
+                housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
             default:
                 // Save and create event
-                saveHousekeeping(study, housekeeping);
+                housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
         }
-    }
-
-
-    /**
-     * Create study housekeeping
-     */
-    private Housekeeping createHousekeeping() {
-        // Create housekeeping object and create the study added date
-        Housekeeping housekeeping = new Housekeeping();
-        java.util.Date studyAddedDate = new java.util.Date();
-        housekeeping.setStudyAddedDate(studyAddedDate);
-
-        // Set status
-        CurationStatus status = curationStatusRepository.findByStatus("Awaiting Curation");
-        housekeeping.setCurationStatus(status);
-
-        // Set curator
-        Curator curator = curatorRepository.findByLastName("Level 1 Curator");
-        housekeeping.setCurator(curator);
-
-        // Save housekeeping
-        housekeepingRepository.save(housekeeping);
-
-        // Save housekeeping
-        return housekeeping;
     }
 }
