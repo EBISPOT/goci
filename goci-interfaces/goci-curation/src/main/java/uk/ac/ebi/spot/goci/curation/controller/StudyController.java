@@ -851,13 +851,13 @@ public class StudyController {
 
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
-            throws
-            FileUploadException,
-            IOException {
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model, HttpServletRequest request )
+            throws FileUploadException, IOException {
+
+
         model.addAttribute("study", studyRepository.findOne(studyId));
         try {
-            studyFileService.upload(file, studyId);
+            studyFileService.upload(file, studyId, currentUserDetailsService.getUserFromRequest(request));
             return "redirect:/studies/" + studyId + "/studyfiles";
         }
         catch (FileUploadException | IOException e) {

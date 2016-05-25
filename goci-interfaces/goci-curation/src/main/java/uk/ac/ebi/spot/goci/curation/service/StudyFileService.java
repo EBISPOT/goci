@@ -2,12 +2,19 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
+import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
+import uk.ac.ebi.spot.goci.model.EventType;
+import uk.ac.ebi.spot.goci.model.SecureUser;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +41,17 @@ public class StudyFileService {
 
     protected Logger getLog() {
         return log;
+    }
+
+    private TrackingOperationService trackingOperationService;
+
+    private StudyRepository studyRepository;
+
+    @Autowired
+    public StudyFileService(@Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
+                            StudyRepository studyRepository) {
+        this.trackingOperationService = trackingOperationService;
+        this.studyRepository = studyRepository;
     }
 
     public synchronized void createStudyDir(Long studyId) {
@@ -105,8 +123,10 @@ public class StudyFileService {
      *
      * @param fileFromUpload File user is uploading
      * @param studyId        Study ID which is used to find study specific dir
+     * @param user           User carrying out request
      */
-    public synchronized void upload(MultipartFile fileFromUpload, Long studyId) throws IOException {
+    public synchronized void upload(MultipartFile fileFromUpload, Long studyId, SecureUser user)
+            throws IOException {
 
         if (!fileFromUpload.isEmpty()) {
             File file = createFileInStudyDir(fileFromUpload.getOriginalFilename(), studyId);
@@ -117,6 +137,9 @@ public class StudyFileService {
                 // Set some permissions
                 file.setWritable(true, false);
                 file.setReadable(true, false);
+
+                // Add event
+                createFileUploadEvent(studyId, user);
             }
             catch (IOException e) {
                 getLog().error("Unable to copy file: " + fileFromUpload.getName() + " to study dir");
@@ -127,6 +150,19 @@ public class StudyFileService {
             getLog().error(fileFromUpload.getName() + " is empty");
             throw new FileUploadException("Upload file is empty");
         }
+    }
+
+    /**
+     * Record file upload event
+     *
+     * @param studyId Study ID which is used to find study specific dir
+     * @param user    User carrying out request
+     */
+    private void createFileUploadEvent(Long studyId, SecureUser user) {
+        Study study = studyRepository.findOne(studyId);
+        trackingOperationService.update(study, user, EventType.STUDY_FILE_UPLOAD);
+        studyRepository.save(study);
+        getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
     }
 
     /**

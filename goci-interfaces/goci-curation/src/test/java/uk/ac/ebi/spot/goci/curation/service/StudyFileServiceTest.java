@@ -66,7 +66,7 @@ public class StudyFileServiceTest {
         // Mock a file coming in via the controller
         MockMultipartFile file =
                 new MockMultipartFile("data", "filename.txt", "text/plain", "Some study details".getBytes());
-        studyFileService.upload(file, STUDY_ID);
+        studyFileService.upload(file, STUDY_ID, currentUserDetailsService.getUserFromRequest(request));
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).isNotEmpty();
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).hasSize(1);
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).hasOnlyElementsOfType(StudyFileSummary.class);
@@ -83,7 +83,7 @@ public class StudyFileServiceTest {
         // Mock a file coming in via the controller
         MockMultipartFile file =
                 new MockMultipartFile("data", "filename.txt", "text/plain", "".getBytes());
-        studyFileService.upload(file, STUDY_ID);
+        studyFileService.upload(file, STUDY_ID, currentUserDetailsService.getUserFromRequest(request));
     }
 
     @Test
