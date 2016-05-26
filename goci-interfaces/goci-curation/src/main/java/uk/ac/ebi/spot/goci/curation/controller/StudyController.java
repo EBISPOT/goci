@@ -850,11 +850,9 @@ public class StudyController {
         return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
     }
 
-
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model, HttpServletRequest request )
             throws FileUploadException, IOException {
-
 
         model.addAttribute("study", studyRepository.findOne(studyId));
         try {
