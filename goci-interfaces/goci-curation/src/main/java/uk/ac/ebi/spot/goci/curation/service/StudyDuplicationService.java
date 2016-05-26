@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -34,7 +35,7 @@ public class StudyDuplicationService {
     @Autowired
     public StudyDuplicationService(EthnicityRepository ethnicityRepository,
                                    HousekeepingOperationsService housekeepingOperationsService,
-                                   TrackingOperationService trackingOperationService,
+                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                    StudyRepository studyRepository) {
         this.ethnicityRepository = ethnicityRepository;
         this.housekeepingOperationsService = housekeepingOperationsService;
