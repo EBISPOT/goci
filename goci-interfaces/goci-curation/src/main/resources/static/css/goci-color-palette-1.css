@@ -119,13 +119,14 @@ a > .toplevel-view {
 }
 
 .btn-primary {
-    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
+    background-image: linear-gradient(to bottom, #46AAB9 50%, #398A96 100%);
 }
 
 .btn-primary {
-    /*color: #333;*/
-    color: #398A96;
+    color: #333;
+    /*color: #398A96;*/
     background-color: #fff;
+    /*background-color: #398A96;*/
     border-color: #ccc;
 }
 
@@ -135,8 +136,16 @@ a > .toplevel-view {
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-default {
-    background-image: linear-gradient(to bottom, #D3EFF3 0%, #B0DFE6 100%);
-    background-color: #B0DFE6;
+    background-image: linear-gradient(to bottom, #398A96 0%, #317781 100%);
+    background-color: #317781;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus,
+.nav-pills > .active > a > .badge {
+    color: #fff;
+    background-color: #317781;
 }
 
 .navbar {

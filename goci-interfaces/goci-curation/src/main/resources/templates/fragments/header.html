@@ -100,7 +100,7 @@
                 <!--<a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>-->
                 <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS Catalog</a>
             </div>
-            <div id="navbar" class="navbar-collapse collapse">
+            <div id="navbarCollapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a th:href="@{/studies}">Home</a></li>
                     <li><a th:href="@{/studies/new}">Add Study</a></li>
@@ -142,7 +142,8 @@
                     </li>
                     <li>
                         <form th:action="@{/logout}" method="post">
-                            <input type="submit" value="Sign Out"/>
+                            <!--<input type="submit" value="Sign Out"/>-->
+                            <button type="submit" class="btn btn-default navbar-btn">Sign out</button>
                         </form>
                     </li>
                 </ul>
@@ -175,15 +176,12 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
+<!--<script src="../../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>-->
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+<script src="../../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
 
-<!-- GOCI JavaScript
-================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 
 <!-- Google analytics
 ================================================== -->
