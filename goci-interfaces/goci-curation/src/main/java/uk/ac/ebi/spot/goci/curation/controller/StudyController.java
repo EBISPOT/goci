@@ -641,7 +641,7 @@ public class StudyController {
 
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
-        Long duplicateStudyId = studyDuplicationService.duplicateStudy(studyToDuplicate,
+        Study duplicateStudy = studyDuplicationService.duplicateStudy(studyToDuplicate,
                                                                        currentUserDetailsService.getUserFromRequest(
                                                                                request));
 
@@ -650,7 +650,7 @@ public class StudyController {
                 "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
-        return "redirect:/studies/" + duplicateStudyId;
+        return "redirect:/studies/" + duplicateStudy.getId();
     }
 
     // Assign a curator to a study

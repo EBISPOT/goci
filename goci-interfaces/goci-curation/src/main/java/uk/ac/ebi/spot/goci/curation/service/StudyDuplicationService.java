@@ -50,7 +50,7 @@ public class StudyDuplicationService {
      * @param studyToDuplicate Study to duplicate
      * @return ID of newly created duplicate study
      */
-    public Long duplicateStudy(Study studyToDuplicate, SecureUser user) {
+    public Study duplicateStudy(Study studyToDuplicate, SecureUser user) {
 
         // Record duplication event
         trackingOperationService.update(studyToDuplicate, user, EventType.STUDY_DUPLICATION);
@@ -73,14 +73,19 @@ public class StudyDuplicationService {
 
         // Copy existing ethnicity
         Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyToDuplicate.getId());
+        Collection<Ethnicity> newEthnicities = new ArrayList<>();
 
         studyToDuplicateEthnicities.forEach(studyToDuplicateEthnicity -> {
             Ethnicity duplicateEthnicity = copyEthnicity(studyToDuplicateEthnicity);
             duplicateEthnicity.setStudy(duplicateStudy);
+            newEthnicities.add(duplicateEthnicity);
             ethnicityRepository.save(duplicateEthnicity);
         });
 
-        return duplicateStudy.getId();
+        duplicateStudy.setEthnicities(newEthnicities);
+        studyRepository.save(duplicateStudy);
+
+        return duplicateStudy;
     }
 
     /**
