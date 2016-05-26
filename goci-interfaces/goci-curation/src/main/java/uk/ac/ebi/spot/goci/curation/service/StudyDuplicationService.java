@@ -79,7 +79,7 @@ public class StudyDuplicationService {
             ethnicityRepository.save(duplicateEthnicity);
         });
 
-        return studyToDuplicate.getId();
+        return duplicateStudy.getId();
     }
 
     /**
