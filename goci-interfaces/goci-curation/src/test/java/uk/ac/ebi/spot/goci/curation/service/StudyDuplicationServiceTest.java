@@ -161,6 +161,7 @@ public class StudyDuplicationServiceTest {
                 "Duplicate of study: MacTest T, PMID: 1234569");
         assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
         assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
+        assertThat(duplicateStudy.getHousekeeping().getStudyAddedDate()).isToday();
 
         /// Check ethnicity
         assertThat(duplicateStudy.getEthnicities()).extracting("id", "numberOfIndividuals", "ethnicGroup",
