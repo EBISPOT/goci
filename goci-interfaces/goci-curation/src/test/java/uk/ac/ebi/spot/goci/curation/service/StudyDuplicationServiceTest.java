@@ -1,0 +1,173 @@
+package uk.ac.ebi.spot.goci.curation.service;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.EthnicityBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.service.tracking.StudyTrackingOperationServiceImpl;
+import uk.ac.ebi.spot.goci.model.CurationStatus;
+import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.EventType;
+import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.SecureUser;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/**
+ * Created by emma on 26/05/2016.
+ *
+ * @author emma
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class StudyDuplicationServiceTest {
+
+    @Mock
+    private EthnicityRepository ethnicityRepository;
+
+    @Mock
+    private HousekeepingOperationsService housekeepingOperationsService;
+
+    @Mock
+    private StudyTrackingOperationServiceImpl studyTrackingOperationService;
+
+    @Mock
+    private StudyRepository studyRepository;
+
+    private StudyDuplicationService studyDuplicationService;
+
+    private static final DiseaseTrait DISEASE_TRAIT =
+            new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
+
+    private static final EfoTrait EFO1 =
+            new EfoTraitBuilder().setId(987L)
+                    .setTrait("asthma")
+                    .setUri("http://www.ebi.ac.uk/efo/EFO_0000270")
+                    .build();
+
+    private static final Ethnicity ETH1 = new EthnicityBuilder().setNotes("ETH1 notes")
+            .setId(40L)
+            .setCountryOfOrigin("Ireland")
+            .setCountryOfRecruitment("Ireland")
+            .setDescription("ETH1 description")
+            .setEthnicGroup("European")
+            .setNumberOfIndividuals(100)
+            .setType("initial")
+            .build();
+
+    private static final Ethnicity ETH2 = new EthnicityBuilder().setNotes("ETH2 notes")
+            .setId(60L)
+            .setCountryOfOrigin("U.K.")
+            .setCountryOfRecruitment("U.K.")
+            .setDescription("ETH2 description")
+            .setEthnicGroup("European")
+            .setNumberOfIndividuals(200)
+            .setType("replication")
+            .build();
+
+
+    private static final SecureUser SECURE_USER =
+            new SecureUserBuilder().setId(111L).setEmail("curator@test.com").setPasswordHash("738274$$").build();
+
+    private static final Curator CURATOR = new CuratorBuilder().setId(803L)
+            .setLastName("Unassigned")
+            .build();
+
+    private static final CurationStatus STATUS =
+            new CurationStatusBuilder().setId(804L).setStatus("Awaiting Curation").build();
+
+    private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
+            .setAuthor("MacTest T")
+            .setPubmedId("1234569")
+            .setPublication("Testiing is Awesome")
+            .setTitle("I like to test")
+            .setPublicationDate(new Date())
+            .setDiseaseTrait(DISEASE_TRAIT)
+            .setEfoTraits(Collections.singletonList(EFO1))
+            .setStudyDesignComment("comment")
+            .setInitialSampleSize("initial")
+            .setReplicateSampleSize("rep")
+            .setEthnicities(Arrays.asList(ETH1, ETH2))
+            .build();
+
+    private static final Housekeeping NEW_HOUSEKEEPING =
+            new HousekeepingBuilder()
+                    .setId(799L)
+                    .setCurationStatus(STATUS)
+                    .setCurator(CURATOR)
+                    .setStudyAddedDate(new Date())
+                    .build();
+
+    @Before
+    public void setUp() throws Exception {
+        studyDuplicationService = new StudyDuplicationService(ethnicityRepository,
+                                                              housekeepingOperationsService,
+                                                              studyTrackingOperationService,
+                                                              studyRepository);
+    }
+
+    @Test
+    public void duplicateStudy() throws Exception {
+
+        // Stubbing
+        when(housekeepingOperationsService.createHousekeeping()).thenReturn(NEW_HOUSEKEEPING);
+        when(ethnicityRepository.findByStudyId(STUDY_TO_DUPLICATE.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
+
+        Study duplicateStudy = studyDuplicationService.duplicateStudy(STUDY_TO_DUPLICATE, SECURE_USER);
+
+        // Verification
+        verify(studyTrackingOperationService, times(1)).update(STUDY_TO_DUPLICATE,
+                                                               SECURE_USER,
+                                                               EventType.STUDY_DUPLICATION);
+        verify(studyRepository, times(1)).save(STUDY_TO_DUPLICATE);
+        verify(studyTrackingOperationService, times(1)).create(duplicateStudy, SECURE_USER);
+        verify(housekeepingOperationsService, times(1)).createHousekeeping();
+        verify(ethnicityRepository, times(1)).findByStudyId(STUDY_TO_DUPLICATE.getId());
+        verify(ethnicityRepository, times(2)).save(Matchers.any(Ethnicity.class));
+        verify(housekeepingOperationsService, times(1)).saveHousekeeping(duplicateStudy,
+                                                                         duplicateStudy.getHousekeeping());
+
+
+        // Assertions;
+        assertThat(duplicateStudy).isEqualToIgnoringGivenFields(STUDY_TO_DUPLICATE,
+                                                                "housekeeping",
+                                                                "ethnicities",
+                                                                "id",
+                                                                "author");
+        assertThat(duplicateStudy.getHousekeeping().getNotes()).isEqualToIgnoringCase(
+                "Duplicate of study: MacTest T, PMID: 1234569");
+        assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
+        assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
+
+        /// Check ethnicity
+        assertThat(duplicateStudy.getEthnicities()).extracting("id", "numberOfIndividuals", "ethnicGroup",
+                                                               "description",
+                                                               "countryOfOrigin",
+                                                               "countryOfRecruitment", "type")
+                .contains(tuple(null, 100, "European", "ETH1 description", "Ireland", "Ireland", "initial"),
+                          tuple(null, 200, "European", "ETH2 description", "U.K.", "U.K.", "replication"));
+    }
+}
