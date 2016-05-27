@@ -81,9 +81,6 @@ public class StudyOperationServiceTest {
     private CurationStatusRepository curationStatusRepository;
 
     @Mock
-    private EventOperationsService eventOperationsService;
-
-    @Mock
     private TrackingOperationService trackingOperationService;
 
     @Mock
@@ -92,8 +89,13 @@ public class StudyOperationServiceTest {
     @Mock
     private EventTypeService eventTypeService;
 
+    @Mock
+    private HousekeepingOperationsService housekeepingOperationsService;
+
+    // Class under test
     private StudyOperationsService studyOperationsService;
 
+    // Build entity objects for use during testing
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -106,13 +108,13 @@ public class StudyOperationServiceTest {
     private static final CurationStatus LEVEL_02 =
             new CurationStatusBuilder().setId(806L).setStatus("Level 2 curation done").build();
 
-    private static final CurationStatus CURRENT_STATUS1 =
-            new CurationStatusBuilder().setId(816L).setStatus("Level 2 ancestry done").build();
+    private static final CurationStatus AWAITING_CURATION =
+            new CurationStatusBuilder().setId(816L).setStatus("Awaiting Curation").build();
 
     private static final CurationStatus UNPUBLISH =
             new CurationStatusBuilder().setId(811L).setStatus("Unpublished from catalog").build();
 
-    private static final Curator CURATOR1 = new CuratorBuilder().setId(803L)
+    private static final Curator UNASSIGNED = new CuratorBuilder().setId(803L)
             .setLastName("Unassigned")
             .build();
 
@@ -127,6 +129,14 @@ public class StudyOperationServiceTest {
     private static final Housekeeping NEW_HOUSEKEEPING =
             new HousekeepingBuilder()
                     .setId(799L)
+                    .setCurationStatus(AWAITING_CURATION)
+                    .setCurator(LEVEL_1_CURATOR)
+                    .setStudyAddedDate(new Date())
+                    .build();
+
+    private static final Housekeeping LEVEL_01_HOUSEKEEPING =
+            new HousekeepingBuilder()
+                    .setId(799L)
                     .setCurationStatus(LEVEL_01)
                     .setCurator(LEVEL_1_CURATOR)
                     .setNotes("Some notes")
@@ -137,8 +147,8 @@ public class StudyOperationServiceTest {
     private static final Housekeeping NEW_HOUSEKEEPING_NO_STATUS_CHANGE =
             new HousekeepingBuilder()
                     .setId(799L)
-                    .setCurationStatus(CURRENT_STATUS1)
-                    .setCurator(CURATOR1)
+                    .setCurationStatus(AWAITING_CURATION)
+                    .setCurator(UNASSIGNED)
                     .setNotes("Some notes")
                     .setEthnicityCheckedLevelOne(true)
                     .setStudyAddedDate(new Date())
@@ -199,25 +209,32 @@ public class StudyOperationServiceTest {
                                                             curationStatusRepository,
                                                             trackingOperationService,
                                                             ethnicityRepository,
-                                                            eventTypeService);
-
+                                                            eventTypeService,
+                                                            housekeepingOperationsService);
+        // Create these objects before each test
         CURRENT_HOUSEKEEPING =
-                new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
+                new HousekeepingBuilder().setId(799L).setCurationStatus(AWAITING_CURATION).setCurator(UNASSIGNED).build();
         STU1 = new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
     }
 
 
     @Test
     public void testCreateStudy() {
+
+        // Stubbing
+        when(housekeepingOperationsService.createHousekeeping()).thenReturn(NEW_HOUSEKEEPING);
+
         // Test creating a study
         Study study = studyOperationsService.createStudy(NEW_STUDY, SECURE_USER);
-        verify(housekeepingRepository, times(1)).save(Matchers.any(Housekeeping.class));
-        verify(studyRepository, times(1)).save(NEW_STUDY);
         verify(trackingOperationService, times(1)).create(NEW_STUDY, SECURE_USER);
+        verify(studyRepository, times(1)).save(NEW_STUDY);
 
         assertThat(study).extracting("author", "title", "publication", "pubmedId")
                 .contains("Smith X", "Test", "Nature", "1001002");
-        assertThat(study).extracting("publicationDate").isNotNull();
+        assertThat(study.getPublicationDate()).isToday();
+        assertThat(study.getHousekeeping().getStudyAddedDate()).isToday();
+        assertThat(study.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
+        assertThat(study.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
     }
 
     @Test
@@ -288,8 +305,8 @@ public class StudyOperationServiceTest {
     public void testAssignStudyStatusNoChange() {
 
         // No change to status
-        when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(CURRENT_STATUS1);
-        when(eventTypeService.determineEventTypeFromStatus(CURRENT_STATUS1)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE);
+        when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(AWAITING_CURATION);
+        when(eventTypeService.determineEventTypeFromStatus(AWAITING_CURATION)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE);
 
         Study studyBeforeAssignStatus = STU1;
         String message =
@@ -380,18 +397,18 @@ public class StudyOperationServiceTest {
     @Test
     public void testUpdateHousekeepingWithStatusAndCuratorChange() {
 
-        when(eventTypeService.determineEventTypeFromCurator(NEW_HOUSEKEEPING.getCurator())).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
-        when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING.getCurationStatus())).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+        when(eventTypeService.determineEventTypeFromCurator(LEVEL_01_HOUSEKEEPING.getCurator())).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+        when(eventTypeService.determineEventTypeFromStatus(LEVEL_01_HOUSEKEEPING.getCurationStatus())).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
 
         // Test updating housekeeping where the status and curator has changed
-        String message = studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING, STU1, SECURE_USER);
+        String message = studyOperationsService.updateHousekeeping(LEVEL_01_HOUSEKEEPING, STU1, SECURE_USER);
 
 
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
-        verify(mailService).sendEmailNotification(STU1, NEW_HOUSEKEEPING.getCurationStatus().getStatus());
-        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING);
+        verify(mailService).sendEmailNotification(STU1, LEVEL_01_HOUSEKEEPING.getCurationStatus().getStatus());
+        verify(housekeepingRepository, times(1)).save(LEVEL_01_HOUSEKEEPING);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
@@ -523,7 +540,7 @@ public class StudyOperationServiceTest {
 
         // Create copies of our study/housekeeping before the method runs
         Housekeeping housekeepingBeforeUnpublish =
-                new HousekeepingBuilder().setId(799L).setCurationStatus(CURRENT_STATUS1).setCurator(CURATOR1).build();
+                new HousekeepingBuilder().setId(799L).setCurationStatus(AWAITING_CURATION).setCurator(UNASSIGNED).build();
         Study beforeUnPublish = new StudyBuilder().setId(802L).setHousekeeping(housekeepingBeforeUnpublish).build();
 
         // Stubbing
@@ -550,7 +567,10 @@ public class StudyOperationServiceTest {
 
         // Check housekeeping was saved
         assertThat(beforeUnPublish).isEqualToIgnoringGivenFields(STU1, "housekeeping");
-        assertThat(housekeepingBeforeUnpublish).isEqualToIgnoringGivenFields(STU1.getHousekeeping(), "catalogUnpublishDate", "lastUpdateDate", "curationStatus");
+        assertThat(housekeepingBeforeUnpublish).isEqualToIgnoringGivenFields(STU1.getHousekeeping(),
+                                                                             "catalogUnpublishDate",
+                                                                             "lastUpdateDate",
+                                                                             "curationStatus");
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status")
                 .contains("Unpublished from catalog");
         assertThat(STU1.getHousekeeping().getCatalogUnpublishDate()).isInThePast();
