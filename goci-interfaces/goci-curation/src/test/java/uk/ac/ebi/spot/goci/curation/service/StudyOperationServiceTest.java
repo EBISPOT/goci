@@ -502,7 +502,7 @@ public class StudyOperationServiceTest {
     @Test
     public void testUnpublishStudy() {
 
-        // Create copies of our study/housekeeping before the method runs
+        // Create clones of our study/housekeeping before the method runs
         Housekeeping housekeepingBeforeUnpublish =
                 new HousekeepingBuilder().setId(799L)
                         .setCurationStatus(AWAITING_CURATION)
@@ -521,25 +521,23 @@ public class StudyOperationServiceTest {
         verify(studyRepository, times(1)).findOne(STU1.getId());
         verify(housekeepingRepository, times(1)).findOne(STU1.getHousekeeping().getId());
         verify(curationStatusRepository, times(1)).findByStatus("Unpublished from catalog");
-        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(2)).save(STU1);
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(STU1.getHousekeeping().getCurationStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG);
-
+        verify(studyRepository, times(1)).save(STU1);
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(publishStudyCheckService);
         verifyZeroInteractions(associationRepository);
 
         // Check housekeeping was saved
-        assertThat(beforeUnPublish).isEqualToIgnoringGivenFields(STU1, "housekeeping");
-        assertThat(housekeepingBeforeUnpublish).isEqualToIgnoringGivenFields(STU1.getHousekeeping(),
+        assertThat(STU1).isEqualToIgnoringGivenFields(beforeUnPublish, "housekeeping");
+        assertThat(STU1.getHousekeeping()).isEqualToIgnoringGivenFields(housekeepingBeforeUnpublish,
                                                                              "catalogUnpublishDate",
                                                                              "lastUpdateDate",
                                                                              "curationStatus");
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status")
                 .contains("Unpublished from catalog");
-        assertThat(STU1.getHousekeeping().getCatalogUnpublishDate()).isInThePast();
+        assertThat(STU1.getHousekeeping().getCatalogUnpublishDate()).isToday();
     }
 }
