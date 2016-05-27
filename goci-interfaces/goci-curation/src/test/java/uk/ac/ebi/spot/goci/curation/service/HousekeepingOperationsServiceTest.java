@@ -101,8 +101,8 @@ public class HousekeepingOperationsServiceTest {
         verifyZeroInteractions(studyRepository);
 
         // Assertions
-        assertThat(housekeeping.getCurator()).extracting("lastName").contains("Level 1 Curator");
-        assertThat(housekeeping.getCurationStatus()).extracting("status").contains("Awaiting Curation");
+        assertThat(housekeeping).extracting(curator -> curator.getCurator().getLastName()).contains("Level 1 Curator");
+        assertThat(housekeeping).extracting(curationStatus -> curationStatus.getCurationStatus().getStatus()).contains("Awaiting Curation");
         assertThat(housekeeping.getStudyAddedDate()).isToday();
     }
 
