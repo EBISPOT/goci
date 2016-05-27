@@ -19,6 +19,8 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,9 +49,9 @@ public class HousekeepingOperationsServiceTest {
     private HousekeepingOperationsService housekeepingOperationsService;
 
     private static final Housekeeping HOUSEKEEPING =
-            new HousekeepingBuilder().setId(799L).build();
+            new HousekeepingBuilder().setId(799L).setStudyAddedDate(new Date()).build();
 
-    private static final Study STU1 = new StudyBuilder().setId(802L).setHousekeeping(HOUSEKEEPING).build();
+    private static final Study STU1 = new StudyBuilder().setId(802L).build();
 
     private static final Curator CURATOR = new CuratorBuilder().setId(803L)
             .setLastName("Level 1 Curator")
@@ -93,5 +95,7 @@ public class HousekeepingOperationsServiceTest {
 
         verifyZeroInteractions(curationStatusRepository);
         verifyZeroInteractions(curatorRepository);
+
+        assertThat(STU1.getHousekeeping()).isEqualToComparingFieldByField(HOUSEKEEPING);
     }
 }
