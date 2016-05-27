@@ -262,7 +262,6 @@ public class StudyOperationServiceTest {
     @Test
     public void testAssignStudyStatusToLevelOneCurationDone() {
 
-        // Change assignment from "Level 2 ancestry done" to "Level 1 curation done"
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_01);
         when(eventTypeService.determineEventTypeFromStatus(LEVEL_01)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
 
@@ -270,12 +269,11 @@ public class StudyOperationServiceTest {
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
         verify(mailService).sendEmailNotification(STU1, LEVEL_01.getStatus());
-        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(2)).save(STU1);
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(LEVEL_01);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+        verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(publishStudyCheckService);
         verifyZeroInteractions(associationRepository);
@@ -287,19 +285,17 @@ public class StudyOperationServiceTest {
     @Test
     public void testAssignStudyStatusToLevelTwoCurationDone() {
 
-        // Change assignment from "Level 2 ancestry done" to "Level 2 curation done"
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_02);
         when(eventTypeService.determineEventTypeFromStatus(LEVEL_02)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE);
 
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
-        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(2)).save(STU1);
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(LEVEL_02);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE);
+        verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(publishStudyCheckService);
@@ -314,9 +310,8 @@ public class StudyOperationServiceTest {
 
         // No change to status
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(AWAITING_CURATION);
-        when(eventTypeService.determineEventTypeFromStatus(AWAITING_CURATION)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE);
+        when(eventTypeService.determineEventTypeFromStatus(AWAITING_CURATION)).thenReturn(EventType.STUDY_STATUS_CHANGE_AWAITING_CURATION);
 
-        Study studyBeforeAssignStatus = STU1;
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
 
@@ -329,7 +324,7 @@ public class StudyOperationServiceTest {
         verifyZeroInteractions(eventTypeService);
 
         // Assert there has been no change
-        assertThat(STU1).isEqualToComparingFieldByFieldRecursively(studyBeforeAssignStatus);
+        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
         assertEquals("Current status and new status are the same, no change required", message);
     }
 
@@ -349,13 +344,14 @@ public class StudyOperationServiceTest {
         String message = studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(eventTypeService, times(1)).determineEventTypeFromStatus(PUBLISH);
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService, times(1)).sendEmailNotification(STU1, PUBLISH.getStatus());
-        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(2)).save(STU1);
+        verify(eventTypeService, times(1)).determineEventTypeFromStatus(PUBLISH);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+        verify(studyRepository, times(1)).save(STU1);
+
 
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Publish study");
         assertNull(message);
@@ -370,19 +366,17 @@ public class StudyOperationServiceTest {
         // Stub behaviour
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(PUBLISH);
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
-        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(Matchers.anyString());
-        when(eventTypeService.determineEventTypeFromStatus(PUBLISH)).thenReturn(EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn("ERROR");
 
         String message = studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
 
-        verifyZeroInteractions(housekeepingRepository);
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(studyRepository);
         verifyZeroInteractions(trackingOperationService);
         verifyZeroInteractions(eventTypeService);
 
-        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Level 2 ancestry done");
-        assertNotNull(message);
+        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
+        assertThat(message).isEqualTo("ERROR");
     }
 
 
