@@ -141,7 +141,7 @@ public class StudyOperationServiceTest {
                     .setCurator(LEVEL_1_CURATOR)
                     .setNotes("Some notes")
                     .setEthnicityCheckedLevelOne(true)
-                    .setStudyAddedDate(new Date())
+                    .setStudySnpCheckedLevelOne(true)
                     .build();
 
     private static final Housekeeping NEW_HOUSEKEEPING_NO_STATUS_CHANGE =
@@ -151,7 +151,6 @@ public class StudyOperationServiceTest {
                     .setCurator(UNASSIGNED)
                     .setNotes("Some notes")
                     .setEthnicityCheckedLevelOne(true)
-                    .setStudyAddedDate(new Date())
                     .build();
 
     private static final Housekeeping NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH =
@@ -407,26 +406,16 @@ public class StudyOperationServiceTest {
         // Test updating housekeeping where the status and curator has changed
         String message = studyOperationsService.updateHousekeeping(LEVEL_01_HOUSEKEEPING, STU1, SECURE_USER);
 
-
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
         verify(mailService).sendEmailNotification(STU1, LEVEL_01_HOUSEKEEPING.getCurationStatus().getStatus());
-        verify(housekeepingRepository, times(1)).save(LEVEL_01_HOUSEKEEPING);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
-        verify(studyRepository, times(3)).save(STU1);
-
+        verify(studyRepository, times(2)).save(STU1);
         verifyZeroInteractions(associationRepository);
         verifyZeroInteractions(publishStudyCheckService);
-
-        // Check housekeeping was saved
-        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
-                .contains("Some notes", true);
-        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
-        assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
-        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Level 1 curation done");
         assertNull(message);
     }
 
@@ -436,25 +425,16 @@ public class StudyOperationServiceTest {
         when(eventTypeService.determineEventTypeFromCurator(NEW_HOUSEKEEPING_NO_STATUS_CHANGE.getCurator())).thenReturn(
                 EventType.STUDY_CURATOR_ASSIGNMENT_UNASSIGNED);
         when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING_NO_STATUS_CHANGE.getCurationStatus())).thenReturn(
-                EventType.STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE);
+                EventType.STUDY_STATUS_CHANGE_AWAITING_CURATION);
 
         // Test updating housekeeping where the status has not changed
         String message =
                 studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_NO_STATUS_CHANGE, STU1, SECURE_USER);
 
-        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_NO_STATUS_CHANGE);
-        verify(studyRepository, times(1)).save(STU1);
-
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(publishStudyCheckService);
         verifyZeroInteractions(associationRepository);
-
-        // Check housekeeping was saved
-        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
-                .contains("Some notes", true);
-        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
-        assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName").contains("Unassigned");
-        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Level 2 ancestry done");
+        verifyZeroInteractions(trackingOperationService);
         assertNull(message);
     }
 
@@ -477,26 +457,17 @@ public class StudyOperationServiceTest {
         String message =
                 studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH, STU1, SECURE_USER);
 
+        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(mailService).sendEmailNotification(STU1,
-                                                  NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()
-                                                          .getStatus());
-        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH);
-        verify(studyRepository, times(3)).save(STU1);
+                                                  NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus().getStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
-
-        // Check housekeeping was saved
-        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
-                .contains("Some notes", true);
-        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
-        assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName").contains("GWAS Catalog");
-        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Publish study");
+        verify(studyRepository, times(2)).save(STU1);
         assertNull(message);
     }
 
@@ -513,30 +484,19 @@ public class StudyOperationServiceTest {
         when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()))
                 .thenReturn(EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
-        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(Matchers.anyString());
+        when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn("ERROR");
 
         // Test updating housekeeping where the status has changed
         String message =
                 studyOperationsService.updateHousekeeping(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH, STU1, SECURE_USER);
 
-        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
-        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
-        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH);
-        verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
-
+        verify(associationRepository, times(1)).findByStudyId(STU1.getId());
+        verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verifyZeroInteractions(mailService);
-
-        // Check housekeeping was saved
-        assertThat(STU1.getHousekeeping()).extracting("notes", "ethnicityCheckedLevelOne")
-                .contains("Some notes", true);
-        assertThat(STU1.getHousekeeping()).extracting("studyAddedDate").isNotNull();
-        assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName")
-                .contains("GWAS Catalog");
-        assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Level 2 ancestry done");
-        assertNotNull(message);
+        assertThat(message).isEqualTo("ERROR");
     }
 
     @Test
