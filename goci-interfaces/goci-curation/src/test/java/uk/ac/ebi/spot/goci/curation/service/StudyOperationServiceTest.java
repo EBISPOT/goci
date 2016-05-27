@@ -164,19 +164,6 @@ public class StudyOperationServiceTest {
                     .setStudyAddedDate(new Date())
                     .build();
 
-    private static final Study NEW_STUDY = new StudyBuilder().setAuthor("Smith X")
-            .setPubmedId("1001002")
-            .setPublication("Nature")
-            .setPublicationDate(new Date())
-            .setTitle("Test")
-            .build();
-
-    private static final DiseaseTrait DISEASE_TRAIT =
-            new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
-
-    private static final Study UPDATED_STUDY =
-            new StudyBuilder().setId(802L).setAuthor("Test").setPubmedId("1000").setDiseaseTrait(DISEASE_TRAIT).build();
-
     private static final Association ASS1 =
             new AssociationBuilder().setId(800L)
                     .setSnpApproved(true).build();
@@ -196,6 +183,19 @@ public class StudyOperationServiceTest {
 
     private static Housekeeping CURRENT_HOUSEKEEPING;
 
+    private static final Study NEW_STUDY = new StudyBuilder().setAuthor("Smith X")
+            .setPubmedId("1001002")
+            .setPublication("Nature")
+            .setPublicationDate(new Date())
+            .setTitle("Test")
+            .build();
+
+    private static final DiseaseTrait DISEASE_TRAIT =
+            new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
+
+    private static final Study UPDATED_STUDY =
+            new StudyBuilder().setId(802L).setAuthor("Test").setPubmedId("1000").setDiseaseTrait(DISEASE_TRAIT).build();
+
     private static Study STU1;
 
     @Before
@@ -213,7 +213,10 @@ public class StudyOperationServiceTest {
                                                             housekeepingOperationsService);
         // Create these objects before each test
         CURRENT_HOUSEKEEPING =
-                new HousekeepingBuilder().setId(799L).setCurationStatus(AWAITING_CURATION).setCurator(UNASSIGNED).build();
+                new HousekeepingBuilder().setId(799L)
+                        .setCurationStatus(AWAITING_CURATION)
+                        .setCurator(UNASSIGNED)
+                        .build();
         STU1 = new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
     }
 
@@ -245,10 +248,15 @@ public class StudyOperationServiceTest {
 
         // Test updating a study
         studyOperationsService.updateStudy(STU1.getId(), UPDATED_STUDY, SECURE_USER);
-        verify(studyRepository, times(1)).save(UPDATED_STUDY);
+
         verify(trackingOperationService, times(1)).update(UPDATED_STUDY, SECURE_USER, EventType.STUDY_UPDATE);
+        verify(studyRepository, times(1)).save(UPDATED_STUDY);
         assertThat(UPDATED_STUDY).extracting("id", "author", "pubmedId").contains(802L, "Test", "1000");
         assertThat(UPDATED_STUDY.getDiseaseTrait()).extracting("trait").contains("Asthma");
+        assertThat(UPDATED_STUDY.getHousekeeping().getCurationStatus()).extracting("status")
+                .contains("Awaiting Curation");
+        assertThat(UPDATED_STUDY.getHousekeeping().getCurator()).extracting("lastName").contains("Unassigned");
+        assertThat(UPDATED_STUDY.getHousekeeping().getId()).isEqualTo(799);
     }
 
     @Test
@@ -398,7 +406,8 @@ public class StudyOperationServiceTest {
     public void testUpdateHousekeepingWithStatusAndCuratorChange() {
 
         when(eventTypeService.determineEventTypeFromCurator(LEVEL_01_HOUSEKEEPING.getCurator())).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
-        when(eventTypeService.determineEventTypeFromStatus(LEVEL_01_HOUSEKEEPING.getCurationStatus())).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+        when(eventTypeService.determineEventTypeFromStatus(LEVEL_01_HOUSEKEEPING.getCurationStatus())).thenReturn(
+                EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
 
         // Test updating housekeeping where the status and curator has changed
         String message = studyOperationsService.updateHousekeeping(LEVEL_01_HOUSEKEEPING, STU1, SECURE_USER);
@@ -540,7 +549,10 @@ public class StudyOperationServiceTest {
 
         // Create copies of our study/housekeeping before the method runs
         Housekeeping housekeepingBeforeUnpublish =
-                new HousekeepingBuilder().setId(799L).setCurationStatus(AWAITING_CURATION).setCurator(UNASSIGNED).build();
+                new HousekeepingBuilder().setId(799L)
+                        .setCurationStatus(AWAITING_CURATION)
+                        .setCurator(UNASSIGNED)
+                        .build();
         Study beforeUnPublish = new StudyBuilder().setId(802L).setHousekeeping(housekeepingBeforeUnpublish).build();
 
         // Stubbing
