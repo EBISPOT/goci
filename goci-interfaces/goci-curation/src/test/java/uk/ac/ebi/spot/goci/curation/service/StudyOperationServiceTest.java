@@ -388,11 +388,12 @@ public class StudyOperationServiceTest {
         when(eventTypeService.determineEventTypeFromCurator(LEVEL_1_CURATOR)).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
 
         studyOperationsService.assignStudyCurator(STU1, ASSIGNEE, SECURE_USER);
-        verify(housekeepingRepository, times(1)).save(STU1.getHousekeeping());
-        verify(studyRepository, times(2)).save(STU1);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+        verify(studyRepository, times(1)).save(STU1);
+
+        assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName").containsOnly("Level 1 Curator");
 
     }
 
