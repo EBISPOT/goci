@@ -377,8 +377,7 @@ public class StudyOperationServiceTest {
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
         assertThat(message).isEqualTo("ERROR");
     }
-
-
+    
     @Test
     public void testAssignStudyCurator() {
 
