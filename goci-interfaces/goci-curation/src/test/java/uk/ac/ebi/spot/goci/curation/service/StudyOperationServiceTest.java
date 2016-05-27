@@ -42,7 +42,6 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -180,8 +179,6 @@ public class StudyOperationServiceTest {
 
     private static final Assignee ASSIGNEE = new AssigneeBuilder().build();
 
-    private static Housekeeping CURRENT_HOUSEKEEPING;
-
     private static final Study NEW_STUDY = new StudyBuilder().setAuthor("Smith X")
             .setPubmedId("1001002")
             .setPublication("Nature")
@@ -211,11 +208,10 @@ public class StudyOperationServiceTest {
                                                             eventTypeService,
                                                             housekeepingOperationsService);
         // Create these objects before each test
-        CURRENT_HOUSEKEEPING =
-                new HousekeepingBuilder().setId(799L)
-                        .setCurationStatus(AWAITING_CURATION)
-                        .setCurator(UNASSIGNED)
-                        .build();
+        Housekeeping CURRENT_HOUSEKEEPING = new HousekeepingBuilder().setId(799L)
+                .setCurationStatus(AWAITING_CURATION)
+                .setCurator(UNASSIGNED)
+                .build();
         STU1 = new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
     }
 
@@ -377,7 +373,7 @@ public class StudyOperationServiceTest {
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
         assertThat(message).isEqualTo("ERROR");
     }
-    
+
     @Test
     public void testAssignStudyCurator() {
 
@@ -462,7 +458,8 @@ public class StudyOperationServiceTest {
                                                           SECURE_USER,
                                                           EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
         verify(mailService).sendEmailNotification(STU1,
-                                                  NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus().getStatus());
+                                                  NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()
+                                                          .getStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
                                                           EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
@@ -532,9 +529,9 @@ public class StudyOperationServiceTest {
         // Check housekeeping was saved
         assertThat(STU1).isEqualToIgnoringGivenFields(beforeUnPublish, "housekeeping");
         assertThat(STU1.getHousekeeping()).isEqualToIgnoringGivenFields(housekeepingBeforeUnpublish,
-                                                                             "catalogUnpublishDate",
-                                                                             "lastUpdateDate",
-                                                                             "curationStatus");
+                                                                        "catalogUnpublishDate",
+                                                                        "lastUpdateDate",
+                                                                        "curationStatus");
         assertThat(STU1.getHousekeeping().getCurationStatus()).extracting("status")
                 .contains("Unpublished from catalog");
         assertThat(STU1.getHousekeeping().getCatalogUnpublishDate()).isToday();
