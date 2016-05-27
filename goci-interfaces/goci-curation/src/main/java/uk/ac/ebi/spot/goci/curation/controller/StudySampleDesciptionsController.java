@@ -66,6 +66,7 @@ public class StudySampleDesciptionsController {
                 Study study = ethnicity.getStudy();
 
                 // Study attributes
+                Long studyId = study.getId();
                 String author = study.getAuthor();
                 Date publicationDate = study.getPublicationDate();
                 String pubmedId = study.getPubmedId();
@@ -92,7 +93,7 @@ public class StudySampleDesciptionsController {
                 String description = ethnicity.getDescription();
                 String notes = ethnicity.getNotes();
 
-                StudySampleDescription studySampleDescription = new StudySampleDescription(author,
+                StudySampleDescription studySampleDescription = new StudySampleDescription(studyId, author,
                                                                                            publicationDate,
                                                                                            pubmedId,
                                                                                            initialSampleSize,

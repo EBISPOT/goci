@@ -3,38 +3,40 @@
  */
 
 
-$(document).ready(function () {
-    $('#filter-form').submit(function (event) {
+$(document).ready(function() {
+    $('#filter-form').submit(function(event) {
         event.preventDefault();
         doFiltering();
     });
 
-    $('#clear-filter').click(function () {
+    $('#clear-filter').click(function() {
         clearFilters();
     });
 
     $('#date-min').datepicker({
-        format: "yyyy-mm",
-        endDate: "today",
-        startView: 1,
-        minViewMode: 1
-    });
+                                  format: "yyyy-mm",
+                                  endDate: "today",
+                                  startView: 1,
+                                  minViewMode: 1
+                              });
 
     $('#date-max').datepicker({
-        format: "yyyy-mm",
-        endDate: "today",
-        startView: 1,
-        minViewMode: 1
-    });
+                                  format: "yyyy-mm",
+                                  endDate: "today",
+                                  startView: 1,
+                                  minViewMode: 1
+                              });
 
 //if the dropdown button is clicked, toggle the open element on the div
-    $('.dropdown-toggle.multiSelect').on('click', function(event){
+    $('.dropdown-toggle.multiSelect').on('click', function(event) {
         $(this).parent().toggleClass("open");
     });
 
 //if there is a click anywhere in the page body and the trait selector is open but the click was in the dropdown, close the dropdown
-    $('body').on('click', function (e) {
-        if ($('#trait-dropdown').hasClass('open') && !$('#trait-dropdown').is(e.target) && !$('#trait-dropdown').children().is(e.target) && !$('#trait-dropdown').children().find('input').is(e.target)) {
+    $('body').on('click', function(e) {
+        if ($('#trait-dropdown').hasClass('open') && !$('#trait-dropdown').is(e.target) &&
+                !$('#trait-dropdown').children().is(e.target) &&
+                !$('#trait-dropdown').children().find('input').is(e.target)) {
             $('#trait-dropdown').removeClass("open");
         }
     });
@@ -49,15 +51,15 @@ function doFiltering() {
     var traits = processTraitDropdown();
     var addeddate = '';
 
-    if($('#filter').text() != ''){
+    if ($('#filter').text() != '') {
 
-        if($('#filter').text() != 'recent' && traits == '') {
+        if ($('#filter').text() != 'recent' && traits == '') {
             var terms = $('#filter').text();
             terms = terms.replace(/\s/g, '+');
 
             traits = terms.split('|');
         }
-        else if($('#filter').text() == 'recent'){
+        else if ($('#filter').text() == 'recent') {
             addeddate = "[NOW-3MONTH+TO+*]";
         }
     }
@@ -76,7 +78,7 @@ function clearFilters() {
 
     //if ($('#facet').text()) {
     //    console.log("No facet, so I'm redoing the search");
-        //doSearch();
+    //doSearch();
     //}
     //else {
     //    console.log("Reapplying the facet without filters for facet " + $('#facet').text());
@@ -84,7 +86,7 @@ function clearFilters() {
     //}
 }
 
-function processPval(){
+function processPval() {
 
     var pvalRange = '';
     var pvalMant = $('#pval-mant').val();
@@ -106,13 +108,13 @@ function processPval(){
             //if no exponent was entered, use the catalog cut-off
             pvalRange = pvalRange.concat("-5");
         }
-     //   pvalRange = pvalRange.concat("]");
+        //   pvalRange = pvalRange.concat("]");
         console.log(pvalRange);
     }
     return pvalRange;
 }
 
-function processOR(){
+function processOR() {
     var orRange = '';
     var orMin = $('#or-min').val();
     var orMax = $('#or-max').val();
@@ -134,10 +136,10 @@ function processOR(){
         orRange = orRange.concat("]");
         console.log(orRange);
     }
-     return orRange;
+    return orRange;
 }
 
-function processBeta(){
+function processBeta() {
     var betaRange = '';
     var betaMin = $('#beta-min').val();
     var betaMax = $('#beta-max').val();
@@ -162,7 +164,7 @@ function processBeta(){
     return betaRange;
 }
 
-function processDate(){
+function processDate() {
     var dateRange = '';
     var dateMin = $('#date-min').val();
     var dateMax = $('#date-max').val();
@@ -179,14 +181,14 @@ function processDate(){
             var year = dateMax.split("-")[0];
             var month = parseInt(dateMax.split("-")[1]);
             var newdate = dateMax;
-            if(month === 12){
-                newdate = (parseInt(year)+1).toString().concat('-01');
+            if (month === 12) {
+                newdate = (parseInt(year) + 1).toString().concat('-01');
             }
-            else if (month > 9 && month < 12){
-                newdate = year.concat("-").concat(month+1);
+            else if (month > 9 && month < 12) {
+                newdate = year.concat("-").concat(month + 1);
             }
-            else{
-                newdate = year.concat("-0").concat(month+1);
+            else {
+                newdate = year.concat("-0").concat(month + 1);
             }
             dateRange = dateRange.concat(newdate).concat("-01T00:00:00Z");
         }
@@ -199,10 +201,10 @@ function processDate(){
     return dateRange;
 }
 
-function processTraitDropdown(){
+function processTraitDropdown() {
     var traits = [];
     var traitInput = $('#trait-dropdown ul li input:checked');
-    for(var i=0; i<traitInput.length; i++){
+    for (var i = 0; i < traitInput.length; i++) {
 
         var trait = traitInput[i].value;
         trait = trait.replace(/\s/g, '+');
@@ -217,26 +219,27 @@ function processTraitDropdown(){
 
 function solrfilter(pval, or, beta, date, traits, addeddate) {
     var query = $('#query').text();
-    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta + ", " + date + ", " + traits + " and " + addeddate);
-    if(query == '*'){
+    console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
+                ", " + date + ", " + traits + " and " + addeddate);
+    if (query == '*') {
         var searchTerm = 'text:'.concat(query);
     }
-    else{
+    else {
         var searchTerm = 'text:"'.concat(query).concat('"');
     }
     $.getJSON('api/search/filter', {
-        'q': searchTerm,
-        'group': 'true',
-        'group.by': 'resourcename',
-        'group.limit': 5,
-        'pvalfilter': pval,
-        'orfilter': or,
-        'betafilter': beta,
-        'datefilter': date,
-        'traitfilter[]': traits,
-        'dateaddedfilter': addeddate
-    })
-        .done(function (data) {
-            processData(data);
-        });
+                'q': searchTerm,
+                'group': 'true',
+                'group.by': 'resourcename',
+                'group.limit': 5,
+                'pvalfilter': pval,
+                'orfilter': or,
+                'betafilter': beta,
+                'datefilter': date,
+                'traitfilter[]': traits,
+                'dateaddedfilter': addeddate
+            })
+            .done(function(data) {
+                processData(data);
+            });
 }

@@ -13,9 +13,9 @@ import java.util.Collection;
  * Created by emma on 27/04/2015.
  *
  * @author emma
- *
- * This is a service class to process a set of study sample descriptions and output the result to a tsv
- * file. Based on AssociationDownloadService.java
+ *         <p>
+ *         This is a service class to process a set of study sample descriptions and output the result to a tsv file.
+ *         Based on AssociationDownloadService.java
  */
 
 @Service
@@ -41,7 +41,7 @@ public class StudySampleDescriptionsDownloadService {
     private String processStudySampleDescriptions(Collection<StudySampleDescription> studySampleDescriptions) {
 
         String header =
-                "Author\tStudy Date\tPubmed ID\tInitial Sample Description\tReplication Sample Description\tType\tNumber of Individuals\tEthnic Group\tCountry of Origin\tCountry of Recruitment\tAdditional Description\tSample Sizes Match\tEthnicty Checked Level One\tEthnicty Checked Level Two\tNotes\n";
+                "Study ID\tAuthor\tPublication Date\tPubmed ID\tInitial Sample Description\tReplication Sample Description\tType\tNumber of Individuals\tEthnic Group\tCountry of Origin\tCountry of Recruitment\tAdditional Description\tSample Sizes Match\tEthnicty Checked Level One\tEthnicty Checked Level Two\tNotes\n";
 
 
         StringBuilder output = new StringBuilder();
@@ -49,6 +49,17 @@ public class StudySampleDescriptionsDownloadService {
 
         for (StudySampleDescription studySampleDescription : studySampleDescriptions) {
             StringBuilder line = new StringBuilder();
+
+            // Study ID
+            if (studySampleDescription.getStudyId() == null) {
+                line.append("");
+            }
+            else {
+                line.append(studySampleDescription.getStudyId());
+
+            }
+            line.append("\t");
+
 
             // Author
             if (studySampleDescription.getAuthor() == null) {
@@ -60,11 +71,10 @@ public class StudySampleDescriptionsDownloadService {
             }
             line.append("\t");
 
-            // Study Date
+            // Publication Date
             if (studySampleDescription.getPublicationDate() == null) {
                 line.append("");
             }
-
             else {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String studyDate = dateFormat.format(studySampleDescription.getPublicationDate());
@@ -76,18 +86,16 @@ public class StudySampleDescriptionsDownloadService {
             if (studySampleDescription.getPubmedId() == null) {
                 line.append("");
             }
-
             else {
                 line.append(studySampleDescription.getPubmedId());
             }
             line.append("\t");
 
             // Initial sample size
-            String initialSampleSize= studySampleDescription.getInitialSampleSize();
-            if (initialSampleSize== null) {
+            String initialSampleSize = studySampleDescription.getInitialSampleSize();
+            if (initialSampleSize == null) {
                 line.append("");
             }
-
             else {
                 line.append(tidyStringForOutput(initialSampleSize));
             }
@@ -98,7 +106,6 @@ public class StudySampleDescriptionsDownloadService {
             if (replicateSampleSize == null) {
                 line.append("");
             }
-
             else {
                 line.append(tidyStringForOutput(replicateSampleSize));
             }
@@ -108,7 +115,6 @@ public class StudySampleDescriptionsDownloadService {
             if (studySampleDescription.getType() == null) {
                 line.append("");
             }
-
             else {
                 line.append(studySampleDescription.getType());
             }
@@ -118,7 +124,6 @@ public class StudySampleDescriptionsDownloadService {
             if (studySampleDescription.getNumberOfIndividuals() == null) {
                 line.append("");
             }
-
             else {
                 line.append(studySampleDescription.getNumberOfIndividuals());
             }
@@ -129,7 +134,6 @@ public class StudySampleDescriptionsDownloadService {
             if (ethnicGroup == null) {
                 line.append("");
             }
-
             else {
                 line.append(tidyStringForOutput(ethnicGroup));
             }
@@ -140,7 +144,6 @@ public class StudySampleDescriptionsDownloadService {
             if (countryOfOrigin == null) {
                 line.append("");
             }
-
             else {
                 line.append(tidyStringForOutput(countryOfOrigin));
             }
@@ -148,10 +151,9 @@ public class StudySampleDescriptionsDownloadService {
 
             // Recruitment
             String countryOfRecruitment = studySampleDescription.getCountryOfRecruitment();
-            if (countryOfRecruitment== null) {
+            if (countryOfRecruitment == null) {
                 line.append("");
             }
-
             else {
                 line.append(tidyStringForOutput(countryOfRecruitment));
             }
@@ -162,7 +164,6 @@ public class StudySampleDescriptionsDownloadService {
             if (description == null) {
                 line.append("");
             }
-
             else {
                 String newline = System.getProperty("line.separator");
                 if (description.equals(newline)) {
@@ -178,7 +179,6 @@ public class StudySampleDescriptionsDownloadService {
             if (studySampleDescription.getSampleSizesMatch() == null) {
                 line.append("");
             }
-
             else {
                 line.append(studySampleDescription.getSampleSizesMatch());
             }
@@ -188,26 +188,26 @@ public class StudySampleDescriptionsDownloadService {
             if (studySampleDescription.isEthnicityCheckedLevelOne() == null) {
                 line.append("");
             }
-
             else {
                 if (studySampleDescription.isEthnicityCheckedLevelOne()) {
                     line.append("Y");
                 }
-
-                else {line.append("N");}
+                else {
+                    line.append("N");
+                }
             }
             line.append("\t");
 
             if (studySampleDescription.isEthnicityCheckedLevelTwo() == null) {
                 line.append("");
             }
-
             else {
                 if (studySampleDescription.isEthnicityCheckedLevelTwo()) {
                     line.append("Y");
                 }
-
-                else {line.append("N");}
+                else {
+                    line.append("N");
+                }
             }
             line.append("\t");
 

@@ -10,7 +10,7 @@ import java.util.Collection;
  * Created by emma on 28/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Ethnicity entity object
  */
 @RepositoryRestResource

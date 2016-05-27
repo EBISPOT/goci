@@ -1,0 +1,287 @@
+.icon-trait {
+    height: 18px;
+    width: 18px;
+    background-image: url(../images/icon-trait-bg_30x405.png);
+    float: left;
+    margin-top: -0.1em;
+    margin-right: 0.3em;
+    background-repeat: no-repeat;
+    display: block;
+    overflow: hidden;
+    text-indent: -99999px;
+}
+
+.icon-trait-haemo-measure {
+    background-position: -7px -6px;
+}
+
+.icon-trait-neuro {
+    background-position: -7px -29px;
+}
+
+.icon-trait-process {
+    background-position: -7px -52px;
+}
+
+.icon-trait-cardio-measure {
+    background-position: -7px -74px;
+}
+
+.icon-trait-other {
+    background-position: -7px -96px;
+}
+
+.icon-trait-metabolic {
+    background-position: -7px -119px;
+}
+
+.icon-trait-drug {
+    background-position: -7px -141px;
+}
+
+.icon-trait-body-measure {
+    background-position: -7px -164px;
+}
+
+.icon-trait-disease {
+    background-position: -7px -187px;
+}
+
+.icon-trait-neoplasm {
+    background-position: -7px -209px;
+}
+
+.icon-trait-immune {
+    background-position: -7px -231px;
+}
+
+.icon-trait-measure {
+    background-position: -7px -253px;
+}
+
+.icon-trait-liver-measure {
+    background-position: -7px -275px;
+}
+
+.icon-trait-lipid-measure {
+    background-position: -7px -298px;
+}
+
+.icon-trait-inflam-measure {
+    background-position: -7px -321px;
+}
+
+.icon-trait-digestive {
+    background-position: -7px -343px;
+}
+
+.icon-trait-cardio {
+    background-position: -7px -366px;
+}
+
+.icon-trait-unmapped {
+    background-position: -7px -389px;
+}
+
+.zoombar {
+    position: absolute;
+    background-color: transparent;
+}
+
+.zoom-compontent {
+    display: inline-block !important;
+    vertical-align: middle;
+}
+
+#tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 5px;
+    width: auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.4;
+    filter: alpha(opacity=0);
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+circle[fading="false"] {
+    cursor: pointer;
+}
+
+circle[fading="true"] {
+    cursor: default;
+}
+
+/**
+  * autocomplete css
+*/
+
+.autocomplete-suggestions {
+    border: 1px solid #999;
+    background: #FFF;
+    overflow: auto;
+}
+
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #3399FF;
+}
+
+.autocomplete-group {
+    padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+    display: block;
+    border-bottom: 1px solid #000;
+}
+
+.ontology-suggest {
+    padding: 2px;
+    font-size: larger;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.suggestion-value {
+    text-overflow: ellipsis;
+    font-size: smaller;
+}
+
+a.nounderline {
+    border-bottom-style: none;
+}
+
+a:hover.nounderline {
+    border-bottom-style: none;
+}
+
+.sub-text {
+    color: #999;
+    font-size: x-small;
+    font-weight: normal;
+}
+
+.jstree-proton {
+    font-family: Verdana, sans-serif;
+}
+
+.legend-item.disabled {
+    color: #555 !important;
+    /*background-color: #FFF !important;*/
+}
+
+.legend-item.disabled > .badge {
+    background-color: #398A96 !important;
+}
+
+.legend-item {
+    font-size: 10px;
+}
+
+.legend-item > .badge {
+    font-size: 10px;
+}
+
+#legend-bar-body {
+    overflow: auto;
+}
+
+.col-16 {
+    width: 12.5%;
+    float: left;
+    margin: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    min-height: 1px;
+    position: relative;
+}
+
+.col-16-right {
+    width: 17%;
+    float: right;
+    display: inline-block;
+    margin-left: 80%;
+    padding-left: 10px;
+    padding-top: 10px;
+    min-height: 1px;
+    position: absolute;
+}
+
+.col-16-middle {
+    width: 18.75%;
+    display: inline-block;
+    margin-right: 40%;
+    margin-left: 40%;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    min-height: 1px;
+    position: relative;
+}
+
+.col-8 {
+    width: 6%;
+    float: left;
+    margin: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    min-height: 1px;
+    position: relative;
+}
+
+.col-16-rest {
+    width: 87.5%;
+    display: inline-block;
+    float: left;
+    margin: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    min-height: 1px;
+    position: relative;
+}
+
+.col-8-rest {
+    width: 94%;
+    float: left;
+    margin: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    min-height: 1px;
+    position: relative;
+}
+
+.diagram-panel {
+    padding: 0 !important;
+}
+
+#filter-button, #clear-filter-button {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#filter-counter {
+    display: inline-block;
+    padding-left: 10px;
+    padding-top: 10px;
+    min-height: 1px;
+    position: absolute;
+    font-style: italic;
+    background-color: transparent;
+}

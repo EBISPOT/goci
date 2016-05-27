@@ -4,7 +4,16 @@ package uk.ac.ebi.spot.goci.model;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
@@ -41,38 +50,60 @@ public class Study {
 
     private String replicateSampleSize;
 
-    private String platform;
-
     @NotBlank(message = "Please enter a pubmed id")
     private String pubmedId;
 
     // Defaults set as false
-    private Boolean cnv=false;
+    private Boolean cnv = false;
 
-    private Boolean gxe=false;
+    private Boolean gxe = false;
 
-    private Boolean gxg=false;
+    private Boolean gxg = false;
+
+    private Boolean genomewideArray = true;
+
+    private Boolean targetedArray = false;
+
+    private Integer snpCount;
+
+    private String qualifier;
+
+    private Boolean imputed = false;
+
+    private Boolean pooled = false;
+
+    private String studyDesignComment;
+
+
+    @ManyToMany
+    @JoinTable(name = "STUDY_PLATFORM",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
+    private Collection<Platform> platforms;
 
     @OneToMany(mappedBy = "study")
     private Collection<Association> associations;
 
+    @OneToMany(mappedBy = "study")
+    private Collection<Ethnicity> ethnicities;
+
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-    @ManyToMany
-    @JoinTable(name = "STUDY_SNP",
-            joinColumns = @JoinColumn(name = "STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
+//    @ManyToMany
+//    @JoinTable(name = "STUDY_SNP",
+//               joinColumns = @JoinColumn(name = "STUDY_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
 
     @OneToOne
     private Housekeeping housekeeping;
@@ -85,21 +116,51 @@ public class Study {
     }
 
 
-    public Study(String author, Date publicationDate, String publication, String title, String initialSampleSize, String replicateSampleSize, String platform, String pubmedId, Boolean cnv, Boolean gxe, Boolean gxg, DiseaseTrait diseaseTrait, Collection<EfoTrait> efoTraits, Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms, Housekeeping housekeeping) {
+    public Study(String author,
+                 Date publicationDate,
+                 String publication,
+                 String title,
+                 String initialSampleSize,
+                 String replicateSampleSize,
+                 Collection<Platform> platforms,
+                 String pubmedId,
+                 Boolean cnv,
+                 Boolean gxe,
+                 Boolean gxg,
+                 Boolean genomewideArray,
+                 Boolean targetedArray,
+                 Integer snpCount,
+                 String qualifier,
+                 Boolean imputed,
+                 Boolean pooled,
+                 String studyDesignComment,
+                 DiseaseTrait diseaseTrait,
+                 Collection<EfoTrait> efoTraits,
+//                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
+                 Collection<Ethnicity> ethnicities,
+                 Housekeeping housekeeping) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platform = platform;
+        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
+        this.targetedArray = targetedArray;
+        this.genomewideArray = genomewideArray;
+        this.snpCount = snpCount;
+        this.qualifier = qualifier;
+        this.imputed = imputed;
+        this.pooled = pooled;
+        this.studyDesignComment = studyDesignComment;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+        this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
     }
 
@@ -159,12 +220,12 @@ public class Study {
         this.replicateSampleSize = replicateSampleSize;
     }
 
-    public String getPlatform() {
-        return platform;
+    public Collection<Platform> getPlatforms() {
+        return platforms;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setPlatforms(Collection<Platform> platforms) {
+        this.platforms = platforms;
     }
 
     public String getPubmedId() {
@@ -199,6 +260,14 @@ public class Study {
         this.gxg = gxg;
     }
 
+    public Boolean getTargetedArray() {
+        return targetedArray;
+    }
+
+    public void setTargetedArray(Boolean targetedArray) {
+        this.targetedArray = targetedArray;
+    }
+
     public Collection<Association> getAssociations() {
         return associations;
     }
@@ -223,13 +292,13 @@ public class Study {
         this.efoTraits = efoTraits;
     }
 
-    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-        return singleNucleotidePolymorphisms;
-    }
-
-    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-    }
+//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
+//        return singleNucleotidePolymorphisms;
+//    }
+//
+//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
+//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
+//    }
 
     public Housekeeping getHousekeeping() {
         return housekeeping;
@@ -256,5 +325,62 @@ public class Study {
                 ", title='" + title + '\'' +
                 ", pubmedId='" + pubmedId + '\'' +
                 '}';
+    }
+
+    public Collection<Ethnicity> getEthnicities() {
+        return ethnicities;
+    }
+
+    public void setEthnicities(Collection<Ethnicity> ethnicities) {
+        this.ethnicities = ethnicities;
+    }
+
+
+    public Integer getSnpCount() {
+        return snpCount;
+    }
+
+    public void setSnpCount(Integer snpCount) {
+        this.snpCount = snpCount;
+    }
+
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    public boolean getImputed() {
+        return imputed;
+    }
+
+    public void setImputed(boolean imputed) {
+        this.imputed = imputed;
+    }
+
+    public boolean getPooled() {
+        return pooled;
+    }
+
+    public void setPooled(boolean pooled) {
+        this.pooled = pooled;
+    }
+
+    public String getStudyDesignComment() {
+        return studyDesignComment;
+    }
+
+    public void setStudyDesignComment(String studyDesignComment) {
+        this.studyDesignComment = studyDesignComment;
+    }
+
+    public Boolean getGenomewideArray() {
+        return genomewideArray;
+    }
+
+    public void setGenomewideArray(Boolean genomewideArray) {
+        this.genomewideArray = genomewideArray;
     }
 }

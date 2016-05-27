@@ -1,12 +1,15 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by emma on 28/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model object representing ethnicity information attached to a study
  */
 
@@ -42,7 +45,15 @@ public class Ethnicity {
     public Ethnicity() {
     }
 
-    public Ethnicity(String type, Integer numberOfIndividuals, String ethnicGroup, String countryOfOrigin, String countryOfRecruitment, String description, String previouslyReported, String sampleSizesMatch, String notes) {
+    public Ethnicity(String type,
+                     Integer numberOfIndividuals,
+                     String ethnicGroup,
+                     String countryOfOrigin,
+                     String countryOfRecruitment,
+                     String description,
+                     String previouslyReported,
+                     String sampleSizesMatch,
+                     String notes) {
         this.type = type;
         this.numberOfIndividuals = numberOfIndividuals;
         this.ethnicGroup = ethnicGroup;

@@ -8,10 +8,13 @@ import uk.ac.ebi.spot.goci.model.Region;
  * Created by emma on 01/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Region entity object
  */
 
 @RepositoryRestResource
 public interface RegionRepository extends JpaRepository<Region, Long> {
+
+    Region findByName(String regionName);
+
 }

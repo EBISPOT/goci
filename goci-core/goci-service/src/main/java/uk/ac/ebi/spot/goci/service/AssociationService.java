@@ -9,7 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.EnsemblGene;
+import uk.ac.ebi.spot.goci.model.EntrezGene;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -17,8 +20,11 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -69,13 +75,9 @@ public class AssociationService {
 
 
     /**
-     * Get in one transaction the list of all Association with :
-     *  the attached study and its publish date
-     *  the attached efo traits
-     *  the attached locii, for each loci :
-     *      their strongestRiskAlleles, for each alleles :
-     *          the regions
-     *          the genomic contexts
+     * Get in one transaction the list of all Association with : the attached study and its publish date the attached
+     * efo traits the attached loci, for each loci : their strongestRiskAlleles, for each alleles : the regions the
+     * genomic contexts
      *
      * @return a List of Associations.
      */
@@ -102,23 +104,26 @@ public class AssociationService {
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations() {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
+        List<Association> allAssociations =
+                associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull();
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public List<Association> findPublishedAssociations(Sort sort) {
-        List<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
-                sort);
+        List<Association> allAssociations =
+                associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                        sort);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
 
     @Transactional(readOnly = true)
     public Page<Association> findPublishedAssociations(Pageable pageable) {
-        Page<Association> allAssociations = associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
-                pageable);
+        Page<Association> allAssociations =
+                associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
+                        pageable);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
@@ -157,10 +162,11 @@ public class AssociationService {
         return associations;
     }
 
-    public void loadAssociatedDataIncludingHousekeeping(Association association){
+    public void loadAssociatedDataIncludingHousekeeping(Association association) {
         loadAssociatedData(association);
         association.getStudy().getHousekeeping().getCatalogPublishDate();
     }
+
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.fetchOne(association.getStudy());
@@ -168,12 +174,61 @@ public class AssociationService {
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
         Collection<Region> regions = new HashSet<>();
         Collection<Gene> mappedGenes = new HashSet<>();
+        Map<String, Set<String>> mappedGeneEntrezIds = new HashMap<>();
+        Map<String, Set<String>> mappedGeneEnsemblIds = new HashMap<>();
         association.getLoci().forEach(
                 locus -> {
                     locus.getStrongestRiskAlleles().stream().map(RiskAllele::getSnp).forEach(
                             snp -> {
-                                snp.getRegions().forEach(regions::add);
-                                snp.getGenomicContexts().forEach(context -> mappedGenes.add(context.getGene()));
+                                Collection<Location> snpLocations = snp.getLocations();
+                                for (Location location : snpLocations) {
+                                    regions.add(location.getRegion());
+                                }
+
+                                snp.getGenomicContexts().forEach(context -> {
+                                                                     mappedGenes.add(context.getGene());
+
+                                                                     String geneName = context.getGene().getGeneName();
+                                                                     Collection<EntrezGene> geneEntrezGeneIds =
+                                                                             context.getGene().getEntrezGeneIds();
+                                                                     Collection<EnsemblGene> geneEnsemblGeneIds =
+                                                                             context.getGene().getEnsemblGeneIds();
+
+                                                                     if (mappedGeneEntrezIds.containsKey(geneName)) {
+                                                                         for (EntrezGene entrezGene : geneEntrezGeneIds) {
+                                                                             mappedGeneEntrezIds.get(geneName).add(
+                                                                                     entrezGene.getEntrezGeneId());
+                                                                         }
+                                                                     }
+
+                                                                     // First time we see a SNP store the location
+                                                                     else {
+                                                                         Set<String> entrezIds = new HashSet<>();
+                                                                         for (EntrezGene entrezGene : geneEntrezGeneIds) {
+                                                                             entrezIds.add(entrezGene.getEntrezGeneId());
+                                                                         }
+                                                                         mappedGeneEntrezIds.put(geneName,
+                                                                                                 entrezIds);
+                                                                     }
+
+                                                                     if (mappedGeneEnsemblIds.containsKey(geneName)) {
+                                                                         for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
+                                                                             mappedGeneEnsemblIds.get(geneName)
+                                                                                     .add(ensemblGene.getEnsemblGeneId());
+                                                                         }
+                                                                     }
+
+                                                                     // First time we see a SNP store the location
+                                                                     else {
+                                                                         Set<String> ensemblIds = new HashSet<>();
+                                                                         for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
+                                                                             ensemblIds.add(ensemblGene.getEnsemblGeneId());
+                                                                         }
+                                                                         mappedGeneEntrezIds.put(geneName,
+                                                                                                 ensemblIds);
+                                                                     }
+                                                                 }
+                                );
                                 snps.add(snp);
                             }
                     );
@@ -183,6 +238,12 @@ public class AssociationService {
                                         .map(RiskAllele::getSnp)
                                         .collect(Collectors.toList()));
                     reportedGeneCount.addAndGet(locus.getAuthorReportedGenes().size());
+                    locus.getAuthorReportedGenes().forEach(
+                            authorReportedGene -> {
+                                authorReportedGene.getEnsemblGeneIds().size();
+                                authorReportedGene.getEntrezGeneIds().size();
+                            }
+                    );
                 });
         getLog().trace("Association '" + association.getId() + "' is mapped to " +
                                "" + traitCount + " EFO traits where study id = " + study.getId() + " " +

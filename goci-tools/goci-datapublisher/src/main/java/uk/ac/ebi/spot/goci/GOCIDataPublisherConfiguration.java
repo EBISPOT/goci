@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.owl.OntologyLoader;
-import uk.ac.ebi.spot.goci.owl.ReasonedOntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -20,7 +20,6 @@ public class GOCIDataPublisherConfiguration {
 
     @NotNull @Value("${efo.location}")
     private Resource efoResource;
-
 
 
     @Bean OntologyLoader ontologyLoader() {

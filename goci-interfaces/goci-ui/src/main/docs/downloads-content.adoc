@@ -2,25 +2,79 @@
 
 == Downloading the GWAS Catalog
 
-The most recent edition of the GWAS Catalog is link:../api/search/downloads/full[available for download here]
 
-For a description of the file's column headings, go to link:fileheaders[this page].
+[width="60%",options="header",cols="2,1,2,1", frame="all", grid="cols", halign = "center"]
+|===
+|Description | Download Link |Format  | Column header descriptions
+
+|The most recent edition of all the associations in the GWAS Catalog
+|link:../api/search/downloads/full[ Click to download]
+|tab separated file
+|link:fileheaders[ Click to view]
 
 
-The most recent edition of the GWAS Catalog with added ontology annotations is link:../api/search/downloads/alternative[available for download here]
 
-For a description of the file's additional column headings, go to link:fileheaders#_file_headers_for_catalog_version_1_0_1[this page].
+|The most recent edition of all the associations in the GWAS Catalog *with added ontology annotations*
+|link:../api/search/downloads/alternative[ Click to download]
+|tab separated file
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
 
+
+|The most recent edition of all the studies in the GWAS Catalog
+|link:../api/search/downloads/studies[ Click to download]
+|tab separated file
+|link:fileheaders[ Click to view]
+
+
+
+|The most recent edition of all the studies in the GWAS Catalog *with added ontology annotations*
+|link:../api/search/downloads/studies_alternative[ Click to download]
+|tab separated file
+|link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
+|===
+
+
+File name conventions:
+
+* v1.0 indicates the columns originally proposed by the NCBI
+* v1.0.1 indicates the addition of ontology annotations
+* eXX indicates the Ensembl release version that the data is mapped to
+* rYYYY-MM-DD indicates the date on which the GWAS Catalog was released
+
+Older versions of the GWAS Catalog, with or without ontology annotations, can be found on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases[ our FTP server].
 
 We are working to provide richer, fully customise-able downloads of GWAS data and these will be available soon.
 
 ////
-== Old version of the spreadsheet
+=== Try our new spreadsheet download
+image::http://www.ebi.ac.uk/web_guidelines/images/icons/EBI-Generic/Generic%20icons/Beta.png[BETA]
 
-As of 15/6/2015, all CNV studies that were included in the GWAS Catalog for historical reasons have been removed as they did not meet the Catalog's eligibility criteria. At the same time, the "CNV?" column in the download spreadsheet, used to flag CNV studies, was removed as it was redundant. A version of the old spreadsheet format, including the removed studies and all other data up to 2/5/2015 is link:../api/search/downloads/old[available for download here]
+As part of ongoing improvements mapping information will be added for all GWAS Catalog SNPs to Ensembl genes, in addition to NCBI genes. Multiple genomic locations for SNPs that map to multiple locations within the primary assembly will also be included.
+
+We are in the process of testing and developing this feature and in order to gather feedback the GWAS Catalog with added mapping information is link:../api/search/downloads/ensembl_mapping[available for download here].
+
+A description of the headers in this file can be found link:mappingfileheaders[here]. The information in this file is generated using the link:http://rest.ensembl.org/[Ensembl API] and the source of the data is both Ensembl and NCBI. The data was produced using a snapshot of our database as of the 9th of September 2015 and includes studies with a date added to catalog up to July 2015.
+
+We'd love to hear what you think of this new feature, contact the GWAS Catalog team on mailto:gwas-info@ebi.ac.uk[gwas-info@ebi.ac.uk]
 ////
+
+== GWAS to EFO mappings
+
+A file showing all GWAS to EFO mappings, including the parent category each trait is mapped to on the diagram can be found link:../api/search/downloads/trait_mappings[ here] and on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest[ our FTP server]. Note that mappings are not one-to-one, i.e. one EFO term may be mapped to several different GWAS traits and vice versa.
+
+
+== Downloading the GWAS Diagram
+
+link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas_diagram.svg[ Download the latest version] of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries[ older versions of the diagram] to generate for a visually striking time lapse.
+
+
+== Downloading the GWAS Catalog as RDF/OWL
+
+*CAUTION*: Some of these files may be very large - attempting to open them in your browser may take a very long time. It is usually safest to right-click and choose "save as..." to download these files.
+
+Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-kb.owl[OWL knowledge base] that can be loaded into an RDF triple store. In order to work with the knowledge base, a copy of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-diagram.owl[schema ontology] and of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/efo.owl[Experimental Factor Ontology (EFO)] are required. For more information on our use of ontologies, see our link:ontology[ontology] page.
+
 
 == Citing the GWAS Catalog
 
 Please see the link:about[About] page for citation guidance.
-

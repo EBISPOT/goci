@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -44,7 +45,7 @@ public class StudyService {
      * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
      * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
      * associations, housekeeping).
-     * <p/>
+     * <p>
      * Use this when you know you will need deep information about a study and do not have an open session that can be
      * used to lazy load extra data.
      *
@@ -57,6 +58,12 @@ public class StudyService {
         return allStudies;
     }
 
+    /**
+     * Get in one transaction all the studies, plus associated Associations, plus associated SNPs and their regions,
+     * plus the studies publish date.
+     *
+     * @return a List of Studies
+     */
     @Transactional(readOnly = true)
     public List<Study> deepFindAll() {
         List<Study> allStudies = studyRepository.findAll();
@@ -97,7 +104,7 @@ public class StudyService {
      * A facade service around a {@link uk.ac.ebi.spot.goci.repository.StudyRepository} that retrieves all studies, and
      * then within the same datasource transaction additionally loads other objects referenced by this study (traits,
      * associations, housekeeping).
-     * <p/>
+     * <p>
      * Use this when you know you will need deep information about a study and do not have an open session that can be
      * used to lazy load extra data.
      *
@@ -180,55 +187,90 @@ public class StudyService {
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
+        int ethnicityCount = study.getEthnicities().size();
+        int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations and was published on " + publishDate.toString());
+                            "has " + associationCount + " associations, " + ethnicityCount +
+                            " ancestry entries, " + platformCount + " platform manufacturers "  +
+                            " and was published on " + publishDate.toString());
         }
         else {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations and is not yet published");
+                            "has " + associationCount + " associations, " + ethnicityCount +
+                            " ancestry entries , " + platformCount + " platform manufacturers " +
+                            "and is not yet published");
         }
     }
 
     public void deepLoadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        int snpCount = study.getSingleNucleotidePolymorphisms().size();
+//        int snpCount = study.getSingleNucleotidePolymorphisms().size();
+        int platformCount = study.getPlatforms().size();
 
-        for (Association association : study.getAssociations()) {
-            int lociCount = association.getLoci().size();
-            int associationEfoTraitCount = association.getEfoTraits().size();
-            getLog().trace("Association '" + association.getId() + "' is linked to " + lociCount + " loci and " +
-                                   associationEfoTraitCount + "efo traits.");
-            for (Locus locus : association.getLoci()) {
-                int riskAlleleCount = locus.getStrongestRiskAlleles().size();
-                getLog().trace("Locus '" + locus.getId() + "' is linked to " + riskAlleleCount + " risk alleles.");
-                for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
-                    SingleNucleotidePolymorphism riskAlleleSnp = riskAllele.getSnp();
-                    int riskAlleleSnpRegionCount = riskAlleleSnp.getRegions().size();
-                    getLog().trace("Snp '" + riskAlleleSnp.getId() + "' is linked to " + riskAlleleSnpRegionCount +
-                                           " regions.");
+        Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+        study.getAssociations().forEach(
+                association -> {
+                    association.getLoci().forEach(
+                            locus -> {
+                                locus.getStrongestRiskAlleles().forEach(
+                                        riskAllele -> {
+                                            snps.add(riskAllele.getSnp());
+                                        }
+                                );
+                            }
+                    );
+                }
+        );
+        int snpCount = snps.size();
+
+
+//        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
+        for (SingleNucleotidePolymorphism snp : snps) {
+
+            int locationCount = snp.getLocations().size();
+            getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
+
+            int ethnicityCount = study.getEthnicities().size();
+
+            for (Association association : study.getAssociations()) {
+                int lociCount = association.getLoci().size();
+                int associationEfoTraitCount = association.getEfoTraits().size();
+                getLog().trace("Association '" + association.getId() + "' is linked to " + lociCount + " loci and " +
+                                       associationEfoTraitCount + "efo traits.");
+                for (Locus locus : association.getLoci()) {
+                    int riskAlleleCount = locus.getStrongestRiskAlleles().size();
+                    getLog().trace("Locus '" + locus.getId() + "' is linked to " + riskAlleleCount + " risk alleles.");
+                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                        SingleNucleotidePolymorphism riskAlleleSnp = riskAllele.getSnp();
+                        int riskAlleleSnpRegionCount = riskAlleleSnp.getLocations().size();
+                        getLog().trace("Snp '" + riskAlleleSnp.getId() + "' is linked to " + riskAlleleSnpRegionCount +
+                                               " regions.");
+                    }
                 }
             }
-        }
-        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
-            int regionCount = snp.getRegions().size();
-            getLog().trace("Snp '" + snp.getId() + "' is linked to " + regionCount + " regions.");
-        }
-        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
-        if (publishDate != null) {
-            getLog().trace(
-                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations, " + snpCount + " snps and was published on " +
-                            publishDate.toString());
-        }
-        else {
-            getLog().trace(
-                    "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations, " + snpCount + " and is not yet published");
+
+
+            Date publishDate = study.getHousekeeping().getCatalogPublishDate();
+            if (publishDate != null) {
+                getLog().trace(
+                        "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                                "has " + associationCount + " associations, " + snpCount + " snps, " + ethnicityCount +
+                                " ancestry entries , " + platformCount + " platform manufacturers " +
+                                " and was published on " +
+                                publishDate.toString());
+            }
+            else {
+                getLog().trace(
+                        "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                                "has " + associationCount + " associations, " + snpCount + " snps, , " +
+                                ethnicityCount + " ancestry entries , " + platformCount + " platform manufacturers "  +
+                                " and is not yet published");
+            }
         }
     }
 }

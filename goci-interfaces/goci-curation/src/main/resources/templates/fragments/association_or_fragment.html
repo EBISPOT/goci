@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<body th:fragment="or">
+
+<div class="form-group">
+    <label for="orPerCopyNum" class="control-label col-md-2">OR/HR/RR</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" name="orPerCopyNum" id="orPerCopyNum" th:field="*{orPerCopyNum}"/>
+    </div>
+
+    <!--Warning if OR value is less than 1-->
+    <div class="col-md-offset-2 col-md-10">
+        <div class="alert alert-warning alert-dismissible"
+             role="alert"
+             th:if="*{orPerCopyNum &lt; 1 and not #strings.isEmpty(orPerCopyNum)}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> OR value less than 1
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRecip" class="control-label col-md-2">OR/HR/RR reciprocal</label>
+
+    <div class="col-md-10">
+        <input type="text"
+               class="form-control"
+               id="orPerCopyRecip"
+               th:field="*{orPerCopyRecip}"
+               name="orPerCopyRecip"/>
+    </div>
+
+    <div class="col-md-10">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-or-from-recip">Calculate OR/HR/RR from reciprocal OR/HR/RR</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="range" class="control-label col-md-2">OR/HR/RR range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{range}" name="range"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="orPerCopyRecipRange" class="control-label col-md-2">OR/HR/RR reciprocal range</label>
+
+    <div class="col-md-10">
+        <input type="text"
+               class="form-control"
+               id="orPerCopyRecipRange"
+               th:field="*{orPerCopyRecipRange}"
+               name="orPerCopyRecipRange"/>
+    </div>
+
+    <div class="col-md-10">
+        <button type="button" class="btn btn-primary pull-right" id="calculate-recip-range">Calculate OR/HR/RR range from reciprocal OR/HR/RR range</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="standardError" class="control-label col-md-2">Standard Error</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="standardError"
+               th:field="*{standardError}" name="standardError"/>
+    </div>
+
+    <div class="col-md-12">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-range-from-or">Build range</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="description" class="control-label col-md-2">OR description</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="description"
+               th:field="*{description}" name="description"/>
+    </div>
+</div>
+</body>
+</html>

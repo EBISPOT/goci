@@ -33,10 +33,8 @@ import java.util.Map;
 /**
  * Created by emma on 05/01/15.
  *
- * @author emma
- *         Ethnicity Controller, interpret user input and transform it into a ethniciy
- *         model that is represented to the user by the associated HTML page. Used to view, add and edit
- *         existing ethnicity/sample information.
+ * @author emma Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to
+ *         the user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
  */
 @Controller
 public class EthnicityController {
@@ -47,7 +45,9 @@ public class EthnicityController {
     private StudyRepository studyRepository;
 
     @Autowired
-    public EthnicityController(EthnicityRepository ethnicityRepository, CountryRepository countryRepository, StudyRepository studyRepository) {
+    public EthnicityController(EthnicityRepository ethnicityRepository,
+                               CountryRepository countryRepository,
+                               StudyRepository studyRepository) {
         this.ethnicityRepository = ethnicityRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
@@ -57,7 +57,9 @@ public class EthnicityController {
     /* Ethnicity/Sample information associated with a study */
 
     // Generate view of ethnicity/sample information linked to a study
-    @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/studies/{studyId}/sampledescription",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
     public String viewStudySampleDescription(Model model, @PathVariable Long studyId) {
 
         // Two types of ethnicity information which the view needs to form two different tables
@@ -68,7 +70,8 @@ public class EthnicityController {
         String replicationType = "replication";
 
         initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, initialType));
-        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, replicationType));
+        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId,
+                                                                                              replicationType));
 
         // Add all ethnicity/sample information for the study to our model
         model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
@@ -84,7 +87,8 @@ public class EthnicityController {
             InitialSampleDescription initialSampleDescription = new InitialSampleDescription();
             initialSampleDescription.setInitialSampleDescription(study.getInitialSampleSize());
             model.addAttribute("initialSampleDescription", initialSampleDescription);
-        } else {
+        }
+        else {
             model.addAttribute("initialSampleDescription", new InitialSampleDescription());
         }
 
@@ -92,7 +96,8 @@ public class EthnicityController {
             ReplicationSampleDescription replicationSampleDescription = new ReplicationSampleDescription();
             replicationSampleDescription.setReplicationSampleDescription(study.getReplicateSampleSize());
             model.addAttribute("replicationSampleDescription", replicationSampleDescription);
-        } else {
+        }
+        else {
             model.addAttribute("replicationSampleDescription", new ReplicationSampleDescription());
         }
 
@@ -103,8 +108,13 @@ public class EthnicityController {
 
 
     // Add new ethnicity/sample information to a study
-    @RequestMapping(value = "/studies/{studyId}/initialreplicationsampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudyInitialReplcationSampleDescription(@ModelAttribute InitialSampleDescription initialSampleDescription, @ModelAttribute ReplicationSampleDescription replicationSampleDescription, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/studies/{studyId}/initialreplicationsampledescription",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String addStudyInitialReplcationSampleDescription(@ModelAttribute InitialSampleDescription initialSampleDescription,
+                                                             @ModelAttribute ReplicationSampleDescription replicationSampleDescription,
+                                                             @PathVariable Long studyId,
+                                                             RedirectAttributes redirectAttributes) {
 
         Study study = studyRepository.findOne(studyId);
 
@@ -124,8 +134,12 @@ public class EthnicityController {
 
 
     // Add new ethnicity/sample information to a study
-    @RequestMapping(value = "/studies/{studyId}/sampledescription", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity, @PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/studies/{studyId}/sampledescription",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity,
+                                            @PathVariable Long studyId,
+                                            RedirectAttributes redirectAttributes) {
 
         Study study = studyRepository.findOne(studyId);
 
@@ -163,7 +177,9 @@ public class EthnicityController {
     /* Existing ethnicity/sample information */
 
     // View ethnicity/sample information
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/sampledescriptions/{ethnicityId}",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
     public String viewSampleDescription(Model model, @PathVariable Long ethnicityId) {
         Ethnicity ethnicityToView = ethnicityRepository.findOne(ethnicityId);
         model.addAttribute("ethnicity", ethnicityToView);
@@ -252,7 +268,7 @@ public class EthnicityController {
             String countryOfOriginJoined = String.join(",", listOfOriginCountries);
             ethnicity.setCountryOfOrigin(countryOfOriginJoined);
         }
-        else{
+        else {
             ethnicity.setCountryOfOrigin("NR");
         }
 
@@ -263,7 +279,7 @@ public class EthnicityController {
             String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
             ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
         }
-        else{
+        else {
             ethnicity.setCountryOfRecruitment("NR");
         }
 

@@ -2,12 +2,14 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Javadocs go here!
@@ -38,10 +40,19 @@ public class TraitService {
     }
 
     public Collection<EfoTrait> findMappedTraitByStudyId(Long studyId) {
-        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(studyId);
+        return efoTraitRepository.findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
+                studyId);
     }
 
     public Collection<EfoTrait> findMappedTraitByAssociationId(Long associationId) {
         return efoTraitRepository.findByAssociationsId(associationId);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<EfoTrait> findAllEfoTraits() {
+        List<EfoTrait> allEfoTraits = efoTraitRepository.findAll();
+        //        allStudies.forEach(this::loadAssociatedData);
+        return allEfoTraits;
     }
 }

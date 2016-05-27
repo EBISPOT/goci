@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="bottom_level">
+<div class="container-fluid" th:object="${study}">
+    <div class="row">
+        <div class="col-md-12">
+            <!--Button-->
+
+            <a href="#StandardOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add standard
+                                                                                                     SNP</a>
+
+            <a href="#MultiOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add multi-SNP
+                                                                                                  haplotype</a>
+
+            <a href="#InteractionOptionModal" class="btn btn-primary" data-toggle="modal" role="button">Add SNP:SNP
+                                                                                                        interaction</a>
+
+            <input type="button" class="btn btn-primary pull-right" value="Add SNPs from spreadsheet"
+                   data-toggle="collapse"
+                   data-target="#uploadSNPsForn"/>
+
+        </div>
+    </div>
+</div>
+<br/>
+
+
+<div id="StandardOptionModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Please select association type?</h4>
+            </div>
+            <div class="modal-body">
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_standard(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="MultiOptionModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Please select association type?</h4>
+            </div>
+            <div class="modal-body">
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_multi(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="InteractionOptionModal" class="modal fade" th:object="${study}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Please select association type?</h4>
+            </div>
+            <div class="modal-body">
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='or')}"
+                   class="btn btn-default"
+                   role="button">OR</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='beta')}"
+                   class="btn btn-default"
+                   role="button">Beta</a>
+
+                <a th:href="@{/studies/{studyId}/associations/add_interaction(studyId=*{id}, measurementType='none')}"
+                   class="btn btn-default"
+                   role="button">No effect data</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <div id="uploadSNPsForn" class="collapse">
+
+                    <div class="alert alert-info col-md-offset-1 col-md-5">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Note:</strong> File must be in xlsx format, a
+                        <a href="../static/assets/Extraction_template.xlsx"
+                           th:href="@{../../assets/Extraction_template.xlsx}"
+                           download="Extraction_template.xlsx">template</a> is available and further help can be found
+                        <a href="http://www.ebi.ac.uk/seqdb/confluence/pages/viewpage.action?pageId=32184056"
+                           target="_blank">here</a>
+                    </div>
+
+                    <!--Form object is a study, this is so we can pass back ID which can be used-->
+                    <!--in URLs created by controller-->
+                    <form class="form-inline" name="uploadSNPsForn" role="form" method="post"
+                          th:action="@{/studies/{studyId}/associations/upload(studyId=${study.id})}"
+                          enctype="multipart/form-data" th:object="${study} ">
+
+                        <div class="form-group">
+                            <label for="uploadSNPs" class="control-label col-md-2"></label>
+
+                            <div class="col-md-10">
+                                <input type="file" name="file" class="form-control" id="uploadSNPs"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Upload File</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

@@ -10,7 +10,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,10 +32,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
 
-    // Custom query
-    @Query("select s from Study s where s.housekeeping.curationStatus.id = :status order by s.publicationDate desc")
-    Collection<Study> findByCurationStatusIgnoreCase(@Param("status") Long status);
-
     // Pageable queries for filtering main page
     Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
                                                                            Long curator,
@@ -48,20 +43,30 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
-    // Custom query to calculate curator totals
-    @Query("select s from Study s where s.housekeeping.curator.id = :curator and s.publicationDate between :dateFrom and :dateTo")
-    List<Study> findByPublicationDateAndCurator(@Param("curator") Long curator,
-                                          @Param("dateFrom") Date dateFrom,
-                                          @Param("dateTo") Date dateTo);
+    // Custom query to find studies in reports table
+    @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
+    Page<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") Long curator, @Param("status") Long status,
+                                                         @Param("year") Integer year,
+                                                         @Param("month") Integer month, Pageable pageable);
 
     // Queries for study types
-    Page<Study>findByGxe(Boolean gxe ,Pageable pageable);
+    Page<Study> findByGxe(Boolean gxe, Pageable pageable);
 
-    Page<Study>findByGxg(Boolean gxg ,Pageable pageable);
+    Page<Study> findByGxg(Boolean gxg, Pageable pageable);
 
-    Page<Study>findByCnv(Boolean cnv ,Pageable pageable);
+    Page<Study> findByCnv(Boolean cnv, Pageable pageable);
 
-    Page<Study>findByHousekeepingCheckedNCBIErrorOrHousekeepingCurationStatusId(Boolean checkedNCBIError,Long status ,Pageable pageable);
+    Page<Study> findByTargetedArray(Boolean targetedArray, Pageable pageable);
+
+    Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
+
+    Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
+                                                                                    Long status,
+                                                                                    Pageable pageable);
+
+    List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(Sort sort);
+
+    List<Study> findStudyDistinctByAssociationsSnpInteractionTrue(Sort sort);
 
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
@@ -70,16 +75,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 
     // Custom query to get list of study authors
-    @Query("select distinct s.author from Study s")
-    List<String> findAllStudyAuthors(Sort sort);
+    @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
-    List<Study> findByHousekeepingSendToNCBIDate(Date date);
-
-    List<Study> findByAuthorContainingIgnoreCase(String author);
-
-    List<Study> findByAuthorContainingIgnoreCase(String author , Sort sort);
-
-    Page<Study>  findByAuthorContainingIgnoreCase(String author , Pageable pageable);
+    Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
 
@@ -87,25 +85,16 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long snpId);
+    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long snpId);
 
-    List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort,
-                                                                                                   Long snpId);
+    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long associationId);
 
-    Page<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable,
-                                                                                                   Long snpId);
+    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+            Long diseaseTraitId);
 
-    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long associationId);
-
-    List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long associationId);
-
-    Page<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long associationId);
-
-    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Long diseaseTraitId);
-
-    List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort, Long diseaseTraitId);
-
-    Page<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable, Long diseaseTraitId);
+    Study findByAssociationsId(Long associationId);
 
 }
 

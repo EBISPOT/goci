@@ -33,12 +33,15 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class CatalogExportRepository {
-    private static final String FROM_CLAUSE =
-            " FROM CATALOG_SUMMARY_VIEW ";
+//    private static final String FROM_CLAUSE =
+//            " FROM CATALOG_SUMMARY_VIEW ";
+    private static final String FROM_NCBI_CLAUSE =
+            " FROM NCBI_CATALOG_SUMMARY_VIEW ";
     private static final String NCBI_WHERE_CLAUSE =
-            " WHERE CURATION_STATUS = 'Send to NCBI' OR (CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL) ORDER BY STUDY_ID DESC ";
+            " WHERE CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL ORDER BY STUDY_ID DESC ";
     private static final String DOWNLOAD_WHERE_CLAUSE =
-            " WHERE CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL ORDER BY PUBMED_ID DESC ";
+            " WHERE (REGEXP_LIKE (CHROMOSOME_NAME,'^[[:digit:]]+$') OR CHROMOSOME_NAME = 'X' OR CHROMOSOME_NAME = 'Y') " +
+                    "AND CATALOG_PUBLISH_DATE IS NOT NULL AND CATALOG_UNPUBLISH_DATE IS NULL ORDER BY PUBMED_ID DESC ";
 
     private final DateFormat df;
 
@@ -81,7 +84,7 @@ public class CatalogExportRepository {
                 .collect(Collectors.toList());
 
         // export data and return
-        return extractData(buildSelectClause(ncbiQueryHeaders) + FROM_CLAUSE + NCBI_WHERE_CLAUSE,
+        return extractData(buildSelectClause(ncbiQueryHeaders) + FROM_NCBI_CLAUSE + NCBI_WHERE_CLAUSE,
                            CatalogHeaderBindings.getNcbiHeaders(),
                            ncbiOutputHeaders,
                            CatalogHeaderBinding::getNcbiInclusion);
@@ -104,7 +107,7 @@ public class CatalogExportRepository {
                 .collect(Collectors.toList());
 
         // export data and return
-        return extractData(buildSelectClause(downloadQueryHeaders) + FROM_CLAUSE + DOWNLOAD_WHERE_CLAUSE,
+        return extractData(buildSelectClause(downloadQueryHeaders) + FROM_NCBI_CLAUSE + DOWNLOAD_WHERE_CLAUSE,
                            getOrderedDownloadHeaders(version),
                            downloadOutputHeaders,
                            CatalogHeaderBinding::getDownloadInclusion);
@@ -173,8 +176,8 @@ public class CatalogExportRepository {
 
                     if (val != null) {
                         if (!val.isEmpty()) {
-                            if(!StringUtils.isNumeric(val)){
-                               identifiers.add((long) val.hashCode());
+                            if (!StringUtils.isNumeric(val)) {
+                                identifiers.add((long) val.hashCode());
                             }
                             else {
                                 try {
@@ -195,7 +198,7 @@ public class CatalogExportRepository {
             }
             long id = generateUniqueID(identifiers);
 
-            if(bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)){
+            if (bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)) {
                 rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
             }
 
@@ -214,7 +217,7 @@ public class CatalogExportRepository {
                                 // update existing values with this new combined value
                                 existingValues.put(binding, combinedValue);
                             }
-                            else if(binding.getDatabaseName().isPresent()) {
+                            else if (binding.getDatabaseName().isPresent()) {
                                 throw new RuntimeException(
                                         "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
                                                 "differ in row ID '" + id + "': " +
@@ -222,7 +225,36 @@ public class CatalogExportRepository {
                                                 "This would result in a new row, causing duplicated unique IDs");
 
                             }
-                            else{
+                            else {
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.toString() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+
+
+                            }
+                        }
+                        // Need to include a special case for chromosome name
+                        // as multiple chromosome names can contain similar characters
+                        // e.g. 'CHR_HSCHR6_MHC_COX_CTG1' and '6'
+                        else if (binding.name().equalsIgnoreCase("CHROMOSOME_NAME") &&
+                                !existingValue.contains(" ".concat(newValue)) && !existingValue.equals(newValue)) {
+                            if (extractor.extract(binding).isConcatenatable()) {
+                                // existing value does not already contain new value, comma separate and append
+                                String combinedValue = existingValue.concat(", ").concat(newValue);
+                                // update existing values with this new combined value
+                                existingValues.put(binding, combinedValue);
+                            }
+                            else if (binding.getDatabaseName().isPresent()) {
+                                throw new RuntimeException(
+                                        "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
+                                                "differ in row ID '" + id + "': " +
+                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
+                                                "This would result in a new row, causing duplicated unique IDs");
+
+                            }
+                            else {
                                 throw new RuntimeException(
                                         "Non-concatenatable values for " + binding.toString() + " " +
                                                 "differ in row ID '" + id + "': " +
@@ -380,18 +412,25 @@ public class CatalogExportRepository {
                                   "CHR_ID",
                                   "CHR_POS",
                                   "REPORTED GENE(S)",
-                                  "MAPPED_GENE",
-                                  "UPSTREAM_GENE_ID",
-                                  "DOWNSTREAM_GENE_ID",
-                                  "SNP_GENE_IDS",
-                                  "UPSTREAM_GENE_DISTANCE",
-                                  "DOWNSTREAM_GENE_DISTANCE",
+                                  "ENTREZ_MAPPED_GENE",
+                                  "ENSEMBL_MAPPED_GENE",
+                                  "ENTREZ_UPSTREAM_GENE_ID",
+                                  "ENTREZ_DOWNSTREAM_GENE_ID",
+                                  "ENSEMBL_UPSTREAM_GENE_ID",
+                                  "ENSEMBL_DOWNSTREAM_GENE_ID",
+                                  "SNP_GENE_IDS_ENTREZ",
+                                  "SNP_GENE_IDS_ENSEMBL",
+                                  "ENTREZ_UPSTREAM_GENE_DISTANCE",
+                                  "ENTREZ_DOWNSTREAM_GENE_DISTANCE",
+                                  "ENSEMBL_UPSTREAM_GENE_DISTANCE",
+                                  "ENSEMBL_DOWNSTREAM_GENE_DISTANCE",
                                   "STRONGEST SNP-RISK ALLELE",
                                   "SNPS",
                                   "MERGED",
                                   "SNP_ID_CURRENT",
                                   "CONTEXT",
-                                  "INTERGENIC",
+                                  "INTERGENIC_ENTREZ",
+                                  "INTERGENIC_ENSEMBL",
                                   "RISK ALLELE FREQUENCY",
                                   "P-VALUE",
                                   "PVALUE_MLOG",
@@ -416,18 +455,25 @@ public class CatalogExportRepository {
                                   "CHR_ID",
                                   "CHR_POS",
                                   "REPORTED GENE(S)",
-                                  "MAPPED_GENE",
-                                  "UPSTREAM_GENE_ID",
-                                  "DOWNSTREAM_GENE_ID",
-                                  "SNP_GENE_IDS",
-                                  "UPSTREAM_GENE_DISTANCE",
-                                  "DOWNSTREAM_GENE_DISTANCE",
+                                  "ENTREZ_MAPPED_GENE",
+                                  "ENSEMBL_MAPPED_GENE",
+                                  "ENTREZ_UPSTREAM_GENE_ID",
+                                  "ENTREZ_DOWNSTREAM_GENE_ID",
+                                  "ENSEMBL_UPSTREAM_GENE_ID",
+                                  "ENSEMBL_DOWNSTREAM_GENE_ID",
+                                  "SNP_GENE_IDS_ENTREZ",
+                                  "SNP_GENE_IDS_ENSEMBL",
+                                  "ENTREZ_UPSTREAM_GENE_DISTANCE",
+                                  "ENTREZ_DOWNSTREAM_GENE_DISTANCE",
+                                  "ENSEMBL_UPSTREAM_GENE_DISTANCE",
+                                  "ENSEMBL_DOWNSTREAM_GENE_DISTANCE",
                                   "STRONGEST SNP-RISK ALLELE",
                                   "SNPS",
                                   "MERGED",
                                   "SNP_ID_CURRENT",
                                   "CONTEXT",
-                                  "INTERGENIC",
+                                  "INTERGENIC_ENTREZ",
+                                  "INTERGENIC_ENSEMBL",
                                   "RISK ALLELE FREQUENCY",
                                   "P-VALUE",
                                   "PVALUE_MLOG",

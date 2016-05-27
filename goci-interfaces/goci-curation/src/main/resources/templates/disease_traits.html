@@ -29,7 +29,7 @@
 </head>
 <body>
 
- <!--First option in select is a placeholder-->
+<!--First option in select is a placeholder-->
 <style>
     select option[disabled]:first-child {
         display: none;
@@ -37,7 +37,7 @@
 </style>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <!--Alert if data is deleted-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitExists)}">
@@ -129,17 +129,17 @@
 
 <script>
     $('#addDiseaseTrait').selectize({
-        maxItems: 1,
-        highlight: true,
-        create: function(input) {
-            return {
-                value: input,
-                text: input
-            }
-        },
-        dropdownParent: 'body',
-        persist: false
-    });
+                                        maxItems: 1,
+                                        highlight: true,
+                                        create: function(input) {
+                                            return {
+                                                value: input,
+                                                text: input
+                                            }
+                                        },
+                                        dropdownParent: 'body',
+                                        persist: false
+                                    });
 </script>
 
 </body>

@@ -18,7 +18,7 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
 <!--Form presents some details of study to be unpublished-->
 <div class="container-fluid">
@@ -98,7 +98,9 @@
                     <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
 
                     <div class="col-md-4">
-                        <select th:field="*{housekeeping.unpublishReason}" id="unpublishReason" class="form-control select2-select">
+                        <select th:field="*{housekeeping.unpublishReason}"
+                                id="unpublishReason"
+                                class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
                             <option th:each="unpublishReason : ${unpublishreasons}"

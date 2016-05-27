@@ -1,8 +1,11 @@
-// Calculates various values used in association form
+/* Calculates various values used in association form
+ This method calculates the confidence interval based
+ on the standard error
+ taken from Kent's Coldfusion code.*/
 
 // Calculate OR per copy num
 $(document).ready(function() {
-    $("#calculate-or").click(function() {
+    $("#calculate-or-from-recip").click(function() {
         var orPerCopyRecip = document.forms["snp-association-form"]["orPerCopyRecip"].value;
         calculateOrPerCopyNum(orPerCopyRecip);
     });
@@ -10,28 +13,32 @@ $(document).ready(function() {
 
 function calculateOrPerCopyNum(orPerCopyRecip) {
     var orPerCopyNum;
-    orPerCopyNum=Math.round(100/orPerCopyRecip)/100;
+    orPerCopyNum = Math.round(100 / orPerCopyRecip) / 100;
     console.log(orPerCopyNum);
     document.getElementById("orPerCopyNum").value = orPerCopyNum;
 }
 
-// Build orPerCopyRange
+// Build Range
 $(document).ready(function() {
-    $("#calculate-or-range").click(function() {
-        var orPerCopyStdError = document.forms["snp-association-form"]["orPerCopyStdError"].value;
+    $("#calculate-range-from-or").click(function() {
+        var standardError = document.forms["snp-association-form"]["standardError"].value;
         var orPerCopyNum = document.forms["snp-association-form"]["orPerCopyNum"].value;
-        setRange(orPerCopyStdError, orPerCopyNum);
+        setRange(standardError, orPerCopyNum);
     });
 });
 
+$(document).ready(function() {
+    $("#calculate-range-from-beta").click(function() {
+        var standardError = document.forms["snp-association-form"]["standardError"].value;
+        var beta = document.forms["snp-association-form"]["beta"].value;
+        setRange(standardError, beta);
+    });
+});
 
-/* This method calculates the confidence interval based on the standard error
- taken from Kent's Coldfusion code.*/
-
-function setRange(orPerCopyStdError, orPerCopyNum){
-    var delta = Math.round(100000 * orPerCopyStdError * 1.96) / 100000;
-    var ORpercopylow = orPerCopyNum - delta;
-    var ORpercopyhigh = (1 * orPerCopyNum) + delta;
+function setRange(standardError, num) {
+    var delta = Math.round(100000 * standardError * 1.96) / 100000;
+    var ORpercopylow = num - delta;
+    var ORpercopyhigh = (1 * num) + delta;
 
     if (ORpercopylow < .001) {
         var ORpercopylow2 = ORpercopylow.toFixed(5);
@@ -50,7 +57,7 @@ function setRange(orPerCopyStdError, orPerCopyNum){
         ORpercopyhigh2 = ORpercopyhigh.toFixed(2);
     }
 
-    document.getElementById("orPerCopyRange").value = '[' + ORpercopylow2 + '-' + ORpercopyhigh2 + ']';
+    document.getElementById("range").value = '[' + ORpercopylow2 + '-' + ORpercopyhigh2 + ']';
 }
 
 // Calculate reciprocal orPerCopyRange
@@ -58,7 +65,6 @@ function setRange(orPerCopyStdError, orPerCopyNum){
 $(document).ready(function() {
     $("#calculate-recip-range").click(function() {
         var orPerCopyRecipRange = document.forms["snp-association-form"]["orPerCopyRecipRange"].value;
-
         calculateOrPerCopyRange(orPerCopyRecipRange);
     });
 });
@@ -82,18 +88,19 @@ function calculateOrPerCopyRange(orPerCopyRecipRange) {
     if (low < 0.001) {
         lowval = parseFloat(low).toFixed(5);
         highval = parseFloat(high).toFixed(5);
-    } else if (low >= 0.001 && low < 0.01) {
+    }
+    else if (low >= 0.001 && low < 0.01) {
         lowval = parseFloat(low).toFixed(4);
         highval = parseFloat(high).toFixed(4);
-    } else if (low >= 0.01 && low < 0.1) {
+    }
+    else if (low >= 0.01 && low < 0.1) {
         lowval = parseFloat(low).toFixed(3);
 
         highval = parseFloat(high).toFixed(3);
-    } else {
+    }
+    else {
         lowval = parseFloat(low).toFixed(2);
         highval = parseFloat(high).toFixed(2);
     }
-
-    document.getElementById("orPerCopyRange").value = '[' + lowval + '-' + highval + ']';
-
+    document.getElementById("range").value = '[' + lowval + '-' + highval + ']';
 }

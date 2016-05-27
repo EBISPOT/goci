@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>goci-tools</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
-        <version>2.0-SNAPSHOT</version>
+        <artifactId>goci-parent</artifactId>
+        <version>2.1.4-SNAPSHOT</version>
+        <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-kb-metrics</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.1.4-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
 
     <name>GOCI KnowledgeBase data metrics</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <!--<properties>-->
+    <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    <!--</properties>-->
 
     <build>
         <plugins>
+            <!--<plugin>-->
+            <!--<artifactId>maven-assembly-plugin</artifactId>-->
+            <!--<version>2.3</version>-->
+            <!--<configuration>-->
+            <!--<finalName>goci-kb-metrics</finalName>-->
+            <!--<appendAssemblyId>false</appendAssemblyId>-->
+            <!--<descriptors>-->
+            <!--<descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>-->
+            <!--</descriptors>-->
+            <!--<archive>-->
+            <!--<manifest>-->
+            <!--<addClasspath>true</addClasspath>-->
+            <!--<mainClass>uk.ac.ebi.spot.goci.KBMetricsDriver</mainClass>-->
+            <!--</manifest>-->
+            <!--</archive>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>make-assembly</id>-->
+            <!--<phase>package</phase>-->
+            <!--<goals>-->
+            <!--<goal>attached</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <finalName>goci-kb-metrics</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/goci-assembly-descriptor.xml</descriptor>
-                    </descriptors>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>uk.ac.ebi.spot.goci.KBMetricsDriver</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -53,48 +62,63 @@
         <!-- goci ontology utils -->
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-ontology</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>goci-utils</artifactId>
         </dependency>
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-dao</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <artifactId>goci-ontology</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-db-binding</artifactId>
+        </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>uk.ac.ebi.spot</groupId>-->
+        <!--<artifactId>goci-dao</artifactId>-->
+        <!--<version>2.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
 
         <!-- OWL API and HermiT reasoner, for converting GWAS concepts -->
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-apibinding</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.semanticweb</groupId>
-            <artifactId>HermiT</artifactId>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>net.sourceforge.owlapi</groupId>-->
+        <!--<artifactId>owlapi-distribution</artifactId>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>com.hermit-reasoner</groupId>-->
+        <!--<artifactId>org.semanticweb.hermit</artifactId>-->
+        <!--</dependency>-->
 
         <!-- commons-cli for command line functionality -->
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <!-- logging dependencies for testing -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <!--<version>1.9.5</version>-->
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>log4j</groupId>-->
+        <!--<artifactId>log4j</artifactId>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>com.oracle</groupId>-->
+        <!--<artifactId>ojdbc7</artifactId>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+        <!--<groupId>org.mockito</groupId>-->
+        <!--<artifactId>mockito-core</artifactId>-->
+        <!--&lt;!&ndash;<version>1.9.5</version>&ndash;&gt;-->
+        <!--</dependency>-->
 
     </dependencies>
 

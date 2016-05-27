@@ -2,9 +2,13 @@ package uk.ac.ebi.spot.goci.checker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.tree.IRINode;
 import uk.ac.ebi.spot.goci.tree.IRITree;
 
+import javax.validation.constraints.NotNull;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -16,8 +20,18 @@ import java.util.Map;
  * @author Tony Burdett
  * @date 09/08/12
  */
+
+@Service
+@Component
 public class IRITreeProcessor {
+
+    @NotNull
+    @Value("${watershed.cutoff}")
     private int n;
+
+    //    private String cutoff;
+
+
     private Map<IRINode, Integer> watershedNodeCounts;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -26,8 +40,9 @@ public class IRITreeProcessor {
         return log;
     }
 
-    public IRITreeProcessor(int watershedCutoff) {
-        this.n = watershedCutoff;
+    public IRITreeProcessor() {
+        //        n = Integer.parseInt(cutoff);
+        //        n = Integer.parseInt(System.getProperty("watershed.cutoff"));
         this.watershedNodeCounts = new HashMap<IRINode, Integer>();
     }
 

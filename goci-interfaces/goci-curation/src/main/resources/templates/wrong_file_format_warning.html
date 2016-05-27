@@ -9,27 +9,17 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
-
-
 <div class="container">
-    <div class="col-md-12">
+    <div class="row" th:object="${study}">
         <h2>Error:</h2>
-        <p class="lead">File is not in .xlsx format. Please use the correct file format</p>
+
+        <p class="col-md-10 lead text-left">File is not in the correct format.
+                                            Please ensure you have used an XLSX file and that it contains the correct column headings</p>
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary col-md-2">Back to SNP
+                                                                                                        associations</a>
     </div>
 </div>
-
-<div class="container" th:object="${study}">
-    <div class="row">
-        <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP associations</a></div>
-
-        </div>
-    </div>
-</div>
-
-
 </body>
 </html>

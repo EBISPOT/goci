@@ -9,12 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by emma on 19/03/15.
@@ -72,47 +68,6 @@ public class FtpFileService {
 
         // Close FTP connection
         disconnect();
-    }
-
-    // Download file from NCBI
-    public File ftpDownload() throws IOException {
-
-        // Create a file to write to
-        String uploadDir =
-                System.getProperty("java.io.tmpdir") + File.separator + "gwas_ncbi_export" + File.separator;
-
-        DateFormat df = new SimpleDateFormat("yyyy_MM_dd");
-        String dateStamp = df.format(new Date());
-        File annotatedFile = new File(uploadDir + dateStamp + "_annotated_gwas.txt");
-        annotatedFile.getParentFile().mkdirs();
-
-        // If at this stage we haven't got a file create one
-        if (!annotatedFile.exists()) {
-            annotatedFile.createNewFile();
-        }
-
-        // Connect to FTP
-        connect();
-
-        // Find file on FTP
-        FileOutputStream fileOutputStream = new FileOutputStream(annotatedFile);
-        boolean done = ftpClient.retrieveFile("annotated_gwas.txt", fileOutputStream);
-
-        if (done) {
-            getLog().info("Annotated NCBI file downloaded successfully to " + annotatedFile);
-        }
-
-        else {
-            getLog().error("Failed to download file " + annotatedFile + " from FTP");
-        }
-
-        fileOutputStream.close();
-
-        // Close FTP connection
-        disconnect();
-
-        // Return NCBI annotated file
-        return annotatedFile;
     }
 
     // Connect to FTP server

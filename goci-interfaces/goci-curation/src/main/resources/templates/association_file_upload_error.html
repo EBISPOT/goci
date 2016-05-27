@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container">
+    <div class="row" th:object="${study}">
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary col-md-offset-10 col-md-2">Back to SNP
+                                                                                                        associations</a>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <p class="col-md-10 lead text-left">Errors found in file:
+          <span
+                th:utext="${fileName} ?: ''"></span>
+        </p>
+        <table id="mainTable"
+               class="table table-hover table-bordered"
+               th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
+            <br/>
+            <thead>
+            <tr>
+                <th>Row</th>
+                <th>Column Name</th>
+                <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fileError: ${fileErrors}">
+                <td th:text="${fileError.row}?: '' "></td>
+                <td th:text="${fileError.columnName}?: '' "></td>
+                <td th:text="${fileError.error}?: '' "></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#mainTable').DataTable({
+                                      "info": false, "paging": false, searching: false,
+                                  });
+    });
+</script>
+</body>
+</html>

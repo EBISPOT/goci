@@ -31,20 +31,10 @@
 <body>
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
-            <li class="active"><a href="#">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
-        </ul>
-    </div>
-</div>
-
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
 <div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
@@ -71,7 +61,7 @@
                                                                                          Description:</label>
 
                     <div class="col-md-10">
-                        <textarea rows="3" id="sampleInitialDescription" class="form-control" type="text"
+                        <textarea rows="3" id="sampleInitialDescription" class="form-control"
                                   th:field="${initialSampleDescription.initialSampleDescription}"></textarea>
                     </div>
                 </div>
@@ -81,7 +71,7 @@
                                                                                              Description:</label>
 
                     <div class="col-md-10">
-                        <textarea rows="3" id="sampleReplicationDescription" class="form-control" type="text"
+                        <textarea rows="3" id="sampleReplicationDescription" class="form-control"
                                   th:field="${replicationSampleDescription.replicationSampleDescription}"></textarea>
                     </div>
                 </div>

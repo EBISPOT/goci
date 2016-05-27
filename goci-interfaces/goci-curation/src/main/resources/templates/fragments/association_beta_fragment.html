@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<body th:fragment="beta">
+
+<div class="form-group">
+    <label for="beta" class="control-label col-md-2">Beta</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" name="beta" id="beta" th:field="*{betaNum}"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="betaUnit" class="control-label col-md-2">Unit</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="betaUnit" th:field="*{betaUnit}" name="betaUnit" th:default="unit"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="betaDirection" class="control-label col-md-2">Direction</label>
+
+    <div class="col-md-10" id="betaDirection">
+        <label class="radio-inline">
+            <input type="radio" name="betaIncrease" th:value="'increase'"
+                   th:field="*{betaDirection}">Increase</input>
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="betaDecrease" th:value="'decrease'"
+                   th:field="*{betaDirection}">Decrease</input>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="range" class="control-label col-md-2">Range</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="range"
+               th:field="*{range}" name="range"/>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="standardError" class="control-label col-md-2">Standard Error</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="standardError"
+               th:field="*{standardError}" name="standardError"/>
+    </div>
+
+    <div class="col-md-12">
+        <button type="button"
+                class="btn btn-primary pull-right"
+                id="calculate-range-from-beta">Build range</button>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="description" class="control-label col-md-2">Beta description</label>
+
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="description"
+               th:field="*{description}" name="description"/>
+    </div>
+</div>
+</body>
+</html>

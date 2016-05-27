@@ -23,10 +23,9 @@ import java.util.List;
 /**
  * Created by emma on 09/01/15.
  *
- * @author emma
- *         DiseaseTrait Controller, interpret user input and transform it into a disease trait
- *         model that is represented to the user by the associated HTML page. Used to view, add and edit
- *         existing disease/trait information.
+ * @author emma DiseaseTrait Controller, interpret user input and transform it into a disease trait model that is
+ *         represented to the user by the associated HTML page. Used to view, add and edit existing disease/trait
+ *         information.
  */
 
 @Controller
@@ -48,7 +47,7 @@ public class DiseaseTraitController {
     public String allDiseaseTraits(Model model) {
 
         model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
-        model.addAttribute("totaldiseaseTraits" , diseaseTraitRepository.findAll(sortByTraitAsc()).size());
+        model.addAttribute("totaldiseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()).size());
 
         // Return an empty DiseaseTrait object so user can add a new one
         model.addAttribute("diseaseTrait", new DiseaseTrait());
@@ -64,8 +63,8 @@ public class DiseaseTraitController {
 
         // Check if it exists already
         DiseaseTrait existingDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait());
-        String existingTrait= null;
-        if (existingDiseaseTrait != null){
+        String existingTrait = null;
+        if (existingDiseaseTrait != null) {
             existingTrait = existingDiseaseTrait.getTrait();
         }
 
@@ -76,7 +75,9 @@ public class DiseaseTraitController {
         }
 
         else if (existingTrait != null && !existingTrait.isEmpty()) {
-            String message = "Trait already exists in database: database value = "+existingTrait+", value entered = "+ diseaseTrait.getTrait();
+            String message =
+                    "Trait already exists in database: database value = " + existingTrait + ", value entered = " +
+                            diseaseTrait.getTrait();
             redirectAttributes.addFlashAttribute("diseaseTraitExists", message);
             return "redirect:/diseasetraits";
         }
@@ -84,7 +85,7 @@ public class DiseaseTraitController {
         // Save disease trait
         else {
             diseaseTraitRepository.save(diseaseTrait);
-            String message = "Trait "+ diseaseTrait.getTrait()+" added to database";
+            String message = "Trait " + diseaseTrait.getTrait() + " added to database";
             redirectAttributes.addFlashAttribute("diseaseTraitSaved", message);
             return "redirect:/diseasetraits";
         }

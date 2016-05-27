@@ -6,9 +6,10 @@ import uk.ac.ebi.spot.goci.model.Country;
 
 /**
  * Created by emma on 19/12/14.
- * @author emma
  *
- * Repository accessing Country entity objects
+ * @author emma
+ *         <p>
+ *         Repository accessing Country entity objects
  */
 @RepositoryRestResource
 public interface CountryRepository extends JpaRepository<Country, Long> {

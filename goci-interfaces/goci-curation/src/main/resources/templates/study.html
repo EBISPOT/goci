@@ -26,21 +26,10 @@
 
 
 <!--Include header-->
-<div th:include="header :: navbar"></div>
+<div th:include="fragments/header :: navbar"></div>
 
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/printview(studyId=*{id})}" target="_blank">Print View</a></li>
-        </ul>
-    </div>
-</div>
-
-<br/>
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
@@ -158,16 +147,70 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="platform" class="control-label col-md-2">Platform</label>
+                    <label for="platform" class="control-label col-md-2">Array manufacturer</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="platform" th:field="*{platform}"/>
+                        <select name="platform" th:field="*{platforms}" class="form-control select2-select"
+                                multiple="multiple" id="platform">
+                            <option th:each="platform : ${platforms}"
+                                    th:value="${platform.id}"
+                                    th:text="${platform.manufacturer}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10 col-md-offset-2">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Qualifier</th>
+                                <th>Number SNPs analysed</th>
+                                <th>Imputed</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+
+                                    <select name="qualifier" th:field="*{qualifier}" class="form-control select2-select"
+                                            id="qualifier">
+                                        <option value=""></option>
+                                        <option th:each="qualifier : ${qualifiers}"
+                                                th:value="${qualifier}"
+                                                th:text="${qualifier}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="snpCount" th:field="*{snpCount}"/>
+                                </td>
+                                <td>
+                                    <input id="imputed" type="checkbox" th:field="*{imputed}"/>
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="studyDesignComment" class="control-label col-md-2">Additional array information</label>
+
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               id="studyDesignComment"
+                               th:field="*{studyDesignComment}"/>
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
+                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
                     <div class="col-md-10">
                         <select name="diseaseTrait" th:field="*{diseaseTrait}" id="diseaseTrait"
@@ -183,7 +226,7 @@
 
 
                 <div class="form-group">
-                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
+                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait</label>
 
                     <div class="col-md-10">
                         <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
@@ -205,10 +248,22 @@
                     </div>
                 </div>
 
+                <!-- CNV information in no longer captured but is still stored in database, thus field is left as
+                hidden to preserve existing values in database -->
                 <div class="form-group">
-                    <label for="cnv" class="control-label col-md-2">CNV</label>
+                    <input id="cnv" type="hidden" th:field="*{cnv}"/>
+                </div>
 
-                    <input id="cnv" type="checkbox" th:field="*{cnv}"/>
+                <div class="form-group">
+                    <label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>
+
+                    <input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>
+
+                    <input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>
                 </div>
 
                 <div class="form-group">
@@ -222,6 +277,13 @@
 
                     <input id="gxg" type="checkbox" th:field="*{gxg}"/>
                 </div>
+
+                <div class="form-group">
+                    <label for="pooled" class="control-label col-md-2">Pooled</label>
+
+                    <input id="pooled" type="checkbox" th:field="*{pooled}"/>
+                </div>
+
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -238,9 +300,9 @@
     $(function() {
         // turn the element to select2 select style
         $('#EFOTrait').select2({
-            placeholder: "Select an EFO trait",
-            allowClear: true
-        });
+                                   placeholder: "Select an EFO trait",
+                                   allowClear: true
+                               });
     });
 </script>
 
@@ -249,9 +311,29 @@
     $(function() {
         // turn the element to select2 select style
         $('#diseaseTrait').select2({
-            placeholder: "Select a disease/trait",
-            allowClear: true
-        });
+                                       placeholder: "Select a disease/trait",
+                                       allowClear: true
+                                   });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#platform').select2({
+                                   placeholder: "Select an array manufacturer",
+                                   allowClear: true
+                               });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#qualifier').select2({
+                                    placeholder: "Select a qualifier",
+                                    allowClear: true
+                                });
     });
 </script>
 

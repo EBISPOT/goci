@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"
+            th:src="@{https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css"
+          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
+          rel="stylesheet"/>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#">Monthly Curator Totals</a></li>
+            <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
+            <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
+        </ul>
+    </div>
+</div>
+
+<!--Include filter options-->
+<div th:include="fragments/reports_filter :: monthly_search_filter"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table" data-show-columns="true">
+                <thead>
+                <tr>
+                    <th class="col-md-1" data-sortable="true">Year</th>
+                    <th class="col-md-1" data-sortable="true">Month</th>
+                    <th class="col-md-2" data-sortable="true">Curator</th>
+                    <th class="col-md-2" data-sortable="true">Total number per curator</th>
+                    <th class="col-md-2" data-sortable="true">Curation Status</th>
+                    <th class="col-md-2">Link to studies</th>
+                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
+                    <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
+                    <!--Some thymeleaf wrangling to get the month name for a date-->
+                    <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
+                    <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
+                    <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
+                    <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
+                    <td><a th:href="@{/reports/monthly/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
+                           class="btn btn-link">Show studies</a></td>
+                    <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

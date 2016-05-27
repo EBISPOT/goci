@@ -2,14 +2,21 @@
 
 == Ontologies in the GWAS Catalog
 
-All curated traits descriptions are mapped to terms from the Experimental Factor Ontology (EFO; http://www.ebi.ac.uk/efo/).
+All curated traits descriptions are mapped to terms from the http://www.ebi.ac.uk/efo/[Experimental Factor Ontology] (EFO).
 Traits in the GWAS Catalog are highly diverse and include diseases, e.g. Type II diabetes, disease markers, e.g. measurements of blood glucose concentration, and non-clinical phenotypes, e.g. hair color.
 EFO was chosen as the ontology to represent GWAS Catalog traits as it is highly adaptable and extensible, combining parts of several biological domain-specific ontologies and allowing modelling of tests, diseases, anatomy and anthropometry.
 Accurate mapping of curated trait descriptions to EFO terms facilitates searching, visualisation and integration of GWAS Catalog data with other resources.
 
-EFO is freely available in OWL format from http://www.ebi.ac.uk/efo[the EFO website] and can be browsed in http://bioportal.bioontology.org/ontologies/EFO?p=classes&conceptid=root[bioportal].
-Mapping of all GWAS Catalog trait descriptions to EFO terms are available through our downloads page, along with the GWAS Catalog ontology schema and data knowledgebase.
+EFO is freely available in OWL format from http://www.ebi.ac.uk/efo[the EFO website] and can be browsed in http://www.ebi.ac.uk/ols/beta/ontologies/efo[the Ontology Lookup Service].
+Mappings of all GWAS Catalog trait descriptions to EFO terms are now available through link:downloads[our downloads page], along with the GWAS Catalog ontology schema and data knowledgebase.
 
 For an introduction on why we think mapping to ontologies is important, check out http://drjamesmalone.blogspot.co.uk/2012/06/common-ontology-questions-1-what-is-it.html[this blog post] by EFO editor James Malone.
 
 You can find more information on our work so far in our recent http://nar.oxfordjournals.org/content/42/D1/D1001.full[Nucleic Acids Research paper].
+
+
+== GWAS Catalog in RDF
+
+Each GWAS Catalog data release is also available in OWL/RDF format from link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/[ our FTP server]. The Catalog data can be found in the gwas-kb.owl file while gwas-diagram.owl contains the schema ontology defining the relationships between different Catalog concepts. Please note that the knowledge base file is very large. For this reason, it excludes some Catalog data, such as sample descriptions and ancestry information.
+
+The GWAS Catalog knowledge base is used to generate the http://www.ebi.ac.uk/gwas/diagram[GWAS diagram] via a Virtuoso triple store. The triple store is currently only available inside EMBL-EBI but will be available publicly in the near future.

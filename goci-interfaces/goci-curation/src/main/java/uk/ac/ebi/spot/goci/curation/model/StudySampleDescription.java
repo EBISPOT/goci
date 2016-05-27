@@ -7,10 +7,13 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         Object used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability to
- *         download a spreadsheet of the sample description, detailed ancestry and country information for all studies.
+ *         DTO used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability
+ *         to download a spreadsheet of the sample description, detailed ancestry and country information for all
+ *         studies.
  */
 public class StudySampleDescription {
+
+    private Long studyId;
 
     private String author;
 
@@ -42,7 +45,8 @@ public class StudySampleDescription {
 
     private String notes;
 
-    public StudySampleDescription(String author,
+    public StudySampleDescription(Long studyId,
+                                  String author,
                                   Date publicationDate,
                                   String pubmedId,
                                   String initialSampleSize,
@@ -54,7 +58,10 @@ public class StudySampleDescription {
                                   String ethnicGroup,
                                   String countryOfOrigin,
                                   String countryOfRecruitment,
-                                  String description, String sampleSizesMatch, String notes) {
+                                  String description,
+                                  String sampleSizesMatch,
+                                  String notes) {
+        this.studyId = studyId;
         this.author = author;
         this.publicationDate = publicationDate;
         this.pubmedId = pubmedId;
@@ -70,6 +77,14 @@ public class StudySampleDescription {
         this.description = description;
         this.sampleSizesMatch = sampleSizesMatch;
         this.notes = notes;
+    }
+
+    public Long getStudyId() {
+        return studyId;
+    }
+
+    public void setStudyId(Long studyId) {
+        this.studyId = studyId;
     }
 
     public String getAuthor() {

@@ -18,21 +18,8 @@ public class AssociationCalculationService {
     }
 
     /**
-     * This method calculates the p-value float based on the mantissa and exponent
-     *
-     * @param pvalueMantissa
-     * @param pvalueExponent
-     * @return Float, pvalue float
-     */
-
-    public Float calculatePvalueFloat(Integer pvalueMantissa, Integer pvalueExponent) {
-        double calculatedPvalueFloat = (pvalueMantissa * Math.pow(10, pvalueExponent));
-        Float pvalueFloat = Float.valueOf((float) calculatedPvalueFloat);
-        return pvalueFloat;
-    }
-
-    /**
-     * This method calculates the confidence interval based on the standard error - formatting code taken from Kent's Coldfusion code.
+     * This method calculates the confidence interval based on the standard error - formatting code taken from Kent's
+     * Coldfusion code.
      *
      * @param orpc_stderr The standard error
      * @param orpc_num    The odds-ratio or beta value for the SNP
@@ -49,15 +36,18 @@ public class AssociationCalculationService {
             DecimalFormat df = new DecimalFormat("#.#####");
             lowval = df.format(low);
             highval = df.format(high);
-        } else if (low >= 0.001 && low < 0.01) {
+        }
+        else if (low >= 0.001 && low < 0.01) {
             DecimalFormat df = new DecimalFormat("#.####");
             lowval = df.format(low);
             highval = df.format(high);
-        } else if (low >= 0.01 && low < 0.1) {
+        }
+        else if (low >= 0.01 && low < 0.1) {
             DecimalFormat df = new DecimalFormat("#.###");
             lowval = df.format(low);
             highval = df.format(high);
-        } else {
+        }
+        else {
             DecimalFormat df = new DecimalFormat("#.##");
             lowval = df.format(low);
             highval = df.format(high);
@@ -81,7 +71,8 @@ public class AssociationCalculationService {
 
         if (ci.equals("NR")) {
             newInterval = interval;
-        } else if (ci.matches("[\\d\\s.-]+")) {
+        }
+        else if (ci.matches("[\\d\\s.-]+")) {
             String[] num = ci.split("-");
             double one = Double.parseDouble(num[0].trim());
             double two = Double.parseDouble(num[1].trim());
@@ -95,22 +86,26 @@ public class AssociationCalculationService {
                 DecimalFormat df = new DecimalFormat("#.#####");
                 lowval = df.format(low);
                 highval = df.format(high);
-            } else if (low >= 0.001 && low < 0.01) {
+            }
+            else if (low >= 0.001 && low < 0.01) {
                 DecimalFormat df = new DecimalFormat("#.####");
                 lowval = df.format(low);
                 highval = df.format(high);
-            } else if (low >= 0.01 && low < 0.1) {
+            }
+            else if (low >= 0.01 && low < 0.1) {
                 DecimalFormat df = new DecimalFormat("#.###");
                 lowval = df.format(low);
                 highval = df.format(high);
-            } else {
+            }
+            else {
                 DecimalFormat df = new DecimalFormat("#.##");
                 lowval = df.format(low);
                 highval = df.format(high);
             }
 
             newInterval = ("[" + lowval + "-" + highval + "]");
-        } else {
+        }
+        else {
             newInterval = null;
 
         }

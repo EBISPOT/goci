@@ -13,9 +13,9 @@ public class StudySearchFilter {
 
     private Long curatorSearchFilterId;
 
-    private String monthFilter;
+    private Integer monthFilter;
 
-    private String yearFilter;
+    private Integer yearFilter;
 
     private String pubmedId;
 
@@ -34,12 +34,14 @@ public class StudySearchFilter {
 
     public StudySearchFilter(Long statusSearchFilterId,
                              Long curatorSearchFilterId,
-                             String monthFilter,
-                             String yearFilter,
+                             Integer monthFilter,
+                             Integer yearFilter,
                              String pubmedId,
                              String author,
                              String studyType,
-                             Long efoTraitSearchFilterId, Long diseaseTraitSearchFilterId, String notesQuery) {
+                             Long efoTraitSearchFilterId,
+                             Long diseaseTraitSearchFilterId,
+                             String notesQuery) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;
@@ -68,19 +70,19 @@ public class StudySearchFilter {
         this.curatorSearchFilterId = curatorSearchFilterId;
     }
 
-    public String getMonthFilter() {
+    public Integer getMonthFilter() {
         return monthFilter;
     }
 
-    public void setMonthFilter(String monthFilter) {
+    public void setMonthFilter(Integer monthFilter) {
         this.monthFilter = monthFilter;
     }
 
-    public String getYearFilter() {
+    public Integer getYearFilter() {
         return yearFilter;
     }
 
-    public void setYearFilter(String yearFilter) {
+    public void setYearFilter(Integer yearFilter) {
         this.yearFilter = yearFilter;
     }
 

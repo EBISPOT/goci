@@ -1,11 +1,11 @@
-#ebi-logo{
-   padding-bottom: 9px !important;
+#ebi-logo {
+    padding-bottom: 9px !important;
     padding-top: 11px !important;
     padding-left: 7px !important;
     padding-right: 7px !important;
 }
 
-#nhgri-logo{
+#nhgri-logo {
     padding-bottom: 7px !important;
     padding-top: 8px !important;
     padding-left: 5px !important;
@@ -184,14 +184,13 @@
     margin-top: 10px;
 }
 
-.results-container > table{
+.results-container > table {
     margin-bottom: 0 !important;
 }
 
-.results-container{
+.results-container {
     margin-bottom: 20px !important;
 }
-
 
 .tight-to-top {
     padding-top: 0 !important;
@@ -211,9 +210,8 @@ a > .toplevel-view {
 }
 
 /*table .collapse.in {*/
-    /*display:table-row;*/
+/*display:table-row;*/
 /*}*/
-
 
 .hiddenRow {
     padding: 0 !important;
@@ -225,13 +223,21 @@ a > .toplevel-view {
 }
 
 @-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+    to {
+        transform: scale(1) rotate(360deg);
+    }
 }
 
 .table-striped-study > tbody > tr:nth-child(4n-3) {
@@ -259,6 +265,7 @@ a > .toplevel-view {
     vertical-align: top;
     /*border-top: 1px solid #ddd;*/
 }
+
 .sample-info > thead > tr > th {
     vertical-align: bottom;
     border-bottom: 2px solid #ddd;
@@ -271,11 +278,10 @@ a > .toplevel-view {
 }
 
 /*.glyphicon-link {*/
-    /*color: #A6703F;*/
+/*color: #A6703F;*/
 /*}*/
 
-
-.link-icon{
+.link-icon {
     width: 1.5em;
     height: auto;
 }

@@ -1,6 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,7 +14,7 @@ import java.util.Collection;
  * Created by emma on 26/01/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Locus object holds links to associated risk alleles and author reported genes
  */
 @Entity
@@ -23,27 +29,30 @@ public class Locus {
 
     @ManyToMany
     @JoinTable(name = "LOCUS_RISK_ALLELE",
-            joinColumns = @JoinColumn(name = "LOCUS_ID"),
-            inverseJoinColumns = @JoinColumn(name = "RISK_ALLELE_ID"))
+               joinColumns = @JoinColumn(name = "LOCUS_ID"),
+               inverseJoinColumns = @JoinColumn(name = "RISK_ALLELE_ID"))
     private Collection<RiskAllele> strongestRiskAlleles = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "AUTHOR_REPORTED_GENE",
-            joinColumns = @JoinColumn(name = "LOCUS_ID"),
-            inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
+               joinColumns = @JoinColumn(name = "LOCUS_ID"),
+               inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
     private Collection<Gene> authorReportedGenes = new ArrayList<>();
 
     @ManyToOne
     @JoinTable(name = "ASSOCIATION_LOCUS",
-            joinColumns = @JoinColumn(name = "LOCUS_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+               joinColumns = @JoinColumn(name = "LOCUS_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
     private Association association;
 
     // JPA no-args constructor
     public Locus() {
     }
 
-    public Locus(Integer haplotypeSnpCount, String description, Collection<RiskAllele> strongestRiskAlleles, Collection<Gene> authorReportedGenes) {
+    public Locus(Integer haplotypeSnpCount,
+                 String description,
+                 Collection<RiskAllele> strongestRiskAlleles,
+                 Collection<Gene> authorReportedGenes) {
         this.haplotypeSnpCount = haplotypeSnpCount;
         this.description = description;
         this.strongestRiskAlleles = strongestRiskAlleles;

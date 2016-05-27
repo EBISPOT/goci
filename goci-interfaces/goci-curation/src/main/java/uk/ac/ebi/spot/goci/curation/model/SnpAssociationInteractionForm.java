@@ -1,184 +1,70 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.GenomicContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by emma on 12/02/15.
- * @author emma
  *
- * Service class to deal with form used by curators to enter snp/association details for interaction studies
+ * @author emma
+ *         <p>
+ *         DTO object that represents form used to enter interaction association information
  */
-public class SnpAssociationInteractionForm {
-
-    // Holds ID of association so we can create a link on form to edit the
-    // linked association
-    private Long associationId;
-
-    private String pvalueText;
-
-    private Float orPerCopyNum;
-
-    private String snpType;
-
-    private Boolean snpChecked;
-
-    private Boolean orType;
-
-    private Integer pvalueMantissa;
-
-    private Integer pvalueExponent;
-
-    private Float orPerCopyRecip;
-
-    private Float orPerCopyStdError;
-
-    private String orPerCopyRange;
-
-    private String orPerCopyRecipRange;
-
-    private String orPerCopyUnitDescr;
+public class SnpAssociationInteractionForm extends SnpAssociationForm {
 
     private List<SnpFormColumn> snpFormColumns = new ArrayList<>();
 
-    private Collection<EfoTrait> efoTraits = new ArrayList<>();
-
     private Integer numOfInteractions;
-
-    private String riskFrequency;
-
 
     // Constructors
     public SnpAssociationInteractionForm() {
     }
 
     public SnpAssociationInteractionForm(Long associationId,
-                                         String pvalueText,
-                                         Float orPerCopyNum,
-                                         String snpType,
-                                         Boolean snpChecked,
-                                         Boolean orType,
+                                         String riskFrequency,
+                                         String pvalueDescription,
                                          Integer pvalueMantissa,
                                          Integer pvalueExponent,
-                                         Float orPerCopyRecip,
-                                         Float orPerCopyStdError,
-                                         String orPerCopyRange,
-                                         String orPerCopyRecipRange,
-                                         String orPerCopyUnitDescr,
-                                         List<SnpFormColumn> snpFormColumns,
+                                         List<SnpMappingForm> snpMappingForms,
                                          Collection<EfoTrait> efoTraits,
-                                         Integer numOfInteractions,
-                                         String riskFrequency) {
-        this.associationId = associationId;
-        this.pvalueText = pvalueText;
-        this.orPerCopyNum = orPerCopyNum;
-        this.snpType = snpType;
-        this.snpChecked = snpChecked;
-        this.orType = orType;
-        this.pvalueMantissa = pvalueMantissa;
-        this.pvalueExponent = pvalueExponent;
-        this.orPerCopyRecip = orPerCopyRecip;
-        this.orPerCopyStdError = orPerCopyStdError;
-        this.orPerCopyRange = orPerCopyRange;
-        this.orPerCopyRecipRange = orPerCopyRecipRange;
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
+                                         Collection<GenomicContext> genomicContexts,
+                                         String snpType,
+                                         Boolean snpApproved,
+                                         Float standardError,
+                                         String range,
+                                         String description,
+                                         Float orPerCopyNum,
+                                         Float orPerCopyRecip,
+                                         String orPerCopyRecipRange,
+                                         Float betaNum,
+                                         String betaUnit,
+                                         String betaDirection,
+                                         List<SnpFormColumn> snpFormColumns, Integer numOfInteractions) {
+        super(associationId,
+              riskFrequency,
+              pvalueDescription,
+              pvalueMantissa,
+              pvalueExponent,
+              snpMappingForms,
+              efoTraits,
+              genomicContexts,
+              snpType,
+              snpApproved,
+              standardError,
+              range,
+              description,
+              orPerCopyNum,
+              orPerCopyRecip,
+              orPerCopyRecipRange,
+              betaNum,
+              betaUnit,
+              betaDirection);
         this.snpFormColumns = snpFormColumns;
-        this.efoTraits = efoTraits;
         this.numOfInteractions = numOfInteractions;
-        this.riskFrequency = riskFrequency;
-    }
-
-    public Long getAssociationId() {
-        return associationId;
-    }
-
-    public void setAssociationId(Long associationId) {
-        this.associationId = associationId;
-    }
-
-    public String getPvalueText() {
-        return pvalueText;
-    }
-
-    public void setPvalueText(String pvalueText) {
-        this.pvalueText = pvalueText;
-    }
-
-    public Float getOrPerCopyNum() {
-        return orPerCopyNum;
-    }
-
-    public void setOrPerCopyNum(Float orPerCopyNum) {
-        this.orPerCopyNum = orPerCopyNum;
-    }
-
-    public String getSnpType() {
-        return snpType;
-    }
-
-    public void setSnpType(String snpType) {
-        this.snpType = snpType;
-    }
-
-    public Integer getPvalueMantissa() {
-        return pvalueMantissa;
-    }
-
-    public void setPvalueMantissa(Integer pvalueMantissa) {
-        this.pvalueMantissa = pvalueMantissa;
-    }
-
-    public Integer getPvalueExponent() {
-        return pvalueExponent;
-    }
-
-    public void setPvalueExponent(Integer pvalueExponent) {
-        this.pvalueExponent = pvalueExponent;
-    }
-
-    public Float getOrPerCopyRecip() {
-        return orPerCopyRecip;
-    }
-
-    public void setOrPerCopyRecip(Float orPerCopyRecip) {
-        this.orPerCopyRecip = orPerCopyRecip;
-    }
-
-    public Float getOrPerCopyStdError() {
-        return orPerCopyStdError;
-    }
-
-    public void setOrPerCopyStdError(Float orPerCopyStdError) {
-        this.orPerCopyStdError = orPerCopyStdError;
-    }
-
-    public String getOrPerCopyRange() {
-        return orPerCopyRange;
-    }
-
-    public void setOrPerCopyRange(String orPerCopyRange) {
-        this.orPerCopyRange = orPerCopyRange;
-    }
-
-    public String getOrPerCopyRecipRange() {
-        return orPerCopyRecipRange;
-    }
-
-    public void setOrPerCopyRecipRange(String orPerCopyRecipRange) {
-        this.orPerCopyRecipRange = orPerCopyRecipRange;
-    }
-
-    public String getOrPerCopyUnitDescr() {
-        return orPerCopyUnitDescr;
-    }
-
-    public void setOrPerCopyUnitDescr(String orPerCopyUnitDescr) {
-        this.orPerCopyUnitDescr = orPerCopyUnitDescr;
     }
 
     public List<SnpFormColumn> getSnpFormColumns() {
@@ -189,43 +75,11 @@ public class SnpAssociationInteractionForm {
         this.snpFormColumns = snpFormColumns;
     }
 
-    public Collection<EfoTrait> getEfoTraits() {
-        return efoTraits;
-    }
-
-    public void setEfoTraits(Collection<EfoTrait> efoTraits) {
-        this.efoTraits = efoTraits;
-    }
-
     public Integer getNumOfInteractions() {
         return numOfInteractions;
     }
 
     public void setNumOfInteractions(Integer numOfInteractions) {
         this.numOfInteractions = numOfInteractions;
-    }
-
-    public Boolean getSnpChecked() {
-        return snpChecked;
-    }
-
-    public void setSnpChecked(Boolean snpChecked) {
-        this.snpChecked = snpChecked;
-    }
-
-    public Boolean getOrType() {
-        return orType;
-    }
-
-    public void setOrType(Boolean orType) {
-        this.orType = orType;
-    }
-
-    public String getRiskFrequency() {
-        return riskFrequency;
-    }
-
-    public void setRiskFrequency(String riskFrequency) {
-        this.riskFrequency = riskFrequency;
     }
 }
