@@ -48,17 +48,36 @@ public class HousekeepingOperationsServiceTest {
 
     private HousekeepingOperationsService housekeepingOperationsService;
 
-    private static final Housekeeping HOUSEKEEPING =
-            new HousekeepingBuilder().setId(799L).setStudyAddedDate(new Date()).build();
+    private static final CurationStatus LEVEL_01 =
+            new CurationStatusBuilder().setId(804L).setStatus("Level 1 curation done").build();
 
-    private static final Study STU1 = new StudyBuilder().setId(802L).build();
+    private static final CurationStatus AWAITING_CURATION =
+            new CurationStatusBuilder().setId(816L).setStatus("Awaiting Curation").build();
 
-    private static final Curator CURATOR = new CuratorBuilder().setId(803L)
+    private static final Curator UNASSIGNED = new CuratorBuilder().setId(803L)
+            .setLastName("Unassigned")
+            .build();
+
+    private static final Curator LEVEL_1_CURATOR = new CuratorBuilder().setId(803L)
             .setLastName("Level 1 Curator")
             .build();
 
-    private static final CurationStatus CURATION_STATUS =
-            new CurationStatusBuilder().setId(804L).setStatus("Awaiting Curation").build();
+    private static final Housekeeping CURRENT_HOUSEKEEPING =
+            new HousekeepingBuilder().setId(799L)
+                    .setCurator(UNASSIGNED)
+                    .setCurationStatus(AWAITING_CURATION)
+                    .build();
+
+    private static final Housekeeping NEW_HOUSEKEEPING =
+            new HousekeepingBuilder().setId(799L)
+                    .setNotes("Testing saving")
+                    .setEthnicityCheckedLevelOne(true)
+                    .setStudySnpCheckedLevelOne(true)
+                    .setCurationStatus(LEVEL_01)
+                    .setCurator(LEVEL_1_CURATOR)
+                    .build();
+
+    private static final Study STU1 = new StudyBuilder().setId(802L).setHousekeeping(CURRENT_HOUSEKEEPING).build();
 
     @Before
     public void setUp() throws Exception {
@@ -72,8 +91,8 @@ public class HousekeepingOperationsServiceTest {
     public void createHousekeeping() throws Exception {
 
         // Stubbing
-        when(curationStatusRepository.findByStatus("Awaiting Curation")).thenReturn(CURATION_STATUS);
-        when(curatorRepository.findByLastName("Level 1 Curator")).thenReturn(CURATOR);
+        when(curationStatusRepository.findByStatus("Awaiting Curation")).thenReturn(AWAITING_CURATION);
+        when(curatorRepository.findByLastName("Level 1 Curator")).thenReturn(LEVEL_1_CURATOR);
 
         Housekeeping housekeeping = housekeepingOperationsService.createHousekeeping();
         verify(curationStatusRepository, times(1)).findByStatus("Awaiting Curation");
@@ -89,13 +108,12 @@ public class HousekeepingOperationsServiceTest {
 
     @Test
     public void saveHousekeeping() throws Exception {
-        housekeepingOperationsService.saveHousekeeping(STU1, HOUSEKEEPING);
-        verify(housekeepingRepository, times(1)).save(HOUSEKEEPING);
+        housekeepingOperationsService.saveHousekeeping(STU1, NEW_HOUSEKEEPING);
+        verify(housekeepingRepository, times(1)).save(NEW_HOUSEKEEPING);
         verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(curationStatusRepository);
         verifyZeroInteractions(curatorRepository);
-
-        assertThat(STU1.getHousekeeping()).isEqualToComparingFieldByField(HOUSEKEEPING);
+        assertThat(STU1.getHousekeeping()).isEqualToComparingFieldByField(NEW_HOUSEKEEPING);
     }
 }
