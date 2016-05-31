@@ -33,6 +33,7 @@ import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
@@ -102,6 +103,7 @@ public class StudyController {
     private CurrentUserDetailsService currentUserDetailsService;
     private StudyFileService studyFileService;
     private StudyDuplicationService studyDuplicationService;
+    private StudyDeletionService studyDeletionService;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -127,7 +129,7 @@ public class StudyController {
                            MappingDetailsService mappingDetailsService,
                            CurrentUserDetailsService currentUserDetailsService,
                            StudyFileService studyFileService,
-                           StudyDuplicationService studyDuplicationService) {
+                           StudyDuplicationService studyDuplicationService, StudyDeletionService studyDeletionService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -144,6 +146,7 @@ public class StudyController {
         this.currentUserDetailsService = currentUserDetailsService;
         this.studyFileService = studyFileService;
         this.studyDuplicationService = studyDuplicationService;
+        this.studyDeletionService = studyDeletionService;
     }
 
     /* All studies and various filtered lists */
@@ -629,7 +632,7 @@ public class StudyController {
 
         // Find our study based on the ID
         Study studyToDelete = studyRepository.findOne(studyId);
-        studyOperationsService.deleteStudy(studyToDelete, currentUserDetailsService.getUserFromRequest(request));
+        studyDeletionService.deleteStudy(studyToDelete, currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies";
     }
 
