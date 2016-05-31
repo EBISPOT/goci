@@ -47,7 +47,6 @@ public class StudyOperationsService {
     private CuratorRepository curatorRepository;
     private CurationStatusRepository curationStatusRepository;
     private TrackingOperationService trackingOperationService;
-    private EthnicityRepository ethnicityRepository;
     private EventTypeService eventTypeService;
     private HousekeepingOperationsService housekeepingOperationsService;
 
@@ -60,7 +59,6 @@ public class StudyOperationsService {
                                   CuratorRepository curatorRepository,
                                   CurationStatusRepository curationStatusRepository,
                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
-                                  EthnicityRepository ethnicityRepository,
                                   EventTypeService eventTypeService,
                                   HousekeepingOperationsService housekeepingOperationsService) {
         this.associationRepository = associationRepository;
@@ -71,7 +69,6 @@ public class StudyOperationsService {
         this.curatorRepository = curatorRepository;
         this.curationStatusRepository = curationStatusRepository;
         this.trackingOperationService = trackingOperationService;
-        this.ethnicityRepository = ethnicityRepository;
         this.eventTypeService = eventTypeService;
         this.housekeepingOperationsService = housekeepingOperationsService;
     }

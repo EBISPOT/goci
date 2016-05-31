@@ -204,7 +204,6 @@ public class StudyOperationServiceTest {
                                                             curatorRepository,
                                                             curationStatusRepository,
                                                             trackingOperationService,
-                                                            ethnicityRepository,
                                                             eventTypeService,
                                                             housekeepingOperationsService);
         // Create these objects before each test
