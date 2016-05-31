@@ -12,9 +12,9 @@
     padding-right: 0px !important;
 }
 
-#imaginary_container {
-    margin-top: 5%;
-}
+/*#imaginary_container {*/
+    /*margin-top: 5%;*/
+/*}*/
 
 .stylish-input-group .input-group-addon {
     background: white !important;
@@ -286,10 +286,10 @@ a > .toplevel-view {
     height: auto;
 }
 
-#trait-dropdown > ul > li {
-    padding-left: 3%;
-    padding-bottom: 1%;
-}
+/*#trait-dropdown > ul > li {*/
+    /*padding-left: 3%;*/
+    /*padding-bottom: 1%;*/
+/*}*/
 
 .scrollable-menu {
     height: auto;
@@ -297,7 +297,12 @@ a > .toplevel-view {
     overflow-x: hidden;
 }
 
-#catalog-stats {
-    padding-top: 10%;
-    font-style: italic;
+/*#catalog-stats {*/
+    /*padding-top: 10%;*/
+    /*font-style: italic;*/
+/*}*/
+
+.affix {
+    top: 50px;
+    width:100%;
 }
