@@ -13,7 +13,6 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
-import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Collection;
@@ -36,7 +35,6 @@ public class StudyDeletionService {
      * @param user  User
      */
 
-    private HousekeepingRepository housekeepingRepository;
     private EthnicityRepository ethnicityRepository;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
@@ -49,12 +47,10 @@ public class StudyDeletionService {
     }
 
     @Autowired
-    public StudyDeletionService(HousekeepingRepository housekeepingRepository,
-                                EthnicityRepository ethnicityRepository,
+    public StudyDeletionService(EthnicityRepository ethnicityRepository,
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
                                 DeletedStudyRepository deletedStudyRepository) {
-        this.housekeepingRepository = housekeepingRepository;
         this.ethnicityRepository = ethnicityRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
