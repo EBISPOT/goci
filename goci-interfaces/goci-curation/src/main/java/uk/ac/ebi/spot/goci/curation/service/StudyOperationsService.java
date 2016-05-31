@@ -251,32 +251,6 @@ public class StudyOperationsService {
     }
 
     /**
-     * Delete a study
-     *
-     * @param study Study to delete
-     * @param user  User
-     */
-    public void deleteStudy(Study study, SecureUser user) {
-
-        // Before we delete the study get its associated housekeeping and ethnicity
-        Long housekeepingId = study.getHousekeeping().getId();
-        Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
-        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(study.getId());
-
-        // Delete ethnicity information linked to this study
-        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
-            ethnicityRepository.delete(ethnicity);
-        }
-
-        // Delete study
-        studyRepository.delete(study);
-
-        // Delete housekeeping
-        housekeepingRepository.delete(housekeepingAttachedToStudy);
-        trackingOperationService.delete(study, user);
-    }
-
-    /**
      * Record a study status change
      *
      * @param newStatus New status to apply to study
