@@ -4,7 +4,6 @@ package uk.ac.ebi.spot.goci.model;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -28,7 +28,7 @@ import java.util.Date;
  */
 
 @Entity
-public class Study {
+public class Study implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -74,7 +74,6 @@ public class Study {
 
     private String studyDesignComment;
 
-
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -99,22 +98,21 @@ public class Study {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
-//    @ManyToMany
-//    @JoinTable(name = "STUDY_SNP",
-//               joinColumns = @JoinColumn(name = "STUDY_ID"),
-//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-//    private Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms;
-
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Housekeeping housekeeping;
 
-    @OneToOne(mappedBy = "study", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "study", orphanRemoval = true)
     private StudyReport studyReport;
+
+    @OneToMany
+    @JoinTable(name = "STUDY_EVENT",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    private Collection<Event> events = new ArrayList<>();
 
     // JPA no-args constructor
     public Study() {
     }
-
 
     public Study(String author,
                  Date publicationDate,
@@ -122,7 +120,6 @@ public class Study {
                  String title,
                  String initialSampleSize,
                  String replicateSampleSize,
-                 Collection<Platform> platforms,
                  String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
@@ -134,34 +131,38 @@ public class Study {
                  Boolean imputed,
                  Boolean pooled,
                  String studyDesignComment,
+                 Collection<Platform> platforms,
+                 Collection<Association> associations,
+                 Collection<Ethnicity> ethnicities,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
-//                 Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms,
-                 Collection<Ethnicity> ethnicities,
-                 Housekeeping housekeeping) {
+                 Housekeeping housekeeping,
+                 StudyReport studyReport, Collection<Event> events) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
         this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.platforms = platforms;
         this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.targetedArray = targetedArray;
         this.genomewideArray = genomewideArray;
+        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
         this.pooled = pooled;
         this.studyDesignComment = studyDesignComment;
+        this.platforms = platforms;
+        this.associations = associations;
+        this.ethnicities = ethnicities;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
-//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-        this.ethnicities = ethnicities;
         this.housekeeping = housekeeping;
+        this.studyReport = studyReport;
+        this.events = events;
     }
 
     public Long getId() {
@@ -292,14 +293,6 @@ public class Study {
         this.efoTraits = efoTraits;
     }
 
-//    public Collection<SingleNucleotidePolymorphism> getSingleNucleotidePolymorphisms() {
-//        return singleNucleotidePolymorphisms;
-//    }
-//
-//    public void setSingleNucleotidePolymorphisms(Collection<SingleNucleotidePolymorphism> singleNucleotidePolymorphisms) {
-//        this.singleNucleotidePolymorphisms = singleNucleotidePolymorphisms;
-//    }
-
     public Housekeeping getHousekeeping() {
         return housekeeping;
     }
@@ -314,17 +307,6 @@ public class Study {
 
     public void setStudyReport(StudyReport studyReport) {
         this.studyReport = studyReport;
-    }
-
-    @Override public String toString() {
-        return "Study{" +
-                "id=" + id +
-                ", author='" + author + '\'' +
-                ", publicationDate=" + publicationDate +
-                ", publication='" + publication + '\'' +
-                ", title='" + title + '\'' +
-                ", pubmedId='" + pubmedId + '\'' +
-                '}';
     }
 
     public Collection<Ethnicity> getEthnicities() {
@@ -382,5 +364,18 @@ public class Study {
 
     public void setGenomewideArray(Boolean genomewideArray) {
         this.genomewideArray = genomewideArray;
+    }
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
+    }
+
+    @Override public synchronized void addEvent(Event event) {
+        Collection<Event> currentEvents = getEvents();
+        currentEvents.add(event);
+        setEvents((currentEvents));
     }
 }
