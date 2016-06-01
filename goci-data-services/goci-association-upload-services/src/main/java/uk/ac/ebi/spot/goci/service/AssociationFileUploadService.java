@@ -29,7 +29,7 @@ import java.util.Collection;
 @Service
 public class AssociationFileUploadService {
 
-    private UploadSheetProcessor uploadSheetProcessor;
+    private UploadSheetProcessorBuilder uploadSheetProcessorBuilder;
 
     private AssociationRowProcessor associationRowProcessor;
 
@@ -44,11 +44,11 @@ public class AssociationFileUploadService {
     }
 
     @Autowired
-    public AssociationFileUploadService(UploadSheetProcessor uploadSheetProcessor,
+    public AssociationFileUploadService(UploadSheetProcessorBuilder uploadSheetProcessorBuilder,
                                         AssociationRowProcessor associationRowProcessor,
                                         ValidationService validationService,
                                         SheetCreationService sheetCreationService) {
-        this.uploadSheetProcessor = uploadSheetProcessor;
+        this.uploadSheetProcessorBuilder = uploadSheetProcessorBuilder;
         this.associationRowProcessor = associationRowProcessor;
         this.validationService = validationService;
         this.sheetCreationService = sheetCreationService;
@@ -74,7 +74,8 @@ public class AssociationFileUploadService {
                 // Create a sheet for reading
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
-                // Process file into a generic row object
+                // Process file, depending on validation level, into a generic row object
+                UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
                 fileRows = uploadSheetProcessor.readSheetRows(sheet);
             }
             catch (InvalidFormatException | IOException e) {
@@ -147,4 +148,6 @@ public class AssociationFileUploadService {
         associationSummary.setErrors(errors);
         return associationSummary;
     }
+
+
 }
