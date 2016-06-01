@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.utils.SheetCellProcessingService;
@@ -25,6 +26,7 @@ import java.util.Map;
  *         created containing association information.
  */
 @Service
+@Lazy
 public class SheetProcessorImpl implements UploadSheetProcessor {
 
     private TranslateUploadHeaders translateUploadHeaders;

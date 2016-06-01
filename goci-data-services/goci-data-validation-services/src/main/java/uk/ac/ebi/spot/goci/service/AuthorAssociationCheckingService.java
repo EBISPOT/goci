@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.ValidationError;
@@ -15,6 +16,7 @@ import java.util.Collection;
  *         Full checking service will run all checks
  */
 @Service
+@Lazy
 public class AuthorAssociationCheckingService implements AssociationCheckingService {
 
     @Override

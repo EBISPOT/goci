@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.utils;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
  *         Service class to translate headers in upload file to enum value
  */
 @Service
+@Lazy
 public class TranslateUploadHeaders {
 
     public UploadFileHeader translateToEnumValue(String value) {
