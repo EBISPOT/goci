@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -24,7 +23,7 @@ import java.util.Date;
  *         Model object representing an association
  */
 @Entity
-public class Association {
+public class Association implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -83,7 +82,7 @@ public class Association {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
-    @OneToOne(mappedBy = "association", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -93,6 +92,12 @@ public class Association {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
+
+    @OneToMany
+    @JoinTable(name = "ASSOCIATION_EVENT",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    private Collection<Event> events = new ArrayList<>();
 
     // JPA no-args constructor
     public Association() {
@@ -121,7 +126,7 @@ public class Association {
                        AssociationReport associationReport,
                        Date lastMappingDate,
                        String lastMappingPerformedBy,
-                       Date lastUpdateDate) {
+                       Date lastUpdateDate, Collection<Event> events) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -146,6 +151,7 @@ public class Association {
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastUpdateDate = lastUpdateDate;
+        this.events = events;
     }
 
     public Long getId() {
@@ -354,5 +360,19 @@ public class Association {
 
     public void setBetaDirection(String betaDirection) {
         this.betaDirection = betaDirection;
+    }
+
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
+    }
+
+    @Override public synchronized void addEvent(Event event) {
+        Collection<Event> currentEvents = getEvents();
+        currentEvents.add(event);
+        setEvents((currentEvents));
     }
 }

@@ -34,22 +34,40 @@ public class CatalogMetaDataRepository {
             "SELECT COUNT(*) FROM(" +
             "SELECT DISTINCT SNP.RS_ID " +
             "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-            "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-            "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+//            "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+//            "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+            "JOIN RISK_ALLELE_SNP RS ON RS.SNP_ID = SNP.ID " +
+            "JOIN LOCUS_RISK_ALLELE LR ON LR.RISK_ALLELE_ID = RS.RISK_ALLELE_ID " +
+            "JOIN ASSOCIATION_LOCUS AL ON AL.LOCUS_ID = LR.LOCUS_ID " +
+            "JOIN ASSOCIATION A ON A.ID = AL.ASSOCIATION_ID " +
+            "JOIN STUDY S ON S.ID = A.STUDY_ID " +
             "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
             "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
 
+
+
     private static final String ASSOCIATION_COUNT =
-            "SELECT COUNT(*) FROM(" +
-                    "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
-                    "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
-                    "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
-                    "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
-                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
-                    "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
-                    "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
-                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+//                    "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
+//                    "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+//                    "JOIN STUDY_SNP SN ON SN.SNP_ID = SNP.ID " +
+//                    "JOIN STUDY S ON S.ID = SN.STUDY_ID " +
+//                    "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+//                    "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID " +
+//                    "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
+//                    "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
+              "SELECT COUNT(*) FROM(" +
+                      "SELECT DISTINCT SNP.RS_ID, D.TRAIT " +
+                      "FROM SINGLE_NUCLEOTIDE_POLYMORPHISM SNP " +
+                      "JOIN RISK_ALLELE_SNP RS ON RS.SNP_ID = SNP.ID " +
+                      "JOIN LOCUS_RISK_ALLELE LR ON LR.RISK_ALLELE_ID = RS.RISK_ALLELE_ID " +
+                      "JOIN ASSOCIATION_LOCUS AL ON AL.LOCUS_ID = LR.LOCUS_ID " +
+                      "JOIN ASSOCIATION A ON A.ID = AL.ASSOCIATION_ID " +
+                      "JOIN STUDY S ON S.ID = A.STUDY_ID " +
+                      "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                      "JOIN STUDY_DISEASE_TRAIT SD ON SD.STUDY_ID = S.ID   " +
+                      "JOIN DISEASE_TRAIT D ON D.ID = SD.DISEASE_TRAIT_ID " +
+                      "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
     private static final String ENSEMBL_BUILD_VERSION =
             "SELECT ENSEMBL_RELEASE_NUMBER " +

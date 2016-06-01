@@ -249,11 +249,11 @@ public class JsonProcessingService {
         line.append(context);
         line.append("\t");
 
-        if (context == "") {
-            line.append("1");
+        if (mappedGenes.get("ingene").getName() != "") {
+            line.append("0");
         }
         else {
-            line.append("0");
+            line.append("1");
         }
         line.append("\t");
 

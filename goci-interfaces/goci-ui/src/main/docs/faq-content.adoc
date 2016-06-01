@@ -96,9 +96,11 @@
 
 33. <<faq-33,How do I zoom and move the diagram?>>
 
-34. <<faq-34,How is the genomic annotation for each SNP provided?>>
+34. <<faq-34,Why do the counts in the legend do not always match the association count for a search?>>
 
-35. <<faq-35,What changes will I see in the genomic annotation with the new mapping pipeline?>>
+35. <<faq-35,How is the genomic annotation for each SNP provided?>>
+
+36. <<faq-36,What changes will I see in the genomic annotation with the new mapping pipeline?>>
 
 '''
 == General
@@ -235,13 +237,15 @@ Chromosomes and traits (coloured circles) have labels that display when hovering
 The diagram was designed to have GoogleMaps-style interactivity. There are two ways to zoom in and out. The easiest option is to use the scroll wheel on the mouse or touch pad on a laptop. Scrolling up zooms in and scrolling down zooms out. This feature may not work with all touch pads. Alternatively, the top right-hand corner of the diagram features a zoom bar which can be used to generate exactly the same effect, by dragging the little square left or right along the bar with the mouse pointer or clicking the plus and minus buttons.
 The diagram can be moved around the viewing area by clicking on any part of the diagram with the left mouse button and, holding the mouse button down, dragging the diagram around the screen until the desired part is visible. This feature is particularly useful for centering the diagram on a specific location at higher zoom levels.
 
+==== [[faq-34]]34. Why do the counts in the legend do not always match the association count for a search?
+The legend counts in the GWAS diagram legend are literally counts of the number of dots of each colour in the diagram. When the diagram is generated, trait categories are assigned to each dot based on the corresponding trait’s most specific parent in the hierarchy of the Experimental Factor Ontology (EFO), which the GWAS Catalog traits are mapped to. In some cases, a term can belong to multiple categories, e.g. “inflammatory bowel disease” is both a digestive system disease and an immune system disease, so while it will show in the colour of one category, it will be returned in the search and result count for both. Equally, a number of cancers such as colorectal carcinoma fall under both the cancer category and their appropriate anatomical disease category.
 
 == Genomic mappings
 
-==== [[faq-34]]34. How is the genomic annotation for each SNP provided?
+==== [[faq-35]]35. How is the genomic annotation for each SNP provided?
 In March 2016 we switched to a new Ensembl mapping pipeline which provides the genomic annotation (chromosome location, cytogenetic region and mapped genes), which is available alongside the curated content in the GWAS Catalog. Previously the genomic annotation was provided by an NCBI mapping pipeline.
 
-==== [[faq-35]]35. What changes will I see in the genomic annotation with the new mapping pipeline?
+==== [[faq-36]]36. What changes will I see in the genomic annotation with the new mapping pipeline?
 The format of the mapping data we provide in both the search interface and downloads will remain the same, but with the chromosomal position of the SNP, cytogenetic region and mapped Entrez genes provided by Ensembl. We are changing to using an Ensembl pipeline as this will allow us to provide a denser set of results and, in the future, to integrate additional information from Ensembl with GWAS Catalog data. As the mapping information will now be provided by Ensembl, rather than NCBI, there will be a small number of differences in SNP position and mapped gene. The mapping information will be updated at every Ensembl release, every 2-3 months. In addition, we have made improvements to the display of haplotypes and proxy SNPs to make the data more user-friendly.
 
 +++<u>Changes to mapping locations</u>+++
