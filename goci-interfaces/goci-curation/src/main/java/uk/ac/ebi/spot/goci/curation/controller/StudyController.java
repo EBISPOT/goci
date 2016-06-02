@@ -43,7 +43,6 @@ import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
-import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -645,8 +644,8 @@ public class StudyController {
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
         Study duplicateStudy = studyDuplicationService.duplicateStudy(studyToDuplicate,
-                                                                       currentUserDetailsService.getUserFromRequest(
-                                                                               request));
+                                                                      currentUserDetailsService.getUserFromRequest(
+                                                                              request));
 
         // Add duplicate message
         String message =
@@ -854,12 +853,16 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model, HttpServletRequest request )
+    public String uploadStudyFile(@RequestParam("file") MultipartFile file,
+                                  @PathVariable Long studyId,
+                                  Model model,
+                                  HttpServletRequest request)
             throws FileUploadException, IOException {
 
         model.addAttribute("study", studyRepository.findOne(studyId));
         try {
-            studyFileService.upload(file, studyId, currentUserDetailsService.getUserFromRequest(request));
+            studyFileService.upload(file, studyId);
+            studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
             return "redirect:/studies/" + studyId + "/studyfiles";
         }
         catch (FileUploadException | IOException e) {
@@ -867,7 +870,7 @@ public class StudyController {
             return "error_pages/study_file_upload_failure";
         }
     }
-    
+
     @RequestMapping(value = "/{studyId}/tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getStudyEvents(Model model, @PathVariable Long studyId) {
         model.addAttribute("events", studyRepository.findOne(studyId).getEvents());

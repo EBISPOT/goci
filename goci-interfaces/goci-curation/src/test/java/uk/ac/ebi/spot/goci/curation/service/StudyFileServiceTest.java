@@ -82,9 +82,6 @@ public class StudyFileServiceTest {
     @Test
     public void testUploadWithFile() throws Exception {
 
-        // Stubbing
-        when(studyRepository.findOne(STUDY_ID)).thenReturn(STUDY);
-
         // Create our study dir , it should be empty
         studyFileService.createStudyDir(STUDY_ID);
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).isEmpty();
@@ -92,13 +89,7 @@ public class StudyFileServiceTest {
         // Mock a file coming in via the controller
         MockMultipartFile file =
                 new MockMultipartFile("data", "filename.txt", "text/plain", "Some study details".getBytes());
-        studyFileService.upload(file, STUDY_ID, SECURE_USER);
-
-        verify(studyRepository, times(1)).findOne(STUDY_ID);
-        verify(trackingOperationService, times(1)).update(STUDY,
-                                                          SECURE_USER,
-                                                          EventType.STUDY_FILE_UPLOAD);
-        verify(studyRepository, times(1)).save(STUDY);
+        studyFileService.upload(file, STUDY_ID);
 
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).isNotEmpty();
         assertThat(studyFileService.getStudyFiles(STUDY_ID)).hasSize(1);
@@ -116,12 +107,25 @@ public class StudyFileServiceTest {
         // Mock a file coming in via the controller
         MockMultipartFile file =
                 new MockMultipartFile("data", "filename.txt", "text/plain", "".getBytes());
-        studyFileService.upload(file, STUDY_ID, SECURE_USER);
+        studyFileService.upload(file, STUDY_ID);
     }
 
     @Test
     public void testGetStudyDirRoot() throws Exception {
         studyFileService.setStudyDirRoot(testFolder.newFolder("test"));
         assertThat(studyFileService.getStudyDirRoot()).hasName("test");
+    }
+
+    @Test
+    public void testCreateFileUploadEvent(){
+        // Stubbing
+        when(studyRepository.findOne(STUDY_ID)).thenReturn(STUDY);
+
+        studyFileService.createFileUploadEvent(STUDY_ID, SECURE_USER);
+        verify(studyRepository, times(1)).findOne(STUDY_ID);
+        verify(trackingOperationService, times(1)).update(STUDY,
+                                                          SECURE_USER,
+                                                          EventType.STUDY_FILE_UPLOAD);
+        verify(studyRepository, times(1)).save(STUDY);
     }
 }
