@@ -162,6 +162,17 @@ public class StudyFileService {
     }
 
     /**
+     * Delete a file by study ID and name
+     *
+     * @param studyId  Study ID, this will help locate dir
+     * @param fileName Name of file to delete
+     */
+    public void deleteFile(Long studyId, String fileName) {
+        File fileToDelete = getFileFromFileName(studyId, fileName);
+        fileToDelete.delete();
+    }
+
+    /**
      * Return a subdir based on the study id
      *
      * @param id Study ID
@@ -221,8 +232,7 @@ public class StudyFileService {
      */
     public File getFileFromFileName(Long studyId, String fileName) {
         String fileNameWithFullPath = getStudyDirRoot() + File.separator + studyId + File.separator + fileName;
-        File file = new File(fileNameWithFullPath);
-        return file;
+        return new File(fileNameWithFullPath);
     }
 
     public File getStudyDirRoot() {
