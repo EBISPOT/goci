@@ -32,6 +32,7 @@ public class LociAttributesService {
     private LocusRepository locusRepository;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
     protected Logger getLog() {
         return log;
     }
@@ -50,9 +51,14 @@ public class LociAttributesService {
 
     public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
-        for (String authorReportedGene : authorReportedGenes) {
 
+        authorReportedGenes.forEach(authorReportedGene -> {
             authorReportedGene = tidy_curator_entered_string(authorReportedGene);
+
+            // Check for intergenic
+            if (authorReportedGene.equals("Intergenic")){
+                authorReportedGene = authorReportedGene.toLowerCase();
+            }
 
             // Check if gene already exists, note we may have duplicates so for moment just take first one
             Gene geneInDatabase = geneRepository.findByGeneName(authorReportedGene);
@@ -60,14 +66,14 @@ public class LociAttributesService {
 
             // Exists in database already
             if (geneInDatabase != null) {
-                getLog().debug("Gene "+ geneInDatabase.getGeneName() +" already exists in database");
+                getLog().debug("Gene " + geneInDatabase.getGeneName() + " already exists in database");
                 gene = geneInDatabase;
             }
 
             // If gene doesn't exist then create and save
             else {
                 // Create new gene
-                getLog().debug("Gene "+ authorReportedGene +" not found in database. Creating and saving new gene.");
+                getLog().debug("Gene " + authorReportedGene + " not found in database. Creating and saving new gene.");
                 Gene newGene = new Gene();
                 newGene.setGeneName(authorReportedGene);
 
@@ -77,7 +83,7 @@ public class LociAttributesService {
 
             // Add genes to collection
             locusGenes.add(gene);
-        }
+        });
         return locusGenes;
     }
 
