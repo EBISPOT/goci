@@ -4,7 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.Collection;
 
 /**
  * Created by emma on 09/02/15.
@@ -29,14 +31,21 @@ public class SecureUser {
     @OneToOne
     private SecureRole role;
 
+    @OneToMany(mappedBy = "user")
+    private Collection<Event> events;
+
     // JPA no-args constructor
     public SecureUser() {
     }
 
-    public SecureUser(String email, String passwordHash, SecureRole secureRole) {
+    public SecureUser(String email,
+                      String passwordHash,
+                      SecureRole role,
+                      Collection<Event> events) {
         this.email = email;
         this.passwordHash = passwordHash;
-        this.role = secureRole;
+        this.role = role;
+        this.events = events;
     }
 
     public Long getId() {
@@ -71,12 +80,11 @@ public class SecureUser {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "SecureUser{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                '}';
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
     }
 }
