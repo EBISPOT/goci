@@ -105,8 +105,7 @@ public class DiseaseTraitController {
 
     @RequestMapping(value = "/{diseaseTraitId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait,
-                                   BindingResult bindingResult,
-                                   Model model) {
+                                   BindingResult bindingResult, @PathVariable Long diseaseTraitId) {
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
@@ -166,7 +165,7 @@ public class DiseaseTraitController {
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
-    public List<DiseaseTrait> populateDiseaseTraits(Model model) {
+    public List<DiseaseTrait> populateDiseaseTraits() {
         return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 
