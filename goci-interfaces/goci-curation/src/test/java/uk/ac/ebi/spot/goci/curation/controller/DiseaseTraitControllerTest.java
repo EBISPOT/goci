@@ -23,6 +23,7 @@ import java.util.List;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,8 +77,9 @@ public class DiseaseTraitControllerTest {
                 .andExpect(model().attribute("diseaseTraits", instanceOf(Collection.class)))
                 .andExpect(model().attribute("diseaseTraits", hasSize(2)))
                 .andExpect(model().attribute("totaldiseaseTraits", instanceOf(Integer.class)))
-                .andExpect(model().attribute("totaldiseaseTraits", equalTo(2)))
-        ;
+                .andExpect(model().attribute("totaldiseaseTraits", equalTo(2)));
+
+        verifyZeroInteractions(studyRepository);
     }
 }
 

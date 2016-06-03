@@ -46,8 +46,10 @@ public class DiseaseTraitController {
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String allDiseaseTraits(Model model) {
 
-        model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
-        model.addAttribute("totaldiseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()).size());
+        Sort sort = sortByTraitAsc();
+        List<DiseaseTrait> allDiseaseTraits = diseaseTraitRepository.findAll(sort);
+        model.addAttribute("diseaseTraits", allDiseaseTraits);
+        model.addAttribute("totaldiseaseTraits", allDiseaseTraits.size());
 
         // Return an empty DiseaseTrait object so user can add a new one
         model.addAttribute("diseaseTrait", new DiseaseTrait());
