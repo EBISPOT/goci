@@ -43,7 +43,7 @@ public class DiseaseTraitController {
     }
 
     //Return all disease traits
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE,  method = RequestMethod.GET)
     public String allDiseaseTraits(Model model) {
 
         Sort sort = sortByTraitAsc();
