@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import com.google.common.base.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasProperty;
@@ -67,6 +69,8 @@ public class DiseaseTraitControllerTest {
 
     private static final DiseaseTrait NEW_DISEASE_TRAIT_WITH_ERROR =
             new DiseaseTraitBuilder().build();
+
+    private static final Study STUDY = new StudyBuilder().setId(123L).setDiseaseTrait(DISEASE_TRAIT_2).build();
 
     @Before
     public void setUpMock() {
@@ -179,12 +183,57 @@ public class DiseaseTraitControllerTest {
 
         mockMvc.perform(post("/diseasetraits/799")
                                 .param("trait", ""))
-                .andExpect(model().attributeHasFieldErrors("diseaseTrait","trait"))
+                .andExpect(model().attributeHasFieldErrors("diseaseTrait", "trait"))
                 .andExpect(view().name("edit_disease_trait"));
 
         verifyZeroInteractions(studyRepository);
     }
 
+    @Test
+    public void testViewDiseaseTraitToDelete() throws Exception {
 
+        when(diseaseTraitRepository.findOne(Matchers.anyLong())).thenReturn(DISEASE_TRAIT_2);
+        when(studyRepository.findByDiseaseTraitId(DISEASE_TRAIT_2.getId())).thenReturn(Collections.singletonList(STUDY));
+
+        mockMvc.perform(get("/diseasetraits/800/delete").accept(MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(view().name("delete_disease_trait"))
+                .andExpect(model().attributeExists("diseaseTrait"))
+                .andExpect(model().attributeExists("studies"))
+                .andExpect(model().attributeExists("totalStudies"))
+                .andExpect(model().attribute("diseaseTrait", instanceOf(DiseaseTrait.class)))
+                .andExpect(model().attribute("studies", instanceOf(Collection.class)))
+                .andExpect(model().attribute("studies", hasSize(1)))
+                .andExpect(model().attribute("totalStudies", instanceOf(Integer.class)))
+                .andExpect(model().attribute("totalStudies", equalTo(1)));
+    }
+
+
+    @Test
+    public void testDeleteDiseaseTrait() throws Exception {
+
+        when(studyRepository.findByDiseaseTraitId(DISEASE_TRAIT_1.getId())).thenReturn(Collections.EMPTY_LIST);
+
+        mockMvc.perform(post("/diseasetraits/799/delete")
+                                .param("id", "799"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/diseasetraits"));
+
+        //verify properties of bound object
+        ArgumentCaptor<Long> diseaseTraitIdArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        verify(diseaseTraitRepository).delete(diseaseTraitIdArgumentCaptor.capture());
+        assertEquals(799L, diseaseTraitIdArgumentCaptor.getValue().longValue());
+    }
+
+    @Test
+    public void testDeleteDiseaseTraitWhereDiseaseTraitHasStudy() throws Exception {
+
+        when(studyRepository.findByDiseaseTraitId(DISEASE_TRAIT_2.getId())).thenReturn(Collections.singletonList(STUDY));
+
+        mockMvc.perform(post("/diseasetraits/800/delete")
+                                .param("id", "800"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("diseaseTraitUsed", "Trait is used in 1 study/studies, cannot delete!"))
+                .andExpect(view().name("redirect:/diseasetraits/800/delete"));
+    }
 }
-
