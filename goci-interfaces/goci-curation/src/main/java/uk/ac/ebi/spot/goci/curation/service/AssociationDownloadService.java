@@ -1,5 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -9,6 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by dwelter on 09/04/15. Updated by emma
@@ -17,19 +23,33 @@ import java.util.Collection;
  */
 @Service
 public class AssociationDownloadService {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
             throws IOException {
 
-        String file = processAssociations(associations);
+        getLog().info("Creating association download file..");
+        Future<String> file = processAssociations(associations);
 
         // Write file
-        outputStream.write(file.getBytes("UTF-8"));
-        outputStream.flush();
+        if(file.isDone()){
+            try {
+                outputStream.write(file.get().getBytes("UTF-8"));
+                outputStream.flush();
+            }
+            catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
         outputStream.close();
     }
 
-    private String processAssociations(Collection<Association> associations) {
+    @Async
+    private Future<String> processAssociations(Collection<Association> associations) {
 
         String header =
                 "Gene(s)\tStrongest SNP-Risk Allele\tSNP\tProxy SNP" +
@@ -45,6 +65,7 @@ public class AssociationDownloadService {
         StringBuilder output = new StringBuilder();
         output.append(header);
 
+        getLog().info("Processing associations...");
 
         for (Association association : associations) {
             StringBuilder line = new StringBuilder();
@@ -230,8 +251,8 @@ public class AssociationDownloadService {
             output.append(line.toString());
 
         }
-
-        return output.toString();
+        getLog().info("Processing done...");
+        return new AsyncResult<String>(output.toString());
     }
 
     private void extractSNPStatus(Association association, StringBuilder line) {
