@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.google.common.base.Strings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -120,6 +123,8 @@ public class DiseaseTraitControllerTest {
                                 .param("trait", NEW_DISEASE_TRAIT_WITH_ERROR.getTrait()))
                 .andExpect(model().attributeHasFieldErrors("diseaseTrait", "trait"))
                 .andExpect(view().name("disease_traits"));
+
+        verifyZeroInteractions(studyRepository);
     }
 
     @Test
@@ -134,6 +139,50 @@ public class DiseaseTraitControllerTest {
                                              "Trait already exists " +
                                                      "in database: database value = Asthma, value entered = Asthma"))
                 .andExpect(view().name("redirect:/diseasetraits"));
+
+        verifyZeroInteractions(studyRepository);
+    }
+
+    @Test
+    public void testViewDiseaseTrait() throws Exception {
+
+        when(diseaseTraitRepository.findOne(Matchers.anyLong())).thenReturn(DISEASE_TRAIT_1);
+
+        mockMvc.perform(get("/diseasetraits/799").accept(MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(view().name("edit_disease_trait"))
+                .andExpect(model().attributeExists("diseaseTrait"))
+                .andExpect(model().attribute("diseaseTrait", instanceOf(DiseaseTrait.class)))
+                .andExpect(model().attribute("diseaseTrait", hasProperty("trait", is("Asthma"))));
+
+        verifyZeroInteractions(studyRepository);
+    }
+
+    @Test
+    public void editDiseaseTrait() throws Exception {
+
+        mockMvc.perform(post("/diseasetraits/799")
+                                .param("trait", "Severe asthma"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/diseasetraits"));
+
+        //verify properties of bound object
+        ArgumentCaptor<DiseaseTrait> diseaseTraitArgumentCaptor = ArgumentCaptor.forClass(DiseaseTrait.class);
+        verify(diseaseTraitRepository).save(diseaseTraitArgumentCaptor.capture());
+        assertEquals("Severe asthma", diseaseTraitArgumentCaptor.getValue().getTrait());
+
+        verifyZeroInteractions(studyRepository);
+    }
+
+    @Test
+    public void editDiseaseTraitWithErrors() throws Exception {
+
+        mockMvc.perform(post("/diseasetraits/799")
+                                .param("trait", ""))
+                .andExpect(model().attributeHasFieldErrors("diseaseTrait","trait"))
+                .andExpect(view().name("edit_disease_trait"));
+
+        verifyZeroInteractions(studyRepository);
     }
 
 
