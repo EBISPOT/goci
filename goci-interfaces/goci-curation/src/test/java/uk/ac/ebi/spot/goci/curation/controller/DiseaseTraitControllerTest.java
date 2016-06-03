@@ -10,7 +10,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
@@ -21,21 +20,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,6 +61,9 @@ public class DiseaseTraitControllerTest {
 
     private static final DiseaseTrait NEW_DISEASE_TRAIT =
             new DiseaseTraitBuilder().setTrait("Urate levels").build();
+
+    private static final DiseaseTrait NEW_DISEASE_TRAIT_WITH_ERROR =
+            new DiseaseTraitBuilder().build();
 
     @Before
     public void setUpMock() {
@@ -113,6 +109,31 @@ public class DiseaseTraitControllerTest {
         verify(diseaseTraitRepository).save(diseaseTraitArgumentCaptor.capture());
         assertEquals(NEW_DISEASE_TRAIT.getTrait(), diseaseTraitArgumentCaptor.getValue().getTrait());
         verifyZeroInteractions(studyRepository);
+    }
+
+    @Test
+    public void testAddDiseaseTraitWithErrors() throws Exception {
+
+        when(diseaseTraitRepository.findByTraitIgnoreCase(Matchers.anyString())).thenReturn(null);
+
+        mockMvc.perform(post("/diseasetraits")
+                                .param("trait", NEW_DISEASE_TRAIT_WITH_ERROR.getTrait()))
+                .andExpect(model().attributeHasFieldErrors("diseaseTrait", "trait"))
+                .andExpect(view().name("disease_traits"));
+    }
+
+    @Test
+    public void testAddDiseaseTraitWithExistingTrait() throws Exception {
+
+        when(diseaseTraitRepository.findByTraitIgnoreCase(Matchers.anyString())).thenReturn(DISEASE_TRAIT_1);
+
+        mockMvc.perform(post("/diseasetraits")
+                                .param("trait", DISEASE_TRAIT_1.getTrait()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("diseaseTraitExists",
+                                             "Trait already exists " +
+                                                     "in database: database value = Asthma, value entered = Asthma"))
+                .andExpect(view().name("redirect:/diseasetraits"));
     }
 
 
