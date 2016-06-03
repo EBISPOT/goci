@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -20,11 +21,22 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -52,7 +64,10 @@ public class DiseaseTraitControllerTest {
             new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
 
     private static final DiseaseTrait DISEASE_TRAIT_2 =
-            new DiseaseTraitBuilder().setId(799L).setTrait("Body mass index").build();
+            new DiseaseTraitBuilder().setId(800L).setTrait("Body mass index").build();
+
+    private static final DiseaseTrait NEW_DISEASE_TRAIT =
+            new DiseaseTraitBuilder().setTrait("Urate levels").build();
 
     @Before
     public void setUpMock() {
@@ -67,7 +82,7 @@ public class DiseaseTraitControllerTest {
         List<DiseaseTrait> allTraits = Arrays.asList(DISEASE_TRAIT_1, DISEASE_TRAIT_2);
         when(diseaseTraitRepository.findAll(Matchers.any(Sort.class))).thenReturn(allTraits);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/diseasetraits").accept(MediaType.TEXT_HTML_VALUE))
+        mockMvc.perform(get("/diseasetraits").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("disease_traits"))
                 .andExpect(model().attributeExists("diseaseTrait"))
@@ -81,5 +96,25 @@ public class DiseaseTraitControllerTest {
 
         verifyZeroInteractions(studyRepository);
     }
+
+    @Test
+    public void testAddDiseaseTrait() throws Exception {
+
+        when(diseaseTraitRepository.findByTraitIgnoreCase(Matchers.anyString())).thenReturn(null);
+
+        mockMvc.perform(post("/diseasetraits")
+                                .param("trait", NEW_DISEASE_TRAIT.getTrait()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("diseaseTraitSaved", "Trait Urate levels added to database"))
+                .andExpect(view().name("redirect:/diseasetraits"));
+
+        //verify properties of bound object
+        ArgumentCaptor<DiseaseTrait> diseaseTraitArgumentCaptor = ArgumentCaptor.forClass(DiseaseTrait.class);
+        verify(diseaseTraitRepository).save(diseaseTraitArgumentCaptor.capture());
+        assertEquals(NEW_DISEASE_TRAIT.getTrait(), diseaseTraitArgumentCaptor.getValue().getTrait());
+        verifyZeroInteractions(studyRepository);
+    }
+
+
 }
 
