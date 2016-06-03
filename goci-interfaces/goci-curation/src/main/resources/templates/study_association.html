@@ -19,13 +19,12 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
-    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
-    <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-curation.css" th:href="@{css/goci-curation.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
-    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
 
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
@@ -35,7 +34,7 @@
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
     <!--Handles checkbox in table -->
-    <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
+    <script th:src="@{/js/goci-study-association.js}"></script>
 
     <!--https://www.datatables.net/-->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
@@ -508,6 +507,9 @@
 
 <!--Bottom level buttons and modals-->
 <div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
 
 <script>
     $(document).ready(function() {

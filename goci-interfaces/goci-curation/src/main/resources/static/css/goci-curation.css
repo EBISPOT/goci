@@ -16,6 +16,10 @@
     /*margin-top: 5%;*/
 /*}*/
 
+#navbarCollapseBottom {
+    padding-left: 25px !important;
+}
+
 .stylish-input-group .input-group-addon {
     background: white !important;
 }
@@ -172,6 +176,7 @@
 .navbar-bottom-banner-3 {
     height: 8px;
 }
+
 
 .gwas-circle {
     float: left;
