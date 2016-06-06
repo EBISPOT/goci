@@ -862,7 +862,7 @@ public class StudyController {
 
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        // Return view 
+        // Return view
         return () -> {
             try {
                 studyFileService.upload(file, studyId);
