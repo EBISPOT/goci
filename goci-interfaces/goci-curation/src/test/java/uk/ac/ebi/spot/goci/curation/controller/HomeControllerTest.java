@@ -22,13 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class HomeControllerTest {
 
-    private HomeController homeController;
-
     private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
-        homeController = new HomeController();
+        HomeController homeController = new HomeController();
         mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
     }
 
