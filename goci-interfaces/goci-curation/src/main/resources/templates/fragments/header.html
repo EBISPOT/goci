@@ -21,7 +21,9 @@
                             <span class="icon-bar"></span>
                         </button>
                             <!--<a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>-->
-                            <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS Catalog</a>
+                            <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand"
+                               th:style="'background:url(' + @{/images/GWAS_Catalog_banner_logo_34x40.png} + ') no-repeat !important; background-position: left center; padding-left: 40px;'">
+                                GWAS Catalog</a>
                     </div>
                     <div id="navbarCollapseTop" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-right">
@@ -39,7 +41,7 @@
                             </li>
                             <li>
                                 <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
-                                    <img alt="GWAS logo"  th:src="@{/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                                    <img alt="NHGRI logo"  th:src="@{/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
                                 </a>
                             </li>
                             <li>

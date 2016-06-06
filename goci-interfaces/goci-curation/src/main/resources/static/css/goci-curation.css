@@ -155,11 +155,11 @@
     cursor: pointer;
 }
 
-.navbar-brand {
-    background: url(../images/GWAS_Catalog_banner_logo_34x40.png) no-repeat !important;
-    background-position: left center;
-    padding-left: 40px;
-}
+/*.navbar-brand {*/
+    /*background: url(../images/GWAS_Catalog_banner_logo_34x40.png) no-repeat !important;*/
+    /*background-position: left center;*/
+    /*padding-left: 40px;*/
+/*}*/
 
 .navbar-fixed-top {
     border-bottom: 0px;

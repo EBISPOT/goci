@@ -124,10 +124,7 @@ a > .toplevel-view {
 
 .btn-primary {
     color: #333;
-    /*color: #398A96;*/
-    background-color: #fff;
-    /*background-color: #398A96;*/
-    border-color: #ccc;
+    background-color: #fff; border-color: #ccc;
 }
 
 .btn-primary:hover,
@@ -135,10 +132,32 @@ a > .toplevel-view {
 .btn-primary.focus,
 .btn-primary:active,
 .btn-primary.active,
-.open > .dropdown-toggle.btn-default {
+.open > .dropdown-toggle.btn-primary {
     background-image: linear-gradient(to bottom, #398A96 0%, #317781 100%);
     background-color: #317781;
 }
+
+.btn-danger {
+    background-image: linear-gradient(to bottom, #d9534f 50%, #d43f3a 100%);
+}
+
+.btn-danger {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger.focus,
+.btn-danger:active,
+.btn-danger.active,
+.open > .dropdown-toggle.btn-danger {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #ac2925;
+}
+
 
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
