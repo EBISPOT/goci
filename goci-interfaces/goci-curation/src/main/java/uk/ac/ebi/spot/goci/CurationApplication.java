@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-//@EnableAsync
+@EnableAsync
 public class CurationApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(CurationApplication.class, args);
