@@ -1,9 +1,12 @@
 package uk.ac.ebi.spot.goci.curation.service.mail;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmail;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
@@ -34,6 +37,12 @@ public class MailService {
 
     private EmailMappingErrorsService emailMappingErrorsService;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @Autowired
     public MailService(JavaMailSender javaMailSender,
                        EmailMappingErrorsService emailMappingErrorsService) {
@@ -42,11 +51,14 @@ public class MailService {
     }
 
     /**
-     * Send notification to curators when a study status changes
+     * Send notification to curators when a study status changes,
+     * this method will be run in a new thread
      *
      * @param study  study details
      * @param status status of study
      */
+
+    @Async
     public void sendEmailNotification(Study study, String status) {
 
         CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
@@ -108,5 +120,6 @@ public class MailService {
         mailMessage.setSubject(email.getSubject());
         mailMessage.setText(email.getBody());
         javaMailSender.send(mailMessage);
+        getLog().info("Email sent");
     }
 }
