@@ -69,6 +69,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by emma on 20/11/14.
@@ -853,22 +854,26 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file,
+    public Callable<String> uploadStudyFile(@RequestParam("file") MultipartFile file,
                                   @PathVariable Long studyId,
                                   Model model,
                                   HttpServletRequest request)
             throws FileUploadException, IOException {
 
         model.addAttribute("study", studyRepository.findOne(studyId));
-        try {
-            studyFileService.upload(file, studyId);
-            studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
-            return "redirect:/studies/" + studyId + "/studyfiles";
-        }
-        catch (FileUploadException | IOException e) {
-            getLog().error("File upload exception", e);
-            return "error_pages/study_file_upload_failure";
-        }
+
+        // Return view
+        return () -> {
+            try {
+                studyFileService.upload(file, studyId);
+                studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
+                return "redirect:/studies/" + studyId + "/studyfiles";
+            }
+            catch (FileUploadException | IOException e) {
+                getLog().error("File upload exception", e);
+                return "error_pages/study_file_upload_failure";
+            }
+        };
     }
 
     @RequestMapping(value = "/{studyId}/tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
