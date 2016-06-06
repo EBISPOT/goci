@@ -296,6 +296,7 @@ public class StudyOperationsService {
                     housekeeping.setCatalogPublishDate(publishDate);
                 }
                 // Send notification email to curators
+                getLog().info("Sending email...");
                 mailService.sendEmailNotification(study, "Publish study");
 
                 // Save and create event
@@ -305,6 +306,7 @@ public class StudyOperationsService {
 
             case "Level 1 curation done":
                 // Send notification email to curators
+                getLog().info("Sending email...");
                 mailService.sendEmailNotification(study, "Level 1 curation done");
 
                 // Save and create event
