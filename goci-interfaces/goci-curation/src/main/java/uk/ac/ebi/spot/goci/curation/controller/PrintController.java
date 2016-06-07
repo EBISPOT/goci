@@ -79,7 +79,7 @@ public class PrintController {
                                                                         "replication"));
 
             model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
-            return "printview";
+            return "study_printview";
         };
     }
 }
