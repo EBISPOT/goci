@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
  * Created by emma on 08/06/2016.
  *
  * @author emma
+ *         <p>
+ *         Service to create weekly progress views
  */
 @Lazy
 @Service
