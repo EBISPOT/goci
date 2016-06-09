@@ -10,7 +10,7 @@ import java.util.Set;
  *         <p>
  *         Model class to represent weekly curation progress
  */
-public class WeeklyProgressView {
+public class ReportsWeeklyProgressView {
 
     private Date weekDate;
 
@@ -22,7 +22,7 @@ public class WeeklyProgressView {
 
     private Set<Long> studiesPublished;
 
-    public WeeklyProgressView(Date weekDate) {
+    public ReportsWeeklyProgressView(Date weekDate) {
         this.weekDate = weekDate;
     }
 
