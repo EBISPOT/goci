@@ -21,6 +21,15 @@
             charset="utf8"
             src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css"/>
+
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
 </head>
 <body>
 
@@ -43,15 +52,18 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="progressTable" class="table table-hover table-bordered"
-                   data-toggle="table">
+            <table id="progressTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th class="col-md-1" data-sortable="true">Week Start Date</th>
-                    <th class="col-md-1" data-sortable="true">Studies Created</th>
-                    <th class="col-md-2" data-sortable="true">Studies Level 1 Completed</th>
-                    <th class="col-md-2" data-sortable="true">Studies Level 2 Completed</th>
-                    <th class="col-md-2" data-sortable="true">Studies Published</th>
+                    <th>Week Start Date</th>
+                    <th>Created</th>
+                    <th>Created IDs</th>
+                    <th>Level 1 Completed</th>
+                    <th>Level 1 IDs</th>
+                    <th>Level 2 Completed</th>
+                    <th>Level 2 ID</th>
+                    <th>Published</th>
+                    <th>Published ID</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,9 +72,37 @@
                         2022-22-22
                     </td>
                     <td th:text="${#sets.size(view.studiesCreated)} ?: 'null'">1000</td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-info"
+                                th:each="study : ${view.studiesCreated}"
+                                th:text="${study}"></li>
+                        </ul>
+                    </td>
                     <td th:text="${#sets.size(view.studiesLevel1Completed)} ?: 'null'">1000</td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-info"
+                                th:each="study : ${view.studiesLevel1Completed}"
+                                th:text="${study}"></li>
+                        </ul>
+                    </td>
                     <td th:text="${#sets.size(view.studiesLevel2Completed)} ?: 'null'">1000</td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-info"
+                                th:each="study : ${view.studiesLevel2Completed}"
+                                th:text="${study}"></li>
+                        </ul>
+                    </td>
                     <td th:text="${#sets.size(view.studiesPublished)} ?: 'null'">1000</td>
+                    <td>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-info"
+                                th:each="study : ${view.studiesPublished}"
+                                th:text="${study}"></li>
+                        </ul>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -74,11 +114,27 @@
     $(document).ready(function() {
         var table = $('#progressTable').DataTable({
                                                       info: false,
-                                                      paging: false
+                                                      paging: false,
+                                                      dom: 'Bfrtip',
+                                                      buttons: [
+                                                          {
+                                                              extend: 'colvis',
+                                                              columns: ':gt(0)',
+                                                              postfixButtons: ['colvisRestore']
+                                                          }
+                                                      ],
+                                                      "columnDefs": [
+                                                          {"targets": 1},
+                                                          {"targets": 2, "visible": false},
+                                                          {"targets": 3},
+                                                          {"targets": 4, "visible": false},
+                                                          {"targets": 5},
+                                                          {"targets": 6, "visible": false},
+                                                          {"targets": 7},
+                                                          {"targets": 8, "visible": false}
+                                                      ]
                                                   });
     });
 </script>
-
-
 </body>
 </html>
