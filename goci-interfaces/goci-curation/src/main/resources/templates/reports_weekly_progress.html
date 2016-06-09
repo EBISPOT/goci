@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"
+            th:src="@{https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css"
+          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
+          rel="stylesheet"/>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
+            <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
+            <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
+            <li class="active"><a href="#">Weekly progress</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="mainTable" class="table table-hover table-bordered"
+                   data-toggle="table">
+                <thead>
+                <tr>
+                    <th class="col-md-1" data-sortable="true">Week Start Date</th>
+                    <th class="col-md-1" data-sortable="true">Studies Created</th>
+                    <th class="col-md-2" data-sortable="true">Studies Level 1 Completed</th>
+                    <th class="col-md-2" data-sortable="true">Studies Level 2 Completed</th>
+                    <th class="col-md-2" data-sortable="true">Studies Published</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="view: ${weeklyProgressViews}">
+                    <td th:text="${view.weekDate != null} ? ${#calendars.format(view.weekDate, 'dd MMMM yyyy')} : ''">2022-22-22</td>
+                    <td th:text="${#sets.size(view.studiesCreated)} ?: 'null'">1000</td>
+                    <td th:text="${#sets.size(view.studiesLevel1Completed)} ?: 'null'">1000</td>
+                    <td th:text="${#sets.size(view.studiesLevel2Completed)} ?: 'null'">1000</td>
+                    <td th:text="${#sets.size(view.studiesPublished)} ?: 'null'">1000</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
