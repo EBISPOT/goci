@@ -6,26 +6,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"
-            th:src="@{https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
-            th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
-            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
-
-    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
-          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
-          rel="stylesheet"/>
-
-    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css"
-          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
-          rel="stylesheet"/>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css"
-          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
-          rel="stylesheet"/>
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 
 </head>
 <body>
@@ -43,11 +37,13 @@
         </ul>
     </div>
 </div>
+<br/>
+<br/>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <table id="mainTable" class="table table-hover table-bordered"
+            <table id="progressTable" class="table table-hover table-bordered"
                    data-toggle="table">
                 <thead>
                 <tr>
@@ -60,7 +56,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="view: ${weeklyProgressViews}">
-                    <td th:text="${view.weekDate != null} ? ${#calendars.format(view.weekDate, 'dd MMMM yyyy')} : ''">2022-22-22</td>
+                    <td th:text="${view.weekDate != null} ? ${#calendars.format(view.weekDate, 'dd MMMM yyyy')} : ''">
+                        2022-22-22
+                    </td>
                     <td th:text="${#sets.size(view.studiesCreated)} ?: 'null'">1000</td>
                     <td th:text="${#sets.size(view.studiesLevel1Completed)} ?: 'null'">1000</td>
                     <td th:text="${#sets.size(view.studiesLevel2Completed)} ?: 'null'">1000</td>
@@ -71,5 +69,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        var table = $('#progressTable').DataTable({
+                                                      info: false,
+                                                      paging: false
+                                                  });
+    });
+</script>
+
+
 </body>
 </html>
