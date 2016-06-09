@@ -26,8 +26,6 @@ public class WeeklyProgressView {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
-    private Integer numberOfStudies;
-
     // JPA no-args constructor
     public WeeklyProgressView() {
     }
@@ -41,7 +39,6 @@ public class WeeklyProgressView {
         this.weekStartDate = weekStartDate;
         this.studyId = studyId;
         this.eventType = eventType;
-        this.numberOfStudies = numberOfStudies;
     }
 
     public Long getId() {
@@ -66,14 +63,6 @@ public class WeeklyProgressView {
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
-    }
-
-    public Integer getNumberOfStudies() {
-        return numberOfStudies;
-    }
-
-    public void setNumberOfStudies(Integer numberOfStudies) {
-        this.numberOfStudies = numberOfStudies;
     }
 
     public Long getStudyId() {
