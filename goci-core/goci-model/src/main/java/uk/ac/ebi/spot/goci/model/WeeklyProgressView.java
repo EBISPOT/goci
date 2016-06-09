@@ -19,7 +19,7 @@ public class WeeklyProgressView {
     @Id
     private Long id;
 
-    private Date weekStartDate;
+    private Date weekStartDay;
 
     private Long studyId;
 
@@ -31,12 +31,12 @@ public class WeeklyProgressView {
     }
 
     public WeeklyProgressView(Long id,
-                              Date weekStartDate,
+                              Date weekStartDay,
                               Long studyId,
                               EventType eventType,
                               Integer numberOfStudies) {
         this.id = id;
-        this.weekStartDate = weekStartDate;
+        this.weekStartDay = weekStartDay;
         this.studyId = studyId;
         this.eventType = eventType;
     }
@@ -49,12 +49,12 @@ public class WeeklyProgressView {
         this.id = id;
     }
 
-    public Date getWeekStartDate() {
-        return weekStartDate;
+    public Date getWeekStartDay() {
+        return weekStartDay;
     }
 
-    public void setWeekStartDate(Date weekStartDate) {
-        this.weekStartDate = weekStartDate;
+    public void setWeekStartDay(Date weekStartDay) {
+        this.weekStartDay = weekStartDay;
     }
 
     public EventType getEventType() {
