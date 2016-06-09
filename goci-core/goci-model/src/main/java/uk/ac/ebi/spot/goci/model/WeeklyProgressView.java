@@ -8,9 +8,10 @@ import java.util.Date;
 
 /**
  * Created by emma on 08/06/2016.
- * @author emma
  *
- *  Model of WEEKLY_PROGRESS_VIEW table
+ * @author emma
+ *         <p>
+ *         Model of WEEKLY_PROGRESS_VIEW table
  */
 @Entity
 public class WeeklyProgressView {
@@ -19,6 +20,8 @@ public class WeeklyProgressView {
     private Long id;
 
     private Date weekStartDate;
+
+    private Long studyId;
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
@@ -29,11 +32,16 @@ public class WeeklyProgressView {
     public WeeklyProgressView() {
     }
 
-    public WeeklyProgressView(Long id, Integer numberOfStudies, EventType eventType, Date weekStartDate) {
+    public WeeklyProgressView(Long id,
+                              Date weekStartDate,
+                              Long studyId,
+                              EventType eventType,
+                              Integer numberOfStudies) {
         this.id = id;
-        this.numberOfStudies = numberOfStudies;
-        this.eventType = eventType;
         this.weekStartDate = weekStartDate;
+        this.studyId = studyId;
+        this.eventType = eventType;
+        this.numberOfStudies = numberOfStudies;
     }
 
     public Long getId() {
@@ -66,5 +74,13 @@ public class WeeklyProgressView {
 
     public void setNumberOfStudies(Integer numberOfStudies) {
         this.numberOfStudies = numberOfStudies;
+    }
+
+    public Long getStudyId() {
+        return studyId;
+    }
+
+    public void setStudyId(Long studyId) {
+        this.studyId = studyId;
     }
 }
