@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +38,26 @@ import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
-import uk.ac.ebi.spot.goci.curation.service.batchloader.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -66,6 +67,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -99,6 +101,7 @@ public class AssociationController {
     private MappingService mappingService;
     private StudyFileService studyFileService;
     private CurrentUserDetailsService currentUserDetailsService;
+    private AssociationFileUploadService associationFileUploadService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -121,7 +124,8 @@ public class AssociationController {
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
                                  StudyFileService studyFileService,
-                                 CurrentUserDetailsService currentUserDetailsService) {
+                                 CurrentUserDetailsService currentUserDetailsService,
+                                 AssociationFileUploadService associationFileUploadService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -137,6 +141,7 @@ public class AssociationController {
         this.mappingService = mappingService;
         this.studyFileService = studyFileService;
         this.currentUserDetailsService = currentUserDetailsService;
+        this.associationFileUploadService = associationFileUploadService;
     }
 
     /*  Study SNP/Associations */
@@ -201,69 +206,55 @@ public class AssociationController {
 
         // Send file, including path, to SNP batch loader process
         File uploadedFile = studyFileService.getFileFromFileName(studyId, originalFilename);
-        String uploadedFilePath = uploadedFile.getAbsolutePath();
-        Collection<BatchUploadRow> fileRows = new ArrayList<>();
+
+        // TODO WHEN DO WE STORE EVENT
+        studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
         try {
-            fileRows = associationBatchLoaderService.processFile(uploadedFilePath, study);
+            ValidationSummary validationSummary =
+                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
+
+            // TODO: COULD VALIDATION SUMMARY BE NULL
+
+            // Check if we have any errors
+            long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
+                    .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
+                    .count();
+
+            long associationErrorCount = validationSummary.getAssociationSummaries().parallelStream()
+                    .filter(associationSummary -> !associationSummary.getErrors().isEmpty())
+                    .count();
+
+            // Errors found
+            if (rowErrorCount > 0) {
+                studyFileService.deleteFile(studyId, originalFilename);
+                getLog().error("Errors found in file: " + originalFilename);
+                // TODO NEED NEW VIEW
+                return "association_file_upload_error";
+            }
+            else {
+                if (associationErrorCount > 0) {
+                    studyFileService.deleteFile(studyId, originalFilename);
+                    getLog().error("Errors found in file: " + originalFilename);
+                    // TODO NEED NEW VIEW
+                    return "association_file_upload_error";
+                }
+                else {
+                    // TODO SAVE AND MAP
+                    List<Association> associationsToSave = validationSummary.getAssociationSummaries().stream().map(
+                            AssociationSummary::getAssociation)
+                            .collect(Collectors.toList());
+
+                    // TODO CREATE SERVICE TO SAVE AND MAP
+
+                }
+            }
         }
-        catch (InvalidOperationException | InvalidFormatException | IOException e) {
-            // If upload fails delete file
-            studyFileService.deleteFile(studyId, originalFilename);
-            getLog().error("Wrong file format ", e);
-            return "wrong_file_format_warning";
-        }
-        catch (RuntimeException e) {
+        // TODO IS THIS CORRECT RESPONSE
+        catch (FileNotFoundException e) {
             // If upload fails delete file
             studyFileService.deleteFile(studyId, originalFilename);
             getLog().error("Data upload failed ", e);
             return "data_upload_problem";
-        }
-
-        // If the file contained something readable
-        if (!fileRows.isEmpty()) {
-            Collection<BatchUploadError> fileErrors =
-                    associationBatchLoaderService.checkUploadForErrors(fileRows);
-
-            if (!fileErrors.isEmpty()) {
-                // If upload fails delete file
-                studyFileService.deleteFile(studyId, originalFilename);
-                getLog().error("Errors found in file: " + originalFilename);
-                model.addAttribute("fileName", originalFilename);
-                model.addAttribute("fileErrors", fileErrors);
-                return "association_file_upload_error";
-            }
-            else {
-
-                // Create associations from rows
-                Collection<Association> newAssociations =
-                        associationBatchLoaderService.processFileRows(fileRows);
-
-                // Save and map associations
-                if (!newAssociations.isEmpty()) {
-                    associationBatchLoaderService.saveAssociations(newAssociations, study);
-                    studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
-
-                    Curator curator = study.getHousekeeping().getCurator();
-                    String mappedBy = curator.getLastName();
-                    try {
-                        mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
-                    }
-                    catch (EnsemblMappingException e) {
-                        model.addAttribute("study", study);
-                        return "ensembl_mapping_failure";
-                    }
-                }
-                else {
-                    // If upload fails delete file
-                    studyFileService.deleteFile(studyId, originalFilename);
-                    getLog().error("No associations created from " + originalFilename);
-                }
-            }
-        }
-        else {
-            // If upload fails delete file
-            studyFileService.deleteFile(studyId, originalFilename);
-            getLog().error("File: " + uploadedFilePath + " contained no readable rows.");
         }
 
         return "redirect:/studies/" + studyId + "/associations";
