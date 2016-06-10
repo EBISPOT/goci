@@ -5,7 +5,7 @@ package uk.ac.ebi.spot.goci.utils;
  *
  * @author emma
  *         <p>
- *         Enum class to hold possible file headings Based on speci for author submission spreadsheet
+ *         Enum class to hold possible file headings
  */
 public enum UploadFileHeader {
     SNP_ID,
@@ -25,5 +25,14 @@ public enum UploadFileHeader {
     BETA_DIRECTION,
     STANDARD_ERROR,
     RANGE,
+    PROXY_SNP,
+    OR_RECIPROCAL,
+    OR_RECIPROCAL_RANGE,
+    DESCRIPTION,
+    MULTI_SNP_HAPLOTYPE,
+    SNP_INTERACTION,
+    SNP_STATUS,
+    SNP_TYPE,
+    EFO_TRAITS,
     UNKNOWN
 }
