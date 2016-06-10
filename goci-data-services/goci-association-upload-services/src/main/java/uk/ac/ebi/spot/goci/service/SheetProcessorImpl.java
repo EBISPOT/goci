@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Service
 @Lazy
-public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
+public class SheetProcessorImpl implements UploadSheetProcessor {
 
     private TranslateUploadHeaders translateUploadHeaders;
 
@@ -39,7 +39,7 @@ public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
     }
 
     @Autowired
-    public AuthorSheetProcessorImpl(TranslateUploadHeaders translateUploadHeaders) {
+    public SheetProcessorImpl(TranslateUploadHeaders translateUploadHeaders) {
         this.translateUploadHeaders = translateUploadHeaders;
     }
 
@@ -70,6 +70,11 @@ public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
                 }
                 else {
                     switch (headerName) {
+                        case GENES:
+                            associationUploadRow.setAuthorReportedGene(cell.getRichStringCellValue()
+                                                                               .getString()
+                                                                               .trim());
+                            break;
                         case SNP_ID:
                             associationUploadRow.setSnp(cell.getRichStringCellValue()
                                                                 .getString()
@@ -85,6 +90,11 @@ public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
                                                                         .getString()
                                                                         .trim());
                             break;
+                        case PROXY_SNP:
+                            associationUploadRow.setProxy(cell.getRichStringCellValue()
+                                                                  .getString()
+                                                                  .trim());
+                            break;
                         case EFFECT_ALLELE_FREQUENCY_IN_CONTROLS:
                             associationUploadRow.setAssociationRiskFrequency(SheetCellProcessingService.processStringValue(
                                     cell));
@@ -95,8 +105,16 @@ public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
                         case PVALUE_EXPONENT:
                             associationUploadRow.setPvalueExponent(SheetCellProcessingService.processIntValues(cell));
                             break;
+                        case PVALUE_DESCRIPTION:
+                            associationUploadRow.setPvalueDescription(cell.getRichStringCellValue()
+                                                                              .getString()
+                                                                              .trim());
+                            break;
                         case OR:
                             associationUploadRow.setOrPerCopyNum(SheetCellProcessingService.processFloatValues(cell));
+                            break;
+                        case OR_RECIPROCAL:
+                            associationUploadRow.setOrPerCopyRecip(SheetCellProcessingService.processFloatValues(cell));
                             break;
                         case BETA:
                             associationUploadRow.setBetaNum(SheetCellProcessingService.processFloatValues(cell));
@@ -111,18 +129,49 @@ public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
                                                                           .getString()
                                                                           .trim());
                             break;
-                        case STANDARD_ERROR:
-                            associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(cell));
-                            break;
                         case RANGE:
                             associationUploadRow.setRange(cell.getRichStringCellValue()
                                                                   .getString()
                                                                   .trim());
                             break;
-                        case PVALUE_DESCRIPTION:
-                            associationUploadRow.setPvalueDescription(cell.getRichStringCellValue()
+                        case OR_RECIPROCAL_RANGE:
+                            associationUploadRow.setOrPerCopyRecipRange(cell.getRichStringCellValue()
+                                                                                .getString()
+                                                                                .trim());
+                            break;
+                        case STANDARD_ERROR:
+                            associationUploadRow.setStandardError(SheetCellProcessingService.processFloatValues(cell));
+                            break;
+
+                        case DESCRIPTION:
+                            associationUploadRow.setDescription(cell.getRichStringCellValue()
+                                                                        .getString()
+                                                                        .trim());
+                            break;
+                        case MULTI_SNP_HAPLOTYPE:
+                            associationUploadRow.setMultiSnpHaplotype(cell.getRichStringCellValue()
                                                                               .getString()
                                                                               .trim());
+                            break;
+                        case SNP_INTERACTION:
+                            associationUploadRow.setSnpInteraction(cell.getRichStringCellValue()
+                                                                           .getString()
+                                                                           .trim());
+                            break;
+                        case SNP_STATUS:
+                            associationUploadRow.setSnpStatus(cell.getRichStringCellValue()
+                                                                      .getString()
+                                                                      .trim());
+                            break;
+                        case SNP_TYPE:
+                            associationUploadRow.setSnpType(cell.getRichStringCellValue()
+                                                                    .getString()
+                                                                    .trim());
+                            break;
+                        case EFO_TRAITS:
+                            associationUploadRow.setEfoTrait(cell.getRichStringCellValue()
+                                                                     .getString()
+                                                                     .trim());
                             break;
                         default:
                             getLog().warn("Column with unknown heading found in file.");

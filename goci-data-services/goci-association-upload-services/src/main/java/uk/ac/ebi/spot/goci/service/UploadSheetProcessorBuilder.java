@@ -29,15 +29,15 @@ public class UploadSheetProcessorBuilder {
         switch (validationLevel) {
             case "full":
                 translateUploadHeaders = new TranslateCuratorUploadHeaders();
-                uploadSheetProcessor = new CuratorSheetProcessorImpl(translateUploadHeaders);
+                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
                 break;
             case "author":
                 translateUploadHeaders = new TranslateAuthorUploadHeaders();
-                uploadSheetProcessor = new AuthorSheetProcessorImpl(translateUploadHeaders);
+                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
                 break;
             default:
                 translateUploadHeaders = new TranslateCuratorUploadHeaders();
-                uploadSheetProcessor = new CuratorSheetProcessorImpl(translateUploadHeaders);
+                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
                 break;
         }
         return uploadSheetProcessor;

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
  *         Test SheetProcessor class
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AuthorSheetProcessorImplTest {
+public class SheetProcessorImplTest {
 
     private UploadSheetProcessor uploadSheetProcessor;
 
@@ -38,7 +38,7 @@ public class AuthorSheetProcessorImplTest {
 
     @Before
     public void setUp() throws Exception {
-        uploadSheetProcessor = new AuthorSheetProcessorImpl(translateAuthorUploadHeaders);
+        uploadSheetProcessor = new SheetProcessorImpl(translateAuthorUploadHeaders);
 
         // Create spreadsheet for testing
         XSSFWorkbook workbook = new XSSFWorkbook();
