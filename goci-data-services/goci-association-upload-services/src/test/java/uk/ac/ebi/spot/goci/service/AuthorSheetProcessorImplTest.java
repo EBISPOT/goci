@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
-import uk.ac.ebi.spot.goci.utils.TranslateUploadHeaders;
+import uk.ac.ebi.spot.goci.utils.TranslateAuthorUploadHeaders;
 import uk.ac.ebi.spot.goci.utils.UploadFileHeader;
 
 import java.util.Collection;
@@ -27,18 +27,18 @@ import static org.mockito.Mockito.when;
  *         Test SheetProcessor class
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SheetProcessorImplTest {
+public class AuthorSheetProcessorImplTest {
 
     private UploadSheetProcessor uploadSheetProcessor;
 
     private XSSFSheet sheet;
 
     @Mock
-    private TranslateUploadHeaders translateUploadHeaders;
+    private TranslateAuthorUploadHeaders translateAuthorUploadHeaders;
 
     @Before
     public void setUp() throws Exception {
-        uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
+        uploadSheetProcessor = new AuthorSheetProcessorImpl(translateAuthorUploadHeaders);
 
         // Create spreadsheet for testing
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -82,27 +82,27 @@ public class SheetProcessorImplTest {
         row2.createCell(14).setCellValue("[1.22-1.43]"); // Range
         row2.createCell(15).setCellValue("This is a description"); // Description
 
-        when(translateUploadHeaders.translateToEnumValue("SNP ID (ideally rsID) (see below) (mandatory)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("SNP ID (ideally rsID) (see below) (mandatory)")).thenReturn(
                 UploadFileHeader.SNP_ID);
-        when(translateUploadHeaders.translateToEnumValue("Chr(Optional)")).thenReturn(UploadFileHeader.CHR);
-        when(translateUploadHeaders.translateToEnumValue("Bp(Optional)")).thenReturn(UploadFileHeader.BP);
-        when(translateUploadHeaders.translateToEnumValue("Genome Build(Optional)")).thenReturn(UploadFileHeader.GENOME_BUILD);
-        when(translateUploadHeaders.translateToEnumValue("Effect Allele(Optional)")).thenReturn(UploadFileHeader.EFFECT_ALLELE);
-        when(translateUploadHeaders.translateToEnumValue("Other Alleles(Optional)")).thenReturn(UploadFileHeader.OTHER_ALLELES);
-        when(translateUploadHeaders.translateToEnumValue("Effect Allele Frequency in Controls(Optional)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("Chr(Optional)")).thenReturn(UploadFileHeader.CHR);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Bp(Optional)")).thenReturn(UploadFileHeader.BP);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Genome Build(Optional)")).thenReturn(UploadFileHeader.GENOME_BUILD);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Effect Allele(Optional)")).thenReturn(UploadFileHeader.EFFECT_ALLELE);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Other Alleles(Optional)")).thenReturn(UploadFileHeader.OTHER_ALLELES);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Effect Allele Frequency in Controls(Optional)")).thenReturn(
                 UploadFileHeader.EFFECT_ALLELE_FREQUENCY_IN_CONTROLS);
-        when(translateUploadHeaders.translateToEnumValue("p-value mantissa(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_MANTISSA);
-        when(translateUploadHeaders.translateToEnumValue("p-value exponent(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_EXPONENT);
-        when(translateUploadHeaders.translateToEnumValue("OR(Optional)")).thenReturn(UploadFileHeader.OR);
-        when(translateUploadHeaders.translateToEnumValue("Beta(Optional)")).thenReturn(UploadFileHeader.BETA);
-        when(translateUploadHeaders.translateToEnumValue("Beta Unit(mandatory if beta is entered)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("p-value mantissa(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_MANTISSA);
+        when(translateAuthorUploadHeaders.translateToEnumValue("p-value exponent(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_EXPONENT);
+        when(translateAuthorUploadHeaders.translateToEnumValue("OR(Optional)")).thenReturn(UploadFileHeader.OR);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Beta(Optional)")).thenReturn(UploadFileHeader.BETA);
+        when(translateAuthorUploadHeaders.translateToEnumValue("Beta Unit(mandatory if beta is entered)")).thenReturn(
                 UploadFileHeader.BETA_UNIT);
-        when(translateUploadHeaders.translateToEnumValue("Beta Direction(mandatory if beta is entered)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("Beta Direction(mandatory if beta is entered)")).thenReturn(
                 UploadFileHeader.BETA_DIRECTION);
-        when(translateUploadHeaders.translateToEnumValue("OR/Beta SE(Optional)")).thenReturn(UploadFileHeader.STANDARD_ERROR);
-        when(translateUploadHeaders.translateToEnumValue("OR/Beta Range(95% confidence intervals)(Optional)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("OR/Beta SE(Optional)")).thenReturn(UploadFileHeader.STANDARD_ERROR);
+        when(translateAuthorUploadHeaders.translateToEnumValue("OR/Beta Range(95% confidence intervals)(Optional)")).thenReturn(
                 UploadFileHeader.RANGE);
-        when(translateUploadHeaders.translateToEnumValue("Association Description(Optional)")).thenReturn(
+        when(translateAuthorUploadHeaders.translateToEnumValue("Association Description(Optional)")).thenReturn(
                 UploadFileHeader.PVALUE_DESCRIPTION);
     }
 

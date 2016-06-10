@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Service
 @Lazy
-public class SheetProcessorImpl implements UploadSheetProcessor {
+public class AuthorSheetProcessorImpl implements UploadSheetProcessor {
 
     private TranslateUploadHeaders translateUploadHeaders;
 
@@ -39,7 +39,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
     }
 
     @Autowired
-    public SheetProcessorImpl(TranslateUploadHeaders translateUploadHeaders) {
+    public AuthorSheetProcessorImpl(TranslateUploadHeaders translateUploadHeaders) {
         this.translateUploadHeaders = translateUploadHeaders;
     }
 
@@ -121,8 +121,8 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                             break;
                         case PVALUE_DESCRIPTION:
                             associationUploadRow.setPvalueDescription(cell.getRichStringCellValue()
-                                                                  .getString()
-                                                                  .trim());
+                                                                              .getString()
+                                                                              .trim());
                             break;
                         default:
                             getLog().warn("Column with unknown heading found in file.");

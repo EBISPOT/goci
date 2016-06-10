@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.utils.TranslateAuthorUploadHeaders;
+import uk.ac.ebi.spot.goci.utils.TranslateCuratorUploadHeaders;
 import uk.ac.ebi.spot.goci.utils.TranslateUploadHeaders;
 
 /**
@@ -22,19 +24,20 @@ public class UploadSheetProcessorBuilder {
     public UploadSheetProcessor buildProcessor(String validationLevel) {
 
         UploadSheetProcessor uploadSheetProcessor;
-
-        // TODO COULD POTENTIALLY HAVE DIFFERENT TRANSALTE HEADER METHODS SET HERE
-        TranslateUploadHeaders translateUploadHeaders = new TranslateUploadHeaders();
+        TranslateUploadHeaders translateUploadHeaders;
 
         switch (validationLevel) {
             case "full":
-                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
+                translateUploadHeaders = new TranslateCuratorUploadHeaders();
+                uploadSheetProcessor = new CuratorSheetProcessorImpl(translateUploadHeaders);
                 break;
             case "author":
-                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
+                translateUploadHeaders = new TranslateAuthorUploadHeaders();
+                uploadSheetProcessor = new AuthorSheetProcessorImpl(translateUploadHeaders);
                 break;
             default:
-                uploadSheetProcessor = new SheetProcessorImpl(translateUploadHeaders);
+                translateUploadHeaders = new TranslateCuratorUploadHeaders();
+                uploadSheetProcessor = new CuratorSheetProcessorImpl(translateUploadHeaders);
                 break;
         }
         return uploadSheetProcessor;
