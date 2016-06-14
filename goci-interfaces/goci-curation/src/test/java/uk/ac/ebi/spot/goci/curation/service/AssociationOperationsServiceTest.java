@@ -10,6 +10,8 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
 import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.service.MappingService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,10 +47,16 @@ public class AssociationOperationsServiceTest {
     private AssociationReportRepository associationReportRepository;
 
     @Mock
+    private AssociationRepository associationRepository;
+
+    @Mock
     private SnpFormRowValidator snpFormRowValidator;
 
     @Mock
     private SnpFormColumnValidator snpFormColumnValidator;
+
+    @Mock
+    private MappingService mappingService;
 
     @Before
     public void setUpMock() {
@@ -56,7 +64,9 @@ public class AssociationOperationsServiceTest {
                                                                         snpInteractionAssociationService,
                                                                         associationReportRepository,
                                                                         snpFormRowValidator,
-                                                                        snpFormColumnValidator);
+                                                                        associationRepository,
+                                                                        snpFormColumnValidator,
+                                                                        mappingService);
     }
 
     @Test
