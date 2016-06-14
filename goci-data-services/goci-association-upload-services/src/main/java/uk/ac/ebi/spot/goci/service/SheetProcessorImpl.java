@@ -99,6 +99,10 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                             associationUploadRow.setAssociationRiskFrequency(SheetCellProcessingService.processStringValue(
                                     cell));
                             break;
+                        case INDEPENDENT_SNP_EFFECT_ALLELE_FREQUENCY_IN_CONTROLS:
+                            associationUploadRow.setRiskFrequency(SheetCellProcessingService.processStringValue(
+                                    cell));
+                            break;
                         case PVALUE_MANTISSA:
                             associationUploadRow.setPvalueMantissa(SheetCellProcessingService.processIntValues(cell));
                             break;
