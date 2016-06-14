@@ -53,10 +53,10 @@ public class TranslateCuratorUploadHeaders implements TranslateUploadHeaders {
         else if (value.equals("Beta")) {
             enumValue = UploadFileHeader.BETA;
         }
-        else if (value.equals("Beta Unit")) {
+        else if (value.equals("Beta unit")) {
             enumValue = UploadFileHeader.BETA_UNIT;
         }
-        else if (value.equals("Beta Direction")) {
+        else if (value.equals("Beta direction")) {
             enumValue = UploadFileHeader.BETA_DIRECTION;
         }
         else if (value.equals("Range")) {
