@@ -12,14 +12,12 @@
 </head>
 <body>
 <div class="container">
-    <div class="row" th:object="${study}">
+    <div class="row">
         <h2>Error:</h2>
 
         <p class="col-md-10 lead text-left">There is a mistake in the data you are trying to upload. Please double check
                                             your file.</p>
 
-        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP
-                                                                                               associations</a>
     </div>
 </div>
 </body>
