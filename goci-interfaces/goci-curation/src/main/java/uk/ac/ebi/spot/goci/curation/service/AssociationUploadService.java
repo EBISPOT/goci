@@ -64,9 +64,6 @@ public class AssociationUploadService {
 
             // Send file, including path, to SNP batch loader process
             File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
-            studyFileService.createFileUploadEvent(study.getId(),
-                                                   currentUserDetailsService.getUserFromRequest(request));
-
             ValidationSummary validationSummary = null;
             validationSummary =
                     associationFileUploadService.processAssociationFile(uploadedFile, "full");
