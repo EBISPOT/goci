@@ -67,6 +67,31 @@ public class MappingService {
         this.ensemblMappingPipeline = ensemblMappingPipeline;
     }
 
+
+    /**
+     * Perform validation and mapping of association
+     *
+     * @param association Association to map
+     * @param performer   name of curator/job carrying out the mapping
+     */
+    @Transactional(rollbackFor = EnsemblMappingException.class)
+    public void validateAndMapAssociation(Association association, String performer)
+            throws EnsemblMappingException {
+
+        try {
+            doMapping(association);
+
+            // Once mapping is complete, update mapping record
+            getLog().debug("Update mapping record");
+            mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map supplied association failed", e);
+        }
+    }
+
+
     /**
      * Perform validation and mapping of supplied associations
      *
