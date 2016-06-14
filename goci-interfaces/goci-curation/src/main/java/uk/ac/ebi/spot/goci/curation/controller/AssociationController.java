@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
-import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -31,6 +30,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
@@ -39,8 +39,8 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
@@ -56,8 +56,6 @@ import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,7 +65,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -102,6 +99,7 @@ public class AssociationController {
     private StudyFileService studyFileService;
     private CurrentUserDetailsService currentUserDetailsService;
     private AssociationFileUploadService associationFileUploadService;
+    private AssociationUploadService associationUploadService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -125,7 +123,8 @@ public class AssociationController {
                                  MappingService mappingService,
                                  StudyFileService studyFileService,
                                  CurrentUserDetailsService currentUserDetailsService,
-                                 AssociationFileUploadService associationFileUploadService) {
+                                 AssociationFileUploadService associationFileUploadService,
+                                 AssociationUploadService associationUploadService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -142,6 +141,7 @@ public class AssociationController {
         this.studyFileService = studyFileService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.associationFileUploadService = associationFileUploadService;
+        this.associationUploadService = associationUploadService;
     }
 
     /*  Study SNP/Associations */
@@ -189,73 +189,18 @@ public class AssociationController {
     public String uploadStudySnps(@RequestParam("file") MultipartFile file,
                                   @PathVariable Long studyId,
                                   Model model,
-                                  HttpServletRequest request)
-            throws EnsemblMappingException {
+                                  HttpServletRequest request) {
 
         // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", studyRepository.findOne(studyId));
-        String originalFilename = file.getOriginalFilename();
-        try {
-            studyFileService.upload(file, studyId);
+
+        ValidationSummary validationSummary = null;
+        validationSummary = associationUploadService.upload(file, study, request);
+
+        if (validationSummary != null) {
+            // TODO ADD ERROR VIEW
         }
-        catch (FileUploadException | IOException e) {
-            getLog().error("File upload exception", e);
-            return "error_pages/study_file_upload_failure";
-        }
-
-        // Send file, including path, to SNP batch loader process
-        File uploadedFile = studyFileService.getFileFromFileName(studyId, originalFilename);
-
-        // TODO WHEN DO WE STORE EVENT
-        studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
-        try {
-            ValidationSummary validationSummary =
-                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
-
-            // TODO: COULD VALIDATION SUMMARY BE NULL
-
-            // Check if we have any errors
-            long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
-                    .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
-                    .count();
-
-            long associationErrorCount = validationSummary.getAssociationSummaries().parallelStream()
-                    .filter(associationSummary -> !associationSummary.getErrors().isEmpty())
-                    .count();
-
-            // Errors found
-            if (rowErrorCount > 0) {
-                studyFileService.deleteFile(studyId, originalFilename);
-                getLog().error("Errors found in file: " + originalFilename);
-                // TODO NEED NEW VIEW
-                return "association_file_upload_error";
-            }
-            else {
-                if (associationErrorCount > 0) {
-                    studyFileService.deleteFile(studyId, originalFilename);
-                    getLog().error("Errors found in file: " + originalFilename);
-                    // TODO NEED NEW VIEW
-                    return "association_file_upload_error";
-                }
-                else {
-                    // TODO SAVE AND MAP
-                    List<Association> associationsToSave = validationSummary.getAssociationSummaries().stream().map(
-                            AssociationSummary::getAssociation)
-                            .collect(Collectors.toList());
-                    associationOperationsService.saveAndMapAssociationsFromUpload(associationsToSave, study, request);
-
-                }
-            }
-        }
-        // TODO IS THIS CORRECT RESPONSE
-        catch (FileNotFoundException e) {
-            // If upload fails delete file
-            studyFileService.deleteFile(studyId, originalFilename);
-            getLog().error("Data upload failed ", e);
-            return "data_upload_problem";
-        }
-
         return "redirect:/studies/" + studyId + "/associations";
     }
 
@@ -1252,9 +1197,15 @@ public class AssociationController {
 
     /* Exception handling */
     @ExceptionHandler(DataIntegrityException.class)
-    public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
+    public String handleDataIntegrityException(DataIntegrityException dataIntegrityException) {
         return dataIntegrityException.getMessage();
     }
+
+    @ExceptionHandler({SheetProcessingException.class})
+    public String handleInvalidFormatExceptionAndInvalidOperationException() {
+        return "error_pages/wrong_file_format_warning";
+    }
+
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
