@@ -24,10 +24,16 @@ public class TranslateCuratorUploadHeaders implements TranslateUploadHeaders {
             enumValue = UploadFileHeader.EFFECT_ALLELE;
         }
         else if (value.equals("SNP")) {
-            enumValue = UploadFileHeader.SNP_ID;
+            enumValue = UploadFileHeader.SNP;
         }
         else if (value.equals("Proxy SNP")) {
             enumValue = UploadFileHeader.PROXY_SNP;
+        }
+        else if (value.equals("Independent SNP risk allele frequency in controls")) {
+            enumValue = UploadFileHeader.INDEPENDENT_SNP_EFFECT_ALLELE_FREQUENCY_IN_CONTROLS;
+        }
+        else if (value.equals("Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls")) {
+            enumValue = UploadFileHeader.EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS;
         }
         else if (value.equals("P-value mantissa")) {
             enumValue = UploadFileHeader.PVALUE_MANTISSA;

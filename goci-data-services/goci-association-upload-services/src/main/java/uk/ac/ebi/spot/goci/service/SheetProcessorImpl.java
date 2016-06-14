@@ -75,7 +75,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                                                                .getString()
                                                                                .trim());
                             break;
-                        case SNP_ID:
+                        case SNP:
                             associationUploadRow.setSnp(cell.getRichStringCellValue()
                                                                 .getString()
                                                                 .trim());
@@ -95,7 +95,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                                                   .getString()
                                                                   .trim());
                             break;
-                        case EFFECT_ALLELE_FREQUENCY_IN_CONTROLS:
+                        case EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS:
                             associationUploadRow.setAssociationRiskFrequency(SheetCellProcessingService.processStringValue(
                                     cell));
                             break;

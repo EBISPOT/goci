@@ -8,13 +8,16 @@ package uk.ac.ebi.spot.goci.utils;
  *         Enum class to hold possible file headings
  */
 public enum UploadFileHeader {
-    SNP_ID,
+    SNP,
     CHR,
     BP,
     GENOME_BUILD,
     EFFECT_ALLELE,
     OTHER_ALLELES,
-    EFFECT_ALLELE_FREQUENCY_IN_CONTROLS,
+    // Curator spreadsheet = Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls
+    EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS,
+    // Curator spreadsheet = Independent SNP risk allele frequency in controls
+    INDEPENDENT_SNP_EFFECT_ALLELE_FREQUENCY_IN_CONTROLS,
     GENES,
     PVALUE_MANTISSA,
     PVALUE_EXPONENT,

@@ -83,14 +83,14 @@ public class SheetProcessorImplTest {
         row2.createCell(15).setCellValue("This is a description"); // Description
 
         when(translateAuthorUploadHeaders.translateToEnumValue("SNP ID (ideally rsID) (see below) (mandatory)")).thenReturn(
-                UploadFileHeader.SNP_ID);
+                UploadFileHeader.SNP);
         when(translateAuthorUploadHeaders.translateToEnumValue("Chr(Optional)")).thenReturn(UploadFileHeader.CHR);
         when(translateAuthorUploadHeaders.translateToEnumValue("Bp(Optional)")).thenReturn(UploadFileHeader.BP);
         when(translateAuthorUploadHeaders.translateToEnumValue("Genome Build(Optional)")).thenReturn(UploadFileHeader.GENOME_BUILD);
         when(translateAuthorUploadHeaders.translateToEnumValue("Effect Allele(Optional)")).thenReturn(UploadFileHeader.EFFECT_ALLELE);
         when(translateAuthorUploadHeaders.translateToEnumValue("Other Alleles(Optional)")).thenReturn(UploadFileHeader.OTHER_ALLELES);
         when(translateAuthorUploadHeaders.translateToEnumValue("Effect Allele Frequency in Controls(Optional)")).thenReturn(
-                UploadFileHeader.EFFECT_ALLELE_FREQUENCY_IN_CONTROLS);
+                UploadFileHeader.EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS);
         when(translateAuthorUploadHeaders.translateToEnumValue("p-value mantissa(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_MANTISSA);
         when(translateAuthorUploadHeaders.translateToEnumValue("p-value exponent(Mandatory)")).thenReturn(UploadFileHeader.PVALUE_EXPONENT);
         when(translateAuthorUploadHeaders.translateToEnumValue("OR(Optional)")).thenReturn(UploadFileHeader.OR);
@@ -157,13 +157,13 @@ public class SheetProcessorImplTest {
 
         Map<Integer, UploadFileHeader> headerRowMap = uploadSheetProcessor.createHeaderMap(sheet.getRow(0));
         assertThat(headerRowMap).isNotEmpty().hasSize(16);
-        assertThat(headerRowMap).containsValues(UploadFileHeader.SNP_ID,
+        assertThat(headerRowMap).containsValues(UploadFileHeader.SNP,
                                                 UploadFileHeader.CHR,
                                                 UploadFileHeader.BP,
                                                 UploadFileHeader.GENOME_BUILD,
                                                 UploadFileHeader.EFFECT_ALLELE,
                                                 UploadFileHeader.OTHER_ALLELES,
-                                                UploadFileHeader.EFFECT_ALLELE_FREQUENCY_IN_CONTROLS,
+                                                UploadFileHeader.EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS,
                                                 UploadFileHeader.PVALUE_MANTISSA,
                                                 UploadFileHeader.PVALUE_EXPONENT,
                                                 UploadFileHeader.OR,

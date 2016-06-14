@@ -20,7 +20,7 @@ public class TranslateAuthorUploadHeaders implements TranslateUploadHeaders {
         UploadFileHeader enumValue;
 
         if (value.equals("snp id(ideally rsid)(mandatory)")) {
-            enumValue = UploadFileHeader.SNP_ID;
+            enumValue = UploadFileHeader.SNP;
         }
         else if (value.equals("chr(optional)")) {
             enumValue = UploadFileHeader.CHR;
@@ -38,7 +38,7 @@ public class TranslateAuthorUploadHeaders implements TranslateUploadHeaders {
             enumValue = UploadFileHeader.OTHER_ALLELES;
         }
         else if (value.startsWith("effect allele frequency")) {
-            enumValue = UploadFileHeader.EFFECT_ALLELE_FREQUENCY_IN_CONTROLS;
+            enumValue = UploadFileHeader.EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS;
         }
         else if (value.equals("p-value mantissa(mandatory)")) {
             enumValue = UploadFileHeader.PVALUE_MANTISSA;
