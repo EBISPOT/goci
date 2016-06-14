@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -1202,6 +1203,11 @@ public class AssociationController {
     @ExceptionHandler({IOException.class})
     public String handleIOException() {
         return "error_pages/data_upload_problem";
+    }
+
+    @ExceptionHandler({FileUploadException.class})
+    public String handleFileUploadException() {
+        return "error_pages/empty_snpfile_upload_warning";
     }
 
     /* Model Attributes :
