@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.model.RowValidationSummary;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
@@ -52,9 +54,10 @@ public class AssociationUploadService {
         this.associationOperationsService = associationOperationsService;
     }
 
-    public ValidationSummary upload(MultipartFile file, Study study, HttpServletRequest request)
+    public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, HttpServletRequest request)
             throws IOException, EnsemblMappingException {
 
+        List<AssociationUploadErrorView> fileErrors = new ArrayList<>();
         String originalFilename = file.getOriginalFilename();
         getLog().info("Uploading file: ".concat(originalFilename));
 
@@ -79,6 +82,9 @@ public class AssociationUploadService {
                 if (rowErrorCount > 0) {
                     studyFileService.deleteFile(study.getId(), originalFilename);
                     getLog().error("Errors found in file: " + originalFilename);
+                    validationSummary.getRowValidationSummaries().forEach(
+                            rowValidationSummary -> fileErrors.addAll(processRowError(rowValidationSummary))
+                    );
                 }
                 else {
 
@@ -89,6 +95,9 @@ public class AssociationUploadService {
                     if (associationErrorCount > 0) {
                         studyFileService.deleteFile(study.getId(), originalFilename);
                         getLog().error("Errors found in file: " + originalFilename);
+                        validationSummary.getAssociationSummaries().forEach(
+                                associationSummary -> fileErrors.addAll(processAssociationError(associationSummary))
+                        );
                     }
                     else {
                         associationsToSave = validationSummary.getAssociationSummaries().stream().map(
@@ -106,7 +115,7 @@ public class AssociationUploadService {
                 }
             }
 
-            return validationSummary;
+            return fileErrors;
         }
         catch (IOException e) {
             throw new IOException(e);
@@ -115,5 +124,38 @@ public class AssociationUploadService {
 
     private void uploadFile(MultipartFile file, Long studyId) throws IOException {
         studyFileService.upload(file, studyId);
+    }
+
+    private List<AssociationUploadErrorView> processRowError(RowValidationSummary rowValidationSummary) {
+
+        List<AssociationUploadErrorView> errors = new ArrayList<>();
+        rowValidationSummary.getErrors().forEach(validationError -> {
+                                                     AssociationUploadErrorView associationUploadErrorView =
+                                                             new AssociationUploadErrorView(rowValidationSummary.getRow().getRowNumber(),
+                                                                                            validationError.getField(),
+                                                                                            validationError.getError());
+
+                                                     errors.add(associationUploadErrorView);
+                                                 }
+
+
+        );
+        return errors;
+    }
+
+    private List<AssociationUploadErrorView> processAssociationError(AssociationSummary associationSummary) {
+
+        List<AssociationUploadErrorView> errors = new ArrayList<>();
+        associationSummary.getErrors().forEach(validationError -> {
+                                                   AssociationUploadErrorView associationUploadErrorView =
+                                                           new AssociationUploadErrorView(associationSummary.getRowNumber(),
+                                                                                          validationError.getField(),
+                                                                                          validationError.getError());
+                                                   errors.add(associationUploadErrorView);
+                                               }
+
+
+        );
+        return errors;
     }
 }

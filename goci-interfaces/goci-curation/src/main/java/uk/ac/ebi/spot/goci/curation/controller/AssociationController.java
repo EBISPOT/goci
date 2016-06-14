@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
+import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -45,7 +46,6 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -184,16 +184,19 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        ValidationSummary validationSummary = null;
+        List<AssociationUploadErrorView> fileErrors = null;
         try {
-            validationSummary = associationUploadService.upload(file, study, request);
+            fileErrors = associationUploadService.upload(file, study, request);
         }
         catch (EnsemblMappingException e) {
             return "ensembl_mapping_failure";
         }
 
-        if (validationSummary != null) {
-            // TODO ADD ERROR VIEW
+        if (fileErrors != null && !fileErrors.isEmpty()) {
+            getLog().error("Errors found in file: " + file.getOriginalFilename());
+            model.addAttribute("fileName", file.getOriginalFilename());
+            model.addAttribute("fileErrors", fileErrors);
+            return "association_file_upload_error";
         }
         return "redirect:/studies/" + studyId + "/associations";
     }
