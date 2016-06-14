@@ -243,8 +243,7 @@ public class AssociationController {
                     List<Association> associationsToSave = validationSummary.getAssociationSummaries().stream().map(
                             AssociationSummary::getAssociation)
                             .collect(Collectors.toList());
-
-                    // TODO CREATE SERVICE TO SAVE AND MAP
+                    associationOperationsService.saveAndMapAssociationsFromUpload(associationsToSave, study, request);
 
                 }
             }
