@@ -1,11 +1,13 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
@@ -60,7 +62,7 @@ public class AssociationFileUploadService {
      * @param file XLSX file supplied by user
      */
     public synchronized ValidationSummary processAssociationFile(File file, String validationLevel)
-            throws FileNotFoundException {
+            throws FileNotFoundException, SheetProcessingException {
 
         ValidationSummary validationSummary = new ValidationSummary();
         Collection<RowValidationSummary> rowValidationSummaries = new ArrayList<>();
@@ -78,8 +80,10 @@ public class AssociationFileUploadService {
                 UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
                 fileRows = uploadSheetProcessor.readSheetRows(sheet);
             }
-            catch (InvalidFormatException | IOException e) {
+            catch (InvalidFormatException | InvalidOperationException | IOException e) {
                 getLog().error("File: " + file.getName() + " cannot be processed", e);
+                file.delete();
+                throw new SheetProcessingException("File: " + file.getName() + " cannot be processed", e);
             }
         }
         else {
