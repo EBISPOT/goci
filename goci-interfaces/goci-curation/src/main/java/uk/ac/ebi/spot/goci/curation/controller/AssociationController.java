@@ -33,11 +33,9 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
-import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
-import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -51,7 +49,6 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,9 +93,6 @@ public class AssociationController {
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
     private MappingService mappingService;
-    private StudyFileService studyFileService;
-    private CurrentUserDetailsService currentUserDetailsService;
-    private AssociationFileUploadService associationFileUploadService;
     private AssociationUploadService associationUploadService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -121,9 +115,6 @@ public class AssociationController {
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
-                                 StudyFileService studyFileService,
-                                 CurrentUserDetailsService currentUserDetailsService,
-                                 AssociationFileUploadService associationFileUploadService,
                                  AssociationUploadService associationUploadService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
@@ -138,12 +129,9 @@ public class AssociationController {
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
         this.mappingService = mappingService;
-        this.studyFileService = studyFileService;
-        this.currentUserDetailsService = currentUserDetailsService;
-        this.associationFileUploadService = associationFileUploadService;
         this.associationUploadService = associationUploadService;
     }
-
+    
     /*  Study SNP/Associations */
 
     // Generate list of SNP associations linked to a study
@@ -189,14 +177,19 @@ public class AssociationController {
     public String uploadStudySnps(@RequestParam("file") MultipartFile file,
                                   @PathVariable Long studyId,
                                   Model model,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request) throws IOException {
 
         // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
         ValidationSummary validationSummary = null;
-        validationSummary = associationUploadService.upload(file, study, request);
+        try {
+            validationSummary = associationUploadService.upload(file, study, request);
+        }
+        catch (EnsemblMappingException e) {
+            return "ensembl_mapping_failure";
+        }
 
         if (validationSummary != null) {
             // TODO ADD ERROR VIEW
