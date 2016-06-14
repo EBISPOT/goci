@@ -21,9 +21,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by emma on 03/03/2016.
@@ -43,46 +41,28 @@ public class AssociationOperationsService {
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
     private SnpFormColumnValidator snpFormColumnValidator;
-    private StudyFileService studyFileService;
-    private CurrentUserDetailsService currentUserDetailsService;
     private MappingService mappingService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                         SnpInteractionAssociationService snpInteractionAssociationService,
                                         AssociationReportRepository associationReportRepository,
-                                        AssociationRepository associationRepository,
                                         SnpFormRowValidator snpFormRowValidator,
+                                        AssociationRepository associationRepository,
                                         SnpFormColumnValidator snpFormColumnValidator,
-                                        StudyFileService studyFileService,
-                                        CurrentUserDetailsService currentUserDetailsService,
                                         MappingService mappingService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
-        this.associationRepository = associationRepository;
         this.snpFormRowValidator = snpFormRowValidator;
+        this.associationRepository = associationRepository;
         this.snpFormColumnValidator = snpFormColumnValidator;
-        this.studyFileService = studyFileService;
-        this.currentUserDetailsService = currentUserDetailsService;
         this.mappingService = mappingService;
     }
 
-    public void saveAndMapAssociationsFromUpload(List<Association> associationsList,
-                                                 Study study,
-                                                 HttpServletRequest request)  throws EnsemblMappingException {
+    public void saveAndMap(Association association, Study study)
+            throws EnsemblMappingException {
 
-        studyFileService.createFileUploadEvent(study.getId(), currentUserDetailsService.getUserFromRequest(request));
-
-        associationsList.forEach(association -> {
-
-                saveAndMap(association, study);
-
-
-        });
-    }
-
-    public void saveAndMap(Association association, Study study) throws EnsemblMappingException {
         // Set the study ID for our association
         association.setStudy(study);
 
@@ -92,12 +72,7 @@ public class AssociationOperationsService {
 
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
-        try {
-            mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
-        }
-        catch (EnsemblMappingException e) {
-          throw new EnsemblMappingException("Mapping failed",e );
-        }
+        mappingService.validateAndMapAssociation(association, mappedBy);
     }
 
     /**
