@@ -59,58 +59,64 @@ public class AssociationUploadService {
         getLog().info("Uploading file: ".concat(originalFilename));
 
         // Upload file
-        uploadFile(file, study.getId());
+        try {
+            uploadFile(file, study.getId());
 
-        // Send file, including path, to SNP batch loader process
-        File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
-        studyFileService.createFileUploadEvent(study.getId(), currentUserDetailsService.getUserFromRequest(request));
+            // Send file, including path, to SNP batch loader process
+            File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
+            studyFileService.createFileUploadEvent(study.getId(),
+                                                   currentUserDetailsService.getUserFromRequest(request));
 
-        ValidationSummary validationSummary = null;
-        validationSummary =
-                associationFileUploadService.processAssociationFile(uploadedFile, "full");
+            ValidationSummary validationSummary = null;
+            validationSummary =
+                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
 
-        List<Association> associationsToSave = new ArrayList<>();
-        if (validationSummary != null) {
-            // Check if we have any errors
-            long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
-                    .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
-                    .count();
-
-            // Errors found
-            if (rowErrorCount > 0) {
-                studyFileService.deleteFile(study.getId(), originalFilename);
-                getLog().error("Errors found in file: " + originalFilename);
-            }
-            else {
-
-                long associationErrorCount = validationSummary.getAssociationSummaries().parallelStream()
-                        .filter(associationSummary -> !associationSummary.getErrors().isEmpty())
+            List<Association> associationsToSave = new ArrayList<>();
+            if (validationSummary != null) {
+                // Check if we have any errors
+                long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
+                        .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
                         .count();
 
-                if (associationErrorCount > 0) {
+                // Errors found
+                if (rowErrorCount > 0) {
                     studyFileService.deleteFile(study.getId(), originalFilename);
                     getLog().error("Errors found in file: " + originalFilename);
                 }
                 else {
-                    associationsToSave = validationSummary.getAssociationSummaries().stream().map(
-                            AssociationSummary::getAssociation)
-                            .collect(Collectors.toList());
+
+                    long associationErrorCount = validationSummary.getAssociationSummaries().parallelStream()
+                            .filter(associationSummary -> !associationSummary.getErrors().isEmpty())
+                            .count();
+
+                    if (associationErrorCount > 0) {
+                        studyFileService.deleteFile(study.getId(), originalFilename);
+                        getLog().error("Errors found in file: " + originalFilename);
+                    }
+                    else {
+                        associationsToSave = validationSummary.getAssociationSummaries().stream().map(
+                                AssociationSummary::getAssociation)
+                                .collect(Collectors.toList());
+                    }
                 }
             }
-        }
 
-        if (!associationsToSave.isEmpty()) {
-            for (Association association: associationsToSave){
-                studyFileService.createFileUploadEvent(study.getId(), currentUserDetailsService.getUserFromRequest(request));
-                associationOperationsService.saveAndMap(association, study);
+            if (!associationsToSave.isEmpty()) {
+                for (Association association : associationsToSave) {
+                    studyFileService.createFileUploadEvent(study.getId(),
+                                                           currentUserDetailsService.getUserFromRequest(request));
+                    associationOperationsService.saveAndMap(association, study);
+                }
             }
-        }
 
-        return validationSummary;
+            return validationSummary;
+        }
+        catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
     private void uploadFile(MultipartFile file, Long studyId) throws IOException {
-        // TODO DO WE KNOW TO THROW FILENOTFOUNDEXCEPTION
         studyFileService.upload(file, studyId);
     }
 }
