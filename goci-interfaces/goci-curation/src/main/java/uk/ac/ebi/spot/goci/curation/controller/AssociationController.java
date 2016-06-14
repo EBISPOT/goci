@@ -1206,6 +1206,10 @@ public class AssociationController {
         return "error_pages/wrong_file_format_warning";
     }
 
+    @ExceptionHandler({IOException.class})
+    public String handleIOException() {
+        return "error_pages/data_upload_problem";
+    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
