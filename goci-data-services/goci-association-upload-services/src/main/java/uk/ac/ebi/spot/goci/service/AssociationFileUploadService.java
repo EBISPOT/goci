@@ -96,7 +96,7 @@ public class AssociationFileUploadService {
 
                 // Only store summary if there is an error
                 if (!rowValidationSummary.getErrors().isEmpty()) {
-                    rowValidationSummaries.add(createRowValidationSummary(row));
+                    rowValidationSummaries.add(rowValidationSummary);
                 }
             }
 
