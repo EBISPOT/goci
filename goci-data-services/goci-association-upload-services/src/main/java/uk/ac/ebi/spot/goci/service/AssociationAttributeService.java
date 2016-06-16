@@ -58,8 +58,6 @@ public class AssociationAttributeService {
     }
 
     public RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
-
-        //Create new risk allele, at present we always create a new risk allele for each locus within an association
         RiskAllele riskAllele = new RiskAllele();
         riskAllele.setRiskAlleleName(StringProcessingService.tidy_curator_entered_string(curatorEnteredRiskAllele));
         riskAllele.setSnp(snp);
