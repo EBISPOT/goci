@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
  * Created by emma on 14/06/2016.
  *
  * @author emma
+ *         <p>
+ *         Service to upload and validate a spreadsheet file containing SNP associations
  */
 @Service
 public class AssociationUploadService {
@@ -63,11 +65,12 @@ public class AssociationUploadService {
 
             // Send file, including path, to SNP batch loader process
             File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
-            ValidationSummary validationSummary = associationFileUploadService.processAssociationFile(uploadedFile, "full");
+            ValidationSummary validationSummary =
+                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
 
             List<Association> associationsToSave = new ArrayList<>();
             if (validationSummary != null) {
-                // Check if we have any errors
+                // Check if we have any row errors
                 long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
                         .filter(rowValidationSummary -> !rowValidationSummary.getErrors().isEmpty())
                         .count();
@@ -75,7 +78,7 @@ public class AssociationUploadService {
                 // Errors found
                 if (rowErrorCount > 0) {
                     studyFileService.deleteFile(study.getId(), originalFilename);
-                    getLog().error("Errors found in file: " + originalFilename);
+                    getLog().error("Row errors found in file: " + originalFilename);
                     validationSummary.getRowValidationSummaries().forEach(
                             rowValidationSummary -> fileErrors.addAll(processRowError(rowValidationSummary))
                     );
@@ -88,7 +91,7 @@ public class AssociationUploadService {
 
                     if (associationErrorCount > 0) {
                         studyFileService.deleteFile(study.getId(), originalFilename);
-                        getLog().error("Errors found in file: " + originalFilename);
+                        getLog().error("Association errors found in file: " + originalFilename);
                         validationSummary.getAssociationSummaries().forEach(
                                 associationSummary -> fileErrors.addAll(processAssociationError(associationSummary))
                         );
@@ -116,10 +119,21 @@ public class AssociationUploadService {
         }
     }
 
+    /**
+     * Upload a file to the study specific dir
+     *
+     * @param file    XLSX file supplied by user
+     * @param studyId study to link file to
+     */
     private void uploadFile(MultipartFile file, Long studyId) throws IOException {
         studyFileService.upload(file, studyId);
     }
 
+    /**
+     * Process summary of row validation into object that can be returned to view
+     *
+     * @param rowValidationSummary
+     */
     private List<AssociationUploadErrorView> processRowError(RowValidationSummary rowValidationSummary) {
 
         List<AssociationUploadErrorView> errors = new ArrayList<>();
@@ -137,6 +151,11 @@ public class AssociationUploadService {
         return errors;
     }
 
+    /**
+     * Process summary of association validation into object that can be returned to view
+     *
+     * @param associationSummary
+     */
     private List<AssociationUploadErrorView> processAssociationError(AssociationSummary associationSummary) {
 
         List<AssociationUploadErrorView> errors = new ArrayList<>();
