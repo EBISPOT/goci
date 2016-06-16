@@ -35,6 +35,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
@@ -95,6 +96,7 @@ public class AssociationController {
     private AssociationOperationsService associationOperationsService;
     private MappingService mappingService;
     private AssociationUploadService associationUploadService;
+    private CurrentUserDetailsService currentUserDetailsService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -116,7 +118,8 @@ public class AssociationController {
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
-                                 AssociationUploadService associationUploadService) {
+                                 AssociationUploadService associationUploadService,
+                                 CurrentUserDetailsService currentUserDetailsService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -131,6 +134,7 @@ public class AssociationController {
         this.associationOperationsService = associationOperationsService;
         this.mappingService = mappingService;
         this.associationUploadService = associationUploadService;
+        this.currentUserDetailsService = currentUserDetailsService;
     }
     
     /*  Study SNP/Associations */
@@ -186,7 +190,8 @@ public class AssociationController {
 
         List<AssociationUploadErrorView> fileErrors = null;
         try {
-            fileErrors = associationUploadService.upload(file, study, request);
+            fileErrors =
+                    associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
         }
         catch (EnsemblMappingException e) {
             return "ensembl_mapping_failure";
