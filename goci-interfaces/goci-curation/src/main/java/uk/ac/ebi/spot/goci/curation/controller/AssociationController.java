@@ -55,6 +55,7 @@ import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -1216,6 +1217,11 @@ public class AssociationController {
     @ExceptionHandler({FileUploadException.class})
     public String handleFileUploadException() {
         return "error_pages/empty_snpfile_upload_warning";
+    }
+
+    @ExceptionHandler({FileNotFoundException.class})
+    public String handleFileNotFound() {
+        return "error_pages/file_not_found";
     }
 
     /* Model Attributes :

@@ -900,8 +900,8 @@ public class StudyController {
     }
 
     @ExceptionHandler({FileNotFoundException.class})
-    public String handleInvalidFormatExceptionAndInvalidOperationException() {
-        return "error_pages/wrong_file_format_warning";
+    public String handleFileNotFound() {
+        return "error_pages/file_not_found";
     }
 
     /* Model Attributes :
