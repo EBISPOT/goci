@@ -23,7 +23,9 @@ public class AssociationUploadRow {
 
     private String riskFrequency;
 
-    private String associationRiskFrequency;
+    // Equivalent to "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls" in upload spreadsheet
+    // Set to "NR' by default
+    private String associationRiskFrequency = "NR";
 
     private Integer pvalueMantissa;
 
