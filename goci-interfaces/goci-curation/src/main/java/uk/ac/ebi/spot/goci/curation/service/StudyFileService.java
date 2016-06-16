@@ -245,8 +245,8 @@ public class StudyFileService {
             return file;
         }
         else {
-            getLog().error(fileName.concat(" not found"));
-            throw new FileNotFoundException(fileName.concat(" not found"));
+            getLog().error(fileNameWithFullPath.concat(" not found"));
+            throw new FileNotFoundException(fileNameWithFullPath.concat(" not found"));
         }
     }
 
