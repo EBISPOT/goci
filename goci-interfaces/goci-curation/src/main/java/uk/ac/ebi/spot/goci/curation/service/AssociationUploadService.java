@@ -102,8 +102,9 @@ public class AssociationUploadService {
             }
 
             if (!associationsToSave.isEmpty()) {
+                studyFileService.createFileUploadEvent(study.getId(), user);
+
                 for (Association association : associationsToSave) {
-                    studyFileService.createFileUploadEvent(study.getId(), user);
                     associationOperationsService.saveAndMap(association, study);
                 }
             }
