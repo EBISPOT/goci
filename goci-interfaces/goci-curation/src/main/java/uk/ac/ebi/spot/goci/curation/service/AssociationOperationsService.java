@@ -16,11 +16,16 @@ import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -37,31 +42,39 @@ public class AssociationOperationsService {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private AssociationReportRepository associationReportRepository;
     private AssociationRepository associationRepository;
+    private LocusRepository locusRepository;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
     private SnpFormColumnValidator snpFormColumnValidator;
     private MappingService mappingService;
+    private LociAttributesService lociAttributesService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                         SnpInteractionAssociationService snpInteractionAssociationService,
                                         AssociationReportRepository associationReportRepository,
-                                        SnpFormRowValidator snpFormRowValidator,
                                         AssociationRepository associationRepository,
+                                        LocusRepository locusRepository,
+                                        SnpFormRowValidator snpFormRowValidator,
                                         SnpFormColumnValidator snpFormColumnValidator,
-                                        MappingService mappingService) {
+                                        MappingService mappingService,
+                                        LociAttributesService lociAttributesService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
-        this.snpFormRowValidator = snpFormRowValidator;
         this.associationRepository = associationRepository;
+        this.locusRepository = locusRepository;
+        this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
+        this.lociAttributesService = lociAttributesService;
     }
 
-    public void saveAndMap(Association association, Study study)
+    public void saveNewAssociation(Association association, Study study)
             throws EnsemblMappingException {
+
+        association.getLoci().forEach(this::saveLocusAttributes);
 
         // Set the study ID for our association
         association.setStudy(study);
@@ -73,6 +86,25 @@ public class AssociationOperationsService {
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
         mappingService.validateAndMapAssociation(association, mappedBy);
+    }
+
+    /**
+     * Save transient objects on association before saving association
+     *
+     * @param locus Locus to save
+     */
+    private void saveLocusAttributes(Locus locus) {
+
+        // Save genes
+        Collection<Gene> savedGenes = lociAttributesService.saveGene(locus.getAuthorReportedGenes());
+        locus.setAuthorReportedGenes(savedGenes);
+
+        // Save risk allele
+        Collection<RiskAllele> savedRiskAlleles =
+                lociAttributesService.saveRiskAlleles(locus.getStrongestRiskAlleles());
+        locus.setStrongestRiskAlleles(savedRiskAlleles);
+
+        locusRepository.save(locus);
     }
 
     /**

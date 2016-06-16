@@ -21,7 +21,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Service class that creates the attributes of a loci, used by AssociationController
+ *         Service class that creates the attributes of a loci
  */
 @Service
 public class LociAttributesService {
@@ -49,6 +49,33 @@ public class LociAttributesService {
         this.locusRepository = locusRepository;
     }
 
+
+    public Collection<Gene> saveGene(Collection<Gene> genes) {
+        Collection<Gene> locusGenes = new ArrayList<Gene>();
+
+        genes.forEach(gene -> {
+                          // Check if gene already exists, note we may have duplicates so for moment just take first one
+                          Gene geneInDatabase = geneRepository.findByGeneName(gene.getGeneName());
+
+                          // Exists in database already
+                          if (geneInDatabase != null) {
+                              getLog().debug("Gene " + geneInDatabase.getGeneName() + " already exists in database");
+                              locusGenes.add(geneInDatabase);
+                          }
+
+                          // If gene doesn't exist then create and save
+                          else {
+                              // Create new gene
+                              getLog().debug("Gene " + gene.getGeneName() + " not found in database. Creating and saving new gene.");
+                              geneRepository.save(gene);
+                              locusGenes.add(gene);
+                          }
+                      }
+
+        );
+        return locusGenes;
+    }
+
     public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
 
@@ -56,7 +83,7 @@ public class LociAttributesService {
             authorReportedGene = tidy_curator_entered_string(authorReportedGene);
 
             // Check for intergenic
-            if (authorReportedGene.equals("Intergenic")){
+            if (authorReportedGene.equals("Intergenic")) {
                 authorReportedGene = authorReportedGene.toLowerCase();
             }
 
@@ -87,6 +114,34 @@ public class LociAttributesService {
         return locusGenes;
     }
 
+
+    public Collection<RiskAllele> saveRiskAlleles(Collection<RiskAllele> strongestRiskAlleles) {
+
+        //Create new risk allele, at present we always create a new risk allele for each locus within an association
+
+        Collection<RiskAllele> riskAlleles = new ArrayList<RiskAllele>();
+
+        strongestRiskAlleles.forEach(riskAllele -> {
+
+            // Save SNP
+            SingleNucleotidePolymorphism savedSnp = saveSnp(riskAllele.getSnp());
+            riskAllele.setSnp(savedSnp);
+
+            // Save proxy SNPs
+            Collection<SingleNucleotidePolymorphism> savedProxySnps = new ArrayList<SingleNucleotidePolymorphism>();
+            if (!riskAllele.getProxySnps().isEmpty()) {
+                riskAllele.getProxySnps().forEach(singleNucleotidePolymorphism -> {
+                    savedProxySnps.add(saveSnp(singleNucleotidePolymorphism));
+                });
+            }
+            riskAllele.setProxySnps(savedProxySnps);
+            riskAlleleRepository.save(riskAllele);
+        });
+
+        return riskAlleles;
+    }
+
+
     public RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
 
         //Create new risk allele, at present we always create a new risk allele for each locus within an association
@@ -106,6 +161,23 @@ public class LociAttributesService {
     public void deleteLocus(Locus locus) {
         locusRepository.delete(locus);
     }
+
+
+    private SingleNucleotidePolymorphism saveSnp(SingleNucleotidePolymorphism snp) {
+
+        // Check if SNP already exists
+        SingleNucleotidePolymorphism snpInDatabase =
+                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(snp.getRsId());
+
+        if (snpInDatabase != null) {
+            return snpInDatabase;
+        }
+        else {
+            // save new SNP
+            return singleNucleotidePolymorphismRepository.save(snp);
+        }
+    }
+
 
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
@@ -145,4 +217,5 @@ public class LociAttributesService {
 
         return newString;
     }
+
 }
