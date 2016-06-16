@@ -108,7 +108,7 @@ public class AssociationUploadService {
                 studyFileService.createFileUploadEvent(study.getId(), user);
 
                 for (Association association : associationsToSave) {
-                    associationOperationsService.saveAndMap(association, study);
+                    associationOperationsService.saveNewAssociation(association, study);
                 }
             }
 

@@ -204,7 +204,7 @@ public class AssociationUploadServiceTest {
         verify(studyFileService, times(1)).getFileFromFileName(STUDY.getId(), uploadedFile.getOriginalFilename());
         verify(associationFileUploadService, times(1)).processAssociationFile(file, "full");
         verify(studyFileService, times(1)).createFileUploadEvent(STUDY.getId(), SECURE_USER);
-        verify(associationOperationsService, times(1)).saveAndMap(ASSOCIATION, STUDY);
+        verify(associationOperationsService, times(1)).saveNewAssociation(ASSOCIATION, STUDY);
     }
 
     @Test
