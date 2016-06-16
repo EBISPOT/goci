@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
+import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
+import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
+import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
@@ -18,8 +18,6 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;

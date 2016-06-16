@@ -3,12 +3,11 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
-import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
+import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -76,7 +75,6 @@ public class AssociationUploadServiceTest {
         associationUploadService.upload(incorrectlyFormattedFile, STUDY, SECURE_USER);
     }
 
-
     @Test(expected = IOException.class)
     public void uploadMissingFile() throws Exception {
 
@@ -84,7 +82,15 @@ public class AssociationUploadServiceTest {
                 new MockMultipartFile("data", "filename.txt", "text/plain", "Blank file".getBytes());
 
         // Stubbing
-        when(studyFileService.getFileFromFileName(STUDY.getId(), file.getOriginalFilename())).thenThrow(new FileNotFoundException());
+        when(studyFileService.getFileFromFileName(STUDY.getId(),
+                                                  file.getOriginalFilename())).thenThrow(new FileNotFoundException());
         associationUploadService.upload(file, STUDY, SECURE_USER);
+    }
+
+    public void uploadFileNoErrors() throws Exception {
+        MockMultipartFile uploadedFile =
+                new MockMultipartFile("data", "filename.txt", "text/plain", "Test file".getBytes());
+        File file = new File(uploadedFile.getOriginalFilename());
+        when(associationFileUploadService.processAssociationFile(file, "full")).thenReturn(null);
     }
 }

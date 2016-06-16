@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.builder;
+package uk.ac.ebi.spot.goci.builder;
 
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SecureRole;
