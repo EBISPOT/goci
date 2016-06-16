@@ -63,6 +63,7 @@ import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -841,7 +842,7 @@ public class StudyController {
     @ResponseBody
     public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
                                                 HttpServletRequest request,
-                                                HttpServletResponse response) {
+                                                HttpServletResponse response) throws FileNotFoundException {
 
         // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
         String path = request.getServletPath();
@@ -855,9 +856,9 @@ public class StudyController {
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public Callable<String> uploadStudyFile(@RequestParam("file") MultipartFile file,
-                                  @PathVariable Long studyId,
-                                  Model model,
-                                  HttpServletRequest request)
+                                            @PathVariable Long studyId,
+                                            Model model,
+                                            HttpServletRequest request)
             throws FileUploadException, IOException {
 
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -898,6 +899,10 @@ public class StudyController {
         return "pubmed_import_warning";
     }
 
+    @ExceptionHandler({FileNotFoundException.class})
+    public String handleInvalidFormatExceptionAndInvalidOperationException() {
+        return "error_pages/wrong_file_format_warning";
+    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
