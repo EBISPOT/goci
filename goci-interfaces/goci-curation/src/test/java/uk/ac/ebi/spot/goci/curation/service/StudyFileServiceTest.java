@@ -5,7 +5,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
@@ -117,7 +116,7 @@ public class StudyFileServiceTest {
     }
 
     @Test
-    public void testCreateFileUploadEvent(){
+    public void testCreateFileUploadEvent() {
         // Stubbing
         when(studyRepository.findOne(STUDY_ID)).thenReturn(STUDY);
 
