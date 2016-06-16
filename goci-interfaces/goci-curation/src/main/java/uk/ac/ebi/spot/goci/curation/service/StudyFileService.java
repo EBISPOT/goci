@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -168,8 +169,14 @@ public class StudyFileService {
      * @param fileName Name of file to delete
      */
     public void deleteFile(Long studyId, String fileName) {
-        File fileToDelete = getFileFromFileName(studyId, fileName);
-        fileToDelete.delete();
+        File fileToDelete = null;
+        try {
+            fileToDelete = getFileFromFileName(studyId, fileName);
+            fileToDelete.delete();
+        }
+        catch (FileNotFoundException e) {
+            getLog().error(fileName.concat(" not found"));
+        }
     }
 
     /**
@@ -230,9 +237,17 @@ public class StudyFileService {
      * @param studyId  Study ID, this will help locate dir
      * @param fileName Name of file to return
      */
-    public File getFileFromFileName(Long studyId, String fileName) {
+    public File getFileFromFileName(Long studyId, String fileName) throws FileNotFoundException {
         String fileNameWithFullPath = getStudyDirRoot() + File.separator + studyId + File.separator + fileName;
-        return new File(fileNameWithFullPath);
+        File file = new File(fileNameWithFullPath);
+
+        if (file.exists() && file.isFile()) {
+            return new File(fileNameWithFullPath);
+        }
+        else {
+            getLog().error(fileName.concat(" not found"));
+            throw new FileNotFoundException(fileName.concat(" not found"));
+        }
     }
 
     public File getStudyDirRoot() {
