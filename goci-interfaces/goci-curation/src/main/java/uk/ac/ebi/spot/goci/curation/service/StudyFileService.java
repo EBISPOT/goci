@@ -242,7 +242,7 @@ public class StudyFileService {
         File file = new File(fileNameWithFullPath);
 
         if (file.exists() && file.isFile()) {
-            return new File(fileNameWithFullPath);
+            return file;
         }
         else {
             getLog().error(fileName.concat(" not found"));
