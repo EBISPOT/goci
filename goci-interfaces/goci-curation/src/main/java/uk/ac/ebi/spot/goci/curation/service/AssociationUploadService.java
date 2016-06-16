@@ -10,11 +10,11 @@ import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.RowValidationSummary;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,8 +31,6 @@ public class AssociationUploadService {
 
     private StudyFileService studyFileService;
 
-    private CurrentUserDetailsService currentUserDetailsService;
-
     private AssociationFileUploadService associationFileUploadService;
 
     private AssociationOperationsService associationOperationsService;
@@ -45,16 +43,14 @@ public class AssociationUploadService {
 
     @Autowired
     public AssociationUploadService(StudyFileService studyFileService,
-                                    CurrentUserDetailsService currentUserDetailsService,
                                     AssociationFileUploadService associationFileUploadService,
                                     AssociationOperationsService associationOperationsService) {
         this.studyFileService = studyFileService;
-        this.currentUserDetailsService = currentUserDetailsService;
         this.associationFileUploadService = associationFileUploadService;
         this.associationOperationsService = associationOperationsService;
     }
 
-    public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, HttpServletRequest request)
+    public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, SecureUser user)
             throws IOException, EnsemblMappingException {
 
         List<AssociationUploadErrorView> fileErrors = new ArrayList<>();
@@ -67,9 +63,7 @@ public class AssociationUploadService {
 
             // Send file, including path, to SNP batch loader process
             File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
-            ValidationSummary validationSummary = null;
-            validationSummary =
-                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
+            ValidationSummary validationSummary = associationFileUploadService.processAssociationFile(uploadedFile, "full");
 
             List<Association> associationsToSave = new ArrayList<>();
             if (validationSummary != null) {
@@ -109,8 +103,7 @@ public class AssociationUploadService {
 
             if (!associationsToSave.isEmpty()) {
                 for (Association association : associationsToSave) {
-                    studyFileService.createFileUploadEvent(study.getId(),
-                                                           currentUserDetailsService.getUserFromRequest(request));
+                    studyFileService.createFileUploadEvent(study.getId(), user);
                     associationOperationsService.saveAndMap(association, study);
                 }
             }
