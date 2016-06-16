@@ -102,19 +102,19 @@ public class ValidationChecks {
     }
 
     /**
-     * OR MUST be filled and less than 1
+     * OR MUST be filled and more than 1
      *
      * @param value Value to be checked
      */
-    public String checkOrIsPresentAndLessThanOne(Float value) {
+    public String checkOrIsPresentAndMoreThanOne(Float value) {
         String error = null;
 
         if (value == null) {
             error = "Value is empty";
         }
         else {
-            if (value > 1) {
-                error = "Value is more than 1";
+            if (value < 1) {
+                error = "Value is less than 1";
             }
         }
         return error;

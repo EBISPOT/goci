@@ -44,7 +44,7 @@ public class ErrorCreationService {
     }
 
     public ValidationError checkOrIsPresentAndLessThanOne(Association association) {
-        String errorMessage = validationChecks.checkOrIsPresentAndLessThanOne(association.getOrPerCopyNum());
+        String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
         return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
