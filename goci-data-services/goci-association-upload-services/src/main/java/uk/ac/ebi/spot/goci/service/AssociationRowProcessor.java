@@ -193,9 +193,11 @@ public class AssociationRowProcessor {
             Locus locus = new Locus();
 
             // Handle curator entered genes, for haplotype they are separated by a comma
-            Collection<Gene> locusGenes =
-                    associationAttributeService.createLocusGenes(row.getAuthorReportedGene(), ",");
-            locus.setAuthorReportedGenes(locusGenes);
+            if (row.getAuthorReportedGene() != null && !row.getAuthorReportedGene().isEmpty()) {
+                Collection<Gene> locusGenes =
+                        associationAttributeService.createLocusGenes(row.getAuthorReportedGene(), ",");
+                locus.setAuthorReportedGenes(locusGenes);
+            }
 
             // Handle curator entered risk allele
             Collection<RiskAllele> locusRiskAlleles =
