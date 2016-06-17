@@ -11,10 +11,10 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by emma on 03/03/2016.
@@ -58,25 +58,23 @@ public class AssociationOperationsServiceTest {
     @Mock
     private MappingService mappingService;
 
+    @Mock
+    private LocusRepository locusRepository;
+
+    @Mock
+    private LociAttributesService lociAttributesService;
+
     @Before
     public void setUpMock() {
         associationOperationsService = new AssociationOperationsService(singleSnpMultiSnpAssociationService,
                                                                         snpInteractionAssociationService,
                                                                         associationReportRepository,
-                                                                        snpFormRowValidator,
                                                                         associationRepository,
+                                                                        locusRepository,
+                                                                        snpFormRowValidator,
                                                                         snpFormColumnValidator,
-                                                                        mappingService);
-    }
-
-    @Test
-    public void testMocks() {
-        // Test mock creation
-        assertNotNull(singleSnpMultiSnpAssociationService);
-        assertNotNull(snpInteractionAssociationService);
-        assertNotNull(associationReportRepository);
-        assertNotNull(snpFormRowValidator);
-        assertNotNull(snpFormColumnValidator);
+                                                                        mappingService,
+                                                                        lociAttributesService);
     }
 
     @Test
