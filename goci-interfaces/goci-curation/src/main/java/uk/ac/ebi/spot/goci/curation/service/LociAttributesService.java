@@ -54,7 +54,7 @@ public class LociAttributesService {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
 
         genes.forEach(gene -> {
-                          // Check if gene already exists, note we may have duplicates so for moment just take first one
+                          // Check if gene already exists
                           Gene geneInDatabase = geneRepository.findByGeneName(gene.getGeneName());
 
                           // Exists in database already
