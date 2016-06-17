@@ -47,7 +47,7 @@ public class FilteringService {
 
             if(associations.size() == 1 && associations.get(0).getPvalueExponent() < -5){
                 associations.get(0).setIsTopAssociation(true);
-                filtered.add(associations.get(0));
+//                filtered.add(associations.get(0));
             }
             else {
                 int i =0;
