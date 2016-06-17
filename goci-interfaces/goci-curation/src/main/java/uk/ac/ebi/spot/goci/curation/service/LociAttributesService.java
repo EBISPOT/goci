@@ -136,6 +136,7 @@ public class LociAttributesService {
             }
             riskAllele.setProxySnps(savedProxySnps);
             riskAlleleRepository.save(riskAllele);
+            riskAlleles.add(riskAllele);
         });
 
         return riskAlleles;
