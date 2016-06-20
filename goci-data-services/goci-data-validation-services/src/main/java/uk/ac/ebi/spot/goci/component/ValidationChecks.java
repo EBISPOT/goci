@@ -332,16 +332,20 @@ public class ValidationChecks {
             error = "Empty value";
         }
         else {
-            try {
-                float f = Float.parseFloat(riskFrequency);
-                // if string contains only numbers then check its value is between valid range
-                if (f < 0 || f > 1) {
-                    error = "Value is invalid i.e. not less than 0 or more than 1";
+            // Skip check if value is NR
+            if (!riskFrequency.equals("NR")) {
+
+                try {
+                    float f = Float.parseFloat(riskFrequency);
+                    // if string contains only numbers then check its value is between valid range
+                    if (f < 0 || f > 1) {
+                        error = "Value is invalid i.e. not less than 0 or more than 1";
+                    }
                 }
-            }
-            catch (NumberFormatException e) {
-                if (!riskFrequency.contentEquals("NR")) {
-                    error = "Value is invalid i.e. not equal to NR or a number";
+                catch (NumberFormatException e) {
+                    if (!riskFrequency.contentEquals("NR")) {
+                        error = "Value is invalid i.e. not equal to NR or a number";
+                    }
                 }
             }
         }
