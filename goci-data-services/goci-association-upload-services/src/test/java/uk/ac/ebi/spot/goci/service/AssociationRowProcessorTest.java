@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Gene;
+import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.utils.AssociationCalculationService;
@@ -23,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,13 +54,13 @@ public class AssociationRowProcessorTest {
             .setProxy("rs99")
             .setAuthorReportedGene("SFRP1, ELF1")
             .setStrongestAllele("rs123-?")
-            .setAssociationRiskFrequency("0.52")
             .setPvalueMantissa(2)
             .setPvalueExponent(-7)
             .setPvalueDescription("(some pvalue description)")
             .setOrPerCopyNum((float) 1.22)
             .setRange("[0.82-0.92]")
             .setStandardError((float) 0.6)
+            .setAssociationRiskFrequency("0.52")
             .build();
 
     private static final AssociationUploadRow SNP_INTERACTION_ROW = new AssociationUploadRowBuilder().setRowNumber(2)
@@ -65,7 +68,7 @@ public class AssociationRowProcessorTest {
             .setAuthorReportedGene("PMS1 x HIBCH")
             .setStrongestAllele("rs2562796-T x rs16832404-G")
             .setAssociationRiskFrequency("0.52")
-            .setRiskFrequency("NR x NR")
+            .setRiskFrequency("0.3 x 0.4")
             .setPvalueMantissa(2)
             .setPvalueExponent(-7)
             .setOrPerCopyNum((float) 1.22)
@@ -73,7 +76,6 @@ public class AssociationRowProcessorTest {
             .setStandardError((float) 0.6)
             .setSnpInteraction("Y")
             .build();
-
 
     private static final AssociationUploadRow HAPLOTYPE_ROW = new AssociationUploadRowBuilder().setRowNumber(2)
             .setSnp("rs456; rs678")
@@ -88,7 +90,6 @@ public class AssociationRowProcessorTest {
             .setPvalueMantissa(2)
             .setPvalueExponent(-7)
             .build();
-
 
     private static final Gene GENE_01 = new GeneBuilder().setGeneName("SFRP1").build();
 
@@ -228,14 +229,14 @@ public class AssociationRowProcessorTest {
             proxies.addAll(riskAllele.getProxySnps());
         });
 
+        assertThat(association.getLoci()).extracting(Locus::getDescription).containsOnly("Single variant");
         assertThat(locusGenes).hasSize(2).contains(GENE_01, GENE_02);
         assertThat(locusRiskAlleles).hasSize(1).contains(RA_01);
-        assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskAlleleName).containsExactly("rs123-?");
-        assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskFrequency).containsExactly("0.52");
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
+                .contains(tuple("rs123-?","0.52","rs123"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).contains(SNP_01);
         assertThat(proxies).contains(PROXY);
-        assertThat(proxies).extracting(singleNucleotidePolymorphism -> singleNucleotidePolymorphism.getRsId())
-                .containsExactly("rs99");
+        assertThat(proxies).extracting(SingleNucleotidePolymorphism::getRsId).containsExactly("rs99");
     }
 
     @Test
@@ -327,12 +328,11 @@ public class AssociationRowProcessorTest {
                                                }
         );
 
-
+        assertThat(association.getLoci()).extracting(Locus::getDescription).containsOnly("SNP x SNP interaction");
         assertThat(locusGenes).hasSize(2).contains(GENE_03, GENE_04);
         assertThat(locusRiskAlleles).hasSize(2).contains(RA_02, RA_03);
-        assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskAlleleName)
-                .containsExactly("rs2562796-T", "rs16832404-G");
-        assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskFrequency).containsOnly("NR");
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
+                .contains(tuple("rs2562796-T","0.3","rs2562796"),tuple("rs16832404-G","0.4","rs16832404"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).containsExactly(SNP_02, SNP_03);
     }
 
@@ -423,11 +423,12 @@ public class AssociationRowProcessorTest {
                                                }
         );
 
+        assertThat(association.getLoci()).extracting(Locus::getDescription).containsOnly("2-SNP haplotype");
         assertThat(locusGenes).isEmpty();
         assertThat(locusRiskAlleles).hasSize(2).contains(RA_04, RA_05);
-        assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskAlleleName)
-                .containsExactly("rs456-T", "rs678-?");
         assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskFrequency).containsNull();
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
+                .contains(tuple("rs456-T",null,"rs456"),tuple("rs678-?",null,"rs678"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).containsExactly(SNP_04, SNP_05);
     }
 
