@@ -91,7 +91,8 @@ public class FilterDataProcessingService {
     public List<FilterAssociation> processInputData(String[][] data) {
         List<FilterAssociation> associations = new ArrayList<>();
 
-        System.out.println("About to process " + data.length + " entries");
+        int entries = data.length-1;
+        System.out.println("About to process " + entries + " entries");
 
         for(int i = 1; i < data.length; i++){
 
