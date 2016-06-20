@@ -32,6 +32,11 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
             associationValidationErrors.addAll(lociAttributeErrors);
         }
 
+        Collection<ValidationError> riskFrequencyErrors = validationChecksBuilder.runRiskFrequencyChecks(association);
+        if (!riskFrequencyErrors.isEmpty()) {
+            associationValidationErrors.addAll(riskFrequencyErrors);
+        }
+
         Collection<ValidationError> pvalueErrors = validationChecksBuilder.runPvalueChecks(association);
         if(!pvalueErrors.isEmpty()){
             associationValidationErrors.addAll(pvalueErrors);
