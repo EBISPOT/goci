@@ -143,6 +143,12 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
     }
 
+    public ValidationError checkAlleleRiskFrequency(RiskAllele riskAllele) {
+        String errorMessage = validationChecks.checkRiskFrequency(riskAllele.getRiskFrequency());
+        return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
+    }
+
+
     // Check range
     public ValidationError checkRangeIsPresent(Association association) {
         String errorMessage = validationChecks.checkValueIsPresent(association.getRange());
