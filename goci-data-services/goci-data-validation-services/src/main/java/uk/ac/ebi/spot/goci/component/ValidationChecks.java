@@ -351,4 +351,18 @@ public class ValidationChecks {
         }
         return error;
     }
+
+    /**
+     * Check value contains the required delimiter
+     *
+     * @param value     Value to check
+     * @param delimiter
+     */
+    public String checkSynthax(String value, String delimiter) {
+        String error = null;
+        if (!value.contains(delimiter)) {
+            error = "Value does not contain correct separator";
+        }
+        return error;
+    }
 }
