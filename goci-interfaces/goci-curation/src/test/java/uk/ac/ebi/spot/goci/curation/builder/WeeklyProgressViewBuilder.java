@@ -36,7 +36,7 @@ public class WeeklyProgressViewBuilder {
         return this;
     }
 
-    private WeeklyProgressView build() {
+    public WeeklyProgressView build() {
         return weeklyProgressView;
     }
 
