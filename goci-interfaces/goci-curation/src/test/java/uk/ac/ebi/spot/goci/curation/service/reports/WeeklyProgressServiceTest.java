@@ -22,8 +22,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by emma on 20/06/2016.
- * <p>
- * Test for WeeklyProgressService
+ *
+ * @author emma
+ *         <p>
+ *         Test for WeeklyProgressService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class WeeklyProgressServiceTest {
@@ -32,7 +34,6 @@ public class WeeklyProgressServiceTest {
     private WeeklyProgressViewRepository weeklyProgressViewRepository;
 
     private WeeklyProgressService weeklyProgressService;
-
 
     private static final WeeklyProgressView STUDY_CREATION =
             new WeeklyProgressViewBuilder().setStudyId((long) 100).setEventType(
@@ -57,7 +58,6 @@ public class WeeklyProgressServiceTest {
                     .setId((long) 4)
                     .setWeekStartDay(new Date())
                     .build();
-
 
     private static final WeeklyProgressView STUDY_LEVEL_2 =
             new WeeklyProgressViewBuilder().setStudyId((long) 103)
