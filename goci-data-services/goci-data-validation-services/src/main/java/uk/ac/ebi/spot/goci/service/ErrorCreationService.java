@@ -43,7 +43,7 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "SNP type");
     }
 
-    public ValidationError checkOrIsPresentAndLessThanOne(Association association) {
+    public ValidationError checkOrIsPresentAndMoreThanOne(Association association) {
         String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
         return ErrorProcessingService.createError(errorMessage, "OR");
     }

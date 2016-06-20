@@ -69,7 +69,7 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
 
-        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndLessThanOne(association);
+        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndMoreThanOne(association);
         ValidationErrors.add(orIsPresent);
 
         ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association);
