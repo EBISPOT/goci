@@ -35,7 +35,7 @@ public class ValidationServiceImpl implements ValidationService{
         return log;
     }
 
-    @Override public synchronized Collection<ValidationError> runAssociationValidation(Association association,
+    @Override public Collection<ValidationError> runAssociationValidation(Association association,
                                                                              String validationLevel) {
 
         // Determine validation type
@@ -43,7 +43,7 @@ public class ValidationServiceImpl implements ValidationService{
         return associationCheckingService.runChecks(association, validationChecksBuilder);
     }
 
-    @Override public synchronized Collection<ValidationError> runRowValidation(AssociationUploadRow row) {
+    @Override public Collection<ValidationError> runRowValidation(AssociationUploadRow row) {
         return rowCheckingService.runChecks(row);
     }
 }
