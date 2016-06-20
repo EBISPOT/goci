@@ -365,4 +365,18 @@ public class ValidationChecks {
         }
         return error;
     }
+
+    /**
+     * Check that SNP status attributes are set to true for at least one
+     *
+     * @param genomeWide
+     * @param limitedList
+     */
+    public String checkSnpStatus(Boolean genomeWide, Boolean limitedList) {
+        String error = null;
+        if (!genomeWide && !limitedList) {
+            error = "No status selected";
+        }
+        return error;
+    }
 }

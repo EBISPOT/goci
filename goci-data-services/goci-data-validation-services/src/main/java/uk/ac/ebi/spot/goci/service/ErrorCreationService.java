@@ -177,5 +177,8 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "Gene");
     }
 
-
+    public ValidationError checkSnpStatusIsPresent(Boolean genomeWide, Boolean limitedList) {
+        String errorMessage = validationChecks.checkSnpStatus(genomeWide, limitedList);
+        return ErrorProcessingService.createError(errorMessage, "SNP Status");
+    }
 }

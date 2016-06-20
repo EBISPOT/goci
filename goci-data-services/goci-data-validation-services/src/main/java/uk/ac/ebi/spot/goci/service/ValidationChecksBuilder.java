@@ -51,10 +51,16 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAnnotationChecks(Association association) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
+        validationErrors.add(errorCreationService.checkSnpType(association));
 
-        ValidationError snpTypeError = errorCreationService.checkSnpType(association);
-        if (snpTypeError.getError() != null) {
-            validationErrors.add(snpTypeError);
+        if (association.getSnpInteraction()) {
+            for (Locus locus : association.getLoci()) {
+                locus.getStrongestRiskAlleles().forEach(riskAllele -> {
+                    Boolean genomeWide = riskAllele.getGenomeWide();
+                    Boolean limitedList = riskAllele.getLimitedList();
+                    validationErrors.add(errorCreationService.checkSnpStatusIsPresent(genomeWide, limitedList));
+                });
+            }
         }
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -266,10 +272,6 @@ public class ValidationChecksBuilder {
 
                 // Check risk allele attributes
                 riskAlleles.forEach(riskAllele -> {
-
-                    if (association.getSnpInteraction()) {
-
-                    }
 
                     ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
                     validationErrors.add(riskAlleleError);
