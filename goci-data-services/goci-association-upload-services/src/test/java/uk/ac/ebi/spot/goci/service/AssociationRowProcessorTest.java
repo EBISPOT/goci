@@ -54,6 +54,7 @@ public class AssociationRowProcessorTest {
             .setAssociationRiskFrequency("0.52")
             .setPvalueMantissa(2)
             .setPvalueExponent(-7)
+            .setPvalueDescription("(some pvalue description)")
             .setOrPerCopyNum((float) 1.22)
             .setRange("[0.82-0.92]")
             .setStandardError((float) 0.6)
@@ -80,6 +81,7 @@ public class AssociationRowProcessorTest {
             .setPvalueMantissa(2)
             .setPvalueExponent(-7)
             .setMultiSnpHaplotype("Y")
+            .setPvalueDescription("description")
             .build();
 
     private static final AssociationUploadRow ROW_THAT_SHOULD_FAIL = new AssociationUploadRowBuilder().setRowNumber(2)
@@ -181,7 +183,7 @@ public class AssociationRowProcessorTest {
                                            "lastUpdateDate")
                 .containsExactly(null,
                                  "0.52",
-                                 null,
+                                 "(some pvalue description)",
                                  2,
                                  -7,
                                  false,
@@ -381,7 +383,7 @@ public class AssociationRowProcessorTest {
                                            "lastUpdateDate")
                 .containsExactly(null,
                                  "NR",
-                                 null,
+                                 "(description)",
                                  2,
                                  -7,
                                  true,

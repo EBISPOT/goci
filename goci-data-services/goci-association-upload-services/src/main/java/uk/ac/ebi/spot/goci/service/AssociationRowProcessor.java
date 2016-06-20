@@ -113,6 +113,9 @@ public class AssociationRowProcessor {
                 String newPvalueDescription = "(".concat(row.getPvalueDescription()).concat(")");
                 newAssociation.setPvalueDescription(newPvalueDescription);
             }
+            else {
+                newAssociation.setPvalueDescription(row.getPvalueDescription());
+            }
         }
         else {
             newAssociation.setPvalueDescription(row.getPvalueDescription());
