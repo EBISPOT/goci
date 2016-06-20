@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.builder.WeeklyProgressViewBuilder;
+import uk.ac.ebi.spot.goci.builder.WeeklyProgressViewBuilder;
 import uk.ac.ebi.spot.goci.curation.model.reports.ReportsWeeklyProgressView;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.WeeklyProgressView;
