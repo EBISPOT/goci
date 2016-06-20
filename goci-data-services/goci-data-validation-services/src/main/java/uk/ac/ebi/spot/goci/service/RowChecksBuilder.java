@@ -38,4 +38,28 @@ public class RowChecksBuilder {
         errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row));
         return ErrorProcessingService.checkForValidErrors(errors);
     }
+
+    /**
+     * Run checks for synthax errors depending on association type
+     *
+     * @param row Row to be checked
+     */
+    public Collection<ValidationError> runSynthaxChecks(AssociationUploadRow row) {
+
+        Collection<ValidationError> errors = new ArrayList<>();
+
+        if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
+            errors.add(errorCreationService.checkSnpSynthax(row, ";"));
+            errors.add(errorCreationService.checkRiskAlleleSynthax(row, ";"));
+        }
+
+        if (row.getSnpInteraction().equalsIgnoreCase("Y")) {
+            errors.add(errorCreationService.checkSnpSynthax(row, "x"));
+            errors.add(errorCreationService.checkRiskAlleleSynthax(row, "x"));
+            if (!row.getAuthorReportedGene().isEmpty()) {
+                errors.add(errorCreationService.checkGeneSynthax(row, "x"));
+            }
+        }
+        return ErrorProcessingService.checkForValidErrors(errors);
+    }
 }

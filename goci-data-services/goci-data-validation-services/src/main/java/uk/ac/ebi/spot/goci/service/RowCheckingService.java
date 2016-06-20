@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Check a row for missing values or syntax values
+ *         Check a row for missing values or syntax errors
  */
 @Service
 public class RowCheckingService {
@@ -29,9 +29,18 @@ public class RowCheckingService {
         // Create collection to store all newly created associations
         Collection<ValidationError> errors = new ArrayList<>();
 
+        // Check for missing essential values like SNP or risk allele
         Collection<ValidationError> emptyValuesErrors = rowChecksBuilder.runEmptyValueChecks(row);
         if (!emptyValuesErrors.isEmpty()) {
             errors.addAll(emptyValuesErrors);
+        }
+        else {
+            // Check that SNP and risk allele use the correct delimiter
+            // i.e. x = SNP interaction, ; = multi-snp haplotype
+            Collection<ValidationError> synthaxErrors = rowChecksBuilder.runSynthaxChecks(row);
+            if (!synthaxErrors.isEmpty()) {
+                errors.addAll(synthaxErrors);
+            }
         }
         return errors;
     }

@@ -140,14 +140,14 @@ public class ErrorCreationService {
     // Check risk frequency
     public ValidationError checkAssociationRiskFrequency(Association association) {
         String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
-        return ErrorProcessingService.createError(errorMessage, "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
+        return ErrorProcessingService.createError(errorMessage,
+                                                  "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
     }
 
     public ValidationError checkAlleleRiskFrequency(RiskAllele riskAllele) {
         String errorMessage = validationChecks.checkRiskFrequency(riskAllele.getRiskFrequency());
         return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
     }
-
 
     // Check range
     public ValidationError checkRangeIsPresent(Association association) {
@@ -160,4 +160,22 @@ public class ErrorCreationService {
         String errorMessage = validationChecks.checkSnpGeneLocation(snp.getRsId(), gene.getGeneName());
         return ErrorProcessingService.createError(errorMessage, "Gene");
     }
+
+    // Check snp and risk allele use the correct delimiter
+    public ValidationError checkSnpSynthax(AssociationUploadRow row, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(row.getSnp(), delimiter);
+        return ErrorProcessingService.createError(errorMessage, "SNP");
+    }
+
+    public ValidationError checkRiskAlleleSynthax(AssociationUploadRow row, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(row.getStrongestAllele(), delimiter);
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+    }
+
+    public ValidationError checkGeneSynthax(AssociationUploadRow row, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(row.getAuthorReportedGene(), delimiter);
+        return ErrorProcessingService.createError(errorMessage, "Gene");
+    }
+
+
 }
