@@ -29,6 +29,9 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
         Collection<ValidationError> associationValidationErrors = new ArrayList<>();
 
         Collection<ValidationError> pvalueErrors = validationChecksBuilder.runPvalueChecks(association);
+        if(!pvalueErrors.isEmpty()){
+            associationValidationErrors.addAll(pvalueErrors);
+        }
 
         Collection<ValidationError> annotationErrors =
                 validationChecksBuilder.runAnnotationChecks(association);
