@@ -291,7 +291,7 @@ public class ValidationChecksBuilder {
      */
     public Collection<ValidationError> runRiskFrequencyChecks(Association association) {
         Collection<ValidationError> ValidationErrors = new ArrayList<>();
-        ValidationError error = errorCreationService.checkRiskFrequency(association);
+        ValidationError error = errorCreationService.checkAssociationRiskFrequency(association);
         ValidationErrors.add(error);
         return ErrorProcessingService.checkForValidErrors(ValidationErrors);
     }

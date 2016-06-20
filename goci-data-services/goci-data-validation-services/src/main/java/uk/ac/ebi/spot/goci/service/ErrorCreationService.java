@@ -138,9 +138,9 @@ public class ErrorCreationService {
     }
 
     // Check risk frequency
-    public ValidationError checkRiskFrequency(Association association) {
+    public ValidationError checkAssociationRiskFrequency(Association association) {
         String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
-        return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
+        return ErrorProcessingService.createError(errorMessage, "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
     }
 
     // Check range
