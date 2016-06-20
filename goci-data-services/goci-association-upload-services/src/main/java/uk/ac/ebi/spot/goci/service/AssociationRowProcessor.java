@@ -107,11 +107,21 @@ public class AssociationRowProcessor {
             newAssociation.setRange(row.getRange());
         }
 
+        // Add brackets to the p-value description
+        if (row.getPvalueDescription() != null && !row.getPvalueDescription().isEmpty()) {
+            if (!row.getPvalueDescription().startsWith("(") && !row.getPvalueDescription().endsWith(")")) {
+                String newPvalueDescription = "(".concat(row.getPvalueDescription()).concat(")");
+                newAssociation.setPvalueDescription(newPvalueDescription);
+            }
+        }
+        else {
+            newAssociation.setPvalueDescription(row.getPvalueDescription());
+        }
+
         // Set values common to all association types
         newAssociation.setRiskFrequency(row.getAssociationRiskFrequency());
         newAssociation.setPvalueMantissa(row.getPvalueMantissa());
         newAssociation.setPvalueExponent(row.getPvalueExponent());
-        newAssociation.setPvalueDescription(row.getPvalueDescription());
         newAssociation.setSnpType(row.getSnpType());
         newAssociation.setStandardError(row.getStandardError());
         newAssociation.setDescription(row.getDescription());
