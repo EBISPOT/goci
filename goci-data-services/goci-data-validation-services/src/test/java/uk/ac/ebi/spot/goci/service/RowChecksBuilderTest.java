@@ -37,6 +37,21 @@ public class RowChecksBuilderTest {
     private static final AssociationUploadRow ROW_WITH_NO_RA =
             new AssociationUploadRowBuilder().setRowNumber(1).setSnp("rs123456").build();
 
+    private static final AssociationUploadRow INTERACTION_ROW_NO_ERROR =
+            new AssociationUploadRowBuilder().setRowNumber(1)
+                    .setSnp("rs2562796 x rs16832404")
+                    .setStrongestAllele("rs2562796-T x rs16832404-G")
+                    .setSnpInteraction("Y")
+                    .build();
+
+    private static final AssociationUploadRow INTERACTION_ROW_ERROR =
+            new AssociationUploadRowBuilder().setRowNumber(1)
+                    .setSnp("rs2562796 ; rs16832404")
+                    .setStrongestAllele("rs2562796-T;rs16832404-G")
+                    .setAuthorReportedGene("SFRP1 - SFRP2")
+                    .setSnpInteraction("Y")
+                    .build();
+
     private static final ValidationError ERROR_MISSING_SNP =
             new ValidationErrorBuilder().setField("SNP").setError("Missing value").build();
 
@@ -47,6 +62,17 @@ public class RowChecksBuilderTest {
 
     private static final ValidationError ERROR_03 =
             new ValidationErrorBuilder().build();
+
+    private static final ValidationError SNP_INTERACTION_ERROR_01 =
+            new ValidationErrorBuilder().setField("SNP").setError("Value does not contain correct separator").build();
+
+    private static final ValidationError SNP_INTERACTION_ERROR_02 =
+            new ValidationErrorBuilder().setField("Risk Allele")
+                    .setError("Value does not contain correct separator")
+                    .build();
+
+    private static final ValidationError SNP_INTERACTION_ERROR_03 =
+            new ValidationErrorBuilder().setField("Gene").setError("Value does not contain correct separator").build();
 
     @Before
     public void setUp() throws Exception {
@@ -83,5 +109,24 @@ public class RowChecksBuilderTest {
         assertThat(rowChecksBuilder.runEmptyValueChecks(ROW_WITH_NO_RA)).extracting("field", "error")
                 .contains(tuple("Strongest SNP-Risk Allele/Effect Allele", "Missing value"));
 
+    }
+
+    @Test
+    public void testRunSynthaxChecks() throws Exception {
+        // Stubbing
+        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_NO_ERROR, "x")).thenReturn(ERROR_03);
+        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_NO_ERROR, "x")).thenReturn(ERROR_03);
+        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(SNP_INTERACTION_ERROR_01);
+        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(
+                SNP_INTERACTION_ERROR_02);
+        when(errorCreationService.checkGeneSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(
+                SNP_INTERACTION_ERROR_03);
+
+        assertThat(rowChecksBuilder.runSynthaxChecks(INTERACTION_ROW_NO_ERROR)).hasSize(0);
+        assertThat(rowChecksBuilder.runSynthaxChecks(INTERACTION_ROW_ERROR)).hasSize(3);
+        assertThat(rowChecksBuilder.runSynthaxChecks(INTERACTION_ROW_ERROR)).extracting("field", "error")
+                .contains(tuple("SNP", "Value does not contain correct separator"),
+                          tuple("Risk Allele", "Value does not contain correct separator"),
+                          tuple("Gene", "Value does not contain correct separator"));
     }
 }
