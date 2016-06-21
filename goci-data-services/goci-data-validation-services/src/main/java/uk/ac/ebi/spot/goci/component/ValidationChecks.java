@@ -148,7 +148,7 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "Empty value";
+            error = "Value is empty";
         }
         else {
             switch (value) {
@@ -307,7 +307,7 @@ public class ValidationChecks {
             if (riskAlleleName.isEmpty()) {
                 error = "Risk allele is empty";
             }
-            // Check  risk allele is one of the accepted types
+            // Check risk allele is one of the accepted types
             else {
                 if (!acceptableValues.contains(riskAlleleName)) {
                     error = "Risk allele is not one of ".concat(acceptableValues.toString());
@@ -339,7 +339,7 @@ public class ValidationChecks {
                     float f = Float.parseFloat(riskFrequency);
                     // if string contains only numbers then check its value is between valid range
                     if (f < 0 || f > 1) {
-                        error = "Value is invalid i.e. not less than 0 or more than 1";
+                        error = "Value is invalid, value is not between 0 and 1";
                     }
                 }
                 catch (NumberFormatException e) {
