@@ -56,7 +56,7 @@ public class RowChecksBuilder {
         if (row.getSnpInteraction().equalsIgnoreCase("Y")) {
             errors.add(errorCreationService.checkSnpSynthax(row, "x"));
             errors.add(errorCreationService.checkRiskAlleleSynthax(row, "x"));
-            if (!row.getAuthorReportedGene().isEmpty()) {
+            if (row.getAuthorReportedGene() != null && !row.getAuthorReportedGene().isEmpty()) {
                 errors.add(errorCreationService.checkGeneSynthax(row, "x"));
             }
         }
