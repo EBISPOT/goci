@@ -37,8 +37,8 @@ public class ValidationChecksTest {
     @Test
     public void checkValueIsPresent() throws Exception {
         assertThat(validationChecks.checkValueIsPresent("rs123")).isNull();
-        assertThat(validationChecks.checkValueIsPresent("")).isEqualTo("Empty value");
-        assertThat(validationChecks.checkValueIsPresent(null)).isEqualTo("Empty value");
+        assertThat(validationChecks.checkValueIsPresent("")).isEqualTo("Value is empty");
+        assertThat(validationChecks.checkValueIsPresent(null)).isEqualTo("Value is empty");
     }
 
     @Test
