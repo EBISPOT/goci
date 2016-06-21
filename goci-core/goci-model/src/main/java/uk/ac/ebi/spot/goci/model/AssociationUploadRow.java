@@ -51,9 +51,9 @@ public class AssociationUploadRow {
 
     private String description;
 
-    private String multiSnpHaplotype;
+    private String multiSnpHaplotype = "N";
 
-    private String snpInteraction;
+    private String snpInteraction ="N";
 
     private String snpStatus;
 
