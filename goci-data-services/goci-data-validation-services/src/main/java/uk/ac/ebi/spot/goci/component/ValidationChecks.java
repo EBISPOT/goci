@@ -39,11 +39,11 @@ public class ValidationChecks {
         String error = null;
 
         if (value == null) {
-            error = "Empty value";
+            error = "Value is empty";
         }
         else {
             if (value.isEmpty()) {
-                error = "Empty value";
+                error = "Value is empty";
             }
         }
         return error;
