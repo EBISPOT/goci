@@ -35,7 +35,7 @@ public class ErrorCreationService {
 
     public ValidationError checkStrongestAlleleValueIsPresent(AssociationUploadRow row) {
         String errorMessage = validationChecks.checkValueIsPresent(row.getStrongestAllele());
-        return ErrorProcessingService.createError(errorMessage, "Strongest SNP-Risk Allele/Effect Allele");
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
     }
 
     public ValidationError checkSnpType(Association association) {
