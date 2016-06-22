@@ -3,11 +3,6 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.component.ValidationChecks;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
@@ -28,96 +23,96 @@ public class ErrorCreationService {
         this.validationChecks = validationChecks;
     }
 
-    public ValidationError checkSnpValueIsPresent(AssociationUploadRow row) {
-        String errorMessage = validationChecks.checkValueIsPresent(row.getSnp());
+    public ValidationError checkSnpValueIsPresent(String snp) {
+        String errorMessage = validationChecks.checkValueIsPresent(snp);
         return ErrorProcessingService.createError(errorMessage, "SNP");
     }
 
-    public ValidationError checkStrongestAlleleValueIsPresent(AssociationUploadRow row) {
-        String errorMessage = validationChecks.checkValueIsPresent(row.getStrongestAllele());
+    public ValidationError checkStrongestAlleleValueIsPresent(String allele) {
+        String errorMessage = validationChecks.checkValueIsPresent(allele);
         return ErrorProcessingService.createError(errorMessage, "Risk Allele");
     }
 
-    public ValidationError checkSnpType(Association association) {
-        String errorMessage = validationChecks.checkSnpType(association.getSnpType());
+    public ValidationError checkSnpType(String type) {
+        String errorMessage = validationChecks.checkSnpType(type);
         return ErrorProcessingService.createError(errorMessage, "SNP type");
     }
 
-    public ValidationError checkOrIsPresentAndMoreThanOne(Association association) {
-        String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
+    public ValidationError checkOrIsPresentAndMoreThanOne(Float or) {
+        String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(or);
         return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
-    public ValidationError checkBetaValuesIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaNum());
+    public ValidationError checkBetaValuesIsEmpty(Float beta) {
+        String errorMessage = validationChecks.checkValueIsEmpty(beta);
         return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
-    public ValidationError checkBetaUnitIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaUnit());
+    public ValidationError checkBetaUnitIsEmpty(String unit) {
+        String errorMessage = validationChecks.checkValueIsEmpty(unit);
         return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
-    public ValidationError checkBetaDirectionIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getBetaDirection());
+    public ValidationError checkBetaDirectionIsEmpty(String direction) {
+        String errorMessage = validationChecks.checkValueIsEmpty(direction);
         return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
-    public ValidationError checkBetaIsPresentAndIsNotNegative(Association association) {
-        String errorMessage = validationChecks.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
+    public ValidationError checkBetaIsPresentAndIsNotNegative(Float beta) {
+        String errorMessage = validationChecks.checkBetaIsPresentAndIsNotNegative(beta);
         return ErrorProcessingService.createError(errorMessage, "Beta");
     }
 
-    public ValidationError checkBetaUnitIsPresent(Association association) {
-        String errorMessage = validationChecks.checkValueIsPresent(association.getBetaUnit());
+    public ValidationError checkBetaUnitIsPresent(String unit) {
+        String errorMessage = validationChecks.checkValueIsPresent(unit);
         return ErrorProcessingService.createError(errorMessage, "Beta Unit");
     }
 
-    public ValidationError checkBetaDirectionIsPresent(Association association) {
-        String errorMessage = validationChecks.checkBetaDirectionIsPresent(association.getBetaDirection());
+    public ValidationError checkBetaDirectionIsPresent(String direction) {
+        String errorMessage = validationChecks.checkBetaDirectionIsPresent(direction);
         return ErrorProcessingService.createError(errorMessage, "Beta Direction");
     }
 
-    public ValidationError checkOrEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyNum());
+    public ValidationError checkOrEmpty(Float or) {
+        String errorMessage = validationChecks.checkValueIsEmpty(or);
         return ErrorProcessingService.createError(errorMessage, "OR");
     }
 
-    public ValidationError checkOrRecipEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyRecip());
+    public ValidationError checkOrRecipEmpty(Float orRecip) {
+        String errorMessage = validationChecks.checkValueIsEmpty(orRecip);
         return ErrorProcessingService.createError(errorMessage, "OR reciprocal");
     }
 
-    public ValidationError checkOrPerCopyRecipRangeIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getOrPerCopyRecipRange());
+    public ValidationError checkOrPerCopyRecipRangeIsEmpty(String recipRange) {
+        String errorMessage = validationChecks.checkValueIsEmpty(recipRange);
         return ErrorProcessingService.createError(errorMessage,
                                                   "OR reciprocal range");
     }
 
-    public ValidationError checkRangeIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getRange());
+    public ValidationError checkRangeIsEmpty(String range) {
+        String errorMessage = validationChecks.checkValueIsEmpty(range);
         return ErrorProcessingService.createError(errorMessage, "Range");
     }
 
-    public ValidationError checkStandardErrorIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getStandardError());
+    public ValidationError checkStandardErrorIsEmpty(Float standardError) {
+        String errorMessage = validationChecks.checkValueIsEmpty(standardError);
         return ErrorProcessingService.createError(errorMessage, "Standard Error");
     }
 
-    public ValidationError checkDescriptionIsEmpty(Association association) {
-        String errorMessage = validationChecks.checkValueIsEmpty(association.getDescription());
+    public ValidationError checkDescriptionIsEmpty(String description) {
+        String errorMessage = validationChecks.checkValueIsEmpty(description);
         return ErrorProcessingService.createError(errorMessage,
                                                   "OR/Beta description");
     }
 
     // Pvalue checks
-    public ValidationError checkMantissaIsLessThan10(Association association) {
-        String errorMessage = validationChecks.checkMantissaIsLessThan10(association.getPvalueMantissa());
+    public ValidationError checkMantissaIsLessThan10(Integer mantissa) {
+        String errorMessage = validationChecks.checkMantissaIsLessThan10(mantissa);
         return ErrorProcessingService.createError(errorMessage, "P-value Mantissa");
     }
 
-    public ValidationError checkExponentIsPresent(Association association) {
-        String errorMessage = validationChecks.checkExponentIsPresent(association.getPvalueExponent());
+    public ValidationError checkExponentIsPresent(Integer exponent) {
+        String errorMessage = validationChecks.checkExponentIsPresent(exponent);
         return ErrorProcessingService.createError(errorMessage, "P-value exponent");
     }
 
@@ -127,8 +122,8 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "Gene");
     }
 
-    public ValidationError checkRiskAllele(RiskAllele riskAllele) {
-        String errorMessage = validationChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
+    public ValidationError checkRiskAllele(String riskAllele) {
+        String errorMessage = validationChecks.checkRiskAllele(riskAllele);
         return ErrorProcessingService.createError(errorMessage, "Risk Allele");
     }
 
@@ -138,26 +133,26 @@ public class ErrorCreationService {
     }
 
     // Check risk frequency
-    public ValidationError checkAssociationRiskFrequency(Association association) {
-        String errorMessage = validationChecks.checkRiskFrequency(association.getRiskFrequency());
+    public ValidationError checkAssociationRiskFrequency(String riskFrequency) {
+        String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
         return ErrorProcessingService.createError(errorMessage,
                                                   "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
     }
 
-    public ValidationError checkAlleleRiskFrequency(RiskAllele riskAllele) {
-        String errorMessage = validationChecks.checkRiskFrequency(riskAllele.getRiskFrequency());
+    public ValidationError checkAlleleRiskFrequency(String riskFrequency) {
+        String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
         return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
     }
 
     // Check range
-    public ValidationError checkRangeIsPresent(Association association) {
-        String errorMessage = validationChecks.checkValueIsPresent(association.getRange());
+    public ValidationError checkRangeIsPresent(String range) {
+        String errorMessage = validationChecks.checkValueIsPresent(range);
         return ErrorProcessingService.createError(errorMessage, "Range");
     }
 
     // Check Gene and SNP are on same chromosome
-    public ValidationError checkSnpGeneLocation(SingleNucleotidePolymorphism snp, String gene) {
-        String errorMessage = validationChecks.checkSnpGeneLocation(snp.getRsId(), gene);
+    public ValidationError checkSnpGeneLocation(String snp, String gene) {
+        String errorMessage = validationChecks.checkSnpGeneLocation(snp, gene);
 
         // Based on error message figure out the most appropriate field name
         String field = "Gene";
@@ -167,18 +162,18 @@ public class ErrorCreationService {
     }
 
     // Check snp and risk allele use the correct delimiter
-    public ValidationError checkSnpSynthax(AssociationUploadRow row, String delimiter) {
-        String errorMessage = validationChecks.checkSynthax(row.getSnp(), delimiter);
+    public ValidationError checkSnpSynthax(String snp, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(snp, delimiter);
         return ErrorProcessingService.createError(errorMessage, "SNP");
     }
 
-    public ValidationError checkRiskAlleleSynthax(AssociationUploadRow row, String delimiter) {
-        String errorMessage = validationChecks.checkSynthax(row.getStrongestAllele(), delimiter);
+    public ValidationError checkRiskAlleleSynthax(String allele, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(allele, delimiter);
         return ErrorProcessingService.createError(errorMessage, "Risk Allele");
     }
 
-    public ValidationError checkGeneSynthax(AssociationUploadRow row, String delimiter) {
-        String errorMessage = validationChecks.checkSynthax(row.getAuthorReportedGene(), delimiter);
+    public ValidationError checkGeneSynthax(String gene, String delimiter) {
+        String errorMessage = validationChecks.checkSynthax(gene, delimiter);
         return ErrorProcessingService.createError(errorMessage, "Gene");
     }
 
