@@ -249,7 +249,7 @@ public class SheetProcessorImplTest {
                                        1,
                                        -9,
                                        "This is a description", (float) 2.48, null, null, null, null, "[1.22-1.43]",
-                                       null, (float) 0.01, null, null, null, null, null, null));
+                                       null, (float) 0.01, null, "N", "N", null, null, null));
     }
 
     @Test
@@ -295,7 +295,7 @@ public class SheetProcessorImplTest {
                                        1,
                                        -9,
                                        "test", (float) 2.48, null, null, null, null, "[NR]",
-                                       null, (float) 0.56, null, null, null, null, "novel", null));
+                                       null, (float) 0.56, null, "N", "N", null, "novel", null));
     }
 
     @Test
