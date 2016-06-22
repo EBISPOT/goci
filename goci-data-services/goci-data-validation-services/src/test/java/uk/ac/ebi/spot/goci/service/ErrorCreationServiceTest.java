@@ -47,7 +47,7 @@ public class ErrorCreationServiceTest {
     public void testCheckStrongestAlleleValueIsPresent() throws Exception {
         when(validationChecks.checkValueIsPresent(EMPTY_ROW.getStrongestAllele())).thenReturn("Empty value");
         ValidationError error = errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW);
-        assertThat(error).extracting("field", "error").contains("Strongest SNP-Risk Allele/Effect Allele","Empty value");
+        assertThat(error).extracting("field", "error").contains("Risk Allele","Empty value");
     }
 
     @Test
