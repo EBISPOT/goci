@@ -121,9 +121,20 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "P-value exponent");
     }
 
+    // Loci attributes checks
+    public ValidationError checkGene(String gene) {
+        String errorMessage = validationChecks.checkGene(gene);
+        return ErrorProcessingService.createError(errorMessage, "Gene");
+    }
+
     public ValidationError checkRiskAllele(RiskAllele riskAllele) {
         String errorMessage = validationChecks.checkRiskAllele(riskAllele.getRiskAlleleName());
         return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+    }
+
+    public ValidationError checkSnp(String snp) {
+        String errorMessage = validationChecks.checkSnp(snp);
+        return ErrorProcessingService.createError(errorMessage, "SNP");
     }
 
     // Check risk frequency
@@ -145,8 +156,8 @@ public class ErrorCreationService {
     }
 
     // Check Gene and SNP are on same chromosome
-    public ValidationError checkSnpGeneLocation(SingleNucleotidePolymorphism snp, Gene gene) {
-        String errorMessage = validationChecks.checkSnpGeneLocation(snp.getRsId(), gene.getGeneName());
+    public ValidationError checkSnpGeneLocation(SingleNucleotidePolymorphism snp, String gene) {
+        String errorMessage = validationChecks.checkSnpGeneLocation(snp.getRsId(), gene);
 
         // Based on error message figure out the most appropriate field name
         String field = "Gene";
