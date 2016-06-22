@@ -30,7 +30,7 @@ public class RestUrlBuilder {
 
     public String createUrl(String endpoint, String query) {
         String url = getServer().concat(endpoint).concat(query);
-        getLog().info("Checking url: " + url);
+        getLog().info("Creating url: " + url);
         return url;
     }
 
