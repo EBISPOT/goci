@@ -256,30 +256,32 @@ public class ValidationChecks {
 
         // Ensure valid gene and snp
         String snpError = checkSnp(snp);
-        String geneError = checkGene(gene);
 
         if (snpError != null) {
-            error = "SNP ".concat(snp).concat(" is not valid, cannot check if gene is on same chromosome as SNP");
-
-        }
-        else if (geneError != null) {
-            error = "Gene ".concat(gene).concat(" is not valid, cannot check if gene is on same chromosome as SNP");
+            error = snpError;
         }
         else {
-            // Get all SNP locations and check gene location is one of them
-            Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
-            if (!snpChromosomeNames.isEmpty()) {
-                String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
-                if (!snpChromosomeNames.contains(geneChromosome)) {
-                    error = "Gene ".concat(gene)
-                            .concat(" and SNP ")
-                            .concat(snp)
-                            .concat(" are not on same chromosome");
-                }
+            String geneError = checkGene(gene);
+
+            if (geneError != null) {
+                error = geneError;
             }
             else {
-                error = "SNP ".concat(snp)
-                        .concat(" has no location details, cannot check if gene is on same chromosome as SNP");
+                // Get all SNP locations and check gene location is one of them
+                Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
+                if (!snpChromosomeNames.isEmpty()) {
+                    String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
+                    if (!snpChromosomeNames.contains(geneChromosome)) {
+                        error = "Gene ".concat(gene)
+                                .concat(" and SNP ")
+                                .concat(snp)
+                                .concat(" are not on same chromosome");
+                    }
+                }
+                else {
+                    error = "SNP ".concat(snp)
+                            .concat(" has no location details, cannot check if gene is on same chromosome as SNP");
+                }
             }
         }
         return error;
