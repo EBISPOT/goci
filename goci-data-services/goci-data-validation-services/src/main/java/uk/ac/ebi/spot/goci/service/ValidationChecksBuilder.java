@@ -1,17 +1,20 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 18/04/2016.
@@ -24,6 +27,12 @@ import java.util.Collection;
 public class ValidationChecksBuilder {
 
     private ErrorCreationService errorCreationService;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public ValidationChecksBuilder(ErrorCreationService errorCreationService) {
@@ -262,13 +271,25 @@ public class ValidationChecksBuilder {
         if (loci != null) {
             for (Locus locus : association.getLoci()) {
                 Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
-                Collection<Gene> authorReportedGenes = locus.getAuthorReportedGenes();
+                Collection<ValidationError> geneErrors = new ArrayList<>();
 
-                // Check genes are valid
-                authorReportedGenes.forEach(gene -> {
-                    ValidationError geneError = errorCreationService.checkGene(gene);
-                    validationErrors.add(geneError);
-                });
+                // Firstly check all genes are valid
+                if (!locus.getAuthorReportedGenes().isEmpty()) {
+                    Set<String> locusGenes =
+                            locus.getAuthorReportedGenes().stream().map(Gene::getGeneName).collect(Collectors.toSet());
+
+                    locusGenes.forEach(geneName -> {
+                        getLog().info("Checking gene: ".concat(geneName));
+                        ValidationError geneError = errorCreationService.checkGene(geneName);
+                        if (geneError.getError() != null) {
+                            geneErrors.add(geneError);
+                        }
+                    });
+
+                    if (!geneErrors.isEmpty()) {
+                        validationErrors.addAll(geneErrors);
+                    }
+                }
 
                 // Check risk allele attributes
                 riskAlleles.forEach(riskAllele -> {
@@ -276,15 +297,28 @@ public class ValidationChecksBuilder {
                     ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
                     validationErrors.add(riskAlleleError);
 
-                    SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                    ValidationError snpError = errorCreationService.checkSnp(snp);
+                    // If gene is valid proceed to check gene and snp location
+                    if (geneErrors.isEmpty()) {
+                        Set<String> locusGenes =
+                                locus.getAuthorReportedGenes()
+                                        .stream()
+                                        .map(Gene::getGeneName)
+                                        .collect(Collectors.toSet());
 
-                    authorReportedGenes.forEach(gene -> {
-                        ValidationError snpGeneLocationError =
-                                errorCreationService.checkSnpGeneLocation(snp, gene);
-                        validationErrors.add(snpGeneLocationError);
-                    });
-                    validationErrors.add(snpError);
+                        locusGenes.forEach(geneName -> {
+                            getLog().info("Checking snp/gene location: ".concat(geneName)
+                                                  .concat(" ")
+                                                  .concat(riskAllele.getSnp().getRsId()));
+                            ValidationError snpGeneLocationError =
+                                    errorCreationService.checkSnpGeneLocation(riskAllele.getSnp(), geneName);
+                            validationErrors.add(snpGeneLocationError);
+                        });
+                    }
+                    else {
+                        // Check snp is valid
+                        ValidationError snpError = errorCreationService.checkSnp(riskAllele.getSnp().getRsId());
+                        validationErrors.add(snpError);
+                    }
                 });
             }
         }
