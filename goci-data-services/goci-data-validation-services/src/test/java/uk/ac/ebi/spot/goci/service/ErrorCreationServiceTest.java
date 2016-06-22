@@ -39,14 +39,14 @@ public class ErrorCreationServiceTest {
     @Test
     public void testCheckSnpValueIsPresent() throws Exception {
         when(validationChecks.checkValueIsPresent(EMPTY_ROW.getSnp())).thenReturn("Empty value");
-        ValidationError error = errorCreationService.checkSnpValueIsPresent(EMPTY_ROW);
+        ValidationError error = errorCreationService.checkSnpValueIsPresent(EMPTY_ROW.getSnp());
         assertThat(error).extracting("field", "error").contains("SNP","Empty value");
     }
 
     @Test
     public void testCheckStrongestAlleleValueIsPresent() throws Exception {
         when(validationChecks.checkValueIsPresent(EMPTY_ROW.getStrongestAllele())).thenReturn("Empty value");
-        ValidationError error = errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW);
+        ValidationError error = errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW.getStrongestAllele());
         assertThat(error).extracting("field", "error").contains("Risk Allele","Empty value");
     }
 

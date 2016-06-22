@@ -83,14 +83,14 @@ public class RowChecksBuilderTest {
     public void testRunEmptyValueChecks() throws Exception {
 
         // Stubbing
-        when(errorCreationService.checkSnpValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_SNP);
-        when(errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW)).thenReturn(ERROR_MISSING_RA);
+        when(errorCreationService.checkSnpValueIsPresent(EMPTY_ROW.getSnp())).thenReturn(ERROR_MISSING_SNP);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW.getStrongestAllele())).thenReturn(ERROR_MISSING_RA);
 
-        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_MISSING_SNP);
-        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_SNP)).thenReturn(ERROR_03);
+        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_SNP.getSnp())).thenReturn(ERROR_MISSING_SNP);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_SNP.getStrongestAllele())).thenReturn(ERROR_03);
 
-        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_03);
-        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_RA)).thenReturn(ERROR_MISSING_RA);
+        when(errorCreationService.checkSnpValueIsPresent(ROW_WITH_NO_RA.getSnp())).thenReturn(ERROR_03);
+        when(errorCreationService.checkStrongestAlleleValueIsPresent(ROW_WITH_NO_RA.getStrongestAllele())).thenReturn(ERROR_MISSING_RA);
 
         // Test of no SNP and Risk allele
         assertThat(rowChecksBuilder.runEmptyValueChecks(EMPTY_ROW)).hasSize(2);
@@ -114,12 +114,12 @@ public class RowChecksBuilderTest {
     @Test
     public void testRunSynthaxChecks() throws Exception {
         // Stubbing
-        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_NO_ERROR, "x")).thenReturn(ERROR_03);
-        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_NO_ERROR, "x")).thenReturn(ERROR_03);
-        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(SNP_INTERACTION_ERROR_01);
-        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(
+        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_NO_ERROR.getSnp(), "x")).thenReturn(ERROR_03);
+        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_NO_ERROR.getStrongestAllele(), "x")).thenReturn(ERROR_03);
+        when(errorCreationService.checkSnpSynthax(INTERACTION_ROW_ERROR.getSnp(), "x")).thenReturn(SNP_INTERACTION_ERROR_01);
+        when(errorCreationService.checkRiskAlleleSynthax(INTERACTION_ROW_ERROR.getStrongestAllele(), "x")).thenReturn(
                 SNP_INTERACTION_ERROR_02);
-        when(errorCreationService.checkGeneSynthax(INTERACTION_ROW_ERROR, "x")).thenReturn(
+        when(errorCreationService.checkGeneSynthax(INTERACTION_ROW_ERROR.getAuthorReportedGene(), "x")).thenReturn(
                 SNP_INTERACTION_ERROR_03);
 
         assertThat(rowChecksBuilder.runSynthaxChecks(INTERACTION_ROW_NO_ERROR)).hasSize(0);

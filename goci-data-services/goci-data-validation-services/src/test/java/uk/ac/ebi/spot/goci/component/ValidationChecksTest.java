@@ -139,20 +139,14 @@ public class ValidationChecksTest {
         when(geneCheckingRestService.checkGeneSymbolIsValid("ELF1")).thenReturn(null);
         when(snpCheckingRestService.checkSnpIdentifierIsValid("MADEUPSNP")).thenReturn(
                 "SNP identifier MADEUPSNP is not valid");
-        when(geneCheckingRestService.checkGeneSymbolIsValid("MADEUPGENE")).thenReturn(
-                "Gene symbol MADEUPGENE is not valid");
 
         // Test pass condition
         assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "ELF1")).isNull();
 
         // Test invalid SNP condition
         assertThat(validationChecks.checkSnpGeneLocation("MADEUPSNP", "ELF1")).isEqualTo(
-                "SNP MADEUPSNP is not valid, cannot check if gene is on same chromosome as SNP");
-
-        // Test invalid Gene condition
-        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "MADEUPGENE")).isEqualTo(
-                "Gene MADEUPGENE is not valid, cannot check if gene is on same chromosome as SNP");
-
+                "SNP identifier MADEUPSNP is not valid");
+        
         // Test SNP with no locations
         assertThat(validationChecks.checkSnpGeneLocation("rs1234", "SFRP1")).isEqualTo(
                 "SNP rs1234 has no location details, cannot check if gene is on same chromosome as SNP");
