@@ -146,7 +146,7 @@ public class ValidationChecksTest {
         // Test invalid SNP condition
         assertThat(validationChecks.checkSnpGeneLocation("MADEUPSNP", "ELF1")).isEqualTo(
                 "SNP identifier MADEUPSNP is not valid");
-        
+
         // Test SNP with no locations
         assertThat(validationChecks.checkSnpGeneLocation("rs1234", "SFRP1")).isEqualTo(
                 "SNP rs1234 has no location details, cannot check if gene is on same chromosome as SNP");
