@@ -34,8 +34,8 @@ public class RowChecksBuilder {
     public Collection<ValidationError> runEmptyValueChecks(AssociationUploadRow row) {
 
         Collection<ValidationError> errors = new ArrayList<>();
-        errors.add(errorCreationService.checkSnpValueIsPresent(row));
-        errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row));
+        errors.add(errorCreationService.checkSnpValueIsPresent(row.getSnp()));
+        errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row.getStrongestAllele()));
         return ErrorProcessingService.checkForValidErrors(errors);
     }
 
@@ -49,15 +49,15 @@ public class RowChecksBuilder {
         Collection<ValidationError> errors = new ArrayList<>();
 
         if (row.getMultiSnpHaplotype().equalsIgnoreCase("Y")) {
-            errors.add(errorCreationService.checkSnpSynthax(row, ";"));
-            errors.add(errorCreationService.checkRiskAlleleSynthax(row, ";"));
+            errors.add(errorCreationService.checkSnpSynthax(row.getSnp(), ";"));
+            errors.add(errorCreationService.checkRiskAlleleSynthax(row.getStrongestAllele(), ";"));
         }
 
         if (row.getSnpInteraction().equalsIgnoreCase("Y")) {
-            errors.add(errorCreationService.checkSnpSynthax(row, "x"));
-            errors.add(errorCreationService.checkRiskAlleleSynthax(row, "x"));
+            errors.add(errorCreationService.checkSnpSynthax(row.getSnp(), "x"));
+            errors.add(errorCreationService.checkRiskAlleleSynthax(row.getStrongestAllele(), "x"));
             if (row.getAuthorReportedGene() != null && !row.getAuthorReportedGene().isEmpty()) {
-                errors.add(errorCreationService.checkGeneSynthax(row, "x"));
+                errors.add(errorCreationService.checkGeneSynthax(row.getAuthorReportedGene(), "x"));
             }
         }
         return ErrorProcessingService.checkForValidErrors(errors);

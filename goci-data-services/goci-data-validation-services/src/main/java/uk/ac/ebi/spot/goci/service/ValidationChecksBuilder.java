@@ -47,8 +47,8 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runPvalueChecks(Association association) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
-        validationErrors.add(errorCreationService.checkMantissaIsLessThan10(association));
-        validationErrors.add(errorCreationService.checkExponentIsPresent(association));
+        validationErrors.add(errorCreationService.checkMantissaIsLessThan10(association.getPvalueMantissa()));
+        validationErrors.add(errorCreationService.checkExponentIsPresent(association.getPvalueExponent()));
         return ErrorProcessingService.checkForValidErrors(validationErrors);
     }
 
@@ -60,7 +60,7 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAnnotationChecks(Association association) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
-        validationErrors.add(errorCreationService.checkSnpType(association));
+        validationErrors.add(errorCreationService.checkSnpType(association.getSnpType()));
 
         if (association.getSnpInteraction()) {
             for (Locus locus : association.getLoci()) {
@@ -84,17 +84,17 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndMoreThanOne(association);
+        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
         validationErrors.add(orIsPresent);
 
-        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
         validationErrors.add(betaFoundForOr);
 
-        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association.getBetaUnit());
         validationErrors.add(betaUnitFoundForOr);
 
         ValidationError betaDirectionFoundForOr =
-                errorCreationService.checkBetaDirectionIsEmpty(association);
+                errorCreationService.checkBetaDirectionIsEmpty(association.getBetaDirection());
         validationErrors.add(betaDirectionFoundForOr);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -110,18 +110,18 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
         validationErrors.add(betaFoundForOr);
 
-        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationError betaUnitFoundForOr = errorCreationService.checkBetaUnitIsEmpty(association.getBetaUnit());
         validationErrors.add(betaUnitFoundForOr);
 
         ValidationError betaDirectionFoundForOr =
-                errorCreationService.checkBetaDirectionIsEmpty(association);
+                errorCreationService.checkBetaDirectionIsEmpty(association.getBetaDirection());
         validationErrors.add(betaDirectionFoundForOr);
 
         ValidationError rangeNotFound =
-                errorCreationService.checkRangeIsPresent(association);
+                errorCreationService.checkRangeIsPresent(association.getRange());
         validationErrors.add(rangeNotFound);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -137,24 +137,24 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
         validationErrors.add(betaIsPresent);
 
-        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association);
+        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association.getBetaUnit());
         validationErrors.add(betaUnitNotFound);
 
         ValidationError betaDirectionNotFound =
-                errorCreationService.checkBetaDirectionIsPresent(association);
+                errorCreationService.checkBetaDirectionIsPresent(association.getBetaDirection());
         validationErrors.add(betaDirectionNotFound);
 
-        ValidationError orFound = errorCreationService.checkOrEmpty(association);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association.getOrPerCopyNum());
         validationErrors.add(orFound);
 
-        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association);
+        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association.getOrPerCopyRecip());
         validationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association);
+                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association.getOrPerCopyRecipRange());
         validationErrors.add(orRecipRangeFound);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -168,21 +168,21 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAuthorLevelBetaChecks(Association association) {
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association);
+        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
         validationErrors.add(betaIsPresent);
 
-        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association);
+        ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association.getBetaUnit());
         validationErrors.add(betaUnitNotFound);
 
         ValidationError betaDirectionNotFound =
-                errorCreationService.checkBetaDirectionIsPresent(association);
+                errorCreationService.checkBetaDirectionIsPresent(association.getBetaDirection());
         validationErrors.add(betaDirectionNotFound);
 
-        ValidationError orFound = errorCreationService.checkOrEmpty(association);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association.getOrPerCopyNum());
         validationErrors.add(orFound);
 
         ValidationError rangeNotFound =
-                errorCreationService.checkRangeIsPresent(association);
+                errorCreationService.checkRangeIsPresent(association.getRange());
         validationErrors.add(rangeNotFound);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -197,34 +197,34 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError orFound = errorCreationService.checkOrEmpty(association);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association.getOrPerCopyNum());
         validationErrors.add(orFound);
 
-        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association);
+        ValidationError orRecipFound = errorCreationService.checkOrRecipEmpty(association.getOrPerCopyRecip());
         validationErrors.add(orRecipFound);
 
         ValidationError orRecipRangeFound =
-                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association);
+                errorCreationService.checkOrPerCopyRecipRangeIsEmpty(association.getOrPerCopyRecipRange());
         validationErrors.add(orRecipRangeFound);
 
-        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
         validationErrors.add(betaFound);
 
-        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association.getBetaUnit());
         validationErrors.add(betaUnitFound);
 
         ValidationError betaDirectionFound =
-                errorCreationService.checkBetaDirectionIsEmpty(association);
+                errorCreationService.checkBetaDirectionIsEmpty(association.getBetaDirection());
         validationErrors.add(betaDirectionFound);
 
-        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association);
+        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association.getRange());
         validationErrors.add(rangeFound);
 
         ValidationError standardErrorFound =
-                errorCreationService.checkStandardErrorIsEmpty(association);
+                errorCreationService.checkStandardErrorIsEmpty(association.getStandardError());
         validationErrors.add(standardErrorFound);
 
-        ValidationError descriptionFound = errorCreationService.checkDescriptionIsEmpty(association);
+        ValidationError descriptionFound = errorCreationService.checkDescriptionIsEmpty(association.getDescription());
         validationErrors.add(descriptionFound);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -239,20 +239,20 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError orFound = errorCreationService.checkOrEmpty(association);
+        ValidationError orFound = errorCreationService.checkOrEmpty(association.getOrPerCopyNum());
         validationErrors.add(orFound);
 
-        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association);
+        ValidationError betaFound = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
         validationErrors.add(betaFound);
 
-        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association);
+        ValidationError betaUnitFound = errorCreationService.checkBetaUnitIsEmpty(association.getBetaUnit());
         validationErrors.add(betaUnitFound);
 
         ValidationError betaDirectionFound =
-                errorCreationService.checkBetaDirectionIsEmpty(association);
+                errorCreationService.checkBetaDirectionIsEmpty(association.getBetaDirection());
         validationErrors.add(betaDirectionFound);
 
-        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association);
+        ValidationError rangeFound = errorCreationService.checkRangeIsEmpty(association.getRange());
         validationErrors.add(rangeFound);
 
         return ErrorProcessingService.checkForValidErrors(validationErrors);
@@ -294,7 +294,7 @@ public class ValidationChecksBuilder {
                 // Check risk allele attributes
                 riskAlleles.forEach(riskAllele -> {
 
-                    ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele);
+                    ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele.getRiskAlleleName());
                     validationErrors.add(riskAlleleError);
 
                     // If gene is valid proceed to check gene and snp location
@@ -310,7 +310,7 @@ public class ValidationChecksBuilder {
                                                   .concat(" ")
                                                   .concat(riskAllele.getSnp().getRsId()));
                             ValidationError snpGeneLocationError =
-                                    errorCreationService.checkSnpGeneLocation(riskAllele.getSnp(), geneName);
+                                    errorCreationService.checkSnpGeneLocation(riskAllele.getSnp().getRsId(), geneName);
                             validationErrors.add(snpGeneLocationError);
                         });
                     }
@@ -334,13 +334,13 @@ public class ValidationChecksBuilder {
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
         // Check the association risk frequency
-        validationErrors.add(errorCreationService.checkAssociationRiskFrequency(association));
+        validationErrors.add(errorCreationService.checkAssociationRiskFrequency(association.getRiskFrequency()));
 
         // Check risk frequency on alleles if its a SNP interaction association
         if (association.getSnpInteraction()) {
             for (Locus locus : association.getLoci()) {
                 locus.getStrongestRiskAlleles().forEach(riskAllele -> {
-                    validationErrors.add(errorCreationService.checkAlleleRiskFrequency(riskAllele));
+                    validationErrors.add(errorCreationService.checkAlleleRiskFrequency(riskAllele.getRiskFrequency()));
                 });
             }
         }
