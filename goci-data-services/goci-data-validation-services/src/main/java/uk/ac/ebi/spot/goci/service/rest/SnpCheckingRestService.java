@@ -84,7 +84,7 @@ public class SnpCheckingRestService {
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            getLog().error("Getting locations for SNP ".concat(snp).concat("failed"), e);
+            getLog().error("Getting locations for SNP ".concat(snp).concat(" failed"), e);
         }
         return snpChromosomeNames;
     }
