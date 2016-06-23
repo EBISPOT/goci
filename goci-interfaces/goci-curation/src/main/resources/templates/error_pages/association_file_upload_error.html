@@ -20,6 +20,8 @@
     <script type="text/javascript"
             charset="utf8"
             src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
 <body>
 
@@ -50,7 +52,8 @@
             <tr>
                 <th>Row</th>
                 <th>Column Name</th>
-                <th>Error</th>
+                <th>Error Message</th>
+                <th>Warning</th>
             </tr>
             </thead>
             <tbody>
@@ -58,12 +61,17 @@
                 <td th:text="${fileError.row}?: '' "></td>
                 <td th:text="${fileError.columnName}?: '' "></td>
                 <td th:text="${fileError.error}?: '' "></td>
+                <td>
+                    <div th:if="${#bools.isTrue(fileError.warning)}">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
 
 
-        <div class="form-group">
+        <div class="form-group" th:if="${#bools.isFalse(errorsFound)}">
             <div class="col-md-10">
                 <div id="uploadSNPsForn">
 

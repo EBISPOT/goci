@@ -202,9 +202,21 @@ public class AssociationController {
             getLog().error("Errors found in file: " + file.getOriginalFilename());
             model.addAttribute("fileName", file.getOriginalFilename());
             model.addAttribute("fileErrors", fileErrors);
+
+            // Determine if we have any errors rather than warnings
+            long errors = fileErrors.stream()
+                    .filter(associationUploadErrorView -> !associationUploadErrorView.getWarning())
+                    .count();
+
+            if (errors > 0) {
+                model.addAttribute("errorsFound", true);
+            }
+
             return "error_pages/association_file_upload_error";
         }
-        return "redirect:/studies/" + studyId + "/associations";
+        else {
+            return "redirect:/studies/" + studyId + "/associations";
+        }
     }
 
     // Upload a spreadsheet of snp association information

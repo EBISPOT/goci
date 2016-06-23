@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
@@ -173,12 +172,9 @@ public class AssociationUploadService {
                                                      AssociationUploadErrorView associationUploadErrorView =
                                                              new AssociationUploadErrorView(rowValidationSummary.getRow().getRowNumber(),
                                                                                             validationError.getField(),
-                                                                                            validationError.getError());
-
+                                                                                            validationError.getError(), validationError.getWarning());
                                                      errors.add(associationUploadErrorView);
                                                  }
-
-
         );
         return errors;
     }
@@ -195,11 +191,9 @@ public class AssociationUploadService {
                                                    AssociationUploadErrorView associationUploadErrorView =
                                                            new AssociationUploadErrorView(associationSummary.getRowNumber(),
                                                                                           validationError.getField(),
-                                                                                          validationError.getError());
+                                                                                          validationError.getError(), validationError.getWarning());
                                                    errors.add(associationUploadErrorView);
                                                }
-
-
         );
         return errors;
     }

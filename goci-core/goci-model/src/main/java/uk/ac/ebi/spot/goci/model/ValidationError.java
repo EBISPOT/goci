@@ -14,6 +14,8 @@ public class ValidationError {
 
     private String error;
 
+    private Boolean warning = false;
+
     public String getField() {
         return field;
     }
@@ -28,5 +30,13 @@ public class ValidationError {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public Boolean getWarning() {
+        return warning;
+    }
+
+    public void setWarning(Boolean warning) {
+        this.warning = warning;
     }
 }

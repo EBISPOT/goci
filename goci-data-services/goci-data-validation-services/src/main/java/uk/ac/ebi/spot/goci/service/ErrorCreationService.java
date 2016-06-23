@@ -25,129 +25,129 @@ public class ErrorCreationService {
 
     public ValidationError checkSnpValueIsPresent(String snp) {
         String errorMessage = validationChecks.checkValueIsPresent(snp);
-        return ErrorProcessingService.createError(errorMessage, "SNP");
+        return ErrorProcessingService.createError(errorMessage, "SNP", false);
     }
 
     public ValidationError checkStrongestAlleleValueIsPresent(String allele) {
         String errorMessage = validationChecks.checkValueIsPresent(allele);
-        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele",false);
     }
 
     public ValidationError checkSnpType(String type) {
         String errorMessage = validationChecks.checkSnpType(type);
-        return ErrorProcessingService.createError(errorMessage, "SNP type");
+        return ErrorProcessingService.createError(errorMessage, "SNP type",false);
     }
 
     public ValidationError checkOrIsPresentAndMoreThanOne(Float or) {
         String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(or);
-        return ErrorProcessingService.createError(errorMessage, "OR");
+        return ErrorProcessingService.createError(errorMessage, "OR", false);
     }
 
     public ValidationError checkBetaValuesIsEmpty(Float beta) {
         String errorMessage = validationChecks.checkValueIsEmpty(beta);
-        return ErrorProcessingService.createError(errorMessage, "Beta");
+        return ErrorProcessingService.createError(errorMessage, "Beta",false);
     }
 
     public ValidationError checkBetaUnitIsEmpty(String unit) {
         String errorMessage = validationChecks.checkValueIsEmpty(unit);
-        return ErrorProcessingService.createError(errorMessage, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage, "Beta Unit",false);
     }
 
     public ValidationError checkBetaDirectionIsEmpty(String direction) {
         String errorMessage = validationChecks.checkValueIsEmpty(direction);
-        return ErrorProcessingService.createError(errorMessage, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage, "Beta Direction",false);
     }
 
     public ValidationError checkBetaIsPresentAndIsNotNegative(Float beta) {
         String errorMessage = validationChecks.checkBetaIsPresentAndIsNotNegative(beta);
-        return ErrorProcessingService.createError(errorMessage, "Beta");
+        return ErrorProcessingService.createError(errorMessage, "Beta",false);
     }
 
     public ValidationError checkBetaUnitIsPresent(String unit) {
         String errorMessage = validationChecks.checkValueIsPresent(unit);
-        return ErrorProcessingService.createError(errorMessage, "Beta Unit");
+        return ErrorProcessingService.createError(errorMessage, "Beta Unit",false);
     }
 
     public ValidationError checkBetaDirectionIsPresent(String direction) {
         String errorMessage = validationChecks.checkBetaDirectionIsPresent(direction);
-        return ErrorProcessingService.createError(errorMessage, "Beta Direction");
+        return ErrorProcessingService.createError(errorMessage, "Beta Direction",false);
     }
 
     public ValidationError checkOrEmpty(Float or) {
         String errorMessage = validationChecks.checkValueIsEmpty(or);
-        return ErrorProcessingService.createError(errorMessage, "OR");
+        return ErrorProcessingService.createError(errorMessage, "OR",false);
     }
 
     public ValidationError checkOrRecipEmpty(Float orRecip) {
         String errorMessage = validationChecks.checkValueIsEmpty(orRecip);
-        return ErrorProcessingService.createError(errorMessage, "OR reciprocal");
+        return ErrorProcessingService.createError(errorMessage, "OR reciprocal",false);
     }
 
     public ValidationError checkOrPerCopyRecipRangeIsEmpty(String recipRange) {
         String errorMessage = validationChecks.checkValueIsEmpty(recipRange);
         return ErrorProcessingService.createError(errorMessage,
-                                                  "OR reciprocal range");
+                                                  "OR reciprocal range",false);
     }
 
     public ValidationError checkRangeIsEmpty(String range) {
         String errorMessage = validationChecks.checkValueIsEmpty(range);
-        return ErrorProcessingService.createError(errorMessage, "Range");
+        return ErrorProcessingService.createError(errorMessage, "Range",false);
     }
 
     public ValidationError checkStandardErrorIsEmpty(Float standardError) {
         String errorMessage = validationChecks.checkValueIsEmpty(standardError);
-        return ErrorProcessingService.createError(errorMessage, "Standard Error");
+        return ErrorProcessingService.createError(errorMessage, "Standard Error",false);
     }
 
     public ValidationError checkDescriptionIsEmpty(String description) {
         String errorMessage = validationChecks.checkValueIsEmpty(description);
         return ErrorProcessingService.createError(errorMessage,
-                                                  "OR/Beta description");
+                                                  "OR/Beta description",false);
     }
 
     // Pvalue checks
     public ValidationError checkMantissaIsLessThan10(Integer mantissa) {
         String errorMessage = validationChecks.checkMantissaIsLessThan10(mantissa);
-        return ErrorProcessingService.createError(errorMessage, "P-value Mantissa");
+        return ErrorProcessingService.createError(errorMessage, "P-value Mantissa",false);
     }
 
     public ValidationError checkExponentIsPresent(Integer exponent) {
         String errorMessage = validationChecks.checkExponentIsPresent(exponent);
-        return ErrorProcessingService.createError(errorMessage, "P-value exponent");
+        return ErrorProcessingService.createError(errorMessage, "P-value exponent",false);
     }
 
     // Loci attributes checks
     public ValidationError checkGene(String gene) {
         String errorMessage = validationChecks.checkGene(gene);
-        return ErrorProcessingService.createError(errorMessage, "Gene");
+        return ErrorProcessingService.createError(errorMessage, "Gene", true);
     }
 
     public ValidationError checkRiskAllele(String riskAllele) {
         String errorMessage = validationChecks.checkRiskAllele(riskAllele);
-        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele", false);
     }
 
     public ValidationError checkSnp(String snp) {
         String errorMessage = validationChecks.checkSnp(snp);
-        return ErrorProcessingService.createError(errorMessage, "SNP");
+        return ErrorProcessingService.createError(errorMessage, "SNP", true);
     }
 
     // Check risk frequency
     public ValidationError checkAssociationRiskFrequency(String riskFrequency) {
         String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
         return ErrorProcessingService.createError(errorMessage,
-                                                  "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls");
+                                                  "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls",false);
     }
 
     public ValidationError checkAlleleRiskFrequency(String riskFrequency) {
         String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
-        return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls");
+        return ErrorProcessingService.createError(errorMessage, "Independent SNP risk allele frequency in controls",false);
     }
 
     // Check range
     public ValidationError checkRangeIsPresent(String range) {
         String errorMessage = validationChecks.checkValueIsPresent(range);
-        return ErrorProcessingService.createError(errorMessage, "Range");
+        return ErrorProcessingService.createError(errorMessage, "Range",false);
     }
 
     // Check Gene and SNP are on same chromosome
@@ -158,27 +158,27 @@ public class ErrorCreationService {
         String field = "Gene";
         if (errorMessage != null && errorMessage.startsWith("SNP")) {field = "SNP";}
 
-        return ErrorProcessingService.createError(errorMessage, field);
+        return ErrorProcessingService.createError(errorMessage, field, true);
     }
 
     // Check snp and risk allele use the correct delimiter
     public ValidationError checkSnpSynthax(String snp, String delimiter) {
         String errorMessage = validationChecks.checkSynthax(snp, delimiter);
-        return ErrorProcessingService.createError(errorMessage, "SNP");
+        return ErrorProcessingService.createError(errorMessage, "SNP",false);
     }
 
     public ValidationError checkRiskAlleleSynthax(String allele, String delimiter) {
         String errorMessage = validationChecks.checkSynthax(allele, delimiter);
-        return ErrorProcessingService.createError(errorMessage, "Risk Allele");
+        return ErrorProcessingService.createError(errorMessage, "Risk Allele", false);
     }
 
     public ValidationError checkGeneSynthax(String gene, String delimiter) {
         String errorMessage = validationChecks.checkSynthax(gene, delimiter);
-        return ErrorProcessingService.createError(errorMessage, "Gene");
+        return ErrorProcessingService.createError(errorMessage, "Gene", false);
     }
 
     public ValidationError checkSnpStatusIsPresent(Boolean genomeWide, Boolean limitedList) {
         String errorMessage = validationChecks.checkSnpStatus(genomeWide, limitedList);
-        return ErrorProcessingService.createError(errorMessage, "SNP Status");
+        return ErrorProcessingService.createError(errorMessage, "SNP Status",false);
     }
 }

@@ -15,10 +15,13 @@ public class AssociationUploadErrorView {
 
     private String error;
 
-    public AssociationUploadErrorView(Integer row, String columnName, String error) {
+    private Boolean warning;
+
+    public AssociationUploadErrorView(Integer row, String columnName, String error, Boolean warning) {
         this.row = row;
         this.columnName = columnName;
         this.error = error;
+        this.warning = warning;
     }
 
     public Integer getRow() {
@@ -43,5 +46,13 @@ public class AssociationUploadErrorView {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public Boolean getWarning() {
+        return warning;
+    }
+
+    public void setWarning(Boolean warning) {
+        this.warning = warning;
     }
 }

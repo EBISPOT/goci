@@ -19,13 +19,14 @@ public class ErrorProcessingService {
      * @param message       Error message
      * @param columnChecked Name of the column checked
      */
-    public static ValidationError createError(String message, String columnChecked) {
+    public static ValidationError createError(String message, String columnChecked, Boolean warning) {
         ValidationError error = new ValidationError();
 
         // If there is an error create a fully formed object
         if (message != null) {
             error.setField(columnChecked);
             error.setError(message);
+            error.setWarning(warning);
         }
         return error;
     }
