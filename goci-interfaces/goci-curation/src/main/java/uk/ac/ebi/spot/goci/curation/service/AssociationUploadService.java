@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
@@ -18,6 +19,7 @@ import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +68,7 @@ public class AssociationUploadService {
             // Send file, including path, to SNP batch loader process
             File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
             ValidationSummary validationSummary =
-                    associationFileUploadService.processAssociationFile(uploadedFile, "full");
+                    associationFileUploadService.processAndValidateAssociationFile(uploadedFile, "full");
 
             List<Association> associationsToSave = new ArrayList<>();
             if (validationSummary != null) {
@@ -118,6 +120,36 @@ public class AssociationUploadService {
             throw new IOException(e);
         }
     }
+
+    public void uploadAndSave(MultipartFile file, Study study, SecureUser user)
+            throws IOException, EnsemblMappingException {
+
+        String originalFilename = file.getOriginalFilename();
+        getLog().info("Uploading file: ".concat(originalFilename));
+
+        // Upload file
+        try {
+            uploadFile(file, study.getId());
+
+            // Send file, including path, to SNP batch loader process
+            File uploadedFile = studyFileService.getFileFromFileName(study.getId(), originalFilename);
+            Collection<Association> associations =
+                    associationFileUploadService.processFile(uploadedFile);
+
+
+            if (!associations.isEmpty()) {
+                studyFileService.createFileUploadEvent(study.getId(), user);
+
+                for (Association association : associations) {
+                    associationOperationsService.saveNewAssociation(association, study);
+                }
+            }
+        }
+        catch (IOException e) {
+            throw new IOException(e);
+        }
+    }
+
 
     /**
      * Upload a file to the study specific dir

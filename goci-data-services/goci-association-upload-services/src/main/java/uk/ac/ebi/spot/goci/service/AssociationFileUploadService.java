@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -61,7 +62,7 @@ public class AssociationFileUploadService {
      *
      * @param file XLSX file supplied by user
      */
-    public ValidationSummary processAssociationFile(File file, String validationLevel)
+    public ValidationSummary processAndValidateAssociationFile(File file, String validationLevel)
             throws FileNotFoundException, SheetProcessingException {
 
         ValidationSummary validationSummary = new ValidationSummary();
@@ -118,6 +119,40 @@ public class AssociationFileUploadService {
         validationSummary.setAssociationSummaries(associationSummaries);
         validationSummary.setRowValidationSummaries(rowValidationSummaries);
         return validationSummary;
+    }
+
+    public Collection<Association> processFile(File file) throws FileNotFoundException, SheetProcessingException {
+        Collection<AssociationUploadRow> fileRows = new ArrayList<>();
+
+        if (file.exists()) {
+            // Create sheet
+            XSSFSheet sheet = null;
+            try {
+                // Create a sheet for reading
+                sheet = sheetCreationService.createSheet(file.getAbsolutePath());
+
+                // Process file, depending on validation level, into a generic row object
+                UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(null);
+                fileRows = uploadSheetProcessor.readSheetRows(sheet);
+            }
+            catch (InvalidFormatException | InvalidOperationException | IOException e) {
+                getLog().error("File: " + file.getName() + " cannot be processed", e);
+                file.delete();
+                throw new SheetProcessingException("File: " + file.getName() + " cannot be processed", e);
+            }
+        }
+        else {
+            getLog().error("File: " + file.getName() + " cannot be found");
+            throw new FileNotFoundException("File does not exist");
+        }
+
+        Collection<Association> associations = new ArrayList<>();
+        if (!fileRows.isEmpty()) {
+            fileRows.forEach(associationUploadRow -> {
+                associations.add(associationRowProcessor.createAssociationFromUploadRow(associationUploadRow));
+            });
+        }
+        return associations;
     }
 
     /**

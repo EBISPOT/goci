@@ -202,7 +202,30 @@ public class AssociationController {
             getLog().error("Errors found in file: " + file.getOriginalFilename());
             model.addAttribute("fileName", file.getOriginalFilename());
             model.addAttribute("fileErrors", fileErrors);
-            return "association_file_upload_error";
+            return "error_pages/association_file_upload_error";
+        }
+        return "redirect:/studies/" + studyId + "/associations";
+    }
+
+    // Upload a spreadsheet of snp association information
+    @RequestMapping(value = "/studies/{studyId}/associations/upload_and_save",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.POST)
+    public String uploadAndSaveStudySnps(@RequestParam("file") MultipartFile file,
+                                         @PathVariable Long studyId,
+                                         Model model,
+                                         HttpServletRequest request) throws IOException {
+
+        // Establish our study object and upload file into study dir
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        List<AssociationUploadErrorView> fileErrors = null;
+        try {
+            associationUploadService.uploadAndSave(file, study, currentUserDetailsService.getUserFromRequest(request));
+        }
+        catch (EnsemblMappingException e) {
+            return "ensembl_mapping_failure";
         }
         return "redirect:/studies/" + studyId + "/associations";
     }

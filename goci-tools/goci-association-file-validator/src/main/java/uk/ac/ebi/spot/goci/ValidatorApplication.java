@@ -93,7 +93,7 @@ public class ValidatorApplication {
     private void runUpload(File file, String validationLevel) throws FileNotFoundException {
 
         ValidationSummary validationSummary =
-                associationFileUploadService.processAssociationFile(file, validationLevel);
+                associationFileUploadService.processAndValidateAssociationFile(file, validationLevel);
         validationLogService.processErrors(inputFile, validationSummary);
     }
 
