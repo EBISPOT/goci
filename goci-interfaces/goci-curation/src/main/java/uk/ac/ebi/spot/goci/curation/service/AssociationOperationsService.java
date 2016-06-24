@@ -25,6 +25,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
@@ -46,6 +47,7 @@ public class AssociationOperationsService {
     private AssociationReportRepository associationReportRepository;
     private AssociationRepository associationRepository;
     private LocusRepository locusRepository;
+    private AssociationValidationReportRepository associationValidationReportRepository;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -59,6 +61,7 @@ public class AssociationOperationsService {
                                         AssociationReportRepository associationReportRepository,
                                         AssociationRepository associationRepository,
                                         LocusRepository locusRepository,
+                                        AssociationValidationReportRepository associationValidationReportRepository,
                                         SnpFormRowValidator snpFormRowValidator,
                                         SnpFormColumnValidator snpFormColumnValidator,
                                         MappingService mappingService,
@@ -68,6 +71,7 @@ public class AssociationOperationsService {
         this.associationReportRepository = associationReportRepository;
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
+        this.associationValidationReportRepository = associationValidationReportRepository;
         this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
@@ -85,20 +89,24 @@ public class AssociationOperationsService {
         // Save our association information
         association.setLastUpdateDate(new Date());
         associationRepository.save(association);
+        createAssociationValidationReport(errors, association.getId());
 
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
         mappingService.validateAndMapAssociation(association, mappedBy);
-
-        createAssociationValidationReport(errors, association.getId());
     }
 
     @Async
     public void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
         Association association = associationRepository.findOne(id);
         errors.forEach(validationError -> {
-            AssociationValidationReport associationValidationReport = new AssociationValidationReport(validationError.getError(),validationError.getField(),false, association);
-            // TODO SAVE VALIDATION REPORT
+            AssociationValidationReport associationValidationReport =
+                    new AssociationValidationReport(validationError.getError(),
+                                                    validationError.getField(),
+                                                    false,
+                                                    association);
+            // save validation report
+            associationValidationReportRepository.save(associationValidationReport);
         });
     }
 
