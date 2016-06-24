@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by emma on 14/06/2016.
@@ -104,25 +103,22 @@ public class AssociationUploadService {
                         );
                     }
                     else {
-                        associationsToSave = validationSummary.getAssociationSummaries().stream().map(
-                                AssociationSummary::getAssociation)
-                                .collect(Collectors.toList());
+                        studyFileService.createFileUploadEvent(study.getId(), user);
+                        saveAssociations(validationSummary.getAssociationSummaries(),study);
                     }
                 }
             }
-
-            if (!associationsToSave.isEmpty()) {
-                studyFileService.createFileUploadEvent(study.getId(), user);
-
-                for (Association association : associationsToSave) {
-                    associationOperationsService.saveNewAssociation(association, study);
-                }
-            }
-
             return fileErrors;
         }
         catch (IOException e) {
             throw new IOException(e);
+        }
+    }
+
+    private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study) throws EnsemblMappingException {
+
+        for (AssociationSummary associationSummary:associationSummaries) {
+            associationOperationsService.saveNewAssociation(associationSummary.getAssociation(), study, associationSummary.getErrors());
         }
     }
 

@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
@@ -15,11 +16,13 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
+import uk.ac.ebi.spot.goci.model.AssociationValidationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -71,7 +74,7 @@ public class AssociationOperationsService {
         this.lociAttributesService = lociAttributesService;
     }
 
-    public void saveNewAssociation(Association association, Study study)
+    public void saveNewAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
 
         association.getLoci().forEach(this::saveLocusAttributes);
@@ -86,7 +89,19 @@ public class AssociationOperationsService {
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
         mappingService.validateAndMapAssociation(association, mappedBy);
+
+        createAssociationValidationReport(errors, association.getId());
     }
+
+    @Async
+    public void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
+        Association association = associationRepository.findOne(id);
+        errors.forEach(validationError -> {
+            AssociationValidationReport associationValidationReport = new AssociationValidationReport(validationError.getError(),validationError.getField(),false, association);
+            // TODO SAVE VALIDATION REPORT
+        });
+    }
+
 
     /**
      * Save transient objects on association before saving association
