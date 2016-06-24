@@ -219,29 +219,6 @@ public class AssociationController {
         }
     }
 
-    // Upload a spreadsheet of snp association information
-    @RequestMapping(value = "/studies/{studyId}/associations/upload_and_save",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.POST)
-    public String uploadAndSaveStudySnps(@RequestParam("file") MultipartFile file,
-                                         @PathVariable Long studyId,
-                                         Model model,
-                                         HttpServletRequest request) throws IOException {
-
-        // Establish our study object and upload file into study dir
-        Study study = studyRepository.findOne(studyId);
-        model.addAttribute("study", studyRepository.findOne(studyId));
-
-        List<AssociationUploadErrorView> fileErrors = null;
-        try {
-            associationUploadService.uploadAndSave(file, study, currentUserDetailsService.getUserFromRequest(request));
-        }
-        catch (EnsemblMappingException e) {
-            return "ensembl_mapping_failure";
-        }
-        return "redirect:/studies/" + studyId + "/associations";
-    }
-
     // Generate a empty form page to add standard snp
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
