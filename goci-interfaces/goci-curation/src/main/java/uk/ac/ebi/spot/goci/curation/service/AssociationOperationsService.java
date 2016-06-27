@@ -31,6 +31,7 @@ import uk.ac.ebi.spot.goci.service.MappingService;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by emma on 03/03/2016.
@@ -259,5 +260,14 @@ public class AssociationOperationsService {
         }
 
         return result.hasErrors();
+    }
+
+    /**
+     * Retrieve validation warnings for an association
+     *
+     * @param associationId ID of association to get warning for
+     */
+    public List<AssociationValidationReport> getAssociationWarnings(Long associationId) {
+        return associationValidationReportRepository.findByAssociationId(associationId);
     }
 }
