@@ -373,6 +373,14 @@ public class Association implements Trackable {
         this.events = events;
     }
 
+    public AssociationValidationReport getAssociationValidationReport() {
+        return associationValidationReport;
+    }
+
+    public void setAssociationValidationReport(AssociationValidationReport associationValidationReport) {
+        this.associationValidationReport = associationValidationReport;
+    }
+
     @Override public synchronized void addEvent(Event event) {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
