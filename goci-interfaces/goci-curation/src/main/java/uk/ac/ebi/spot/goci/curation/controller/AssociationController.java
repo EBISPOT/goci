@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
-import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -30,7 +29,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
@@ -92,7 +90,6 @@ public class AssociationController {
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private LociAttributesService lociAttributesService;
-    private AssociationFormErrorViewService associationFormErrorViewService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
     private MappingService mappingService;
@@ -115,7 +112,6 @@ public class AssociationController {
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  LociAttributesService lociAttributesService,
-                                 AssociationFormErrorViewService associationFormErrorViewService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
@@ -130,7 +126,6 @@ public class AssociationController {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.lociAttributesService = lociAttributesService;
-        this.associationFormErrorViewService = associationFormErrorViewService;
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
         this.mappingService = mappingService;
@@ -569,10 +564,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        AssociationFormErrorView associationFormErrorView =
-                associationFormErrorViewService.checkAssociationForErrors(
-                        associationToView);
-        model.addAttribute("errors", associationFormErrorView);
+        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
@@ -639,9 +631,7 @@ public class AssociationController {
             model.addAttribute("mappingDetails", mappingDetails);
 
             // Return any association errors
-            AssociationFormErrorView associationFormErrorView =
-                    associationFormErrorViewService.checkAssociationForErrors(associationToEdit);
-            model.addAttribute("errors", associationFormErrorView);
+            model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
             // Establish study
             Long studyId = associationToEdit.getStudy().getId();
@@ -734,10 +724,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        AssociationFormErrorView associationFormErrorView =
-                associationFormErrorViewService.checkAssociationForErrors(
-                        currentAssociation);
-        model.addAttribute("errors", associationFormErrorView);
+        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -768,10 +755,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        AssociationFormErrorView associationFormErrorView =
-                associationFormErrorViewService.checkAssociationForErrors(
-                        currentAssociation);
-        model.addAttribute("errors", associationFormErrorView);
+        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
         return "edit_snp_interaction_association";
     }
@@ -807,10 +791,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        AssociationFormErrorView associationFormErrorView =
-                associationFormErrorViewService.checkAssociationForErrors(
-                        currentAssociation);
-        model.addAttribute("errors", associationFormErrorView);
+        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -846,10 +827,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        AssociationFormErrorView associationFormErrorView =
-                associationFormErrorViewService.checkAssociationForErrors(
-                        currentAssociation);
-        model.addAttribute("errors", associationFormErrorView);
+        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
         return "edit_snp_interaction_association";
     }
