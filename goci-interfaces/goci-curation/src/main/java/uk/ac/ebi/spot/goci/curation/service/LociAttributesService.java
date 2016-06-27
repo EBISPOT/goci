@@ -123,13 +123,14 @@ public class LociAttributesService {
 
         strongestRiskAlleles.forEach(riskAllele -> {
 
+            getLog().info("Saving " + riskAllele.getRiskAlleleName());
             // Save SNP
             SingleNucleotidePolymorphism savedSnp = saveSnp(riskAllele.getSnp());
             riskAllele.setSnp(savedSnp);
 
             // Save proxy SNPs
             Collection<SingleNucleotidePolymorphism> savedProxySnps = new ArrayList<SingleNucleotidePolymorphism>();
-            if (!riskAllele.getProxySnps().isEmpty()) {
+            if (riskAllele.getProxySnps() != null && !riskAllele.getProxySnps().isEmpty()) {
                 riskAllele.getProxySnps().forEach(singleNucleotidePolymorphism -> {
                     savedProxySnps.add(saveSnp(singleNucleotidePolymorphism));
                 });
