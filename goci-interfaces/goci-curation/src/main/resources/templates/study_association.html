@@ -239,10 +239,10 @@
 
                                 <br/>
                                 <br/>
-                                <span style="font-style: italic"
-                                      th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
-                                      th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
-                                </span>
+                          <span style="color:red" th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                    <a class="btn btn-danger" href="#">
+                                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Warnings</a>
+                                    </span>
 
                             </td>
 
@@ -370,8 +370,9 @@
                                     <br/>
                                     <br/>
                                     <span style="color:red"
-                                          th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
                                           th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                    <a class="btn btn-danger" href="#">
+                                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Warnings</a>
                                     </span>
 
                                 </td>
@@ -472,8 +473,9 @@
                                     <br/>
                                     <br/>
                                     <span style="color:red"
-                                          th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
                                           th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
+                                    <a class="btn btn-danger" href="#">
+                                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Warnings</a>
                                     </span>
                                 </td>
 
@@ -510,7 +512,7 @@
                                                       {
                                                           extend: 'colvis',
                                                           columns: ':gt(0)',
-                                                          postfixButtons: [ 'colvisRestore' ]
+                                                          postfixButtons: ['colvisRestore']
                                                       }
                                                   ]
                                               });
