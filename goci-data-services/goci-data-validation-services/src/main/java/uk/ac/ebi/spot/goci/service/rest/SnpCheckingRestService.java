@@ -49,8 +49,10 @@ public class SnpCheckingRestService {
         String error = null;
         String response = null;
         try {
+            String url = restUrlBuilder.createUrl(getEndpoint(), snp);
+            getLog().info("Querying: " + url);
             response = restUrlBuilder.getRestTemplate()
-                    .getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), String.class);
+                    .getForObject(url, String.class);
 
             if (response.contains("error")) {
                 error = "SNP identifier ".concat(snp).concat(" is not valid");
@@ -75,9 +77,11 @@ public class SnpCheckingRestService {
         Set<String> snpChromosomeNames = new HashSet<>();
         SnpLookupJson snpLookupJson = new SnpLookupJson();
         try {
+            String url = restUrlBuilder.createUrl(getEndpoint(), snp);
+            getLog().info("Querying: " + url);
             snpLookupJson =
                     restUrlBuilder.getRestTemplate()
-                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), snp), SnpLookupJson.class);
+                            .getForObject(url, SnpLookupJson.class);
             snpLookupJson.getMappings().forEach(snpMappingsJson -> {
                 snpChromosomeNames.add(snpMappingsJson.getSeq_region_name());
             });

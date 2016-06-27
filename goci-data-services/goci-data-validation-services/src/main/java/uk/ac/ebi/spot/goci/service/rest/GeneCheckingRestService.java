@@ -48,9 +48,11 @@ public class GeneCheckingRestService {
         GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
+            String url = restUrlBuilder.createUrl(getEndpoint(), gene);
+            getLog().info("Querying: " + url);
             geneLookupJson =
                     restUrlBuilder.getRestTemplate()
-                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
+                            .getForObject(url, GeneLookupJson.class);
 
             if (!geneLookupJson.getObject_type().equalsIgnoreCase("gene")) {
                 error = "Gene symbol ".concat(gene).concat(" is not valid");
@@ -76,9 +78,11 @@ public class GeneCheckingRestService {
         GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
+            String url = restUrlBuilder.createUrl(getEndpoint(), gene);
+            getLog().info("Querying: " + url);
             geneLookupJson =
                     restUrlBuilder.getRestTemplate()
-                            .getForObject(restUrlBuilder.createUrl(getEndpoint(), gene), GeneLookupJson.class);
+                            .getForObject(url, GeneLookupJson.class);
             geneChromosome = geneLookupJson.getSeq_region_name();
         }
         // The query returns a 400 error if response returns an error
