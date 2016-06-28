@@ -34,7 +34,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
     // Repositories
     private AssociationRepository associationRepository;
-    private LocusRepository locusRepository;
     private GenomicContextRepository genomicContextRepository;
 
     // Services
@@ -42,11 +41,9 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
     @Autowired
     public SingleSnpMultiSnpAssociationService(AssociationRepository associationRepository,
-                                               LocusRepository locusRepository,
                                                GenomicContextRepository genomicContextRepository,
                                                LociAttributesService lociAttributesService) {
         this.associationRepository = associationRepository;
-        this.locusRepository = locusRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
     }
@@ -238,9 +235,6 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         // Assign all created risk alleles to locus
         locus.setStrongestRiskAlleles(locusRiskAlleles);
-
-        // Save our newly created locus
-        locusRepository.save(locus);
 
         // Add locus to collection and link to our association
         loci.add(locus);

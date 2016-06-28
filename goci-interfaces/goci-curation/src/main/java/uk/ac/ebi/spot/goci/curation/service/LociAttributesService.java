@@ -21,7 +21,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Service class that creates the attributes of a loci
+ *         Service class that creates and saves the attributes of a locus
  */
 @Service
 public class LociAttributesService {
@@ -87,29 +87,10 @@ public class LociAttributesService {
                 authorReportedGene = authorReportedGene.toLowerCase();
             }
 
-            // Check if gene already exists, note we may have duplicates so for moment just take first one
-            Gene geneInDatabase = geneRepository.findByGeneName(authorReportedGene);
-            Gene gene;
-
-            // Exists in database already
-            if (geneInDatabase != null) {
-                getLog().debug("Gene " + geneInDatabase.getGeneName() + " already exists in database");
-                gene = geneInDatabase;
-            }
-
-            // If gene doesn't exist then create and save
-            else {
-                // Create new gene
-                getLog().debug("Gene " + authorReportedGene + " not found in database. Creating and saving new gene.");
-                Gene newGene = new Gene();
-                newGene.setGeneName(authorReportedGene);
-
-                // Save gene
-                gene = geneRepository.save(newGene);
-            }
-
+            Gene newGene = new Gene();
+            newGene.setGeneName(authorReportedGene);
             // Add genes to collection
-            locusGenes.add(gene);
+            locusGenes.add(newGene);
         });
         return locusGenes;
     }
@@ -145,14 +126,10 @@ public class LociAttributesService {
 
 
     public RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
-
         //Create new risk allele, at present we always create a new risk allele for each locus within an association
         RiskAllele riskAllele = new RiskAllele();
         riskAllele.setRiskAlleleName(tidy_curator_entered_string(curatorEnteredRiskAllele));
         riskAllele.setSnp(snp);
-
-        // Save risk allele
-        riskAlleleRepository.save(riskAllele);
         return riskAllele;
     }
 
@@ -183,32 +160,14 @@ public class LociAttributesService {
 
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
-        curatorEnteredSNP = tidy_curator_entered_string(curatorEnteredSNP);
-
-        // Check if SNP already exists database
-        SingleNucleotidePolymorphism snpInDatabase =
-                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
-        SingleNucleotidePolymorphism snp;
-        if (snpInDatabase != null) {
-            snp = snpInDatabase;
-        }
-
-        // If SNP doesn't exist, create and save
-        else {
-            // Create new SNP
-            SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
-            newSNP.setRsId(curatorEnteredSNP);
-
-            // Save SNP
-            snp = singleNucleotidePolymorphismRepository.save(newSNP);
-        }
-
-        return snp;
-
+        // Create new SNP
+        SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
+        newSNP.setRsId(tidy_curator_entered_string(curatorEnteredSNP));
+        return newSNP;
     }
 
 
-    public String tidy_curator_entered_string(String string) {
+    private String tidy_curator_entered_string(String string) {
 
         String newString = string.trim();
         String newline = System.getProperty("line.separator");
@@ -219,5 +178,4 @@ public class LociAttributesService {
 
         return newString;
     }
-
 }

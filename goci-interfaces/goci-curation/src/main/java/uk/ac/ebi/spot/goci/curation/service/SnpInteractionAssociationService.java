@@ -33,7 +33,6 @@ import java.util.List;
 public class SnpInteractionAssociationService implements SnpAssociationFormService {
 
     // Repositories
-    private LocusRepository locusRepository;
     private AssociationRepository associationRepository;
     private GenomicContextRepository genomicContextRepository;
 
@@ -41,11 +40,9 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
     private LociAttributesService lociAttributesService;
 
     @Autowired
-    public SnpInteractionAssociationService(LocusRepository locusRepository,
-                                            AssociationRepository associationRepository,
+    public SnpInteractionAssociationService(AssociationRepository associationRepository,
                                             GenomicContextRepository genomicContextRepository,
                                             LociAttributesService lociAttributesService) {
-        this.locusRepository = locusRepository;
         this.associationRepository = associationRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
@@ -244,9 +241,6 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
             // Link risk allele to locus
             locusRiskAlleles.add(riskAllele);
             locus.setStrongestRiskAlleles(locusRiskAlleles);
-
-            // Save our newly created locus
-            locusRepository.save(locus);
 
             // Add locus to collection and link to our association
             loci.add(locus);
