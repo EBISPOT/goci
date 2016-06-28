@@ -120,9 +120,9 @@ public class AssociationUploadService {
             throws EnsemblMappingException {
 
         for (AssociationSummary associationSummary : associationSummaries) {
-            associationOperationsService.saveNewAssociation(associationSummary.getAssociation(),
-                                                            study,
-                                                            associationSummary.getErrors());
+            associationOperationsService.savAssociation(associationSummary.getAssociation(),
+                                                        study,
+                                                        associationSummary.getErrors());
         }
     }
 

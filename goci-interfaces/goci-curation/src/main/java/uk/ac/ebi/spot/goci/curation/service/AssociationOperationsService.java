@@ -98,7 +98,8 @@ public class AssociationOperationsService {
                 validationService.runAssociationValidation(association, "full");
 
         // Create errors view that will be returned via controller
-        Collection<AssociationValidationView> errors = processAssociationValidationErrors(associationValidationErrors);
+        Collection<AssociationValidationView> associationValidationViews =
+                processAssociationValidationErrors(associationValidationErrors);
 
         // Validation returns warnings and errors, errors prevent a save action
         long errorCount = associationValidationErrors.parallelStream()
@@ -106,12 +107,12 @@ public class AssociationOperationsService {
                 .count();
 
         if (errorCount == 0) {
-            saveNewAssociation(association, study, associationValidationErrors);
+            savAssociation(association, study, associationValidationErrors);
         }
-        return errors;
+        return associationValidationViews;
     }
 
-    public void saveNewAssociation(Association association, Study study, Collection<ValidationError> errors)
+    public void savAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
 
         association.getLoci().forEach(this::saveLocusAttributes);
@@ -124,9 +125,8 @@ public class AssociationOperationsService {
         associationRepository.save(association);
         createAssociationValidationReport(errors, association.getId());
 
-        Curator curator = study.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        mappingService.validateAndMapAssociation(association, mappedBy);
+        // Run mapping on association
+        runMapping(study.getHousekeeping().getCurator(), association);
     }
 
     private void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
@@ -140,6 +140,10 @@ public class AssociationOperationsService {
             // save validation report
             associationValidationReportRepository.save(associationValidationReport);
         });
+    }
+
+    private void runMapping(Curator curator, Association association) throws EnsemblMappingException {
+        mappingService.validateAndMapAssociation(association, curator.getLastName());
     }
 
     /**
