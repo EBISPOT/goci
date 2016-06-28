@@ -104,7 +104,7 @@ public class AssociationOperationsService {
         }
         return errors;
     }
-    
+
     public void saveNewAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
 

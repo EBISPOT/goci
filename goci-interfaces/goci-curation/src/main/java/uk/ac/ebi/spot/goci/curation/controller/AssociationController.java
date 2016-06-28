@@ -414,7 +414,7 @@ public class AssociationController {
             // Save and validate form
             Collection<ValidationError> errors = null;
             try {
-                errors = associationOperationsService.saveAssociationForm(study, newAssociation);
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation);
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
