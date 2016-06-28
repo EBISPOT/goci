@@ -28,6 +28,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
+import uk.ac.ebi.spot.goci.service.ValidationService;
 
 import java.util.Collection;
 import java.util.Date;
@@ -55,6 +56,7 @@ public class AssociationOperationsService {
     private SnpFormColumnValidator snpFormColumnValidator;
     private MappingService mappingService;
     private LociAttributesService lociAttributesService;
+    private ValidationService validationService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -66,7 +68,8 @@ public class AssociationOperationsService {
                                         SnpFormRowValidator snpFormRowValidator,
                                         SnpFormColumnValidator snpFormColumnValidator,
                                         MappingService mappingService,
-                                        LociAttributesService lociAttributesService) {
+                                        LociAttributesService lociAttributesService,
+                                        ValidationService validationService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
@@ -77,7 +80,25 @@ public class AssociationOperationsService {
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
         this.lociAttributesService = lociAttributesService;
+        this.validationService = validationService;
     }
+
+    public Collection<ValidationError> saveAssociationForm(Study study, Association association) throws EnsemblMappingException {
+        // Validate association
+        Collection<ValidationError> errors =
+                validationService.runAssociationValidation(association, "full");
+
+        // Validation returns warnings and errors, errors prevent a save action
+        long errorCount = errors.parallelStream()
+                .filter(validationError -> !validationError.getWarning())
+                .count();
+
+        if (errorCount == 0) {
+            saveNewAssociation(association, study, errors);
+        }
+        return errors;
+    }
+
 
     public void saveNewAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
