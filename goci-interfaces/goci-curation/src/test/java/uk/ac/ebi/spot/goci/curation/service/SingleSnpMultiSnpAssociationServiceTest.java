@@ -26,7 +26,6 @@ import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,9 +48,6 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     @Mock
     private AssociationRepository associationRepository;
-
-    @Mock
-    private LocusRepository locusRepository;
 
     @Mock
     private GenomicContextRepository genomicContextRepository;
@@ -222,7 +218,6 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     @Before
     public void setUp() throws Exception {
         snpAssociationFormService = new SingleSnpMultiSnpAssociationService(associationRepository,
-                                                                            locusRepository,
                                                                             genomicContextRepository,
                                                                             lociAttributesService);
     }
