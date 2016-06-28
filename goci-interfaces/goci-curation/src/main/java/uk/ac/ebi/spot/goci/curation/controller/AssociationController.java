@@ -45,6 +45,7 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -192,7 +193,7 @@ public class AssociationController {
         catch (EnsemblMappingException e) {
             return "ensembl_mapping_failure";
         }
-
+        // TODO REVIEW
         if (fileErrors != null && !fileErrors.isEmpty()) {
             getLog().error("Errors found in file: " + file.getOriginalFilename());
             model.addAttribute("fileName", file.getOriginalFilename());
@@ -403,46 +404,47 @@ public class AssociationController {
                                   BindingResult result,
                                   Model model) throws EnsemblMappingException {
 
+        // Establish study
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+
         // Check for errors in form
         Boolean hasErrors =
                 associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
         if (hasErrors) {
             model.addAttribute("form", snpAssociationStandardMultiForm);
-
-            // Also passes back study object to view so we can create links back to main study page
-            model.addAttribute("study", studyRepository.findOne(studyId));
             return "add_standard_snp_association";
         }
         else {
-            // Get our study object
-            Study study = studyRepository.findOne(studyId);
-
             // Create an association object from details in returned form
             Association newAssociation =
                     singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
 
-            // Set the study ID for our association
-            newAssociation.setStudy(study);
-
-            // Save our association information
-            newAssociation.setLastUpdateDate(new Date());
-            associationRepository.save(newAssociation);
-
-            // Map RS_ID in association
-            Collection<Association> associationsToMap = new ArrayList<>();
-            associationsToMap.add(newAssociation);
-            Curator curator = study.getHousekeeping().getCurator();
-            String mappedBy = curator.getLastName();
+            // Save and validate form
+            Collection<ValidationError> errors = null;
             try {
-                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
+                errors = associationOperationsService.saveAssociationForm(study, newAssociation);
             }
             catch (EnsemblMappingException e) {
-                model.addAttribute("study", study);
                 return "ensembl_mapping_failure";
             }
 
-            return "redirect:/associations/" + newAssociation.getId();
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
+
+            if (errorCount > 0) {
+                model.addAttribute("errors", errors);
+                model.addAttribute("form", snpAssociationStandardMultiForm);
+                String measurementType = associationOperationsService.determineIfAssociationIsOrType(newAssociation);
+                model.addAttribute("measurementType", measurementType);
+                return "add_standard_snp_association";
+            }
+            else {
+                return "redirect:/associations/" + newAssociation.getId();
+            }
         }
     }
 
