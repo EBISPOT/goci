@@ -193,21 +193,11 @@ public class AssociationController {
         catch (EnsemblMappingException e) {
             return "ensembl_mapping_failure";
         }
-        // TODO REVIEW
+
         if (fileErrors != null && !fileErrors.isEmpty()) {
             getLog().error("Errors found in file: " + file.getOriginalFilename());
             model.addAttribute("fileName", file.getOriginalFilename());
             model.addAttribute("fileErrors", fileErrors);
-
-            // Determine if we have any errors rather than warnings
-            long errors = fileErrors.stream()
-                    .filter(associationUploadErrorView -> !associationUploadErrorView.getWarning())
-                    .count();
-
-            if (errors > 0) {
-                model.addAttribute("errorsFound", true);
-            }
-
             return "error_pages/association_file_upload_error";
         }
         else {

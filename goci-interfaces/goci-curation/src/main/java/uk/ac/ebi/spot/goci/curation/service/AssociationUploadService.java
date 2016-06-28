@@ -56,6 +56,7 @@ public class AssociationUploadService {
     public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, SecureUser user)
             throws IOException, EnsemblMappingException {
 
+        // File errors will contain any validation errors and be returned to controller if any are found
         List<AssociationUploadErrorView> fileErrors = new ArrayList<>();
         String originalFilename = file.getOriginalFilename();
         getLog().info("Uploading file: ".concat(originalFilename));
@@ -104,7 +105,7 @@ public class AssociationUploadService {
                     }
                     else {
                         studyFileService.createFileUploadEvent(study.getId(), user);
-                        saveAssociations(validationSummary.getAssociationSummaries(),study);
+                        saveAssociations(validationSummary.getAssociationSummaries(), study);
                     }
                 }
             }
@@ -115,10 +116,13 @@ public class AssociationUploadService {
         }
     }
 
-    private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study) throws EnsemblMappingException {
+    private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study)
+            throws EnsemblMappingException {
 
-        for (AssociationSummary associationSummary:associationSummaries) {
-            associationOperationsService.saveNewAssociation(associationSummary.getAssociation(), study, associationSummary.getErrors());
+        for (AssociationSummary associationSummary : associationSummaries) {
+            associationOperationsService.saveNewAssociation(associationSummary.getAssociation(),
+                                                            study,
+                                                            associationSummary.getErrors());
         }
     }
 
