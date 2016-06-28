@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
+import uk.ac.ebi.spot.goci.service.ValidationService;
 
 import static org.junit.Assert.assertEquals;
 
@@ -68,6 +69,9 @@ public class AssociationOperationsServiceTest {
     @Mock
     private AssociationValidationReportRepository associationValidationReportRepository;
 
+    @Mock
+    private ValidationService validationService;
+
     @Before
     public void setUpMock() {
         associationOperationsService = new AssociationOperationsService(singleSnpMultiSnpAssociationService,
@@ -79,7 +83,7 @@ public class AssociationOperationsServiceTest {
                                                                         snpFormRowValidator,
                                                                         snpFormColumnValidator,
                                                                         mappingService,
-                                                                        lociAttributesService);
+                                                                        lociAttributesService, validationService);
     }
 
     @Test
