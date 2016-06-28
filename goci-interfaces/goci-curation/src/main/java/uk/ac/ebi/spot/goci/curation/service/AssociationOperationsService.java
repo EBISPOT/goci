@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
@@ -83,7 +82,14 @@ public class AssociationOperationsService {
         this.validationService = validationService;
     }
 
-    public Collection<ValidationError> saveAssociationForm(Study study, Association association) throws EnsemblMappingException {
+    /**
+     * Save association created from details on webform
+     *
+     * @param study       Study to assign association to
+     * @param association Association to validate and save
+     */
+    public Collection<ValidationError> saveAssociationCreatedFromForm(Study study, Association association)
+            throws EnsemblMappingException {
         // Validate association
         Collection<ValidationError> errors =
                 validationService.runAssociationValidation(association, "full");
@@ -98,8 +104,7 @@ public class AssociationOperationsService {
         }
         return errors;
     }
-
-
+    
     public void saveNewAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
 
@@ -118,7 +123,6 @@ public class AssociationOperationsService {
         mappingService.validateAndMapAssociation(association, mappedBy);
     }
 
-    @Async
     public void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
         Association association = associationRepository.findOne(id);
         errors.forEach(validationError -> {
@@ -131,7 +135,6 @@ public class AssociationOperationsService {
             associationValidationReportRepository.save(associationValidationReport);
         });
     }
-
 
     /**
      * Save transient objects on association before saving association
