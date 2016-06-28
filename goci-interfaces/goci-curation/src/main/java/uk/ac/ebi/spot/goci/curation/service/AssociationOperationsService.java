@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -29,6 +30,7 @@ import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -88,19 +90,23 @@ public class AssociationOperationsService {
      * @param study       Study to assign association to
      * @param association Association to validate and save
      */
-    public Collection<ValidationError> saveAssociationCreatedFromForm(Study study, Association association)
+    public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study, Association association)
             throws EnsemblMappingException {
+
         // Validate association
-        Collection<ValidationError> errors =
+        Collection<ValidationError> associationValidationErrors =
                 validationService.runAssociationValidation(association, "full");
 
+        // Create errors view that will be returned via controller
+        Collection<AssociationValidationView> errors = processAssociationValidationErrors(associationValidationErrors);
+
         // Validation returns warnings and errors, errors prevent a save action
-        long errorCount = errors.parallelStream()
+        long errorCount = associationValidationErrors.parallelStream()
                 .filter(validationError -> !validationError.getWarning())
                 .count();
 
         if (errorCount == 0) {
-            saveNewAssociation(association, study, errors);
+            saveNewAssociation(association, study, associationValidationErrors);
         }
         return errors;
     }
@@ -123,7 +129,7 @@ public class AssociationOperationsService {
         mappingService.validateAndMapAssociation(association, mappedBy);
     }
 
-    public void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
+    private void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
         Association association = associationRepository.findOne(id);
         errors.forEach(validationError -> {
             AssociationValidationReport associationValidationReport =
@@ -287,11 +293,35 @@ public class AssociationOperationsService {
     }
 
     /**
-     * Retrieve validation warnings for an association
+     * Retrieve validation warnings for an association and return this is a structure accessible by view
      *
      * @param associationId ID of association to get warning for
      */
-    public List<AssociationValidationReport> getAssociationWarnings(Long associationId) {
-        return associationValidationReportRepository.findByAssociationId(associationId);
+    public List<AssociationValidationView> getAssociationWarnings(Long associationId) {
+
+        List<AssociationValidationView> associationValidationViews = new ArrayList<>();
+        associationValidationReportRepository.findByAssociationId(associationId)
+                .forEach(associationValidationReport -> {
+                    associationValidationViews.add(new AssociationValidationView(associationValidationReport.getValidatedField(),
+                                                                                 associationValidationReport.getWarning(),
+                                                                                 true));
+                });
+        return associationValidationViews;
+    }
+
+    /**
+     * Retrieve validation warnings for an association and return this is a structure accessible by view
+     *
+     * @param errors List of validation errors to process
+     */
+    private List<AssociationValidationView> processAssociationValidationErrors(Collection<ValidationError> errors) {
+
+        List<AssociationValidationView> associationValidationViews = new ArrayList<>();
+        errors.forEach(validationError -> {
+            associationValidationViews.add(new AssociationValidationView(validationError.getField(),
+                                                                         validationError.getError(),
+                                                                         validationError.getWarning()));
+        });
+        return associationValidationViews;
     }
 }

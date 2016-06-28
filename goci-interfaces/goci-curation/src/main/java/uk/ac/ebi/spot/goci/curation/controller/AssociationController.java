@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
+import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
@@ -412,7 +413,7 @@ public class AssociationController {
                     singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
 
             // Save and validate form
-            Collection<ValidationError> errors = null;
+            Collection<AssociationValidationView> errors = null;
             try {
                 errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation);
             }

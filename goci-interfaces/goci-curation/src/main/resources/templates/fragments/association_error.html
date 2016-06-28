@@ -37,13 +37,15 @@
                     <thead>
                     <tr>
                         <th>Field</th>
-                        <th>Warning Message</th>
+                        <th>Error Message</th>
+                        <th>Warning</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="error: ${errors}">
-                        <td th:text="${error.validatedField}?: '' "></td>
-                        <td th:text="${error.warning}?: '' "></td>
+                        <td th:text="${error.field}?: '' "></td>
+                        <td th:text="${error.errorMessage}?: '' "></td>
+                        <td><i class="fa fa-check" aria-hidden="true" th:if="${#bools.isTrue(error.warning)}"></i></td>
                     </tr>
                     </tbody>
                 </table>
