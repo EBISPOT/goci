@@ -398,7 +398,7 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        // Check for errors in form
+        // Check for errors in form that would prevent saving an association
         Boolean hasErrors =
                 associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
 
