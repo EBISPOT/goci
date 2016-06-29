@@ -86,7 +86,7 @@ public class Association implements Trackable {
     private AssociationReport associationReport;
 
     @OneToMany(mappedBy = "association", orphanRemoval = true)
-    private Collection<AssociationValidationReport> associationValidationReport;
+    private Collection<AssociationValidationReport> associationValidationReport  = new ArrayList<>();;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastMappingDate;
