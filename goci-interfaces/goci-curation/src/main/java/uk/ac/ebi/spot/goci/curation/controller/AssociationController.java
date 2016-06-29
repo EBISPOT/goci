@@ -46,7 +46,6 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -601,6 +600,12 @@ public class AssociationController {
                                   Model model) throws EnsemblMappingException {
 
 
+        // Establish study
+        Association associationToEdit = associationRepository.findOne(associationId);
+        Long studyId = associationToEdit.getStudy().getId();
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+
         // Validate returned form depending on association type
         Boolean hasErrors;
         if (associationType.equalsIgnoreCase("interaction")) {
@@ -616,21 +621,15 @@ public class AssociationController {
         // If errors found then return the edit form with all information entered by curator preserved
         if (hasErrors) {
 
-            // Return association with that ID
-            Association associationToEdit = associationRepository.findOne(associationId);
-
             // Get mapping details
-            MappingDetails mappingDetails = associationOperationsService.createMappingDetails(associationToEdit);
-            model.addAttribute("mappingDetails", mappingDetails);
+            model.addAttribute("mappingDetails", associationOperationsService.createMappingDetails(associationToEdit));
 
             // Return any association errors
             model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
 
-            // Establish study
-            Long studyId = associationToEdit.getStudy().getId();
-
-            // Also passes back study object to view so we can create links back to main study page
-            model.addAttribute("study", studyRepository.findOne(studyId));
+            // Determine if association is an OR or BETA type
+            String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
+            model.addAttribute("measurementType", measurementType);
 
             if (associationType.equalsIgnoreCase("interaction")) {
                 model.addAttribute("form", snpAssociationInteractionForm);
@@ -662,32 +661,45 @@ public class AssociationController {
                         singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
             }
 
-            // Set ID of new  association to the ID of the association we're currently editing
-            editedAssociation.setId(associationId);
+            // Save and validate form
+            Collection<AssociationValidationView> errors =
+                    associationOperationsService.saveEditedAssociationFromForm(study, editedAssociation, associationId);
 
-            // Set study to one currently linked to association
-            Association currentAssociation = associationRepository.findOne(associationId);
-            Study associationStudy = currentAssociation.getStudy();
-            editedAssociation.setStudy(associationStudy);
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
 
-            // Save our association information
-            editedAssociation.setLastUpdateDate(new Date());
-            associationRepository.save(editedAssociation);
+            if (errorCount > 0) {
 
-            // Map RS_ID in association
-            Collection<Association> associationsToMap = new ArrayList<>();
-            associationsToMap.add(editedAssociation);
-            Curator curator = associationStudy.getHousekeeping().getCurator();
-            String mappedBy = curator.getLastName();
-            try {
-                mappingService.validateAndMapAssociations(associationsToMap, mappedBy);
+                // Determine if association is an OR or BETA type
+                String measurementType = associationOperationsService.determineIfAssociationIsOrType(editedAssociation);
+                model.addAttribute("measurementType", measurementType);
+
+                // Get mapping details
+                model.addAttribute("mappingDetails",
+                                   associationOperationsService.createMappingDetails(editedAssociation));
+                model.addAttribute("errors", errors);
+
+                if (associationType.equalsIgnoreCase("interaction")) {
+                    model.addAttribute("form", snpAssociationInteractionForm);
+                    return "edit_snp_interaction_association";
+                }
+                else {
+                    model.addAttribute("form", snpAssociationStandardMultiForm);
+
+                    // Determine view
+                    if (associationToEdit.getMultiSnpHaplotype()) {
+                        return "edit_multi_snp_association";
+                    }
+                    else {
+                        return "edit_standard_snp_association";
+                    }
+                }
             }
-            catch (EnsemblMappingException e) {
-                model.addAttribute("study", associationStudy);
-                return "ensembl_mapping_failure";
+            else {
+                return "redirect:/associations/" + associationId;
             }
-
-            return "redirect:/associations/" + associationId;
         }
     }
 
