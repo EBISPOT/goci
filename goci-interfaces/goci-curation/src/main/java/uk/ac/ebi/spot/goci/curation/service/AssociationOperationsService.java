@@ -112,6 +112,39 @@ public class AssociationOperationsService {
         return associationValidationViews;
     }
 
+    /**
+     * Save edited association
+     *
+     * @param study         Study to assign association to
+     * @param association   Association to validate and save
+     * @param associationId existing association Id
+     */
+    public Collection<AssociationValidationView> saveEditedAssociationFromForm(Study study,
+                                                                               Association association,
+                                                                               Long associationId)
+            throws EnsemblMappingException {
+
+        // Validate association
+        Collection<ValidationError> associationValidationErrors =
+                validationService.runAssociationValidation(association, "full");
+
+        // Create errors view that will be returned via controller
+        Collection<AssociationValidationView> associationValidationViews =
+                processAssociationValidationErrors(associationValidationErrors);
+
+        // Validation returns warnings and errors, errors prevent a save action
+        long errorCount = associationValidationErrors.parallelStream()
+                .filter(validationError -> !validationError.getWarning())
+                .count();
+
+        if (errorCount == 0) {
+            // Set ID of new association to the ID of the association we're currently editing
+            association.setId(associationId);
+            savAssociation(association, study, associationValidationErrors);
+        }
+        return associationValidationViews;
+    }
+
     public void savAssociation(Association association, Study study, Collection<ValidationError> errors)
             throws EnsemblMappingException {
 
