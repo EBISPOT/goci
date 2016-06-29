@@ -85,8 +85,8 @@ public class Association implements Trackable {
     @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
 
-    @OneToOne(mappedBy = "association", orphanRemoval = true)
-    private AssociationValidationReport associationValidationReport;
+    @OneToMany(mappedBy = "association", orphanRemoval = true)
+    private Collection<AssociationValidationReport> associationValidationReport;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastMappingDate;
@@ -127,9 +127,11 @@ public class Association implements Trackable {
                        Collection<Locus> loci,
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
+                       Collection<AssociationValidationReport> associationValidationReport,
                        Date lastMappingDate,
                        String lastMappingPerformedBy,
-                       Date lastUpdateDate, Collection<Event> events) {
+                       Date lastUpdateDate,
+                       Collection<Event> events) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -151,6 +153,7 @@ public class Association implements Trackable {
         this.loci = loci;
         this.efoTraits = efoTraits;
         this.associationReport = associationReport;
+        this.associationValidationReport = associationValidationReport;
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastUpdateDate = lastUpdateDate;
@@ -373,11 +376,11 @@ public class Association implements Trackable {
         this.events = events;
     }
 
-    public AssociationValidationReport getAssociationValidationReport() {
+    public Collection<AssociationValidationReport> getAssociationValidationReport() {
         return associationValidationReport;
     }
 
-    public void setAssociationValidationReport(AssociationValidationReport associationValidationReport) {
+    public void setAssociationValidationReport(Collection<AssociationValidationReport> associationValidationReport) {
         this.associationValidationReport = associationValidationReport;
     }
 
