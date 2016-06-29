@@ -182,17 +182,27 @@ public class AssociationOperationsService {
         runMapping(study.getHousekeeping().getCurator(), association);
     }
 
+    /**
+     * Create association validation reports and add to association
+     *
+     * @param errors Study to assign association to
+     * @param id     Association to validate and save
+     */
     private void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
         Association association = associationRepository.findOne(id);
+        Collection<AssociationValidationReport> reports = new ArrayList<>();
         errors.forEach(validationError -> {
             AssociationValidationReport associationValidationReport =
                     new AssociationValidationReport(validationError.getError(),
                                                     validationError.getField(),
                                                     false,
                                                     association);
-            // save validation report
-            associationValidationReportRepository.save(associationValidationReport);
+            reports.add(associationValidationReport);
         });
+
+        // save validation report
+        association.setAssociationValidationReport(reports);
+        associationRepository.save(association);
     }
 
     private void runMapping(Curator curator, Association association) throws EnsemblMappingException {
