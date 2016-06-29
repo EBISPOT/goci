@@ -22,6 +22,8 @@ import java.io.PrintWriter;
  */
 public class SolrQueryService {
 
+    //do
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
