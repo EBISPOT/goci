@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Created by emma on 21/03/2016.
@@ -110,8 +111,9 @@ public class AssociationRowProcessor {
         // Add brackets to the p-value description
         if (row.getPvalueDescription() != null && !row.getPvalueDescription().isEmpty()) {
             if (!row.getPvalueDescription().startsWith("(") && !row.getPvalueDescription().endsWith(")")) {
-                String newPvalueDescription = "(".concat(row.getPvalueDescription()).concat(")");
-                newAssociation.setPvalueDescription(newPvalueDescription);
+                StringJoiner newPvalueDescription = new StringJoiner("", "(", ")");
+                newPvalueDescription.add(row.getPvalueDescription());
+                newAssociation.setPvalueDescription(newPvalueDescription.toString());
             }
             else {
                 newAssociation.setPvalueDescription(row.getPvalueDescription());
