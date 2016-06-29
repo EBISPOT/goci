@@ -140,6 +140,26 @@ public class AssociationOperationsService {
         if (errorCount == 0) {
             // Set ID of new association to the ID of the association we're currently editing
             association.setId(associationId);
+
+            // Check for existing loci, when editing delete any existing loci and risk alleles
+            // They will be recreated as part of the save method
+            Association associationUserIsEditing =
+                    associationRepository.findOne(associationId);
+            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
+            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
+
+            if (associationLoci != null) {
+                for (Locus locus : associationLoci) {
+                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
+                }
+                for (Locus locus : associationLoci) {
+                    lociAttributesService.deleteLocus(locus);
+                }
+                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
+                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
+                }
+            }
+
             savAssociation(association, study, associationValidationErrors);
         }
         return associationValidationViews;
