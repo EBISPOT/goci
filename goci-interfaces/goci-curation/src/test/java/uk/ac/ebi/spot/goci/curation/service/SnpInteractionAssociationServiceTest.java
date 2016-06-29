@@ -165,8 +165,7 @@ public class SnpInteractionAssociationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        snpAssociationFormService = new SnpInteractionAssociationService(associationRepository,
-                                                                         genomicContextRepository,
+        snpAssociationFormService = new SnpInteractionAssociationService(genomicContextRepository,
                                                                          lociAttributesService);
     }
 

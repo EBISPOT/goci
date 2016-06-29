@@ -47,9 +47,6 @@ import static org.junit.Assert.assertNull;
 public class SingleSnpMultiSnpAssociationServiceTest {
 
     @Mock
-    private AssociationRepository associationRepository;
-
-    @Mock
     private GenomicContextRepository genomicContextRepository;
 
     @Mock
@@ -217,7 +214,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        snpAssociationFormService = new SingleSnpMultiSnpAssociationService(associationRepository,
+        snpAssociationFormService = new SingleSnpMultiSnpAssociationService(
                                                                             genomicContextRepository,
                                                                             lociAttributesService);
     }
