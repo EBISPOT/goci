@@ -145,8 +145,7 @@ public class AssociationController {
                                 @RequestParam(required = false) Long associationId) {
 
         // Get all associations for a study
-        Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(studyId));
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
 
         // For our associations create a table view object and return
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
