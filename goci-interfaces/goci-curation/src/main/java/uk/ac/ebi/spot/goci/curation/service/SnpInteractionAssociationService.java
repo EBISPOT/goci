@@ -13,9 +13,7 @@ import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,17 +31,14 @@ import java.util.List;
 public class SnpInteractionAssociationService implements SnpAssociationFormService {
 
     // Repositories
-    private AssociationRepository associationRepository;
     private GenomicContextRepository genomicContextRepository;
 
     // Services
     private LociAttributesService lociAttributesService;
 
     @Autowired
-    public SnpInteractionAssociationService(AssociationRepository associationRepository,
-                                            GenomicContextRepository genomicContextRepository,
+    public SnpInteractionAssociationService(GenomicContextRepository genomicContextRepository,
                                             LociAttributesService lociAttributesService) {
-        this.associationRepository = associationRepository;
         this.genomicContextRepository = genomicContextRepository;
         this.lociAttributesService = lociAttributesService;
     }
@@ -175,28 +170,6 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         // Set multi-snp and snp interaction checkboxes
         association.setMultiSnpHaplotype(false);
         association.setSnpInteraction(true);
-
-        // Check for existing loci, when editing delete any existing loci and risk alleles
-        // They will be recreated in next for loop
-        if (form.getAssociationId() != null) {
-
-            Association associationUserIsEditing =
-                    associationRepository.findOne(form.getAssociationId());
-            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
-            Collection<RiskAllele> existingRiskAlleles = new ArrayList<>();
-
-            if (associationLoci != null) {
-                for (Locus locus : associationLoci) {
-                    existingRiskAlleles.addAll(locus.getStrongestRiskAlleles());
-                }
-                for (Locus locus : associationLoci) {
-                    lociAttributesService.deleteLocus(locus);
-                }
-                for (RiskAllele existingRiskAllele : existingRiskAlleles) {
-                    lociAttributesService.deleteRiskAllele(existingRiskAllele);
-                }
-            }
-        }
 
         // For each column create a loci
         Collection<Locus> loci = new ArrayList<>();
