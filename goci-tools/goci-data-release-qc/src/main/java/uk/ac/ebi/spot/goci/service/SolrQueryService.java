@@ -10,19 +10,20 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.util.Properties;
 
 /**
  * Created by dwelter on 29/06/16.
  */
+@Service
 public class SolrQueryService {
-
-    //do
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -30,9 +31,35 @@ public class SolrQueryService {
         return log;
     }
 
+    @Value("${catalog.stats.file}")
+    private Resource catalogStatsFile;
 
-    public void dispatchSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws
-                                                                                                          IOException {
+
+    public SolrQueryService(){
+
+    }
+
+    public String getLastReleaseDate(){
+        String releasedate;
+
+        Properties properties = new Properties();
+        try {
+            properties.load(catalogStatsFile.getInputStream());
+            releasedate = properties.getProperty("releasedate");
+
+        }
+        catch (IOException e) {
+            throw new RuntimeException(
+                    "Unable to return catolog stats: failed to read catalog.stats.file resource", e);
+        }
+        return releasedate;
+    }
+
+    public String buildSolrQuery(String releaseDate){
+        return "bar";
+    }
+
+    public void querySolr(String searchString) throws IOException {
 
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -71,10 +98,13 @@ public class SolrQueryService {
                     "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
         }
 
-        PrintWriter outputWriter = new PrintWriter(outputStream);
 
-        outputWriter.write(file);
-        outputWriter.flush();
+    }
 
+
+    public Resource getCatalogStatsFile(){return catalogStatsFile;};
+
+    public void setCatalogStatsFile(Resource csf){
+        this.catalogStatsFile = csf;
     }
 }

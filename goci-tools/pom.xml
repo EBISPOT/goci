@@ -30,5 +30,6 @@
         <module>goci-cttv-jsonGeneration</module>
         <module>goci-parent-mapper</module>
         <module>goci-association-filter</module>
+        <module>goci-data-release-qc</module>
     </modules>
 </project>
