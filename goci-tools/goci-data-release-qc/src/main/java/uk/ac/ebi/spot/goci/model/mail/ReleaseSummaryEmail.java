@@ -1,5 +1,12 @@
 package uk.ac.ebi.spot.goci.model.mail;
 
+import uk.ac.ebi.spot.goci.model.PublishedStudy;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by dwelter on 29/06/16.
  */
@@ -8,8 +15,6 @@ public class ReleaseSummaryEmail {
     private String to;
 
     private String from;
-
-    private String link;
 
     private String subject;
 
@@ -50,20 +55,40 @@ public class ReleaseSummaryEmail {
         this.from = from;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
     public void addToBody(String textToAddToBody) {
         String newBody = getBody() + textToAddToBody;
         setBody(newBody);
     }
 
-    public void createBody(){
+    public void createBody(List<PublishedStudy> studies){
 
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String today = df.format(date);
+        this.setSubject("Studies added to the Solr index on " + today);
+
+        if(studies.size() != 0) {
+            this.setBody("The following studies were added to the Solr index on " + today + "\n");
+
+            for (PublishedStudy s : studies) {
+                StringBuilder line = new StringBuilder();
+
+                line.append(s.getAuthor());
+                line.append(" (");
+                line.append(s.getPubmedId());
+                line.append(") - ");
+                line.append(s.getTitle());
+                line.append(" (");
+                line.append(s.getPublicationDate());
+                line.append(", ");
+                line.append(s.getJournal());
+                line.append(") ");
+                line.append(s.getAssociationCount());
+                line.append(" associations.\n");
+            }
+        }
+        else {
+            this.setBody("No studies were added to the Solr index on " + today + "\n");
+        }
     }
 }

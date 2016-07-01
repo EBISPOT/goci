@@ -13,10 +13,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.PublishedStudy;
+import uk.ac.ebi.spot.goci.service.mail.SolrDataProcessingService;
 
+import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -34,10 +40,26 @@ public class SolrQueryService {
     @Value("${catalog.stats.file}")
     private Resource catalogStatsFile;
 
+    @NotNull @Value("${search.server}")
+    private URL server;
+
 
     public SolrQueryService(){
 
     }
+
+    public List<PublishedStudy> getPublishedStudies() throws IOException{
+        String lastReleaseDate = getLastReleaseDate();
+
+        String query = buildSolrQuery(lastReleaseDate);
+
+        HttpEntity entity = querySolr(query);
+
+        List<PublishedStudy> studies = processSolrResult(entity);
+
+        return studies;
+    }
+
 
     public String getLastReleaseDate(){
         String releasedate;
@@ -46,7 +68,6 @@ public class SolrQueryService {
         try {
             properties.load(catalogStatsFile.getInputStream());
             releasedate = properties.getProperty("releasedate");
-
         }
         catch (IOException e) {
             throw new RuntimeException(
@@ -55,11 +76,28 @@ public class SolrQueryService {
         return releasedate;
     }
 
-    public String buildSolrQuery(String releaseDate){
-        return "bar";
+    public String buildSolrQuery(String releaseDate) throws IOException{
+
+        StringBuilder solrSearchBuilder = new StringBuilder();
+        solrSearchBuilder.append(server)
+                .append("/select?");
+
+        solrSearchBuilder.append("q=")
+                .append("catalogPublishDate%3A%7B")
+                .append(releaseDate)
+                .append("T00%3A00%3A00Z+TO+*%5D");
+
+        solrSearchBuilder.append("&fq=")
+                .append("resourcename")
+                .append("%3A")
+                .append("study");
+
+        solrSearchBuilder.append("&wt=json");
+
+        return solrSearchBuilder.toString();
     }
 
-    public void querySolr(String searchString) throws IOException {
+    public HttpEntity querySolr(String searchString) throws IOException{
 
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -76,29 +114,38 @@ public class SolrQueryService {
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
 
-        String file = null;
+        HttpEntity entity = null;
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
-            HttpEntity entity = response.getEntity();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
-
-            String output;
-            while ((output = br.readLine()) != null) {
+            entity = response.getEntity();
 
 
-            }
-
-            EntityUtils.consume(entity);
         }
-        if (file == null) {
+        return entity;
+    }
 
-            //TO DO throw exception here and add error handler
-            file =
-                    "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
+    public List<PublishedStudy> processSolrResult(HttpEntity entity) throws IOException{
+        List<PublishedStudy> studies = new ArrayList<>();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
+
+        String output;
+        while ((output = br.readLine()) != null) {
+
+            SolrDataProcessingService jsonProcessor = new SolrDataProcessingService(output);
+            studies = jsonProcessor.processJson();
         }
 
+        EntityUtils.consume(entity);
 
+//        if (file == null) {
+//
+//            //TO DO throw exception here and add error handler
+//            file =
+//                    "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
+//        }
+
+        return studies;
     }
 
 
@@ -107,4 +154,14 @@ public class SolrQueryService {
     public void setCatalogStatsFile(Resource csf){
         this.catalogStatsFile = csf;
     }
+
+    public URL getServer() {
+        return server;
+    }
+
+    public void setServer(URL server) {
+        this.server = server;
+    }
+
+
 }
