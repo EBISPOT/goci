@@ -11,7 +11,6 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
@@ -67,10 +66,11 @@ public class AssociationOperationsServiceTest {
     private LociAttributesService lociAttributesService;
 
     @Mock
-    private AssociationValidationReportRepository associationValidationReportRepository;
+    private AssociationValidationReportService associationValidationReportService;
 
     @Mock
     private ValidationService validationService;
+
 
     @Before
     public void setUpMock() {
@@ -79,11 +79,12 @@ public class AssociationOperationsServiceTest {
                                                                         associationReportRepository,
                                                                         associationRepository,
                                                                         locusRepository,
-                                                                        associationValidationReportRepository,
                                                                         snpFormRowValidator,
                                                                         snpFormColumnValidator,
                                                                         mappingService,
-                                                                        lociAttributesService, validationService);
+                                                                        lociAttributesService,
+                                                                        validationService,
+                                                                        associationValidationReportService);
     }
 
     @Test
