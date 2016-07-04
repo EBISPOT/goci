@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.PublishedStudy;
-import uk.ac.ebi.spot.goci.service.mail.SolrDataProcessingService;
 
 import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;

@@ -14,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import uk.ac.ebi.spot.goci.service.DataReleaseQCService;
 
 import java.util.Arrays;
 
@@ -24,9 +25,15 @@ import java.util.Arrays;
 @SpringBootApplication
 public class GOCIDataReleaseQCDriver {
 
+    private DataReleaseQCService dataReleaseQCService;
+    private OperationMode opMode;
+
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    public GOCIDataReleaseQCDriver(DataReleaseQCService dataReleaseQCService) {
+        this.dataReleaseQCService = dataReleaseQCService;
+    }
 
 
     public static void main(String[] args) {
@@ -36,13 +43,34 @@ public class GOCIDataReleaseQCDriver {
         SpringApplication.exit(ctx);
     }
 
+
     @Bean CommandLineRunner run() {
         return strings -> {
             long start_time = System.currentTimeMillis();
             System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
             int parseArgs = parseArguments(strings);
             if (parseArgs == 0) {
-                // execute publisher
+                switch (opMode) {
+                    case ALL :
+                        dataReleaseQCService.runFullQCPipeline();
+                        break;
+                    case SUMMARY_EMAIL:
+                        dataReleaseQCService.emailLatestPublishedStudies();
+                        break;
+                    case KNOWLEDGE_BASE:
+                        dataReleaseQCService.verifyKnowledgeBase();
+                        break;
+                    case SOLR_INDEX:
+                        dataReleaseQCService.verifySolrIndex();
+                        break;
+                    case DIAGRAM:
+                        dataReleaseQCService.verifyDiagram();
+                        break;
+                    default:
+                        System.err.println("No operation mode specified");
+                        parseArgs += 1;
+                }
+
             }
             else {
                 // could not parse arguments, exit with exit code >1 (depending on parsing problem)
@@ -51,12 +79,12 @@ public class GOCIDataReleaseQCDriver {
             }
             long end_time = System.currentTimeMillis();
             String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
-            System.out.println("Indexing building complete in " + time + " s. - application will now exit");
+            System.out.println("Indexing building complete in " + time + " s. - application will now exit - exit code " + parseArgs);
         };
     }
 
 
-    private static int parseArguments(String[] args) {
+    private int parseArguments(String[] args) {
         CommandLineParser parser = new GnuParser();
         HelpFormatter help = new HelpFormatter();
         Options options = bindOptions();
@@ -68,25 +96,28 @@ public class GOCIDataReleaseQCDriver {
             // check for mode help option
             if (cl.hasOption("")) {
                 // print out mode help
-                help.printHelp("publish", options, true);
+                help.printHelp("qc", options, true);
                 parseArgs += 1;
             }
             else {
                 // find -o option (for asserted output file)
-                if (cl.hasOption("o")) {
-                    String assertedOutputFileName = cl.getOptionValue("o");
+                if (cl.hasOption("a")) {
+                    this.opMode = OperationMode.ALL;
+                }
 
-                    if (cl.hasOption("i")) {
-                        String inferredOutputFileName = cl.getOptionValue("i");
-                    }
+                else if (cl.hasOption("k")) {
+                    this.opMode = OperationMode.KNOWLEDGE_BASE;
+                }
 
-                    if (cl.hasOption("p")) {
-                        String pvalueFilter = cl.getOptionValue("p");
-                    }
+                else if (cl.hasOption("e")) {
+                    this.opMode = OperationMode.SUMMARY_EMAIL;
+                }
 
-                    if (cl.hasOption("d")) {
-                        String dateFilter = cl.getOptionValue("d");
-                    }
+                else if (cl.hasOption("d")) {
+                    this.opMode = OperationMode.DIAGRAM;
+                }
+                else if (cl.hasOption("s")) {
+                    this.opMode = OperationMode.SOLR_INDEX;
                 }
                 else {
                     System.err.println("-o (ontology output file) argument is required");
@@ -132,5 +163,13 @@ public class GOCIDataReleaseQCDriver {
 
     private Logger getLog() {
         return log;
+    }
+
+    private enum OperationMode {
+        ALL,
+        SUMMARY_EMAIL,
+        KNOWLEDGE_BASE,
+        SOLR_INDEX,
+        DIAGRAM
     }
 }

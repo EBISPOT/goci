@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.service.mail;
+package uk.ac.ebi.spot.goci.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

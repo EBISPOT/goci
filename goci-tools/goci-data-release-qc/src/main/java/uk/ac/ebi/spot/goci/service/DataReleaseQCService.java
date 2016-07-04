@@ -29,7 +29,7 @@ public class DataReleaseQCService {
 
 
 
-    public void findLatestPublishedStudies(){
+    public void emailLatestPublishedStudies(){
         try {
             List<PublishedStudy> publishedStudies = solrQueryService.getPublishedStudies();
 
@@ -59,4 +59,11 @@ public class DataReleaseQCService {
         this.mailSendingService = mailSendingService;
     }
 
+    public void verifyDiagram() {}
+
+    public void verifySolrIndex() {}
+
+    public void verifyKnowledgeBase() {}
+
+    public void runFullQCPipeline() {}
 }
