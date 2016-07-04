@@ -26,13 +26,13 @@ import java.util.Collection;
 public class AssociationViewService {
 
     private AssociationMappingErrorService associationMappingErrorService;
-    private AssociationOperationsService associationOperationsService;
+    private AssociationValidationReportService associationValidationReportService;
 
     @Autowired
     public AssociationViewService(AssociationMappingErrorService associationMappingErrorService,
-                                  AssociationOperationsService associationOperationsService) {
+                                  AssociationValidationReportService associationValidationReportService) {
         this.associationMappingErrorService = associationMappingErrorService;
-        this.associationOperationsService = associationOperationsService;
+        this.associationValidationReportService = associationValidationReportService;
     }
 
     /**
@@ -282,7 +282,7 @@ public class AssociationViewService {
         snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
                 association.getAssociationReport()));
         long associationValidationReportCount =
-                associationOperationsService.getAssociationWarnings(association.getId()).stream().count();
+                associationValidationReportService.getAssociationWarnings(association.getId()).stream().count();
 
         // Set syntax errors
         if (associationValidationReportCount > 0) {

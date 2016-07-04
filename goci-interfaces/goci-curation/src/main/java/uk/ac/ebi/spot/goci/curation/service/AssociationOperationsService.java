@@ -16,7 +16,6 @@ import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
-import uk.ac.ebi.spot.goci.model.AssociationValidationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
@@ -25,7 +24,6 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
@@ -50,7 +48,6 @@ public class AssociationOperationsService {
     private AssociationReportRepository associationReportRepository;
     private AssociationRepository associationRepository;
     private LocusRepository locusRepository;
-    private AssociationValidationReportRepository associationValidationReportRepository;
 
     // Validators
     private SnpFormRowValidator snpFormRowValidator;
@@ -58,6 +55,7 @@ public class AssociationOperationsService {
     private MappingService mappingService;
     private LociAttributesService lociAttributesService;
     private ValidationService validationService;
+    private AssociationValidationReportService associationValidationReportService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -65,23 +63,23 @@ public class AssociationOperationsService {
                                         AssociationReportRepository associationReportRepository,
                                         AssociationRepository associationRepository,
                                         LocusRepository locusRepository,
-                                        AssociationValidationReportRepository associationValidationReportRepository,
                                         SnpFormRowValidator snpFormRowValidator,
                                         SnpFormColumnValidator snpFormColumnValidator,
                                         MappingService mappingService,
                                         LociAttributesService lociAttributesService,
-                                        ValidationService validationService) {
+                                        ValidationService validationService,
+                                        AssociationValidationReportService associationValidationReportService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
-        this.associationValidationReportRepository = associationValidationReportRepository;
         this.snpFormRowValidator = snpFormRowValidator;
         this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
         this.lociAttributesService = lociAttributesService;
         this.validationService = validationService;
+        this.associationValidationReportService = associationValidationReportService;
     }
 
     /**
@@ -176,34 +174,12 @@ public class AssociationOperationsService {
         // Save our association information
         association.setLastUpdateDate(new Date());
         associationRepository.save(association);
-        createAssociationValidationReport(errors, association.getId());
+        associationValidationReportService.createAssociationValidationReport(errors, association.getId());
 
         // Run mapping on association
         runMapping(study.getHousekeeping().getCurator(), association);
     }
 
-    /**
-     * Create association validation reports and add to association
-     *
-     * @param errors Study to assign association to
-     * @param id     Association to validate and save
-     */
-    private void createAssociationValidationReport(Collection<ValidationError> errors, Long id) {
-        Association association = associationRepository.findOne(id);
-        Collection<AssociationValidationReport> reports = new ArrayList<>();
-        errors.forEach(validationError -> {
-            AssociationValidationReport associationValidationReport =
-                    new AssociationValidationReport(validationError.getError(),
-                                                    validationError.getField(),
-                                                    false,
-                                                    association);
-            reports.add(associationValidationReport);
-        });
-
-        // save validation report
-        association.setAssociationValidationReport(reports);
-        associationRepository.save(association);
-    }
 
     private void runMapping(Curator curator, Association association) throws EnsemblMappingException {
         mappingService.validateAndMapAssociation(association, curator.getLastName());
@@ -357,23 +333,6 @@ public class AssociationOperationsService {
         }
 
         return result.hasErrors();
-    }
-
-    /**
-     * Retrieve validation warnings for an association and return this is a structure accessible by view
-     *
-     * @param associationId ID of association to get warning for
-     */
-    public List<AssociationValidationView> getAssociationWarnings(Long associationId) {
-
-        List<AssociationValidationView> associationValidationViews = new ArrayList<>();
-        associationValidationReportRepository.findByAssociationId(associationId)
-                .forEach(associationValidationReport -> {
-                    associationValidationViews.add(new AssociationValidationView(associationValidationReport.getValidatedField(),
-                                                                                 associationValidationReport.getWarning(),
-                                                                                 true));
-                });
-        return associationValidationViews;
     }
 
     /**
