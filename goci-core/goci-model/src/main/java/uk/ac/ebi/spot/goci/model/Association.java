@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 27/11/14.
@@ -86,7 +88,7 @@ public class Association implements Trackable {
     private AssociationReport associationReport;
 
     @OneToMany(mappedBy = "association", orphanRemoval = true)
-    private Collection<AssociationValidationReport> associationValidationReport  = new ArrayList<>();;
+    private Collection<AssociationValidationReport> associationValidationReport = new ArrayList<>();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastMappingDate;
