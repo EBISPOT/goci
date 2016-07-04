@@ -43,28 +43,23 @@ public class AssociationValidationReportService {
 
         // Get list of existing reports and create list of existing warnings
         Association association = associationRepository.findOne(id);
-        Collection<AssociationValidationReport> existingReports = association.getAssociationValidationReport();
-        List<String> currentWarnings = new ArrayList<>();
-        if (!existingReports.isEmpty()) {
-            existingReports.forEach(associationValidationReport -> {
-                currentWarnings.add(associationValidationReport.getWarning());
-            });
-        }
+        Collection<AssociationValidationReport> existingReports =
+                associationValidationReportRepository.findByAssociationId(id);
 
-        // Create current association validation report
+        existingReports.forEach(associationValidationReport -> associationValidationReportRepository.delete(
+                associationValidationReport));
+
+        // Create association validation reports
         errors.forEach(validationError -> {
             // if warning is not already linked to association
-            if (!currentWarnings.contains(validationError.getError())) {
-                AssociationValidationReport associationValidationReport =
-                        new AssociationValidationReport(validationError.getError(),
-                                                        validationError.getField(),
-                                                        false,
-                                                        association);
-                associationValidationReportRepository.save(associationValidationReport);
-            }
+            AssociationValidationReport associationValidationReport =
+                    new AssociationValidationReport(validationError.getError(),
+                                                    validationError.getField(),
+                                                    false,
+                                                    association);
+            associationValidationReportRepository.save(associationValidationReport);
         });
     }
-
 
     /**
      * Retrieve validation warnings for an association and return this is a structure accessible by view
