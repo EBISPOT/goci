@@ -9,6 +9,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,19 +26,21 @@ import java.util.Arrays;
 @SpringBootApplication
 public class GOCIDataReleaseQCDriver {
 
+    @Autowired
     private DataReleaseQCService dataReleaseQCService;
     private OperationMode opMode;
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public GOCIDataReleaseQCDriver(DataReleaseQCService dataReleaseQCService) {
-        this.dataReleaseQCService = dataReleaseQCService;
-    }
+//    @Autowired
+//    public GOCIDataReleaseQCDriver(DataReleaseQCService dataReleaseQCService) {
+//        this.dataReleaseQCService = dataReleaseQCService;
+//    }
 
 
     public static void main(String[] args) {
-        System.out.println("Starting Goci data publisher...");
+        System.out.println("Starting GOCI data release QC pipeline...");
         ApplicationContext ctx = SpringApplication.run(GOCIDataReleaseQCDriver.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
@@ -47,7 +50,7 @@ public class GOCIDataReleaseQCDriver {
     @Bean CommandLineRunner run() {
         return strings -> {
             long start_time = System.currentTimeMillis();
-            System.out.println("Building indexes with supplied params: " + Arrays.toString(strings));
+            System.out.println("Running QC pipeline with supplied params: " + Arrays.toString(strings));
             int parseArgs = parseArguments(strings);
             if (parseArgs == 0) {
                 switch (opMode) {
@@ -79,7 +82,7 @@ public class GOCIDataReleaseQCDriver {
             }
             long end_time = System.currentTimeMillis();
             String time = String.format("%.1f", ((double) (end_time - start_time)) / 1000);
-            System.out.println("Indexing building complete in " + time + " s. - application will now exit - exit code " + parseArgs);
+            System.out.println("QC pipeline complete in " + time + " s. - application will now exit - exit code " + parseArgs);
         };
     }
 
@@ -142,21 +145,24 @@ public class GOCIDataReleaseQCDriver {
         options.addOption(helpOption);
 
         // add output file arguments
-        Option outputFileOption = new Option("o", "output", true,
-                                             "The output file to write the published ontology to");
-        outputFileOption.setArgName("file");
-        outputFileOption.setRequired(true);
-        options.addOption(outputFileOption);
+        Option allQCOption = new Option("a", "all", false,
+                                             "Run the full QC pipeline");
+        options.addOption(allQCOption);
 
-        Option pvalueFilterOption = new Option("p",
-                                               "pvalue",
-                                               true,
-                                               "The minimum p-value on which to filter the knowledge base, in format nE-x, e.g. 5E-8");
-        options.addOption(pvalueFilterOption);
+        Option emailOption = new Option("e", "email",
+                                               false,
+                                               "Check the most recently published studies and email them out");
+        options.addOption(emailOption);
 
-        Option dateFilterOption =
-                new Option("d", "date", true, "The date on which to filter the knowledge base, in format YYYY-MM-DD");
-        options.addOption(dateFilterOption);
+        Option knowledgeBaseOption =
+                new Option("k", "knowledgebase", false, "Run knowledge base QC tasks");
+        options.addOption(knowledgeBaseOption);
+
+        Option diagramOption = new Option("d", "diagram", false, "Run diagram QC tasks");
+        options.addOption(diagramOption);
+
+        Option solrOption = new Option("s", "solr", false, "Run Solr QC tasks");
+        options.addOption(solrOption);
 
         return options;
     }

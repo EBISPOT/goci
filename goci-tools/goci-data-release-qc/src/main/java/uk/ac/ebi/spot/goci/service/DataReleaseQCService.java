@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.PublishedStudy;
 import uk.ac.ebi.spot.goci.service.mail.MailSendingService;
@@ -18,6 +19,7 @@ public class DataReleaseQCService {
     private MailSendingService mailSendingService;
 
 
+    @Autowired
     public DataReleaseQCService(SolrQueryService solrQueryService,
                                 MailSendingService mailSendingService) {
         this.solrQueryService = solrQueryService;

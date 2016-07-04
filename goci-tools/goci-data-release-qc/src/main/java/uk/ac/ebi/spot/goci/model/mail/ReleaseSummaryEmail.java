@@ -82,9 +82,12 @@ public class ReleaseSummaryEmail {
                 line.append(s.getPublicationDate());
                 line.append(", ");
                 line.append(s.getJournal());
-                line.append(") ");
+                line.append("); ");
                 line.append(s.getAssociationCount());
                 line.append(" associations.\n");
+                line.append("\n");
+
+                this.addToBody(line.toString());
             }
         }
         else {

@@ -52,9 +52,9 @@ public class SolrQueryService {
 
         String query = buildSolrQuery(lastReleaseDate);
 
-        HttpEntity entity = querySolr(query);
+//        HttpEntity entity = querySolr(query);
 
-        List<PublishedStudy> studies = processSolrResult(entity);
+        List<PublishedStudy> studies = querySolr(query); //processSolrResult(entity);
 
         return studies;
     }
@@ -96,9 +96,10 @@ public class SolrQueryService {
         return solrSearchBuilder.toString();
     }
 
-    public HttpEntity querySolr(String searchString) throws IOException{
+//    public HttpEntity querySolr(String searchString) throws IOException{
+    public List<PublishedStudy> querySolr(String searchString) throws IOException{
 
-        System.out.println(searchString);
+    System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {
@@ -113,14 +114,29 @@ public class SolrQueryService {
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
 
-        HttpEntity entity = null;
+//        HttpEntity entity = null;
+        List<PublishedStudy> studies = new ArrayList<>();
+
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
-            entity = response.getEntity();
+            HttpEntity entity = response.getEntity();
 
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent()));
+
+            String output;
+            while ((output = br.readLine()) != null) {
+
+                SolrDataProcessingService jsonProcessor = new SolrDataProcessingService(output);
+                studies = jsonProcessor.processJson();
+            }
+
+            EntityUtils.consume(entity);
 
         }
-        return entity;
+//        return entity;
+        return studies;
+
     }
 
     public List<PublishedStudy> processSolrResult(HttpEntity entity) throws IOException{
@@ -136,13 +152,6 @@ public class SolrQueryService {
         }
 
         EntityUtils.consume(entity);
-
-//        if (file == null) {
-//
-//            //TO DO throw exception here and add error handler
-//            file =
-//                    "Some error occurred during your request. Please try again or contact the GWAS Catalog team for assistance";
-//        }
 
         return studies;
     }
