@@ -321,10 +321,10 @@ public class ValidationChecks {
     public String checkRiskFrequency(String riskFrequency) {
         String error = null;
         if (riskFrequency == null) {
-            error = "Empty value";
+            error = "Value is empty";
         }
         else if (riskFrequency.isEmpty()) {
-            error = "Empty value";
+            error = "Value is empty";
         }
         else {
             // Skip check if value is NR
