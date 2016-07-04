@@ -182,10 +182,12 @@ public class LociAttributesService {
 
     public void deleteLocusAndRiskAlleles(Association association) {
         if (association.getLoci() != null) {
+            Collection<RiskAllele> riskAlleles = new ArrayList<>();
             for (Locus locus : association.getLoci()) {
-                locus.getStrongestRiskAlleles().forEach(riskAllele -> riskAlleleRepository.delete(riskAllele));
+                locus.getStrongestRiskAlleles().forEach(riskAlleles::add);
                 deleteLocus(locus);
             }
+            riskAlleles.forEach(riskAllele -> riskAlleleRepository.delete(riskAllele));
         }
     }
 }
