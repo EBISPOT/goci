@@ -144,7 +144,7 @@ public class AssociationOperationsService {
             Association associationUserIsEditing =
                     associationRepository.findOne(associationId);
             lociAttributesService.deleteLocusAndRiskAlleles(associationUserIsEditing);
-            
+
             savAssociation(association, study, associationValidationErrors);
         }
         return associationValidationViews;
