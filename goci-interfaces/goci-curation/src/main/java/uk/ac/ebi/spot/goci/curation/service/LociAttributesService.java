@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
@@ -177,5 +178,14 @@ public class LociAttributesService {
         }
 
         return newString;
+    }
+
+    public void deleteLocusAndRiskAlleles(Association association) {
+        if (association.getLoci() != null) {
+            for (Locus locus : association.getLoci()) {
+                locus.getStrongestRiskAlleles().forEach(riskAllele -> riskAlleleRepository.delete(riskAllele));
+                deleteLocus(locus);
+            }
+        }
     }
 }
