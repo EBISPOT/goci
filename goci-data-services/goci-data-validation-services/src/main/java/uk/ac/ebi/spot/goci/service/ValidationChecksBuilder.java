@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -84,7 +85,8 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError orIsPresent = errorCreationService.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
+        ValidationError orIsPresent =
+                errorCreationService.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
         validationErrors.add(orIsPresent);
 
         ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
@@ -137,7 +139,8 @@ public class ValidationChecksBuilder {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
+        ValidationError betaIsPresent =
+                errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
         validationErrors.add(betaIsPresent);
 
         ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association.getBetaUnit());
@@ -168,7 +171,8 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runAuthorLevelBetaChecks(Association association) {
         Collection<ValidationError> validationErrors = new ArrayList<>();
 
-        ValidationError betaIsPresent = errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
+        ValidationError betaIsPresent =
+                errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum());
         validationErrors.add(betaIsPresent);
 
         ValidationError betaUnitNotFound = errorCreationService.checkBetaUnitIsPresent(association.getBetaUnit());
@@ -266,35 +270,43 @@ public class ValidationChecksBuilder {
     public Collection<ValidationError> runLociAttributeChecks(Association association) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
-        Collection<Locus> loci = association.getLoci();
+        if (association.getLoci() != null) {
 
-        if (loci != null) {
+            Set<String> associationGenes = new HashSet<>();
+            Collection<ValidationError> geneErrors = new ArrayList<>();
+
+            // Create a unique set of all locus genes
+            for (Locus locus : association.getLoci()) {
+                Set<String> locusGenes = new HashSet<>();
+                if (!locus.getAuthorReportedGenes().isEmpty()) {
+                    locusGenes =
+                            locus.getAuthorReportedGenes().stream().map(Gene::getGeneName).collect(Collectors.toSet());
+                }
+                associationGenes.addAll(locusGenes);
+            }
+
+            // Check genes
+            associationGenes.forEach(geneName -> {
+                getLog().info("Checking gene: ".concat(geneName));
+                ValidationError geneError = errorCreationService.checkGene(geneName);
+                if (geneError.getError() != null) {
+                    geneErrors.add(geneError);
+                }
+            });
+
+            if (!geneErrors.isEmpty()) {
+                validationErrors.addAll(geneErrors);
+            }
+
+
             for (Locus locus : association.getLoci()) {
                 Collection<RiskAllele> riskAlleles = locus.getStrongestRiskAlleles();
-                Collection<ValidationError> geneErrors = new ArrayList<>();
-
-                // Firstly check all genes are valid
-                if (!locus.getAuthorReportedGenes().isEmpty()) {
-                    Set<String> locusGenes =
-                            locus.getAuthorReportedGenes().stream().map(Gene::getGeneName).collect(Collectors.toSet());
-
-                    locusGenes.forEach(geneName -> {
-                        getLog().info("Checking gene: ".concat(geneName));
-                        ValidationError geneError = errorCreationService.checkGene(geneName);
-                        if (geneError.getError() != null) {
-                            geneErrors.add(geneError);
-                        }
-                    });
-
-                    if (!geneErrors.isEmpty()) {
-                        validationErrors.addAll(geneErrors);
-                    }
-                }
 
                 // Check risk allele attributes
                 riskAlleles.forEach(riskAllele -> {
 
-                    ValidationError riskAlleleError = errorCreationService.checkRiskAllele(riskAllele.getRiskAlleleName());
+                    ValidationError riskAlleleError =
+                            errorCreationService.checkRiskAllele(riskAllele.getRiskAlleleName());
                     validationErrors.add(riskAlleleError);
 
                     // If gene is valid proceed to check gene and snp location
