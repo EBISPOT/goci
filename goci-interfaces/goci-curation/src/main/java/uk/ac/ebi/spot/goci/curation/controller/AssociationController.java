@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
@@ -96,6 +97,7 @@ public class AssociationController {
     private MappingService mappingService;
     private AssociationUploadService associationUploadService;
     private CurrentUserDetailsService currentUserDetailsService;
+    private AssociationValidationReportService associationValidationReportService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -117,7 +119,8 @@ public class AssociationController {
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
                                  AssociationUploadService associationUploadService,
-                                 CurrentUserDetailsService currentUserDetailsService) {
+                                 CurrentUserDetailsService currentUserDetailsService,
+                                 AssociationValidationReportService associationValidationReportService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -132,8 +135,9 @@ public class AssociationController {
         this.mappingService = mappingService;
         this.associationUploadService = associationUploadService;
         this.currentUserDetailsService = currentUserDetailsService;
+        this.associationValidationReportService = associationValidationReportService;
     }
-    
+
     /*  Study SNP/Associations */
 
     // Generate list of SNP associations linked to a study
@@ -557,7 +561,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
@@ -626,7 +630,7 @@ public class AssociationController {
             model.addAttribute("mappingDetails", associationOperationsService.createMappingDetails(associationToEdit));
 
             // Return any association errors
-            model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+            model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
             // Determine if association is an OR or BETA type
             String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
@@ -730,7 +734,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -761,7 +765,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
         return "edit_snp_interaction_association";
     }
@@ -797,7 +801,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -833,7 +837,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationOperationsService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
 
         return "edit_snp_interaction_association";
     }
