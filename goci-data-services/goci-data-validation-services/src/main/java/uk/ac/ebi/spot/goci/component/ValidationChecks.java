@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.service.rest.GeneCheckingRestService;
 import uk.ac.ebi.spot.goci.service.rest.SnpCheckingRestService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -288,24 +286,27 @@ public class ValidationChecks {
      */
     public String checkRiskAllele(String riskAlleleName) {
         String error = null;
+
+/*
+        TODO AT SOME STAGE WE SHOULD SWITCH TO CHECKING JUST THE 4 BASES
         List<String> acceptableValues = new ArrayList<>();
         acceptableValues.add("A");
         acceptableValues.add("T");
         acceptableValues.add("G");
         acceptableValues.add("C");
-        acceptableValues.add("?");
+        acceptableValues.add("?");*/
 
         if (riskAlleleName == null) {
-            error = "Risk allele is empty";
+            error = "Value is empty";
         }
         else {
             if (riskAlleleName.isEmpty()) {
-                error = "Risk allele is empty";
+                error = "Value is empty";
             }
             // Check risk allele is one of the accepted types
             else {
-                if (!acceptableValues.contains(riskAlleleName)) {
-                    error = "Risk allele is not one of ".concat(acceptableValues.toString());
+                if (!riskAlleleName.startsWith("rs") && !riskAlleleName.contains("-")) {
+                    error = "Value does not start with rs or contain -";
                 }
             }
         }
