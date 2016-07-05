@@ -43,6 +43,11 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "OR", false);
     }
 
+    public ValidationError checkOrRecipIsPresentAndLessThanOne(Float orPerCopyRecip) {
+        String errorMessage = validationChecks.checkOrRecipIsPresentAndLessThanOne(orPerCopyRecip);
+        return ErrorProcessingService.createError(errorMessage, "Reciprocal OR", false);
+    }
+
     public ValidationError checkBetaValuesIsEmpty(Float beta) {
         String errorMessage = validationChecks.checkValueIsEmpty(beta);
         return ErrorProcessingService.createError(errorMessage, "Beta", false);

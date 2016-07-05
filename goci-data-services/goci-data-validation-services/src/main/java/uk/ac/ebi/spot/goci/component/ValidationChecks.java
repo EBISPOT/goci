@@ -119,6 +119,25 @@ public class ValidationChecks {
     }
 
     /**
+     * Reciprocal OR MUST be filled and less than 1
+     *
+     * @param value Value to be checked
+     */
+    public String checkOrRecipIsPresentAndLessThanOne(Float value) {
+        String error = null;
+
+        if (value == null) {
+            error = "Value is empty";
+        }
+        else {
+            if (value > 1) {
+                error = "Value is more than 1";
+            }
+        }
+        return error;
+    }
+
+    /**
      * Beta MUST be filled
      *
      * @param value Value to be checked

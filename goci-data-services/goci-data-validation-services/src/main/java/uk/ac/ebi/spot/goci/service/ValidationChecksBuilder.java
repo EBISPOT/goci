@@ -89,6 +89,10 @@ public class ValidationChecksBuilder {
                 errorCreationService.checkOrIsPresentAndMoreThanOne(association.getOrPerCopyNum());
         validationErrors.add(orIsPresent);
 
+        ValidationError orRecipIsPresent =
+                errorCreationService.checkOrRecipIsPresentAndLessThanOne(association.getOrPerCopyRecip());
+        validationErrors.add(orRecipIsPresent);
+
         ValidationError betaFoundForOr = errorCreationService.checkBetaValuesIsEmpty(association.getBetaNum());
         validationErrors.add(betaFoundForOr);
 
