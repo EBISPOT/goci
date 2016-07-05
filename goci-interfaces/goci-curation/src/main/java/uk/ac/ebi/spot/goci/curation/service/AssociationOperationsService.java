@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -11,8 +10,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
@@ -25,8 +22,10 @@ import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
+import uk.ac.ebi.spot.goci.service.ErrorCreationService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
+import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,14 +47,11 @@ public class AssociationOperationsService {
     private AssociationReportRepository associationReportRepository;
     private AssociationRepository associationRepository;
     private LocusRepository locusRepository;
-
-    // Validators
-    private SnpFormRowValidator snpFormRowValidator;
-    private SnpFormColumnValidator snpFormColumnValidator;
     private MappingService mappingService;
     private LociAttributesService lociAttributesService;
     private ValidationService validationService;
     private AssociationValidationReportService associationValidationReportService;
+    private ErrorCreationService errorCreationService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -63,23 +59,51 @@ public class AssociationOperationsService {
                                         AssociationReportRepository associationReportRepository,
                                         AssociationRepository associationRepository,
                                         LocusRepository locusRepository,
-                                        SnpFormRowValidator snpFormRowValidator,
-                                        SnpFormColumnValidator snpFormColumnValidator,
                                         MappingService mappingService,
                                         LociAttributesService lociAttributesService,
                                         ValidationService validationService,
-                                        AssociationValidationReportService associationValidationReportService) {
+                                        AssociationValidationReportService associationValidationReportService,
+                                        ErrorCreationService errorCreationService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
         this.associationRepository = associationRepository;
         this.locusRepository = locusRepository;
-        this.snpFormRowValidator = snpFormRowValidator;
-        this.snpFormColumnValidator = snpFormColumnValidator;
         this.mappingService = mappingService;
         this.lociAttributesService = lociAttributesService;
         this.validationService = validationService;
         this.associationValidationReportService = associationValidationReportService;
+        this.errorCreationService = errorCreationService;
+    }
+
+    /**
+     * Check a standard SNP association form for errors, these are critical errors that would prevent creating an
+     * association
+     *
+     * @param form The form to validate
+     */
+    public Collection<ValidationError> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form) {
+        Collection<ValidationError> errors = new ArrayList<>();
+        for (SnpFormRow row : form.getSnpFormRows()) {
+            errors.add(errorCreationService.checkSnpValueIsPresent(row.getSnp()));
+            errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row.getStrongestRiskAllele()));
+        }
+        return ErrorProcessingService.checkForValidErrors(errors);
+    }
+
+    /**
+     * Check a SNP association interaction form for errors, these are critical errors that would prevent creating an
+     * association
+     *
+     * @param form The form to validate
+     */
+    public Collection<ValidationError> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form) {
+        Collection<ValidationError> errors = new ArrayList<>();
+        for (SnpFormColumn column : form.getSnpFormColumns()) {
+            errors.add(errorCreationService.checkSnpValueIsPresent(column.getSnp()));
+            errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(column.getStrongestRiskAllele()));
+        }
+        return ErrorProcessingService.checkForValidErrors(errors);
     }
 
     /**
@@ -288,38 +312,6 @@ public class AssociationOperationsService {
             lastViewedAssociation.setId(associationId);
         }
         return lastViewedAssociation;
-    }
-
-    /**
-     * Check a standard SNP association form for errors
-     *
-     * @param result Binding result from edit form
-     * @param form   The form to validate
-     */
-
-    public Boolean checkSnpAssociationFormErrors(BindingResult result,
-                                                 SnpAssociationStandardMultiForm form) {
-        for (SnpFormRow row : form.getSnpFormRows()) {
-            snpFormRowValidator.validate(row, result);
-        }
-
-        return result.hasErrors();
-    }
-
-    /**
-     * Check a SNP association interaction form for errors
-     *
-     * @param result Binding result from edit form
-     * @param form   The form to validate
-     */
-    public Boolean checkSnpAssociationInteractionFormErrors(BindingResult result,
-                                                            SnpAssociationInteractionForm form) {
-
-        for (SnpFormColumn column : form.getSnpFormColumns()) {
-            snpFormColumnValidator.validate(column, result);
-        }
-
-        return result.hasErrors();
     }
 
     /**

@@ -6,12 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormColumnValidator;
-import uk.ac.ebi.spot.goci.curation.validator.SnpFormRowValidator;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
+import uk.ac.ebi.spot.goci.service.ErrorCreationService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 
@@ -51,12 +50,6 @@ public class AssociationOperationsServiceTest {
     private AssociationRepository associationRepository;
 
     @Mock
-    private SnpFormRowValidator snpFormRowValidator;
-
-    @Mock
-    private SnpFormColumnValidator snpFormColumnValidator;
-
-    @Mock
     private MappingService mappingService;
 
     @Mock
@@ -71,6 +64,8 @@ public class AssociationOperationsServiceTest {
     @Mock
     private ValidationService validationService;
 
+    @Mock
+    private ErrorCreationService errorCreationService;
 
     @Before
     public void setUpMock() {
@@ -79,12 +74,11 @@ public class AssociationOperationsServiceTest {
                                                                         associationReportRepository,
                                                                         associationRepository,
                                                                         locusRepository,
-                                                                        snpFormRowValidator,
-                                                                        snpFormColumnValidator,
                                                                         mappingService,
                                                                         lociAttributesService,
                                                                         validationService,
-                                                                        associationValidationReportService);
+                                                                        associationValidationReportService,
+                                                                        errorCreationService);
     }
 
     @Test
