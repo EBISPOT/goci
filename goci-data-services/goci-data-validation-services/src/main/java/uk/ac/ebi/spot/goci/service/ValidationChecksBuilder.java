@@ -107,6 +107,10 @@ public class ValidationChecksBuilder {
                 errorCreationService.checkRangeIsPresent(association.getRange());
         validationErrors.add(rangeNotFound);
 
+        ValidationError recipRangeNotFound =
+                errorCreationService.checkOrPerCopyRecipRangeIsPresent(association.getOrPerCopyRecipRange());
+        validationErrors.add(recipRangeNotFound);
+
         return ErrorProcessingService.checkForValidErrors(validationErrors);
     }
 

@@ -45,7 +45,7 @@ public class ErrorCreationService {
 
     public ValidationError checkOrRecipIsPresentAndLessThanOne(Float orPerCopyRecip) {
         String errorMessage = validationChecks.checkOrRecipIsPresentAndLessThanOne(orPerCopyRecip);
-        return ErrorProcessingService.createError(errorMessage, "Reciprocal OR", false);
+        return ErrorProcessingService.createError(errorMessage, "OR reciprocal", false);
     }
 
     public ValidationError checkBetaValuesIsEmpty(Float beta) {
@@ -161,6 +161,11 @@ public class ErrorCreationService {
     public ValidationError checkRangeIsPresent(String range) {
         String errorMessage = validationChecks.checkValueIsPresent(range);
         return ErrorProcessingService.createError(errorMessage, "Range", false);
+    }
+
+    public ValidationError checkOrPerCopyRecipRangeIsPresent(String orPerCopyRecipRange) {
+        String errorMessage = validationChecks.checkValueIsPresent(orPerCopyRecipRange);
+        return ErrorProcessingService.createError(errorMessage, "OR reciprocal range", false);
     }
 
     // Check Gene and SNP are on same chromosome
