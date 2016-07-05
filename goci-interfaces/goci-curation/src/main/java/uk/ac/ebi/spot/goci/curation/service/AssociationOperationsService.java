@@ -82,13 +82,14 @@ public class AssociationOperationsService {
      *
      * @param form The form to validate
      */
-    public Collection<ValidationError> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form) {
+    public List<AssociationValidationView> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form) {
         Collection<ValidationError> errors = new ArrayList<>();
         for (SnpFormRow row : form.getSnpFormRows()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(row.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row.getStrongestRiskAllele()));
         }
-        return ErrorProcessingService.checkForValidErrors(errors);
+        Collection<ValidationError> updatedErrors =  ErrorProcessingService.checkForValidErrors(errors);
+        return processAssociationValidationErrors(updatedErrors);
     }
 
     /**
@@ -97,13 +98,14 @@ public class AssociationOperationsService {
      *
      * @param form The form to validate
      */
-    public Collection<ValidationError> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form) {
+    public List<AssociationValidationView> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form) {
         Collection<ValidationError> errors = new ArrayList<>();
         for (SnpFormColumn column : form.getSnpFormColumns()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(column.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(column.getStrongestRiskAllele()));
         }
-        return ErrorProcessingService.checkForValidErrors(errors);
+        Collection<ValidationError> updatedErrors =  ErrorProcessingService.checkForValidErrors(errors);
+        return processAssociationValidationErrors(updatedErrors);
     }
 
     /**
