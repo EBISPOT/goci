@@ -47,6 +47,7 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -394,18 +395,19 @@ public class AssociationController {
                     method = RequestMethod.POST)
     public String addStandardSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                   @PathVariable Long studyId,
-                                  BindingResult result,
-                                  Model model) throws EnsemblMappingException {
+                                  Model model, @RequestParam(required = true) String measurementType)
+            throws EnsemblMappingException {
 
-        // Establish study
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
 
         // Check for errors in form that would prevent saving an association
-        Boolean hasErrors =
-                associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
+        List<AssociationValidationView> rowErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
 
-        if (hasErrors) {
+        if (!rowErrors.isEmpty()) {
+            model.addAttribute("errors", rowErrors);
             model.addAttribute("form", snpAssociationStandardMultiForm);
             return "add_standard_snp_association";
         }
@@ -431,8 +433,6 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationStandardMultiForm);
-                String measurementType = associationOperationsService.determineIfAssociationIsOrType(newAssociation);
-                model.addAttribute("measurementType", measurementType);
                 return "add_standard_snp_association";
             }
             else {
@@ -446,18 +446,19 @@ public class AssociationController {
                     method = RequestMethod.POST)
     public String addMultiSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                @PathVariable Long studyId,
-                               BindingResult result,
-                               Model model) throws EnsemblMappingException {
+                               Model model, @RequestParam(required = true) String measurementType)
+            throws EnsemblMappingException {
 
-        // Establish study
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
 
-        // Check for errors in form
-        Boolean hasErrors =
-                associationOperationsService.checkSnpAssociationFormErrors(result, snpAssociationStandardMultiForm);
+        // Check for errors in form that would prevent saving an association
+        List<AssociationValidationView> rowErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
 
-        if (hasErrors) {
+        if (!rowErrors.isEmpty()) {
+            model.addAttribute("errors", rowErrors);
             model.addAttribute("form", snpAssociationStandardMultiForm);
             return "add_multi_snp_association";
         }
@@ -484,8 +485,6 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationStandardMultiForm);
-                String measurementType = associationOperationsService.determineIfAssociationIsOrType(newAssociation);
-                model.addAttribute("measurementType", measurementType);
                 return "add_multi_snp_association";
             }
             else {
@@ -498,18 +497,21 @@ public class AssociationController {
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                    @PathVariable Long studyId, BindingResult result, Model model)
+                                    @PathVariable Long studyId,
+                                    Model model,
+                                    @RequestParam(required = true) String measurementType)
             throws EnsemblMappingException {
 
-        // Establish study
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
 
-        // Check for errors in form
-        Boolean hasErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(result,
-                                                                                                  snpAssociationInteractionForm);
+        // Check for errors in form that would prevent saving an association
+        List<AssociationValidationView> colErrors =
+                associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
 
-        if (hasErrors) {
+        if (!colErrors.isEmpty()) {
+            model.addAttribute("errors", colErrors);
             model.addAttribute("form", snpAssociationInteractionForm);
             return "add_snp_interaction_association";
         }
@@ -535,8 +537,6 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationInteractionForm);
-                String measurementType = associationOperationsService.determineIfAssociationIsOrType(newAssociation);
-                model.addAttribute("measurementType", measurementType);
                 return "add_snp_interaction_association";
             }
             else {
@@ -597,9 +597,7 @@ public class AssociationController {
                     method = RequestMethod.POST)
     // TODO COULD REFACTOR TO JUST USE SUPERCLASS AS METHOD PARAMETER
     public String editAssociation(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
-                                  BindingResult snpAssociationFormBindingResult,
                                   @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
-                                  BindingResult snpAssociationInteractionFormBindingResult,
                                   @PathVariable Long associationId,
                                   @RequestParam(value = "associationtype", required = true) String associationType,
                                   Model model) throws EnsemblMappingException {
@@ -612,25 +610,22 @@ public class AssociationController {
         model.addAttribute("study", study);
 
         // Validate returned form depending on association type
-        Boolean hasErrors;
+        List<AssociationValidationView> criticalErrors = new ArrayList<>();
         if (associationType.equalsIgnoreCase("interaction")) {
-            hasErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(
-                    snpAssociationInteractionFormBindingResult,
-                    snpAssociationInteractionForm);
+            criticalErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
         }
         else {
-            hasErrors = associationOperationsService.checkSnpAssociationFormErrors(snpAssociationFormBindingResult,
-                                                                                   snpAssociationStandardMultiForm);
+            criticalErrors = associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
         }
 
         // If errors found then return the edit form with all information entered by curator preserved
-        if (hasErrors) {
+        if (!criticalErrors.isEmpty()) {
 
             // Get mapping details
             model.addAttribute("mappingDetails", associationOperationsService.createMappingDetails(associationToEdit));
 
             // Return any association errors
-            model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+            model.addAttribute("errors", criticalErrors);
 
             // Determine if association is an OR or BETA type
             String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
