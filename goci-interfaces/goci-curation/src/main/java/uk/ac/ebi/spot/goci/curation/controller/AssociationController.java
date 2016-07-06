@@ -28,6 +28,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
@@ -97,6 +98,7 @@ public class AssociationController {
     private AssociationUploadService associationUploadService;
     private CurrentUserDetailsService currentUserDetailsService;
     private AssociationValidationReportService associationValidationReportService;
+    private AssociationDeletionService associationDeletionService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -119,7 +121,8 @@ public class AssociationController {
                                  MappingService mappingService,
                                  AssociationUploadService associationUploadService,
                                  CurrentUserDetailsService currentUserDetailsService,
-                                 AssociationValidationReportService associationValidationReportService) {
+                                 AssociationValidationReportService associationValidationReportService,
+                                 AssociationDeletionService associationDeletionService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -135,6 +138,7 @@ public class AssociationController {
         this.associationUploadService = associationUploadService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.associationValidationReportService = associationValidationReportService;
+        this.associationDeletionService = associationDeletionService;
     }
 
     /*  Study SNP/Associations */
@@ -853,32 +857,11 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String deleteAllAssociations(Model model, @PathVariable Long studyId) {
+    public String deleteAllAssociations(Model model, @PathVariable Long studyId, HttpServletRequest request) {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-
-        // For each association get the loci
-        Collection<Locus> loci = new ArrayList<Locus>();
-        for (Association association : studyAssociations) {
-            loci.addAll(association.getLoci());
-        }
-
-        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
-        // Snps are not deleted as they may be used in other associations
-        for (Locus locus : loci) {
-            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
-            locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele : locusRiskAlleles) {
-                lociAttributesService.deleteRiskAllele(riskAllele);
-            }
-            locusRepository.delete(locus);
-        }
-        // Delete associations
-        for (Association association : studyAssociations) {
-            associationRepository.delete(association);
-        }
-
+        studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, currentUserDetailsService.getUserFromRequest(request)));
         return "redirect:/studies/" + studyId + "/associations";
     }
 
