@@ -105,7 +105,7 @@ public class AssociationUploadService {
                     }
                     else {
                         studyFileService.createFileUploadEvent(study.getId(), user);
-                        saveAssociations(validationSummary.getAssociationSummaries(), study);
+                        saveAssociations(validationSummary.getAssociationSummaries(), study, user);
                     }
                 }
             }
@@ -116,11 +116,15 @@ public class AssociationUploadService {
         }
     }
 
-    private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study)
+    private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study, SecureUser user)
             throws EnsemblMappingException {
 
         for (AssociationSummary associationSummary : associationSummaries) {
-            associationOperationsService.savAssociation(associationSummary.getAssociation(),
+            Association newAssociation = associationSummary.getAssociation();
+            // Add creation event
+            associationOperationsService.createAssociationCreationEvent(newAssociation, user);
+            // Save association
+            associationOperationsService.savAssociation(newAssociation,
                                                         study,
                                                         associationSummary.getErrors());
         }

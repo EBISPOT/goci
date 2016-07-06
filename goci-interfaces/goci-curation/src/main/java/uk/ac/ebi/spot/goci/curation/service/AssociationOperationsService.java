@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
@@ -10,6 +11,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
+import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
@@ -17,6 +19,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
@@ -52,6 +55,7 @@ public class AssociationOperationsService {
     private ValidationService validationService;
     private AssociationValidationReportService associationValidationReportService;
     private ErrorCreationService errorCreationService;
+    private TrackingOperationService trackingOperationService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -63,7 +67,8 @@ public class AssociationOperationsService {
                                         LociAttributesService lociAttributesService,
                                         ValidationService validationService,
                                         AssociationValidationReportService associationValidationReportService,
-                                        ErrorCreationService errorCreationService) {
+                                        ErrorCreationService errorCreationService,
+                                        @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
@@ -74,6 +79,7 @@ public class AssociationOperationsService {
         this.validationService = validationService;
         this.associationValidationReportService = associationValidationReportService;
         this.errorCreationService = errorCreationService;
+        this.trackingOperationService = trackingOperationService;
     }
 
     /**
@@ -88,7 +94,7 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkSnpValueIsPresent(row.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row.getStrongestRiskAllele()));
         }
-        Collection<ValidationError> updatedErrors =  ErrorProcessingService.checkForValidErrors(errors);
+        Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
         return processAssociationValidationErrors(updatedErrors);
     }
 
@@ -104,7 +110,7 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkSnpValueIsPresent(column.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(column.getStrongestRiskAllele()));
         }
-        Collection<ValidationError> updatedErrors =  ErrorProcessingService.checkForValidErrors(errors);
+        Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
         return processAssociationValidationErrors(updatedErrors);
     }
 
@@ -330,5 +336,14 @@ public class AssociationOperationsService {
                                                                          validationError.getWarning()));
         });
         return associationValidationViews;
+    }
+
+    /**
+     * Add association creation event
+     *
+     * @param association Association to add creation event to
+     */
+    public void createAssociationCreationEvent(Association association, SecureUser user) {
+        trackingOperationService.create(association, user);
     }
 }
