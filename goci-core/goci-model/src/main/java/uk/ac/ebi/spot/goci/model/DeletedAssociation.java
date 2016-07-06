@@ -1,19 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created by emma on 27/11/14.
@@ -23,12 +16,13 @@ import java.util.Date;
  *         Model object representing a deleted association
  */
 @Entity
-public class DeletedAssociation{
+public class DeletedAssociation {
     @Id
     private Long id;
 
-    @ManyToOne
-    private Study study;
+    // Use study ID rather that study object,
+    // this hopefully preserve event information even if the study is deleted
+    private Long studyId;
 
     @OneToMany
     @JoinTable(name = "DELETED_ASSOCIATION_EVENT",
@@ -40,9 +34,9 @@ public class DeletedAssociation{
     public DeletedAssociation() {
     }
 
-    public DeletedAssociation(Long id, Study study, Collection<Event> events) {
+    public DeletedAssociation(Long id, Long studyId, Collection<Event> events) {
         this.id = id;
-        this.study = study;
+        this.studyId = studyId;
         this.events = events;
     }
 
@@ -54,12 +48,12 @@ public class DeletedAssociation{
         this.id = id;
     }
 
-    public Study getStudy() {
-        return study;
+    public Long getStudyId() {
+        return studyId;
     }
 
-    public void setStudy(Study study) {
-        this.study = study;
+    public void setStudyId(Long studyId) {
+        this.studyId = studyId;
     }
 
     public Collection<Event> getEvents() {

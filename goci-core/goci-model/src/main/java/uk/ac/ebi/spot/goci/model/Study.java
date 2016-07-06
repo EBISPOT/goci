@@ -84,9 +84,6 @@ public class Study implements Trackable {
     private Collection<Association> associations;
 
     @OneToMany(mappedBy = "study")
-    private Collection<Association> deletedAssociations;
-
-    @OneToMany(mappedBy = "study")
     private Collection<Ethnicity> ethnicities;
 
     @ManyToOne
@@ -368,6 +365,7 @@ public class Study implements Trackable {
     public void setGenomewideArray(Boolean genomewideArray) {
         this.genomewideArray = genomewideArray;
     }
+
     public Collection<Event> getEvents() {
         return events;
     }

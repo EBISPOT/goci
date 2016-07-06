@@ -11,7 +11,6 @@ import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.DeletedAssociationRepository;
 
@@ -83,7 +82,7 @@ public class AssociationDeletionService {
     private DeletedAssociation createDeletedAssociation(Association association) {
         Collection<Event> events = association.getEvents();
         Long id = association.getId();
-        Study study = association.getStudy();
-        return new DeletedAssociation(id, study, events);
+        Long studyId = association.getStudy().getId();
+        return new DeletedAssociation(id, studyId, events);
     }
 }
