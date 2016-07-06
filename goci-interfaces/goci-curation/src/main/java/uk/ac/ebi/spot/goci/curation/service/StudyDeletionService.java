@@ -28,13 +28,6 @@ import java.util.Collection;
 @Service
 public class StudyDeletionService {
 
-    /**
-     * Delete a study
-     *
-     * @param study Study to delete
-     * @param user  User
-     */
-
     private EthnicityRepository ethnicityRepository;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
@@ -56,7 +49,12 @@ public class StudyDeletionService {
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
     }
-
+    /**
+     * Delete a study
+     *
+     * @param study Study to delete
+     * @param user  User
+     */
     public void deleteStudy(Study study, SecureUser user) {
 
         getLog().warn("Deleting study: ".concat(String.valueOf(study.getId())));
