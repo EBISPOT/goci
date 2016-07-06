@@ -63,7 +63,7 @@ public class WeeklyProgressServiceTest {
             new WeeklyProgressViewBuilder().setStudyId((long) 103)
                     .setEventType(
                             EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE)
-                    .setId((long) 4)
+                    .setId((long) 5)
                     .setWeekStartDay(new Date())
                     .build();
 
@@ -76,10 +76,11 @@ public class WeeklyProgressServiceTest {
     public void processWeeklyView() throws Exception {
 
         // Stubbing
-        List<WeeklyProgressView>
-                weeklyProgressViewList =
-                Arrays.asList(STUDY_CREATION, STUDY_LEVEL_1_EV_01, STUDY_LEVEL_1_EV_02, STUDY_LEVEL_2, STUDY_PUBLISH);
-        when(weeklyProgressViewRepository.findAll()).thenReturn(weeklyProgressViewList);
+        when(weeklyProgressViewRepository.findAll()).thenReturn(Arrays.asList(STUDY_CREATION,
+                                                                              STUDY_LEVEL_1_EV_01,
+                                                                              STUDY_LEVEL_1_EV_02,
+                                                                              STUDY_LEVEL_2,
+                                                                              STUDY_PUBLISH));
 
         List<ReportsWeeklyProgressView> views = weeklyProgressService.processWeeklyView();
 
