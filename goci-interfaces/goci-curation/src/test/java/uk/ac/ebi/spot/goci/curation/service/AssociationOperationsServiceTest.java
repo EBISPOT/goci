@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
+import uk.ac.ebi.spot.goci.curation.service.tracking.AssociationTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -67,6 +68,9 @@ public class AssociationOperationsServiceTest {
     @Mock
     private ErrorCreationService errorCreationService;
 
+    @Mock
+    private AssociationTrackingOperationServiceImpl associationTrackingOperationService;
+
     @Before
     public void setUpMock() {
         associationOperationsService = new AssociationOperationsService(singleSnpMultiSnpAssociationService,
@@ -78,7 +82,7 @@ public class AssociationOperationsServiceTest {
                                                                         lociAttributesService,
                                                                         validationService,
                                                                         associationValidationReportService,
-                                                                        errorCreationService);
+                                                                        errorCreationService,associationTrackingOperationService);
     }
 
     @Test
