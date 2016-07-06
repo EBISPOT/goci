@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
@@ -148,14 +149,15 @@ public class AssociationOperationsService {
 
     /**
      * Save edited association
-     *
-     * @param study         Study to assign association to
+     *  @param study         Study to assign association to
      * @param association   Association to validate and save
      * @param associationId existing association Id
+     * @param user
      */
     public Collection<AssociationValidationView> saveEditedAssociationFromForm(Study study,
                                                                                Association association,
-                                                                               Long associationId)
+                                                                               Long associationId,
+                                                                               SecureUser user)
             throws EnsemblMappingException {
 
         // Validate association
@@ -181,6 +183,8 @@ public class AssociationOperationsService {
                     associationRepository.findOne(associationId);
             lociAttributesService.deleteLocusAndRiskAlleles(associationUserIsEditing);
 
+            // Add update event and save
+            trackingOperationService.update(association, user, EventType.ASSOCIATION_UPDATE);
             savAssociation(association, study, associationValidationErrors);
         }
         return associationValidationViews;

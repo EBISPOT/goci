@@ -611,7 +611,7 @@ public class AssociationController {
                                   @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
                                   @PathVariable Long associationId,
                                   @RequestParam(value = "associationtype", required = true) String associationType,
-                                  Model model) throws EnsemblMappingException {
+                                  Model model, HttpServletRequest request) throws EnsemblMappingException {
 
 
         // Establish study
@@ -676,7 +676,11 @@ public class AssociationController {
 
             // Save and validate form
             Collection<AssociationValidationView> errors =
-                    associationOperationsService.saveEditedAssociationFromForm(study, editedAssociation, associationId);
+                    associationOperationsService.saveEditedAssociationFromForm(study,
+                                                                               editedAssociation,
+                                                                               associationId,
+                                                                               currentUserDetailsService.getUserFromRequest(
+                                                                                       request));
 
             // Determine if we have any errors rather than warnings
             long errorCount = errors.stream()
@@ -849,7 +853,7 @@ public class AssociationController {
 
         return "edit_snp_interaction_association";
     }
-    
+
     // Delete all associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
