@@ -84,6 +84,9 @@ public class Study implements Trackable {
     private Collection<Association> associations;
 
     @OneToMany(mappedBy = "study")
+    private Collection<Association> deletedAssociations;
+
+    @OneToMany(mappedBy = "study")
     private Collection<Ethnicity> ethnicities;
 
     @ManyToOne
