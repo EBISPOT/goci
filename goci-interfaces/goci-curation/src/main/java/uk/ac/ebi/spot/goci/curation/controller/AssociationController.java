@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +46,6 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -395,7 +393,9 @@ public class AssociationController {
                     method = RequestMethod.POST)
     public String addStandardSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                   @PathVariable Long studyId,
-                                  Model model, @RequestParam(required = true) String measurementType)
+                                  Model model,
+                                  @RequestParam(required = true) String measurementType,
+                                  HttpServletRequest request)
             throws EnsemblMappingException {
 
         Study study = studyRepository.findOne(studyId);
@@ -419,7 +419,10 @@ public class AssociationController {
             // Save and validate form
             Collection<AssociationValidationView> errors = null;
             try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation);
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study,
+                                                                                     newAssociation,
+                                                                                     currentUserDetailsService.getUserFromRequest(
+                                                                                             request));
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -446,7 +449,9 @@ public class AssociationController {
                     method = RequestMethod.POST)
     public String addMultiSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
                                @PathVariable Long studyId,
-                               Model model, @RequestParam(required = true) String measurementType)
+                               Model model,
+                               @RequestParam(required = true) String measurementType,
+                               HttpServletRequest request)
             throws EnsemblMappingException {
 
         Study study = studyRepository.findOne(studyId);
@@ -471,7 +476,9 @@ public class AssociationController {
             // Save and validate form
             Collection<AssociationValidationView> errors = null;
             try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation);
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+                                                                                     currentUserDetailsService.getUserFromRequest(
+                                                                                             request));
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -499,7 +506,7 @@ public class AssociationController {
     public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
                                     @PathVariable Long studyId,
                                     Model model,
-                                    @RequestParam(required = true) String measurementType)
+                                    @RequestParam(required = true) String measurementType, HttpServletRequest request)
             throws EnsemblMappingException {
 
         Study study = studyRepository.findOne(studyId);
@@ -523,7 +530,9 @@ public class AssociationController {
             // Save and validate form
             Collection<AssociationValidationView> errors = null;
             try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation);
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+                                                                                     currentUserDetailsService.getUserFromRequest(
+                                                                                             request));
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -612,10 +621,12 @@ public class AssociationController {
         // Validate returned form depending on association type
         List<AssociationValidationView> criticalErrors = new ArrayList<>();
         if (associationType.equalsIgnoreCase("interaction")) {
-            criticalErrors = associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
+            criticalErrors =
+                    associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
         }
         else {
-            criticalErrors = associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
+            criticalErrors =
+                    associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
         }
 
         // If errors found then return the edit form with all information entered by curator preserved

@@ -116,11 +116,13 @@ public class AssociationOperationsService {
 
     /**
      * Save association created from details on webform
-     *
-     * @param study       Study to assign association to
+     *  @param study       Study to assign association to
      * @param association Association to validate and save
+     * @param user
      */
-    public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study, Association association)
+    public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study,
+                                                                                Association association,
+                                                                                SecureUser user)
             throws EnsemblMappingException {
 
         // Validate association
@@ -137,6 +139,7 @@ public class AssociationOperationsService {
                 .count();
 
         if (errorCount == 0) {
+            createAssociationCreationEvent(association, user);
             savAssociation(association, study, associationValidationErrors);
         }
         return associationValidationViews;
