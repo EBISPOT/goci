@@ -1206,26 +1206,7 @@ public class AssociationController {
     }
 
     // Sort options
-
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
-    }
-
-    private Sort sortByPvalueExponentAndMantissaAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "pvalueExponent"),
-                        new Sort.Order(Sort.Direction.ASC, "pvalueMantissa"));
-    }
-
-    private Sort sortByPvalueExponentAndMantissaDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "pvalueExponent"),
-                        new Sort.Order(Sort.Direction.DESC, "pvalueMantissa"));
-    }
-
-    private Sort sortByRsidAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "loci.strongestRiskAlleles.snp.rsId"));
-    }
-
-    private Sort sortByRsidDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "loci.strongestRiskAlleles.snp.rsId"));
     }
 }
