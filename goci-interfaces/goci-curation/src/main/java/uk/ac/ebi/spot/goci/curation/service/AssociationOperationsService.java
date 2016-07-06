@@ -116,7 +116,8 @@ public class AssociationOperationsService {
 
     /**
      * Save association created from details on webform
-     *  @param study       Study to assign association to
+     *
+     * @param study       Study to assign association to
      * @param association Association to validate and save
      * @param user
      */
