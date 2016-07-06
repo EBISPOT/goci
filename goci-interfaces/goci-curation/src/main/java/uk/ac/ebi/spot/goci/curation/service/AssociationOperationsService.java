@@ -149,7 +149,8 @@ public class AssociationOperationsService {
 
     /**
      * Save edited association
-     *  @param study         Study to assign association to
+     *
+     * @param study         Study to assign association to
      * @param association   Association to validate and save
      * @param associationId existing association Id
      * @param user
@@ -354,4 +355,13 @@ public class AssociationOperationsService {
     public void createAssociationCreationEvent(Association association, SecureUser user) {
         trackingOperationService.create(association, user);
     }
+
+    public void createAssociationApproveEvent(Association association, SecureUser user) {
+        trackingOperationService.update(association, user, EventType.ASSOCIATION_APPROVED);
+    }
+
+    public void createAssociationUnapproveEvent(Association association, SecureUser user) {
+        trackingOperationService.update(association, user, EventType.ASSOCIATION_UNAPPROVED);
+    }
+
 }

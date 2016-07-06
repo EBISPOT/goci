@@ -898,7 +898,9 @@ public class AssociationController {
     @RequestMapping(value = "associations/{associationId}/approve",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveSnpAssociation(@PathVariable Long associationId, RedirectAttributes redirectAttributes) {
+    public String approveSnpAssociation(@PathVariable Long associationId,
+                                        RedirectAttributes redirectAttributes,
+                                        HttpServletRequest request) {
 
         Association association = associationRepository.findOne(associationId);
 
@@ -917,9 +919,13 @@ public class AssociationController {
             // Set snpChecked attribute to true
             association.setSnpApproved(true);
             association.setLastUpdateDate(new Date());
+
+            // Add approve event
+            associationOperationsService.createAssociationApproveEvent(association,
+                                                                       currentUserDetailsService.getUserFromRequest(
+                                                                               request));
             associationRepository.save(association);
         }
-
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
 
@@ -928,7 +934,7 @@ public class AssociationController {
     @RequestMapping(value = "associations/{associationId}/unapprove",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String unapproveSnpAssociation(@PathVariable Long associationId) {
+    public String unapproveSnpAssociation(@PathVariable Long associationId, HttpServletRequest request) {
 
         Association association = associationRepository.findOne(associationId);
 
@@ -938,6 +944,12 @@ public class AssociationController {
         // Set snpChecked attribute to true
         association.setSnpApproved(false);
         association.setLastUpdateDate(new Date());
+
+        // Add unapprove event
+        associationOperationsService.createAssociationUnapproveEvent(association,
+                                                                     currentUserDetailsService.getUserFromRequest(
+                                                                             request));
+
         associationRepository.save(association);
 
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
@@ -948,7 +960,8 @@ public class AssociationController {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> approveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+    Map<String, String> approveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                       HttpServletRequest request) {
 
         String message = "";
         Integer count = 0;
@@ -976,6 +989,12 @@ public class AssociationController {
 
                 association.setSnpApproved(true);
                 association.setLastUpdateDate(new Date());
+
+                // Add approve event
+                associationOperationsService.createAssociationApproveEvent(association,
+                                                                           currentUserDetailsService.getUserFromRequest(
+                                                                                   request));
+
                 associationRepository.save(association);
                 count++;
             }
@@ -991,7 +1010,8 @@ public class AssociationController {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> unapproveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+    Map<String, String> unapproveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                         HttpServletRequest request) {
 
         String message = "";
         Integer count = 0;
@@ -1005,6 +1025,12 @@ public class AssociationController {
 
             association.setSnpApproved(false);
             association.setLastUpdateDate(new Date());
+
+            // Add unapprove event
+            associationOperationsService.createAssociationUnapproveEvent(association,
+                                                                         currentUserDetailsService.getUserFromRequest(
+                                                                                 request));
+
             associationRepository.save(association);
             count++;
         }
@@ -1020,7 +1046,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/approve_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String approveAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes) {
+    public String approveAll(@PathVariable Long studyId,
+                             RedirectAttributes redirectAttributes,
+                             HttpServletRequest request) {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
@@ -1040,6 +1068,12 @@ public class AssociationController {
 
                 association.setSnpApproved(true);
                 association.setLastUpdateDate(new Date());
+
+                // Add approve event
+                associationOperationsService.createAssociationApproveEvent(association,
+                                                                           currentUserDetailsService.getUserFromRequest(
+                                                                                   request));
+
                 associationRepository.save(association);
             }
         }
