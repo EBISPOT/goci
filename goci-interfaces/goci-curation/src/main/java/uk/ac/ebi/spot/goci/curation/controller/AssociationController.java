@@ -44,8 +44,6 @@ import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
@@ -851,17 +849,18 @@ public class AssociationController {
 
         return "edit_snp_interaction_association";
     }
-
-
+    
     // Delete all associations linked to a study
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String deleteAllAssociations(Model model, @PathVariable Long studyId, HttpServletRequest request) {
 
-        // Get all associations
+        // Get all associations and delete
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-        studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, currentUserDetailsService.getUserFromRequest(request)));
+        studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association,
+                                                                                              currentUserDetailsService.getUserFromRequest(
+                                                                                                      request)));
         return "redirect:/studies/" + studyId + "/associations";
     }
 
@@ -870,44 +869,24 @@ public class AssociationController {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> deleteChecked(@RequestParam(value = "associationIds[]") String[] associationsIds) {
+    Map<String, String> deleteChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                      HttpServletRequest request) {
 
         String message = "";
         Integer count = 0;
 
-        Collection<Locus> loci = new ArrayList<Locus>();
-        Collection<Association> studyAssociations = new ArrayList<Association>();
-
-        // For each association get the loci attached
+        // Get all associations and delete
         for (String associationId : associationsIds) {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
-            loci.addAll(association.getLoci());
-            studyAssociations.add(association);
+            associationDeletionService.deleteAssociation(association,
+                                                         currentUserDetailsService.getUserFromRequest(request));
             count++;
         }
 
-        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
-        // Snps are not deleted as they may be used in other associations
-        for (Locus locus : loci) {
-            Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
-            locus.setStrongestRiskAlleles(new ArrayList<>());
-            for (RiskAllele riskAllele : locusRiskAlleles) {
-                lociAttributesService.deleteRiskAllele(riskAllele);
-            }
-            locusRepository.delete(locus);
-        }
-
-        // Delete associations
-        for (Association association : studyAssociations) {
-            associationRepository.delete(association);
-        }
-
         message = "Successfully deleted " + count + " associations";
-
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
-
     }
 
 
