@@ -26,8 +26,8 @@ public class AssociationTrackingOperationServiceImpl implements TrackingOperatio
     }
 
     @Override public void create(Trackable trackable, SecureUser secureUser) {
-        Event studyCreationEvent = eventOperationsService.createEvent(EventType.ASSOCIATION_CREATION, secureUser);
-        trackable.addEvent(studyCreationEvent);
+        Event creationEvent = eventOperationsService.createEvent(EventType.ASSOCIATION_CREATION, secureUser);
+        trackable.addEvent(creationEvent);
     }
 
     @Override public void update(Trackable trackable, SecureUser secureUser, EventType eventType) {
