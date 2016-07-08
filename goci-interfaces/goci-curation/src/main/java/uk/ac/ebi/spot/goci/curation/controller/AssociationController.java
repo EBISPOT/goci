@@ -36,7 +36,6 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -47,7 +46,6 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
@@ -82,14 +80,12 @@ public class AssociationController {
     private AssociationRepository associationRepository;
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
-    private LocusRepository locusRepository;
 
     // Services
     private AssociationDownloadService associationDownloadService;
     private AssociationViewService associationViewService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private SnpInteractionAssociationService snpInteractionAssociationService;
-    private LociAttributesService lociAttributesService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
     private MappingService mappingService;
@@ -108,12 +104,10 @@ public class AssociationController {
     public AssociationController(AssociationRepository associationRepository,
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
-                                 LocusRepository locusRepository,
                                  AssociationDownloadService associationDownloadService,
                                  AssociationViewService associationViewService,
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                  SnpInteractionAssociationService snpInteractionAssociationService,
-                                 LociAttributesService lociAttributesService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
                                  MappingService mappingService,
@@ -124,12 +118,10 @@ public class AssociationController {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
-        this.locusRepository = locusRepository;
         this.associationDownloadService = associationDownloadService;
         this.associationViewService = associationViewService;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
-        this.lociAttributesService = lociAttributesService;
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
         this.mappingService = mappingService;
