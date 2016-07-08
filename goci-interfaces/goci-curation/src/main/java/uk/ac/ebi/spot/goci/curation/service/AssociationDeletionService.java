@@ -58,8 +58,9 @@ public class AssociationDeletionService {
         Collection<Locus> loci = new ArrayList<Locus>();
         loci.addAll(association.getLoci());
 
-        // Delete each locus and risk allele, which in turn deletes link to genes via author_reported_gene table,
-        // SNPs are not deleted as they may be used in other associations
+        // Delete each locus and risk allele,
+        // which in turn deletes link to genes via author_reported_gene table.
+        // SNPs are not deleted as they may be used in other associations.
         for (Locus locus : loci) {
             Collection<RiskAllele> locusRiskAlleles = locus.getStrongestRiskAlleles();
             locus.setStrongestRiskAlleles(new ArrayList<>());
