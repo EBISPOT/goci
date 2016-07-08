@@ -143,6 +143,9 @@ public class AssociationOperationsService {
         if (errorCount == 0) {
             createAssociationCreationEvent(association, user);
             savAssociation(association, study, associationValidationErrors);
+
+            // Run mapping on association
+            runMapping(study.getHousekeeping().getCurator(), association, user);
         }
         return associationValidationViews;
     }
@@ -187,12 +190,15 @@ public class AssociationOperationsService {
             // Add update event and save
             createAssociationUpdateEvent(association, user);
             savAssociation(association, study, associationValidationErrors);
+
+            // Run mapping on association
+            runMapping(study.getHousekeeping().getCurator(), association, user);
+
         }
         return associationValidationViews;
     }
 
-    public void savAssociation(Association association, Study study, Collection<ValidationError> errors)
-            throws EnsemblMappingException {
+    public void savAssociation(Association association, Study study, Collection<ValidationError> errors) {
 
         association.getLoci().forEach(this::saveLocusAttributes);
 
@@ -203,14 +209,11 @@ public class AssociationOperationsService {
         association.setLastUpdateDate(new Date());
         associationRepository.save(association);
         associationValidationReportService.createAssociationValidationReport(errors, association.getId());
-
-        // Run mapping on association
-        runMapping(study.getHousekeeping().getCurator(), association);
     }
 
 
-    private void runMapping(Curator curator, Association association) throws EnsemblMappingException {
-        mappingService.validateAndMapAssociation(association, curator.getLastName());
+    public void runMapping(Curator curator, Association association, SecureUser user) throws EnsemblMappingException {
+        mappingService.validateAndMapAssociation(association, curator.getLastName(), user);
     }
 
     /**

@@ -127,6 +127,8 @@ public class AssociationUploadService {
             associationOperationsService.savAssociation(newAssociation,
                                                         study,
                                                         associationSummary.getErrors());
+
+            associationOperationsService.runMapping(study.getHousekeeping().getCurator(), newAssociation, user);
         }
     }
 
