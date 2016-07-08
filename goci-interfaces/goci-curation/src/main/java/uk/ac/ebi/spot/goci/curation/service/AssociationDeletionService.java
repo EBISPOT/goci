@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
@@ -38,6 +39,7 @@ public class AssociationDeletionService {
         return log;
     }
 
+    @Autowired
     public AssociationDeletionService(AssociationRepository associationRepository,
                                       LociAttributesService lociAttributesService,
                                       @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
