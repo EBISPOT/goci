@@ -1026,7 +1026,10 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String validateAll(@PathVariable Long studyId, RedirectAttributes redirectAttributes, Model model)
+    public String validateAll(@PathVariable Long studyId,
+                              RedirectAttributes redirectAttributes,
+                              Model model,
+                              HttpServletRequest request)
             throws EnsemblMappingException {
 
         // For the study get all associations
@@ -1036,7 +1039,9 @@ public class AssociationController {
         Curator curator = study.getHousekeeping().getCurator();
         String mappedBy = curator.getLastName();
         try {
-            mappingService.validateAndMapAssociations(studyAssociations, mappedBy);
+            mappingService.validateAndMapAssociations(studyAssociations,
+                                                      mappedBy,
+                                                      currentUserDetailsService.getUserFromRequest(request));
         }
         catch (EnsemblMappingException e) {
             model.addAttribute("study", study);
