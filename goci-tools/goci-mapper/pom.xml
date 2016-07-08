@@ -49,6 +49,10 @@
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-tracking</artifactId>
+        </dependency>
     </dependencies>
 
 
