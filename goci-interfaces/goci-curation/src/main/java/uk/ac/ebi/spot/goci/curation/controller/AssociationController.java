@@ -913,18 +913,8 @@ public class AssociationController {
             redirectAttributes.addFlashAttribute("efoMessage", message);
         }
         else {
-            // Mark errors as checked
-            associationOperationsService.associationErrorsChecked(association);
-
-            // Set snpChecked attribute to true
-            association.setSnpApproved(true);
-            association.setLastUpdateDate(new Date());
-
-            // Add approve event
-            associationOperationsService.createAssociationApproveEvent(association,
-                                                                       currentUserDetailsService.getUserFromRequest(
-                                                                               request));
-            associationRepository.save(association);
+            associationOperationsService.approveAssociation(association, currentUserDetailsService.getUserFromRequest(
+                    request));
         }
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
@@ -937,21 +927,8 @@ public class AssociationController {
     public String unapproveSnpAssociation(@PathVariable Long associationId, HttpServletRequest request) {
 
         Association association = associationRepository.findOne(associationId);
-
-        // Mark errors as unchecked
-        associationOperationsService.associationErrorsUnchecked(association);
-
-        // Set snpChecked attribute to true
-        association.setSnpApproved(false);
-        association.setLastUpdateDate(new Date());
-
-        // Add unapprove event
-        associationOperationsService.createAssociationUnapproveEvent(association,
-                                                                     currentUserDetailsService.getUserFromRequest(
-                                                                             request));
-
-        associationRepository.save(association);
-
+        associationOperationsService.unapproveAssociation(association,
+                                                          currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies/" + association.getStudy().getId() + "/associations";
     }
 
@@ -983,19 +960,8 @@ public class AssociationController {
             // For each one set snpChecked attribute to true
             for (String associationId : associationsIds) {
                 Association association = associationRepository.findOne(Long.valueOf(associationId));
-
-                // Mark errors as checked
-                associationOperationsService.associationErrorsChecked(association);
-
-                association.setSnpApproved(true);
-                association.setLastUpdateDate(new Date());
-
-                // Add approve event
-                associationOperationsService.createAssociationApproveEvent(association,
-                                                                           currentUserDetailsService.getUserFromRequest(
-                                                                                   request));
-
-                associationRepository.save(association);
+                associationOperationsService.approveAssociation(association,
+                                                                currentUserDetailsService.getUserFromRequest(request));
                 count++;
             }
             message = "Successfully updated " + count + " associations";
@@ -1019,19 +985,8 @@ public class AssociationController {
         // For each one set snpChecked attribute to true
         for (String associationId : associationsIds) {
             Association association = associationRepository.findOne(Long.valueOf(associationId));
-
-            // Mark errors as checked
-            associationOperationsService.associationErrorsUnchecked(association);
-
-            association.setSnpApproved(false);
-            association.setLastUpdateDate(new Date());
-
-            // Add unapprove event
-            associationOperationsService.createAssociationUnapproveEvent(association,
-                                                                         currentUserDetailsService.getUserFromRequest(
-                                                                                 request));
-
-            associationRepository.save(association);
+            associationOperationsService.unapproveAssociation(association,
+                                                              currentUserDetailsService.getUserFromRequest(request));
             count++;
         }
         message = "Successfully updated " + count + " associations";
@@ -1063,18 +1018,8 @@ public class AssociationController {
         else {
             // For each one set snpChecked attribute to true
             for (Association association : studyAssociations) {
-                // Mark errors as checked
-                associationOperationsService.associationErrorsChecked(association);
-
-                association.setSnpApproved(true);
-                association.setLastUpdateDate(new Date());
-
-                // Add approve event
-                associationOperationsService.createAssociationApproveEvent(association,
-                                                                           currentUserDetailsService.getUserFromRequest(
-                                                                                   request));
-
-                associationRepository.save(association);
+                associationOperationsService.approveAssociation(association,
+                                                                currentUserDetailsService.getUserFromRequest(request));
             }
         }
         return "redirect:/studies/" + studyId + "/associations";
