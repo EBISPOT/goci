@@ -25,6 +25,7 @@
         <module>goci-renderlets-core</module>
         <module>goci-ontology</module>
         <module>goci-db-binding</module>
+        <module>goci-tracking</module>
     </modules>
 
 </project>

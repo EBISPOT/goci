@@ -9,7 +9,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.curation.service.tracking.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.SecureUser;

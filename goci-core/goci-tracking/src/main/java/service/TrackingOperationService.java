@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package service;
 
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;

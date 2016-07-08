@@ -14,7 +14,6 @@ import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
 import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.curation.service.tracking.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,25 +9,24 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Trackable;
 
 /**
- * Created by emma on 06/07/2016.
+ * Created by emma on 13/05/2016.
  *
  * @author emma
  *         <p>
- *         Association focused implementation of tracking behaviour
+ *         Study focused implementation of tracking behaviour
  */
 @Service
-public class AssociationTrackingOperationServiceImpl implements TrackingOperationService {
-
+public class StudyTrackingOperationServiceImpl implements TrackingOperationService {
     private EventOperationsService eventOperationsService;
 
     @Autowired
-    public AssociationTrackingOperationServiceImpl(EventOperationsService eventOperationsService) {
+    public StudyTrackingOperationServiceImpl(EventOperationsService eventOperationsService) {
         this.eventOperationsService = eventOperationsService;
     }
 
     @Override public void create(Trackable trackable, SecureUser secureUser) {
-        Event creationEvent = eventOperationsService.createEvent(EventType.ASSOCIATION_CREATION, secureUser);
-        trackable.addEvent(creationEvent);
+        Event studyCreationEvent = eventOperationsService.createEvent(EventType.STUDY_CREATION, secureUser);
+        trackable.addEvent(studyCreationEvent);
     }
 
     @Override public void update(Trackable trackable, SecureUser secureUser, EventType eventType) {
@@ -36,7 +35,7 @@ public class AssociationTrackingOperationServiceImpl implements TrackingOperatio
     }
 
     @Override public void delete(Trackable trackable, SecureUser secureUser) {
-        Event deleteEvent = eventOperationsService.createEvent(EventType.ASSOCIATION_DELETION, secureUser);
+        Event deleteEvent = eventOperationsService.createEvent(EventType.STUDY_DELETION, secureUser);
         trackable.addEvent(deleteEvent);
     }
 }

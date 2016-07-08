@@ -8,7 +8,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.EventBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.curation.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;

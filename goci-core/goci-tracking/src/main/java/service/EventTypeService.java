@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
