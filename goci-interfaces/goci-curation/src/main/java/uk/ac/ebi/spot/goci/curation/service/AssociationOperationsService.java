@@ -185,7 +185,7 @@ public class AssociationOperationsService {
             lociAttributesService.deleteLocusAndRiskAlleles(associationUserIsEditing);
 
             // Add update event and save
-            trackingOperationService.update(association, user, EventType.ASSOCIATION_UPDATE);
+            createAssociationUpdateEvent(association, user);
             savAssociation(association, study, associationValidationErrors);
         }
         return associationValidationViews;
@@ -348,20 +348,81 @@ public class AssociationOperationsService {
     }
 
     /**
+     * Approve association
+     *
+     * @param association Association to approve
+     * @param user        User performing request
+     */
+    public void approveAssociation(Association association, SecureUser user) {
+        // Mark errors as checked
+        associationErrorsChecked(association);
+
+        // Set snpChecked attribute to true
+        association.setSnpApproved(true);
+        association.setLastUpdateDate(new Date());
+
+        // Add approve event
+        createAssociationApproveEvent(association, user);
+        associationRepository.save(association);
+    }
+
+    /**
+     * Unapprove association
+     *
+     * @param association Association to unapprove
+     * @param user        User performing request
+     */
+    public void unapproveAssociation(Association association, SecureUser user) {
+        // Mark errors as unchecked
+        associationErrorsUnchecked(association);
+
+        // Set snpChecked attribute to true
+        association.setSnpApproved(false);
+        association.setLastUpdateDate(new Date());
+
+        // Add unapprove event
+        createAssociationUnapproveEvent(association, user);
+
+        associationRepository.save(association);
+    }
+
+    /**
      * Add association creation event
      *
      * @param association Association to add creation event to
+     * @param user        User performing request
      */
     public void createAssociationCreationEvent(Association association, SecureUser user) {
         trackingOperationService.create(association, user);
     }
 
-    public void createAssociationApproveEvent(Association association, SecureUser user) {
+    /**
+     * Add association approve event
+     *
+     * @param association Association to add approve event to
+     * @param user        User performing request
+     */
+    private void createAssociationApproveEvent(Association association, SecureUser user) {
         trackingOperationService.update(association, user, EventType.ASSOCIATION_APPROVED);
     }
 
-    public void createAssociationUnapproveEvent(Association association, SecureUser user) {
+    /**
+     * Add association unapprove event
+     *
+     * @param association Association to add unapprove event to
+     * @param user        User performing request
+     */
+    private void createAssociationUnapproveEvent(Association association, SecureUser user) {
         trackingOperationService.update(association, user, EventType.ASSOCIATION_UNAPPROVED);
     }
 
+    /**
+     * Add association update event
+     *
+     * @param association Association to add update event to
+     * @param user        User performing request
+     */
+    private void createAssociationUpdateEvent(Association association, SecureUser user) {
+        trackingOperationService.update(association, user, EventType.ASSOCIATION_UPDATE);
+    }
 }
