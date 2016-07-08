@@ -186,7 +186,7 @@
                 <artifactId>goci-tracking</artifactId>
                 <version>${goci.version}</version>
             </dependency>
-            
+
             <!--  additional external dependencies -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
