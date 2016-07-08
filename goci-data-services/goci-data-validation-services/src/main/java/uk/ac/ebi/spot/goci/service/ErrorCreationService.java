@@ -129,7 +129,7 @@ public class ErrorCreationService {
 
     public ValidationError checkRiskAllele(String riskAllele) {
         String errorMessage = validationChecks.checkRiskAllele(riskAllele);
-        if (errorMessage.equals("Value is empty")) {
+        if (errorMessage != null && errorMessage.equals("Value is empty")) {
             return ErrorProcessingService.createError(errorMessage, "Risk Allele", false);
         }
         else {
