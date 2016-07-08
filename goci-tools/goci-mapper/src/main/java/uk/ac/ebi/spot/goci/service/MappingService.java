@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -81,7 +80,8 @@ public class MappingService {
 
     /**
      * Perform validation and mapping of association
-     *  @param association Association to map
+     *
+     * @param association Association to map
      * @param performer   name of curator/job carrying out the mapping
      * @param user
      */
@@ -108,7 +108,8 @@ public class MappingService {
 
     /**
      * Perform validation and mapping of supplied associations
-     *  @param associations Collection of associations to map
+     *
+     * @param associations Collection of associations to map
      * @param performer    name of curator/job carrying out the mapping
      * @param user
      */

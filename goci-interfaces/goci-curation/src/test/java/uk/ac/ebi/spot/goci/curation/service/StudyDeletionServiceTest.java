@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import service.StudyTrackingOperationServiceImpl;
+import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;

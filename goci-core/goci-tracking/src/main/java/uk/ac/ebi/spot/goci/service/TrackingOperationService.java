@@ -1,4 +1,4 @@
-package service;
+package uk.ac.ebi.spot.goci.service;
 
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
