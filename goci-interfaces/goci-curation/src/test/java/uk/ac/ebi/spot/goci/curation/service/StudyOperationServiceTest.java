@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import service.EventTypeService;
+import service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
 import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
