@@ -187,6 +187,9 @@ public class AssociationOperationsService {
                     associationRepository.findOne(associationId);
             lociAttributesService.deleteLocusAndRiskAlleles(associationUserIsEditing);
 
+            // Add events
+            association.setEvents(associationUserIsEditing.getEvents());
+
             // Add update event and save
             createAssociationUpdateEvent(association, user);
             savAssociation(association, study, associationValidationErrors);
