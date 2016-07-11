@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
@@ -42,7 +43,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -119,6 +119,7 @@ public class AssociationControllerTest {
                             (float) 0.6)
                     .setPvalueMantissa(2)
                     .setPvalueExponent(-7)
+                    .setStudy(STUDY)
                     .build();
 
     @Before
@@ -226,7 +227,7 @@ public class AssociationControllerTest {
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(errors);
 
-        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType","or"))
+        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", instanceOf(SnpAssociationStandardMultiForm.class)))
                 .andExpect(model().attribute("errors", instanceOf(List.class)))
@@ -256,10 +257,12 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(Collections.EMPTY_LIST);
-        when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class))).thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY,ASSOCIATION,SECURE_USER)).thenReturn(errors);
+        when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
+                .thenReturn(ASSOCIATION);
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+                errors);
 
-        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType","or"))
+        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", instanceOf(SnpAssociationStandardMultiForm.class)))
                 .andExpect(model().attribute("errors", instanceOf(List.class)))
@@ -290,10 +293,12 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(Collections.EMPTY_LIST);
-        when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class))).thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY,ASSOCIATION,SECURE_USER)).thenReturn(errors);
+        when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
+                .thenReturn(ASSOCIATION);
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+                errors);
 
-        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType","or"))
+        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attributeExists("study"))
                 .andExpect(model().attributeExists("measurementType"))
@@ -324,29 +329,40 @@ public class AssociationControllerTest {
     }
 
     @Test
-    public void editAssociation() throws Exception {
+    public void editAssociationNoErrors() throws Exception {
 
+        AssociationValidationView associationValidationView =
+                new AssociationValidationView("SNP", "SNP identifier rs34tt is not valid", true);
+        List<AssociationValidationView> errors = Collections.singletonList(associationValidationView);
+
+        // Stubbing
+        when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
+        when(associationRepository.findOne(Matchers.anyLong())).thenReturn(ASSOCIATION);
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+        when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class)))
+                .thenReturn(Collections.EMPTY_LIST);
+        when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
+                .thenReturn(ASSOCIATION);
+        when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
+                                                                        ASSOCIATION,
+                                                                        ASSOCIATION.getId(),
+                                                                        SECURE_USER)).thenReturn(errors);
+
+        mockMvc.perform(post("/associations/100").param("associationtype", "multi"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().attributeExists("study"))
+                .andExpect(view().name("redirect:/associations/100"));
+
+        //verify properties of bound object
+        ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
+                ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
+        verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture());
+        verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+        verify(associationRepository, times(1)).findOne(Matchers.anyLong());
     }
 
-    @Test
-    public void addRowEditMode() throws Exception {
-
-    }
-
-    @Test
-    public void addColEditMode() throws Exception {
-
-    }
-
-    @Test
-    public void removeRowEditMode() throws Exception {
-
-    }
-
-    @Test
-    public void removeColEditMode() throws Exception {
-
-    }
 
     @Test
     public void deleteAllAssociations() throws Exception {
