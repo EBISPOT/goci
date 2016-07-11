@@ -205,9 +205,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addStandardSnps(Model model,
-                                  @PathVariable Long studyId,
-                                  @RequestParam(required = true) String measurementType) {
+    public String addStandardSnpsView(Model model,
+                                      @PathVariable Long studyId,
+                                      @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
@@ -229,9 +229,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addMultiSnps(Model model,
-                               @PathVariable Long studyId,
-                               @RequestParam(required = true) String measurementType) {
+    public String addMultiSnpsView(Model model,
+                                   @PathVariable Long studyId,
+                                   @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
@@ -250,9 +250,9 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String addSnpInteraction(Model model,
-                                    @PathVariable Long studyId,
-                                    @RequestParam(required = true) String measurementType) {
+    public String addSnpInteractionView(Model model,
+                                        @PathVariable Long studyId,
+                                        @RequestParam(required = true) String measurementType) {
 
         // Return form object
         SnpAssociationInteractionForm emptyForm = new SnpAssociationInteractionForm();
