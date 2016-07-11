@@ -179,7 +179,7 @@ public class AssociationController {
 
         // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
-        model.addAttribute("study", studyRepository.findOne(studyId));
+        model.addAttribute("study", study);
 
         List<AssociationUploadErrorView> fileErrors = null;
         try {
