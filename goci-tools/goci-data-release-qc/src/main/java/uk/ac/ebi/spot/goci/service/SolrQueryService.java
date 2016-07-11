@@ -91,7 +91,8 @@ public class SolrQueryService {
                 .append("%3A")
                 .append("study");
 
-        solrSearchBuilder.append("&wt=json");
+        solrSearchBuilder.append("&rows=100")
+                .append("&wt=json");
 
         return solrSearchBuilder.toString();
     }
