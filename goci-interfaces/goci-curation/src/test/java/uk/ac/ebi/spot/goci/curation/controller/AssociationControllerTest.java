@@ -155,8 +155,8 @@ public class AssociationControllerTest {
                 .andExpect(model().attribute("fileName", file.getOriginalFilename()))
                 .andExpect(model().attribute("fileErrors", instanceOf(List.class)))
                 .andExpect(model().attribute("fileErrors", hasSize(1)))
+                .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("error_pages/association_file_upload_error"));
-
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
@@ -175,12 +175,10 @@ public class AssociationControllerTest {
 
         mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
                 .andExpect(status().is3xxRedirection())
+                .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("redirect:/studies/1234/associations"));
-        ;
-
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
-
 
     @Test
     public void uploadStudySnpsFileWithMappingError() throws Exception {
@@ -197,12 +195,11 @@ public class AssociationControllerTest {
 
         mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("ensembl_mapping_failure"));
-
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
-
-
+    
     @Test
     public void addStandardSnpsWithRowErrors() throws Exception {
 
