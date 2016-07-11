@@ -3,17 +3,19 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
+import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
@@ -38,11 +40,14 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -107,19 +112,19 @@ public class AssociationControllerTest {
     @Before
     public void setUp() throws Exception {
         AssociationController associationController = new AssociationController(associationRepository,
-                                                          studyRepository,
-                                                          efoTraitRepository,
-                                                          associationDownloadService,
-                                                          associationViewService,
-                                                          singleSnpMultiSnpAssociationService,
-                                                          snpInteractionAssociationService,
-                                                          checkEfoTermAssignmentService,
-                                                          associationOperationsService,
-                                                          mappingService,
-                                                          associationUploadService,
-                                                          currentUserDetailsService,
-                                                          associationValidationReportService,
-                                                          associationDeletionService);
+                                                                                studyRepository,
+                                                                                efoTraitRepository,
+                                                                                associationDownloadService,
+                                                                                associationViewService,
+                                                                                singleSnpMultiSnpAssociationService,
+                                                                                snpInteractionAssociationService,
+                                                                                checkEfoTermAssignmentService,
+                                                                                associationOperationsService,
+                                                                                mappingService,
+                                                                                associationUploadService,
+                                                                                currentUserDetailsService,
+                                                                                associationValidationReportService,
+                                                                                associationDeletionService);
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
     }
 
@@ -145,7 +150,7 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(uploadErrorViews);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId","1234"))
+        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("fileName", file.getOriginalFilename()))
                 .andExpect(model().attribute("fileErrors", instanceOf(List.class)))
@@ -168,9 +173,10 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(Collections.EMPTY_LIST);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId","1234"))
+        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/studies/1234/associations"));;
+                .andExpect(view().name("redirect:/studies/1234/associations"));
+        ;
 
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
@@ -189,17 +195,42 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenThrow(EnsemblMappingException.class);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId","1234"))
+        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("ensembl_mapping_failure"));;
+                .andExpect(view().name("ensembl_mapping_failure"));
 
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
 
     @Test
-    public void addStandardSnps() throws Exception {
+    public void addStandardSnpsWithRowErrors() throws Exception {
 
+        AssociationValidationView associationValidationView =
+                new AssociationValidationView("SNP", "Value is not empty", false);
+        List<AssociationValidationView> errors = Collections.singletonList(associationValidationView);
+
+        // Stubbing
+        when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+        when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class)))
+                .thenReturn(errors);
+
+        mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType","or"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", instanceOf(SnpAssociationStandardMultiForm.class)))
+                .andExpect(model().attribute("errors", instanceOf(List.class)))
+                .andExpect(model().attribute("errors", hasSize(1)))
+                .andExpect(model().attributeExists("study"))
+                .andExpect(model().attributeExists("measurementType"))
+                .andExpect(view().name("add_standard_snp_association"));
+
+        //verify properties of bound object
+        ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
+                ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
+        verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture());
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
     @Test
@@ -212,50 +243,6 @@ public class AssociationControllerTest {
 
     }
 
-    @Test
-    public void addRows() throws Exception {
-
-    }
-
-    @Test
-    public void addRows1() throws Exception {
-
-    }
-
-    @Test
-    public void addRow() throws Exception {
-
-    }
-
-    @Test
-    public void addCol() throws Exception {
-
-    }
-
-    @Test
-    public void removeRow() throws Exception {
-
-    }
-
-    @Test
-    public void removeCol() throws Exception {
-
-    }
-
-    @Test
-    public void addStandardSnps1() throws Exception {
-
-    }
-
-    @Test
-    public void addMultiSnps1() throws Exception {
-
-    }
-
-    @Test
-    public void addSnpInteraction1() throws Exception {
-
-    }
 
     @Test
     public void viewAssociation() throws Exception {
