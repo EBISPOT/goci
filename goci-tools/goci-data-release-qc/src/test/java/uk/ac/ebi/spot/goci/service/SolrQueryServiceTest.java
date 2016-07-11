@@ -37,7 +37,7 @@ public class SolrQueryServiceTest {
     @Test
     public void testBuildSolrQuery() throws Exception{
         assertNotNull(solrQueryService.buildSolrQuery("2016-06-01"));
-        assertEquals("http://snoopy.ebi.ac.uk:8985/solr/gwas/select?q=catalogPublishDate%3A%7B2016-06-01T00%3A00%3A00Z+TO+*%5D&fq=resourcename%3Astudy&wt=json",
+        assertEquals("http://snoopy.ebi.ac.uk:8985/solr/gwas/select?q=catalogPublishDate%3A%7B2016-06-01T00%3A00%3A00Z+TO+*%5D&fq=resourcename%3Astudy&rows=100&wt=json",
                      solrQueryService.buildSolrQuery("2016-06-01"));
     }
 

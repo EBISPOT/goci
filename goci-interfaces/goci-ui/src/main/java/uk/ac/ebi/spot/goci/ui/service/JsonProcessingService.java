@@ -375,7 +375,7 @@ public class JsonProcessingService {
         if (doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null) {
             String mant = doc.get("pValueMantissa").asText().trim();
             String exp = doc.get("pValueExponent").asText().trim();
-            pvalue = mant.concat("E").concat(exp);
+            pvalue = mant.concat("").concat(exp);
         }
         else {
             pvalue = "";
@@ -388,7 +388,8 @@ public class JsonProcessingService {
         if (doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null) {
             int mant = doc.get("pValueMantissa").asInt();
             int exp = doc.get("pValueExponent").asInt();
-            double p = -(Math.log(mant)+exp);
+            double log = Math.log10(mant);
+            double p = -(log + exp);
             pvalue = String.valueOf(p);
         }
         else {
