@@ -43,7 +43,7 @@ public class AssociationUploadRow {
 
     private String betaDirection;
 
-    private String range;
+    private String range = "[NR]";
 
     private String orPerCopyRecipRange;
 
