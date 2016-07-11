@@ -1060,8 +1060,7 @@ public class AssociationController {
     public String downloadStudySnps(HttpServletResponse response, Model model, @PathVariable Long studyId)
             throws IOException {
 
-        Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(studyId));
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
         Study study = studyRepository.findOne((studyId));
 
         if (associations.size() == 0) {
@@ -1084,7 +1083,6 @@ public class AssociationController {
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
             associationDownloadService.createDownloadFile(response.getOutputStream(), associations);
-
             return "redirect:/studies/" + studyId + "/associations";
         }
     }
