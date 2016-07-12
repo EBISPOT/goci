@@ -50,6 +50,7 @@ public class ValidationChecksBuilder {
         Collection<ValidationError> validationErrors = new ArrayList<>();
         validationErrors.add(errorCreationService.checkMantissaIsLessThan10(association.getPvalueMantissa()));
         validationErrors.add(errorCreationService.checkExponentIsPresent(association.getPvalueExponent()));
+        validationErrors.add(errorCreationService.checkPvalueDescriptionIsPresent(association.getPvalueDescription()));
         return ErrorProcessingService.checkForValidErrors(validationErrors);
     }
 
