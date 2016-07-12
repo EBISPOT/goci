@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import org.assertj.core.groups.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,6 +83,8 @@ public class AssociationRowProcessorTest {
             .setPvalueExponent(-7)
             .setMultiSnpHaplotype("Y")
             .setPvalueDescription("description")
+            .setOrPerCopyRecip((float) 0.83)
+            .setOrPerCopyRecipRange("[0.87-0.94]")
             .build();
 
     private static final AssociationUploadRow ROW_THAT_SHOULD_FAIL = new AssociationUploadRowBuilder().setRowNumber(2)
@@ -232,8 +233,8 @@ public class AssociationRowProcessorTest {
         assertThat(association.getLoci()).extracting(Locus::getDescription).containsOnly("Single variant");
         assertThat(locusGenes).hasSize(2).contains(GENE_01, GENE_02);
         assertThat(locusRiskAlleles).hasSize(1).contains(RA_01);
-        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
-                .contains(tuple("rs123-?","0.52","rs123"));
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId")
+                .contains(tuple("rs123-?", "0.52", "rs123"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).contains(SNP_01);
         assertThat(proxies).contains(PROXY);
         assertThat(proxies).extracting(SingleNucleotidePolymorphism::getRsId).containsExactly("rs99");
@@ -331,8 +332,8 @@ public class AssociationRowProcessorTest {
         assertThat(association.getLoci()).extracting(Locus::getDescription).containsOnly("SNP x SNP interaction");
         assertThat(locusGenes).hasSize(2).contains(GENE_03, GENE_04);
         assertThat(locusRiskAlleles).hasSize(2).contains(RA_02, RA_03);
-        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
-                .contains(tuple("rs2562796-T","0.3","rs2562796"),tuple("rs16832404-G","0.4","rs16832404"));
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId")
+                .contains(tuple("rs2562796-T", "0.3", "rs2562796"), tuple("rs16832404-G", "0.4", "rs16832404"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).containsExactly(SNP_02, SNP_03);
     }
 
@@ -344,10 +345,11 @@ public class AssociationRowProcessorTest {
         when(associationAttributeService.createSnp("rs678")).thenReturn(SNP_05);
         when(associationAttributeService.createRiskAllele("rs456-T", SNP_04)).thenReturn(RA_04);
         when(associationAttributeService.createRiskAllele("rs678-?", SNP_05)).thenReturn(RA_05);
+        when(associationCalculationService.reverseCI("[0.87-0.94]")).thenReturn("[1.06-1.15]");
 
         Association association = associationRowProcessor.createAssociationFromUploadRow(HAPLOTYPE_ROW);
 
-        verify(associationCalculationService, never()).reverseCI(Matchers.anyString());
+        verify(associationCalculationService, times(1)).reverseCI(Matchers.anyString());
         verify(associationCalculationService, never()).setRange(Matchers.anyDouble(),
                                                                 Matchers.anyDouble());
         verify(associationAttributeService, never()).getEfoTraitsFromRepository(Collections.EMPTY_LIST);
@@ -391,11 +393,11 @@ public class AssociationRowProcessorTest {
                                  false,
                                  null,
                                  null,
+                                 "[1.06-1.15]",
                                  null,
-                                 null,
-                                 null,
-                                 null,
-                                 null,
+                                 1.2048193f,
+                                 0.83f,
+                                 "[0.87-0.94]",
                                  null,
                                  null,
                                  null,
@@ -427,8 +429,8 @@ public class AssociationRowProcessorTest {
         assertThat(locusGenes).isEmpty();
         assertThat(locusRiskAlleles).hasSize(2).contains(RA_04, RA_05);
         assertThat(locusRiskAlleles).extracting(RiskAllele::getRiskFrequency).containsNull();
-        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId" )
-                .contains(tuple("rs456-T",null,"rs456"),tuple("rs678-?",null,"rs678"));
+        assertThat(locusRiskAlleles).extracting("riskAlleleName", "riskFrequency", "snp.rsId")
+                .contains(tuple("rs456-T", null, "rs456"), tuple("rs678-?", null, "rs678"));
         assertThat(locusRiskAlleles).extracting(RiskAllele::getSnp).containsExactly(SNP_04, SNP_05);
     }
 
@@ -478,7 +480,7 @@ public class AssociationRowProcessorTest {
                                  false,
                                  null,
                                  null,
-                                 null,
+                                 "[NR]",
                                  null,
                                  null,
                                  null,
