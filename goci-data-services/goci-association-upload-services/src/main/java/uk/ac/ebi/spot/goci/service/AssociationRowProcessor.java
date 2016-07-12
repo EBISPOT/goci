@@ -86,8 +86,7 @@ public class AssociationRowProcessor {
             newAssociation.setOrPerCopyNum(row.getOrPerCopyNum());
         }
 
-        // Calculate range
-        // (This logic is retained from Dani's original code)
+        // Calculate range , this logic is retained from Dani's original code
         if ((row.getOrPerCopyRecipRange() != null) && recipReverse) {
             newAssociation.setRange(associationCalculationService.reverseCI(row.getOrPerCopyRecipRange()));
         }
@@ -103,6 +102,9 @@ public class AssociationRowProcessor {
                                                                                    row.getBetaNum()));
                 }
             }
+        }
+        else if(row.getRange() == null){
+            newAssociation.setRange("[NR]");
         }
         else {
             newAssociation.setRange(row.getRange());
