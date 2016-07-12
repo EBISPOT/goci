@@ -158,14 +158,10 @@ public class ValidationChecksTest {
 
     @Test
     public void checkRiskAllele() throws Exception {
-        assertThat(validationChecks.checkRiskAllele("A")).isNull();
-        assertThat(validationChecks.checkRiskAllele("T")).isNull();
-        assertThat(validationChecks.checkRiskAllele("C")).isNull();
-        assertThat(validationChecks.checkRiskAllele("G")).isNull();
-        assertThat(validationChecks.checkRiskAllele("?")).isNull();
-        assertThat(validationChecks.checkRiskAllele("")).isEqualTo("Risk allele is empty");
-        assertThat(validationChecks.checkRiskAllele(null)).isEqualTo("Risk allele is empty");
-        assertThat(validationChecks.checkRiskAllele("CHR1234")).isEqualTo("Risk allele is not one of [A, T, G, C, ?]");
+        assertThat(validationChecks.checkRiskAllele("rs123-A")).isNull();
+        assertThat(validationChecks.checkRiskAllele("")).isEqualTo("Value is empty");
+        assertThat(validationChecks.checkRiskAllele(null)).isEqualTo("Value is empty");
+        assertThat(validationChecks.checkRiskAllele("CHR1234")).isEqualTo("Value does not start with rs or contain -");
     }
 
     @Test

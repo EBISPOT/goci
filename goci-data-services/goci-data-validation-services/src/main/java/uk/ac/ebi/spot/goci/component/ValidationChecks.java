@@ -306,8 +306,7 @@ public class ValidationChecks {
     public String checkRiskAllele(String riskAlleleName) {
         String error = null;
 
-/*
-        TODO AT SOME STAGE WE SHOULD SWITCH TO CHECKING JUST THE 4 BASES
+   /* TODO AT SOME STAGE WE SHOULD SWITCH TO CHECKING JUST THE 4 BASES
         List<String> acceptableValues = new ArrayList<>();
         acceptableValues.add("A");
         acceptableValues.add("T");
