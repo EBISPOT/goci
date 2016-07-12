@@ -187,4 +187,11 @@ public class ValidationChecksTest {
         assertThat(validationChecks.checkSnpStatus(false, true)).isNull();
         assertThat(validationChecks.checkSnpStatus(false, false)).isEqualTo("No status selected");
     }
+
+    @Test
+    public void checkOrRecipIsPresentAndLessThanOne() throws Exception {
+        assertThat(validationChecks.checkOrRecipIsPresentAndLessThanOne((float) 0.83)).isNull();
+        assertThat(validationChecks.checkOrRecipIsPresentAndLessThanOne((float) 12.0)).isEqualTo("Value is more than 1");
+        assertThat(validationChecks.checkOrRecipIsPresentAndLessThanOne(null)).isEqualTo("Value is empty");
+    }
 }
