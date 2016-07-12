@@ -57,10 +57,9 @@ public class MailService {
      * @param study  study details
      * @param status status of study
      */
-
-    @Async
     public void sendEmailNotification(Study study, String status) {
 
+        getLog().info("Sending email for study ".concat(String.valueOf(study.getId())));
         CurationSystemEmailToCurator email = new CurationSystemEmailToCurator();
         email.setTo(this.to);
         email.setLink(this.link);
