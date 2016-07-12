@@ -25,8 +25,19 @@ public class ErrorCreationServiceTest {
 
     private ErrorCreationService errorCreationService;
 
+    private static final AssociationUploadRow INVALID_ROW =
+            new AssociationUploadRowBuilder().setRowNumber(1)
+                    .setSnpType("unknown")
+                    .setOrPerCopyNum((float) 0.9)
+                    .build();
 
-    private static final AssociationUploadRow EMPTY_ROW = new AssociationUploadRowBuilder().setRowNumber(1).build();
+    private static final AssociationUploadRow VALID_ROW = new AssociationUploadRowBuilder().setSnp("rs123")
+            .setStrongestAllele("rs123-?")
+            .setRowNumber(1)
+            .setSnpType("novel")
+            .setOrPerCopyNum((float) 1.2)
+            .setOrPerCopyRecip((float) 0.83)
+            .build();
 
     @Mock
     private ValidationChecks validationChecks;
@@ -38,25 +49,52 @@ public class ErrorCreationServiceTest {
 
     @Test
     public void testCheckSnpValueIsPresent() throws Exception {
-        when(validationChecks.checkValueIsPresent(EMPTY_ROW.getSnp())).thenReturn("Empty value");
-        ValidationError error = errorCreationService.checkSnpValueIsPresent(EMPTY_ROW.getSnp());
-        assertThat(error).extracting("field", "error").contains("SNP","Empty value");
+        when(validationChecks.checkValueIsPresent(INVALID_ROW.getSnp())).thenReturn("Value is empty");
+        ValidationError error1 = errorCreationService.checkSnpValueIsPresent(INVALID_ROW.getSnp());
+        assertThat(error1).extracting("field", "error", "warning").contains("SNP", "Value is empty", false);
+
+        when(validationChecks.checkValueIsPresent(VALID_ROW.getSnp())).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkSnpValueIsPresent(VALID_ROW.getSnp());
+        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
     }
 
     @Test
     public void testCheckStrongestAlleleValueIsPresent() throws Exception {
-        when(validationChecks.checkValueIsPresent(EMPTY_ROW.getStrongestAllele())).thenReturn("Empty value");
-        ValidationError error = errorCreationService.checkStrongestAlleleValueIsPresent(EMPTY_ROW.getStrongestAllele());
-        assertThat(error).extracting("field", "error").contains("Risk Allele","Empty value");
+        when(validationChecks.checkValueIsPresent(INVALID_ROW.getStrongestAllele())).thenReturn("Value is empty");
+        ValidationError error1 =
+                errorCreationService.checkStrongestAlleleValueIsPresent(INVALID_ROW.getStrongestAllele());
+        assertThat(error1).extracting("field", "error", "warning").contains("Risk Allele", "Value is empty", false);
+
+        when(validationChecks.checkValueIsPresent(VALID_ROW.getStrongestAllele())).thenReturn(null);
+        ValidationError error2 =
+                errorCreationService.checkStrongestAlleleValueIsPresent(INVALID_ROW.getStrongestAllele());
+        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
     }
 
     @Test
     public void testCheckSnpType() throws Exception {
+        when(validationChecks.checkSnpType(INVALID_ROW.getSnpType())).thenReturn("Value does not contain novel or known");
+        ValidationError error1 = errorCreationService.checkSnpType(INVALID_ROW.getSnpType());
+        assertThat(error1).extracting("field", "error", "warning")
+                .contains("SNP type", "Value does not contain novel or known", false);
 
+        when(validationChecks.checkSnpType(VALID_ROW.getSnpType())).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkSnpType(VALID_ROW.getSnpType());
+        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
     }
 
     @Test
     public void testCheckOrIsPresent() throws Exception {
+
+        when(validationChecks.checkOrIsPresentAndMoreThanOne(INVALID_ROW.getOrPerCopyNum())).thenReturn(
+                "Value is less than 1");
+        ValidationError error1 = errorCreationService.checkOrIsPresentAndMoreThanOne(INVALID_ROW.getOrPerCopyNum());
+        assertThat(error1).extracting("field", "error", "warning")
+                .contains("OR", "Value is less than 1", false);
+
+        when(validationChecks.checkOrIsPresentAndMoreThanOne(VALID_ROW.getOrPerCopyNum())).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkOrIsPresentAndMoreThanOne(VALID_ROW.getOrPerCopyNum());
+        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
 
     }
 
