@@ -144,7 +144,12 @@ public class ErrorCreationService {
 
     public ValidationError checkSnp(String snp) {
         String errorMessage = validationChecks.checkSnp(snp);
-        return ErrorProcessingService.createError(errorMessage, "SNP", true);
+        if (errorMessage != null && errorMessage.equals("SNP identifier is empty")) {
+            return ErrorProcessingService.createError(errorMessage, "SNP", false);
+        }
+        else {
+            return ErrorProcessingService.createError(errorMessage, "SNP", true);
+        }
     }
 
     // Check risk frequency
