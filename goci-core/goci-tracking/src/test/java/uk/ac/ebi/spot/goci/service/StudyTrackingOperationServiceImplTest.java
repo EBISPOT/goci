@@ -1,12 +1,10 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package uk.ac.ebi.spot.goci.service;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.service.EventOperationsService;
-import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.EventBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
@@ -23,6 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 /**
  * Created by emma on 24/05/2016.
  *
@@ -30,7 +29,6 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class StudyTrackingOperationServiceImplTest {
-
 
     private StudyTrackingOperationServiceImpl studyTrackingOperationService;
 
