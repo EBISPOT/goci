@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -28,6 +27,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.ErrorCreationService;
 import uk.ac.ebi.spot.goci.service.MappingService;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
@@ -86,15 +86,25 @@ public class AssociationOperationsService {
     /**
      * Check a standard SNP association form for errors, these are critical errors that would prevent creating an
      * association
-     *
-     * @param form The form to validate
+     *  @param form The form to validate
+     *  @param measurementType Determine if user has selected and populated essential value on the form
      */
-    public List<AssociationValidationView> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form) {
+    public List<AssociationValidationView> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form,
+                                                                         String measurementType) {
         Collection<ValidationError> errors = new ArrayList<>();
         for (SnpFormRow row : form.getSnpFormRows()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(row.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(row.getStrongestRiskAllele()));
         }
+
+        // Ensure user has entered required information on the form
+        if (measurementType.equals("or")) {
+            errors.add(errorCreationService.checkOrIsPresentAndMoreThanOne(form.getOrPerCopyNum()));
+        }
+        if (measurementType.equals("beta")) {
+            errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
+        }
+
         Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
         return processAssociationValidationErrors(updatedErrors);
     }
@@ -103,14 +113,25 @@ public class AssociationOperationsService {
      * Check a SNP association interaction form for errors, these are critical errors that would prevent creating an
      * association
      *
-     * @param form The form to validate
+     * @param form            The form to validate
+     * @param measurementType Determine if user has selected and populated essential value on the form
      */
-    public List<AssociationValidationView> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form) {
+    public List<AssociationValidationView> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form,
+                                                                                    String measurementType) {
         Collection<ValidationError> errors = new ArrayList<>();
         for (SnpFormColumn column : form.getSnpFormColumns()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(column.getSnp()));
             errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(column.getStrongestRiskAllele()));
         }
+
+        // Ensure user has entered required information on the form
+        if (measurementType.equals("or")) {
+            errors.add(errorCreationService.checkOrIsPresentAndMoreThanOne(form.getOrPerCopyNum()));
+        }
+        if (measurementType.equals("beta")) {
+            errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
+        }
+
         Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
         return processAssociationValidationErrors(updatedErrors);
     }

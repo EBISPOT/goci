@@ -398,7 +398,8 @@ public class AssociationController {
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> rowErrors =
-                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                                                                           measurementType);
 
         if (!rowErrors.isEmpty()) {
             model.addAttribute("errors", rowErrors);
@@ -454,7 +455,8 @@ public class AssociationController {
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> rowErrors =
-                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                                                                           measurementType);
 
         if (!rowErrors.isEmpty()) {
             model.addAttribute("errors", rowErrors);
@@ -509,7 +511,8 @@ public class AssociationController {
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> colErrors =
-                associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
+                associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                                                                                      measurementType);
 
         if (!colErrors.isEmpty()) {
             model.addAttribute("errors", colErrors);
@@ -612,15 +615,21 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
+        model.addAttribute("measurementType", measurementType);
+
         // Validate returned form depending on association type
         List<AssociationValidationView> criticalErrors = new ArrayList<>();
         if (associationType.equalsIgnoreCase("interaction")) {
             criticalErrors =
-                    associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm);
+                    associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                                                                                          measurementType);
         }
         else {
             criticalErrors =
-                    associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm);
+                    associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                                                                               measurementType);
         }
 
         // If errors found then return the edit form with all information entered by curator preserved
@@ -631,10 +640,6 @@ public class AssociationController {
 
             // Return any association errors
             model.addAttribute("errors", criticalErrors);
-
-            // Determine if association is an OR or BETA type
-            String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
-            model.addAttribute("measurementType", measurementType);
 
             if (associationType.equalsIgnoreCase("interaction")) {
                 model.addAttribute("form", snpAssociationInteractionForm);
@@ -680,11 +685,6 @@ public class AssociationController {
                     .count();
 
             if (errorCount > 0) {
-
-                // Determine if association is an OR or BETA type
-                String measurementType = associationOperationsService.determineIfAssociationIsOrType(editedAssociation);
-                model.addAttribute("measurementType", measurementType);
-
                 // Get mapping details
                 model.addAttribute("mappingDetails",
                                    associationOperationsService.createMappingDetails(editedAssociation));
