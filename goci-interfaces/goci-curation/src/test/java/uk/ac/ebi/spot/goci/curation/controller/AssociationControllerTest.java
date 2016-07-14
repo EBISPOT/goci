@@ -39,6 +39,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -115,6 +116,11 @@ public class AssociationControllerTest {
 
     private static final Association ASSOCIATION =
             new AssociationBuilder().setId(100L)
+                    .setStudy(STUDY)
+                    .build();
+
+    private static final Association EDITED_ASSOCIATION =
+            new AssociationBuilder()
                     .setStudy(STUDY)
                     .build();
 
@@ -579,22 +585,31 @@ public class AssociationControllerTest {
     @Test
     public void editAssociationNonCriticalErrors() throws Exception {
 
+
+        // Warnings will not prevent a save
         AssociationValidationView associationValidationView =
-                new AssociationValidationView("OR", "Value is empty", false);
+                new AssociationValidationView("P-value exponent", "Value is empty", false);
         List<AssociationValidationView> errors = Collections.singletonList(associationValidationView);
+
+        MappingDetails mappingDetails = new MappingDetails();
 
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationRepository.findOne(Matchers.anyLong())).thenReturn(ASSOCIATION);
-        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
-                SnpAssociationInteractionForm.class))).thenReturn(Collections.EMPTY_LIST);
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(SnpAssociationInteractionForm.class)))
+                .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(ASSOCIATION);
         when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
                                                                         ASSOCIATION,
                                                                         ASSOCIATION.getId(),
                                                                         SECURE_USER)).thenReturn(errors);
-        when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn("or");
+        when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn(
+                "or");
+        when(associationOperationsService.createMappingDetails(Matchers.any(Association.class))).thenReturn(mappingDetails);
+
 
         mockMvc.perform(post("/associations/100").param("associationtype", "interaction"))
                 .andExpect(status().isOk())
@@ -607,19 +622,19 @@ public class AssociationControllerTest {
                 .andExpect(view().name("edit_snp_interaction_association"));
 
         //verify properties of bound object
-        ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
+       ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findOne(Matchers.anyLong());
-        verify(associationOperationsService, times(1)).checkSnpAssociationInteractionFormErrors(Matchers.any(
-                SnpAssociationInteractionForm.class));
+        verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveEditedAssociationFromForm(Matchers.any(Study.class),
                                                                                      Matchers.any(Association.class),
                                                                                      Matchers.anyLong(),
                                                                                      Matchers.any(SecureUser.class));
         verify(associationOperationsService, times(1)).determineIfAssociationIsOrType(Matchers.any(Association.class));
+        verify(associationOperationsService, times(1)).createMappingDetails(Matchers.any(Association.class));
         verify(snpInteractionAssociationService,
                times(1)).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
         verifyZeroInteractions(singleSnpMultiSnpAssociationService);
