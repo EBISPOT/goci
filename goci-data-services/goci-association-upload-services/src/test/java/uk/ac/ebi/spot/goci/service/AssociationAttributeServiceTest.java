@@ -2,7 +2,9 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
@@ -20,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *         <p>
  *         Test for AssociationAttributeService
  */
+@RunWith(MockitoJUnitRunner.class)
 public class AssociationAttributeServiceTest {
 
     private AssociationAttributeService associationAttributeService;
