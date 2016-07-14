@@ -21,6 +21,8 @@ public class FilterAssociation {
 
     private Boolean isTopAssociation = false;
 
+    private Boolean isAmbigious = false;
+
     private List<String> otherInformation;
 
     private Boolean precisionConcern = false;
@@ -123,5 +125,13 @@ public class FilterAssociation {
 
     public void setLdBlock(String ldBlock) {
         this.ldBlock = ldBlock;
+    }
+
+    public Boolean getIsAmbigious() {
+        return isAmbigious;
+    }
+
+    public void setIsAmbigious(Boolean ambigious) {
+        isAmbigious = ambigious;
     }
 }
