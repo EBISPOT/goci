@@ -120,7 +120,7 @@ public class AssociationFileUploadService {
         validationSummary.setRowValidationSummaries(rowValidationSummaries);
         return validationSummary;
     }
-    
+
     /**
      * Return a list of syntax errors. These error checks will look for things that would prevent creation of an
      * association which could then be carried forward to full validation
