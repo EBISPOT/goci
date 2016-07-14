@@ -120,41 +120,7 @@ public class AssociationFileUploadService {
         validationSummary.setRowValidationSummaries(rowValidationSummaries);
         return validationSummary;
     }
-
-    public Collection<Association> processFile(File file) throws FileNotFoundException, SheetProcessingException {
-        Collection<AssociationUploadRow> fileRows = new ArrayList<>();
-
-        if (file.exists()) {
-            // Create sheet
-            XSSFSheet sheet = null;
-            try {
-                // Create a sheet for reading
-                sheet = sheetCreationService.createSheet(file.getAbsolutePath());
-
-                // Process file, depending on validation level, into a generic row object
-                UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(null);
-                fileRows = uploadSheetProcessor.readSheetRows(sheet);
-            }
-            catch (InvalidFormatException | InvalidOperationException | IOException e) {
-                getLog().error("File: " + file.getName() + " cannot be processed", e);
-                file.delete();
-                throw new SheetProcessingException("File: " + file.getName() + " cannot be processed", e);
-            }
-        }
-        else {
-            getLog().error("File: " + file.getName() + " cannot be found");
-            throw new FileNotFoundException("File does not exist");
-        }
-
-        Collection<Association> associations = new ArrayList<>();
-        if (!fileRows.isEmpty()) {
-            fileRows.forEach(associationUploadRow -> {
-                associations.add(associationRowProcessor.createAssociationFromUploadRow(associationUploadRow));
-            });
-        }
-        return associations;
-    }
-
+    
     /**
      * Return a list of syntax errors. These error checks will look for things that would prevent creation of an
      * association which could then be carried forward to full validation
