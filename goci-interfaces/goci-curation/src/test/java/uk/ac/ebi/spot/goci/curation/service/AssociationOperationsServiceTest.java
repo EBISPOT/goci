@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.curation.builder.SnpAssociationStandardMultiFormBuild
 import uk.ac.ebi.spot.goci.curation.builder.SnpFormColumnBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SnpFormRowBuilder;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
@@ -37,6 +38,7 @@ import uk.ac.ebi.spot.goci.service.ValidationService;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -163,7 +165,11 @@ public class AssociationOperationsServiceTest {
     private static final Association ASS_MULTI = new AssociationBuilder().setMultiSnpHaplotype(true).build();
 
     private static final Association ASS_INTER =
-            new AssociationBuilder().setId((long) 100).setSnpInteraction(true).build();
+            new AssociationBuilder().setId((long) 100)
+                    .setSnpInteraction(true)
+                    .setLastMappingPerformedBy("test")
+                    .setLastMappingDate(new Date())
+                    .build();
 
     private static final SecureUser USER = new SecureUserBuilder().build();
 
@@ -261,8 +267,9 @@ public class AssociationOperationsServiceTest {
         verifyZeroInteractions(mappingService);
     }
 
+
     @Test
-    public void saveEditedAssociationFromFormAssociationNoErrors() throws Exception {
+    public void saveAssociationCreatedFromFormAssociationNoErrors() throws Exception {
         when(validationService.runAssociationValidation(ASS_INTER, "full")).thenReturn(Collections.singleton(WARNING));
         assertThat(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASS_INTER, USER)).isInstanceOf(
                 List.class)
@@ -277,6 +284,16 @@ public class AssociationOperationsServiceTest {
         verify(mappingService, times(1)).validateAndMapAssociation(ASS_INTER, CURATOR.getLastName(), USER);
     }
 
+    @Test
+    public void saveEditedAssociationFromFormAssociationNoErrors() throws Exception {
+
+    }
+
+    @Test
+    public void saveEditedAssociationFromFormAssociationWithErrors() throws Exception {
+
+    }
+    
     @Test
     public void savAssociation() throws Exception {
 
@@ -306,7 +323,10 @@ public class AssociationOperationsServiceTest {
 
     @Test
     public void createMappingDetails() throws Exception {
-
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(ASS_INTER);
+        assertThat(mappingDetails).isInstanceOf(MappingDetails.class);
+        assertThat(mappingDetails.getMappingDate()).isToday();
+        assertThat(mappingDetails.getPerformer()).isEqualTo("test");
     }
 
     @Test
@@ -326,7 +346,7 @@ public class AssociationOperationsServiceTest {
 
     @Test
     public void createAssociationCreationEvent() throws Exception {
-
+        associationOperationsService.createAssociationCreationEvent(ASS_MULTI, USER);
+        verify(associationTrackingOperationService, times(1)).create(ASS_MULTI, USER);
     }
-
 }
