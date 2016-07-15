@@ -23,8 +23,12 @@ public class ValidationErrorBuilder {
         return this;
     }
 
+    public ValidationErrorBuilder setWarning(Boolean warning) {
+        validationError.setWarning(warning);
+        return this;
+    }
+
     public ValidationError build() {
         return validationError;
     }
-
 }
