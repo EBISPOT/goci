@@ -55,7 +55,6 @@ public class AssociationValidationReportService {
             AssociationValidationReport associationValidationReport =
                     new AssociationValidationReport(validationError.getError(),
                                                     validationError.getField(),
-                                                    false,
                                                     association);
             associationValidationReportRepository.save(associationValidationReport);
         });

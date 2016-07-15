@@ -4,8 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import java.util.Date;
 
 /**
  * Created by emma on 24/06/2016.
@@ -26,8 +24,6 @@ public class AssociationValidationReport {
 
     private String validatedField;
 
-    private Boolean errorCheckedByCurator = false;
-
     @ManyToOne
     private Association association;
 
@@ -36,11 +32,9 @@ public class AssociationValidationReport {
 
     public AssociationValidationReport(String warning,
                                        String validatedField,
-                                       Boolean errorCheckedByCurator,
                                        Association association) {
         this.warning = warning;
         this.validatedField = validatedField;
-        this.errorCheckedByCurator = errorCheckedByCurator;
         this.association = association;
     }
 
@@ -66,14 +60,6 @@ public class AssociationValidationReport {
 
     public void setValidatedField(String validatedField) {
         this.validatedField = validatedField;
-    }
-
-    public Boolean getErrorCheckedByCurator() {
-        return errorCheckedByCurator;
-    }
-
-    public void setErrorCheckedByCurator(Boolean errorCheckedByCurator) {
-        this.errorCheckedByCurator = errorCheckedByCurator;
     }
 
     public Association getAssociation() {
