@@ -317,33 +317,6 @@ public class AssociationOperationsService {
         return mappingDetails;
     }
 
-
-    /**
-     * Mark errors for a particular association as checked, this involves updating the linked association report
-     *
-     * @param association Association to mark as errors checked
-     */
-    public void associationErrorsChecked(Association association) {
-        AssociationReport associationReport = association.getAssociationReport();
-        associationReport.setErrorCheckedByCurator(true);
-        associationReport.setLastUpdateDate(new Date());
-        associationReportRepository.save(associationReport);
-    }
-
-
-    /**
-     * Mark errors for a particular association as unchecked, this involves updating the linked association report
-     *
-     * @param association Association to mark as errors unchecked
-     */
-    public void associationErrorsUnchecked(Association association) {
-        AssociationReport associationReport = association.getAssociationReport();
-        associationReport.setErrorCheckedByCurator(false);
-        associationReport.setLastUpdateDate(new Date());
-        associationReportRepository.save(associationReport);
-    }
-
-
     /**
      * Determine last viewed association
      *
@@ -451,5 +424,30 @@ public class AssociationOperationsService {
      */
     private void createAssociationUpdateEvent(Association association, SecureUser user) {
         trackingOperationService.update(association, user, EventType.ASSOCIATION_UPDATE);
+    }
+
+    /**
+     * Mark errors for a particular association as checked, this involves updating the linked association report
+     *
+     * @param association Association to mark as errors checked
+     */
+    private void associationErrorsChecked(Association association) {
+        AssociationReport associationReport = association.getAssociationReport();
+        associationReport.setErrorCheckedByCurator(true);
+        associationReport.setLastUpdateDate(new Date());
+        associationReportRepository.save(associationReport);
+    }
+
+
+    /**
+     * Mark errors for a particular association as unchecked, this involves updating the linked association report
+     *
+     * @param association Association to mark as errors unchecked
+     */
+    private void associationErrorsUnchecked(Association association) {
+        AssociationReport associationReport = association.getAssociationReport();
+        associationReport.setErrorCheckedByCurator(false);
+        associationReport.setLastUpdateDate(new Date());
+        associationReportRepository.save(associationReport);
     }
 }
