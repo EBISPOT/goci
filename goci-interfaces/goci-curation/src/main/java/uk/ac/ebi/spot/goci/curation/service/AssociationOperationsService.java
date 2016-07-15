@@ -86,8 +86,9 @@ public class AssociationOperationsService {
     /**
      * Check a standard SNP association form for errors, these are critical errors that would prevent creating an
      * association
-     *  @param form The form to validate
-     *  @param measurementType Determine if user has selected and populated essential value on the form
+     *
+     * @param form            The form to validate
+     * @param measurementType Determine if user has selected and populated essential value on the form
      */
     public List<AssociationValidationView> checkSnpAssociationFormErrors(SnpAssociationStandardMultiForm form,
                                                                          String measurementType) {
@@ -105,8 +106,10 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
         }
 
-        Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
-        return processAssociationValidationErrors(updatedErrors);
+        if (!errors.isEmpty()) {
+            ErrorProcessingService.checkForValidErrors(errors);
+        }
+        return processAssociationValidationErrors(errors);
     }
 
     /**
@@ -132,8 +135,10 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
         }
 
-        Collection<ValidationError> updatedErrors = ErrorProcessingService.checkForValidErrors(errors);
-        return processAssociationValidationErrors(updatedErrors);
+        if (!errors.isEmpty()) {
+            ErrorProcessingService.checkForValidErrors(errors);
+        }
+        return processAssociationValidationErrors(errors);
     }
 
     /**
