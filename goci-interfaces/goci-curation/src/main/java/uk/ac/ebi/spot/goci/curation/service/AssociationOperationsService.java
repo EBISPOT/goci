@@ -106,10 +106,8 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
         }
 
-        if (!errors.isEmpty()) {
-            ErrorProcessingService.checkForValidErrors(errors);
-        }
-        return processAssociationValidationErrors(errors);
+        Collection<ValidationError> updatedError = ErrorProcessingService.checkForValidErrors(errors);
+        return processAssociationValidationErrors(updatedError);
     }
 
     /**
@@ -135,10 +133,8 @@ public class AssociationOperationsService {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
         }
 
-        if (!errors.isEmpty()) {
-            ErrorProcessingService.checkForValidErrors(errors);
-        }
-        return processAssociationValidationErrors(errors);
+        Collection<ValidationError> updatedError = ErrorProcessingService.checkForValidErrors(errors);
+        return processAssociationValidationErrors(updatedError);
     }
 
     /**
