@@ -278,17 +278,17 @@ public class AssociationViewService {
             }
         }
 
-        // Check for errors
+        // Check for mapping errors
         snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
                 association.getAssociationReport()));
+
+       // Check for validation warnings
         long associationValidationReportCount =
                 associationValidationReportService.getAssociationWarnings(association.getId()).stream().count();
-
-        // Set syntax errors
         if (associationValidationReportCount > 0) {
-            snpAssociationTableView.setSyntaxErrorsFound("Yes");
+            snpAssociationTableView.setValidationWarnings(true);
         }
-        else {snpAssociationTableView.setSyntaxErrorsFound("No");}
+        else {snpAssociationTableView.setValidationWarnings(false);}
 
         // Get mapping details
         if (association.getLastMappingPerformedBy() != null) {
