@@ -33,7 +33,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -83,7 +83,7 @@ public class AssociationController {
 
     // Services
     private AssociationDownloadService associationDownloadService;
-    private AssociationViewService associationViewService;
+    private SnpAssociationTableViewService snpAssociationTableViewService;
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
@@ -105,7 +105,7 @@ public class AssociationController {
                                  StudyRepository studyRepository,
                                  EfoTraitRepository efoTraitRepository,
                                  AssociationDownloadService associationDownloadService,
-                                 AssociationViewService associationViewService,
+                                 SnpAssociationTableViewService snpAssociationTableViewService,
                                  SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
@@ -119,7 +119,7 @@ public class AssociationController {
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
         this.associationDownloadService = associationDownloadService;
-        this.associationViewService = associationViewService;
+        this.snpAssociationTableViewService = snpAssociationTableViewService;
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
@@ -148,7 +148,7 @@ public class AssociationController {
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
             SnpAssociationTableView snpAssociationTableView =
-                    associationViewService.createSnpAssociationTableView(association);
+                    snpAssociationTableViewService.createSnpAssociationTableView(association);
             snpAssociationTableViews.add(snpAssociationTableView);
         }
         model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);

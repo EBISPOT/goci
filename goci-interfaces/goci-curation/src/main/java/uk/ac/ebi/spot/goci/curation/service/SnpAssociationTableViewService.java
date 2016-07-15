@@ -23,14 +23,14 @@ import java.util.Collection;
  *         Service class that creates table view of a study's associations
  */
 @Service
-public class AssociationViewService {
+public class SnpAssociationTableViewService {
 
     private AssociationMappingErrorService associationMappingErrorService;
     private AssociationValidationReportService associationValidationReportService;
 
     @Autowired
-    public AssociationViewService(AssociationMappingErrorService associationMappingErrorService,
-                                  AssociationValidationReportService associationValidationReportService) {
+    public SnpAssociationTableViewService(AssociationMappingErrorService associationMappingErrorService,
+                                          AssociationValidationReportService associationValidationReportService) {
         this.associationMappingErrorService = associationMappingErrorService;
         this.associationValidationReportService = associationValidationReportService;
     }

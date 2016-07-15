@@ -24,7 +24,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -79,7 +79,7 @@ public class AssociationControllerTest {
     private AssociationDownloadService associationDownloadService;
 
     @Mock
-    private AssociationViewService associationViewService;
+    private SnpAssociationTableViewService snpAssociationTableViewService;
 
     @Mock
     private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
@@ -129,7 +129,7 @@ public class AssociationControllerTest {
                                                                                 studyRepository,
                                                                                 efoTraitRepository,
                                                                                 associationDownloadService,
-                                                                                associationViewService,
+                                                                                snpAssociationTableViewService,
                                                                                 singleSnpMultiSnpAssociationService,
                                                                                 snpInteractionAssociationService,
                                                                                 checkEfoTermAssignmentService,
