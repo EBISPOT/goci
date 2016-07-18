@@ -223,6 +223,13 @@ public class AssociationOperationsService {
         return associationValidationViews;
     }
 
+    /**
+     * Save an association
+     *
+     * @param association Association to save
+     * @param study       Study to assign association to
+     * @param errors      Validation errors, these errors do not prevent a save but should be reviewed by curators
+     */
     public void savAssociation(Association association, Study study, Collection<ValidationError> errors) {
 
         association.getLoci().forEach(this::saveLocusAttributes);
@@ -236,28 +243,15 @@ public class AssociationOperationsService {
         associationValidationReportService.createAssociationValidationReport(errors, association.getId());
     }
 
-
+    /**
+     * Save an association
+     *
+     * @param association Association to map
+     * @param curator     Curator running mapping
+     * @param user        User to assign mapping event to
+     */
     public void runMapping(Curator curator, Association association, SecureUser user) throws EnsemblMappingException {
         mappingService.validateAndMapAssociation(association, curator.getLastName(), user);
-    }
-
-    /**
-     * Save transient objects on association before saving association
-     *
-     * @param locus Locus to save
-     */
-    private void saveLocusAttributes(Locus locus) {
-
-        // Save genes
-        Collection<Gene> savedGenes = lociAttributesService.saveGene(locus.getAuthorReportedGenes());
-        locus.setAuthorReportedGenes(savedGenes);
-
-        // Save risk allele
-        Collection<RiskAllele> savedRiskAlleles =
-                lociAttributesService.saveRiskAlleles(locus.getStrongestRiskAlleles());
-        locus.setStrongestRiskAlleles(savedRiskAlleles);
-
-        locusRepository.save(locus);
     }
 
     /**
@@ -284,7 +278,6 @@ public class AssociationOperationsService {
      *
      * @param association Association to create form from
      */
-
     public SnpAssociationForm generateForm(Association association) {
 
         if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
@@ -296,15 +289,6 @@ public class AssociationOperationsService {
         }
     }
 
-    /**
-     * Create a form from association details
-     *
-     * @param association Association to create form from
-     * @param service     Service to create form
-     */
-    private SnpAssociationForm createForm(Association association, SnpAssociationFormService service) {
-        return service.createForm(association);
-    }
 
     /**
      * Gather mapping details for an association
@@ -330,22 +314,6 @@ public class AssociationOperationsService {
             lastViewedAssociation.setId(associationId);
         }
         return lastViewedAssociation;
-    }
-
-    /**
-     * Retrieve validation warnings for an association and return this is a structure accessible by view
-     *
-     * @param errors List of validation errors to process
-     */
-    private List<AssociationValidationView> processAssociationValidationErrors(Collection<ValidationError> errors) {
-
-        List<AssociationValidationView> associationValidationViews = new ArrayList<>();
-        errors.forEach(validationError -> {
-            associationValidationViews.add(new AssociationValidationView(validationError.getField(),
-                                                                         validationError.getError(),
-                                                                         validationError.getWarning()));
-        });
-        return associationValidationViews;
     }
 
     /**
@@ -383,7 +351,6 @@ public class AssociationOperationsService {
 
         // Add unapprove event
         createAssociationUnapproveEvent(association, user);
-
         associationRepository.save(association);
     }
 
@@ -439,7 +406,6 @@ public class AssociationOperationsService {
         associationReportRepository.save(associationReport);
     }
 
-
     /**
      * Mark errors for a particular association as unchecked, this involves updating the linked association report
      *
@@ -450,5 +416,50 @@ public class AssociationOperationsService {
         associationReport.setErrorCheckedByCurator(false);
         associationReport.setLastUpdateDate(new Date());
         associationReportRepository.save(associationReport);
+    }
+
+    /**
+     * Save transient objects on association before saving association
+     *
+     * @param locus Locus to save
+     */
+    private void saveLocusAttributes(Locus locus) {
+
+        // Save genes
+        Collection<Gene> savedGenes = lociAttributesService.saveGene(locus.getAuthorReportedGenes());
+        locus.setAuthorReportedGenes(savedGenes);
+
+        // Save risk allele
+        Collection<RiskAllele> savedRiskAlleles =
+                lociAttributesService.saveRiskAlleles(locus.getStrongestRiskAlleles());
+        locus.setStrongestRiskAlleles(savedRiskAlleles);
+
+        locusRepository.save(locus);
+    }
+
+    /**
+     * Create a form from association details
+     *
+     * @param association Association to create form from
+     * @param service     Service to create form
+     */
+    private SnpAssociationForm createForm(Association association, SnpAssociationFormService service) {
+        return service.createForm(association);
+    }
+
+    /**
+     * Retrieve validation warnings for an association and return this is a structure accessible by view
+     *
+     * @param errors List of validation errors to process
+     */
+    private List<AssociationValidationView> processAssociationValidationErrors(Collection<ValidationError> errors) {
+
+        List<AssociationValidationView> associationValidationViews = new ArrayList<>();
+        errors.forEach(validationError -> {
+            associationValidationViews.add(new AssociationValidationView(validationError.getField(),
+                                                                         validationError.getError(),
+                                                                         validationError.getWarning()));
+        });
+        return associationValidationViews;
     }
 }
