@@ -7,6 +7,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
+import uk.ac.ebi.spot.goci.builder.AssociationReportBuilder;
 import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
 import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
@@ -17,13 +18,16 @@ import uk.ac.ebi.spot.goci.curation.builder.SnpAssociationStandardMultiFormBuild
 import uk.ac.ebi.spot.goci.curation.builder.SnpFormColumnBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SnpFormRowBuilder;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -171,6 +175,18 @@ public class AssociationOperationsServiceTest {
                     .setLastMappingDate(new Date())
                     .build();
 
+    private static final Association ASS_INTER_EDITED =
+            new AssociationBuilder()
+                    .setSnpInteraction(true)
+                    .setLastMappingPerformedBy("test")
+                    .setLastMappingDate(new Date())
+                    .build();
+
+    private static final AssociationReport ASSOCIATION_REPORT = new AssociationReportBuilder().build();
+
+    private static final Association ASS_APPROVE_UNAPPROVE =
+            new AssociationBuilder().setAssociationReport(ASSOCIATION_REPORT).build();
+
     private static final SecureUser USER = new SecureUserBuilder().build();
 
     private static final Curator CURATOR = new CuratorBuilder().setLastName("test").build();
@@ -238,7 +254,7 @@ public class AssociationOperationsServiceTest {
     }
 
     @Test
-    public void checkSnpAssociationInteractionFormErrorsNoErrors() throws Exception {
+    public void checkSnpAssociationInteractionFormErrorsWithNoErrors() throws Exception {
         when(errorCreationService.checkSnpValueIsPresent(Matchers.anyString())).thenReturn(SNP_NO_ERROR);
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(
                 RISK_ALLELE_NO_ERROR);
@@ -267,7 +283,6 @@ public class AssociationOperationsServiceTest {
         verifyZeroInteractions(mappingService);
     }
 
-
     @Test
     public void saveAssociationCreatedFromFormAssociationNoErrors() throws Exception {
         when(validationService.runAssociationValidation(ASS_INTER, "full")).thenReturn(Collections.singleton(WARNING));
@@ -285,18 +300,55 @@ public class AssociationOperationsServiceTest {
     }
 
     @Test
-    public void saveEditedAssociationFromFormAssociationNoErrors() throws Exception {
+    public void saveEditedAssociationFromFormAssociationWithErrors() throws Exception {
+        when(validationService.runAssociationValidation(ASS_MULTI, "full")).thenReturn(Collections.singleton(OR_ERROR));
+        assertThat(associationOperationsService.saveEditedAssociationFromForm(STUDY,
+                                                                              ASS_MULTI,
+                                                                              (long) 100,
+                                                                              USER)).isInstanceOf(
+                List.class)
+                .hasOnlyElementsOfType(
+                        AssociationValidationView.class)
+                .hasSize(1);
 
+        verifyZeroInteractions(lociAttributesService);
+        verifyZeroInteractions(associationRepository);
+        verifyZeroInteractions(associationTrackingOperationService);
+        verifyZeroInteractions(associationValidationReportService);
+        verifyZeroInteractions(mappingService);
     }
 
     @Test
-    public void saveEditedAssociationFromFormAssociationWithErrors() throws Exception {
+    public void saveEditedAssociationFromFormAssociationNoErrors() throws Exception {
+        when(validationService.runAssociationValidation(ASS_INTER_EDITED, "full")).thenReturn(Collections.singleton(
+                WARNING));
+        when(associationRepository.findOne(Matchers.anyLong())).thenReturn(ASS_INTER);
 
+        assertThat(associationOperationsService.saveEditedAssociationFromForm(STUDY,
+                                                                              ASS_INTER_EDITED,
+                                                                              (long) 100,
+                                                                              USER)).isInstanceOf(
+                List.class)
+                .hasOnlyElementsOfType(
+                        AssociationValidationView.class)
+                .hasSize(1);
+
+        verify(associationRepository, times(1)).findOne((long) 100);
+        verify(lociAttributesService, times(1)).deleteLocusAndRiskAlleles(ASS_INTER);
+        verify(associationTrackingOperationService, times(1)).update(ASS_INTER_EDITED, USER,
+                                                                     EventType.ASSOCIATION_UPDATE);
+        verify(associationRepository, times(1)).save(ASS_INTER_EDITED);
+        verify(associationValidationReportService, times(1)).createAssociationValidationReport(Collections.singleton(
+                WARNING), ASS_INTER_EDITED.getId());
+        verify(mappingService, times(1)).validateAndMapAssociation(ASS_INTER_EDITED, CURATOR.getLastName(), USER);
     }
 
     @Test
     public void savAssociation() throws Exception {
-
+        associationOperationsService.savAssociation(ASS_MULTI, STUDY, Collections.singletonList(WARNING));
+        verify(associationRepository, times(1)).save(ASS_MULTI);
+        verify(associationValidationReportService,
+               times(1)).createAssociationValidationReport(Collections.singletonList(WARNING), ASS_MULTI.getId());
     }
 
     @Test
@@ -331,17 +383,26 @@ public class AssociationOperationsServiceTest {
 
     @Test
     public void getLastViewedAssociation() throws Exception {
-
+        assertThat(associationOperationsService.getLastViewedAssociation((long) 100)).isInstanceOf(
+                LastViewedAssociation.class).extracting("id").containsOnly((long) 100);
     }
 
     @Test
     public void approveAssociation() throws Exception {
-
+        associationOperationsService.approveAssociation(ASS_APPROVE_UNAPPROVE, USER);
+        verify(associationTrackingOperationService, times(1)).update(ASS_APPROVE_UNAPPROVE,
+                                                                     USER,
+                                                                     EventType.ASSOCIATION_APPROVED);
+        verify(associationRepository, times(1)).save(ASS_APPROVE_UNAPPROVE);
     }
 
     @Test
     public void unapproveAssociation() throws Exception {
-
+        associationOperationsService.unapproveAssociation(ASS_APPROVE_UNAPPROVE, USER);
+        verify(associationTrackingOperationService, times(1)).update(ASS_APPROVE_UNAPPROVE,
+                                                                     USER,
+                                                                     EventType.ASSOCIATION_UNAPPROVED);
+        verify(associationRepository, times(1)).save(ASS_APPROVE_UNAPPROVE);
     }
 
     @Test
