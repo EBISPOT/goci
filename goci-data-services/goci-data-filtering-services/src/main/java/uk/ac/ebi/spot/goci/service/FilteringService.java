@@ -221,6 +221,16 @@ public class FilteringService {
     }
 
     //this method isn't complete yet
+    /*Secondary LD block algorithm:
+    *
+    * - start at first element, carry on until distance > 100KB
+    * - find the most significant association in this block
+    * - using the most significant association as a starting point, find any associations with
+    * distance to this one > 100kb
+    * - this is the 2nd block --> find the most significant associaton in this block
+    * - repeat if necessary
+    *
+    * */
     public void setSecondaryBlocks(List<FilterAssociation> ldBlock){
 
         Map<Integer, List<FilterAssociation>> secondaryBlocks = new HashMap<Integer, List<FilterAssociation>>();
