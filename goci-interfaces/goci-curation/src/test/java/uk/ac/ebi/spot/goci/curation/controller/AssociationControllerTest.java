@@ -601,8 +601,7 @@ public class AssociationControllerTest {
     @Test
     public void editAssociationNonCriticalErrors() throws Exception {
 
-
-        // Warnings will not prevent a save
+        // This error should prevent a save
         AssociationValidationView associationValidationView =
                 new AssociationValidationView("P-value exponent", "Value is empty", false);
         List<AssociationValidationView> errors = Collections.singletonList(associationValidationView);
@@ -652,7 +651,7 @@ public class AssociationControllerTest {
                                                                                      Matchers.any(Association.class),
                                                                                      Matchers.anyLong(),
                                                                                      Matchers.any(SecureUser.class));
-        verify(associationOperationsService, times(2)).determineIfAssociationIsOrType(Matchers.any(Association.class));
+        verify(associationOperationsService, times(1)).determineIfAssociationIsOrType(Matchers.any(Association.class));
         verify(associationOperationsService, times(1)).createMappingDetails(Matchers.any(Association.class));
         verify(snpInteractionAssociationService,
                times(1)).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
