@@ -47,7 +47,6 @@ public class FilteringService {
 
             if(associations.size() == 1 && associations.get(0).getPvalueExponent() < -5){
                 associations.get(0).setIsTopAssociation(true);
-//                filtered.add(associations.get(0));
             }
             else {
                 int i =0;
@@ -142,76 +141,118 @@ public class FilteringService {
                         }
 
                         if(ldBlock.size() != 0) {
-                            FilterAssociation mostSignificant;
-                            List<FilterAssociation> secondary = new ArrayList<>();
-                            if (ldBlock.size() > 1) {
-                                List<FilterAssociation> byPval = ldBlock.stream()
-                                        .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
-                                                                             fa2.getPvalue()))
-                                        .collect(Collectors.toList());
 
+//                            int min = ldBlock.get(0).getChromosomePosition();
+//                            int maxDist = ldBlock.get(ldBlock.size()-1).getChromosomePosition() - min;
+//
+//                            if(maxDist > 100000){
+//                                setSecondaryBlocks(ldBlock);
+//                            }
 
-                                mostSignificant = byPval.get(0);
-
-                                if (mostSignificant.getPrecisionConcern()) {
-                                    for (int k = 1; k < byPval.size(); k++) {
-                                        FilterAssociation fa = byPval.get(k);
-                                        if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
-                                            if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
-                                                mostSignificant = fa;
-                                            }
-                                            else if (fa.getPvalueMantissa() ==
-                                                    mostSignificant.getPvalueMantissa()) {
-                                                secondary.add(fa);
-                                            }
-                                        }
-                                        else {
-                                            break;
-                                        }
-                                    }
-                                }
-                                else {
-                                    boolean done = false;
-                                    int p = 0;
-                                    while(!done && p < byPval.size()-1) {
-                                        if (byPval.get(p).getPvalue() == byPval.get(p+1).getPvalue()) {
-                                            secondary.add(byPval.get(p+1));
-                                            p++;
-                                        }
-                                        else{
-                                            done = true;
-                                        }
-                                    }
-                                }
-                            }
-                            else {
-                                mostSignificant = ldBlock.get(0);
-                            }
-                            if (mostSignificant.getPvalueExponent() < -5) {
-                                mostSignificant.setIsTopAssociation(true);
-                            }
-                            //account for the case where multiple p-values within the same LD block are identical
-                            if (secondary.size() != 0){
-                                for(FilterAssociation s : secondary){
-                                    if(s.getPvalue() == mostSignificant.getPvalue()){
-                                        s.setIsTopAssociation(true);
-                                    }
-                                }
-                            }
+                            setMostSignificant(ldBlock);
                         }
                     }
                     i++;
-
                 }
-
             }
             filtered.addAll(associations);
-
         });
-
         return filtered;
-
     }
 
+    public void setMostSignificant(List<FilterAssociation> ldBlock){
+        FilterAssociation mostSignificant;
+        List<FilterAssociation> secondary = new ArrayList<>();
+        if (ldBlock.size() > 1) {
+            List<FilterAssociation> byPval = ldBlock.stream()
+                    .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
+                                                         fa2.getPvalue()))
+                    .collect(Collectors.toList());
 
+            mostSignificant = byPval.get(0);
+
+            if (mostSignificant.getPrecisionConcern()) {
+                for (int k = 1; k < byPval.size(); k++) {
+                    FilterAssociation fa = byPval.get(k);
+                    if (fa.getPvalueExponent() == mostSignificant.getPvalueExponent()) {
+                        if (fa.getPvalueMantissa() < mostSignificant.getPvalueMantissa()) {
+                            mostSignificant = fa;
+                        }
+                        else if (fa.getPvalueMantissa() ==
+                                mostSignificant.getPvalueMantissa()) {
+                            secondary.add(fa);
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                boolean done = false;
+                int p = 0;
+                while(!done && p < byPval.size()-1) {
+                    if (byPval.get(p).getPvalue() == byPval.get(p+1).getPvalue()) {
+                        secondary.add(byPval.get(p+1));
+                        p++;
+                    }
+                    else{
+                        done = true;
+                    }
+                }
+            }
+        }
+        else {
+            mostSignificant = ldBlock.get(0);
+        }
+        if (mostSignificant.getPvalueExponent() < -5) {
+            mostSignificant.setIsTopAssociation(true);
+        }
+        //account for the case where multiple p-values within the same LD block are identical
+        if (secondary.size() != 0){
+            mostSignificant.setIsAmbigious(true);
+            for(FilterAssociation s : secondary){
+                if(s.getPvalue() == mostSignificant.getPvalue()){
+                    s.setIsTopAssociation(true);
+                    s.setIsAmbigious(true);
+                }
+            }
+        }
+    }
+
+    //this method isn't complete yet
+    /*Secondary LD block algorithm:
+    *
+    * - start at first element, carry on until distance > 100KB
+    * - find the most significant association in this block
+    * - using the most significant association as a starting point, find any associations with
+    * distance to this one > 100kb
+    * - this is the 2nd block --> find the most significant associaton in this block
+    * - repeat if necessary
+    *
+    * */
+    public void setSecondaryBlocks(List<FilterAssociation> ldBlock){
+
+        Map<Integer, List<FilterAssociation>> secondaryBlocks = new HashMap<Integer, List<FilterAssociation>>();
+
+        Integer index = 0;
+        for(int p = 0; p < ldBlock.size()-1; p++){
+            int min = ldBlock.get(0).getChromosomePosition();
+            ArrayList<FilterAssociation> block = new ArrayList<FilterAssociation>();
+
+            boolean next = false;
+            int q = p+1;
+            while(!next){
+                int max = ldBlock.get(q).getChromosomePosition();
+
+                if(max-min < 100000){
+                    block.add(ldBlock.get(q));
+                }
+                else {
+                    next = true;
+                }
+            }
+
+        }
+    }
 }

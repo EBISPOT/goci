@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.renderlet;
 
 import com.hp.hpl.jena.query.QuerySolution;
-import net.sourceforge.fluxion.spi.ServiceProvider;
+import uk.ac.ebi.spot.goci.spi.ServiceProvider;
 import uk.ac.ebi.spot.goci.ontology.OntologyConstants;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;

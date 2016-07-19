@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.1.5-SNAPSHOT</version>
+        <version>2.1.6-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-pussycat-api</artifactId>
-    <version>2.1.5-SNAPSHOT</version>
+    <version>2.1.6-SNAPSHOT</version>
 
     <name>GOCI Pussycat API</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
@@ -42,6 +42,10 @@
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-model</artifactId>
             <scope>test</scope>
         </dependency>
@@ -66,20 +70,20 @@
         </dependency>
 
         <!-- Fluxion implementation of SPI spec -->
-        <dependency>
-            <groupId>net.sourceforge.fluxion</groupId>
-            <artifactId>fluxion-spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>owlapi</groupId>
-                    <artifactId>owlapi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.spot.goci</groupId>-->
+            <!--<artifactId>fluxion-spi</artifactId>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>owlapi</groupId>-->
+                    <!--<artifactId>owlapi</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>commons-logging</groupId>-->
+                    <!--<artifactId>commons-logging</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

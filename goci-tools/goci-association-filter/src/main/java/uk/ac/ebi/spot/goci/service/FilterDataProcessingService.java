@@ -179,7 +179,13 @@ public class FilterDataProcessingService {
                 line[rs_id] = f.getStrongestAllele();
                 line[chromosome] = f.getChromosomeName();
                 line[bp_location] = f.getChromosomePosition().toString();
-                line[headers.length] = f.getIsTopAssociation().toString();
+
+                if(f.getIsAmbigious() && f.getIsTopAssociation()) {
+                    line[headers.length] = "REQUIRES REVIEW";
+                }
+                else {
+                    line[headers.length] = f.getIsTopAssociation().toString();
+                }
 
                 if (f.getPrecisionConcern()) {
                     String m = f.getPvalueMantissa().toString();
