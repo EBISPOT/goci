@@ -35,7 +35,7 @@
         <commons-cli.version>1.2</commons-cli.version>
         <commons-net.version>2.0</commons-net.version>
         <lode-virtuoso-impl.version>1.3</lode-virtuoso-impl.version>
-        <fluxion-spi.version>1.0-alpha-3</fluxion-spi.version>
+        <!--<fluxion-spi.version>1.0-alpha-3</fluxion-spi.version>-->
         <jena-core.version>2.12.0</jena-core.version>
         <mockito.version>1.10.19</mockito.version>
         <batik.version>1.8</batik.version>
@@ -163,6 +163,11 @@
                 <artifactId>goci-data-filtering-services</artifactId>
                 <version>${goci.version}</version>
             </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-spi</artifactId>
+                <version>${goci.version}</version>
+            </dependency>
             <!--  additional external dependencies -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
@@ -208,11 +213,11 @@
                 <artifactId>lode-core-api</artifactId>
                 <version>${lode-virtuoso-impl.version}</version>
             </dependency>
-            <dependency>
-                <groupId>net.sourceforge.fluxion</groupId>
-                <artifactId>fluxion-spi</artifactId>
-                <version>${fluxion-spi.version}</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>uk.ac.ebi.spot.goci</groupId>-->
+                <!--<artifactId>fluxion-spi</artifactId>-->
+                <!--<version>${fluxion-spi.version}</version>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>org.apache.jena</groupId>
                 <artifactId>jena-core</artifactId>
@@ -280,14 +285,14 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>hasbanana-repo</id>
-            <url>http://www.hasbanana.com/maven/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>hasbanana-repo</id>-->
+            <!--<url>http://www.hasbanana.com/maven/repo</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
 
 </project>

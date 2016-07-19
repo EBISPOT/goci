@@ -45,20 +45,20 @@
         </dependency>
 
         <!-- Fluxion implementation of SPI spec -->
-        <dependency>
-            <groupId>net.sourceforge.fluxion</groupId>
-            <artifactId>fluxion-spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>owlapi</groupId>
-                    <artifactId>owlapi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>uk.ac.ebi.spot.goci</groupId>-->
+            <!--<artifactId>fluxion-spi</artifactId>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>owlapi</groupId>-->
+                    <!--<artifactId>owlapi</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>commons-logging</groupId>-->
+                    <!--<artifactId>commons-logging</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
@@ -73,6 +73,11 @@
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-ontology</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-spi</artifactId>
         </dependency>
 
         <dependency>
