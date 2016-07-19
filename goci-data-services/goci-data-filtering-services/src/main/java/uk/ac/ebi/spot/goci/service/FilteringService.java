@@ -142,12 +142,12 @@ public class FilteringService {
 
                         if(ldBlock.size() != 0) {
 
-                            int min = ldBlock.get(0).getChromosomePosition();
-                            int maxDist = ldBlock.get(ldBlock.size()-1).getChromosomePosition() - min;
-
-                            if(maxDist > 100000){
-                                setSecondaryBlocks(ldBlock);
-                            }
+//                            int min = ldBlock.get(0).getChromosomePosition();
+//                            int maxDist = ldBlock.get(ldBlock.size()-1).getChromosomePosition() - min;
+//
+//                            if(maxDist > 100000){
+//                                setSecondaryBlocks(ldBlock);
+//                            }
 
                             setMostSignificant(ldBlock);
                         }
