@@ -41,7 +41,6 @@ import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
@@ -567,7 +566,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
@@ -738,7 +737,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -769,7 +768,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_snp_interaction_association";
     }
@@ -805,7 +804,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -841,7 +840,7 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.getAssociationWarnings(associationId));
+        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_snp_interaction_association";
     }
