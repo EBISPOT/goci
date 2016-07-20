@@ -142,14 +142,15 @@ public class FilteringService {
 
                         if(ldBlock.size() != 0) {
 
-//                            int min = ldBlock.get(0).getChromosomePosition();
-//                            int maxDist = ldBlock.get(ldBlock.size()-1).getChromosomePosition() - min;
-//
-//                            if(maxDist > 100000){
-//                                setSecondaryBlocks(ldBlock);
-//                            }
+                            int min = ldBlock.get(0).getChromosomePosition();
+                            int maxDist = ldBlock.get(ldBlock.size()-1).getChromosomePosition() - min;
 
-                            setMostSignificant(ldBlock);
+                            if(maxDist > 100000){
+                                setSecondaryBlocks(ldBlock);
+                            }
+                            else {
+                                setMostSignificant(ldBlock);
+                            }
                         }
                     }
                     i++;
@@ -235,24 +236,57 @@ public class FilteringService {
 
         Map<Integer, List<FilterAssociation>> secondaryBlocks = new HashMap<Integer, List<FilterAssociation>>();
 
+        List<Integer> mostSign = new ArrayList<>();
+
         Integer index = 0;
-        for(int p = 0; p < ldBlock.size()-1; p++){
-            int min = ldBlock.get(0).getChromosomePosition();
+        boolean done = false;
+
+        while(!done){
+            int min = ldBlock.get(index).getChromosomePosition();
             ArrayList<FilterAssociation> block = new ArrayList<FilterAssociation>();
 
             boolean next = false;
-            int q = p+1;
-            while(!next){
+            int q = index+1;
+            while(!next && q < ldBlock.size()){
                 int max = ldBlock.get(q).getChromosomePosition();
 
                 if(max-min < 100000){
                     block.add(ldBlock.get(q));
+                    q++;
                 }
                 else {
                     next = true;
                 }
             }
+            FilterAssociation ms = findMostSignificantInBlock(block);
+            int i = ldBlock.indexOf(ms);
+
+            secondaryBlocks.put(index, block);
+            mostSign.add(i);
+
+            if(i == index){
+                index = i + block.size();
+            }
+            else {
+                index = i;
+            }
+
+            if(q == ldBlock.size()-1){
+                done = true;
+            }
+        }
+
+        for(Integer a : mostSign){
 
         }
+    }
+
+    public FilterAssociation findMostSignificantInBlock(ArrayList<FilterAssociation> block){
+        List<FilterAssociation> byPval = block.stream()
+                .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
+                                                     fa2.getPvalue()))
+                .collect(Collectors.toList());
+
+        return byPval.get(0);
     }
 }
