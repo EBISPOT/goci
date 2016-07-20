@@ -61,7 +61,8 @@
     $(document).ready(function() {
         var table = $('#eventTable').DataTable({
                                                    info: false,
-                                                   paging: false
+                                                   paging: false,
+                                                   "order": [[ 1, "desc" ]]
                                                });
     });
 </script>
