@@ -105,38 +105,6 @@ public class MappingService {
         }
     }
 
-
-    /**
-     * Perform validation and mapping of supplied associations
-     *
-     * @param associations Collection of associations to map
-     * @param performer    name of curator/job carrying out the mapping
-     * @param user
-     */
-    @Transactional(rollbackFor = EnsemblMappingException.class)
-    public void validateAndMapAssociations(Collection<Association> associations,
-                                           String performer,
-                                           SecureUser user)
-            throws EnsemblMappingException {
-
-        try {
-            for (Association association : associations) {
-                doMapping(association);
-
-                // Update mapping event
-                trackingOperationService.update(association, user, EventType.ASSOCIATION_MAPPING);
-
-                // Once mapping is complete, update mapping record
-                getLog().debug("Update mapping record");
-                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
-            }
-        }
-        catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException("Attempt to map supplied associations failed", e);
-        }
-    }
-
-
     /**
      * Perform validation and mapping of all database associations
      *

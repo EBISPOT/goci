@@ -1017,42 +1017,6 @@ public class AssociationController {
         return "redirect:/studies/" + studyId + "/associations";
     }
 
-    /**
-     * Run mapping pipeline on all SNPs in a study
-     *
-     * @param studyId            Study ID in database
-     * @param redirectAttributes attributes for a redirect scenario
-     */
-    @RequestMapping(value = "/studies/{studyId}/associations/validate_all",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.GET)
-    public String validateAll(@PathVariable Long studyId,
-                              RedirectAttributes redirectAttributes,
-                              Model model,
-                              HttpServletRequest request)
-            throws EnsemblMappingException {
-
-        // For the study get all associations
-        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-
-        Study study = studyRepository.findOne(studyId);
-        Curator curator = study.getHousekeeping().getCurator();
-        String mappedBy = curator.getLastName();
-        try {
-            mappingService.validateAndMapAssociations(studyAssociations,
-                                                      mappedBy,
-                                                      currentUserDetailsService.getUserFromRequest(request));
-        }
-        catch (EnsemblMappingException e) {
-            model.addAttribute("study", study);
-            return "ensembl_mapping_failure";
-        }
-
-        String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
-        redirectAttributes.addFlashAttribute("mappingComplete", message);
-        return "redirect:/studies/" + studyId + "/associations";
-    }
-
 
     @RequestMapping(value = "/studies/{studyId}/associations/download",
                     produces = MediaType.TEXT_HTML_VALUE,
