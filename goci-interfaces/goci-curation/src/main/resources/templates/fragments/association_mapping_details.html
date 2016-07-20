@@ -17,6 +17,12 @@
         <p style="font-style: italic; word-wrap: break-word;"
            th:if="${mappingDetails.performer != null}"
            th:utext="'&lt;br /&gt;' +'Performer: '+ ${mappingDetails.performer} ?: ''"></p>
+
+        <p th:if="${not #maps.isEmpty(mappingDetails.associationErrorMap)}">Mapping errors:</p>
+         <span style="font-style: italic; word-wrap: break-word;"
+               th:each="error: ${mappingDetails.associationErrorMap}"
+               th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
+               th:if="${not #maps.isEmpty(mappingDetails.associationErrorMap)}"></span>
     </div>
 </div>
 </body>

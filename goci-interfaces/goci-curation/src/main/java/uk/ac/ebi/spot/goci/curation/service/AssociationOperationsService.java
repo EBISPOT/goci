@@ -57,6 +57,7 @@ public class AssociationOperationsService {
     private AssociationValidationReportService associationValidationReportService;
     private ErrorCreationService errorCreationService;
     private TrackingOperationService trackingOperationService;
+    private AssociationMappingErrorService associationMappingErrorService;
 
     @Autowired
     public AssociationOperationsService(SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
@@ -69,7 +70,8 @@ public class AssociationOperationsService {
                                         ValidationService validationService,
                                         AssociationValidationReportService associationValidationReportService,
                                         ErrorCreationService errorCreationService,
-                                        @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService) {
+                                        @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
+                                        AssociationMappingErrorService associationMappingErrorService) {
         this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.associationReportRepository = associationReportRepository;
@@ -81,6 +83,7 @@ public class AssociationOperationsService {
         this.associationValidationReportService = associationValidationReportService;
         this.errorCreationService = errorCreationService;
         this.trackingOperationService = trackingOperationService;
+        this.associationMappingErrorService = associationMappingErrorService;
     }
 
     /**
@@ -299,6 +302,7 @@ public class AssociationOperationsService {
         MappingDetails mappingDetails = new MappingDetails();
         mappingDetails.setPerformer(association.getLastMappingPerformedBy());
         mappingDetails.setMappingDate(association.getLastMappingDate());
+        mappingDetails.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(association.getAssociationReport()));
         return mappingDetails;
     }
 

@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by emma on 25/09/2015.
@@ -12,6 +14,8 @@ public class MappingDetails {
     private Date mappingDate;
 
     private String performer;
+
+    private Map<String, String> associationErrorMap = new HashMap<>();
 
     // Constructor
     public MappingDetails() {
@@ -31,5 +35,13 @@ public class MappingDetails {
 
     public void setPerformer(String performer) {
         this.performer = performer;
+    }
+
+    public Map<String, String> getAssociationErrorMap() {
+        return associationErrorMap;
+    }
+
+    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
+        this.associationErrorMap = associationErrorMap;
     }
 }

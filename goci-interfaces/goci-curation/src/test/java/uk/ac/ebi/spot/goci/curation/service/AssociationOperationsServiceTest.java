@@ -95,6 +95,9 @@ public class AssociationOperationsServiceTest {
     @Mock
     private AssociationTrackingOperationServiceImpl associationTrackingOperationService;
 
+    @Mock
+    private AssociationMappingErrorService associationMappingErrorService;
+
     private static final Association ASS_BETA =
             new AssociationBuilder().setId(600L).setBetaNum((float) 0.012).build();
 
@@ -207,7 +210,8 @@ public class AssociationOperationsServiceTest {
                                                                         validationService,
                                                                         associationValidationReportService,
                                                                         errorCreationService,
-                                                                        associationTrackingOperationService);
+                                                                        associationTrackingOperationService,
+                                                                        associationMappingErrorService);
     }
 
     @Test
