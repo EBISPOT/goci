@@ -124,7 +124,7 @@
                     <th style="font-size: small">SNP Status</th>
                     <th style="font-size: small">Multi-SNP haplotype</th>
                     <th style="font-size: small">SNP:SNP interaction</th>
-                    <th style="font-size: small">Errors/ Mapping Details</th>
+                    <th style="font-size: small">Warnings</th>
                     <th style="font-size: small">SNP Approved</th>
                     <th style="font-size: small">Approve / Unapprove / Delete</th>
                 </tr>
@@ -219,17 +219,6 @@
                                        th:each="warning: ${snpAssociationTableView.validationWarnings}"
                                        th:utext="${warning} + '&lt;br /&gt;'?: ''"
                                        th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}"></span>
-
-                                <br/>
-                                <span style="font-style: italic"
-                                      th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                      th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
-                                </span>
-
-                                <span style="font-style: italic"
-                                      th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                      th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
-                                </span>
                             </td>
 
                             <td style="background-color: darkgrey"
@@ -336,18 +325,6 @@
                                             th:utext="${warning} + '&lt;br /&gt;'?: ''"
                                             th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}">
                                       </span>
-
-                                    <br/>
-
-                                    <span style="font-style: italic"
-                                          th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                          th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
-                                    </span>
-
-                                    <span style="font-style: italic"
-                                          th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                          th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
-                                    </span>
                                 </td>
 
                                 <td style="background-color: lightyellow"
@@ -430,14 +407,6 @@
                                              th:each="warning: ${snpAssociationTableView.validationWarnings}"
                                              th:utext="${warning} + '&lt;br /&gt;'?: ''"
                                              th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}"></span>
-                                    <br/>
-                                        <span style="font-style: italic"
-                                              th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
-
-                                        <span style="font-style: italic"
-                                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
