@@ -7,21 +7,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.builder.AssociationReportBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.CurationSystemEmailToCuratorBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.builder.CurationSystemEmailToCuratorBuilder;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
-import uk.ac.ebi.spot.goci.curation.service.AssociationMappingErrorService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -37,7 +35,7 @@ import static org.mockito.Mockito.when;
 public class EmailMappingErrorsServiceTest {
 
     @Mock
-    private AssociationMappingErrorService associationMappingErrorService;
+    private AssociationValidationReportService associationValidationReportService;
 
     private EmailMappingErrorsService emailMappingErrorsService;
 
@@ -62,12 +60,10 @@ public class EmailMappingErrorsServiceTest {
             new AssociationBuilder().setId(103L)
                     .setLastMappingDate(new Date()).setLastMappingPerformedBy("Level 1 Curator").build();
 
-    private static final AssociationReport ASS_REP =
-            new AssociationReportBuilder().setSnpGeneOnDiffChr("ERROR").build();
 
     @Before
     public void setUp() throws Exception {
-        emailMappingErrorsService = new EmailMappingErrorsService(associationMappingErrorService);
+        emailMappingErrorsService = new EmailMappingErrorsService(associationValidationReportService);
     }
 
     @After
@@ -97,23 +93,22 @@ public class EmailMappingErrorsServiceTest {
         assertThat(email).isInstanceOf(CurationSystemEmailToCurator.class);
         assertThat(email).hasFieldOrPropertyWithValue("body",
                                                       "This is a test body" + "\n\n" +
-                                                              "Note: No mapping errors detected for any association in this study.");
+                                                              "Note: No validation warnings detected for any association in this study.");
 
     }
 
     @Test
     public void testGetMappingDetailsOnStudyWithAssociationsThatHaveErrors() throws Exception {
 
-        ASS3.setAssociationReport(ASS_REP);
         STU_WITH_ASSOCIATIONS.setAssociations(Collections.singletonList(ASS3));
-        Map<String, String> map = new HashMap<>();
-        map.put("No Gene For Symbol", "ERROR");
-        when(associationMappingErrorService.createAssociationErrorMap(ASS_REP)).thenReturn(map);
+        Set<String> warnings = new HashSet<>();
+        warnings.add("No Gene For Symbol");
+        when(associationValidationReportService.getWarningSet(ASS3.getId())).thenReturn(warnings);
 
         CurationSystemEmailToCurator email = emailMappingErrorsService.getMappingDetails(STU_WITH_ASSOCIATIONS,
                                                                                          EMAIL1);
         assertThat(email).isInstanceOf(CurationSystemEmailToCurator.class);
         assertThat(email).hasFieldOrProperty("body");
-        assertThat(email.getBody()).contains("Mapping errors: ERROR");
+        assertThat(email.getBody()).contains("Validation Results: No Gene For Symbol");
     }
 }

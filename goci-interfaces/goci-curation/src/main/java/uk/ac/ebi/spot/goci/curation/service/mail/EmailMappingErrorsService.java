@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
 import uk.ac.ebi.spot.goci.curation.service.AssociationMappingErrorService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
 import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by emma on 09/03/2016.
@@ -20,21 +20,21 @@ import java.util.Map;
 @Service
 public class EmailMappingErrorsService {
 
-    private AssociationMappingErrorService associationMappingErrorService;
+    private AssociationValidationReportService associationValidationReportService;
 
     @Autowired
-    public EmailMappingErrorsService(AssociationMappingErrorService associationMappingErrorService) {
-        this.associationMappingErrorService = associationMappingErrorService;
+    public EmailMappingErrorsService(AssociationValidationReportService associationValidationReportService) {
+        this.associationValidationReportService = associationValidationReportService;
     }
 
     public CurationSystemEmailToCurator getMappingDetails(Study study, CurationSystemEmailToCurator email) {
 
-        String mappingDetails = "";
+        String associationSummary = "";
 
         Collection<Association> associations = study.getAssociations();
 
         if (associations.isEmpty()) {
-            mappingDetails = "No associations for this study";
+            associationSummary = "No associations for this study";
         }
         else {
 
@@ -55,48 +55,43 @@ public class EmailMappingErrorsService {
                 String associationLink =
                         email.getLink() + "associations/" + association.getId();
 
-                AssociationReport report = association.getAssociationReport();
-                Map<String, String> associationErrorMap =
-                        associationMappingErrorService.createAssociationErrorMap(report);
-                String errors = formatErrors(associationErrorMap);
+                Set<String> validationWarnings = associationValidationReportService.getWarningSet(association.getId());
+                String validationWarningsForEmailBody = formatWarnings(validationWarnings);
 
                 // Only include details of associations with errors
                 // In future we may want to include all association details can remove this if condition
-                if (!errors.contains("No mapping errors found")) {
-                    mappingDetails = mappingDetails + "Association: " + associationLink + "\n"
+                if (!validationWarningsForEmailBody.contains("No validation warnings found")) {
+                    associationSummary = associationSummary + "Association: " + associationLink + "\n"
+                            + "Validation Results: " + validationWarningsForEmailBody
                             + "Last Mapping Date: " + mappingDate + "\n"
-                            + "Last Mapping Performed By: " + performer + "\n"
-                            + "Mapping errors: " + errors + "\n";
+                            + "Last Mapping Performed By: " + performer + "\n\n";
                 }
             }
         }
 
-        if (mappingDetails.isEmpty()) {
-            mappingDetails = "Note: No mapping errors detected for any association in this study.";
+        if (associationSummary.isEmpty()) {
+            associationSummary = "Note: No validation warnings detected for any association in this study.";
         }
 
-        email.addToBody(mappingDetails);
+        email.addToBody(associationSummary);
         return email;
     }
 
-
     // Format the errors to include in the email
-    private String formatErrors(Map<String, String> map) {
+    private String formatWarnings(Set<String> warnings) {
 
-        String errors = "";
+        String formattedWarnings = "";
 
         // Format errors
-        if (!map.isEmpty()) {
-            for (String key : map.keySet()) {
-                errors = errors + map.get(key) + "\n";
+        if (!warnings.isEmpty()) {
+            for (String warning : warnings) {
+                formattedWarnings = formattedWarnings.concat(warning).concat("\n");
             }
         }
         else {
-            errors = "No mapping errors found" + "\n";
+            formattedWarnings = "No validation warnings found" + "\n";
         }
 
-        return errors;
+        return formattedWarnings;
     }
-
-
 }
