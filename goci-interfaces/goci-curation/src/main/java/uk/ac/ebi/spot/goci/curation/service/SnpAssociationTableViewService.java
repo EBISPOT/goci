@@ -25,13 +25,10 @@ import java.util.Collection;
 @Service
 public class SnpAssociationTableViewService {
 
-    private AssociationMappingErrorService associationMappingErrorService;
     private AssociationValidationReportService associationValidationReportService;
 
     @Autowired
-    public SnpAssociationTableViewService(AssociationMappingErrorService associationMappingErrorService,
-                                          AssociationValidationReportService associationValidationReportService) {
-        this.associationMappingErrorService = associationMappingErrorService;
+    public SnpAssociationTableViewService(AssociationValidationReportService associationValidationReportService) {
         this.associationValidationReportService = associationValidationReportService;
     }
 
@@ -265,30 +262,8 @@ public class SnpAssociationTableViewService {
             }
         }
 
-        // Check if the errors in the association report have been checked by a curator
-        if (association.getAssociationReport() != null) {
-            if (association.getAssociationReport().getErrorCheckedByCurator() != null) {
-                if (association.getAssociationReport().getErrorCheckedByCurator()) {
-                    snpAssociationTableView.setAssociationErrorsChecked("Yes");
-                }
-
-                if (!association.getAssociationReport().getErrorCheckedByCurator()) {
-                    snpAssociationTableView.setAssociationErrorsChecked("No");
-                }
-            }
-        }
-
-        // Check for mapping errors
-        snpAssociationTableView.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(
-                association.getAssociationReport()));
-
-       // Check for validation warnings
-        long associationValidationReportCount =
-                associationValidationReportService.getAssociationWarnings(association.getId()).stream().count();
-        if (associationValidationReportCount > 0) {
-            snpAssociationTableView.setValidationWarnings(true);
-        }
-        else {snpAssociationTableView.setValidationWarnings(false);}
+        // Get validation warnings
+        snpAssociationTableView.setValidationWarnings(associationValidationReportService.getWarningSet(association.getId()));
 
         // Get mapping details
         if (association.getLastMappingPerformedBy() != null) {

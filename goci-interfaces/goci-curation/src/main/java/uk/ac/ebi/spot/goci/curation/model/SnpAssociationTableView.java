@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by emma on 20/05/2015.
@@ -68,96 +68,71 @@ public class SnpAssociationTableView {
 
     private String snpStatuses;
 
-    private Map<String, String> associationErrorMap = new HashMap<>();
-
-    private String associationErrorsChecked;
+    private Set<String> validationWarnings = new HashSet<>();
 
     private String lastMappingPerformedBy;
 
     private String lastMappingDate;
-
-    private Boolean validationWarnings;
 
     // Constructors
     public SnpAssociationTableView() {
     }
 
     public SnpAssociationTableView(Long associationId,
-                                   String authorReportedGenes,
-                                   String strongestRiskAlleles,
-                                   String snps,
-                                   String proxySnps,
                                    String associationRiskFrequency,
-                                   String riskAlleleFrequencies,
-                                   Integer pvalueMantissa,
-                                   Integer pvalueExponent,
-                                   String pvalueDescription,
+                                   String associationType,
+                                   String authorReportedGenes,
+                                   String betaDirection,
+                                   Float betaNum,
+                                   String betaUnit,
+                                   String description,
                                    String efoTraits,
+                                   String lastMappingDate,
+                                   String lastMappingPerformedBy,
+                                   String multiSnpHaplotype,
                                    Float orPerCopyNum,
                                    Float orPerCopyRecip,
                                    String orPerCopyRecipRange,
+                                   String proxySnps,
+                                   String pvalueDescription,
+                                   Integer pvalueExponent,
+                                   Integer pvalueMantissa,
                                    String range,
-                                   String description,
-                                   Float standardError,
-                                   Float betaNum,
-                                   String betaUnit,
-                                   String betaDirection,
-                                   String associationType,
-                                   String multiSnpHaplotype,
-                                   String snpInteraction,
+                                   String riskAlleleFrequencies,
                                    String snpApproved,
+                                   String snpInteraction,
+                                   String snps,
                                    String snpStatuses,
-                                   Map<String, String> associationErrorMap,
-                                   String associationErrorsChecked,
-                                   String lastMappingPerformedBy,
-                                   String lastMappingDate,
-                                   Boolean validationWarnings) {
+                                   Float standardError,
+                                   String strongestRiskAlleles, Set<String> validationWarnings) {
         this.associationId = associationId;
-        this.authorReportedGenes = authorReportedGenes;
-        this.strongestRiskAlleles = strongestRiskAlleles;
-        this.snps = snps;
-        this.proxySnps = proxySnps;
         this.associationRiskFrequency = associationRiskFrequency;
-        this.riskAlleleFrequencies = riskAlleleFrequencies;
-        this.pvalueMantissa = pvalueMantissa;
-        this.pvalueExponent = pvalueExponent;
-        this.pvalueDescription = pvalueDescription;
+        this.associationType = associationType;
+        this.authorReportedGenes = authorReportedGenes;
+        this.betaDirection = betaDirection;
+        this.betaNum = betaNum;
+        this.betaUnit = betaUnit;
+        this.description = description;
         this.efoTraits = efoTraits;
+        this.lastMappingDate = lastMappingDate;
+        this.lastMappingPerformedBy = lastMappingPerformedBy;
+        this.multiSnpHaplotype = multiSnpHaplotype;
         this.orPerCopyNum = orPerCopyNum;
         this.orPerCopyRecip = orPerCopyRecip;
         this.orPerCopyRecipRange = orPerCopyRecipRange;
+        this.proxySnps = proxySnps;
+        this.pvalueDescription = pvalueDescription;
+        this.pvalueExponent = pvalueExponent;
+        this.pvalueMantissa = pvalueMantissa;
         this.range = range;
-        this.description = description;
-        this.standardError = standardError;
-        this.betaNum = betaNum;
-        this.betaUnit = betaUnit;
-        this.betaDirection = betaDirection;
-        this.associationType = associationType;
-        this.multiSnpHaplotype = multiSnpHaplotype;
-        this.snpInteraction = snpInteraction;
+        this.riskAlleleFrequencies = riskAlleleFrequencies;
         this.snpApproved = snpApproved;
+        this.snpInteraction = snpInteraction;
+        this.snps = snps;
         this.snpStatuses = snpStatuses;
-        this.associationErrorMap = associationErrorMap;
-        this.associationErrorsChecked = associationErrorsChecked;
-        this.lastMappingPerformedBy = lastMappingPerformedBy;
-        this.lastMappingDate = lastMappingDate;
+        this.standardError = standardError;
+        this.strongestRiskAlleles = strongestRiskAlleles;
         this.validationWarnings = validationWarnings;
-    }
-
-    public Map<String, String> getAssociationErrorMap() {
-        return associationErrorMap;
-    }
-
-    public void setAssociationErrorMap(Map<String, String> associationErrorMap) {
-        this.associationErrorMap = associationErrorMap;
-    }
-
-    public String getAssociationErrorsChecked() {
-        return associationErrorsChecked;
-    }
-
-    public void setAssociationErrorsChecked(String associationErrorsChecked) {
-        this.associationErrorsChecked = associationErrorsChecked;
     }
 
     public Long getAssociationId() {
@@ -376,11 +351,11 @@ public class SnpAssociationTableView {
         this.strongestRiskAlleles = strongestRiskAlleles;
     }
 
-    public Boolean getValidationWarnings() {
+    public Set<String> getValidationWarnings() {
         return validationWarnings;
     }
 
-    public void setValidationWarnings(Boolean validationWarnings) {
+    public void setValidationWarnings(Set<String> validationWarnings) {
         this.validationWarnings = validationWarnings;
     }
 }

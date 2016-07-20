@@ -11,7 +11,9 @@ import uk.ac.ebi.spot.goci.repository.AssociationValidationReportRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by emma on 04/07/2016.
@@ -65,7 +67,7 @@ public class AssociationValidationReportService {
      *
      * @param associationId ID of association to get warning for
      */
-    public List<AssociationValidationView> getAssociationWarnings(Long associationId) {
+    public List<AssociationValidationView> generateAssociationWarningsListView(Long associationId) {
 
         List<AssociationValidationView> associationValidationViews = new ArrayList<>();
         associationValidationReportRepository.findByAssociationId(associationId)
@@ -75,5 +77,20 @@ public class AssociationValidationReportService {
                                                                                  true));
                 });
         return associationValidationViews;
+    }
+
+    /**
+     * Retrieve validation warnings for an association and return unique set
+     *
+     * @param associationId ID of association to get warning for
+     */
+    public Set<String> getWarningSet(Long associationId) {
+
+        Set<String> warnings = new HashSet<>();
+        associationValidationReportRepository.findByAssociationId(associationId)
+                .forEach(associationValidationReport -> {
+                    warnings.add(associationValidationReport.getWarning());
+                });
+        return warnings;
     }
 }
