@@ -35,8 +35,8 @@
 <div class="container-fluid" th:object="${study}">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li class="active"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study Tracking</a></li>
-            <li><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association Tracking</a></li>
+            <li><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study Tracking</a></li>
+            <li class="active"><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association Tracking</a></li>
         </ul>
     </div>
 </div>
@@ -48,6 +48,8 @@
             <table id="eventTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
+                    <th>Association ID</th>
+                    <th>Association SNP Summary</th>
                     <th>Event</th>
                     <th>Event Date</th>
                     <th>User</th>
@@ -55,6 +57,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="event : ${events}">
+                    <td th:text="${event.trackableId} ?: '' ">rs123</td>
+                    <td th:text="${event.associationSummary} ?: '' ">rs123</td>
                     <td th:text="${event.event} ?: '' ">CREATE</td>
                     <td th:text="${#calendars.format(event.eventDate, 'dd MMMM yyyy HH:mm:ss')} ?: '' ">2016-05-06</td>
                     <td th:text="${event.userEmail} ?: '' ">emma@ebi.ac.uk</td>
@@ -73,7 +77,7 @@
         var table = $('#eventTable').DataTable({
                                                    info: false,
                                                    paging: false,
-                                                   "order": [[ 1, "desc" ]]
+                                                   "order": [[ 0, "desc" ]]
                                                });
     });
 </script>

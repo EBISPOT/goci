@@ -24,10 +24,11 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationEventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -108,6 +109,9 @@ public class AssociationControllerTest {
     @Mock
     private AssociationDeletionService associationDeletionService;
 
+    @Mock
+    private AssociationEventsViewService associationsEventsViewService;
+
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -134,11 +138,11 @@ public class AssociationControllerTest {
                                                                                 snpInteractionAssociationService,
                                                                                 checkEfoTermAssignmentService,
                                                                                 associationOperationsService,
-                                                                                mappingService,
                                                                                 associationUploadService,
                                                                                 currentUserDetailsService,
                                                                                 associationValidationReportService,
-                                                                                associationDeletionService);
+                                                                                associationDeletionService,
+                                                                                associationsEventsViewService);
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
     }
 
@@ -451,7 +455,7 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
-                SnpAssociationInteractionForm.class),Matchers.anyString()))
+                SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_interaction").param("measurementType", "or"))
@@ -484,7 +488,7 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
-                SnpAssociationInteractionForm.class),Matchers.anyString()))
+                SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(ASSOCIATION);
@@ -614,7 +618,7 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
-                SnpAssociationInteractionForm.class),Matchers.anyString()))
+                SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(ASSOCIATION);

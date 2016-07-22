@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
+import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
@@ -46,7 +48,6 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,11 +88,11 @@ public class AssociationController {
     private SnpInteractionAssociationService snpInteractionAssociationService;
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
-    private MappingService mappingService;
     private AssociationUploadService associationUploadService;
     private CurrentUserDetailsService currentUserDetailsService;
     private AssociationValidationReportService associationValidationReportService;
     private AssociationDeletionService associationDeletionService;
+    private EventsViewService eventsViewService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -109,11 +110,11 @@ public class AssociationController {
                                  SnpInteractionAssociationService snpInteractionAssociationService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
-                                 MappingService mappingService,
                                  AssociationUploadService associationUploadService,
                                  CurrentUserDetailsService currentUserDetailsService,
                                  AssociationValidationReportService associationValidationReportService,
-                                 AssociationDeletionService associationDeletionService) {
+                                 AssociationDeletionService associationDeletionService,
+                                 @Qualifier("associationEventsViewService") EventsViewService eventsViewService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -123,11 +124,11 @@ public class AssociationController {
         this.snpInteractionAssociationService = snpInteractionAssociationService;
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
-        this.mappingService = mappingService;
         this.associationUploadService = associationUploadService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.associationValidationReportService = associationValidationReportService;
         this.associationDeletionService = associationDeletionService;
+        this.eventsViewService = eventsViewService;
     }
 
     /*  Study SNP/Associations */
@@ -164,6 +165,14 @@ public class AssociationController {
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
+    }
+
+
+    @RequestMapping(value = "studies/{studyId}/association_tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getStudyEvents(Model model, @PathVariable Long studyId) {
+        model.addAttribute("events", eventsViewService.createViews(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "association_events";
     }
 
 
