@@ -221,22 +221,12 @@ public class FilteringService {
         }
     }
 
-    //this method isn't complete yet
-    /*Secondary LD block algorithm:
-    *
-    * - start at first element, carry on until distance > 100KB
-    * - find the most significant association in this block
-    * - using the most significant association as a starting point, find any associations with
-    * distance to this one > 100kb
-    * - this is the 2nd block --> find the most significant associaton in this block
-    * - repeat if necessary
-    *
-    * */
+
     public void setSecondaryBlocks(List<FilterAssociation> ldBlock){
 
-        Map<Integer, List<FilterAssociation>> secondaryBlocks = new HashMap<Integer, List<FilterAssociation>>();
+        List<List<FilterAssociation>> secondaryBlocks = new ArrayList<>();
 
-        List<Integer> mostSign = new ArrayList<>();
+        List<FilterAssociation> mostSign = new ArrayList<>();
 
         Integer index = 0;
         boolean done = false;
@@ -247,10 +237,11 @@ public class FilteringService {
 
             boolean next = false;
             int q = index+1;
-            while(!next && q < ldBlock.size()){
+            while(!next && q < ldBlock.size()) {
+
                 int max = ldBlock.get(q).getChromosomePosition();
 
-                if(max-min < 100000){
+                if (max - min < 100000) {
                     block.add(ldBlock.get(q));
                     q++;
                 }
@@ -258,11 +249,15 @@ public class FilteringService {
                     next = true;
                 }
             }
-            FilterAssociation ms = findMostSignificantInBlock(block);
-            int i = ldBlock.indexOf(ms);
 
-            secondaryBlocks.put(index, block);
-            mostSign.add(i);
+            setMostSignificant(block);
+
+            FilterAssociation msib = findMostSignificantInBlock(block);
+
+            int i = ldBlock.indexOf(msib);
+            mostSign.add(msib);
+
+            secondaryBlocks.add(block);
 
             if(i == index){
                 index = i + block.size();
@@ -271,22 +266,74 @@ public class FilteringService {
                 index = i;
             }
 
-            if(q == ldBlock.size()-1){
+            if(q == ldBlock.size()){
                 done = true;
             }
         }
 
-        for(Integer a : mostSign){
+        int p = 0;
 
+        while (p < mostSign.size()-2){
+            if(mostSign.get(p+1).getChromosomePosition() - mostSign.get(p).getChromosomePosition() < 100000){
+                if(!mostSign.get(p).equals(mostSign.get(p+1))) {
+                    if (mostSign.get(p).getPvalue() > mostSign.get(p + 1).getPvalue() &&
+                            !mostSign.get(p).getIsAmbigious()) {
+                        mostSign.get(p).setIsTopAssociation(false);
+                        p++;
+                    }
+                    else if (mostSign.get(p).getPvalue() > mostSign.get(p + 1).getPvalue() &&
+                            mostSign.get(p).getIsAmbigious()) {
+                        FilterAssociation notSign = mostSign.get(p);
+                        notSign.setIsTopAssociation(false);
+                        notSign.setIsAmbigious(false);
+
+                        for(List<FilterAssociation> block : secondaryBlocks){
+                            if(block.contains(notSign)){
+                                for(FilterAssociation s : block){
+                                    s.setIsTopAssociation(false);
+                                    s.setIsAmbigious(false);
+                                }
+                            }
+                        }
+                        p++;
+
+                    }
+                    else if (mostSign.get(p).getPvalue() < mostSign.get(p + 1).getPvalue() &&
+                            !mostSign.get(p + 1).getIsAmbigious()) {
+                        mostSign.get(p + 1).setIsTopAssociation(false);
+                        p = p+2;
+                    }
+                    else {
+                        FilterAssociation notSign = mostSign.get(p+1);
+                        notSign.setIsTopAssociation(false);
+                        notSign.setIsAmbigious(false);
+
+                        for(List<FilterAssociation> block : secondaryBlocks){
+                            if(block.contains(notSign)){
+                                for(FilterAssociation s : block){
+                                    s.setIsTopAssociation(false);
+                                    s.setIsAmbigious(false);
+                                }
+                            }
+                        }
+                        p = p+2;
+                    }
+                }
+            }
         }
+
+
     }
 
     public FilterAssociation findMostSignificantInBlock(ArrayList<FilterAssociation> block){
-        List<FilterAssociation> byPval = block.stream()
-                .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
-                                                     fa2.getPvalue()))
-                .collect(Collectors.toList());
+        FilterAssociation ms = null;
+        for(FilterAssociation fa : block){
+            if(fa.getIsTopAssociation()){
+                ms  = fa;
+                break;
+            }
+        }
 
-        return byPval.get(0);
+        return ms;
     }
 }
