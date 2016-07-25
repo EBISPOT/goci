@@ -260,20 +260,14 @@ public class JsonProcessingService {
         line.append(getRiskFreq(doc));
         line.append("\t");
 
-        double pvalue = getPvalue(doc);
+        String pvalue = getPvalue(doc);
 
-        if (pvalue == -10) {
-            line.append("");
-            line.append("\t");
-            line.append("");
-        }
-        else {
-            line.append(pvalue);
-            line.append("\t");
-            double mlog = Math.log10(pvalue);
-            line.append(-mlog);
-        }
+        line.append(pvalue);
         line.append("\t");
+
+         String mlog = getPvalueMlog(doc);
+         line.append(mlog);
+         line.append("\t");
 
         line.append(getQualifier(doc));
         line.append("\t");
@@ -376,15 +370,30 @@ public class JsonProcessingService {
         return qualifier;
     }
 
-    private double getPvalue(JsonNode doc) {
-        double pvalue;
+    private String getPvalue(JsonNode doc) {
+        String pvalue;
+        if (doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null) {
+            String mant = doc.get("pValueMantissa").asText().trim();
+            String exp = doc.get("pValueExponent").asText().trim();
+            pvalue = mant.concat("E").concat(exp);
+        }
+        else {
+            pvalue = "";
+        }
+        return pvalue;
+    }
+
+    private String getPvalueMlog(JsonNode doc){
+        String pvalue;
         if (doc.get("pValueMantissa") != null && doc.get("pValueExponent") != null) {
             int mant = doc.get("pValueMantissa").asInt();
             int exp = doc.get("pValueExponent").asInt();
-            pvalue = mant * Math.pow(10, exp);
+            double log = Math.log10(mant);
+            double p = -(log + exp);
+            pvalue = String.valueOf(p);
         }
         else {
-            pvalue = -10;
+            pvalue = "";
         }
         return pvalue;
     }

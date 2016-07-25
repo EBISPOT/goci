@@ -267,49 +267,12 @@ public class FileController {
         }
         catch (IOException e) {
             throw new RuntimeException(
-                    "Unable to create dispatcher service: failed to read pubmed.properties resource", e);
-        }
-        catch (NumberFormatException e) {
-            throw new RuntimeException(
-                    "Unable to create dispatcher service: you must provide a integer query interval " +
-                            "in minutes (pubmed.query.interval.mins)", e);
+                    "Unable to return catolog stats: failed to read catalog.stats.file resource", e);
         }
 
         return response;
     }
 
-
-//    @RequestMapping(value = "api/search/downloads/ensembl_mapping",
-//                    method = RequestMethod.GET,
-//                    produces = MediaType.TEXT_PLAIN_VALUE)
-//    public void getEnsemblMappingDownload(HttpServletResponse response) throws IOException {
-//
-//        if (ensemblMappingFileDownload.exists()) {
-//
-//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            Date date = new Date();
-//            String now = dateFormat.format(date);
-//
-//            String fileName = "gwas_catalog_ensembl_mapping_v1.0-downloaded_".concat(now).concat(".tsv");
-//            response.setContentType("text/tsv");
-//            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
-//
-//            InputStream inputStream = null;
-//            inputStream = ensemblMappingFileDownload.getInputStream();
-//
-//            OutputStream outputStream;
-//            outputStream = response.getOutputStream();
-//
-//            IOUtils.copy(inputStream, outputStream);
-//            inputStream.close();
-//            outputStream.close();
-//
-//        }
-//        else {
-//            throw new FileNotFoundException();
-//        }
-//
-//    }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "File not found for download")
     @ExceptionHandler(FileNotFoundException.class)

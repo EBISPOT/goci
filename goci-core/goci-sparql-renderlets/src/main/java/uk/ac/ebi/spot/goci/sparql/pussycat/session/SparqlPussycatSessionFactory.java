@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.session;
 
-import net.sourceforge.fluxion.spi.ServiceProvider;
+import uk.ac.ebi.spot.goci.spi.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;

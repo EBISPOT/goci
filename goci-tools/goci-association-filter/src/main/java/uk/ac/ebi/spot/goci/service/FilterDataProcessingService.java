@@ -91,7 +91,8 @@ public class FilterDataProcessingService {
     public List<FilterAssociation> processInputData(String[][] data) {
         List<FilterAssociation> associations = new ArrayList<>();
 
-        System.out.println("About to process " + data.length + " entries");
+        int entries = data.length-1;
+        System.out.println("About to process " + entries + " entries");
 
         for(int i = 1; i < data.length; i++){
 
@@ -178,7 +179,13 @@ public class FilterDataProcessingService {
                 line[rs_id] = f.getStrongestAllele();
                 line[chromosome] = f.getChromosomeName();
                 line[bp_location] = f.getChromosomePosition().toString();
-                line[headers.length] = f.getIsTopAssociation().toString();
+
+                if(f.getIsAmbigious() && f.getIsTopAssociation()) {
+                    line[headers.length] = "REQUIRES REVIEW";
+                }
+                else {
+                    line[headers.length] = f.getIsTopAssociation().toString();
+                }
 
                 if (f.getPrecisionConcern()) {
                     String m = f.getPvalueMantissa().toString();

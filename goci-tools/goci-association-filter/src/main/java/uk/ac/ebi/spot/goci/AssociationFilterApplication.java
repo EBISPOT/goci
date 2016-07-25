@@ -93,16 +93,21 @@ public class AssociationFilterApplication {
                     outputFile = new File(cl.getOptionValue("o"));
 
                 }
-                if (cl.hasOption("f")) {
-                    inputFile = new File(cl.getOptionValue("f"));
-                }
-                if(cl.hasOption("p")) {
-                    prune = true;
-                }
                 else {
                     System.err.println("-o (output file) argument is required");
                     help.printHelp("filter", options, true);
                     parseArgs += 2;
+                }
+                if (cl.hasOption("f")) {
+                    inputFile = new File(cl.getOptionValue("f"));
+                }
+                else {
+                    System.err.println("-f (input file) argument is required");
+                    help.printHelp("filter", options, true);
+                    parseArgs += 2;
+                }
+                if(cl.hasOption("p")) {
+                    prune = true;
                 }
             }
         }

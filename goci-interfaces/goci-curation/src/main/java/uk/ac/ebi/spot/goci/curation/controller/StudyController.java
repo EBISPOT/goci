@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,7 @@ import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
@@ -69,6 +71,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by emma on 20/11/14.
@@ -103,6 +106,7 @@ public class StudyController {
     private StudyFileService studyFileService;
     private StudyDuplicationService studyDuplicationService;
     private StudyDeletionService studyDeletionService;
+    private EventsViewService eventsViewService;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -128,7 +132,9 @@ public class StudyController {
                            MappingDetailsService mappingDetailsService,
                            CurrentUserDetailsService currentUserDetailsService,
                            StudyFileService studyFileService,
-                           StudyDuplicationService studyDuplicationService, StudyDeletionService studyDeletionService) {
+                           StudyDuplicationService studyDuplicationService,
+                           StudyDeletionService studyDeletionService,
+                           @Qualifier("studyEventsViewService")EventsViewService eventsViewService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -146,6 +152,7 @@ public class StudyController {
         this.studyFileService = studyFileService;
         this.studyDuplicationService = studyDuplicationService;
         this.studyDeletionService = studyDeletionService;
+        this.eventsViewService = eventsViewService;
     }
 
     /* All studies and various filtered lists */
@@ -853,27 +860,31 @@ public class StudyController {
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudyFile(@RequestParam("file") MultipartFile file,
-                                  @PathVariable Long studyId,
-                                  Model model,
-                                  HttpServletRequest request)
+    public Callable<String> uploadStudyFile(@RequestParam("file") MultipartFile file,
+                                            @PathVariable Long studyId,
+                                            Model model,
+                                            HttpServletRequest request)
             throws FileUploadException, IOException {
 
         model.addAttribute("study", studyRepository.findOne(studyId));
-        try {
-            studyFileService.upload(file, studyId);
-            studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
-            return "redirect:/studies/" + studyId + "/studyfiles";
-        }
-        catch (FileUploadException | IOException e) {
-            getLog().error("File upload exception", e);
-            return "error_pages/study_file_upload_failure";
-        }
+
+        // Return view
+        return () -> {
+            try {
+                studyFileService.upload(file, studyId);
+                studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
+                return "redirect:/studies/" + studyId + "/studyfiles";
+            }
+            catch (FileUploadException | IOException e) {
+                getLog().error("File upload exception", e);
+                return "error_pages/study_file_upload_failure";
+            }
+        };
     }
 
     @RequestMapping(value = "/{studyId}/tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getStudyEvents(Model model, @PathVariable Long studyId) {
-        model.addAttribute("events", studyRepository.findOne(studyId).getEvents());
+        model.addAttribute("events", eventsViewService.createViews(studyId));
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_events";
     }

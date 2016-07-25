@@ -53,9 +53,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="event : ${events}">
-                    <td th:text="${event.eventType} ?: '' ">CREATE</td>
+                    <td th:text="${event.event} ?: '' ">CREATE</td>
                     <td th:text="${#calendars.format(event.eventDate, 'dd MMMM yyyy HH:mm:ss')} ?: '' ">2016-05-06</td>
-                    <td th:text="${event.user.email} ?: '' ">emma@ebi.ac.uk</td>
+                    <td th:text="${event.userEmail} ?: '' ">emma@ebi.ac.uk</td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(events)}">
                     <td colspan="10"><p style=" font-weight: bold; text-align: center;">No events found</p></td>
@@ -72,7 +72,8 @@
     $(document).ready(function() {
         var table = $('#eventTable').DataTable({
                                                    info: false,
-                                                   paging: false
+                                                   paging: false,
+                                                   "order": [[ 1, "desc" ]]
                                                });
     });
 </script>
