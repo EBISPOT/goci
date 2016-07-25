@@ -14,17 +14,20 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.curation.model.AssociationEventView;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationEventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationEventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -40,7 +43,9 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -148,9 +153,45 @@ public class AssociationControllerTest {
 
     @Test
     public void viewStudySnps() throws Exception {
+
+        SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
+        LastViewedAssociation lastViewedAssociation = new LastViewedAssociation();
+
+        when(associationRepository.findByStudyId(STUDY.getId())).thenReturn(Collections.singletonList(ASSOCIATION));
+        when(snpAssociationTableViewService.createSnpAssociationTableView(ASSOCIATION)).thenReturn(
+                snpAssociationTableView);
+        when(associationOperationsService.getLastViewedAssociation(Matchers.anyLong())).thenReturn(lastViewedAssociation);
+        when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
+
         mockMvc.perform(get("/studies/1234/associations").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
+                .andExpect(model().attribute("snpAssociationTableViews", hasSize(1)))
+                .andExpect(model().attribute("snpAssociationTableViews", instanceOf(Collection.class)))
+                .andExpect(model().attribute("lastViewedAssociation", instanceOf(LastViewedAssociation.class)))
+                .andExpect(model().attribute("totalAssociations", 1))
+                .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("study_association"));
+
+        verify(associationRepository, times(1)).findByStudyId(STUDY.getId());
+        verify(snpAssociationTableViewService, times(1)).createSnpAssociationTableView(ASSOCIATION);
+        verify(associationOperationsService, times(1)).getLastViewedAssociation(Matchers.anyLong());
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+    }
+
+    @Test
+    public void getAssociationEvents() throws Exception {
+
+        AssociationEventView eventView =
+                new AssociationEventView("EVENT", new Date(), (long) 121, "test@email.com", "rs123, rs456");
+
+        when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
+        when(associationsEventsViewService.createViews(STUDY.getId())).thenReturn(Collections.singletonList(eventView));
+        mockMvc.perform(get("/studies/1234/association_tracking").accept(MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("study"))
+                .andExpect(model().attribute("events", hasSize(1)))
+                .andExpect(model().attribute("events", instanceOf(List.class)))
+                .andExpect(view().name("association_events"));
     }
 
     @Test
@@ -576,9 +617,9 @@ public class AssociationControllerTest {
                                                                         Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
-                .thenReturn(ASSOCIATION);
+                .thenReturn(EDITED_ASSOCIATION);
         when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
-                                                                        ASSOCIATION,
+                                                                        EDITED_ASSOCIATION,
                                                                         ASSOCIATION.getId(),
                                                                         SECURE_USER)).thenReturn(errors);
 
@@ -621,9 +662,9 @@ public class AssociationControllerTest {
                 SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
-                .thenReturn(ASSOCIATION);
+                .thenReturn(EDITED_ASSOCIATION);
         when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
-                                                                        ASSOCIATION,
+                                                                        EDITED_ASSOCIATION,
                                                                         ASSOCIATION.getId(),
                                                                         SECURE_USER)).thenReturn(errors);
         when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn(
