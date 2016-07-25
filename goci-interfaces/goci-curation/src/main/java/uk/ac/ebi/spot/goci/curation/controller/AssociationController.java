@@ -169,7 +169,7 @@ public class AssociationController {
 
 
     @RequestMapping(value = "studies/{studyId}/association_tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getStudyEvents(Model model, @PathVariable Long studyId) {
+    public String getAssociationEvents(Model model, @PathVariable Long studyId) {
         model.addAttribute("events", eventsViewService.createViews(studyId));
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "association_events";
