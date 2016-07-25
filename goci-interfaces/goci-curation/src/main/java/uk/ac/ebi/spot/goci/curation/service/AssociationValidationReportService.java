@@ -90,10 +90,9 @@ public class AssociationValidationReportService {
         Set<String> warnings = new HashSet<>();
         associationValidationReportRepository.findByAssociationId(associationId)
                 .forEach(associationValidationReport -> {
-                    StringJoiner warningJoiner = new StringJoiner(", ");
-                    warningJoiner.add(associationValidationReport.getValidatedField()
-                                              .concat(": ")
-                                              .concat(associationValidationReport.getWarning()));
+                    StringJoiner warningJoiner = new StringJoiner(": ");
+                    warningJoiner.add(associationValidationReport.getValidatedField());
+                    warningJoiner.add(associationValidationReport.getWarning());
                     warnings.add(warningJoiner.toString());
                 });
         return warnings;
