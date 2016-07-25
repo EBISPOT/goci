@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * Created by emma on 04/07/2016.
@@ -89,7 +90,11 @@ public class AssociationValidationReportService {
         Set<String> warnings = new HashSet<>();
         associationValidationReportRepository.findByAssociationId(associationId)
                 .forEach(associationValidationReport -> {
-                    warnings.add(associationValidationReport.getWarning());
+                    StringJoiner warningJoiner = new StringJoiner(", ");
+                    warningJoiner.add(associationValidationReport.getValidatedField()
+                                              .concat(": ")
+                                              .concat(associationValidationReport.getWarning()));
+                    warnings.add(warningJoiner.toString());
                 });
         return warnings;
     }
