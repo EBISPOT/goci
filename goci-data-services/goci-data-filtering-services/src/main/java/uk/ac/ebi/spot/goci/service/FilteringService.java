@@ -235,6 +235,7 @@ public class FilteringService {
             int min = ldBlock.get(index).getChromosomePosition();
             ArrayList<FilterAssociation> block = new ArrayList<FilterAssociation>();
 
+            block.add(ldBlock.get(index));
             boolean next = false;
             int q = index+1;
             while(!next && q < ldBlock.size()) {
@@ -273,7 +274,7 @@ public class FilteringService {
 
         int p = 0;
 
-        while (p < mostSign.size()-2){
+        while (p < mostSign.size()-1){
             if(mostSign.get(p+1).getChromosomePosition() - mostSign.get(p).getChromosomePosition() < 100000){
                 if(!mostSign.get(p).equals(mostSign.get(p+1))) {
                     if (mostSign.get(p).getPvalue() > mostSign.get(p + 1).getPvalue() &&
@@ -319,6 +320,12 @@ public class FilteringService {
                         p = p+2;
                     }
                 }
+                else {
+                    p++;
+                }
+            }
+            else {
+                p++;
             }
         }
 
@@ -326,8 +333,14 @@ public class FilteringService {
     }
 
     public FilterAssociation findMostSignificantInBlock(ArrayList<FilterAssociation> block){
+
+        List<FilterAssociation> byPval = block.stream()
+                .sorted((fa1, fa2) -> Double.compare(fa1.getPvalue(),
+                                                     fa2.getPvalue()))
+                .collect(Collectors.toList());
+
         FilterAssociation ms = null;
-        for(FilterAssociation fa : block){
+        for(FilterAssociation fa : byPval){
             if(fa.getIsTopAssociation()){
                 ms  = fa;
                 break;
