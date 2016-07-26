@@ -37,6 +37,14 @@
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
 
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author} ?: '' "></span></li>
+        <li class="active">Tracking Information</li>
+    </ol>
+</div>
+
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
 

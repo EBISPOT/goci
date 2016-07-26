@@ -48,6 +48,14 @@
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
 
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author} ?: '' "></span></li>
+        <li class="active">Editing interaction association</li>
+    </ol>
+</div>
+
 <div class="container-fluid">
     <!-- Link to the different SNP tabs -->
     <div class="row">
