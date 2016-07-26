@@ -247,6 +247,8 @@ public class EthnicityController {
         }
 
         model.addAttribute("ethnicGroup", ethnicGroup);
+
+        model.addAttribute("study", studyRepository.findOne(ethnicityToView.getStudy().getId()));
         return "edit_sample_description";
     }
 
