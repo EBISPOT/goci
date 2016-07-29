@@ -52,7 +52,7 @@
 <div>
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author} ?: '' "></span></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
         <li class="active">Multi-SNP Haplotype Addition</li>
     </ol>
 </div>
