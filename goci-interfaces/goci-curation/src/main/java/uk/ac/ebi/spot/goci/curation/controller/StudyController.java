@@ -862,8 +862,6 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}/studyfiles/{fileName}/delete", method = RequestMethod.GET)
     public String deleteStudyFile(@PathVariable Long studyId,
                                   @PathVariable String fileName) {
-
-        // TODO WHAT IF FILE DOESNT EXIST
         studyFileService.deleteFile(studyId,fileName);
         return "redirect:/studies/" + studyId + "/studyfiles";
     }
