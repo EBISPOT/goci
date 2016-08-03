@@ -134,7 +134,7 @@ public class StudyController {
                            StudyFileService studyFileService,
                            StudyDuplicationService studyDuplicationService,
                            StudyDeletionService studyDeletionService,
-                           @Qualifier("studyEventsViewService")EventsViewService eventsViewService) {
+                           @Qualifier("studyEventsViewService") EventsViewService eventsViewService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -857,6 +857,13 @@ public class StudyController {
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
         return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
+    }
+
+    @RequestMapping(value = "/{studyId}/studyfiles/{fileName}/delete", method = RequestMethod.GET)
+    public String deleteStudyFile(@PathVariable Long studyId,
+                                  @PathVariable String fileName) {
+        studyFileService.deleteFile(studyId,fileName);
+        return "redirect:/studies/" + studyId + "/studyfiles";
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)

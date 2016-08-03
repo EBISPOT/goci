@@ -47,6 +47,7 @@
                 <tr>
                     <th>Study files</th>
                     <th>Download</th>
+                    <th style="color: red">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,10 @@
                     <td><a th:if="${not #strings.isEmpty(file.fileName)}"
                            th:href="@{/studies/{studyId}/studyfiles/{fileName}(studyId=${study.id}, fileName=${file.fileName})}"><i
                             class="fa fa-external-link"
+                            aria-hidden="true"></i></a></td>
+                    <td><a th:if="${not #strings.isEmpty(file.fileName)}"
+                           th:href="@{/studies/{studyId}/studyfiles/{fileName}/delete(studyId=${study.id}, fileName=${file.fileName})}"><i
+                            class="fa fa-trash-o"
                             aria-hidden="true"></i></a></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(files)}">
