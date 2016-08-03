@@ -95,29 +95,6 @@ public class StudyOperationsService {
     }
 
     /**
-     * Update a study entry in the database
-     *
-     * @param existingStudyId ID of study being edited
-     * @param study           Study to update
-     * @param user            User performing request
-     */
-    public void updateStudy(Long existingStudyId, Study study, SecureUser user) {
-
-        // Use id in URL to get study and then its associated housekeeping
-        Study existingStudy = studyRepository.findOne(existingStudyId);
-        Housekeeping existingHousekeeping = existingStudy.getHousekeeping();
-
-        // Set the housekeeping of the study returned to one already linked to it in database
-        // Need to do this as we don't return housekeeping in form
-        study.setHousekeeping(existingHousekeeping);
-
-        trackingOperationService.update(study, user, EventType.STUDY_UPDATE);
-        studyRepository.save(study);
-        getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
-    }
-
-
-    /**
      * Assign status to a study
      */
     public String assignStudyStatus(Study study, StatusAssignment statusAssignment, SecureUser userFromRequest) {
