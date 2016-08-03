@@ -41,4 +41,23 @@ public class EventOperationsService {
         eventRepository.save(event);
         return event;
     }
+
+    /**
+     * Create an event with a description
+     *
+     * @param eventType Event type to create
+     * @return Event object
+     */
+    public synchronized Event createEvent(EventType eventType, SecureUser user, String eventDescription) {
+        // todo add description
+        // Create and save event
+        Event event = new Event();
+        event.setEventDate(new Date());
+        event.setEventType(eventType);
+        event.setUser(user);
+        eventRepository.save(event);
+        return event;
+    }
+
+
 }
