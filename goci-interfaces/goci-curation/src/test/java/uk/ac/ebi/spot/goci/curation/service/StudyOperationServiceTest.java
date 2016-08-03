@@ -234,7 +234,7 @@ public class StudyOperationServiceTest {
         assertThat(study.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
     }
 
-    @Test
+/*    @Test
     public void testUpdateStudy() {
 
         // Stubbing
@@ -251,7 +251,7 @@ public class StudyOperationServiceTest {
                 .contains("Awaiting Curation");
         assertThat(UPDATED_STUDY.getHousekeeping().getCurator()).extracting("lastName").contains("Unassigned");
         assertThat(UPDATED_STUDY.getHousekeeping().getId()).isEqualTo(799);
-    }
+    }*/
 
     @Test
     public void testAssignStudyStatusToLevelOneCurationDone() {
