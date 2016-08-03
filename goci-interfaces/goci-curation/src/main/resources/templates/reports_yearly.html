@@ -27,6 +27,15 @@
           th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
           rel="stylesheet"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
 </head>
 <body>
 
@@ -39,7 +48,7 @@
             <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
             <li class="active"><a href="#">Yearly Curator Totals</a></li>
             <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
-
+            <li><a th:href="@{/reports/weekly_progress}">Weekly progress</a></li>
         </ul>
     </div>
 </div>
@@ -71,6 +80,8 @@
         </div>
     </div>
 </div>
+
+<div th:include="fragments/footer :: page_footer"></div>
 
 </body>
 </html>

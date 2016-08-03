@@ -4,47 +4,105 @@
 
 <body th:fragment="navbar">
 <div>
-    <nav role="navigation" class="navbar navbar-default">
-        <div class="navbar-header">
-            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
-        </div>
-
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a th:href="@{/studies}">Home</a></li>
-                <li><a th:href="@{/studies/new}">Add Study</a></li>
-                <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-                <li><a th:href="@{/reports/monthly}">Reports</a></li>
-                <li>
-                    <div class="btn-group">
+    <nav class="navbar navbar-fixed-top navbar-default">
+        <!--<div class="container">-->
+            <div class="row navbar-top navbar-inverse">
+                <div class="container">
+                    <div class="navbar-header">
                         <button type="button"
-                                data-toggle="dropdown"
-                                class="btn btn-default dropdown-toggle navbar-btn">
-                            Download files<span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
-                            <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
+                                class="navbar-toggle collapsed"
+                                data-toggle="collapse"
+                                data-target="#navbar"
+                                aria-expanded="false"
+                                aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                            <!--<a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>-->
+                            <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand"
+                               th:style="'background:url(' + @{/images/GWAS_Catalog_banner_logo_34x40.png} + ') no-repeat !important; background-position: left center; padding-left: 40px;'">
+                                GWAS Catalog</a>
+                    </div>
+                    <div id="navbarCollapseTop" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="http://www.ebi.ac.uk/gwas">Home</a></li>
+                            <li><a href="http://www.ebi.ac.uk/gwas/search">Search</a></li>
+                            <li><a href="http://www.ebi.ac.uk/gwas/diagram">Diagram</a></li>
+                            <li class="hidden-sm"><a href="http://www.ebi.ac.uk/gwas/docs/downloads">Download</a></li>
+                            <li><a href="http://www.ebi.ac.uk/gwas/docs">Help</a></li>
+                            <li class="hidden-sm"><a href="http://www.ebi.ac.uk/gwas/docs/about">About</a></li>
+
+                            <li>
+                                <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
+                                    <img alt="EBI logo" th:src="@{/icons/EMBL_EBI_Logo_white.png}"/>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
+                                    <img alt="NHGRI logo"  th:src="@{/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                                </a>
+                            </li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="btn btn-default navbar-btn">Sign out</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
-                </li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign Out"/>
-                    </form>
-                </li>
-            </ul>
+                </div>
+            </div>
+            <!--/.navbar-collapse -->
+        <div class="navbar-bottom-banner-1 background-color-complementary">
         </div>
+        <div class="navbar-bottom-banner-2 background-color-primary-bold">
+        </div>
+        <div class="navbar-bottom-banner-3 background-color-primary">
+        </div>
+
+            <div class="row navbar-default">
+
+                    <div id="navbarCollapseBottom" class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a th:href="@{/studies}">Curation Home</a></li>
+                            <li><a th:href="@{/studies/new}">Add Study</a></li>
+                            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
+                            <li><a th:href="@{/reports/monthly}">Reports</a></li>
+                            <li>
+                                <div class="btn-group">
+                                    <button type="button"
+                                            data-toggle="dropdown"
+                                            class="btn btn-default dropdown-toggle navbar-btn">
+                                        Download files<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
+                                        <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+        <!--</div>-->
+
     </nav>
     <br/>
 </div>
+
+<footer class="footer background-color-primary-accent">
+    <!--<div class="footer-banner background-color-primary"></div>-->
+    <div class="container">
+        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
+            <a href="http://www.embl.org">European Molecular
+                                          Biology
+                                          Laboratory</a> |
+            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+    </div>
+</footer>
+
 </body>
 </html>

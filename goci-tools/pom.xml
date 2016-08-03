@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-tools</artifactId>
-    <version>2.1.4-SNAPSHOT</version>
+    <version>2.1.6-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>GOCI Tools</name>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci</artifactId>
-        <version>2.1.4-SNAPSHOT</version>
+        <version>2.1.6-SNAPSHOT</version>
     </parent>
 
 
@@ -30,5 +30,6 @@
         <module>goci-cttv-jsonGeneration</module>
         <module>goci-parent-mapper</module>
         <module>goci-association-filter</module>
+        <module>goci-data-release-qc</module>
     </modules>
 </project>

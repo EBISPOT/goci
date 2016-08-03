@@ -214,7 +214,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
                 }
                 else if (association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null) {
-                    iterator.remove();
+                    associationIterator.remove();
                 }
             }
             getLog().debug(

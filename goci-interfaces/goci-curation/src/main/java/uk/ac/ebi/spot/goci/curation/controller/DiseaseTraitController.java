@@ -43,11 +43,13 @@ public class DiseaseTraitController {
     }
 
     //Return all disease traits
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE,  method = RequestMethod.GET)
     public String allDiseaseTraits(Model model) {
 
-        model.addAttribute("diseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()));
-        model.addAttribute("totaldiseaseTraits", diseaseTraitRepository.findAll(sortByTraitAsc()).size());
+        Sort sort = sortByTraitAsc();
+        List<DiseaseTrait> allDiseaseTraits = diseaseTraitRepository.findAll(sort);
+        model.addAttribute("diseaseTraits", allDiseaseTraits);
+        model.addAttribute("totaldiseaseTraits", allDiseaseTraits.size());
 
         // Return an empty DiseaseTrait object so user can add a new one
         model.addAttribute("diseaseTrait", new DiseaseTrait());
@@ -103,8 +105,7 @@ public class DiseaseTraitController {
 
     @RequestMapping(value = "/{diseaseTraitId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String editDiseaseTrait(@Valid @ModelAttribute DiseaseTrait diseaseTrait,
-                                   BindingResult bindingResult,
-                                   Model model) {
+                                   BindingResult bindingResult, @PathVariable Long diseaseTraitId) {
 
         // Catch a null or empty value being entered
         if (bindingResult.hasErrors()) {
@@ -164,7 +165,7 @@ public class DiseaseTraitController {
 
     // Disease Traits
     @ModelAttribute("diseaseTraits")
-    public List<DiseaseTrait> populateDiseaseTraits(Model model) {
+    public List<DiseaseTrait> populateDiseaseTraits() {
         return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.AssociationFormErrorView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -36,9 +37,11 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationFormErrorViewService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.batchloader.AssociationBatchLoaderService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -97,6 +100,8 @@ public class AssociationController {
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
     private AssociationOperationsService associationOperationsService;
     private MappingService mappingService;
+    private StudyFileService studyFileService;
+    private CurrentUserDetailsService currentUserDetailsService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -118,7 +123,9 @@ public class AssociationController {
                                  AssociationFormErrorViewService associationFormErrorViewService,
                                  CheckEfoTermAssignmentService checkEfoTermAssignmentService,
                                  AssociationOperationsService associationOperationsService,
-                                 MappingService mappingService) {
+                                 MappingService mappingService,
+                                 StudyFileService studyFileService,
+                                 CurrentUserDetailsService currentUserDetailsService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -133,6 +140,8 @@ public class AssociationController {
         this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
         this.associationOperationsService = associationOperationsService;
         this.mappingService = mappingService;
+        this.studyFileService = studyFileService;
+        this.currentUserDetailsService = currentUserDetailsService;
     }
 
     /*  Study SNP/Associations */
@@ -177,101 +186,91 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model)
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file,
+                                  @PathVariable Long studyId,
+                                  Model model,
+                                  HttpServletRequest request)
             throws EnsemblMappingException {
 
-        // Establish our study object
+        // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", studyRepository.findOne(studyId));
+        String originalFilename = file.getOriginalFilename();
+        try {
+            studyFileService.upload(file, studyId);
+        }
+        catch (FileUploadException | IOException e) {
+            getLog().error("File upload exception", e);
+            return "error_pages/study_file_upload_failure";
+        }
 
-        if (!file.isEmpty()) {
-            // Save the uploaded file received in a multipart request as a file in the upload directory
-            // The default temporary-file directory is specified by the system property java.io.tmpdir.
+        // Send file, including path, to SNP batch loader process
+        File uploadedFile = studyFileService.getFileFromFileName(studyId, originalFilename);
+        String uploadedFilePath = uploadedFile.getAbsolutePath();
+        Collection<BatchUploadRow> fileRows = new ArrayList<>();
+        try {
+            fileRows = associationBatchLoaderService.processFile(uploadedFilePath, study);
+        }
+        catch (InvalidOperationException | InvalidFormatException | IOException e) {
+            // If upload fails delete file
+            studyFileService.deleteFile(studyId, originalFilename);
+            getLog().error("Wrong file format ", e);
+            return "wrong_file_format_warning";
+        }
+        catch (RuntimeException e) {
+            // If upload fails delete file
+            studyFileService.deleteFile(studyId, originalFilename);
+            getLog().error("Data upload failed ", e);
+            return "data_upload_problem";
+        }
 
-            String uploadDir =
-                    System.getProperty("java.io.tmpdir") + File.separator + "gwas_batch_upload" + File.separator;
+        // If the file contained something readable
+        if (!fileRows.isEmpty()) {
+            Collection<BatchUploadError> fileErrors =
+                    associationBatchLoaderService.checkUploadForErrors(fileRows);
 
-            // Create file
-            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
-            uploadedFile.getParentFile().mkdirs();
-
-            // Copy contents of multipart request to newly created file
-            try {
-                file.transferTo(uploadedFile);
-            }
-            catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to to upload file ", e);
-            }
-
-            String uploadedFilePath = uploadedFile.getAbsolutePath();
-
-            // Set permissions
-            uploadedFile.setExecutable(true, false);
-            uploadedFile.setReadable(true, false);
-            uploadedFile.setWritable(true, false);
-
-            // Send file, including path, to SNP batch loader process
-            Collection<BatchUploadRow> fileRows = new ArrayList<>();
-            try {
-                fileRows = associationBatchLoaderService.processFile(uploadedFilePath, study);
-
-                // Delete file once processed
-                associationBatchLoaderService.deleteFile(uploadedFilePath);
-            }
-            catch (InvalidOperationException | InvalidFormatException | IOException e) {
-                getLog().error("Wrong file format ", e);
-                return "wrong_file_format_warning";
-            }
-            catch (RuntimeException e) {
-                getLog().error("Data upload failed ", e);
-                return "data_upload_problem";
-            }
-
-            // If the file contained something readable
-            if (!fileRows.isEmpty()) {
-                Collection<BatchUploadError> fileErrors =
-                        associationBatchLoaderService.checkUploadForErrors(fileRows);
-
-                if (!fileErrors.isEmpty()) {
-                    getLog().error("Errors found in file: " + uploadedFile.getName());
-                    model.addAttribute("fileName", uploadedFile.getName());
-                    model.addAttribute("fileErrors", fileErrors);
-                    return "association_file_upload_error";
-                }
-                else {
-
-                    // Create associations from rows
-                    Collection<Association> newAssociations =
-                            associationBatchLoaderService.processFileRows(fileRows);
-
-                    // Save and map associations
-                    if (!newAssociations.isEmpty()) {
-                        associationBatchLoaderService.saveAssociations(newAssociations, study);
-
-                        Curator curator = study.getHousekeeping().getCurator();
-                        String mappedBy = curator.getLastName();
-                        try {
-                            mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
-                        }
-                        catch (EnsemblMappingException e) {
-                            model.addAttribute("study", study);
-                            return "ensembl_mapping_failure";
-                        }
-                    }
-                    else {
-                        getLog().error("No associations created from " + uploadedFilePath);
-                    }
-                }
+            if (!fileErrors.isEmpty()) {
+                // If upload fails delete file
+                studyFileService.deleteFile(studyId, originalFilename);
+                getLog().error("Errors found in file: " + originalFilename);
+                model.addAttribute("fileName", originalFilename);
+                model.addAttribute("fileErrors", fileErrors);
+                return "association_file_upload_error";
             }
             else {
-                getLog().error("File: " + uploadedFilePath + " contained no readable rows.");
+
+                // Create associations from rows
+                Collection<Association> newAssociations =
+                        associationBatchLoaderService.processFileRows(fileRows);
+
+                // Save and map associations
+                if (!newAssociations.isEmpty()) {
+                    associationBatchLoaderService.saveAssociations(newAssociations, study);
+                    studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
+
+                    Curator curator = study.getHousekeeping().getCurator();
+                    String mappedBy = curator.getLastName();
+                    try {
+                        mappingService.validateAndMapAssociations(study.getAssociations(), mappedBy);
+                    }
+                    catch (EnsemblMappingException e) {
+                        model.addAttribute("study", study);
+                        return "ensembl_mapping_failure";
+                    }
+                }
+                else {
+                    // If upload fails delete file
+                    studyFileService.deleteFile(studyId, originalFilename);
+                    getLog().error("No associations created from " + originalFilename);
+                }
             }
         }
         else {
-            // File is empty so let user know
-            return "empty_snpfile_upload_warning";
+            // If upload fails delete file
+            studyFileService.deleteFile(studyId, originalFilename);
+            getLog().error("File: " + uploadedFilePath + " contained no readable rows.");
         }
+
         return "redirect:/studies/" + studyId + "/associations";
     }
 

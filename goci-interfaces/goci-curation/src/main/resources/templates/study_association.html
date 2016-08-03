@@ -18,6 +18,14 @@
     <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
@@ -26,7 +34,7 @@
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 
     <!--Handles checkbox in table -->
-    <script src="../static/js/goci-study-association.js" th:src="@{../../js/goci-study-association.js}"></script>
+    <script th:src="@{/js/goci-study-association.js}"></script>
 
     <!--https://www.datatables.net/-->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
@@ -52,6 +60,14 @@
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">SNP Associations</li>
+    </ol>
+</div>
 
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
@@ -499,6 +515,9 @@
 
 <!--Bottom level buttons and modals-->
 <div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
 
 <script>
     $(document).ready(function() {

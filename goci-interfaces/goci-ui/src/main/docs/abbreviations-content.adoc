@@ -158,6 +158,9 @@ BABF: baseline brachial artery flow velocity
 BARS: Barnes Akathisia Scale
 
 
+BB:	beta blockers
+
+
 BD: bipolar disorder
 
 
@@ -238,6 +241,9 @@ CCA: common carotid artery
 
 
 CCA IMT: common carotid artery intimal medial thickness
+
+
+CCB: calcium channel blockers
 
 
 CCT: central corneal thickness
@@ -521,6 +527,9 @@ FWLTA: forward wave amplitude, long-term average
 === G
 
 G3D: grade 3 diarrhea
+
+
+GBA: glucocerebrosiadase
 
 
 GGT: glutamyltranspeptidase

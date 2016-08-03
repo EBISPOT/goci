@@ -123,9 +123,8 @@ public class StudyFileService {
      *
      * @param fileFromUpload File user is uploading
      * @param studyId        Study ID which is used to find study specific dir
-     * @param user           User carrying out request
      */
-    public synchronized void upload(MultipartFile fileFromUpload, Long studyId, SecureUser user)
+    public synchronized void upload(MultipartFile fileFromUpload, Long studyId)
             throws IOException {
 
         if (!fileFromUpload.isEmpty()) {
@@ -137,9 +136,6 @@ public class StudyFileService {
                 // Set some permissions
                 file.setWritable(true, false);
                 file.setReadable(true, false);
-
-                // Add event
-                createFileUploadEvent(studyId, user);
             }
             catch (IOException e) {
                 getLog().error("Unable to copy file: " + fileFromUpload.getName() + " to study dir");
@@ -158,11 +154,22 @@ public class StudyFileService {
      * @param studyId Study ID which is used to find study specific dir
      * @param user    User carrying out request
      */
-    private void createFileUploadEvent(Long studyId, SecureUser user) {
+    public void createFileUploadEvent(Long studyId, SecureUser user) {
         Study study = studyRepository.findOne(studyId);
         trackingOperationService.update(study, user, EventType.STUDY_FILE_UPLOAD);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
+    }
+
+    /**
+     * Delete a file by study ID and name
+     *
+     * @param studyId  Study ID, this will help locate dir
+     * @param fileName Name of file to delete
+     */
+    public void deleteFile(Long studyId, String fileName) {
+        File fileToDelete = getFileFromFileName(studyId, fileName);
+        fileToDelete.delete();
     }
 
     /**
@@ -225,8 +232,7 @@ public class StudyFileService {
      */
     public File getFileFromFileName(Long studyId, String fileName) {
         String fileNameWithFullPath = getStudyDirRoot() + File.separator + studyId + File.separator + fileName;
-        File file = new File(fileNameWithFullPath);
-        return file;
+        return new File(fileNameWithFullPath);
     }
 
     public File getStudyDirRoot() {

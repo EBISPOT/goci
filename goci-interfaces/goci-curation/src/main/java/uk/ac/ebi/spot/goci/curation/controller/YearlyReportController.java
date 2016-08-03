@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
-import uk.ac.ebi.spot.goci.curation.service.ReportService;
+import uk.ac.ebi.spot.goci.curation.service.reports.ReportService;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.YearlyTotalsSummaryView;
