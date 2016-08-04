@@ -44,6 +44,7 @@ public class MappingService {
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
     private EnsemblMappingPipeline ensemblMappingPipeline;
 
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -177,6 +178,23 @@ public class MappingService {
                 // Update functional class
                 snpLinkedToLocus.setFunctionalClass(ensemblMappingResult.getFunctionalClass());
                 snpLinkedToLocus.setLastUpdateDate(new Date());
+
+                // Update the merge table
+                if (ensemblMappingResult.getMerged() == 1) {
+                    String currentSnpId = ensemblMappingResult.getCurrentSnpId();
+                    SingleNucleotidePolymorphism currentSnp =
+                            singleNucleotidePolymorphismRepository.findByRsId(currentSnpId);
+                    // Create a new entry in the SingleNucleotidePolymorphism SQL table for the current rsID
+                    // Add the current SingleNucleotidePolymorphism to the "merged" rsID
+                    if (currentSnp == null) {
+                        currentSnp = new SingleNucleotidePolymorphism();
+                        currentSnp.setRsId(currentSnpId);
+                        currentSnp.setFunctionalClass(snpLinkedToLocus.getFunctionalClass());
+                        singleNucleotidePolymorphismRepository.save(currentSnp);
+                        currentSnp = singleNucleotidePolymorphismRepository.findByRsId(currentSnpId);
+                    }
+                    snpLinkedToLocus.setCurrentSnp(currentSnp);
+                }
                 singleNucleotidePolymorphismRepository.save(snpLinkedToLocus);
 
                 // Store location information for SNP
