@@ -65,11 +65,17 @@ public class StudyUpdateService {
         // Need to do this as we don't return housekeeping in form
         study.setHousekeeping(existingHousekeeping);
 
-        trackingOperationService.update(study, user, EventType.STUDY_UPDATE);
+        trackingOperationService.update(study, user, EventType.STUDY_UPDATE, updateDescription);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
     }
 
+    /**
+     * Generate a description of update madee
+     *
+     * @param existingStudy Study based on whats stored in database
+     * @param study         Updated study
+     */
     private String generateUpdateDescription(Study existingStudy, Study study) {
 
         String updateDescription = null;
