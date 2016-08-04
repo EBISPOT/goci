@@ -8,7 +8,23 @@ import java.util.Date;
  * @author emma
  */
 public class StudyEventView extends EventView {
-    public StudyEventView(String event, Date eventDate, Long trackableId, String userEmail) {
+
+    private String eventDescription;
+
+    public StudyEventView(String event,
+                          Date eventDate,
+                          Long trackableId,
+                          String userEmail,
+                          String eventDescription) {
         super(event, eventDate, trackableId, userEmail);
+        this.eventDescription = eventDescription;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
     }
 }

@@ -56,6 +56,7 @@
                 <tr>
                     <th>Event</th>
                     <th>Event Date</th>
+                    <th>Event Description</th>
                     <th>User</th>
                 </tr>
                 </thead>
@@ -63,6 +64,7 @@
                 <tr th:each="event : ${events}">
                     <td th:text="${event.event} ?: '' ">CREATE</td>
                     <td th:text="${#calendars.format(event.eventDate, 'dd MMMM yyyy HH:mm:ss')} ?: '' ">2016-05-06</td>
+                    <td th:text="${event.eventDescription} ?: '' ">SOMETHING WAS CHANGED</td>
                     <td th:text="${event.userEmail} ?: '' ">emma@ebi.ac.uk</td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(events)}">

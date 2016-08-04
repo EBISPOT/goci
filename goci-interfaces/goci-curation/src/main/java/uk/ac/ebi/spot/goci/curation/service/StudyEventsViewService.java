@@ -36,7 +36,7 @@ public class StudyEventsViewService implements EventsViewService {
         events.forEach(event -> {
             String eventName = translateEventEnum(event.getEventType());
             EventView eventView =
-                    new StudyEventView(eventName, event.getEventDate(), trackableId, event.getUser().getEmail());
+                    new StudyEventView(eventName, event.getEventDate(), trackableId, event.getUser().getEmail(), event.getEventDescription());
             views.add(eventView);
         });
 
