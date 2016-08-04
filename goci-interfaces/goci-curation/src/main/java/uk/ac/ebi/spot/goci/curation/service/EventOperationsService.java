@@ -30,6 +30,7 @@ public class EventOperationsService {
      * Create an event
      *
      * @param eventType Event type to create
+     * @param user      User Initiating event
      * @return Event object
      */
     public synchronized Event createEvent(EventType eventType, SecureUser user) {
@@ -45,19 +46,19 @@ public class EventOperationsService {
     /**
      * Create an event with a description
      *
-     * @param eventType Event type to create
+     * @param eventType        Event type to create
+     * @param user             User Initiating event
+     * @param eventDescription Description of update event
      * @return Event object
      */
     public synchronized Event createEvent(EventType eventType, SecureUser user, String eventDescription) {
-        // todo add description
         // Create and save event
         Event event = new Event();
         event.setEventDate(new Date());
         event.setEventType(eventType);
         event.setUser(user);
+        event.setEventDescription(eventDescription);
         eventRepository.save(event);
         return event;
     }
-
-
 }
