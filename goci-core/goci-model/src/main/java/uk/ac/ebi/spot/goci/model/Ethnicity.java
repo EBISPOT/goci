@@ -3,7 +3,12 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by emma on 28/11/14.
@@ -41,28 +46,35 @@ public class Ethnicity {
     @OneToOne
     private Study study;
 
+    @OneToMany
+    @JoinTable(name = "ETHNICITY_EVENT",
+               joinColumns = @JoinColumn(name = "ETHNICITY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    private Collection<Event> events = new ArrayList<>();
+
     // JPA no-args constructor
     public Ethnicity() {
     }
 
-    public Ethnicity(String type,
-                     Integer numberOfIndividuals,
-                     String ethnicGroup,
-                     String countryOfOrigin,
+    public Ethnicity(String countryOfOrigin,
                      String countryOfRecruitment,
                      String description,
-                     String previouslyReported,
-                     String sampleSizesMatch,
-                     String notes) {
-        this.type = type;
-        this.numberOfIndividuals = numberOfIndividuals;
-        this.ethnicGroup = ethnicGroup;
+                     String ethnicGroup,
+                     Collection<Event> events,
+                     String notes,
+                     Integer numberOfIndividuals,
+                     String previouslyReported, String sampleSizesMatch, Study study, String type) {
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
+        this.ethnicGroup = ethnicGroup;
+        this.events = events;
+        this.notes = notes;
+        this.numberOfIndividuals = numberOfIndividuals;
         this.previouslyReported = previouslyReported;
         this.sampleSizesMatch = sampleSizesMatch;
-        this.notes = notes;
+        this.study = study;
+        this.type = type;
     }
 
     public Long getId() {
@@ -153,14 +165,11 @@ public class Ethnicity {
         this.study = study;
     }
 
-    @Override public String toString() {
-        return "Ethnicity{" +
-                "id=" + id +
-                ", numberOfIndividuals=" + numberOfIndividuals +
-                ", ethnicGroup='" + ethnicGroup + '\'' +
-                ", description='" + description + '\'' +
-                ", countryOfOrigin='" + countryOfOrigin + '\'' +
-                ", countryOfRecruitment='" + countryOfRecruitment + '\'' +
-                '}';
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Collection<Event> events) {
+        this.events = events;
     }
 }
