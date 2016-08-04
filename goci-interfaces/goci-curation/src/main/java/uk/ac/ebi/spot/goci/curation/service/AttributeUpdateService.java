@@ -23,24 +23,27 @@ public class AttributeUpdateService {
 
         String updateDescription = null;
 
-        if (existingValue != null && newValue != null) {
+        // Case where a value has been added
+        if (existingValue == null) {
+            if (newValue != null) {
+                updateDescription =
+                        attribute.concat(" set to ").concat(newValue);
+            }
+        }
+        // Case where a value has been removed
+        else if (newValue == null) {
+            updateDescription =
+                    attribute.concat(" value removed");
+
+        }
+        // Case where value has changed
+        else {
             if (!existingValue.equals(newValue)) {
                 updateDescription =
                         attribute.concat(" updated from ").concat(existingValue).concat(" to ").concat(newValue);
             }
         }
-        else {
 
-            if (existingValue == null) {
-                updateDescription =
-                        attribute.concat(" set to ").concat(newValue);
-            }
-            else {
-                updateDescription =
-                        attribute.concat(" set to ").concat("null");
-            }
-
-        }
         return updateDescription;
     }
 }
