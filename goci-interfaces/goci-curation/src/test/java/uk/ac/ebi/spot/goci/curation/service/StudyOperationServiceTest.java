@@ -10,7 +10,6 @@ import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
@@ -23,7 +22,6 @@ import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -186,12 +184,6 @@ public class StudyOperationServiceTest {
             .setTitle("Test")
             .build();
 
-    private static final DiseaseTrait DISEASE_TRAIT =
-            new DiseaseTraitBuilder().setId(799L).setTrait("Asthma").build();
-
-    private static final Study UPDATED_STUDY =
-            new StudyBuilder().setId(802L).setAuthor("Test").setPubmedId("1000").setDiseaseTrait(DISEASE_TRAIT).build();
-
     private static Study STU1;
 
     @Before
@@ -237,20 +229,7 @@ public class StudyOperationServiceTest {
 /*    @Test
     public void testUpdateStudy() {
 
-        // Stubbing
-        when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
 
-        // Test updating a study
-        studyOperationsService.updateStudy(STU1.getId(), UPDATED_STUDY, SECURE_USER);
-
-        verify(trackingOperationService, times(1)).update(UPDATED_STUDY, SECURE_USER, EventType.STUDY_UPDATE);
-        verify(studyRepository, times(1)).save(UPDATED_STUDY);
-        assertThat(UPDATED_STUDY).extracting("id", "author", "pubmedId").contains(802L, "Test", "1000");
-        assertThat(UPDATED_STUDY.getDiseaseTrait()).extracting("trait").contains("Asthma");
-        assertThat(UPDATED_STUDY.getHousekeeping().getCurationStatus()).extracting("status")
-                .contains("Awaiting Curation");
-        assertThat(UPDATED_STUDY.getHousekeeping().getCurator()).extracting("lastName").contains("Unassigned");
-        assertThat(UPDATED_STUDY.getHousekeeping().getId()).isEqualTo(799);
     }*/
 
     @Test
