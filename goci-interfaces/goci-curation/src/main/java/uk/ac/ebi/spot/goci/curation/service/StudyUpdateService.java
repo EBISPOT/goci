@@ -71,7 +71,7 @@ public class StudyUpdateService {
     }
 
     /**
-     * Generate a description of update madee
+     * Generate a description of update made
      *
      * @param existingStudy Study based on whats stored in database
      * @param study         Updated study
