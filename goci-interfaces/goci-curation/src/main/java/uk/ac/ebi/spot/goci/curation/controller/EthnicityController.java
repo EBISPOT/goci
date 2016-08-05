@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyEthnicityService;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
@@ -27,7 +28,6 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -51,18 +51,21 @@ public class EthnicityController {
 
     private StudySampleDescriptionService studySampleDescriptionService;
     private CurrentUserDetailsService currentUserDetailsService;
+    private StudyEthnicityService ethnicityService;
 
     @Autowired
     public EthnicityController(EthnicityRepository ethnicityRepository,
                                CountryRepository countryRepository,
                                StudyRepository studyRepository,
                                StudySampleDescriptionService studySampleDescriptionService,
-                               CurrentUserDetailsService currentUserDetailsService) {
+                               CurrentUserDetailsService currentUserDetailsService,
+                               StudyEthnicityService ethnicityService) {
         this.ethnicityRepository = ethnicityRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
         this.studySampleDescriptionService = studySampleDescriptionService;
         this.currentUserDetailsService = currentUserDetailsService;
+        this.ethnicityService = ethnicityService;
     }
 
     /* Ethnicity/Sample information associated with a study */
@@ -147,37 +150,13 @@ public class EthnicityController {
                     method = RequestMethod.POST)
     public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity,
                                             @PathVariable Long studyId,
-                                            RedirectAttributes redirectAttributes) {
+                                            RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        Study study = studyRepository.findOne(studyId);
-
-        // Set default values when no country of origin or recruitment supplied
-        if (ethnicity.getCountryOfOrigin() == null) {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        if (ethnicity.getCountryOfOrigin() != null && ethnicity.getCountryOfOrigin().isEmpty()) {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        if (ethnicity.getCountryOfRecruitment() == null) {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        if (ethnicity.getCountryOfRecruitment() != null && ethnicity.getCountryOfRecruitment().isEmpty()) {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        // Set the study for our ethnicity
-        ethnicity.setStudy(study);
-
-        // Save our ethnicity/sample information
-        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        ethnicityService.addEthnicity(studyId, ethnicity, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
 
@@ -269,43 +248,15 @@ public class EthnicityController {
                                           @ModelAttribute CountryOfOrigin countryOfOrigin,
                                           @ModelAttribute CountryOfRecruitment countryOfRecruitment,
                                           EthnicGroup ethnicGroup,
-                                          RedirectAttributes redirectAttributes) {
+                                          RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        // Set country of origin based on values returned
-        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
 
-        if (listOfOriginCountries.size() > 0) {
-            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
-            ethnicity.setCountryOfOrigin(countryOfOriginJoined);
-        }
-        else {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        // Set country of recruitment based on values returned
-        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
-
-        if (listOfRecruitmentCountries.size() > 0) {
-            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
-            ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
-        }
-        else {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        // Set ethnic group
-        List<String> listOfEthnicGroups = Arrays.asList(ethnicGroup.getEthnicGroupValues());
-        String ethnicGroupJoined = String.join(",", listOfEthnicGroups);
-        ethnicity.setEthnicGroup(ethnicGroupJoined);
-
-        // Saves the new information returned from form
-        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        ethnicityService.updateEthnicity(ethnicity, countryOfOrigin, countryOfRecruitment, ethnicGroup, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
-        return "redirect:/studies/" + updatedEthnicity.getStudy().getId() + "/sampledescription";
+        return "redirect:/studies/" + ethnicity.getStudy().getId() + "/sampledescription";
     }
 
 
