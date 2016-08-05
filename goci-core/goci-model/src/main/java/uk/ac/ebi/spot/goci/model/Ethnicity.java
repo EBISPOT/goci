@@ -19,7 +19,7 @@ import java.util.Collection;
  */
 
 @Entity
-public class Ethnicity {
+public class Ethnicity implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -171,5 +171,11 @@ public class Ethnicity {
 
     public void setEvents(Collection<Event> events) {
         this.events = events;
+    }
+
+    @Override public void addEvent(Event event) {
+        Collection<Event> currentEvents = getEvents();
+        currentEvents.add(event);
+        setEvents((currentEvents));
     }
 }
