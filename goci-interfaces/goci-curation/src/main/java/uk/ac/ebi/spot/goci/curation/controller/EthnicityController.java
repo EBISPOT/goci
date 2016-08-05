@@ -16,6 +16,8 @@ import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -23,6 +25,7 @@ import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,8 +36,10 @@ import java.util.Map;
 /**
  * Created by emma on 05/01/15.
  *
- * @author emma Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to
- *         the user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
+ * @author emma
+ *         <p>
+ *         Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to the
+ *         user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
  */
 @Controller
 public class EthnicityController {
@@ -44,15 +49,21 @@ public class EthnicityController {
     private CountryRepository countryRepository;
     private StudyRepository studyRepository;
 
+    private StudySampleDescriptionService studySampleDescriptionService;
+    private CurrentUserDetailsService currentUserDetailsService;
+
     @Autowired
     public EthnicityController(EthnicityRepository ethnicityRepository,
                                CountryRepository countryRepository,
-                               StudyRepository studyRepository) {
+                               StudyRepository studyRepository,
+                               StudySampleDescriptionService studySampleDescriptionService,
+                               CurrentUserDetailsService currentUserDetailsService) {
         this.ethnicityRepository = ethnicityRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
+        this.studySampleDescriptionService = studySampleDescriptionService;
+        this.currentUserDetailsService = currentUserDetailsService;
     }
-
 
     /* Ethnicity/Sample information associated with a study */
 
@@ -107,28 +118,25 @@ public class EthnicityController {
     }
 
 
-    // Add new ethnicity/sample information to a study
+    // Add new sample information to a study
     @RequestMapping(value = "/studies/{studyId}/initialreplicationsampledescription",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String addStudyInitialReplcationSampleDescription(@ModelAttribute InitialSampleDescription initialSampleDescription,
                                                              @ModelAttribute ReplicationSampleDescription replicationSampleDescription,
                                                              @PathVariable Long studyId,
-                                                             RedirectAttributes redirectAttributes) {
+                                                             RedirectAttributes redirectAttributes,
+                                                             HttpServletRequest request) {
 
-        Study study = studyRepository.findOne(studyId);
-
-        // Set our descriptions which are attributes of the study
-        study.setInitialSampleSize(initialSampleDescription.getInitialSampleDescription());
-        study.setReplicateSampleSize(replicationSampleDescription.getReplicationSampleDescription());
-
-        // Save study
-        studyRepository.save(study);
+        studySampleDescriptionService.addStudyInitialReplcationSampleDescription(studyId,
+                                                                                 initialSampleDescription,
+                                                                                 replicationSampleDescription,
+                                                                                 currentUserDetailsService.getUserFromRequest(
+                                                                                         request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
 
