@@ -35,10 +35,10 @@ public class DeletedEthnicity {
     public DeletedEthnicity() {
     }
 
-    public DeletedEthnicity(Collection<Event> events, Long id, Long studyId) {
-        this.events = events;
+    public DeletedEthnicity(Long id, Long studyId, Collection<Event> events) {
         this.id = id;
         this.studyId = studyId;
+        this.events = events;
     }
 
     public Collection<Event> getEvents() {
