@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyEthnicityService;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
 import uk.ac.ebi.spot.goci.model.Country;
@@ -53,6 +55,7 @@ public class EthnicityController {
     private StudySampleDescriptionService studySampleDescriptionService;
     private CurrentUserDetailsService currentUserDetailsService;
     private StudyEthnicityService ethnicityService;
+    private EventsViewService eventsViewService;
 
     @Autowired
     public EthnicityController(EthnicityRepository ethnicityRepository,
@@ -60,13 +63,15 @@ public class EthnicityController {
                                StudyRepository studyRepository,
                                StudySampleDescriptionService studySampleDescriptionService,
                                CurrentUserDetailsService currentUserDetailsService,
-                               StudyEthnicityService ethnicityService) {
+                               StudyEthnicityService ethnicityService,
+                               @Qualifier("ethnicityEventsViewService") EventsViewService eventsViewService) {
         this.ethnicityRepository = ethnicityRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
         this.studySampleDescriptionService = studySampleDescriptionService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.ethnicityService = ethnicityService;
+        this.eventsViewService = eventsViewService;
     }
 
     /* Ethnicity/Sample information associated with a study */
@@ -303,9 +308,15 @@ public class EthnicityController {
         };
     }
 
-    /* Model Attributes :
-    *  Used for drop-downs in HTML forms
-    */
+    @RequestMapping(value = "studies/{studyId}/ethnicity_tracking",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String getStudyEvents(Model model, @PathVariable Long studyId) {
+        model.addAttribute("events", eventsViewService.createViews(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "ethnicity_events";
+    }
+
 
     // Ethnicity Types
     @ModelAttribute("ethnicityTypes")
@@ -315,7 +326,6 @@ public class EthnicityController {
         types.add("replication");
         return types;
     }
-
 
     // Ethnicity Types
     @ModelAttribute("ethnicGroups")
