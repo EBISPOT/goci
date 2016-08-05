@@ -148,6 +148,15 @@ public interface EventsViewService {
             case ASSOCIATION_DELETION:
                 translatedEvent = "Association deleted";
                 break;
+            case ETHNICITY_CREATED:
+                translatedEvent = "Ethnicity created";
+                break;
+            case ETHNICITY_UPDATED:
+                translatedEvent = "Ethnicity updated";
+                break;
+            case ETHNICITY_DELETED:
+                translatedEvent = "Ethnicity deleted";
+                break;
         }
         return translatedEvent;
     }
