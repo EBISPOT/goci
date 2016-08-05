@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by emma on 05/01/15.
@@ -251,7 +252,11 @@ public class EthnicityController {
                                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
 
-        ethnicityService.updateEthnicity(ethnicity, countryOfOrigin, countryOfRecruitment, ethnicGroup, currentUserDetailsService.getUserFromRequest(request));
+        ethnicityService.updateEthnicity(ethnicity,
+                                         countryOfOrigin,
+                                         countryOfRecruitment,
+                                         ethnicGroup,
+                                         currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -265,25 +270,22 @@ public class EthnicityController {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds) {
+    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds,
+                                      HttpServletRequest request) {
 
         String message = "";
-        Integer count = 0;
 
         // Get all ethnicities
         Collection<Ethnicity> studyEthnicity = new ArrayList<>();
         for (String sampleDescriptionId : sampleDescriptionIds) {
             studyEthnicity.add(ethnicityRepository.findOne(Long.valueOf(sampleDescriptionId)));
         }
+
         // Delete ethnicity
-        for (Ethnicity ethnicity : studyEthnicity) {
-            ethnicityRepository.delete(ethnicity);
-            count++;
-        }
+        ethnicityService.deleteChecked(studyEthnicity, currentUserDetailsService.getUserFromRequest(request));
 
         // Return success message to view
-        message = "Successfully deleted " + count + " sample description(s)";
-
+        message = "Successfully deleted " + studyEthnicity.size() + " sample description(s)";
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
@@ -293,22 +295,13 @@ public class EthnicityController {
     @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String deleteAllStudySampleDescription(Model model, @PathVariable Long studyId) {
+    public Callable<String> deleteAllStudySampleDescription(@PathVariable Long studyId, HttpServletRequest request) {
 
-        // Get our study
-        Study study = studyRepository.findOne(studyId);
-
-        // Get all study ethnicity's
-        Collection<Ethnicity> studyEthnicity = ethnicityRepository.findByStudyId(studyId);
-
-        // Delete ethnicity
-        for (Ethnicity ethnicity : studyEthnicity) {
-            ethnicityRepository.delete(ethnicity);
-        }
-        return "redirect:/studies/" + studyId + "/sampledescription";
+        return () -> {
+            ethnicityService.deleteAll(studyId, currentUserDetailsService.getUserFromRequest(request));
+            return "redirect:/studies/" + studyId + "/sampledescription";
+        };
     }
-
-
 
     /* Model Attributes :
     *  Used for drop-downs in HTML forms
@@ -366,5 +359,4 @@ public class EthnicityController {
         sampleSizesMatchOptions.add("N");
         return sampleSizesMatchOptions;
     }
-
 }
