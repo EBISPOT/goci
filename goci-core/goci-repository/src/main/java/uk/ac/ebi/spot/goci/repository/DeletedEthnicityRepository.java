@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.DeletedEthnicity;
 
+import java.util.List;
+
 /**
  * Created by emma on 05/08/16.
  *
@@ -13,5 +15,7 @@ import uk.ac.ebi.spot.goci.model.DeletedEthnicity;
  */
 @RepositoryRestResource
 public interface DeletedEthnicityRepository extends JpaRepository<DeletedEthnicity, Long> {
+
+    List<DeletedEthnicity> findByStudyId(Long id);
 }
 
