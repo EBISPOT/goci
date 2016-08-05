@@ -308,7 +308,7 @@ public class EthnicityController {
         };
     }
 
-    @RequestMapping(value = "studies/{studyId}/ethnicity_tracking",
+    @RequestMapping(value = "/studies/{studyId}/ethnicity_tracking",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String getStudyEvents(Model model, @PathVariable Long studyId) {
