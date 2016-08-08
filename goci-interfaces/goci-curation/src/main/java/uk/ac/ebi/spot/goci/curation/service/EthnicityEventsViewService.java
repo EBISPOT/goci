@@ -50,7 +50,7 @@ public class EthnicityEventsViewService implements EventsViewService {
                                                 EventView eventView =
                                                         new EthnicityEventView(eventName,
                                                                                event.getEventDate(),
-                                                                               studyId,
+                                                                               ethnicity.getId(),
                                                                                event.getUser().getEmail(), createEthnicitySummary(ethnicity));
                                                 views.add(eventView);
                                             });
@@ -67,7 +67,7 @@ public class EthnicityEventsViewService implements EventsViewService {
                                                        EventView eventView =
                                                                new EthnicityEventView(eventName,
                                                                                       event.getEventDate(),
-                                                                                      studyId,
+                                                                                      ethnicity.getId(),
                                                                                       event.getUser().getEmail(), null);
                                                        views.add(eventView);
                                                    });
