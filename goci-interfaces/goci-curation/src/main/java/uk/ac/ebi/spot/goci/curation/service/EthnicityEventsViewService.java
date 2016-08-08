@@ -60,7 +60,7 @@ public class EthnicityEventsViewService implements EventsViewService {
         }
 
         // Add deleted ethnicity info
-        if (!deletedEthnicityCollection.isEmpty()) {
+/*        if (!deletedEthnicityCollection.isEmpty()) {
             deletedEthnicityCollection.forEach(ethnicity -> {
                                                    ethnicity.getEvents().forEach(event -> {
                                                        String eventName = translateEventEnum(event.getEventType());
@@ -74,7 +74,7 @@ public class EthnicityEventsViewService implements EventsViewService {
                                                }
 
             );
-        }
+        }*/
 
         return views;
     }
