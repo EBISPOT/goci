@@ -8,7 +8,23 @@ import java.util.Date;
  * @author emma
  */
 public class EthnicityEventView extends EventView {
-    public EthnicityEventView(String event, Date eventDate, Long trackableId, String userEmail) {
+
+    private String ethnicitySummary;
+
+    public EthnicityEventView(String event,
+                              Date eventDate,
+                              Long trackableId,
+                              String userEmail,
+                              String ethnicitySummary) {
         super(event, eventDate, trackableId, userEmail);
+        this.ethnicitySummary = ethnicitySummary;
+    }
+
+    public String getEthnicitySummary() {
+        return ethnicitySummary;
+    }
+
+    public void setEthnicitySummary(String ethnicitySummary) {
+        this.ethnicitySummary = ethnicitySummary;
     }
 }

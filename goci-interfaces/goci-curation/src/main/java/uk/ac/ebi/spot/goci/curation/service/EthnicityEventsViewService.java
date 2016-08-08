@@ -12,13 +12,14 @@ import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * Created by emma on 05/08/2016.
  *
  * @author emma
- *
- * Ethnicity specific implementation of EventsViewService
+ *         <p>
+ *         Ethnicity specific implementation of EventsViewService
  */
 @Service
 public class EthnicityEventsViewService implements EventsViewService {
@@ -42,13 +43,15 @@ public class EthnicityEventsViewService implements EventsViewService {
 
         if (!ethnicityCollection.isEmpty()) {
             ethnicityCollection.forEach(ethnicity -> {
+
+
                                             ethnicity.getEvents().forEach(event -> {
                                                 String eventName = translateEventEnum(event.getEventType());
                                                 EventView eventView =
                                                         new EthnicityEventView(eventName,
                                                                                event.getEventDate(),
                                                                                studyId,
-                                                                               event.getUser().getEmail());
+                                                                               event.getUser().getEmail(), createEthnicitySummary(ethnicity));
                                                 views.add(eventView);
                                             });
                                         }
@@ -65,7 +68,7 @@ public class EthnicityEventsViewService implements EventsViewService {
                                                                new EthnicityEventView(eventName,
                                                                                       event.getEventDate(),
                                                                                       studyId,
-                                                                                      event.getUser().getEmail());
+                                                                                      event.getUser().getEmail(), null);
                                                        views.add(eventView);
                                                    });
                                                }
@@ -74,5 +77,15 @@ public class EthnicityEventsViewService implements EventsViewService {
         }
 
         return views;
+    }
+
+    private String createEthnicitySummary(Ethnicity ethnicity) {
+        String ethnicitySummary = null;
+        StringJoiner joiner = new StringJoiner("; ");
+        joiner.add("Type: ".concat(ethnicity.getType()));
+        joiner.add("Country of recruitment: ".concat(ethnicity.getCountryOfRecruitment()));
+        joiner.add("Country of origin: ".concat(ethnicity.getCountryOfOrigin()));
+        ethnicitySummary = joiner.toString();
+        return ethnicitySummary;
     }
 }
