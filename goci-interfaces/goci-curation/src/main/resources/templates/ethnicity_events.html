@@ -67,6 +67,8 @@
             <table id="eventTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
+                    <th>Ethnicity ID</th>
+                    <th>Ethnicity Summary</th>
                     <th>Event</th>
                     <th>Event Date</th>
                     <th>User</th>
@@ -74,6 +76,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="event : ${events}">
+                    <td th:text="${event.trackableId} ?: '' "></td>
+                    <td>
+                        <span> <p th:text="${event.ethnicitySummary} ?: '' "></p>
+                        <a th:href="@{/sampledescriptions/{trackableId}(trackableId=${event.trackableId})}"><i
+                                class="fa fa-external-link"
+                                aria-hidden="true"></i></a></span></td>
+
                     <td th:text="${event.event} ?: '' ">CREATE</td>
                     <td th:text="${#calendars.format(event.eventDate, 'dd MMMM yyyy HH:mm:ss')} ?: '' ">2016-05-06</td>
                     <td th:text="${event.userEmail} ?: '' ">emma@ebi.ac.uk</td>
