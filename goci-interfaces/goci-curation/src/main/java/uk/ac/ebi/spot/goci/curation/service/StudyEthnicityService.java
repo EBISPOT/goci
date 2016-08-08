@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
@@ -123,7 +122,6 @@ public class StudyEthnicityService {
         getLog().info("Ethnicity ".concat(ethnicity.getId().toString()).concat(" updated"));
     }
 
-    @Async
     public void deleteAll(Long studyId, SecureUser user) {
         // Get all study ethnicity's
         Study study = studyRepository.findOne(studyId);
@@ -133,7 +131,6 @@ public class StudyEthnicityService {
         studyEthnicity.forEach(ethnicity -> deleteEthnicity(ethnicity, user));
     }
 
-    @Async
     public void deleteChecked(Collection<Ethnicity> studyEthnicity, SecureUser user) {
         // Delete ethnicity
         studyEthnicity.forEach(ethnicity -> deleteEthnicity(ethnicity, user));
