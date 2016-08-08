@@ -83,6 +83,7 @@ public class EthnicityEventsViewService implements EventsViewService {
         String ethnicitySummary = null;
         StringJoiner joiner = new StringJoiner("; ");
         joiner.add("Type: ".concat(ethnicity.getType()));
+        joiner.add("Ancestry: ".concat(ethnicity.getEthnicGroup()));
         joiner.add("Country of recruitment: ".concat(ethnicity.getCountryOfRecruitment()));
         joiner.add("Country of origin: ".concat(ethnicity.getCountryOfOrigin()));
         ethnicitySummary = joiner.toString();
