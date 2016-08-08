@@ -48,7 +48,7 @@ public class StudyEthnicityService {
     @Autowired
     public StudyEthnicityService(EthnicityRepository ethnicityRepository,
                                  StudyRepository studyRepository,
-                                 @Qualifier("EthnicityTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
+                                 @Qualifier("ethnicityTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                  DeletedEthnicityRepository deletedEthnicityRepository) {
         this.ethnicityRepository = ethnicityRepository;
         this.studyRepository = studyRepository;
