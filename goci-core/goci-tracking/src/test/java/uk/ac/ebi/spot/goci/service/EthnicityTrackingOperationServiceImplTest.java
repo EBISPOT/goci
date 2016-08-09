@@ -6,10 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.builder.EthnicityBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.EventBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.curation.service.EventOperationsService;
+import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
+import uk.ac.ebi.spot.goci.builder.EventBuilder;
+import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
@@ -18,7 +17,6 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,8 +70,12 @@ public class EthnicityTrackingOperationServiceImplTest {
         trackingOperationService.create(ETHNICITY, SECURE_USER);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_CREATED, SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_CREATED);
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getUser().getEmail())
+                .contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getEventType())
+                .contains(EventType.ETHNICITY_CREATED);
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
@@ -83,8 +85,12 @@ public class EthnicityTrackingOperationServiceImplTest {
         trackingOperationService.delete(ETHNICITY, SECURE_USER);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_DELETED, SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_DELETED);
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getUser().getEmail())
+                .contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getEventType())
+                .contains(EventType.ETHNICITY_DELETED);
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
@@ -94,8 +100,12 @@ public class EthnicityTrackingOperationServiceImplTest {
         trackingOperationService.update(ETHNICITY, SECURE_USER, EventType.ETHNICITY_UPDATED);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_UPDATED, SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_UPDATED);
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getUser().getEmail())
+                .contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents())
+                .extracting(event -> event.getEventType())
+                .contains(EventType.ETHNICITY_UPDATED);
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 }
