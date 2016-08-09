@@ -227,12 +227,6 @@ public class StudyOperationServiceTest {
         assertThat(study.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
     }
 
-/*    @Test
-    public void testUpdateStudy() {
-
-
-    }*/
-
     @Test
     public void testAssignStudyStatusToLevelOneCurationDone() {
 
