@@ -39,6 +39,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -108,6 +109,7 @@ public class StudyController {
     private StudyDuplicationService studyDuplicationService;
     private StudyDeletionService studyDeletionService;
     private EventsViewService eventsViewService;
+    private StudyUpdateService studyUpdateService;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -135,7 +137,8 @@ public class StudyController {
                            StudyFileService studyFileService,
                            StudyDuplicationService studyDuplicationService,
                            StudyDeletionService studyDeletionService,
-                           @Qualifier("studyEventsViewService")EventsViewService eventsViewService) {
+                           @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
+                           StudyUpdateService studyUpdateService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -154,6 +157,7 @@ public class StudyController {
         this.studyDuplicationService = studyDuplicationService;
         this.studyDeletionService = studyDeletionService;
         this.eventsViewService = eventsViewService;
+        this.studyUpdateService = studyUpdateService;
     }
 
     /* All studies and various filtered lists */
@@ -597,7 +601,7 @@ public class StudyController {
     public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        studyOperationsService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
+        studyUpdateService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -858,6 +862,13 @@ public class StudyController {
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
         return new FileSystemResource(studyFileService.getFileFromFileName(studyId, fileName));
+    }
+
+    @RequestMapping(value = "/{studyId}/studyfiles/{fileName}/delete", method = RequestMethod.GET)
+    public String deleteStudyFile(@PathVariable Long studyId,
+                                  @PathVariable String fileName) {
+        studyFileService.deleteFile(studyId, fileName);
+        return "redirect:/studies/" + studyId + "/studyfiles";
     }
 
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)

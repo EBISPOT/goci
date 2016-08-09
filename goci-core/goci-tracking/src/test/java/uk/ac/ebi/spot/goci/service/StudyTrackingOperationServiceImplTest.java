@@ -64,6 +64,13 @@ public class StudyTrackingOperationServiceImplTest {
             .setEventType(EventType.STUDY_DELETION)
             .build();
 
+    private static final Event UPDATE_EVENT_WITH_DESCRIPTION = new EventBuilder().setId(97L)
+            .setEventDate(new Date())
+            .setUser(SECURE_USER)
+            .setEventType(EventType.STUDY_UPDATE)
+            .setEventDescription("DESCRIPTION")
+            .build();
+
     @Before
     public void setUp() throws Exception {
         studyTrackingOperationService = new StudyTrackingOperationServiceImpl(eventOperationsService);
@@ -99,6 +106,25 @@ public class StudyTrackingOperationServiceImplTest {
         assertThat(STUDY.getEvents()).extracting(event -> event.getEventType())
                 .containsOnly(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE,
                               EventType.STUDY_UPDATE);
+        assertThat(STUDY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
+    }
+
+    @Test
+    public void updateWithDescription() throws Exception {
+
+        when(eventOperationsService.createEvent(EventType.STUDY_UPDATE, SECURE_USER, "DESCRIPTION")).thenReturn(
+                UPDATE_EVENT_WITH_DESCRIPTION);
+
+        studyTrackingOperationService.update(STUDY, SECURE_USER, EventType.STUDY_UPDATE, "DESCRIPTION");
+
+        verify(eventOperationsService, times(1)).createEvent(EventType.STUDY_UPDATE, SECURE_USER, "DESCRIPTION");
+
+        assertThat(STUDY.getEvents()).hasSize(1);
+        assertThat(STUDY.getEvents()).extracting(event -> event.getUser().getEmail()).containsOnly("test@test.com");
+        assertThat(STUDY.getEvents()).extracting(event -> event.getEventType())
+                .containsOnly(EventType.STUDY_UPDATE);
+        assertThat(STUDY.getEvents()).extracting(event -> event.getEventDescription())
+                .containsOnly("DESCRIPTION");
         assertThat(STUDY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 

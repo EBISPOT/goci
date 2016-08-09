@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,10 @@ import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
+import uk.ac.ebi.spot.goci.curation.service.StudyEthnicityService;
+import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
 import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -23,18 +28,21 @@ import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Created by emma on 05/01/15.
  *
- * @author emma Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to
- *         the user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
+ * @author emma
+ *         <p>
+ *         Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to the
+ *         user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
  */
 @Controller
 public class EthnicityController {
@@ -44,15 +52,27 @@ public class EthnicityController {
     private CountryRepository countryRepository;
     private StudyRepository studyRepository;
 
+    private StudySampleDescriptionService studySampleDescriptionService;
+    private CurrentUserDetailsService currentUserDetailsService;
+    private StudyEthnicityService ethnicityService;
+    private EventsViewService eventsViewService;
+
     @Autowired
     public EthnicityController(EthnicityRepository ethnicityRepository,
                                CountryRepository countryRepository,
-                               StudyRepository studyRepository) {
+                               StudyRepository studyRepository,
+                               StudySampleDescriptionService studySampleDescriptionService,
+                               CurrentUserDetailsService currentUserDetailsService,
+                               StudyEthnicityService ethnicityService,
+                               @Qualifier("ethnicityEventsViewService") EventsViewService eventsViewService) {
         this.ethnicityRepository = ethnicityRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
+        this.studySampleDescriptionService = studySampleDescriptionService;
+        this.currentUserDetailsService = currentUserDetailsService;
+        this.ethnicityService = ethnicityService;
+        this.eventsViewService = eventsViewService;
     }
-
 
     /* Ethnicity/Sample information associated with a study */
 
@@ -107,28 +127,25 @@ public class EthnicityController {
     }
 
 
-    // Add new ethnicity/sample information to a study
+    // Add new sample information to a study
     @RequestMapping(value = "/studies/{studyId}/initialreplicationsampledescription",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String addStudyInitialReplcationSampleDescription(@ModelAttribute InitialSampleDescription initialSampleDescription,
                                                              @ModelAttribute ReplicationSampleDescription replicationSampleDescription,
                                                              @PathVariable Long studyId,
-                                                             RedirectAttributes redirectAttributes) {
+                                                             RedirectAttributes redirectAttributes,
+                                                             HttpServletRequest request) {
 
-        Study study = studyRepository.findOne(studyId);
-
-        // Set our descriptions which are attributes of the study
-        study.setInitialSampleSize(initialSampleDescription.getInitialSampleDescription());
-        study.setReplicateSampleSize(replicationSampleDescription.getReplicationSampleDescription());
-
-        // Save study
-        studyRepository.save(study);
+        studySampleDescriptionService.addStudyInitialReplcationSampleDescription(studyId,
+                                                                                 initialSampleDescription,
+                                                                                 replicationSampleDescription,
+                                                                                 currentUserDetailsService.getUserFromRequest(
+                                                                                         request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
 
@@ -139,37 +156,13 @@ public class EthnicityController {
                     method = RequestMethod.POST)
     public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity,
                                             @PathVariable Long studyId,
-                                            RedirectAttributes redirectAttributes) {
+                                            RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        Study study = studyRepository.findOne(studyId);
-
-        // Set default values when no country of origin or recruitment supplied
-        if (ethnicity.getCountryOfOrigin() == null) {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        if (ethnicity.getCountryOfOrigin() != null && ethnicity.getCountryOfOrigin().isEmpty()) {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        if (ethnicity.getCountryOfRecruitment() == null) {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        if (ethnicity.getCountryOfRecruitment() != null && ethnicity.getCountryOfRecruitment().isEmpty()) {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        // Set the study for our ethnicity
-        ethnicity.setStudy(study);
-
-        // Save our ethnicity/sample information
-        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        ethnicityService.addEthnicity(studyId, ethnicity, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
         return "redirect:/studies/" + studyId + "/sampledescription";
     }
 
@@ -247,6 +240,8 @@ public class EthnicityController {
         }
 
         model.addAttribute("ethnicGroup", ethnicGroup);
+
+        model.addAttribute("study", studyRepository.findOne(ethnicityToView.getStudy().getId()));
         return "edit_sample_description";
     }
 
@@ -259,43 +254,19 @@ public class EthnicityController {
                                           @ModelAttribute CountryOfOrigin countryOfOrigin,
                                           @ModelAttribute CountryOfRecruitment countryOfRecruitment,
                                           EthnicGroup ethnicGroup,
-                                          RedirectAttributes redirectAttributes) {
+                                          RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        // Set country of origin based on values returned
-        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
 
-        if (listOfOriginCountries.size() > 0) {
-            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
-            ethnicity.setCountryOfOrigin(countryOfOriginJoined);
-        }
-        else {
-            ethnicity.setCountryOfOrigin("NR");
-        }
-
-        // Set country of recruitment based on values returned
-        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
-
-        if (listOfRecruitmentCountries.size() > 0) {
-            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
-            ethnicity.setCountryOfRecruitment(countryOfRecruitmentJoined);
-        }
-        else {
-            ethnicity.setCountryOfRecruitment("NR");
-        }
-
-        // Set ethnic group
-        List<String> listOfEthnicGroups = Arrays.asList(ethnicGroup.getEthnicGroupValues());
-        String ethnicGroupJoined = String.join(",", listOfEthnicGroups);
-        ethnicity.setEthnicGroup(ethnicGroupJoined);
-
-        // Saves the new information returned from form
-        Ethnicity updatedEthnicity = ethnicityRepository.save(ethnicity);
+        ethnicityService.updateEthnicity(ethnicity,
+                                         countryOfOrigin,
+                                         countryOfRecruitment,
+                                         ethnicGroup,
+                                         currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-
-        return "redirect:/studies/" + updatedEthnicity.getStudy().getId() + "/sampledescription";
+        return "redirect:/studies/" + ethnicity.getStudy().getId() + "/sampledescription";
     }
 
 
@@ -304,25 +275,22 @@ public class EthnicityController {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
     public @ResponseBody
-    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds) {
+    Map<String, String> deleteChecked(@RequestParam(value = "sampleDescriptionIds[]") String[] sampleDescriptionIds,
+                                      HttpServletRequest request) {
 
         String message = "";
-        Integer count = 0;
 
         // Get all ethnicities
         Collection<Ethnicity> studyEthnicity = new ArrayList<>();
         for (String sampleDescriptionId : sampleDescriptionIds) {
             studyEthnicity.add(ethnicityRepository.findOne(Long.valueOf(sampleDescriptionId)));
         }
+
         // Delete ethnicity
-        for (Ethnicity ethnicity : studyEthnicity) {
-            ethnicityRepository.delete(ethnicity);
-            count++;
-        }
+        ethnicityService.deleteChecked(studyEthnicity, currentUserDetailsService.getUserFromRequest(request));
 
         // Return success message to view
-        message = "Successfully deleted " + count + " sample description(s)";
-
+        message = "Successfully deleted " + studyEthnicity.size() + " sample description(s)";
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
@@ -332,26 +300,23 @@ public class EthnicityController {
     @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String deleteAllStudySampleDescription(Model model, @PathVariable Long studyId) {
+    public Callable<String> deleteAllStudySampleDescription(@PathVariable Long studyId, HttpServletRequest request) {
 
-        // Get our study
-        Study study = studyRepository.findOne(studyId);
-
-        // Get all study ethnicity's
-        Collection<Ethnicity> studyEthnicity = ethnicityRepository.findByStudyId(studyId);
-
-        // Delete ethnicity
-        for (Ethnicity ethnicity : studyEthnicity) {
-            ethnicityRepository.delete(ethnicity);
-        }
-        return "redirect:/studies/" + studyId + "/sampledescription";
+        return () -> {
+            ethnicityService.deleteAll(studyId, currentUserDetailsService.getUserFromRequest(request));
+            return "redirect:/studies/" + studyId + "/sampledescription";
+        };
     }
 
+    @RequestMapping(value = "/studies/{studyId}/ethnicity_tracking",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
+    public String getStudyEvents(Model model, @PathVariable Long studyId) {
+        model.addAttribute("events", eventsViewService.createViews(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "ethnicity_events";
+    }
 
-
-    /* Model Attributes :
-    *  Used for drop-downs in HTML forms
-    */
 
     // Ethnicity Types
     @ModelAttribute("ethnicityTypes")
@@ -361,7 +326,6 @@ public class EthnicityController {
         types.add("replication");
         return types;
     }
-
 
     // Ethnicity Types
     @ModelAttribute("ethnicGroups")
@@ -405,5 +369,4 @@ public class EthnicityController {
         sampleSizesMatchOptions.add("N");
         return sampleSizesMatchOptions;
     }
-
 }

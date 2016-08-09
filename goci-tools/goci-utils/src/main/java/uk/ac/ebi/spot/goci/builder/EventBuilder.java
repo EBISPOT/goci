@@ -37,6 +37,11 @@ public class EventBuilder {
         return this;
     }
 
+    public EventBuilder setEventDescription(String description) {
+        event.setEventDescription(description);
+        return this;
+    }
+
     public Event build() {
         return event;
     }

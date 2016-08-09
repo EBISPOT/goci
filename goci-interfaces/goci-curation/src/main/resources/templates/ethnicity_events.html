@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Tracking Information</li>
+    </ol>
+</div>
+
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
+
+<div class="container-fluid" th:object="${study}">
+    <div class="row">
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study
+                                                                                               Tracking</a>
+            </li>
+            <li role="presentation" class="active"><a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ethnicity
+                                                                                                                        Tracking</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <table id="eventTable" class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>Ethnicity ID</th>
+                    <th>Ethnicity Summary</th>
+                    <th>Event</th>
+                    <th>Event Date</th>
+                    <th>User</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="event : ${events}">
+                    <td th:text="${event.trackableId} ?: '' "></td>
+                    <td>
+                        <span> <p th:text="${event.ethnicitySummary} ?: '' "></p>
+                        <a th:href="@{/sampledescriptions/{trackableId}(trackableId=${event.trackableId})}"><i
+                                class="fa fa-external-link"
+                                aria-hidden="true"></i></a></span></td>
+
+                    <td th:text="${event.event} ?: '' ">CREATE</td>
+                    <td th:text="${#calendars.format(event.eventDate, 'dd MMMM yyyy HH:mm:ss')} ?: '' ">2016-05-06</td>
+                    <td th:text="${event.userEmail} ?: '' ">emma@ebi.ac.uk</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(events)}">
+                    <td colspan="10"><p style=" font-weight: bold; text-align: center;">No events found</p></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script>
+    $(document).ready(function() {
+        var table = $('#eventTable').DataTable({
+                                                   info: false,
+                                                   paging: false,
+                                                   "order": [[1, "desc"]]
+                                               });
+    });
+</script>
+
+</body>
+</html>

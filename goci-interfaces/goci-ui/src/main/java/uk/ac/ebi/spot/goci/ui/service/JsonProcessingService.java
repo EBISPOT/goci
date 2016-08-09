@@ -628,7 +628,7 @@ public class JsonProcessingService {
             }
         }
 
-        Map<String, MappedGene> genes = new HashMap<String, MappedGene>();
+        Map<String, MappedGene> genes = new HashMap<>();
         MappedGene upstream = new MappedGene();
         MappedGene downstream = new MappedGene();
         MappedGene ingene = new MappedGene();

@@ -12,11 +12,29 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
 </head>
 <body>
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
+
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Study Files</li>
+    </ol>
+</div>
 
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
@@ -29,6 +47,7 @@
                 <tr>
                     <th>Study files</th>
                     <th>Download</th>
+                    <th style="color: red">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,6 +56,10 @@
                     <td><a th:if="${not #strings.isEmpty(file.fileName)}"
                            th:href="@{/studies/{studyId}/studyfiles/{fileName}(studyId=${study.id}, fileName=${file.fileName})}"><i
                             class="fa fa-external-link"
+                            aria-hidden="true"></i></a></td>
+                    <td><a th:if="${not #strings.isEmpty(file.fileName)}"
+                           th:href="@{/studies/{studyId}/studyfiles/{fileName}/delete(studyId=${study.id}, fileName=${file.fileName})}"><i
+                            class="fa fa-trash-o"
                             aria-hidden="true"></i></a></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(files)}">
@@ -63,5 +86,8 @@
         </div>
     </div>
 </div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
 </body>
 </html>

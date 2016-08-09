@@ -33,12 +33,15 @@ public class Event {
     @ManyToOne
     private SecureUser user;
 
+    private String eventDescription;
+
     // JPA no-args constructor
     public Event() {
     }
 
-    public Event(Date eventDate, EventType eventType, SecureUser user) {
+    public Event(Date eventDate, String eventDescription, EventType eventType, SecureUser user) {
         this.eventDate = eventDate;
+        this.eventDescription = eventDescription;
         this.eventType = eventType;
         this.user = user;
     }
@@ -73,5 +76,13 @@ public class Event {
 
     public void setUser(SecureUser user) {
         this.user = user;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
     }
 }

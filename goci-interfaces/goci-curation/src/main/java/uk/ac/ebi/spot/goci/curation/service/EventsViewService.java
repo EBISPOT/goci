@@ -127,6 +127,9 @@ public interface EventsViewService {
             case STUDY_DUPLICATION:
                 translatedEvent = "Study duplicated";
                 break;
+            case STUDY_SAMPLE_DESCRIPTION_UPDATE:
+                translatedEvent = "Study initial/replication description updated";
+                break;
             case ASSOCIATION_CREATION:
                 translatedEvent = "Association created";
                 break;
@@ -144,6 +147,15 @@ public interface EventsViewService {
                 break;
             case ASSOCIATION_DELETION:
                 translatedEvent = "Association deleted";
+                break;
+            case ETHNICITY_CREATED:
+                translatedEvent = "Ethnicity created";
+                break;
+            case ETHNICITY_UPDATED:
+                translatedEvent = "Ethnicity updated";
+                break;
+            case ETHNICITY_DELETED:
+                translatedEvent = "Ethnicity deleted";
                 break;
         }
         return translatedEvent;

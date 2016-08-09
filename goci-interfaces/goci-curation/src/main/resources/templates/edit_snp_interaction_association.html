@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
@@ -28,12 +37,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
     <!--Handles calculations in form -->
-    <script src="../static/js/goci-snp-association-calculations.js"
-            th:src="@{../js/goci-snp-association-calculations.js}"></script>
+    <script th:src="@{/js/goci-snp-association-calculations.js}"></script>
 
     <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
-    <script src="../static/js/goci-snp-association-mapping.js"
-            th:src="@{../js/goci-snp-association-mapping.js}"></script>
+    <script th:src="@{/js/goci-snp-association-mapping.js}"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
@@ -41,6 +48,14 @@
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Editing interaction association</li>
+    </ol>
+</div>
 
 <div class="container-fluid">
     <!-- Link to the different SNP tabs -->
@@ -243,6 +258,7 @@
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
 
 <script>
     $(function() {

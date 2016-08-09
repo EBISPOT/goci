@@ -18,6 +18,15 @@
     <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
@@ -27,6 +36,15 @@
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Study Details</li>
+    </ol>
+</div>
 
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
@@ -304,6 +322,9 @@
         </div>
     </div>
 </div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
 
 <script>
     $(function() {
