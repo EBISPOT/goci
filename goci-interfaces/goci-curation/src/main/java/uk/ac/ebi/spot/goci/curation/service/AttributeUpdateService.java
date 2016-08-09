@@ -27,7 +27,7 @@ public class AttributeUpdateService {
         if (existingValue == null) {
             if (newValue != null) {
                 updateDescription =
-                        attribute.concat(" set to ").concat(newValue);
+                        attribute.concat(" set to ").concat("'").concat(newValue).concat("'");
             }
         }
         // Case where a value has been removed
@@ -40,7 +40,14 @@ public class AttributeUpdateService {
         else {
             if (!existingValue.equals(newValue)) {
                 updateDescription =
-                        attribute.concat(" updated from ").concat(existingValue).concat(" to ").concat(newValue);
+                        attribute.concat(" updated from ")
+                                .concat("'")
+                                .concat(existingValue)
+                                .concat("'")
+                                .concat(" to ")
+                                .concat("'")
+                                .concat(newValue)
+                                .concat("'");
             }
         }
 
