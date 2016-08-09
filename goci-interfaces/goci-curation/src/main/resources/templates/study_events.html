@@ -54,21 +54,11 @@
             <li role="presentation" class="active"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study
                                                                                                               Tracking</a>
             </li>
-            <li role="presentation"><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association
-                                                                                                           Tracking</a>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-pills" role="tablist">
-            <li role="presentation" class="active"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study
-                                                                                                              Tracking</a>
-            </li>
             <li role="presentation"><a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ethnicity
                                                                                                          Tracking</a>
+            </li>
+            <li role="presentation"><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association
+                                                                                                           Tracking</a>
             </li>
         </ul>
     </div>
@@ -109,7 +99,7 @@
         var table = $('#eventTable').DataTable({
                                                    info: false,
                                                    paging: false,
-                                                   "order": [[ 1, "desc" ]]
+                                                   "order": [[1, "desc"]]
                                                });
     });
 </script>
