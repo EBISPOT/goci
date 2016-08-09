@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
-import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.DeletedEthnicity;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Event;
@@ -18,6 +17,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedEthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.Arrays;
 import java.util.Collection;
