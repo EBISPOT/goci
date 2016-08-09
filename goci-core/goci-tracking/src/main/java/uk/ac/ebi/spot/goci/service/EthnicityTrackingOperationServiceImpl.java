@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -41,8 +40,8 @@ public class EthnicityTrackingOperationServiceImpl implements TrackingOperationS
     }
 
     @Override
-    public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String updateDescription) {
-        Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, updateDescription);
+    public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String description) {
+        Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, description);
         trackable.addEvent(updateEvent);
     }
 }

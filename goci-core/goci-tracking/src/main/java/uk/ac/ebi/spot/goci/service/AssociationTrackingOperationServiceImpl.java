@@ -34,6 +34,12 @@ public class AssociationTrackingOperationServiceImpl implements TrackingOperatio
         trackable.addEvent(updateEvent);
     }
 
+    @Override
+    public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String description) {
+        Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, description);
+        trackable.addEvent(updateEvent);
+    }
+
     @Override public void delete(Trackable trackable, SecureUser secureUser) {
         Event deleteEvent = eventOperationsService.createEvent(EventType.ASSOCIATION_DELETION, secureUser);
         trackable.addEvent(deleteEvent);

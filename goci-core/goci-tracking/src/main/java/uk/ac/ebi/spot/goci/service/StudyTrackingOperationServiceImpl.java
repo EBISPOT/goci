@@ -33,8 +33,8 @@ public class StudyTrackingOperationServiceImpl implements TrackingOperationServi
         trackable.addEvent(updateEvent);
     }
 
-    @Override public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String eventDescription) {
-        Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, eventDescription);
+    @Override public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String description) {
+        Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, description);
         trackable.addEvent(updateEvent);
     }
 
