@@ -1,5 +1,6 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package uk.ac.ebi.spot.goci.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,10 +71,10 @@ public class EthnicityTrackingOperationServiceImplTest {
         when(eventOperationsService.createEvent(EventType.ETHNICITY_CREATED, SECURE_USER)).thenReturn(CREATE_EVENT);
         trackingOperationService.create(ETHNICITY, SECURE_USER);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_CREATED, SECURE_USER);
-        assertThat(ETHNICITY.getEvents()).hasSize(1);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_CREATED);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
+        Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_CREATED);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
     @Test
@@ -81,10 +82,10 @@ public class EthnicityTrackingOperationServiceImplTest {
         when(eventOperationsService.createEvent(EventType.ETHNICITY_DELETED, SECURE_USER)).thenReturn(DELETE_EVENT);
         trackingOperationService.delete(ETHNICITY, SECURE_USER);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_DELETED, SECURE_USER);
-        assertThat(ETHNICITY.getEvents()).hasSize(1);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_DELETED);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
+        Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_DELETED);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
     @Test
@@ -92,9 +93,9 @@ public class EthnicityTrackingOperationServiceImplTest {
         when(eventOperationsService.createEvent(EventType.ETHNICITY_UPDATED, SECURE_USER)).thenReturn(UPDATE_EVENT);
         trackingOperationService.update(ETHNICITY, SECURE_USER, EventType.ETHNICITY_UPDATED);
         verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_UPDATED, SECURE_USER);
-        assertThat(ETHNICITY.getEvents()).hasSize(1);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_UPDATED);
-        assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
+        Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getUser().getEmail()).contains("test@test.com");
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventType()).contains(EventType.ETHNICITY_UPDATED);
+        Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 }

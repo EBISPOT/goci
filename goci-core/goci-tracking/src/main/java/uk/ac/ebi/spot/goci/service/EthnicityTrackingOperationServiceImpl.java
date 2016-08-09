@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.service.tracking;
+package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
