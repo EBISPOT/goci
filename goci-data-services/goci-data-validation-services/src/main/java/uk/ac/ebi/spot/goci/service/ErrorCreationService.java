@@ -38,8 +38,8 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "SNP type", false);
     }
 
-    public ValidationError checkOrIsPresentAndMoreThanOne(Float or) {
-        String errorMessage = validationChecks.checkOrIsPresentAndMoreThanOne(or);
+    public ValidationError checkOrIsPresent(Float or) {
+        String errorMessage = validationChecks.checkOrIsPresent(or);
         return ErrorProcessingService.createError(errorMessage, "OR", false);
     }
 

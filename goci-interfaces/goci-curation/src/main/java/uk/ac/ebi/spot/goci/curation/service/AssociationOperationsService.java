@@ -103,7 +103,7 @@ public class AssociationOperationsService {
 
         // Ensure user has entered required information on the form
         if (measurementType.equals("or")) {
-            errors.add(errorCreationService.checkOrIsPresentAndMoreThanOne(form.getOrPerCopyNum()));
+            errors.add(errorCreationService.checkOrIsPresent(form.getOrPerCopyNum()));
         }
         if (measurementType.equals("beta")) {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));
@@ -130,7 +130,7 @@ public class AssociationOperationsService {
 
         // Ensure user has entered required information on the form
         if (measurementType.equals("or")) {
-            errors.add(errorCreationService.checkOrIsPresentAndMoreThanOne(form.getOrPerCopyNum()));
+            errors.add(errorCreationService.checkOrIsPresent(form.getOrPerCopyNum()));
         }
         if (measurementType.equals("beta")) {
             errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(form.getBetaNum()));

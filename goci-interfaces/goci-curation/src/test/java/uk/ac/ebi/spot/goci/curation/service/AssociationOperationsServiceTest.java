@@ -218,7 +218,7 @@ public class AssociationOperationsServiceTest {
     public void checkSnpAssociationFormErrorsFormWithErrors() throws Exception {
         when(errorCreationService.checkSnpValueIsPresent(Matchers.anyString())).thenReturn(SNP_ERROR);
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(RISK_ALLELE_ERROR);
-        when(errorCreationService.checkOrIsPresentAndMoreThanOne(Matchers.anyFloat())).thenReturn(OR_ERROR);
+        when(errorCreationService.checkOrIsPresent(Matchers.anyFloat())).thenReturn(OR_ERROR);
 
         assertThat(associationOperationsService.checkSnpAssociationFormErrors(
                 SNP_ASSOCIATION_STANDARD_MULTI_FORM_WITH_ERRORS,
@@ -233,7 +233,7 @@ public class AssociationOperationsServiceTest {
         when(errorCreationService.checkSnpValueIsPresent(Matchers.anyString())).thenReturn(SNP_NO_ERROR);
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(
                 RISK_ALLELE_NO_ERROR);
-        when(errorCreationService.checkOrIsPresentAndMoreThanOne(Matchers.anyFloat())).thenReturn(OR_NO_ERROR);
+        when(errorCreationService.checkOrIsPresent(Matchers.anyFloat())).thenReturn(OR_NO_ERROR);
 
         assertThat(associationOperationsService.checkSnpAssociationFormErrors(
                 SNP_ASSOCIATION_STANDARD_MULTI_FORM,
@@ -247,7 +247,7 @@ public class AssociationOperationsServiceTest {
     public void checkSnpAssociationInteractionFormErrorsWithErrors() throws Exception {
         when(errorCreationService.checkSnpValueIsPresent(Matchers.anyString())).thenReturn(SNP_ERROR);
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(RISK_ALLELE_ERROR);
-        when(errorCreationService.checkOrIsPresentAndMoreThanOne(Matchers.anyFloat())).thenReturn(OR_ERROR);
+        when(errorCreationService.checkOrIsPresent(Matchers.anyFloat())).thenReturn(OR_ERROR);
 
         assertThat(associationOperationsService.checkSnpAssociationInteractionFormErrors(
                 SNP_ASSOCIATION_INTERACTION_FORM_WITH_ERRORS,
@@ -262,7 +262,7 @@ public class AssociationOperationsServiceTest {
         when(errorCreationService.checkSnpValueIsPresent(Matchers.anyString())).thenReturn(SNP_NO_ERROR);
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(
                 RISK_ALLELE_NO_ERROR);
-        when(errorCreationService.checkOrIsPresentAndMoreThanOne(Matchers.anyFloat())).thenReturn(OR_NO_ERROR);
+        when(errorCreationService.checkOrIsPresent(Matchers.anyFloat())).thenReturn(OR_NO_ERROR);
 
         assertThat(associationOperationsService.checkSnpAssociationInteractionFormErrors(
                 SNP_ASSOCIATION_INTERACTION_FORM,

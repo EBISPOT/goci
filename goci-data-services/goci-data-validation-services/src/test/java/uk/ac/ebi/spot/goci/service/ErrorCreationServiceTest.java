@@ -71,14 +71,14 @@ public class ErrorCreationServiceTest {
     @Test
     public void testCheckOrIsPresentAndMoreThanOne() throws Exception {
 
-        when(validationChecks.checkOrIsPresentAndMoreThanOne((float) 0.5)).thenReturn(
+        when(validationChecks.checkOrIsPresent((float) 0.5)).thenReturn(
                 "Value is less than 1");
-        ValidationError error1 = errorCreationService.checkOrIsPresentAndMoreThanOne((float) 0.5);
+        ValidationError error1 = errorCreationService.checkOrIsPresent((float) 0.5);
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("OR", "Value is less than 1", false);
 
-        when(validationChecks.checkOrIsPresentAndMoreThanOne((float) 1.23)).thenReturn(null);
-        ValidationError error2 = errorCreationService.checkOrIsPresentAndMoreThanOne((float) 1.23);
+        when(validationChecks.checkOrIsPresent((float) 1.23)).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkOrIsPresent((float) 1.23);
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
     }
 

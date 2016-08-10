@@ -63,9 +63,9 @@ public class ValidationChecksTest {
 
     @Test
     public void checkOrIsPresentAndMoreThanOne() throws Exception {
-        assertThat(validationChecks.checkOrIsPresentAndMoreThanOne((float) 1.22)).isNull();
-        assertThat(validationChecks.checkOrIsPresentAndMoreThanOne((float) 0.56)).isEqualTo("Value is less than 1");
-        assertThat(validationChecks.checkOrIsPresentAndMoreThanOne(null)).isEqualTo("Value is empty");
+        assertThat(validationChecks.checkOrIsPresent((float) 1.22)).isNull();
+        assertThat(validationChecks.checkOrIsPresent((float) 0.56)).isEqualTo("Value is less than 1");
+        assertThat(validationChecks.checkOrIsPresent(null)).isEqualTo("Value is empty");
     }
 
     @Test

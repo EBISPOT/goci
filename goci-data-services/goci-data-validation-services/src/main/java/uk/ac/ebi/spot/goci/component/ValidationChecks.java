@@ -100,19 +100,19 @@ public class ValidationChecks {
     }
 
     /**
-     * OR MUST be filled and more than 1
+     * OR MUST be filled and a number
      *
      * @param value Value to be checked
      */
-    public String checkOrIsPresentAndMoreThanOne(Float value) {
+    public String checkOrIsPresent(Float value) {
         String error = null;
 
         if (value == null) {
             error = "Value is empty";
         }
         else {
-            if (value < 1) {
-                error = "Value is less than 1";
+            if (value.isNaN()) {
+                error = "Value is not number";
             }
         }
         return error;
@@ -138,8 +138,7 @@ public class ValidationChecks {
     }
 
     /**
-     * If the 0R < 1 then you enter an OR reciprocal value.
-     * Otherwise OR reciprocal value can be left blank
+     * If the 0R < 1 then you enter an OR reciprocal value. Otherwise OR reciprocal value can be left blank
      *
      * @param or      OR value
      * @param orRecip OR Reciprocal value
