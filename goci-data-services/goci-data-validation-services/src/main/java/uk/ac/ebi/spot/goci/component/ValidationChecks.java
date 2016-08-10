@@ -138,6 +138,27 @@ public class ValidationChecks {
     }
 
     /**
+     * If the 0R < 1 then you enter an OR reciprocal value.
+     * Otherwise OR reciprocal value can be left blank
+     *
+     * @param or      OR value
+     * @param orRecip OR Reciprocal value
+     */
+    public String checkOrAndOrRecip(Float or, Float orRecip) {
+        String error = null;
+
+        if (or == null) {
+            error = "OR value is empty";
+        }
+        else {
+            if (or < 1 && orRecip == null) {
+                error = "OR value is less than 1 and no OR reciprocal value entered";
+            }
+        }
+        return error;
+    }
+
+    /**
      * Beta MUST be filled
      *
      * @param value Value to be checked
