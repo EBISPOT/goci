@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 03/08/2016.
@@ -81,7 +82,7 @@ public class StudyUpdateService {
         String updateDescription = null;
         List<String> updateDetails = new ArrayList<>();
 
-        // Check disease trait reported by curator
+        // Check disease trait for changes
         String existingDiseaseTraitName = null;
         if (existingStudy.getDiseaseTrait() != null && existingStudy.getDiseaseTrait().getTrait() != null) {
             existingDiseaseTraitName = existingStudy.getDiseaseTrait().getTrait();
@@ -99,11 +100,38 @@ public class StudyUpdateService {
             updateDetails.add(diseaseTraitUpdateDescription);
         }
 
-        StringJoiner updateDetailsJoiner = new StringJoiner(",");
+        // Check EFO trait for changes
+        List<String> existingStudyEfoTraits = new ArrayList<>();
+        List<String> updatedStudyEfoTraits = new ArrayList<>();
+
+        existingStudyEfoTraits = existingStudy.getEfoTraits()
+                .stream()
+                .filter(efoTrait -> efoTrait.getTrait() != null)
+                .filter(efoTrait -> !efoTrait.getTrait().isEmpty())
+                .map(efoTrait -> efoTrait.getTrait())
+                .collect(Collectors.toList());
+
+
+        if (study.getEfoTraits() != null) {
+            updatedStudyEfoTraits = study.getEfoTraits()
+                    .stream()
+                    .filter(efoTrait -> !efoTrait.getTrait().isEmpty())
+                    .map(efoTrait -> efoTrait.getTrait())
+                    .collect(Collectors.toList());
+        }
+
+        String efoTraitUpdateDescription = checkForEfoTraitUpdate(existingStudyEfoTraits, updatedStudyEfoTraits);
+        if (efoTraitUpdateDescription != null) {
+            updateDetails.add(efoTraitUpdateDescription);
+        }
+
+
+        StringJoiner updateDetailsJoiner = new StringJoiner(", ");
         if (!updateDetails.isEmpty()) {
             updateDetails.forEach(s -> updateDetailsJoiner.add(s));
             updateDescription = updateDetailsJoiner.toString();
         }
+
 
         return updateDescription;
     }
@@ -112,5 +140,32 @@ public class StudyUpdateService {
         return attributeUpdateService.compareAttribute("Disease Trait",
                                                        existingDiseaseTraitName,
                                                        updatedDiseaseTraitName);
+    }
+
+    private String checkForEfoTraitUpdate(List<String> existingStudyEfoTraits, List<String> updatedStudyEfoTraits) {
+
+        // Sort traits
+        List<String> existingStudyEfoTraitsSorted =
+                existingStudyEfoTraits.stream().sorted().collect(Collectors.toList());
+        List<String> updatedStudyEfoTraitsSorted = updatedStudyEfoTraits.stream().sorted().collect(Collectors.toList());
+
+        // Create a string version of each list of traits
+        String existingStudyEfoTraitsAsString = null;
+        if (!existingStudyEfoTraitsSorted.isEmpty()) {
+            StringJoiner existingJoiner = new StringJoiner(", ");
+            existingStudyEfoTraitsSorted.forEach(s -> existingJoiner.add(s));
+            existingStudyEfoTraitsAsString = existingJoiner.toString();
+        }
+
+        String updatedStudyEfoTraitsAsString = null;
+        if (!updatedStudyEfoTraitsSorted.isEmpty()) {
+            StringJoiner updateJoiner = new StringJoiner(", ");
+            updatedStudyEfoTraitsSorted.stream().forEach(s -> updateJoiner.add(s));
+            updatedStudyEfoTraitsAsString = updateJoiner.toString();
+        }
+
+        return attributeUpdateService.compareAttribute("EFO Trait",
+                                                       existingStudyEfoTraitsAsString,
+                                                       updatedStudyEfoTraitsAsString);
     }
 }
