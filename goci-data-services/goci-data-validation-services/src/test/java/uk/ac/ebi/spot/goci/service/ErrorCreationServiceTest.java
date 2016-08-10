@@ -69,17 +69,46 @@ public class ErrorCreationServiceTest {
     }
 
     @Test
-    public void testCheckOrIsPresentAndMoreThanOne() throws Exception {
+    public void testCheckOrIsPresent() throws Exception {
 
-        when(validationChecks.checkOrIsPresent((float) 0.5)).thenReturn(
-                "Value is less than 1");
-        ValidationError error1 = errorCreationService.checkOrIsPresent((float) 0.5);
+        when(validationChecks.checkOrIsPresent(null)).thenReturn("Value is empty");
+        ValidationError error1 = errorCreationService.checkOrIsPresent((null));
         assertThat(error1).extracting("field", "error", "warning")
-                .contains("OR", "Value is less than 1", false);
+                .contains("OR", "Value is empty", false);
 
         when(validationChecks.checkOrIsPresent((float) 1.23)).thenReturn(null);
         ValidationError error2 = errorCreationService.checkOrIsPresent((float) 1.23);
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
+
+        Float f1 = new Float(-1.0 / 0.0);
+        when(validationChecks.checkOrIsPresent(f1)).thenReturn("Value is not number");
+        ValidationError error3 = errorCreationService.checkOrIsPresent((f1));
+        assertThat(error3).extracting("field", "error", "warning")
+                .contains("OR", "Value is not number", false);
+    }
+
+    @Test
+    public void testCheckOrAndOrRecip() throws Exception {
+
+        when(validationChecks.checkOrAndOrRecip((float) 0.22, (float) 0.66)).thenReturn(null);
+        ValidationError error1 = errorCreationService.checkOrAndOrRecip((float) 0.22, (float) 0.66);
+        assertThat(error1).extracting("field", "error", "warning")
+                .contains(null, null, false);
+
+        when(validationChecks.checkOrAndOrRecip((float) 1.23, null)).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkOrAndOrRecip((float) 1.23, null);
+        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
+
+        when(validationChecks.checkOrAndOrRecip(null, null)).thenReturn("OR value is empty");
+        ValidationError error3 = errorCreationService.checkOrAndOrRecip(null, null);
+        assertThat(error3).extracting("field", "error", "warning")
+                .contains("OR and OR reciprocal", "OR value is empty", false);
+
+        when(validationChecks.checkOrAndOrRecip((float) 0.22, null)).thenReturn(
+                "OR value is less than 1 and no OR reciprocal value entered");
+        ValidationError error4 = errorCreationService.checkOrAndOrRecip((float) 0.22, null);
+        assertThat(error4).extracting("field", "error", "warning")
+                .contains("OR and OR reciprocal", "OR value is less than 1 and no OR reciprocal value entered", false);
     }
 
     @Test
