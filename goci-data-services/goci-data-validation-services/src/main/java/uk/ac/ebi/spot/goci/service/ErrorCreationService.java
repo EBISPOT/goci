@@ -48,6 +48,11 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "OR reciprocal", false);
     }
 
+    public ValidationError checkOrAndOrRecip(Float or, Float orPerCopyRecip){
+        String errorMessage = validationChecks.checkOrAndOrRecip(or, orPerCopyRecip);
+        return ErrorProcessingService.createError(errorMessage, "OR and OR reciprocal", false);
+    }
+
     public ValidationError checkBetaValuesIsEmpty(Float beta) {
         String errorMessage = validationChecks.checkValueIsEmpty(beta);
         return ErrorProcessingService.createError(errorMessage, "Beta", false);
