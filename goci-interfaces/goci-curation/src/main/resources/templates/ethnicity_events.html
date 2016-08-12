@@ -50,14 +50,15 @@
 
 <div class="container-fluid" th:object="${study}">
     <div class="row">
-        <ul class="nav nav-pills" role="tablist">
-            <li role="presentation"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study
-                                                                                               Tracking</a>
-            </li>
-            <li role="presentation" class="active"><a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ethnicity
-                                                                                                                        Tracking</a>
-            </li>
-        </ul>
+        <div class="col-md-10">
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study Tracking</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ethnicity Tracking</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
