@@ -62,10 +62,23 @@ public class ValidationChecksTest {
     }
 
     @Test
-    public void checkOrIsPresentAndMoreThanOne() throws Exception {
+    public void checkOrIsPresent() throws Exception {
+
+        // Will return NaN
+        Float f1 = new Float(0.0 / 0.0);
+
         assertThat(validationChecks.checkOrIsPresent((float) 1.22)).isNull();
-        assertThat(validationChecks.checkOrIsPresent((float) 0.56)).isEqualTo("Value is less than 1");
+        assertThat(validationChecks.checkOrIsPresent(f1)).isEqualTo("Value is not number");
         assertThat(validationChecks.checkOrIsPresent(null)).isEqualTo("Value is empty");
+    }
+
+    @Test
+    public void checkOrAndOrRecip() throws Exception {
+        assertThat(validationChecks.checkOrAndOrRecip((float) 1.22, null)).isNull();
+        assertThat(validationChecks.checkOrAndOrRecip((float) 0.56, (float) 0.98)).isNull();
+        assertThat(validationChecks.checkOrAndOrRecip((float) 0.56, null)).isEqualTo(
+                "OR value is less than 1 and no OR reciprocal value entered");
+        assertThat(validationChecks.checkOrAndOrRecip(null, null)).isEqualTo("OR value is empty");
     }
 
     @Test

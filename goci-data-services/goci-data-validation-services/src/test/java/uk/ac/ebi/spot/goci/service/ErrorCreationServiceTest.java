@@ -80,7 +80,7 @@ public class ErrorCreationServiceTest {
         ValidationError error2 = errorCreationService.checkOrIsPresent((float) 1.23);
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
 
-        Float f1 = new Float(-1.0 / 0.0);
+        Float f1 = new Float(0.0 / 0.0);
         when(validationChecks.checkOrIsPresent(f1)).thenReturn("Value is not number");
         ValidationError error3 = errorCreationService.checkOrIsPresent((f1));
         assertThat(error3).extracting("field", "error", "warning")
