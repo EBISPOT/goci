@@ -111,7 +111,7 @@ public class ValidationChecks {
             error = "Value is empty";
         }
         else {
-            if (value.isNaN()) {
+            if (Float.isNaN(value)) {
                 error = "Value is not number";
             }
         }
