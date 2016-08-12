@@ -296,7 +296,7 @@ public class ErrorCreationServiceTest {
         ValidationError error1 =
                 errorCreationService.checkMantissaIsLessThan10(25);
         assertThat(error1).extracting("field", "error", "warning")
-                .contains("P-value Mantissa", "Value not valid i.e. greater than 9", false);
+                .contains("P-value mantissa", "Value not valid i.e. greater than 9", false);
 
         when(validationChecks.checkMantissaIsLessThan10(6)).thenReturn(null);
         ValidationError error2 =
