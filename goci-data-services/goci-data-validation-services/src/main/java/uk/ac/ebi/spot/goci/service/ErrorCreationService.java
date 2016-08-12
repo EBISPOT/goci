@@ -118,7 +118,7 @@ public class ErrorCreationService {
     // Pvalue checks
     public ValidationError checkMantissaIsLessThan10(Integer mantissa) {
         String errorMessage = validationChecks.checkMantissaIsLessThan10(mantissa);
-        return ErrorProcessingService.createError(errorMessage, "P-value Mantissa", false);
+        return ErrorProcessingService.createError(errorMessage, "P-value mantissa", false);
     }
 
     public ValidationError checkExponentIsPresent(Integer exponent) {
