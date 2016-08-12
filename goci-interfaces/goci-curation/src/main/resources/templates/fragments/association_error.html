@@ -38,14 +38,21 @@
                     <tr>
                         <th>Field</th>
                         <th>Error Message</th>
-                        <th>Warning</th>
+                        <th>Error Level</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="error: ${errors}">
                         <td th:text="${error.field}?: '' "></td>
                         <td th:text="${error.errorMessage}?: '' "></td>
-                        <td><i class="fa fa-check" aria-hidden="true" th:if="${#bools.isTrue(error.warning)}"></i></td>
+                        <td>
+                            <div th:if="${#bools.isTrue(error.warning)}">
+                                <p>Warning</p>
+                            </div>
+                            <div th:if="${#bools.isFalse(error.warning)}">
+                                <p>Critical</p>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

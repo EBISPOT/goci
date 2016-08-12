@@ -70,7 +70,7 @@
                 <th>Row</th>
                 <th>Column Name</th>
                 <th>Error Message</th>
-                <th>Warning</th>
+                <th>Error Level</th>
             </tr>
             </thead>
             <tbody>
@@ -80,7 +80,10 @@
                 <td th:text="${fileError.error}?: '' "></td>
                 <td>
                     <div th:if="${#bools.isTrue(fileError.warning)}">
-                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <p>Warning</p>
+                    </div>
+                    <div th:if="${#bools.isFalse(fileError.warning)}">
+                        <p>Critical</p>
                     </div>
                 </td>
             </tr>
