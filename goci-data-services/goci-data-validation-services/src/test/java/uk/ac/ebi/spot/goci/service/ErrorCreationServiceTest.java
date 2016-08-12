@@ -306,17 +306,23 @@ public class ErrorCreationServiceTest {
 
     @Test
     public void testCheckExponentIsPresent() throws Exception {
-        when(validationChecks.checkExponentIsPresent(null)).thenReturn(
+        when(validationChecks.checkExponentIsPresentAndNegative(null)).thenReturn(
                 "Value is empty");
         ValidationError error1 =
-                errorCreationService.checkExponentIsPresent(null);
+                errorCreationService.checkExponentIsPresentAndNegative(null);
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("P-value exponent", "Value is empty", false);
 
-        when(validationChecks.checkExponentIsPresent(Matchers.anyInt())).thenReturn(null);
+        when(validationChecks.checkExponentIsPresentAndNegative(-8)).thenReturn(null);
         ValidationError error2 =
-                errorCreationService.checkExponentIsPresent(Matchers.anyInt());
+                errorCreationService.checkExponentIsPresentAndNegative(Matchers.anyInt());
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
+
+        when(validationChecks.checkExponentIsPresentAndNegative(10)).thenReturn("Value is greater than or equal to zero");
+        ValidationError error3 =
+                errorCreationService.checkExponentIsPresentAndNegative(10);
+        assertThat(error3).extracting("field", "error", "warning").contains("P-value exponent", "Value is greater than or equal to zero", false);
+
     }
 
     @Test

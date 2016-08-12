@@ -121,8 +121,8 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "P-value mantissa", false);
     }
 
-    public ValidationError checkExponentIsPresent(Integer exponent) {
-        String errorMessage = validationChecks.checkExponentIsPresent(exponent);
+    public ValidationError checkExponentIsPresentAndNegative(Integer exponent) {
+        String errorMessage = validationChecks.checkExponentIsPresentAndNegative(exponent);
         return ErrorProcessingService.createError(errorMessage, "P-value exponent", false);
     }
 

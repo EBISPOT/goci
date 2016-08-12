@@ -224,15 +224,15 @@ public class ValidationChecks {
      *
      * @param value Value to be checked
      */
-    public String checkExponentIsPresent(Integer value) {
+    public String checkExponentIsPresentAndNegative(Integer value) {
         String error = null;
 
         if (value == null) {
             error = "Value is empty";
         }
         else {
-            if (value == 0) {
-                error = "Value is zero";
+            if (value >= 0) {
+                error = "Value is greater than or equal to zero";
             }
         }
         return error;
