@@ -134,7 +134,7 @@ public class LociAttributesService {
     }
 
 
-    public String tidy_curator_entered_string(String string) {
+    private String tidy_curator_entered_string(String string) {
 
         String newString = string.trim();
         String newline = System.getProperty("line.separator");
