@@ -1176,18 +1176,14 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/download",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String downloadStudySnps(HttpServletResponse response, Model model, @PathVariable Long studyId)
+    public void downloadStudySnps(HttpServletResponse response, @PathVariable Long studyId)
             throws IOException {
 
         Collection<Association> associations = new ArrayList<>();
         associations.addAll(associationRepository.findByStudyId(studyId));
         Study study = studyRepository.findOne((studyId));
 
-        if (associations.size() == 0) {
-            model.addAttribute("study", study);
-            return "no_association_download_warning";
-        }
-        else {
+        if (associations.size() > 0) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String now = dateFormat.format(date);
@@ -1201,10 +1197,7 @@ public class AssociationController {
                             .concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
-
             associationDownloadService.createDownloadFile(response.getOutputStream(), associations);
-
-            return "redirect:/studies/" + studyId + "/associations";
         }
     }
 
