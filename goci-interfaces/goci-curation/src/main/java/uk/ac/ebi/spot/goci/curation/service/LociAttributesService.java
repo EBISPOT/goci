@@ -56,7 +56,7 @@ public class LociAttributesService {
             authorReportedGene = tidy_curator_entered_string(authorReportedGene);
 
             // Check for intergenic
-            if (authorReportedGene.equals("Intergenic")){
+            if (authorReportedGene.equals("Intergenic")) {
                 authorReportedGene = authorReportedGene.toLowerCase();
             }
 
@@ -141,6 +141,11 @@ public class LociAttributesService {
 
         if (newString.contains(newline)) {
             newString = newString.replace(newline, "");
+        }
+
+        // catch common typo in standard RS_IDs
+        if (newString.startsWith("Rs")) {
+            newString = newString.toLowerCase();
         }
 
         return newString;
