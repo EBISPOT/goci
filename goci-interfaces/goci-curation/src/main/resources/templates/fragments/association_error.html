@@ -8,7 +8,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <a class="btn btn-default"
+            <!--Only show this button if no critical errors-->
+            <a class="btn btn-default" th:if="${#bools.isFalse(criticalErrorsFound)}"
                th:href="@{/studies/{studyId}/associations(studyId=${study.id}, associationId=*{associationId})}">Back to
                                                                                                                  all SNP
                                                                                                                  associations</a>
