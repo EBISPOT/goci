@@ -620,7 +620,7 @@ public class AssociationController {
                                   Model model, HttpServletRequest request) throws EnsemblMappingException {
 
 
-        // Establish study
+        // Establish study and association we are editing
         Association associationToEdit = associationRepository.findOne(associationId);
         Long studyId = associationToEdit.getStudy().getId();
         Study study = studyRepository.findOne(studyId);
@@ -696,9 +696,10 @@ public class AssociationController {
                     .count();
 
             if (errorCount > 0) {
-                // Get mapping details
+
+                // Get mapping details for association we're editing
                 model.addAttribute("mappingDetails",
-                                   associationOperationsService.createMappingDetails(editedAssociation));
+                                   associationOperationsService.createMappingDetails(associationToEdit));
                 model.addAttribute("errors", errors);
 
                 if (associationType.equalsIgnoreCase("interaction")) {
