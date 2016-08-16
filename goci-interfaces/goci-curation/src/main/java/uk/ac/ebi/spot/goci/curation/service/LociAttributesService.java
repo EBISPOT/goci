@@ -177,6 +177,11 @@ public class LociAttributesService {
             newString = newString.replace(newline, "");
         }
 
+        // catch common typo in standard RS_IDs
+        if (newString.startsWith("Rs")) {
+            newString = newString.toLowerCase();
+        }
+
         return newString;
     }
 

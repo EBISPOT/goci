@@ -34,11 +34,11 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
 import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
-import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
@@ -168,7 +168,9 @@ public class AssociationController {
     }
 
 
-    @RequestMapping(value = "studies/{studyId}/association_tracking", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "studies/{studyId}/association_tracking",
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
     public String getAssociationEvents(Model model, @PathVariable Long studyId) {
         model.addAttribute("events", eventsViewService.createViews(studyId));
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -575,7 +577,8 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
+        model.addAttribute("errors",
+                           associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         // Establish study
         Long studyId = associationToView.getStudy().getId();
@@ -746,7 +749,8 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
+        model.addAttribute("errors",
+                           associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -777,7 +781,8 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
+        model.addAttribute("errors",
+                           associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_snp_interaction_association";
     }
@@ -813,7 +818,8 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
+        model.addAttribute("errors",
+                           associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_multi_snp_association";
     }
@@ -849,7 +855,8 @@ public class AssociationController {
         model.addAttribute("mappingDetails", mappingDetails);
 
         // Return any association errors
-        model.addAttribute("errors", associationValidationReportService.generateAssociationWarningsListView(associationId));
+        model.addAttribute("errors",
+                           associationValidationReportService.generateAssociationWarningsListView(associationId));
 
         return "edit_snp_interaction_association";
     }
@@ -1029,17 +1036,13 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/download",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String downloadStudySnps(HttpServletResponse response, Model model, @PathVariable Long studyId)
+    public void downloadStudySnps(HttpServletResponse response, @PathVariable Long studyId)
             throws IOException {
 
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
         Study study = studyRepository.findOne((studyId));
 
-        if (associations.size() == 0) {
-            model.addAttribute("study", study);
-            return "no_association_download_warning";
-        }
-        else {
+        if (associations.size() > 0) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String now = dateFormat.format(date);
@@ -1053,9 +1056,7 @@ public class AssociationController {
                             .concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
-
             associationDownloadService.createDownloadFile(response.getOutputStream(), associations);
-            return "redirect:/studies/" + studyId + "/associations";
         }
     }
 
