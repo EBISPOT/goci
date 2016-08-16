@@ -414,6 +414,7 @@ public class AssociationController {
         if (!rowErrors.isEmpty()) {
             model.addAttribute("errors", rowErrors);
             model.addAttribute("form", snpAssociationStandardMultiForm);
+            model.addAttribute("criticalErrorsFound", true);
             return "add_standard_snp_association";
         }
         else {
@@ -441,6 +442,7 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationStandardMultiForm);
+                model.addAttribute("criticalErrorsFound", true);
                 return "add_standard_snp_association";
             }
             else {
@@ -471,6 +473,7 @@ public class AssociationController {
         if (!rowErrors.isEmpty()) {
             model.addAttribute("errors", rowErrors);
             model.addAttribute("form", snpAssociationStandardMultiForm);
+            model.addAttribute("criticalErrorsFound", true);
             return "add_multi_snp_association";
         }
         else {
@@ -498,6 +501,7 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationStandardMultiForm);
+                model.addAttribute("criticalErrorsFound", true);
                 return "add_multi_snp_association";
             }
             else {
@@ -527,6 +531,7 @@ public class AssociationController {
         if (!colErrors.isEmpty()) {
             model.addAttribute("errors", colErrors);
             model.addAttribute("form", snpAssociationInteractionForm);
+            model.addAttribute("criticalErrorsFound", true);
             return "add_snp_interaction_association";
         }
         else {
@@ -553,6 +558,7 @@ public class AssociationController {
             if (errorCount > 0) {
                 model.addAttribute("errors", errors);
                 model.addAttribute("form", snpAssociationInteractionForm);
+                model.addAttribute("criticalErrorsFound", true);
                 return "add_snp_interaction_association";
             }
             else {
@@ -651,6 +657,7 @@ public class AssociationController {
 
             // Return any association errors
             model.addAttribute("errors", criticalErrors);
+            model.addAttribute("criticalErrorsFound", true);
 
             if (associationType.equalsIgnoreCase("interaction")) {
                 model.addAttribute("form", snpAssociationInteractionForm);
@@ -701,6 +708,7 @@ public class AssociationController {
                 model.addAttribute("mappingDetails",
                                    associationOperationsService.createMappingDetails(associationToEdit));
                 model.addAttribute("errors", errors);
+                model.addAttribute("criticalErrorsFound", true);
 
                 if (associationType.equalsIgnoreCase("interaction")) {
                     model.addAttribute("form", snpAssociationInteractionForm);
