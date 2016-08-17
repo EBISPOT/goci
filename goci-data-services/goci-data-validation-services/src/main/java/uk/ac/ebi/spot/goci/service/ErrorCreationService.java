@@ -157,25 +157,25 @@ public class ErrorCreationService {
         String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
         return ErrorProcessingService.createError(errorMessage,
                                                   "Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls",
-                                                  false);
+                                                  true);
     }
 
     public ValidationError checkAlleleRiskFrequency(String riskFrequency) {
         String errorMessage = validationChecks.checkRiskFrequency(riskFrequency);
         return ErrorProcessingService.createError(errorMessage,
                                                   "Independent SNP risk allele frequency in controls",
-                                                  false);
+                                                  true);
     }
 
     // Check range
     public ValidationError checkRangeIsPresent(String range) {
         String errorMessage = validationChecks.checkValueIsPresent(range);
-        return ErrorProcessingService.createError(errorMessage, "Range", false);
+        return ErrorProcessingService.createError(errorMessage, "Range", true);
     }
 
     public ValidationError checkOrPerCopyRecipRangeIsPresent(String orPerCopyRecipRange) {
         String errorMessage = validationChecks.checkValueIsPresent(orPerCopyRecipRange);
-        return ErrorProcessingService.createError(errorMessage, "OR reciprocal range", false);
+        return ErrorProcessingService.createError(errorMessage, "OR reciprocal range", true);
     }
 
     // Check Gene and SNP are on same chromosome

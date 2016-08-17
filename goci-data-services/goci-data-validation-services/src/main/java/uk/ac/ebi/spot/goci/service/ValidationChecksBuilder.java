@@ -209,7 +209,7 @@ public class ValidationChecksBuilder {
      *
      * @param association row to be checked
      */
-    public Collection<ValidationError> runNoEffectErrors(Association association) {
+    public Collection<ValidationError> runNoEffectChecks(Association association) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
 

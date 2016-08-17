@@ -69,7 +69,7 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
         if (effectType.equalsIgnoreCase("nr")) {
             Collection<ValidationError> noEffectErrors =
-                    validationChecksBuilder.runNoEffectErrors(association);
+                    validationChecksBuilder.runNoEffectChecks(association);
             if (!noEffectErrors.isEmpty()) {
                 associationValidationErrors.addAll(noEffectErrors);
             }
