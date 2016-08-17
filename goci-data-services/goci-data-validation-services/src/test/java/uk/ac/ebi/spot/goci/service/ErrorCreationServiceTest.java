@@ -326,21 +326,6 @@ public class ErrorCreationServiceTest {
     }
 
     @Test
-    public void testCheckPvalueDescriptionIsPresent() throws Exception {
-        when(validationChecks.checkValueIsPresent("")).thenReturn(
-                "Value is empty");
-        ValidationError error1 =
-                errorCreationService.checkPvalueDescriptionIsPresent("");
-        assertThat(error1).extracting("field", "error", "warning")
-                .contains("P-value description", "Value is empty", true);
-
-        when(validationChecks.checkValueIsPresent(Matchers.anyString())).thenReturn(null);
-        ValidationError error2 =
-                errorCreationService.checkPvalueDescriptionIsPresent(Matchers.anyString());
-        assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
-    }
-
-    @Test
     public void testCheckGene() throws Exception {
         when(validationChecks.checkGene("testX")).thenReturn("Gene synbol testX is not valid");
         ValidationError error1 = errorCreationService.checkGene("testX");

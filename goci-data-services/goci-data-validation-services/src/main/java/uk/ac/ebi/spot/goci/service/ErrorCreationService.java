@@ -126,11 +126,6 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "P-value exponent", false);
     }
 
-    public ValidationError checkPvalueDescriptionIsPresent(String pvalueDescription) {
-        String errorMessage = validationChecks.checkValueIsPresent(pvalueDescription);
-        return ErrorProcessingService.createError(errorMessage, "P-value description", true);
-    }
-
     // Loci attributes checks
     public ValidationError checkGene(String gene) {
         String errorMessage = validationChecks.checkGene(gene);
