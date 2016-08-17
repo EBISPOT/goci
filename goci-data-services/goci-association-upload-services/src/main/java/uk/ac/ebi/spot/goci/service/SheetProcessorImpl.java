@@ -56,7 +56,9 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
 
         while (rowNum <= lastRow) {
             AssociationUploadRow associationUploadRow = new AssociationUploadRow();
-            associationUploadRow.setRowNumber(rowNum);
+
+            // Set row number so its consistent with numbering curator will see via Excel
+            associationUploadRow.setRowNumber(rowNum + 1);
             XSSFRow row = sheet.getRow(rowNum);
 
             // If the row contains defined cell values
