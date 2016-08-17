@@ -316,39 +316,54 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     }
 
     private void embedGeneticData(Association association) {
-        if (association.getLoci().size() > 1) {
-            // if this association has multiple loci, this is a SNP x SNP study
+        if (association.getMultiSnpHaplotype() || association.getSnpInteraction()) {
             final String[] entrezMappedGene = new String[1];
             final String[] reportedGeneString = new String[1];
             final String[] regionString = new String[1];
             final String[] contextString = new String[1];
 
+            String primary_delimiter;
+            String secondary_delimiter;
+
+            if(association.getSnpInteraction()){
+                primary_delimiter = " x ";
+                secondary_delimiter = " x ";
+            }
+            else {
+                primary_delimiter = "; ";
+                secondary_delimiter = ", ";
+            }
+
             association.getLoci().forEach(
                     locus -> {
+                        Set<String> regions = new LinkedHashSet<>();
+                        final String[] localGeneString = new String[1];
+
                         locus.getStrongestRiskAlleles().forEach(
                                 riskAllele -> {
                                     strongestAllele =
-                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), " x ");
+                                            setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), primary_delimiter);
 
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
-                                    rsId = setOrAppend(rsId, snp.getRsId(), " x ");
+                                    rsId = setOrAppend(rsId, snp.getRsId(), primary_delimiter);
 
                                     merged = snp.getMerged();
 
                                     snp.getLocations().forEach(
-                                            location -> {
-                                                if (!region.contains(location.getRegion().getName())) {
-                                                    regionString[0] = setOrAppend(regionString[0], location.getRegion().getName(), " x ");
-                                                }
-                                            });
+                                        location -> {
+                                            if (!regions.contains(location.getRegion().getName())) {
+                                                regions.add(location.getRegion().getName());
+                                                regionString[0] = setOrAppend(regionString[0], location.getRegion().getName(), secondary_delimiter);
+                                            }
+                                        });
 
 
-                                    entrezMappedGene[0] = setOrAppend(entrezMappedGene[0], getMappedGeneString(association, snp, "NCBI"), " x ");
+                                    entrezMappedGene[0] = setOrAppend(entrezMappedGene[0], getMappedGeneString(association, snp, "NCBI"), primary_delimiter);
 
                                     // and add entrez links for each entrez mapped gene
                                     entrezMappedGeneLinks.addAll(createMappedGeneLinks(snp, "NCBI"));
 
-                                    contextString[0]= setOrAppend(contextString[0], snp.getFunctionalClass(), " x ");
+                                    contextString[0]= setOrAppend(contextString[0], snp.getFunctionalClass(), primary_delimiter);
                                     Collection<Location> snpLocations = snp.getLocations();
                                     for (Location snpLocation : snpLocations) {
                                         chromosomeNames.add(snpLocation.getChromosomeName());
@@ -363,7 +378,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         );
                         locus.getAuthorReportedGenes().forEach(gene -> {
 //                            reportedGenes.add(gene.getGeneName().trim());
-                            reportedGeneString[0] = setOrAppend(reportedGeneString[0], gene.getGeneName().trim(), " x ");
+                            localGeneString[0] = setOrAppend(localGeneString[0], gene.getGeneName().trim(), ", ");
                             String reportedGeneLink = createReportedGeneLink(gene);
                             if (reportedGeneLink != null) {
                                 reportedGeneLinks.add(reportedGeneLink);
@@ -371,6 +386,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         });
 
                         locusDescription = locus.getDescription();
+                        reportedGeneString[0] = setOrAppend(reportedGeneString[0], localGeneString[0], secondary_delimiter);
                     }
             );
             entrezMappedGenes.add(entrezMappedGene[0]);
@@ -379,8 +395,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             context = contextString[0];
 
         }
+        else if (association.getMultiSnpHaplotype()){
+
+        }
         else {
-            // this is a single study or a haplotype
+            // this is a single study
             association.getLoci().forEach(
                     locus -> {
                         locus.getStrongestRiskAlleles().forEach(
@@ -478,48 +497,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                         closestUpstreamDownstreamGenes.add(geneName);
                                     }
-    //                                        if (closestUpstreamDownstreamGenesToLocation.get(locationId) == null) {
-    //                                            closestUpstreamDownstreamGenesToLocation.put(locationId,
-    //                                                                                         new ArrayList<>());
-    //                                        }
-    //                                        if (context.getIsUpstream()) {
-    //                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(0, geneName);
-    //                                        }
-    //                                        else if (context.getIsDownstream()) {
-    //                                            if (closestUpstreamDownstreamGenesToLocation.get(locationId).isEmpty()) {
-    //                                                closestUpstreamDownstreamGenesToLocation.get(locationId).add(0, "");
-    //                                            }
-    //                                            closestUpstreamDownstreamGenesToLocation.get(locationId).add(1, geneName);
-    //                                        }
                                 }
                             }
                         }
                     }
                 });
-
-
-//        for (Long locationId : closestUpstreamDownstreamGenesToLocation.keySet()) {
-//
-//            List<String> closest = closestUpstreamDownstreamGenesToLocation.get(locationId);
-//
-//            String up, down;
-//            if (closest.get(0) != "") {
-//                up = closest.get(0);
-//            }
-//            else {
-//                up = "?";
-//            }
-//            if (closest.size() > 1 && closest.get(1) != null && closest.get(1) != "") {
-//                down = closest.get(1);
-//            }
-//            else {
-//                down = "?";
-//            }
-//
-//            closestUpstreamDownstreamGenes.add(up.concat(" - ").concat(down));
-//
-//
-//        }
 
 
         if (!mappedGeneList.isEmpty()) {
@@ -675,81 +657,97 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         Map<Long, Set<String>> mappedGenesToLocation = new HashMap<>();
         Map<Long, Map<String, String>> closestUpstreamDownstreamGenesToLocation = new HashMap<>();
 
-        snp.getGenomicContexts().forEach(
-                context -> {
-                    if (context.getGene() != null && context.getGene().getGeneName() != null &&
-                            context.getSource() != null) {
+        List<String> allMappedGenes = new ArrayList<String>();
 
-                        if (source.equalsIgnoreCase(context.getSource())) {
-                            String geneName = context.getGene().getGeneName().trim();
-                            Long locationId = context.getLocation().getId();
+        if(snp.getGenomicContexts().isEmpty()){
+             allMappedGenes.add("No mapped genes");
+        }
+        else {
+            snp.getGenomicContexts().forEach(
+                    context -> {
+                        if (context.getGene() != null && context.getGene().getGeneName() != null &&
+                                context.getSource() != null) {
 
-                            // Get any overlapping genes
-                            if (context.getDistance() == 0) {
+                            if (source.equalsIgnoreCase(context.getSource())) {
 
-                                if (mappedGenesToLocation.containsKey(locationId)) {
-                                    mappedGenesToLocation.get(locationId).add(geneName);
-                                }
 
-                                else {
-                                    Set<String> mappedGenes = new HashSet<>();
-                                    mappedGenes.add(geneName);
-                                    mappedGenesToLocation.put(locationId, mappedGenes);
-                                }
+                                String location = context.getLocation().getChromosomeName();
 
-                            }
+                                String pattern = "^\\d+$";
 
-                            // else get the closest upstream and downstream
-                            // logic here is to create an array with 2 elements, upstream
-                            // at first index and downstream at second
-                            else {
-                                if (context.getIsClosestGene() != null && context.getIsClosestGene()) {
+                                Pattern p = Pattern.compile(pattern);
 
-                                    if (closestUpstreamDownstreamGenesToLocation.containsKey(locationId)) {
-                                        if (context.getIsUpstream()) {
-                                            closestUpstreamDownstreamGenesToLocation.get(locationId).put("up", geneName);
+                                Matcher m = p.matcher(location);
+
+                                if (m.find() || location.equals("X") || location.equals("Y")) {
+
+
+                                    String geneName = context.getGene().getGeneName().trim();
+                                    Long locationId = context.getLocation().getId();
+
+                                    // Get any overlapping genes
+                                    if (context.getDistance() == 0) {
+
+                                        if (mappedGenesToLocation.containsKey(locationId)) {
+                                            mappedGenesToLocation.get(locationId).add(geneName);
                                         }
 
-                                        else if (context.getIsDownstream()) {
-                                            closestUpstreamDownstreamGenesToLocation.get(locationId).put("down",
-                                                                                                         geneName);
+                                        else {
+                                            Set<String> mappedGenes = new HashSet<>();
+                                            mappedGenes.add(geneName);
+                                            mappedGenesToLocation.put(locationId, mappedGenes);
                                         }
 
-//                                        else {
-//                                            getLog().warn("No closest upstream and downstream gene for association: " +
-//                                                                  association.getId() + ", snp: " + snp.getRsId() +
-//                                                                  ", for source " + source);
-//                                        }
                                     }
 
+                                    // else get the closest upstream and downstream
+                                    // logic here is to create an array with 2 elements, upstream
+                                    // at first index and downstream at second
                                     else {
-                                        Map<String, String> closestUpstreamDownstreamGenes = new HashMap<>();
-                                        if (context.getIsUpstream()) {
-                                            closestUpstreamDownstreamGenes.put("up", geneName);
-                                        }
+                                        if (context.getIsClosestGene() != null && context.getIsClosestGene()) {
 
-                                        else if (context.getIsDownstream()) {
-                                            closestUpstreamDownstreamGenes.put("down", geneName);
-                                        }
-                                        else {
-                                            getLog().warn("No closest upstream and downstream gene for association: " +
-                                                                  association.getId() + ", snp: " + snp.getRsId() +
-                                                                  ", for source " + source);
-                                        }
+                                            if (closestUpstreamDownstreamGenesToLocation.containsKey(locationId)) {
+                                                if (context.getIsUpstream()) {
+                                                    closestUpstreamDownstreamGenesToLocation.get(locationId)
+                                                            .put("up", geneName);
+                                                }
 
-                                        if (!closestUpstreamDownstreamGenes.isEmpty()) {
-                                            closestUpstreamDownstreamGenesToLocation.put(locationId,
-                                                                                         closestUpstreamDownstreamGenes);
+                                                else if (context.getIsDownstream()) {
+                                                    closestUpstreamDownstreamGenesToLocation.get(locationId).put("down",
+                                                                                                                 geneName);
+                                                }
+                                            }
+
+                                            else {
+                                                Map<String, String> closestUpstreamDownstreamGenes = new HashMap<>();
+                                                if (context.getIsUpstream()) {
+                                                    closestUpstreamDownstreamGenes.put("up", geneName);
+                                                }
+
+                                                else if (context.getIsDownstream()) {
+                                                    closestUpstreamDownstreamGenes.put("down", geneName);
+                                                }
+                                                else {
+                                                    getLog().warn(
+                                                            "No closest upstream and downstream gene for association: " +
+                                                                    association.getId() + ", snp: " + snp.getRsId() +
+                                                                    ", for source " + source);
+                                                }
+
+                                                if (!closestUpstreamDownstreamGenes.isEmpty()) {
+                                                    closestUpstreamDownstreamGenesToLocation.put(locationId,
+                                                                                                 closestUpstreamDownstreamGenes);
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                });
+                    });
+        }
 
         // Create list of all mapped genes for this SNP
-        List<String> allMappedGenes = new ArrayList<String>();
         for (Long locationId : mappedGenesToLocation.keySet()) {
 
             Set<String> mappedGenes = mappedGenesToLocation.get(locationId);
@@ -788,31 +786,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                 allUpstreamAndDownstreamGenes.add(upstreamDownstreamGeneString);
             }
-//            else {
-//                getLog().warn("Indexing bad genetic data for association " +
-//                                      "'" + association.getId() +
-//                                      "': wrong number of closest upstream and downstream gene, expected 2, got " +
-//                                      closestUpstreamDownstreamGenes.size() + " for source " + source);
-//            }
 
         }
 
         String geneString = "";
-
-//        if (!allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-//            geneString = String.join("|", allMappedGenes)
-//                    .concat("|")
-//                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
-//        }
-//        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-//            geneString = String.join("|", allMappedGenes);
-//        }
-//        else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
-//            geneString = String.join("|", allUpstreamAndDownstreamGenes);
-//        }
-//        else {
-//            geneString = "N/A";
-//        }
 
         if (!allMappedGenes.isEmpty()) {
             if(association.getMultiSnpHaplotype()){
@@ -822,12 +799,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             else{
                 geneString = String.join(", ", allMappedGenes);
             }
-            //                    .concat("|")
-            //                    .concat(String.join("|", allUpstreamAndDownstreamGenes));
         }
-        //        else if (allUpstreamAndDownstreamGenes.isEmpty() && !allMappedGenes.isEmpty()) {
-        //            geneString = String.join("|", allMappedGenes);
-        //        }
+
         else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
             if(association.getMultiSnpHaplotype()){
                 geneString = String.join("; ", allUpstreamAndDownstreamGenes);
