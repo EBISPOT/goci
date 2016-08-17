@@ -239,7 +239,7 @@ public class SheetProcessorImplTest {
                                     "snpStatus",
                                     "snpType",
                                     "efoTrait")
-                .containsExactly(tuple(1,
+                .containsExactly(tuple(2,
                                        null,
                                        "rs123-?",
                                        "rs123",
@@ -285,7 +285,7 @@ public class SheetProcessorImplTest {
                                     "snpStatus",
                                     "snpType",
                                     "efoTrait")
-                .containsExactly(tuple(1,
+                .containsExactly(tuple(2,
                                        "HIBCH, INPP1, STAT1, PMS1",
                                        "rs9845942-?",
                                        "rs9845942",
