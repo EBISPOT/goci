@@ -80,7 +80,7 @@ public class ErrorCreationServiceTest {
         ValidationError error2 = errorCreationService.checkOrIsPresent((float) 1.23);
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
 
-        Float f1 = new Float(0.0 / 0.0);
+        Float f1 = (float) (0.0 / 0.0);
         when(validationChecks.checkOrIsPresent(f1)).thenReturn("Value is not number");
         ValidationError error3 = errorCreationService.checkOrIsPresent((f1));
         assertThat(error3).extracting("field", "error", "warning")
@@ -389,7 +389,7 @@ public class ErrorCreationServiceTest {
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls",
                           "Value is invalid, value is not between 0 and 1",
-                          false);
+                          true);
 
         when(validationChecks.checkRiskFrequency("")).thenReturn("Value is empty");
         ValidationError error2 =
@@ -397,7 +397,7 @@ public class ErrorCreationServiceTest {
         assertThat(error2).extracting("field", "error", "warning")
                 .contains("Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls",
                           "Value is empty",
-                          false);
+                          true);
 
         when(validationChecks.checkRiskFrequency("0.78")).thenReturn(null);
         ValidationError error3 =
@@ -416,7 +416,7 @@ public class ErrorCreationServiceTest {
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("Independent SNP risk allele frequency in controls",
                           "Value is invalid, value is not between 0 and 1",
-                          false);
+                          true);
 
         when(validationChecks.checkRiskFrequency("")).thenReturn("Value is empty");
         ValidationError error2 =
@@ -424,7 +424,7 @@ public class ErrorCreationServiceTest {
         assertThat(error2).extracting("field", "error", "warning")
                 .contains("Independent SNP risk allele frequency in controls",
                           "Value is empty",
-                          false);
+                          true);
 
         when(validationChecks.checkRiskFrequency("0.78")).thenReturn(null);
         ValidationError error3 =
@@ -443,7 +443,7 @@ public class ErrorCreationServiceTest {
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("Range",
                           "Value is empty",
-                          false);
+                          true);
 
         when(validationChecks.checkValueIsPresent(Matchers.anyString())).thenReturn(null);
         ValidationError error2 =
@@ -462,7 +462,7 @@ public class ErrorCreationServiceTest {
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("OR reciprocal range",
                           "Value is empty",
-                          false);
+                          true);
 
         when(validationChecks.checkValueIsPresent(Matchers.anyString())).thenReturn(null);
         ValidationError error2 =
