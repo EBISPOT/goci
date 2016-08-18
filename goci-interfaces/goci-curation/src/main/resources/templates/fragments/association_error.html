@@ -44,16 +44,18 @@
                     </thead>
                     <tbody>
                     <tr th:each="error: ${errors}">
-                        <td th:text="${error.field}?: '' "></td>
-                        <td th:text="${error.errorMessage}?: '' "></td>
-                        <td>
-                            <div th:if="${#bools.isTrue(error.warning)}">
-                                <p>Warning</p>
+                        <div th:switch="${error.warning}">
+                            <div th:case="true">
+                                <td th:text="${error.field}?: '' "></td>
+                                <td th:text="${error.errorMessage}?: '' "></td>
+                                <td>Warning</td>
                             </div>
-                            <div th:if="${#bools.isFalse(error.warning)}">
-                                <p>Critical</p>
+                            <div th:case="false">
+                                <td style="color: red" th:text="${error.field}?: '' "></td>
+                                <td style="color: red" th:text="${error.errorMessage}?: '' "></td>
+                                <td style="color: red">Critical</td>
                             </div>
-                        </td>
+                        </div>
                     </tr>
                     </tbody>
                 </table>

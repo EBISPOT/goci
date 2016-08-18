@@ -75,17 +75,22 @@
             </thead>
             <tbody>
             <tr th:each="fileError: ${fileErrors}">
-                <td th:text="${fileError.row}?: '' "></td>
-                <td th:text="${fileError.columnName}?: '' "></td>
-                <td th:text="${fileError.error}?: '' "></td>
-                <td>
-                    <div th:if="${#bools.isTrue(fileError.warning)}">
-                        <p>Warning</p>
+
+                <div th:switch="${fileError.warning}">
+                    <div th:case="true">
+                        <td th:text="${fileError.row}?: '' "></td>
+                        <td th:text="${fileError.columnName}?: '' "></td>
+                        <td th:text="${fileError.error}?: '' "></td>
+                        <td>Warning</td>
                     </div>
-                    <div th:if="${#bools.isFalse(fileError.warning)}">
-                        <p>Critical</p>
+                    <div th:case="false">
+                        <td style="color: red" th:text="${fileError.row}?: '' "></td>
+                        <td style="color: red" th:text="${fileError.columnName}?: '' "></td>
+                        <td style="color: red" th:text="${fileError.error}?: '' "></td>
+                        <td style="color: red">Critical</td>
                     </div>
-                </td>
+                </div>
+      
             </tr>
             </tbody>
         </table>
