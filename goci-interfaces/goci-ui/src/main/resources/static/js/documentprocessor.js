@@ -52,8 +52,7 @@ function processStudy(study, table) {
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append(
             $("<td>").html(study.initialSampleDescription)));
 
-    if ($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") &&
-            study.ancestryLinks != null) {
+    if (study.ancestryLinks != null) {
         var initial = '';
         var replication = '';
         var iniancestries = [];
@@ -210,13 +209,20 @@ function processStudy(study, table) {
             replication = replication.concat("NR");
         }
 
+        var ancestry_flag = '';
+        // flag pre-2011 studies!
+        if($.datepicker.parseDate("yy-mm-dd", pubdate) < $.datepicker.parseDate("yy-mm-dd", "2011-01-01")){
+            ancestry_flag = "<span class='glyphicon glyphicon-exclamation-sign context-help' " +
+                    "data-toggle='tooltip' data-original-title='Pre-2011 ancestry not double-curated'></span>"
+        }
+
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html(
-                "Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
+                "Initial ancestry (country of recruitment)")).append($("<td>").html(initial.concat(ancestry_flag))));
         innerTable.append($("<tr>").append($("<th>").attr('style',
                                                           'width: 30%').html("Replication sample description")).append($(
                 "<td>").html(study.replicateSampleDescription)));
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html(
-                "Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
+                "Replication ancestry (country of recruitment)")).append($("<td>").html(replication.concat(ancestry_flag))));
     }
     else {
         innerTable.append($("<tr>").append($("<th>").attr('style',
