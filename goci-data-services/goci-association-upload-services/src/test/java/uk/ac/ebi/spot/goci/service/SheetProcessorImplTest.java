@@ -131,7 +131,7 @@ public class SheetProcessorImplTest {
         rowc2.createCell(11); // Beta
         rowc2.createCell(12); // Beta unit
         rowc2.createCell(13); // Beta direction
-        rowc2.createCell(14).setCellValue("[NR]");
+        rowc2.createCell(14);
         rowc2.createCell(15);
         rowc2.createCell(16).setCellValue(0.56);
         rowc2.createCell(17);
@@ -291,10 +291,10 @@ public class SheetProcessorImplTest {
                                        "rs9845942",
                                        null,
                                        null,
-                                       "NR",
+                                       null,
                                        1,
                                        -9,
-                                       "test", (float) 2.48, null, null, null, null, "[NR]",
+                                       "test", (float) 2.48, null, null, null, null, null,
                                        null, (float) 0.56, null, "N", "N", null, "novel", null));
     }
 
