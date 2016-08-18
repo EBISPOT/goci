@@ -207,6 +207,6 @@ public class ErrorCreationService {
 
     public ValidationError checkSnpStatusIsPresent(Boolean genomeWide, Boolean limitedList) {
         String errorMessage = validationChecks.checkSnpStatus(genomeWide, limitedList);
-        return ErrorProcessingService.createError(errorMessage, "SNP Status", false);
+        return ErrorProcessingService.createError(errorMessage, "SNP Status", true);
     }
 }
