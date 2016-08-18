@@ -384,7 +384,7 @@ public class AssociationRowProcessorTest {
                                            "lastMappingPerformedBy",
                                            "lastUpdateDate")
                 .containsExactly(null,
-                                 "NR",
+                                 null,
                                  "(description)",
                                  2,
                                  -7,
@@ -471,7 +471,7 @@ public class AssociationRowProcessorTest {
                                            "lastMappingPerformedBy",
                                            "lastUpdateDate")
                 .containsExactly(null,
-                                 "NR",
+                                 null,
                                  null,
                                  2,
                                  -7,
@@ -480,7 +480,7 @@ public class AssociationRowProcessorTest {
                                  false,
                                  null,
                                  null,
-                                 "[NR]",
+                                 null,
                                  null,
                                  null,
                                  null,
