@@ -568,7 +568,7 @@ public class ErrorCreationServiceTest {
         ValidationError error1 =
                 errorCreationService.checkSnpStatusIsPresent(false, false);
         assertThat(error1).extracting("field", "error", "warning")
-                .contains("SNP Status", "No status selected", false);
+                .contains("SNP Status", "No status selected", true);
 
         when(validationChecks.checkSnpStatus(true, true)).thenReturn(null);
         ValidationError error2 =
