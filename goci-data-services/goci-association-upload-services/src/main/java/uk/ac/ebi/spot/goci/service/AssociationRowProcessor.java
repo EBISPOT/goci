@@ -103,9 +103,6 @@ public class AssociationRowProcessor {
                 }
             }
         }
-        else if(row.getRange() == null){
-            newAssociation.setRange("[NR]");
-        }
         else {
             newAssociation.setRange(row.getRange());
         }
