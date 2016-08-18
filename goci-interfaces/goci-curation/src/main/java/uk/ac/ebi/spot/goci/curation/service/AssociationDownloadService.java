@@ -143,7 +143,7 @@ public class AssociationDownloadService {
 
             // Range
             if (association.getRange() == null) {
-                line.append("[NR]");
+                line.append("");
             }
             else {
                 line.append(association.getRange());
@@ -151,10 +151,7 @@ public class AssociationDownloadService {
             line.append("\t");
 
             // OR recip range
-             if (association.getOrPerCopyRecipRange() == null && measurementType.equals("or")) {
-                line.append("[NR]");
-            }
-           else if (association.getOrPerCopyRecipRange() == null) {
+            if (association.getOrPerCopyRecipRange() == null) {
                 line.append("");
             }
             else {
