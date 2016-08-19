@@ -811,6 +811,7 @@ public class SolrSearchController {
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
             @RequestParam(value = "facet", required = true) String facet,
+            @RequestParam(value = "ancestry", defaultValue = "false") boolean ancestry,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -894,13 +895,13 @@ public class SolrSearchController {
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
-        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet);
+        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet, ancestry);
 
 
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -926,7 +927,7 @@ public class SolrSearchController {
             String output;
             while ((output = br.readLine()) != null) {
 
-                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet);
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet, ancestry);
                 file = jsonProcessor.processJson();
 
             }

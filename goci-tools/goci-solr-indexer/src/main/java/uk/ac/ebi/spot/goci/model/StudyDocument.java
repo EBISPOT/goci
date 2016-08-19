@@ -33,8 +33,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String replicateSampleDescription;
 
     @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
     @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
 
     @Field @NonEmbeddableField private int associationCount;
@@ -99,8 +101,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.platform = embedPlatformField(study);
 
         this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
         this.numberOfIndividuals = new LinkedHashSet<>();
+        this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
         embedAncestryData(study);
 
@@ -276,6 +280,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     ancestryLink = type;
 
+                    String coo;
+
+                    if(ethnicity.getCountryOfOrigin() != null) {
+                        coo = ethnicity.getCountryOfOrigin();
+                    }
+                    else {
+                        coo = "NR";
+                    }
+
+                    ancestryLink = ancestryLink.concat("|").concat(coo);
+
+
                     String cor;
 
                     if (ethnicity.getCountryOfRecruitment() != null) {
@@ -304,6 +320,15 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     }
 
                     ancestryLink = ancestryLink.concat("|").concat(noInds);
+
+                    String description = "";
+
+                    if(ethnicity.getDescription() != null){
+                        additionalAncestryDescription.add(ethnicity.getDescription());
+                        description = ethnicity.getDescription();
+                    }
+
+                    ancestryLink = ancestryLink.concat("|").concat(description);
 
                     ancestryLinks.add(ancestryLink);
 
@@ -376,4 +401,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
 
+    public Collection<String> getAdditionalAncestryDescription() {
+        return additionalAncestryDescription;
+    }
 }
