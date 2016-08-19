@@ -62,6 +62,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // pluralise all other information, but retain order
     @Field("chromosomeName") private Set<String> chromosomeNames;
     @Field("chromosomePosition") private Set<Integer> chromosomePositions;
+    @Field("chromLocation") @NonEmbeddableField  private Set<String> chromLocations;
     @Field("positionLinks") private Collection<String> positionLinks;
 
     @Field("locusDescription") @NonEmbeddableField private String locusDescription;
@@ -121,6 +122,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.region = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
         this.chromosomePositions = new LinkedHashSet<>();
+        this.chromLocations = new LinkedHashSet<>();
         this.positionLinks = new LinkedHashSet<>();
 
         this.entrezMappedGenes = new LinkedHashSet<>();
@@ -321,6 +323,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             final String[] reportedGeneString = new String[1];
             final String[] regionString = new String[1];
             final String[] contextString = new String[1];
+            final String[] positionString = new String[1];
 
             String primary_delimiter;
             String secondary_delimiter;
@@ -366,12 +369,24 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     contextString[0]= setOrAppend(contextString[0], snp.getFunctionalClass(), primary_delimiter);
                                     Collection<Location> snpLocations = snp.getLocations();
                                     for (Location snpLocation : snpLocations) {
-                                        chromosomeNames.add(snpLocation.getChromosomeName());
+                                        String chromName= snpLocation.getChromosomeName();
+
+                                        chromosomeNames.add(chromName);
 
                                         if (snpLocation.getChromosomePosition() != null) {
                                             chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
                                         }
                                         positionLinks.add(createPositionLink(snpLocation));
+
+                                        String pattern = "^\\d+$";
+
+                                        Pattern p = Pattern.compile(pattern);
+
+                                        Matcher m = p.matcher(chromName);
+
+                                        if (m.find() || chromName.equals("X") || chromName.equals("Y")) {
+                                            positionString[0] = setOrAppend(positionString[0], getPositionString(snpLocation), primary_delimiter);
+                                        }
                                     }
 
                                 }
@@ -392,6 +407,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             entrezMappedGenes.add(entrezMappedGene[0]);
             reportedGenes.add(reportedGeneString[0]);
             region.add(regionString[0]);
+            chromLocations.add(positionString[0]);
             context = contextString[0];
 
         }
@@ -432,11 +448,24 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     context = snp.getFunctionalClass();
                                     Collection<Location> snpLocations = snp.getLocations();
                                     for (Location snpLocation : snpLocations) {
-                                        chromosomeNames.add(snpLocation.getChromosomeName());
+                                        String chromName= snpLocation.getChromosomeName();
+
+                                        chromosomeNames.add(chromName);
+
                                         if (snpLocation.getChromosomePosition() != null) {
                                             chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
                                         }
                                         positionLinks.add(createPositionLink(snpLocation));
+
+                                        String pattern = "^\\d+$";
+
+                                        Pattern p = Pattern.compile(pattern);
+
+                                        Matcher m = p.matcher(chromName);
+
+                                        if (m.find() || chromName.equals("X") || chromName.equals("Y")) {
+                                            chromLocations.add(getPositionString(snpLocation));
+                                        }
                                     }
                                 }
                         );
@@ -451,6 +480,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     }
             );
         }
+    }
+
+    private String getPositionString(Location snpLocation) {
+        String chrom = snpLocation.getChromosomeName();
+        String position = snpLocation.getChromosomePosition();
+
+        String location = "chr".concat(chrom).concat(":").concat(position);
+
+        return location;
     }
 
     private Collection<String> getMappedGenes(Association association,
@@ -871,5 +909,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void setMultiSnpHaplotype(Boolean multiSnpHaplotype) {
         this.multiSnpHaplotype = multiSnpHaplotype;
+    }
+
+    public Set<String> getChromLocations() {
+        return chromLocations;
     }
 }
