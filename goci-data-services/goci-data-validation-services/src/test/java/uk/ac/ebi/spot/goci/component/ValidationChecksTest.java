@@ -123,6 +123,7 @@ public class ValidationChecksTest {
         assertThat(validationChecks.checkGene(null)).isEqualTo("Gene name is empty");
         assertThat(validationChecks.checkGene("MADEUPGENE")).isEqualTo("Gene symbol MADEUPGENE is not valid");
         assertThat(validationChecks.checkGene("HBS1L")).isNull();
+        assertThat(validationChecks.checkGene("intergenic")).isNull();
     }
 
     @Test
@@ -167,6 +168,9 @@ public class ValidationChecksTest {
         // Test SNP with different location to gene
         assertThat(validationChecks.checkSnpGeneLocation("rs11894081", "ELF1")).isEqualTo(
                 "Gene ELF1 and SNP rs11894081 are not on same chromosome");
+
+        // Test "intergenic"
+        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "intergenic")).isNull();
     }
 
     @Test

@@ -254,7 +254,9 @@ public class ValidationChecks {
             }
             // Check gene name in Ensembl
             else {
-                error = geneCheckingRestService.checkGeneSymbolIsValid(geneName);
+                if (!geneName.equalsIgnoreCase("intergenic")) {
+                    error = geneCheckingRestService.checkGeneSymbolIsValid(geneName);
+                }
             }
         }
         return error;
@@ -301,12 +303,14 @@ public class ValidationChecks {
             // Get all SNP locations and check gene location is one of them
             Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
             if (!snpChromosomeNames.isEmpty()) {
-                String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
-                if (!snpChromosomeNames.contains(geneChromosome)) {
-                    error = "Gene ".concat(gene)
-                            .concat(" and SNP ")
-                            .concat(snp)
-                            .concat(" are not on same chromosome");
+                if (!gene.equalsIgnoreCase("intergenic")) {
+                    String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
+                    if (!snpChromosomeNames.contains(geneChromosome)) {
+                        error = "Gene ".concat(gene)
+                                .concat(" and SNP ")
+                                .concat(snp)
+                                .concat(" are not on same chromosome");
+                    }
                 }
             }
             else {
