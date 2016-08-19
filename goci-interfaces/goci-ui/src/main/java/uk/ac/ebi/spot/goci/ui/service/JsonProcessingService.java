@@ -20,6 +20,8 @@ public class JsonProcessingService {
     private boolean includeAnnotations;
     private String type;
     private String newline;
+    private boolean isMultiSnpHaplotype;
+    private boolean isSnpInteraction;
 
     public JsonProcessingService(String json, boolean includeAnnotations, String type) {
         this.json = json;
@@ -74,6 +76,7 @@ public class JsonProcessingService {
     }
     
     public void processStudyJson(StringBuilder line, JsonNode doc) throws IOException{
+
         line.append(getDate(doc));
         line.append("\t");
 
@@ -138,6 +141,8 @@ public class JsonProcessingService {
     }
 
     public void processAssociationJson(StringBuilder line, JsonNode doc) throws IOException {
+        setMultiSnpHaplotype(doc.get("multiSnpHaplotype").asBoolean());
+        setSnpInteraction(doc.get("snpInteraction").asBoolean());
 
         line.append(getDate(doc));
         line.append("\t");
@@ -249,7 +254,10 @@ public class JsonProcessingService {
         line.append(context);
         line.append("\t");
 
-        if (mappedGenes.get("ingene").getName() != "") {
+        if(isMultiSnpHaplotype || isSnpInteraction){
+            line.append("");
+        }
+        else if (mappedGenes.get("ingene").getName() != "") {
             line.append("0");
         }
         else {
@@ -497,9 +505,27 @@ public class JsonProcessingService {
                 Matcher m = p.matcher(chrom);
 
                 if (m.find() || chrom.equals("X") || chrom.equals("Y")) {
-                    chromName = locs[0];
-                    chromPos = locs[1];
-                    region = locs[2];
+                    if(isMultiSnpHaplotype || isSnpInteraction){
+                        if(chromName.equals("")){
+                            chromName = locs[0];
+                            chromPos = locs[1];
+                            region = doc.get("region").get(0).asText().trim();
+                        }
+                        else if (isMultiSnpHaplotype){
+                            chromName = chromName.concat(";").concat(locs[0]);
+                            chromPos = chromPos.concat(";").concat(locs[1]);
+                        }
+                        else {
+                            chromName = chromName.concat(" x ").concat(locs[0]);
+                            chromPos = chromPos.concat(" x ").concat(locs[1]);
+                        }
+
+                    }
+                    else {
+                        chromName = locs[0];
+                        chromPos = locs[1];
+                        region = locs[2];
+                    }
                 }
                 else {
                     System.out.println(loc);
@@ -727,6 +753,22 @@ public class JsonProcessingService {
         traits.put("uri", uri);
 
         return traits;
+    }
+
+    public boolean isMultiSnpHaplotype() {
+        return isMultiSnpHaplotype;
+    }
+
+    public void setMultiSnpHaplotype(boolean multiSnpHaplotype) {
+        isMultiSnpHaplotype = multiSnpHaplotype;
+    }
+
+    public boolean isSnpInteraction() {
+        return isSnpInteraction;
+    }
+
+    public void setSnpInteraction(boolean snpInteraction) {
+        isSnpInteraction = snpInteraction;
     }
 
 
