@@ -886,6 +886,10 @@ public class SolrSearchController {
                 }
             }
         }
+        else if (ancestry){
+            fileName = "gwas_catalog-ancestry-downloaded_".concat(now).concat(".tsv");
+
+        }
         else {
             fileName = "gwas-".concat(facet).concat("-downloaded_").concat(now)
                     .concat("-")
