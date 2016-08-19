@@ -66,6 +66,7 @@ import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -851,7 +852,7 @@ public class StudyController {
     @ResponseBody
     public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
                                                 HttpServletRequest request,
-                                                HttpServletResponse response) {
+                                                HttpServletResponse response) throws FileNotFoundException {
 
         // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
         String path = request.getServletPath();
@@ -915,6 +916,10 @@ public class StudyController {
         return "pubmed_import_warning";
     }
 
+    @ExceptionHandler({FileNotFoundException.class})
+    public String handleFileNotFound() {
+        return "error_pages/file_not_found";
+    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms

@@ -6,14 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.GeneBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.LocationBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.LocusBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.RegionBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.RiskAlleleBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.SingleNucleotidePolymorphismBuilder;
+import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
+import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
+import uk.ac.ebi.spot.goci.builder.GeneBuilder;
+import uk.ac.ebi.spot.goci.builder.LocationBuilder;
+import uk.ac.ebi.spot.goci.builder.LocusBuilder;
+import uk.ac.ebi.spot.goci.builder.RegionBuilder;
+import uk.ac.ebi.spot.goci.builder.RiskAlleleBuilder;
+import uk.ac.ebi.spot.goci.builder.SingleNucleotidePolymorphismBuilder;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -26,7 +26,6 @@ import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,12 +45,6 @@ import static org.junit.Assert.assertNull;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SingleSnpMultiSnpAssociationServiceTest {
-
-    @Mock
-    private AssociationRepository associationRepository;
-
-    @Mock
-    private LocusRepository locusRepository;
 
     @Mock
     private GenomicContextRepository genomicContextRepository;
@@ -221,8 +214,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        snpAssociationFormService = new SingleSnpMultiSnpAssociationService(associationRepository,
-                                                                            locusRepository,
+        snpAssociationFormService = new SingleSnpMultiSnpAssociationService(
                                                                             genomicContextRepository,
                                                                             lociAttributesService);
     }

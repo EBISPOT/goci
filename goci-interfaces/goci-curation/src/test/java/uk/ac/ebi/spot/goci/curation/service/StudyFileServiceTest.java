@@ -5,15 +5,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockMultipartFile;
-import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
+import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
+import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
-import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -117,7 +116,7 @@ public class StudyFileServiceTest {
     }
 
     @Test
-    public void testCreateFileUploadEvent(){
+    public void testCreateFileUploadEvent() {
         // Stubbing
         when(studyRepository.findOne(STUDY_ID)).thenReturn(STUDY);
 

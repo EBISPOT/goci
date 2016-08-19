@@ -365,6 +365,7 @@ public class Study implements Trackable {
     public void setGenomewideArray(Boolean genomewideArray) {
         this.genomewideArray = genomewideArray;
     }
+
     public Collection<Event> getEvents() {
         return events;
     }

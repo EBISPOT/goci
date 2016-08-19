@@ -85,6 +85,9 @@ public class Association implements Trackable {
     @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
 
+    @OneToMany(mappedBy = "association", orphanRemoval = true)
+    private Collection<AssociationValidationReport> associationValidationReports = new ArrayList<>();
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastMappingDate;
 
@@ -124,9 +127,11 @@ public class Association implements Trackable {
                        Collection<Locus> loci,
                        Collection<EfoTrait> efoTraits,
                        AssociationReport associationReport,
+                       Collection<AssociationValidationReport> associationValidationReport,
                        Date lastMappingDate,
                        String lastMappingPerformedBy,
-                       Date lastUpdateDate, Collection<Event> events) {
+                       Date lastUpdateDate,
+                       Collection<Event> events) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -148,6 +153,7 @@ public class Association implements Trackable {
         this.loci = loci;
         this.efoTraits = efoTraits;
         this.associationReport = associationReport;
+        this.associationValidationReports = associationValidationReport;
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastUpdateDate = lastUpdateDate;
@@ -368,6 +374,14 @@ public class Association implements Trackable {
 
     public void setEvents(Collection<Event> events) {
         this.events = events;
+    }
+
+    public Collection<AssociationValidationReport> getAssociationValidationReports() {
+        return associationValidationReports;
+    }
+
+    public void setAssociationValidationReports(Collection<AssociationValidationReport> associationValidationReports) {
+        this.associationValidationReports = associationValidationReports;
     }
 
     @Override public synchronized void addEvent(Event event) {

@@ -52,10 +52,15 @@
     <div class="row">
         <div class="col-md-10">
             <ul class="nav nav-pills" role="tablist">
-                <li role="presentation"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study Tracking</a>
+                <li role="presentation"><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Study
+                                                                                                   Tracking</a>
                 </li>
                 <li role="presentation" class="active">
-                    <a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ancestry Tracking</a>
+                    <a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ancestry
+                                                                                         Tracking</a>
+                </li>
+                <li role="presentation"><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association
+                                                                                                               Tracking</a>
                 </li>
             </ul>
         </div>

@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -18,6 +19,13 @@ import java.util.Collection;
 @Service
 public class AssociationDownloadService {
 
+    private AssociationOperationsService associationOperationsService;
+
+    @Autowired
+    public AssociationDownloadService(AssociationOperationsService associationOperationsService) {
+        this.associationOperationsService = associationOperationsService;
+    }
+
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
             throws IOException {
 
@@ -33,13 +41,14 @@ public class AssociationDownloadService {
 
         String header =
                 "Gene(s)\tStrongest SNP-Risk Allele\tSNP\tProxy SNP" +
-                        "\tIndependent SNP risk allele frequency in controls\tRisk element (allele, haplotype or SNPxSNP interaction) frequency in controls" +
+                        "\tIndependent SNP risk allele frequency in controls" +
+                        "\tRisk element (allele, haplotype or SNPxSNP interaction) frequency in controls" +
                         "\tP-value mantissa\tP-value exponent\tP-value description" +
-                        "\tEffect type\tOR\tOR reciprocal" +
+                        "\tOR\tOR reciprocal" +
                         "\tBeta\tBeta unit\tBeta direction" +
                         "\tRange\tOR reciprocal range" +
                         "\tStandard Error\tOR/Beta description" +
-                        "\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tSNP Status\tSNP type (novel/known)\tEFO traits\r\n";
+                        "\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tSNP Status\tSNP type\tEFO traits\r\n";
 
 
         StringBuilder output = new StringBuilder();
@@ -50,6 +59,8 @@ public class AssociationDownloadService {
             StringBuilder line = new StringBuilder();
 
             extractGeneticData(association, line);
+
+            String measurementType = associationOperationsService.determineIfAssociationIsOrType(association);
 
             if (association.getRiskFrequency() == null) {
                 line.append("");
@@ -82,21 +93,6 @@ public class AssociationDownloadService {
             }
             else {
                 line.append(association.getPvalueDescription());
-            }
-            line.append("\t");
-
-            // Determine effect type
-            if (association.getOrPerCopyNum() == null && association.getBetaNum() == null) {
-                line.append("NR");
-            }
-            else if (association.getOrPerCopyNum() == null && association.getBetaNum() != null) {
-                line.append("Beta");
-            }
-            else if (association.getOrPerCopyNum() != null && association.getBetaNum() == null) {
-                line.append("OR");
-            }
-            else {
-                line.append("");
             }
             line.append("\t");
 
@@ -181,29 +177,19 @@ public class AssociationDownloadService {
             }
             line.append("\t");
 
-            if (association.getMultiSnpHaplotype() == null) {
-                line.append("");
+            if (association.getMultiSnpHaplotype()) {
+                line.append("Y");
             }
             else {
-                if (association.getMultiSnpHaplotype()) {
-                    line.append("Y");
-                }
-                else {
-                    line.append("N");
-                }
+                line.append("");
             }
             line.append("\t");
 
-            if (association.getSnpInteraction() == null) {
-                line.append("");
+            if (association.getSnpInteraction()) {
+                line.append("Y");
             }
             else {
-                if (association.getSnpInteraction()) {
-                    line.append("Y");
-                }
-                else {
-                    line.append("N");
-                }
+                line.append("");
             }
             line.append("\t");
 
@@ -228,9 +214,7 @@ public class AssociationDownloadService {
             line.append("\r\n");
 
             output.append(line.toString());
-
         }
-
         return output.toString();
     }
 

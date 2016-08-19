@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -12,7 +10,6 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.Future;
 
 /**
  * Created by emma on 06/06/2016.
@@ -26,15 +23,15 @@ public class StudyPrintService {
 
     private StudyRepository studyRepository;
     private AssociationRepository associationRepository;
-    private AssociationViewService associationViewService;
+    private SnpAssociationTableViewService snpAssociationTableViewService;
 
     @Autowired
     public StudyPrintService(StudyRepository studyRepository,
                              AssociationRepository associationRepository,
-                             AssociationViewService associationViewService) {
+                             SnpAssociationTableViewService snpAssociationTableViewService) {
         this.studyRepository = studyRepository;
         this.associationRepository = associationRepository;
-        this.associationViewService = associationViewService;
+        this.snpAssociationTableViewService = snpAssociationTableViewService;
     }
 
     public Collection<SnpAssociationTableView> generatePrintView(Long studyId) {
@@ -49,7 +46,7 @@ public class StudyPrintService {
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
             SnpAssociationTableView snpAssociationTableView =
-                    associationViewService.createSnpAssociationTableView(association);
+                    snpAssociationTableViewService.createSnpAssociationTableView(association);
             snpAssociationTableViews.add(snpAssociationTableView);
         }
         return snpAssociationTableViews;

@@ -8,15 +8,13 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
-            <a class="btn btn-default"
+            <!--Only show this button if no critical errors-->
+            <a class="btn btn-default" th:if="${#bools.isFalse(criticalErrorsFound)}"
                th:href="@{/studies/{studyId}/associations(studyId=${study.id}, associationId=*{associationId})}">Back to
                                                                                                                  all SNP
                                                                                                                  associations</a>
             <button id="errorButton"
-                    th:if="${ not #strings.isEmpty(errors.snpErrors)
-                or not #strings.isEmpty(errors.riskAlleleErrors)
-                or not #strings.isEmpty(errors.proxyErrors)
-                or not #maps.isEmpty(errors.associationErrorMap)}"
+                    th:if="${ not #lists.isEmpty(errors)}"
                     type="button"
                     class="btn btn-danger"
                     data-toggle="collapse"
@@ -33,32 +31,35 @@
     <div class="row">
         <div class="collapse" id="collapseErrors">
             <div class="well col-md-offset-4 col-md-6">
+                <table id="mainTable"
+                       class="table table-hover table-bordered"
+                       th:if="${not #lists.isEmpty(errors)}" cellspacing="0" width="100%">
+                    <br/>
+                    <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Error Message</th>
+                        <th>Error Level</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="error: ${errors}">
+                        <div th:switch="${error.warning}">
+                            <div th:case="true">
+                                <td th:text="${error.field}?: '' "></td>
+                                <td th:text="${error.errorMessage}?: '' "></td>
+                                <td>Warning</td>
+                            </div>
+                            <div th:case="false">
+                                <td style="color: red" th:text="${error.field}?: '' "></td>
+                                <td style="color: red" th:text="${error.errorMessage}?: '' "></td>
+                                <td style="color: red">Critical</td>
+                            </div>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
 
-                <div th:if="${not #maps.isEmpty(errors.associationErrorMap)}">
-                    <strong>
-                        <span th:utext="'&lt;br /&gt;' + 'Mapping errors : '+'&lt;br /&gt;' ?: ''"></span>
-                        <span th:each="error: ${errors.associationErrorMap}"
-                              th:utext="${error.value} +' ('+ ${error.key} +') ' +'&lt;br /&gt;' ?: ''"></span>
-                    </strong>
-                </div>
-
-                <div th:if="${ not #strings.isEmpty(errors.snpErrors)
-                        or not #strings.isEmpty(errors.riskAlleleErrors)
-                        or not #strings.isEmpty(errors.proxyErrors)}">
-                    <span th:utext="'&lt;br /&gt;' +'Note: '+ '&lt;br /&gt;'"></span>
-
-                    <div th:if="${not #strings.isEmpty(errors.snpErrors)}">
-                        <span th:utext="'SNP errors: '+${#strings.replace(errors.snpErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
-                    </div>
-
-                    <div th:if="${not #strings.isEmpty(errors.riskAlleleErrors)}">
-                        <span th:utext="'Risk allele errors: '+${#strings.replace(errors.riskAlleleErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
-                    </div>
-
-                    <div th:if="${not #strings.isEmpty(errors.proxyErrors)}">
-                        <span th:utext="'Proxy SNP errors: '+${#strings.replace(errors.proxyErrors,'.','&lt;br /&gt;')}+ '&lt;br /&gt;' ?: ''"></span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

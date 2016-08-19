@@ -248,7 +248,7 @@ function processAssociation(association, table) {
     //}
 
     if (association.rsId != null && association.strongestAllele != null) {
-        if ((association.rsId[0].indexOf(',') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
+        if ((association.rsId[0].indexOf(';') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
             var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat(
                     "</a></span>");
             var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
@@ -264,10 +264,10 @@ function processAssociation(association, table) {
             var description = '';
 
             //this is for a multi-SNP haplotype
-            if (association.rsId[0].indexOf(',') != -1) {
-                rsIds = association.rsId[0].split(',');
-                alleles = association.strongestAllele[0].split(',');
-                type = ',';
+            if (association.rsId[0].indexOf(';') != -1) {
+                rsIds = association.rsId[0].split(';');
+                alleles = association.strongestAllele[0].split(';');
+                type = ';';
 
                 if (association.locusDescription != null && association.locusDescription.indexOf('aplotype') != -1) {
                     description = association.locusDescription;
@@ -298,7 +298,7 @@ function processAssociation(association, table) {
                             }
                             else {
                                 content =
-                                        content.concat(', <br>').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
+                                        content.concat('; <br>').concat(rsidsearch.concat('&nbsp;&nbsp;').concat(ensembl));
                             }
                         }
                     }
@@ -358,11 +358,42 @@ function processAssociation(association, table) {
     }
     row.append($("<td>").html(association.range));
     if (association.region != null) {
-        if (association.region[0].indexOf('[') != -1) {
-            var region = association.region[0].split('[')[0];
-            var regionsearch = "<span><a href='search?query=".concat(region).concat("'>").concat(association.region[0]).concat(
-                    "</a></span>");
-            row.append($("<td>").html(regionsearch));
+        if (association.region[0].indexOf(' x ') != -1) {
+            var regions = association.region[0].split(' x ');
+
+            var region = '';
+            for(var r = 0; r < regions.length; r++){
+                var regionsearch = "<span><a href='search?query=".concat(region).concat("'>").concat(regions[r].trim()).concat(
+                        "</a></span>");
+
+                if(region == ''){
+                    region = regionsearch;
+                }
+                else{
+                    region = region.concat(" x ").concat(regionsearch);
+                }
+            }
+
+            row.append($("<td>").html(region));
+        }
+        else if (association.region[0].indexOf(',') != -1) {
+            var regions = association.region[0].split(', ');
+
+            var region = '';
+            for(var r = 0; r < regions.length; r++){
+                var regionsearch = "<a href='search?query=".concat(region).concat("'>").concat(regions[r].trim()).concat(
+                        "</a>");
+
+                if(region == ''){
+                    region = "<span>".concat(regionsearch);
+                }
+                else{
+                    region = region.concat(", ").concat(regionsearch);
+                }
+            }
+            region = region.concat("</span>");
+
+            row.append($("<td>").html(region));
         }
         else {
             var regionsearch = "<span><a href='search?query=".concat(association.region).concat("'>").concat(association.region).concat(
@@ -384,13 +415,6 @@ function processAssociation(association, table) {
 
             if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
-                location = location.concat("chr").concat(chromName);
-                console.log(chromName);
-                if (position == '') {
-                    position = "?";
-                }
-                location = location.concat(":").concat(position);
-
                 var min = parseInt(position) - 500;
                 var max = parseInt(position) + 500;
                 var locationsearch = min.toString().concat("-").concat(max.toString());
@@ -403,16 +427,27 @@ function processAssociation(association, table) {
                         "'  target='_blank'>").concat(
                         "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                location = location.concat('&nbsp;&nbsp;').concat(ensembl);
+                var locString = "chr".concat(chromName);
+                if (position == '') {
+                    position = "?";
+                }
+                locString = locString.concat(":").concat(position);
+                var locURL = locString.concat('&nbsp;&nbsp;').concat(ensembl);
+
+                if(association.snpInteraction || association.multiSnpHaplotype){
+                    if(location == ''){
+                        location = association.chromLocation[0];
+                    }
+
+                   location = location.replace(locString, locURL);
+                }
+
+                else{
+                    location = location.concat(locURL);
+
+                }
+
             }
-            //else {
-            //    location = location.concat("chr").concat("?");
-            //}
-
-            //if (association.chromosomePosition != null) {
-            //    var position = association.chromosomePosition[0];
-
-
         }
     }
     else {
@@ -453,20 +488,32 @@ function processAssociation(association, table) {
             }
             else {
                 for (var j = 0; j < association.reportedGene.length; j++) {
-                    var repgenesearch = "<span><a href='search?query=".concat(association.reportedGene[j]).concat("'>").concat(
-                            association.reportedGene[j]).concat("</a></span>");
-                    if (repgene == '') {
-                        repgene = repgenesearch;
+                    if(repgene == ''){
+                        repgene = association.reportedGene[j];
                     }
+                    else{
+                        repgene = repgene.concat(", ").concat(association.reportedGene[j]);
+                    }
+                }
 
-                    else {
-                        repgene = repgene.concat(", ").concat(repgenesearch);
-                    }
+                for (var j = 0; j < association.reportedGeneLinks.length; j++) {
+                    var gene = association.reportedGeneLinks[j].split("|")[0];
+                    var geneId = association.reportedGeneLinks[j].split("|")[1];
+
+                    var repgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat(
+                            "</a></span>");
+                    var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat(
+                            "'  target='_blank'>").concat(
+                            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+
+                    var geneString = repgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+
+                    repgene = repgene.replace(gene, geneString);
                 }
             }
         }
         else {
-            if (association.reportedGene[0] == "NR") {
+            if (association.reportedGene[0].indexOf("NR") != -1) {
                 repgene = association.reportedGene[0];
             }
             else {
@@ -495,8 +542,7 @@ function processAssociation(association, table) {
         for (var k = 0; k < association.entrezMappedGenes.length; k++) {
             var emg = association.entrezMappedGenes[k];
 
-            var type;
-            if(emg.indexOf(' - ') > -1 || emg.indexOf(' x ') > -1 || emg.indexOf(':') > -1){
+            if(emg.indexOf(' - ') > -1 || emg.indexOf(' x ') > -1 || emg.indexOf('; ') > -1){
                 //type = 'delim';
                 if(lit == '') {
                     lit = emg;
@@ -505,59 +551,48 @@ function processAssociation(association, table) {
                     lit = lit.concat(", ").concat(emg);
                 }
             }
+            else{
+                for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
+                    if(association.entrezMappedGeneLinks[j].indexOf(emg) > -1 || lit != ''){
+                        var gene = association.entrezMappedGeneLinks[j].split("|")[0];
+                        var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
+                        var dist = association.entrezMappedGeneLinks[j].split("|")[2];
+                        var chromName = association.entrezMappedGeneLinks[j].split("|")[3];
 
-            for (var j = 0; j < association.entrezMappedGeneLinks.length; j++) {
-                if(association.entrezMappedGeneLinks[j].indexOf(emg) > -1){
-                    var gene = association.entrezMappedGeneLinks[j].split("|")[0];
-                    var geneId = association.entrezMappedGeneLinks[j].split("|")[1];
-                    var dist = association.entrezMappedGeneLinks[j].split("|")[2];
-                    var chromName = association.entrezMappedGeneLinks[j].split("|")[3];
+                        var pattern = new RegExp("^\\d+$");
 
-                    var pattern = new RegExp("^\\d+$");
+                        if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
 
-                    if (pattern.test(chromName) || chromName == 'X' || chromName == 'Y') {
+                            var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat(
+                                    "</a></span>");
+                            var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat(
+                                    "'  target='_blank'>").concat(
+                                    "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                        var mapgenesearch = "<span><a href='search?query=".concat(gene).concat("'>").concat(gene).concat(
-                                "</a></span>");
-                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=".concat(geneId).concat(
-                                "'  target='_blank'>").concat(
-                                "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-                        //if(type == 'delim'){
-                        //    if(mapped == ''){
-                        //        mapped = emg.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                        //
-                        //    }else{
-                        //        mapped = mapped.replace(gene, mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl));
-                        //
-                        //    }
-                        //}
-                        //else
-                        if (dist == 0) {
-                            if (mapped == '') {
-                                mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                            if (dist == 0) {
+                                if (mapped == '') {
+                                    mapped = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
+                                }
+                                else {
+                                    mapped =
+                                            mapped.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
+                                }
+                            }
+                            else if (dist > 0) {
+                                upstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
                             }
                             else {
-                                mapped =
-                                        mapped.concat(", ").concat(mapgenesearch).concat('&nbsp;&nbsp;').concat(ensembl);
+                                downstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
                             }
+
                         }
-                        else if (dist > 0) {
-                            upstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
-                        }
-                        else {
-                            downstream = mapgenesearch.concat('&nbsp;&nbsp;').concat(ensembl);
-                        }
+
                     }
 
                 }
-
             }
         }
-        //if(type == 'delim'){
-        //    mapgene = emg;
-        //}
-        //else
+
         if(mapped != ''){
             mapgene = mapped;
         }
@@ -570,6 +605,7 @@ function processAssociation(association, table) {
         else if(upstream == '' && downstream != ''){
             mapgene = ("N/A - ").concat(downstream);
         }
+
         else if(lit != ''){
             mapgene = lit;
 

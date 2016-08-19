@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+</head>
+<body>
+
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Sample Information</li>
+    </ol>
+</div>
+
+<div class="container">
+    <div class="row" th:object="${study}">
+        <a th:href="@{/studies/{studyId}/associations(studyId=*{id})}"
+           class="btn btn-primary col-md-offset-10 col-md-2">Back to SNP
+                                                             associations</a>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <p class="col-md-10 lead text-left">Errors found in file:
+          <span
+                  th:utext="${fileName} ?: ''"></span>
+        </p>
+        <table id="mainTable"
+               class="table table-hover table-bordered"
+               th:if="${not #lists.isEmpty(fileErrors)}" cellspacing="0" width="100%">
+            <br/>
+            <thead>
+            <tr>
+                <th>Row</th>
+                <th>Column Name</th>
+                <th>Error Message</th>
+                <th>Error Level</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fileError: ${fileErrors}">
+
+                <div th:switch="${fileError.warning}">
+                    <div th:case="true">
+                        <td th:text="${fileError.row}?: '' "></td>
+                        <td th:text="${fileError.columnName}?: '' "></td>
+                        <td th:text="${fileError.error}?: '' "></td>
+                        <td>Warning</td>
+                    </div>
+                    <div th:case="false">
+                        <td style="color: red" th:text="${fileError.row}?: '' "></td>
+                        <td style="color: red" th:text="${fileError.columnName}?: '' "></td>
+                        <td style="color: red" th:text="${fileError.error}?: '' "></td>
+                        <td style="color: red">Critical</td>
+                    </div>
+                </div>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script>
+    $(document).ready(function() {
+        $('#mainTable').DataTable({
+                                      "info": false, "paging": false, "order": [[1, "desc"]]
+                                  });
+    });
+</script>
+</body>
+</html>

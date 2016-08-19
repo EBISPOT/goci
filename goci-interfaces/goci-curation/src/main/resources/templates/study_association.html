@@ -140,7 +140,7 @@
                     <th style="font-size: small">SNP Status</th>
                     <th style="font-size: small">Multi-SNP haplotype</th>
                     <th style="font-size: small">SNP:SNP interaction</th>
-                    <th style="font-size: small">Errors/ Mapping Details</th>
+                    <th style="font-size: small">Warnings</th>
                     <th style="font-size: small">SNP Approved</th>
                     <th style="font-size: small">Approve / Unapprove / Delete</th>
                 </tr>
@@ -197,10 +197,6 @@
                                 th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                             <td style="background-color: darkgrey">
                                 <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
-                                <span style="font-style: italic; color:darkgrey; font-size: small"
-                                      th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
-                                      and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
-                                      th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                             </td>
 
                             <td style="background-color: darkgrey"
@@ -236,30 +232,9 @@
                             <!-- Errors-->
                             <td style="background-color: darkgrey">
                                  <span style="font-style: italic"
-                                       th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                       th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                       th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-                                 </span>
-
-                                <br/>
-                                <span style="font-style: italic"
-                                      th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                      th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
-                                </span>
-
-                                <span style="font-style: italic"
-                                      th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                      th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
-
-                                </span>
-
-                                <br/>
-                                <br/>
-                                <span style="font-style: italic"
-                                      th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
-                                      th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
-                                </span>
-
+                                       th:each="warning: ${snpAssociationTableView.validationWarnings}"
+                                       th:utext="${warning} + '&lt;br /&gt;'?: ''"
+                                       th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}"></span>
                             </td>
 
                             <td style="background-color: darkgrey"
@@ -328,10 +303,6 @@
                                     th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                                 <td style="background-color: lightyellow">
                                     <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
-                                        <span style="font-style: italic; color:red; font-size: small"
-                                              th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
-                                              and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
-                                              th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
 
                                 <td style="background-color: lightyellow"
@@ -366,30 +337,10 @@
                                 <!-- Errors-->
                                 <td style="background-color: lightyellow">
                                       <span style="color:red"
-                                            th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                            th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
-                                            th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
+                                            th:each="warning: ${snpAssociationTableView.validationWarnings}"
+                                            th:utext="${warning} + '&lt;br /&gt;'?: ''"
+                                            th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}">
                                       </span>
-
-                                    <br/>
-
-                                    <span style="font-style: italic"
-                                          th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                          th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''">
-                                    </span>
-
-                                    <span style="font-style: italic"
-                                          th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                          th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''">
-                                    </span>
-
-                                    <br/>
-                                    <br/>
-                                    <span style="color:red"
-                                          th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
-                                          th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
-                                    </span>
-
                                 </td>
 
                                 <td style="background-color: lightyellow"
@@ -449,10 +400,6 @@
                                 <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                                 <td>
                                     <p th:text="${snpAssociationTableView.orPerCopyRecip} ?: ''"></p>
-                                    <span style="font-style: italic; color:red; font-size: small"
-                                          th:if="*{not #strings.isEmpty(snpAssociationTableView.orPerCopyRecip)
-                                          and #strings.isEmpty(snpAssociationTableView.orPerCopyNum)}"
-                                          th:text="'Warning: OR per Copy Num is blank but there is a reciprocal'"></span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.betaNum} ?: ''"></td>
@@ -473,24 +420,9 @@
                                 <!-- Errors-->
                                 <td>
                                        <span style="color:red"
-                                             th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                             th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                             th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}"></span>
-                                    <br/>
-                                        <span style="font-style: italic"
-                                              th:if="${snpAssociationTableView.lastMappingDate != null}"
-                                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
-
-                                        <span style="font-style: italic"
-                                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
-
-                                    <br/>
-                                    <br/>
-                                    <span style="color:red"
-                                          th:utext="'Syntax errors found' + '&lt;br /&gt;' ?: ''"
-                                          th:if="${snpAssociationTableView.syntaxErrorsFound == 'Yes'}">
-                                    </span>
+                                             th:each="warning: ${snpAssociationTableView.validationWarnings}"
+                                             th:utext="${warning} + '&lt;br /&gt;'?: ''"
+                                             th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}"></span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
@@ -529,7 +461,7 @@
                                                       {
                                                           extend: 'colvis',
                                                           columns: ':gt(0)',
-                                                          postfixButtons: [ 'colvisRestore' ]
+                                                          postfixButtons: ['colvisRestore']
                                                       }
                                                   ]
                                               });

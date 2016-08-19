@@ -42,6 +42,7 @@
     <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
     <script th:src="@{/js/goci-snp-association-mapping.js}"></script>
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
 <body>
 
@@ -64,9 +65,9 @@
             <li><a id="mapping_tab" href="#">SNP Mappings</a></li>
         </ul>
     </div>
-    <!--Link back to study page -->
+    <!--Include errors-->
     <div class="col-md-10" style="margin-top:10px">
-        <div th:include="fragments/link_to_all_study_associations :: all_associations"></div>
+        <div th:include="fragments/association_error :: association_errors"></div>
     </div>
 </div>
 <br/>
@@ -89,7 +90,6 @@
                             </div>
                         </div>
 
-                        <div th:include="fragments/field_errors :: field_errors"></div>
 
                         <div id="association_div">
                             <div class="form-group">

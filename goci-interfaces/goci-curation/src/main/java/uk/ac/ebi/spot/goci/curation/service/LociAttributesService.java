@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
@@ -21,7 +22,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Service class that creates the attributes of a loci, used by AssociationController
+ *         Service class that creates and saves the attributes of a locus
  */
 @Service
 public class LociAttributesService {
@@ -49,6 +50,33 @@ public class LociAttributesService {
         this.locusRepository = locusRepository;
     }
 
+
+    public Collection<Gene> saveGene(Collection<Gene> genes) {
+        Collection<Gene> locusGenes = new ArrayList<Gene>();
+
+        genes.forEach(gene -> {
+                          // Check if gene already exists
+                          Gene geneInDatabase = geneRepository.findByGeneName(gene.getGeneName());
+
+                          // Exists in database already
+                          if (geneInDatabase != null) {
+                              getLog().debug("Gene " + geneInDatabase.getGeneName() + " already exists in database");
+                              locusGenes.add(geneInDatabase);
+                          }
+
+                          // If gene doesn't exist then create and save
+                          else {
+                              // Create new gene
+                              getLog().debug("Gene " + gene.getGeneName() + " not found in database. Creating and saving new gene.");
+                              geneRepository.save(gene);
+                              locusGenes.add(gene);
+                          }
+                      }
+
+        );
+        return locusGenes;
+    }
+
     public Collection<Gene> createGene(Collection<String> authorReportedGenes) {
         Collection<Gene> locusGenes = new ArrayList<Gene>();
 
@@ -60,42 +88,49 @@ public class LociAttributesService {
                 authorReportedGene = authorReportedGene.toLowerCase();
             }
 
-            // Check if gene already exists, note we may have duplicates so for moment just take first one
-            Gene geneInDatabase = geneRepository.findByGeneName(authorReportedGene);
-            Gene gene;
-
-            // Exists in database already
-            if (geneInDatabase != null) {
-                getLog().debug("Gene " + geneInDatabase.getGeneName() + " already exists in database");
-                gene = geneInDatabase;
-            }
-
-            // If gene doesn't exist then create and save
-            else {
-                // Create new gene
-                getLog().debug("Gene " + authorReportedGene + " not found in database. Creating and saving new gene.");
-                Gene newGene = new Gene();
-                newGene.setGeneName(authorReportedGene);
-
-                // Save gene
-                gene = geneRepository.save(newGene);
-            }
-
+            Gene newGene = new Gene();
+            newGene.setGeneName(authorReportedGene);
             // Add genes to collection
-            locusGenes.add(gene);
+            locusGenes.add(newGene);
         });
         return locusGenes;
     }
 
-    public RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
 
+    public Collection<RiskAllele> saveRiskAlleles(Collection<RiskAllele> strongestRiskAlleles) {
+
+        //Create new risk allele, at present we always create a new risk allele for each locus within an association
+
+        Collection<RiskAllele> riskAlleles = new ArrayList<RiskAllele>();
+
+        strongestRiskAlleles.forEach(riskAllele -> {
+
+            getLog().info("Saving " + riskAllele.getRiskAlleleName());
+            // Save SNP
+            SingleNucleotidePolymorphism savedSnp = saveSnp(riskAllele.getSnp());
+            riskAllele.setSnp(savedSnp);
+
+            // Save proxy SNPs
+            Collection<SingleNucleotidePolymorphism> savedProxySnps = new ArrayList<SingleNucleotidePolymorphism>();
+            if (riskAllele.getProxySnps() != null && !riskAllele.getProxySnps().isEmpty()) {
+                riskAllele.getProxySnps().forEach(singleNucleotidePolymorphism -> {
+                    savedProxySnps.add(saveSnp(singleNucleotidePolymorphism));
+                });
+            }
+            riskAllele.setProxySnps(savedProxySnps);
+            riskAlleleRepository.save(riskAllele);
+            riskAlleles.add(riskAllele);
+        });
+
+        return riskAlleles;
+    }
+
+
+    public RiskAllele createRiskAllele(String curatorEnteredRiskAllele, SingleNucleotidePolymorphism snp) {
         //Create new risk allele, at present we always create a new risk allele for each locus within an association
         RiskAllele riskAllele = new RiskAllele();
         riskAllele.setRiskAlleleName(tidy_curator_entered_string(curatorEnteredRiskAllele));
         riskAllele.setSnp(snp);
-
-        // Save risk allele
-        riskAlleleRepository.save(riskAllele);
         return riskAllele;
     }
 
@@ -107,30 +142,29 @@ public class LociAttributesService {
         locusRepository.delete(locus);
     }
 
+
+    private SingleNucleotidePolymorphism saveSnp(SingleNucleotidePolymorphism snp) {
+
+        // Check if SNP already exists
+        SingleNucleotidePolymorphism snpInDatabase =
+                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(snp.getRsId());
+
+        if (snpInDatabase != null) {
+            return snpInDatabase;
+        }
+        else {
+            // save new SNP
+            return singleNucleotidePolymorphismRepository.save(snp);
+        }
+    }
+
+
     public SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
 
-        curatorEnteredSNP = tidy_curator_entered_string(curatorEnteredSNP);
-
-        // Check if SNP already exists database
-        SingleNucleotidePolymorphism snpInDatabase =
-                singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
-        SingleNucleotidePolymorphism snp;
-        if (snpInDatabase != null) {
-            snp = snpInDatabase;
-        }
-
-        // If SNP doesn't exist, create and save
-        else {
-            // Create new SNP
-            SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
-            newSNP.setRsId(curatorEnteredSNP);
-
-            // Save SNP
-            snp = singleNucleotidePolymorphismRepository.save(newSNP);
-        }
-
-        return snp;
-
+        // Create new SNP
+        SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
+        newSNP.setRsId(tidy_curator_entered_string(curatorEnteredSNP));
+        return newSNP;
     }
 
 
@@ -149,5 +183,16 @@ public class LociAttributesService {
         }
 
         return newString;
+    }
+
+    public void deleteLocusAndRiskAlleles(Association association) {
+        if (association.getLoci() != null) {
+            Collection<RiskAllele> riskAlleles = new ArrayList<>();
+            for (Locus locus : association.getLoci()) {
+                locus.getStrongestRiskAlleles().forEach(riskAlleles::add);
+                deleteLocus(locus);
+            }
+            riskAlleles.forEach(riskAllele -> riskAlleleRepository.delete(riskAllele));
+        }
     }
 }

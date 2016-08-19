@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Event;
@@ -28,13 +28,6 @@ import java.util.Collection;
 @Service
 public class StudyDeletionService {
 
-    /**
-     * Delete a study
-     *
-     * @param study Study to delete
-     * @param user  User
-     */
-
     private EthnicityRepository ethnicityRepository;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
@@ -56,7 +49,12 @@ public class StudyDeletionService {
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
     }
-
+    /**
+     * Delete a study
+     *
+     * @param study Study to delete
+     * @param user  User
+     */
     public void deleteStudy(Study study, SecureUser user) {
 
         getLog().warn("Deleting study: ".concat(String.valueOf(study.getId())));

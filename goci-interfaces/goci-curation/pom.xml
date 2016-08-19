@@ -31,6 +31,16 @@
         </dependency>
 
         <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-association-upload-services</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-tracking</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

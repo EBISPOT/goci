@@ -3,17 +3,21 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Locus;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -43,6 +47,8 @@ public class MappingService {
     private MappingRecordService mappingRecordService;
     private SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService;
     private EnsemblMappingPipeline ensemblMappingPipeline;
+    private TrackingOperationService trackingOperationService;
+    private SecureUserRepository secureUserRepository;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -57,7 +63,9 @@ public class MappingService {
                           AssociationReportService associationReportService,
                           MappingRecordService mappingRecordService,
                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
-                          EnsemblMappingPipeline ensemblMappingPipeline) {
+                          EnsemblMappingPipeline ensemblMappingPipeline,
+                          @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
+                          SecureUserRepository secureUserRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
@@ -65,32 +73,37 @@ public class MappingService {
         this.mappingRecordService = mappingRecordService;
         this.singleNucleotidePolymorphismQueryService = singleNucleotidePolymorphismQueryService;
         this.ensemblMappingPipeline = ensemblMappingPipeline;
+        this.trackingOperationService = trackingOperationService;
+        this.secureUserRepository = secureUserRepository;
     }
 
+
     /**
-     * Perform validation and mapping of supplied associations
+     * Perform validation and mapping of association
      *
-     * @param associations Collection of associations to map
-     * @param performer    name of curator/job carrying out the mapping
+     * @param association Association to map
+     * @param performer   name of curator/job carrying out the mapping
+     * @param user
      */
     @Transactional(rollbackFor = EnsemblMappingException.class)
-    public void validateAndMapAssociations(Collection<Association> associations, String performer)
+    public void validateAndMapAssociation(Association association, String performer, SecureUser user)
             throws EnsemblMappingException {
 
         try {
-            for (Association association : associations) {
-                doMapping(association);
+            doMapping(association);
 
-                // Once mapping is complete, update mapping record
-                getLog().debug("Update mapping record");
-                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
-            }
+            // Update mapping event
+            trackingOperationService.update(association, user, EventType.ASSOCIATION_MAPPING);
+
+            // Once mapping is complete, update mapping record
+            getLog().debug("Update mapping record");
+            mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+
         }
         catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException("Attempt to map supplied associations failed", e);
+            throw new EnsemblMappingException("Attempt to map supplied association failed", e);
         }
     }
-
 
     /**
      * Perform validation and mapping of all database associations
@@ -101,9 +114,15 @@ public class MappingService {
     public void validateAndMapAllAssociations(Collection<Association> associations, String performer)
             throws EnsemblMappingException {
 
+        // Default mapping user
+        SecureUser user = secureUserRepository.findByEmail("automatic_mapping_process");
+
         try {
             for (Association association : associations) {
                 doMapping(association);
+
+                // Update mapping event
+                trackingOperationService.update(association, user, EventType.ASSOCIATION_MAPPING);
 
                 // Once mapping is complete, update mapping record
                 getLog().debug("Update mapping record");

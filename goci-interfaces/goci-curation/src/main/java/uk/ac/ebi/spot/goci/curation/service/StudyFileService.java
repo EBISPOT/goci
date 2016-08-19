@@ -5,18 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
-import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -167,9 +169,17 @@ public class StudyFileService {
      * @param studyId  Study ID, this will help locate dir
      * @param fileName Name of file to delete
      */
+    @Async
     public void deleteFile(Long studyId, String fileName) {
-        File fileToDelete = getFileFromFileName(studyId, fileName);
-        fileToDelete.delete();
+        File fileToDelete = null;
+        try {
+            fileToDelete = getFileFromFileName(studyId, fileName);
+            boolean fileDeleted = fileToDelete.delete();
+            if (fileDeleted) {getLog().info(fileName.concat(" deleted"));}
+        }
+        catch (FileNotFoundException e) {
+            getLog().error(fileName.concat(" not found"));
+        }
     }
 
     /**
@@ -230,9 +240,17 @@ public class StudyFileService {
      * @param studyId  Study ID, this will help locate dir
      * @param fileName Name of file to return
      */
-    public File getFileFromFileName(Long studyId, String fileName) {
+    public File getFileFromFileName(Long studyId, String fileName) throws FileNotFoundException {
         String fileNameWithFullPath = getStudyDirRoot() + File.separator + studyId + File.separator + fileName;
-        return new File(fileNameWithFullPath);
+        File file = new File(fileNameWithFullPath);
+
+        if (file.exists() && file.isFile()) {
+            return file;
+        }
+        else {
+            getLog().error(fileNameWithFullPath.concat(" not found"));
+            throw new FileNotFoundException(fileNameWithFullPath.concat(" not found"));
+        }
     }
 
     public File getStudyDirRoot() {

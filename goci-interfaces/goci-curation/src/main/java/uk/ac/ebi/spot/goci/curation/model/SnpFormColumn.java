@@ -45,49 +45,12 @@ public class SnpFormColumn {
         this.limitedList = limitedList;
     }
 
-    public String getSnp() {
-        return snp;
-    }
-
-    public SnpFormColumn setSnp(String snp) {
-        this.snp = snp;
-        return this;
-    }
-
-    public String getStrongestRiskAllele() {
-        return strongestRiskAllele;
-    }
-
-    public SnpFormColumn setStrongestRiskAllele(String strongestRiskAllele) {
-        this.strongestRiskAllele = strongestRiskAllele;
-        return this;
-    }
-
-    public String getRiskFrequency() {
-        return riskFrequency;
-    }
-
-    public SnpFormColumn setRiskFrequency(String riskFrequency) {
-        this.riskFrequency = riskFrequency;
-        return this;
-    }
-
     public Collection<String> getAuthorReportedGenes() {
         return authorReportedGenes;
     }
 
-    public SnpFormColumn setAuthorReportedGenes(Collection<String> authorReportedGenes) {
+    public void setAuthorReportedGenes(Collection<String> authorReportedGenes) {
         this.authorReportedGenes = authorReportedGenes;
-        return this;
-    }
-
-
-    public Collection<String> getProxySnps() {
-        return proxySnps;
-    }
-
-    public void setProxySnps(Collection<String> proxySnps) {
-        this.proxySnps = proxySnps;
     }
 
     public Boolean getGenomeWide() {
@@ -104,5 +67,37 @@ public class SnpFormColumn {
 
     public void setLimitedList(Boolean limitedList) {
         this.limitedList = limitedList;
+    }
+
+    public Collection<String> getProxySnps() {
+        return proxySnps;
+    }
+
+    public void setProxySnps(Collection<String> proxySnps) {
+        this.proxySnps = proxySnps;
+    }
+
+    public String getRiskFrequency() {
+        return riskFrequency;
+    }
+
+    public void setRiskFrequency(String riskFrequency) {
+        this.riskFrequency = riskFrequency;
+    }
+
+    public String getSnp() {
+        return snp;
+    }
+
+    public void setSnp(String snp) {
+        this.snp = snp;
+    }
+
+    public String getStrongestRiskAllele() {
+        return strongestRiskAllele;
+    }
+
+    public void setStrongestRiskAllele(String strongestRiskAllele) {
+        this.strongestRiskAllele = strongestRiskAllele;
     }
 }

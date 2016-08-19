@@ -6,19 +6,20 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.service.EventTypeService;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
+import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.CurationStatusBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.HousekeepingBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.SecureUserBuilder;
+import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
+import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
+import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
+import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
+import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
-import uk.ac.ebi.spot.goci.curation.service.tracking.EventTypeService;
-import uk.ac.ebi.spot.goci.curation.service.tracking.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -225,12 +226,6 @@ public class StudyOperationServiceTest {
         assertThat(study.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
         assertThat(study.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
     }
-
-/*    @Test
-    public void testUpdateStudy() {
-
-
-    }*/
 
     @Test
     public void testAssignStudyStatusToLevelOneCurationDone() {

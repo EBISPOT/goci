@@ -195,6 +195,8 @@
     <field name="orDescription" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="range" type="text_general" indexed="false" stored="true" multiValued="false" />
     <!--<field name="orType" type="boolean" indexed="true" stored="true" multiValued="false" />-->
+    <field name="snpInteraction" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="multiSnpHaplotype" type="boolean" indexed="true" stored="true" multiValued="false" />
     <field name="rsId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -208,6 +210,7 @@
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="chromosomePosition" type="int" indexed="true" stored="true" multiValued="true" />
+    <field name="chromLocation" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="positionLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="merged" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="locusDescription" type="text_general" indexed="true" stored="true" multiValued="false" />

@@ -16,7 +16,6 @@
         <version>2.1.7-SNAPSHOT</version>
     </parent>
 
-
     <modules>
         <module>goci-solr-indexer</module>
         <module>goci-catalog-io</module>
@@ -31,5 +30,6 @@
         <module>goci-parent-mapper</module>
         <module>goci-association-filter</module>
         <module>goci-data-release-qc</module>
+        <module>goci-association-file-validator</module>
     </modules>
 </project>

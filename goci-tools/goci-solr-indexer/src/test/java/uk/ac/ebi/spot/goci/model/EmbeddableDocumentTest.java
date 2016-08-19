@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.exception.DocumentEmbeddingException;
 
 import java.beans.BeanInfo;
@@ -62,26 +63,18 @@ public class EmbeddableDocumentTest {
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 
-        this.association = new Association("riskFrequency",
-                                           "pValueText",
-                                           1,
-                                           1,
-                                           false,
-                                           false,
-                                           false,
-                                           "snpType",
-                                           (float) 1.01,
-                                           "[NR]",
-                                           "description",
-                                           (float) 1.04,
-                                           (float) 0.68,
-                                           "[NR]",
-                                           null,
-                                           null,
-                                           null,
-                                           study,
-                                           Collections.EMPTY_LIST, Collections.EMPTY_LIST,
-                                           null, null, null, null, Collections.EMPTY_LIST);
+        this.association = new AssociationBuilder().setPvalueExponent(1)
+                .setPvalueMantissa(1)
+                .setRiskFrequency(String.valueOf(0.5))
+                .setPvalueDescription("(test)")
+                .setRange("[NR]")
+                .setOrPerCopyNum((float) 1.04)
+                .setOrPerCopyRecip((float) 0.94)
+                .setMultiSnpHaplotype(false)
+                .setSnpInteraction(false)
+                .setSnpApproved(false)
+                .setSnpType("novel")
+                .build();
         association.setId(2l);
         this.associationDoc = new AssociationDocument(association);
 
