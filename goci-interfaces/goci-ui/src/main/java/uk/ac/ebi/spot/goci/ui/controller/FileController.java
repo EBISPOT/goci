@@ -44,6 +44,9 @@ public class FileController {
     @Value("${download.studiesAlternative}")
     private Resource alternativeStudiesDownload;
 
+    @Value("${download.ancestry}")
+    private Resource ancestryFileDownload;
+
     @Value("${download.efoMappings}")
     private Resource efoMappingsDownload;
 
@@ -271,6 +274,36 @@ public class FileController {
         }
 
         return response;
+    }
+
+
+    @RequestMapping(value = "api/search/downloads/ancestry",
+                    method = RequestMethod.GET)
+    public void getAncestryDownload(HttpServletResponse response) throws IOException {
+        if (ancestryFileDownload.exists() && catalogStatsFile.exists()) {
+
+            Properties properties = new Properties();
+            properties.load(catalogStatsFile.getInputStream());
+            String releasedate = properties.getProperty("releasedate");
+
+            String fileName = "gwas_catalog-ancestry_r".concat(releasedate).concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+
+            InputStream inputStream = null;
+            inputStream = ancestryFileDownload.getInputStream();
+
+            OutputStream outputStream;
+            outputStream = response.getOutputStream();
+
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+
+        }
+        else {
+            throw new FileNotFoundException();
+        }
     }
 
 

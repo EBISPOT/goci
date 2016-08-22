@@ -36,13 +36,13 @@ public class JsonProcessingService {
     public String processJson() throws IOException {
         String header;
         
-        if(type.equals("study")){
+        if(type.equals("study") && !includeAncestry){
             header =
                     "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tPLATFORM [SNPS PASSING QC]\tASSOCIATION COUNT";
         }
         else if(includeAncestry){
             header =
-                    "PUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tTYPE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
+                    "PUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tSTAGE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
         }
         else{
             header =
@@ -67,7 +67,7 @@ public class JsonProcessingService {
         for (JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
-            if(type.equals("study")) {
+            if(type.equals("study") && !includeAncestry) {
                 processStudyJson(line, doc);
             }
             else if(includeAncestry){
@@ -186,6 +186,25 @@ public class JsonProcessingService {
         line.append(stage);
         line.append("\t");
 
+        String sampleSize = "";
+
+        if(!ancestry[4].equals("NA")){
+            sampleSize = ancestry[4];
+        }
+        line.append(sampleSize);
+        line.append("\t");
+
+        String ancestralGroup = "";
+
+        if(ancestry[3] != "NA") {
+            ancestralGroup = ancestry[3];
+            if(ancestralGroup.contains(newline)){
+                ancestralGroup = ancestralGroup.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
+        line.append(ancestralGroup);
+        line.append("\t");
+
         String coo = ancestry[1];
         line.append(coo);
         line.append("\t");
@@ -194,15 +213,14 @@ public class JsonProcessingService {
         line.append(cor);
         line.append("\t");
 
-        String ancestralGroup = ancestry[3];
-        line.append(ancestralGroup);
-        line.append("\t");
+        String description = "";
 
-        String sampleSize = ancestry[4];
-        line.append(sampleSize);
-        line.append("\t");
-
-        String description = ancestry[5];
+        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
+            description = ancestry[5];
+            if(description.contains(newline)){
+                description = description.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
         line.append(description);
         line.append("\t");
 

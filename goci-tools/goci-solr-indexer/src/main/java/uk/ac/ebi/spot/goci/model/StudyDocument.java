@@ -308,6 +308,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     if (ethnicity.getEthnicGroup() != null) {
                         ancestry = ethnicity.getEthnicGroup();
                     }
+                    else{
+                        ancestry = "NR";
+                    }
 
                     ancestralGroups.add(ancestry);
                     ancestryLink = ancestryLink.concat("|").concat(ancestry);
@@ -318,14 +321,20 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                         numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
                         noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
                     }
+                    else{
+                        noInds = "NA";
+                    }
 
                     ancestryLink = ancestryLink.concat("|").concat(noInds);
 
                     String description = "";
 
-                    if(ethnicity.getDescription() != null){
+                    if(ethnicity.getDescription() != null && ethnicity.getDescription().trim() != ""){
                         additionalAncestryDescription.add(ethnicity.getDescription());
                         description = ethnicity.getDescription();
+                    }
+                    else {
+                        description = "NA";
                     }
 
                     ancestryLink = ancestryLink.concat("|").concat(description);
