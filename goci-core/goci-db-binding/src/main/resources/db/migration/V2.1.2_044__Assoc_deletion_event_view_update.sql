@@ -1,7 +1,7 @@
 /*
 ################################################################################
 Create table that displays all deleted association events, version 41 worked but forgot to update
-name in version 42 thus table was overwritten
+name of view in version 42 thus table was overwritten
 
 author: Emma Hastings
 date:    Aug 22th 2016
