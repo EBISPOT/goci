@@ -12,7 +12,7 @@ version: 2.1.2.044
 -- Update view with correct name
 --------------------------------------------------------
 
-CREATE OR REPLACE VIEW DELETED_ASSOCIATION_EVENTS_VIEW (
+CREATE OR REPLACE VIEW DELETED_ASSOC_EVENTS_VIEW (
         ID,
         STUDY_ID,
         ASSOCIATION_ID,
