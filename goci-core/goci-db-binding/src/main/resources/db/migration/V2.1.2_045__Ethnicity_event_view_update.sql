@@ -11,7 +11,7 @@ version: 2.1.2.045
 -- Generate view
 --------------------------------------------------------
 
-CREATE OR REPLACE VIEW STUDY_EVENTS_VIEW (
+CREATE OR REPLACE VIEW ETHNICITY_EVENTS_VIEW (
         ID,
         STUDY_ID,
         ETHNICITY_ID,
