@@ -25,7 +25,7 @@
     <url>http://www.ebi.ac.uk/gwas</url>
 
     <properties>
-        <goci.version>2.1.7-SNAPSHOT</goci.version>
+        <goci.version>2.2.0</goci.version>
         <hibernate.jpa.2.1.version>1.0.0.Final</hibernate.jpa.2.1.version>
         <oracle.version>12.1.0.2</oracle.version>
         <owlapi.version>3.4.3</owlapi.version>
