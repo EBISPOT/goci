@@ -622,20 +622,17 @@ public class StudyController {
         Long housekeepingId = studyToDelete.getHousekeeping().getId();
         Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
 
-        // If so warn the curator
-        if (!associations.isEmpty()) {
-            return "delete_study_with_associations_warning";
+        model.addAttribute("studyToDelete", studyToDelete);
 
-        }
-        else if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
-            model.addAttribute("studyToDelete", studyToDelete);
+        if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
             return "delete_published_study_warning";
         }
+        else if (!associations.isEmpty()) {
+            return "delete_study_with_associations_warning";
+        }
         else {
-            model.addAttribute("studyToDelete", studyToDelete);
             return "delete_study";
         }
-
     }
 
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
