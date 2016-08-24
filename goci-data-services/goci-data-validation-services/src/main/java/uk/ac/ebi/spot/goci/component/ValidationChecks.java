@@ -254,7 +254,7 @@ public class ValidationChecks {
             }
             // Check gene name in Ensembl
             else {
-                if (!geneName.equalsIgnoreCase("intergenic")) {
+                if (!geneName.equalsIgnoreCase("intergenic") && !geneName.equalsIgnoreCase("NR")) {
                     error = geneCheckingRestService.checkGeneSymbolIsValid(geneName);
                 }
             }
@@ -303,7 +303,7 @@ public class ValidationChecks {
             // Get all SNP locations and check gene location is one of them
             Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
             if (!snpChromosomeNames.isEmpty()) {
-                if (!gene.equalsIgnoreCase("intergenic")) {
+                if (!gene.equalsIgnoreCase("intergenic") && !gene.equalsIgnoreCase("NR")) {
                     String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
                     if (!snpChromosomeNames.contains(geneChromosome)) {
                         error = "Gene ".concat(gene)
