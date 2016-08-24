@@ -314,48 +314,12 @@
                     <td style="font-size: small" th:text="${snpAssociationTableView.snpInteraction} ?:''"></td>
 
                     <!-- Errors-->
-                    <td>
-                         <span th:switch="${snpAssociationTableView.associationErrorsChecked}">
-                             <span th:case="'Yes'">
-                                  <span style="color:darkgrey; font-size: small"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                                  <span class="glyphicon glyphicon-ok pull-right"></span>
-                             </span>
-
-                             <span th:case="'No'">
-                                  <span style="color:red; font-size: small"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-
-                                  </span>
-                             </span>
-
-                             <span th:case="null">
-                                  <span style="color:red; font-size: small"
-                                        th:each="error: ${snpAssociationTableView.associationErrorMap}"
-                                        th:utext="${error.value} + '&lt;br /&gt;'?: ''"
-                                        th:if="${not #maps.isEmpty(snpAssociationTableView.associationErrorMap)}">
-                                  </span>
-                             </span>
-                        </span>
-
-                        <br/>
-
-                        <span style="font-style: italic; font-size: small"
-                              th:if="${snpAssociationTableView.lastMappingDate != null}"
-                              th:utext="'Mapping date: '+${snpAssociationTableView.lastMappingDate} ?: ''"></span>
-
-                        <span style="font-style: italic; font-size: small"
-                              th:if="${snpAssociationTableView.lastMappingPerformedBy != null}"
-                              th:utext="'&lt;br /&gt;' +'Performer: '+${snpAssociationTableView.lastMappingPerformedBy} ?: ''"></span>
-
+                    <td style="font-size: small">
+                                 <span style="font-style: italic"
+                                       th:each="warning: ${snpAssociationTableView.validationWarnings}"
+                                       th:utext="${warning} + '&lt;br /&gt;'?: ''"
+                                       th:if="${not #sets.isEmpty(snpAssociationTableView.validationWarnings)}"></span>
                     </td>
-
 
                     <td th:text="${snpAssociationTableView.snpApproved} ?: '' "></td>
                 </tr>
