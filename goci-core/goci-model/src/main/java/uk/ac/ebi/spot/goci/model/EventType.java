@@ -56,6 +56,7 @@ public enum EventType {
     ASSOCIATION_APPROVED,
     ASSOCIATION_UNAPPROVED,
     ASSOCIATION_DELETION,
+    ASSOCIATION_UPLOAD,
 
     // Ethnicity tracking
     ETHNICITY_CREATED,
