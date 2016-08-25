@@ -56,7 +56,7 @@ In cases where studies containing multiple GWAS analyses are not split, generall
 
 Information on the following study-level fields is extracted. Capitalised titles correspond to column headings in tab delimited file:
 
-* DATE ADDED TO CATALOG: Date added to catalog
+* DATE ADDED TO CATALOG: Date a study is published in the catalog
 * PUBMEDID: PubMed identification number
 * FIRST AUTHOR: Last name and initials of first author
 * DATE: Publication date, (online (epub) date if available)
