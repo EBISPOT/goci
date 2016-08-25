@@ -53,7 +53,7 @@ function toggleSidebar(ts) {
         // expand the panel
         $(ts).parents('.panel').find('.panel-body').slideDown();
         $(ts).removeClass('panel-collapsed');
-        $(ts).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $(ts).find('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
         $(ts).parents('#filter-bar').removeClass('col-md-1').addClass('col-md-3');
         $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-11').addClass('col-md-9');
 
@@ -62,12 +62,27 @@ function toggleSidebar(ts) {
         // collapse the panel
         $(ts).parents('.panel').find('.panel-body').slideUp();
         $(ts).addClass('panel-collapsed');
-        $(ts).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        $(ts).find('span').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
         $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
         $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
     }
 }
 
+function toggleDiv(ts) {
+    var divId = '#'+ts;
+    var buttonId = '#button-'+ts;
+    if ($(divId).hasClass('collapse')) {
+        $(divId).removeClass('collapse').addClass('expanded');
+        $(divId).show();
+        $(buttonId).find('span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+    }
+    else {
+        // collapse the panel
+        $(divId).removeClass('expanded').addClass('collapse');
+        $(divId).hide();
+        $(buttonId).find('span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+    }
+}
 
 function setStats(data) {
     try {
