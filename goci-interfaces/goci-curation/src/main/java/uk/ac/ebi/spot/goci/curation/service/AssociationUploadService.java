@@ -135,7 +135,7 @@ public class AssociationUploadService {
     }
 
     /**
-     * Upload a file to the study specific dir
+     * Record batch upload event
      *
      * @param study       Study to assign event to
      * @param description Description of update
