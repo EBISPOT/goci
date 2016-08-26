@@ -148,7 +148,7 @@ public interface EventsViewService {
             case ASSOCIATION_DELETION:
                 translatedEvent = "Association deleted";
                 break;
-            case ASSOCIATION_UPLOAD:
+            case ASSOCIATION_BATCH_UPLOAD:
                 translatedEvent = "SNP batch upload";
                 break;
             case ETHNICITY_CREATED:
