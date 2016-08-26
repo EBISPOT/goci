@@ -149,7 +149,10 @@ public interface EventsViewService {
                 translatedEvent = "Association deleted";
                 break;
             case ASSOCIATION_BATCH_UPLOAD:
-                translatedEvent = "SNP batch upload";
+                translatedEvent = "SNP association batch upload";
+                break;
+            case ASSOCIATION_BATCH_DELETE:
+                translatedEvent = "SNP association batch deletion";
                 break;
             case ETHNICITY_CREATED:
                 translatedEvent = "Ethnicity created";
