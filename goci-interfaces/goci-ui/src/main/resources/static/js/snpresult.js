@@ -18,6 +18,7 @@ $(document).ready(function() {
         console.log("Start search for SNP "+searchTerm);
         getSnpData(searchTerm);
     }
+    getLDPopulations();
 });
 
 function getSnpData(rsId) {
@@ -39,9 +40,13 @@ function getSnpData(rsId) {
 }
 
 function processSnpData(data,rsId) {
+    // Snp summary panel
     getSnpInfo(data.docs[0]);
+    // External links panel
     getLinkButtons(rsId);
+    // Associations table
     getSnpAssociations(data.docs);
+    // Traits table
     getSnpTraits(data.docs);
 }
 
@@ -197,29 +202,57 @@ function getSnpAssociations(data) {
         sudyContent.attr('colspan',11);
         sudyContent.attr('style',"border-top: none");
 
-
         var initialSampleDescription = asso.initialSampleDescription;
         var replicateSampleDescription = asso.replicateSampleDescription;
         var ancestralGroups = asso.ancestralGroups;
-        var content = '' +
-                      '<table class="sample-info sample-info-border">' +
-                      '  <thead><tr><th colspan="2" style="background-color:#E7F7F9">Study information</th></tr></thead>' +
-                      '  <tbody>' +
-                      '    <tr>' +
-                      '      <td style="max-width:30%;text-align:right;font-weight:bold">Initial sample description</td>' +
-                      '      <td style="text-align:left">'+initialSampleDescription+'</td>' +
-                      '    </tr>' +
-                      '    <tr>' +
-                      '      <td style="max-width:30%;text-align:right;font-weight:bold">Replication sample description</td>' +
-                      '      <td style="text-align:left">'+replicateSampleDescription+'</td>' +
-                      '    </tr>' +
-                      '    <tr>' +
-                      '      <td style="max-width:30%;text-align:right;font-weight:bold">Ancestral groups</td>' +
-                      '      <td style="text-align:left">'+ancestralGroups.join(', ')+'</td>' +
-                      '    </tr>' +
-                      '  </tbody>' +
-                      '</table>';
-        sudyContent.html(content);
+
+        var studyTable = $("<table>").addClass('sample-info sample-info-border');
+
+        // Header //
+        studyTable.append($("<thead>").append($("<tr>").append($("<th>").attr("colspan","2").attr("style", "background-color:#E7F7F9").html("Study information"))));
+
+        // Content //
+        var studyTableContent = $("<tbody>");
+
+        // Initial sample description
+        var initialSampleDescriptionRow = $("<tr>");
+        initialSampleDescriptionRow.append($("<td>").attr("style", "max-width:30%;text-align:right;font-weight:bold").html("Initial sample description"));
+        initialSampleDescriptionRow.append($("<td>").attr("style", "text-align:left").html(initialSampleDescription));
+        studyTableContent.append(initialSampleDescriptionRow);
+
+        // Replication sample description
+        var replicateSampleDescriptionRow = $("<tr>");
+        replicateSampleDescriptionRow.append($("<td>").attr("style", "max-width:30%;text-align:right;font-weight:bold").html("Replication sample description"));
+        replicateSampleDescriptionRow.append($("<td>").attr("style", "text-align:left").html(replicateSampleDescription));
+        studyTableContent.append(replicateSampleDescriptionRow);
+
+        // Ancestral groups
+        var ancestralGroupsRow = $("<tr>");
+        ancestralGroupsRow.append($("<td>").attr("style", "max-width:30%;text-align:right;font-weight:bold").html("Ancestral groups"));
+        ancestralGroupsRow.append($("<td>").attr("style", "text-align:left").html(ancestralGroups.join(', ')));
+        studyTableContent.append(ancestralGroupsRow);
+
+        studyTable.append(studyTableContent);
+
+        /*var content = '<table class="sample-info sample-info-border"><thead><tr><th colspan="2" style="background-color:#E7F7F9">Study information</th></tr></thead>' +
+        '  <tbody>' +
+        '    <tr>' +
+        '      <td style="max-width:30%;text-align:right;font-weight:bold">Initial sample description</td>' +
+        '      <td style="text-align:left">'+initialSampleDescription+'</td>' +
+        '    </tr>' +
+        '    <tr>' +
+        '      <td style="max-width:30%;text-align:right;font-weight:bold">Replication sample description</td>' +
+        '      <td style="text-align:left">'+replicateSampleDescription+'</td>' +
+        '    </tr>' +
+        '    <tr>' +
+        '      <td style="max-width:30%;text-align:right;font-weight:bold">Ancestral groups</td>' +
+        '      <td style="text-align:left">'+ancestralGroups.join(', ')+'</td>' +
+        '    </tr>' +
+        '  </tbody>' +
+        '</table>';
+
+        sudyContent.html(content);*/
+        sudyContent.html(studyTable);
         studyRow.append(sudyContent);
 
         $("#association-table-body").append(studyRow);
@@ -339,11 +372,24 @@ function showHideStudy(studyId) {
     study_button.html('<span class="glyphicon glyphicon-plus tgb"></span>');
 
     return study_button;
-    //return '<button title="Click to show/hide more study information" class="btn btn-default btn-xs btn-study" id="button-study-'+studyId+'" onclick="toggleDiv(\'study-'+studyId+'\')>' +
-    //       '    <span class="glyphicon glyphicon-plus tgb"></span>' +
-    //       '</button>';
 }
 
+function getLDPopulations() {
+    $.getJSON('http://rest.ensembl.org/info/variation/populations/homo_sapiens?content-type=application/json;filter=LD')
+            .done(function(data) {
+                console.log(data);
+                processLDPopulationData(data);
+            });
+    console.log("Ensembl REST query done to retrieve LD populations");
+}
+
+function processLDPopulationData(data) {
+    $.each(data, function(index, pop) {
+        var popName = pop.name;
+        var popLabel = popName.split(':')[2] + " - " + pop.description;
+        $('#ld-population-selection').append($("<option>").attr("value", popName).html(popLabel));
+    });
+}
 
 function setState(state) {
     var loading = $('#loading');

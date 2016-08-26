@@ -112,6 +112,8 @@
     </div>
 </div>
 
+
+
 <div class="container-fluid" style="padding-top: 30px">
 
     <ol class="breadcrumb background-color-complementary-accent">
@@ -130,7 +132,7 @@
     </div>
 
     <div class="container-fluid" id="lower_container">
-        <div class="row">
+        <div class="row" style="margin-top:10px">
             <div class="clearfix">
                 <div id="summary-info" class="col-lg-8 col-md-7 col-sm-7 col-xs-7" style="padding-left:0px">
                     <div class="panel panel-default">
@@ -154,10 +156,6 @@
                                 <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Reported gene(s)</div>
                                 <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpGenes"></div>
                             </div>
-                            <!--<div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Merged with</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpMerged"><a href="search?query=rs123">rs123</a></div>
-                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -296,26 +294,21 @@
 
                     <div class="panel-body">
                         <div>
-                    <span>Population (example)
-                        <!-- TODO : Use the Ensembl REST API to retrieve the 1000 Genomes populations -->
-                        <select name="select">
-                            <option value="">---</option>
-                            <option value="CEU">CEU</option>
-                            <option value="FIN">FIN</option>
-                            <option value="GBR">GBR</option>
-                            <option value="IBS">IBS</option>
-                            <option value="TSI">TSI</option>
-                        </select>
-                    </span>
-                            <span style="padding-left:40px">r<sup>2</sup>
-                        <select name="select">
-                            <option value="">---</option>
-                            <option value="1">1</option>
-                            <option value="0.9">0.9</option>
-                            <option value="0.8">0.8</option>
-                            <option value="0.7">0.7</option>
-                        </select>
-                    </span>
+                            <span>Population
+                                <select name="select" id="ld-population-selection">
+                                    <option value="0">---</option>
+                                </select>
+                            </span>
+                            <span style="padding-left:40px">r<sup>2</sup> threshold
+                                <select name="select">
+                                    <option value="">---</option>
+                                    <option value="1">1</option>
+                                    <option value="0.9">0.9</option>
+                                    <option value="0.8" selected="selected">0.8</option>
+                                    <option value="0.7">0.7</option>
+                                    <option value="0.6">0.6</option>
+                                </select>
+                            </span>
                         </div>
                         <div style="margin:15px 5px 5px;padding:8px 4px;width: 400px;text-align:center;border:2px solid #006dcc">** Place the LD widget here **</div>
                     </div>
