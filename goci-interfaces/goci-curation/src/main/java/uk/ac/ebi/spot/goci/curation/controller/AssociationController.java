@@ -879,11 +879,12 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String deleteAllAssociations(Model model, @PathVariable Long studyId, HttpServletRequest request) {
+    public String deleteAllAssociations(@PathVariable Long studyId, HttpServletRequest request) {
 
         // Get all associations and delete
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
         if (studyAssociations.size() > 0) {
+            getLog().info("Deleting all associations for study: " + studyId);
             SecureUser user = currentUserDetailsService.getUserFromRequest(request);
             studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(), user);
             studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
