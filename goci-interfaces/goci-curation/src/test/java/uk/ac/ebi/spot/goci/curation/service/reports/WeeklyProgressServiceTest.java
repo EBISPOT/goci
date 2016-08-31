@@ -12,8 +12,10 @@ import uk.ac.ebi.spot.goci.model.WeeklyProgressView;
 import uk.ac.ebi.spot.goci.repository.WeeklyProgressViewRepository;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,20 +37,22 @@ public class WeeklyProgressServiceTest {
 
     private WeeklyProgressService weeklyProgressService;
 
+    private static final Date testDate = new GregorianCalendar(2016, Calendar.FEBRUARY, 11).getTime();
+
     private static final WeeklyProgressView STUDY_CREATION =
             new WeeklyProgressViewBuilder().setStudyId((long) 100).setEventType(
-                    EventType.STUDY_CREATION).setId((long) 1).setWeekStartDay(new Date()).build();
+                    EventType.STUDY_CREATION).setId((long) 1).setWeekStartDay(testDate).build();
 
     private static final WeeklyProgressView STUDY_PUBLISH =
             new WeeklyProgressViewBuilder().setStudyId((long) 101).setEventType(
-                    EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY).setId((long) 2).setWeekStartDay(new Date()).build();
+                    EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY).setId((long) 2).setWeekStartDay(testDate).build();
 
     private static final WeeklyProgressView STUDY_LEVEL_1_EV_01 =
             new WeeklyProgressViewBuilder().setStudyId((long) 102)
                     .setEventType(
                             EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE)
                     .setId((long) 3)
-                    .setWeekStartDay(new Date())
+                    .setWeekStartDay(testDate)
                     .build();
 
     private static final WeeklyProgressView STUDY_LEVEL_1_EV_02 =
@@ -56,7 +60,7 @@ public class WeeklyProgressServiceTest {
                     .setEventType(
                             EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE)
                     .setId((long) 4)
-                    .setWeekStartDay(new Date())
+                    .setWeekStartDay(testDate)
                     .build();
 
     private static final WeeklyProgressView STUDY_LEVEL_2 =
@@ -64,7 +68,7 @@ public class WeeklyProgressServiceTest {
                     .setEventType(
                             EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE)
                     .setId((long) 5)
-                    .setWeekStartDay(new Date())
+                    .setWeekStartDay(testDate)
                     .build();
 
     @Before
