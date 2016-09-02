@@ -118,6 +118,14 @@
                 </div>
 
                 <!--Visible fields-->
+                <div class="form-group">
+                    <label for="accessionId" class="control-label col-md-2">Accession ID</label>
+
+                    <div class="col-md-10">
+                        <span type="text" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" class="form-control" id="accessionId"></span>
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>

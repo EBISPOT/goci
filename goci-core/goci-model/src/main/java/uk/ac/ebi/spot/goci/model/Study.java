@@ -74,6 +74,8 @@ public class Study implements Trackable {
 
     private String studyDesignComment;
 
+    private String accessionId;
+
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -131,6 +133,7 @@ public class Study implements Trackable {
                  Boolean imputed,
                  Boolean pooled,
                  String studyDesignComment,
+                 String accessionId,
                  Collection<Platform> platforms,
                  Collection<Association> associations,
                  Collection<Ethnicity> ethnicities,
@@ -155,6 +158,7 @@ public class Study implements Trackable {
         this.imputed = imputed;
         this.pooled = pooled;
         this.studyDesignComment = studyDesignComment;
+        this.accessionId = accessionId;
         this.platforms = platforms;
         this.associations = associations;
         this.ethnicities = ethnicities;
@@ -378,5 +382,13 @@ public class Study implements Trackable {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
+    }
+
+    public String getAccessionId() {
+        return accessionId;
+    }
+
+    public void setAccessionId(String accessionId) {
+        this.accessionId = accessionId;
     }
 }
