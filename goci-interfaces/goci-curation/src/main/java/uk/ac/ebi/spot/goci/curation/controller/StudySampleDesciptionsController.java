@@ -52,7 +52,7 @@ public class StudySampleDesciptionsController {
     }
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public void getStudiesSampleDescriptions(HttpServletResponse response, Model model) {
+    public void getStudiesSampleDescriptions(HttpServletResponse response) {
 
         // Get all ethnicities, this will also find all studies with ethnicity information
         Collection<Ethnicity> ethnicities = ethnicityRepository.findAll(sortByPublicationDateDesc());
