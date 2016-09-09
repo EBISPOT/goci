@@ -4,7 +4,7 @@ Update the trigger for accession IDs with correct allocation and error message.
 
 author: Dani Welter
 date:    Sep 8th 2016
-version: 2.1.0.003
+version: 2.2.0.003
 ################################################################################
 */
 
