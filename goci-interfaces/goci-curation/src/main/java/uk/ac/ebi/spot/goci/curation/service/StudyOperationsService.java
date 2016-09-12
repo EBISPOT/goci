@@ -270,13 +270,14 @@ public class StudyOperationsService {
                     Date publishDate = new Date();
                     housekeeping.setCatalogPublishDate(publishDate);
                 }
-                // Send notification email to curators
-                getLog().info("Sending email...");
-                mailService.sendEmailNotification(study, "Publish study");
 
                 // Save and create event
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
+
+                // Send notification email to curators
+                getLog().info("Sending email...");
+                mailService.sendEmailNotification(study, "Publish study");
                 break;
 
             case "Level 1 curation done":

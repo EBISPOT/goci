@@ -17,13 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/")
 public class HomeController {
 
-    public HomeController() {
-    }
-
     // Return home page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String getHomePage(Model model) {
-
-        return "redirect:/login";
+    public String getHomePage() {
+        return "login";
     }
 }
