@@ -78,6 +78,8 @@ function getSnpInfo(data,rsId) {
             }
         });
     });
+    genes_reported_url.sort();
+    genes_mapped_url.sort();
 
     $("#snpLocation").html("chr"+chr+":"+pos);
     $("#snpRegion").html(region);
