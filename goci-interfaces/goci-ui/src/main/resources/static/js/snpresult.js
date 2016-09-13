@@ -41,7 +41,7 @@ function getSnpData(rsId) {
 
 function processSnpData(data,rsId) {
     // Snp summary panel
-    getSnpInfo(data.docs[0]);
+    getSnpInfo(data);
     // External links panel
     getLinkButtons(rsId);
     // Associations table
@@ -51,22 +51,39 @@ function processSnpData(data,rsId) {
 }
 
 function getSnpInfo(data,rsId) {
-    var chr = data.chromosomeName[0];
-    var pos = data.chromosomePosition[0];
-    var region = data.region[0];
-    var func = data.context[0];
+    var chr = data.docs[0].chromosomeName[0];
+    var pos = data.docs[0].chromosomePosition[0];
+    var region = data.docs[0].region[0];
+    var func = data.docs[0].context[0];
 
-    var reportedGenes = data.reportedGene;
-    var genes = [];
-    $.each(reportedGenes, function (index, gene) {
-      genes.push(setQueryUrl(gene));
+    var genes_reported = [];
+    var genes_reported_url = [];
+    var genes_mapped = [];
+    var genes_mapped_url = [];
+    $.each(data.docs, function (index, doc) {
+        // Reported genes
+        var reportedGenes = doc.reportedGene;
+        $.each(reportedGenes, function (index, gene) {
+            if (jQuery.inArray(gene, genes_reported) == -1) {
+                genes_reported.push(gene);
+                genes_reported_url.push(setQueryUrl(gene));
+            }
+        });
+        // Mapped genes
+        var mappedGenes = doc.entrezMappedGenes;
+        $.each(mappedGenes, function (index, gene) {
+            if (jQuery.inArray(gene, genes_mapped) == -1) {
+                genes_mapped.push(gene);
+                genes_mapped_url.push(setQueryUrl(gene));
+            }
+        });
     });
 
     $("#snpLocation").html("chr"+chr+":"+pos);
     $("#snpRegion").html(region);
     $("#snpClass").html(func);
-    $("#snpGenes").html(genes.join(', '));
-
+    $("#snpReportedGenes").html(genes_reported_url.join(', '));
+    $("#snpMappedGenes").html(genes_mapped_url.join(', '));
 }
 
 function getLinkButtons (rsId) {
