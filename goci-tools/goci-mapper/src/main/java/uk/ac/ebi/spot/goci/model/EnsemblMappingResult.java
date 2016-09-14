@@ -17,7 +17,7 @@ public class EnsemblMappingResult {
 
     private String rsId;
 
-    private Integer merged;
+    private Integer merged = 0;
 
     private String currentSnpId;
 
