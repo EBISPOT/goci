@@ -22,11 +22,13 @@ public class JsonProcessingService {
     private String newline;
     private boolean isMultiSnpHaplotype;
     private boolean isSnpInteraction;
+    private boolean includeAncestry;
 
-    public JsonProcessingService(String json, boolean includeAnnotations, String type) {
+    public JsonProcessingService(String json, boolean includeAnnotations, String type, boolean includeAncestry) {
         this.json = json;
         this.includeAnnotations = includeAnnotations;
         this.type = type;
+        this.includeAncestry = includeAncestry;
         newline = System.getProperty("line.separator");
 
     }
@@ -34,9 +36,13 @@ public class JsonProcessingService {
     public String processJson() throws IOException {
         String header;
         
-        if(type.equals("study")){
+        if(type.equals("study") && !includeAncestry){
             header =
                     "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tPLATFORM [SNPS PASSING QC]\tASSOCIATION COUNT";
+        }
+        else if(includeAncestry){
+            header =
+                    "PUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tSTAGE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
         }
         else{
             header =
@@ -61,8 +67,17 @@ public class JsonProcessingService {
         for (JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
-            if(type.equals("study")) {
+            if(type.equals("study") && !includeAncestry) {
                 processStudyJson(line, doc);
+            }
+            else if(includeAncestry){
+
+                if(doc.get("ancestryLinks") != null){
+                    for(JsonNode a : doc.get("ancestryLinks")){
+                        processAncestryJson(line, doc, a);
+                    }
+                }
+
             }
             else {
                 processAssociationJson(line, doc);
@@ -138,6 +153,78 @@ public class JsonProcessingService {
 
         line.append("\r\n");
         
+    }
+
+    public void processAncestryJson(StringBuilder line, JsonNode doc, JsonNode ancestryRow) throws IOException {
+
+        String pubmedid = getPubmedId(doc);
+        line.append(pubmedid);
+        line.append("\t");
+        line.append(getAuthor(doc));
+        line.append("\t");
+        line.append(getPublicationDate(doc));
+        line.append("\t");
+
+        String init = getInitSample(doc);
+        if (init.contains(newline)) {
+            init = init.replaceAll("\n", "").replaceAll("\r", "");
+        }
+
+        line.append(init);
+        line.append("\t");
+
+        String rep = getRepSample(doc);
+        if (rep.contains(newline)) {
+            rep = rep.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(rep);
+        line.append("\t");
+
+        String[] ancestry = ancestryRow.asText().trim().split("\\|");
+
+        String stage = ancestry[0];
+        line.append(stage);
+        line.append("\t");
+
+        String sampleSize = "";
+
+        if(!ancestry[4].equals("NA")){
+            sampleSize = ancestry[4];
+        }
+        line.append(sampleSize);
+        line.append("\t");
+
+        String ancestralGroup = "";
+
+        if(ancestry[3] != "NA") {
+            ancestralGroup = ancestry[3];
+            if(ancestralGroup.contains(newline)){
+                ancestralGroup = ancestralGroup.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
+        line.append(ancestralGroup);
+        line.append("\t");
+
+        String coo = ancestry[1];
+        line.append(coo);
+        line.append("\t");
+
+        String cor = ancestry[2];
+        line.append(cor);
+        line.append("\t");
+
+        String description = "";
+
+        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
+            description = ancestry[5];
+            if(description.contains(newline)){
+                description = description.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
+        line.append(description);
+        line.append("\t");
+
+        line.append("\r\n");
     }
 
     public void processAssociationJson(StringBuilder line, JsonNode doc) throws IOException {

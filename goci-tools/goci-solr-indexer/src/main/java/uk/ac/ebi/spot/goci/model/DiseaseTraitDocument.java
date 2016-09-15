@@ -29,8 +29,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
     @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
     @Field("study_ancestralGroups") private Collection<String> ancestralGroups;
+    @Field("study_countriesOfOrigin") private Collection<String> countriesOfOrigin;
     @Field("study_countriesOfRecruitment") private Collection<String> countriesOfRecruitment;
     @Field("study_numberOfIndividuals") private Collection<Integer> numberOfIndividuals;
+    @Field("study_additionalAncestryDescription") private Collection<String> additionalAncestryDescription;
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
 
     // embedded Association info
@@ -72,8 +74,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.replicateSampleDescriptions = new LinkedHashSet<>();
 
         this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
         this.numberOfIndividuals = new LinkedHashSet<>();
+        this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
@@ -145,12 +149,20 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestralGroups.addAll(ancestralGroups);
     }
 
+    public void addCountriesOfOrigin(Collection<String> countriesOfOrigin) {
+        this.countriesOfOrigin.addAll(countriesOfOrigin);
+    }
+
     public void addCountriesOfRecruitment(Collection<String> countriesOfRecruitment) {
         this.countriesOfRecruitment.addAll(countriesOfRecruitment);
     }
 
     public void addNumberOfIndividuals(Collection<Integer> numberOfIndividuals) {
         this.numberOfIndividuals.addAll(numberOfIndividuals);
+    }
+
+    public void addAdditionalAncestryDescription(Collection<String> additionalAncestryDescription){
+        this.additionalAncestryDescription.addAll(additionalAncestryDescription);
     }
 
     public void addAncestryLinks(Collection<String> ancestryLinks) {

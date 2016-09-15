@@ -82,8 +82,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String replicateSampleDescription;
 
     @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
     @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
 
 
@@ -140,8 +142,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.mappedUris = new LinkedHashSet<>();
 
         this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
         this.numberOfIndividuals = new LinkedHashSet<>();
+        this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
     }
 
@@ -281,12 +285,20 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.numberOfIndividuals.addAll(numberOfIndividuals);
     }
 
+    public void addAdditionalAncestryDescription(Collection<String> additionalAncestryDescription){
+        this.additionalAncestryDescription.addAll(additionalAncestryDescription);
+    }
+
     public void addAncestryLinks(Collection<String> ancestryLinks) {
         this.ancestryLinks.addAll(ancestryLinks);
     }
 
     public void addAncestralGroup(String ancestralGroup) {
         this.ancestralGroups.add(ancestralGroup);
+    }
+
+    public void addCountryOfOrigin(String countryOfOrigin) {
+        this.countriesOfOrigin.add(countryOfOrigin);
     }
 
     public void addCountryOfRecruitment(String countryOfRecruitment) {

@@ -31,6 +31,12 @@
 |link:../api/search/downloads/studies_alternative[ Click to download]
 |tab separated file
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
+
+
+|The most recent edition of all the ancestry data in the GWAS Catalog
+|link:../api/search/downloads/ancestry[ Click to download]
+|tab separated file
+|link:fileheaders#_file_headers_for_ancestry_download[ Click to view]
 |===
 
 
