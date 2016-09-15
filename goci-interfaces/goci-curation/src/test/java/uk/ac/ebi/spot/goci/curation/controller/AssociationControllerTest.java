@@ -33,6 +33,7 @@ import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -117,6 +118,9 @@ public class AssociationControllerTest {
     @Mock
     private AssociationEventsViewService associationsEventsViewService;
 
+    @Mock
+    private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -147,7 +151,8 @@ public class AssociationControllerTest {
                                                                                 currentUserDetailsService,
                                                                                 associationValidationReportService,
                                                                                 associationDeletionService,
-                                                                                associationsEventsViewService);
+                                                                                associationsEventsViewService,
+                                                                                studyAssociationBatchDeletionEventService);
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
     }
 
@@ -755,6 +760,36 @@ public class AssociationControllerTest {
     @Test
     public void deleteAllAssociations() throws Exception {
 
+        when(associationRepository.findByStudyId(STUDY.getId())).thenReturn(Collections.singletonList(ASSOCIATION));
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+
+        mockMvc.perform(get("/studies/1234/associations/delete_all").accept(MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().is3xxRedirection());
+
+        verify(associationRepository, times(1)).findByStudyId(STUDY.getId());
+        verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
+        verify(studyAssociationBatchDeletionEventService, times(1)).createBatchUploadEvent(STUDY.getId(),
+                                                                                           1,
+                                                                                           SECURE_USER);
+        verify(associationDeletionService, times(1)).deleteAssociation(ASSOCIATION, SECURE_USER);
+    }
+
+    @Test
+    public void deleteAllAssociationsWhereStudyHasNoAssociations() throws Exception {
+
+        // Case where study has no association attached
+        when(associationRepository.findByStudyId(STUDY.getId())).thenReturn(Collections.EMPTY_LIST);
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+
+        mockMvc.perform(get("/studies/1234/associations/delete_all").accept(MediaType.TEXT_HTML_VALUE))
+                .andExpect(status().is3xxRedirection());
+
+        verify(associationRepository, times(1)).findByStudyId(STUDY.getId());
+        verifyZeroInteractions(currentUserDetailsService);
+        verifyZeroInteractions(studyAssociationBatchDeletionEventService);
+        verifyZeroInteractions(associationDeletionService);
     }
 
     @Test
