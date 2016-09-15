@@ -77,6 +77,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String publicationLink;
 
     @Field private String platform;
+    @Field private String accessionId;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -263,6 +264,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public void addAccessionId(String accessionId) {
+        this.accessionId = accessionId;
     }
 
     public void addInitialSampleDescription(String initialSampleDescription) {

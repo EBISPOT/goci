@@ -146,6 +146,7 @@
     <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
 
 
     <!-- embedded study -->
@@ -169,6 +170,7 @@
     <field name="study_numberOfIndividuals" type="int" indexed="false" stored="true" multiValued="true" />
     <field name="study_additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="study_accessionId" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- diseasetrait -->
     <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />

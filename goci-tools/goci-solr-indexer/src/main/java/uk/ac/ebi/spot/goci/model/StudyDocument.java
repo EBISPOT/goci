@@ -27,6 +27,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
     @Field private String platform;
+    @Field private String accessionId;
 
 
     @Field private String initialSampleDescription;
@@ -74,6 +75,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
+        this.accessionId = study.getAccessionId();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -412,5 +414,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public Collection<String> getAdditionalAncestryDescription() {
         return additionalAncestryDescription;
+    }
+
+    public String getAccessionId() {
+        return accessionId;
     }
 }

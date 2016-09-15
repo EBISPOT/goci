@@ -25,6 +25,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_publicationLink") private Collection<String> publicationLinks;
 
     @Field("study_platform") private Collection<String> platforms;
+    @Field("study_accesionId") private Collection<String> accessionIds;
 
     @Field("study_initialSampleDescription") private Collection<String> initialSampleDescriptions;
     @Field("study_replicateSampleDescription") private Collection<String> replicateSampleDescriptions;
@@ -69,6 +70,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.publicationLinks = new LinkedHashSet<>();
 
         this.platforms = new LinkedHashSet<>();
+        this.accessionIds = new LinkedHashSet<>();
 
         this.initialSampleDescriptions = new LinkedHashSet<>();
         this.replicateSampleDescriptions = new LinkedHashSet<>();
@@ -134,6 +136,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
 
     public void addPlatform(String platform) {
         this.platforms.add(platform);
+    }
+
+    public void addAccessionId(String accessionId){
+        this.accessionIds.add(accessionId);
     }
 
 

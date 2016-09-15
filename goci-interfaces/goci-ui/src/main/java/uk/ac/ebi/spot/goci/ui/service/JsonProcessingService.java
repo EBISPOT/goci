@@ -42,7 +42,7 @@ public class JsonProcessingService {
         }
         else if(includeAncestry){
             header =
-                    "PUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tSTAGE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
+                    "STUDY ACCCESSION\tPUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tSTAGE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
         }
         else{
             header =
@@ -50,7 +50,7 @@ public class JsonProcessingService {
         }
 
         if(includeAnnotations){
-            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI");
+            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI\tSTUDY ACCESSION");
         }
 
         header = header.concat("\r\n");
@@ -149,6 +149,8 @@ public class JsonProcessingService {
             line.append(traits.get("trait"));
             line.append("\t");
             line.append(traits.get("uri"));
+            line.append("\t");
+            line.append(getAccessionId(doc));
         }
 
         line.append("\r\n");
@@ -158,6 +160,9 @@ public class JsonProcessingService {
     public void processAncestryJson(StringBuilder line, JsonNode doc, JsonNode ancestryRow) throws IOException {
 
         String pubmedid = getPubmedId(doc);
+
+        line.append(getAccessionId(doc));
+        line.append("\t");
         line.append(pubmedid);
         line.append("\t");
         line.append(getAuthor(doc));
@@ -387,6 +392,8 @@ public class JsonProcessingService {
             line.append(traits.get("trait"));
             line.append("\t");
             line.append(traits.get("uri"));
+            line.append("\t");
+            line.append(getAccessionId(doc));
         }
 
         line.append("\r\n");
@@ -841,6 +848,17 @@ public class JsonProcessingService {
 
         return traits;
     }
+
+    private String getAccessionId(JsonNode doc) {
+        String accessionId = "";
+
+        if(doc.get("accessionId") != null){
+            accessionId = doc.get("accessionId").asText().trim();
+        }
+
+        return accessionId;
+    }
+
 
     public boolean isMultiSnpHaplotype() {
         return isMultiSnpHaplotype;
