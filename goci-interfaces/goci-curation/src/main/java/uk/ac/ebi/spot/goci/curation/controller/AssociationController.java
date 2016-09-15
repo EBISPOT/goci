@@ -40,10 +40,12 @@ import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
@@ -93,6 +95,7 @@ public class AssociationController {
     private AssociationValidationReportService associationValidationReportService;
     private AssociationDeletionService associationDeletionService;
     private EventsViewService eventsViewService;
+    private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -114,7 +117,8 @@ public class AssociationController {
                                  CurrentUserDetailsService currentUserDetailsService,
                                  AssociationValidationReportService associationValidationReportService,
                                  AssociationDeletionService associationDeletionService,
-                                 @Qualifier("associationEventsViewService") EventsViewService eventsViewService) {
+                                 @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -129,6 +133,7 @@ public class AssociationController {
         this.associationValidationReportService = associationValidationReportService;
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
+        this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
     }
 
     /*  Study SNP/Associations */
@@ -874,13 +879,16 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String deleteAllAssociations(Model model, @PathVariable Long studyId, HttpServletRequest request) {
+    public String deleteAllAssociations(@PathVariable Long studyId, HttpServletRequest request) {
 
         // Get all associations and delete
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-        studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association,
-                                                                                              currentUserDetailsService.getUserFromRequest(
-                                                                                                      request)));
+        if (studyAssociations.size() > 0) {
+            getLog().info("Deleting all associations for study: " + studyId);
+            SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+            studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(), user);
+            studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
+        }
         return "redirect:/studies/" + studyId + "/associations";
     }
 

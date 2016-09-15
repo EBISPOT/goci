@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Created by emma on 14/10/2015.
@@ -33,7 +34,7 @@ public class HomeControllerTest {
     @Test
     public void getHome() throws Exception {
         mockMvc.perform(get("/").accept(MediaType.TEXT_HTML_VALUE))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"));
     }
 }

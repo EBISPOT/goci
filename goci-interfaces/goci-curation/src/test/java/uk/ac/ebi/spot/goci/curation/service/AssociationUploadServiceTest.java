@@ -22,13 +22,16 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
 import uk.ac.ebi.spot.goci.model.AssociationUploadRow;
 import uk.ac.ebi.spot.goci.model.Curator;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.RowValidationSummary;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
+import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,6 +61,12 @@ public class AssociationUploadServiceTest {
     @Mock
     private AssociationOperationsService associationOperationsService;
 
+    @Mock
+    private StudyRepository studyRepository;
+
+    @Mock
+    private StudyTrackingOperationServiceImpl trackingOperationService;
+
 
     private AssociationUploadService associationUploadService;
 
@@ -76,7 +85,7 @@ public class AssociationUploadServiceTest {
 
     private static final Study STUDY = new StudyBuilder().setId(100L).setHousekeeping(HOUSEKEEPING).build();
 
-    private static final Association ASSOCIATION =  new AssociationBuilder().setId(100L).build();
+    private static final Association ASSOCIATION = new AssociationBuilder().setId(100L).build();
 
     private static final AssociationUploadRow ROW_1 = new AssociationUploadRowBuilder().setRowNumber(1).build();
 
@@ -108,7 +117,8 @@ public class AssociationUploadServiceTest {
                     .build();
 
     private static final ValidationSummary VALIDATION_SUMMARY_ROW_ERRORS =
-            new ValidationSummaryBuilder().setRowValidationSummaries(Collections.singletonList(ROW_VALIDATION_SUMMARY_ERROR))
+            new ValidationSummaryBuilder().setRowValidationSummaries(Collections.singletonList(
+                    ROW_VALIDATION_SUMMARY_ERROR))
                     .build();
 
     private static final ValidationSummary VALIDATION_SUMMARY_ASS_ERRORS =
@@ -117,9 +127,11 @@ public class AssociationUploadServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        associationUploadService = new AssociationUploadService(studyFileService,
-                                                                associationFileUploadService,
-                                                                associationOperationsService);
+        associationUploadService = new AssociationUploadService(associationFileUploadService,
+                                                                associationOperationsService,
+                                                                studyFileService,
+                                                                studyRepository,
+                                                                trackingOperationService);
     }
 
     @Test(expected = FileUploadException.class)
@@ -174,7 +186,12 @@ public class AssociationUploadServiceTest {
 
         verify(studyFileService, times(1)).getFileFromFileName(STUDY.getId(), uploadedFile.getOriginalFilename());
         verify(associationFileUploadService, times(1)).processAndValidateAssociationFile(file, "full");
-        verify(studyFileService, times(1)).createFileUploadEvent(STUDY.getId(), SECURE_USER);
+
+        // Verify batch upload event
+        verify(trackingOperationService, times(1)).update(STUDY,SECURE_USER,
+                                                          EventType.ASSOCIATION_BATCH_UPLOAD, "1 associations created from upload of 'filename.txt'");
+        verify(studyRepository, times(1)).save(STUDY);
+
         verify(associationOperationsService, times(1)).savAssociation(ASSOCIATION,
                                                                       STUDY,
                                                                       ASSOCIATION_SUMMARY_NO_ERROR.getErrors());
@@ -182,6 +199,7 @@ public class AssociationUploadServiceTest {
         verify(associationOperationsService, times(1)).runMapping(STUDY.getHousekeeping().getCurator(),
                                                                   ASSOCIATION,
                                                                   SECURE_USER);
+
     }
 
     @Test

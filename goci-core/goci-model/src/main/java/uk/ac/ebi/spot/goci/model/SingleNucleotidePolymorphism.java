@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Date;
@@ -44,6 +45,13 @@ public class SingleNucleotidePolymorphism {
     @OneToMany(mappedBy = "snp")
     private Collection<RiskAllele> riskAlleles;
 
+    @ManyToOne
+    @JoinTable(name = "SNP_MERGED_SNP",
+               joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
+    private SingleNucleotidePolymorphism currentSNP;
+
+
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
     }
@@ -80,13 +88,15 @@ public class SingleNucleotidePolymorphism {
         this.rsId = rsId;
     }
 
-    public Long getMerged() {
-        return merged;
-    }
+    public Long getMerged() { return merged; }
 
     public void setMerged(Long merged) {
         this.merged = merged;
     }
+
+    public SingleNucleotidePolymorphism getCurrentSnp() { return currentSNP; }
+
+    public void setCurrentSnp(SingleNucleotidePolymorphism currentSNP) { this.currentSNP = currentSNP; }
 
     public String getFunctionalClass() {
         return functionalClass;

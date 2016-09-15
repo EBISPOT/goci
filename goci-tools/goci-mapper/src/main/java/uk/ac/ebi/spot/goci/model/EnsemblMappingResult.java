@@ -17,7 +17,9 @@ public class EnsemblMappingResult {
 
     private String rsId;
 
-    private Integer merged;
+    private Integer merged = 0;
+
+    private String currentSnpId;
 
     private Collection<Location> locations = new ArrayList<>();
 
@@ -112,6 +114,12 @@ public class EnsemblMappingResult {
         this.merged = merged;
     }
 
+    public String getCurrentSnpId() {
+        return currentSnpId;
+    }
+
+    public void setCurrentSnpId(String currentSnpId) { this.currentSnpId = currentSnpId; }
+
     public String getFunctionalClass() {
         return functionalClass;
     }
@@ -143,4 +151,6 @@ public class EnsemblMappingResult {
     public void setEnsemblOverlappingGene(Set<String> ensemblOverlappingGene) {
         this.ensemblOverlappingGene = ensemblOverlappingGene;
     }
+
+
 }

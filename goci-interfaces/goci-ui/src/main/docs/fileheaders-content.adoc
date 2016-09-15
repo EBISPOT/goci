@@ -24,7 +24,7 @@ $Available in ancestry download files
 
 === File headers for catalog version 1.0
 
-DATE ADDED TO CATALOG^*^ ^+^: Date added to catalog
+DATE ADDED TO CATALOG^*^ ^+^: Date a study is published in the catalog
 
 PUBMEDID^*^ ^+^ ^$^: PubMed identification number
 

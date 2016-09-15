@@ -102,6 +102,8 @@
 
 36. <<faq-36,What changes will I see in the genomic annotation with the new mapping pipeline?>>
 
+37. <<faq-37,How are SNP-SNP interactions and multi-SNP haplotypes displayed?>>
+
 '''
 == General
 
@@ -321,6 +323,13 @@ As with the old pipeline the new pipeline includes any genes in which a SNP maps
 |===
 
 
+==== [[faq-37]]37. How are SNP-SNP interactions and multi-SNP haplotypes displayed?
+We have recently done some work to improve the representation of SNP-SNP interactions and multi-SNP haplotypes in the GWAS Catalog, both in the search results and in the download spreadsheet. For SNP-SNP interactions, all elements that are specific to a given SNP (rsID, risk allele, mapped gene, chromosome location etc) are now separated by an "x" (eg "rs1336472-A x rs4715555-G", "1p31.3 x 6p12.1", "3_prime_UTR_variant x upstream_gene_variant"). For multi-SNP haplotypes, elements are separated by a ";" (eg "rs17310467-?; rs6088735-?; rs6060278-?; rs867186-?", "MYH7B; EDEM2 - PROCR; EDEM2 - PROCR; PROCR", "upstream_gene_variant; intergenic_variant; intergenic_variant; missense_variant"). In both cases, the position of each element is the same across all variables, so the first rsID corresponds to the first mapped gene or mapped gene range (for intergenic SNPs), the first bp location etc.
+
+While we do provide the mapped gene and position information in this format in both the results page and the download, we excluded some of the additional gene-related information such as upstream/downstream gene IDs and distances from SNPs to genes from the download spreadsheet. This decision was made as it is almost impossible to present this kind of multi-dimensional data cleanly in the current spreadsheet format. In particular in large multi-SNP haplotypes, it is possible for some of the SNPs to be located within a gene while others are intergenic. Splitting gene IDs and distances by in-gene, upstream and downstream position would make the individual values much harder to pair up.
+
+Please note that there is no loss of information in the new representation compared to the old one. Previously, haplotypes and interactions were either not mapped at all or only the first SNP in the sequence was mapped.
+
 
 '''
 
@@ -331,4 +340,4 @@ Email us at gwas-info@ebi.ac.uk.
 
 '''
 
-_Last updated: 12 January 2016_
+_Last updated: 23 August 2016_
