@@ -106,6 +106,8 @@ MAPPED_TRAIT^*^ ^+^: Mapped Experimental Factor Ontology trait for this study
 
 MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 
+STUDY ACCESSION^*^ ^+^ ^$^: Accession ID allocated to a GWAS Catalog study
+
 _Added: 10 March 2015_
 
 '''
