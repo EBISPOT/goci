@@ -108,7 +108,7 @@ MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 
 STUDY ACCESSION^*^ ^+^ ^$^: Accession ID allocated to a GWAS Catalog study
 
-_Added: 10 March 2015_
+_Last updated: 16 September 2016_
 
 '''
 
@@ -126,4 +126,4 @@ COUNTRY OF RECRUITMENT ^$^: Country of recruitment of the individuals in the sam
 
 ADDITONAL ANCESTRY DESCRIPTION ^$^: Any other information relevant to the sample description
 
-_Added: 22 August 2016_
+_Added: 16 September 2016_

@@ -61,9 +61,10 @@ function processStudy(study, table) {
         for (var j = 0; j < study.ancestryLinks.length; j++) {
             var link = study.ancestryLinks[j].split("|");
 
-            var cor = link[1];
-            var ancestry = link[2];
-            var num = link[3];
+            var coo = link[1];
+            var cor = link[2];
+            var ancestry = link[3];
+            var num = link[4];
 
             if (link[0] == 'initial') {
                 var existing = false;
