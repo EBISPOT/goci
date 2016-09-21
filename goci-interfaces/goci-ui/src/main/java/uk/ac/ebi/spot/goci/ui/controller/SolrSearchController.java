@@ -282,6 +282,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doFilterSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -393,6 +394,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/sort", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doSortSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -533,6 +535,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/moreresults", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doMoreResultsSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -803,6 +806,7 @@ public class SolrSearchController {
 
     //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
     @RequestMapping(value = "api/search/downloads")
+    @CrossOrigin
     public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pval,
