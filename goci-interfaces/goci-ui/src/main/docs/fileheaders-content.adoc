@@ -18,19 +18,17 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 
 +Available in studies download files
 
-$Available in ancestry download files
-
 '''
 
 === File headers for catalog version 1.0
 
 DATE ADDED TO CATALOG^*^ ^+^: Date a study is published in the catalog
 
-PUBMEDID^*^ ^+^ ^$^: PubMed identification number
+PUBMEDID^*^ ^+^: PubMed identification number
 
-FIRST AUTHOR^*^ ^+^ ^$^: Last name and initials of first author
+FIRST AUTHOR^*^ ^+^: Last name and initials of first author
 
-DATE^*^ ^+^ ^$^: Publication date (online (epub) date if available)
+DATE^*^ ^+^: Publication date (online (epub) date if available)
 
 JOURNAL^*^ ^+^: Abbreviated journal name
 
@@ -40,9 +38,9 @@ STUDY^*^ ^+^: Title of paper
 
 DISEASE/TRAIT^*^ ^+^: Disease or trait examined in study
 
-INITIAL SAMPLE DESCRIPTION^*^ ^+^ ^$^: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
+INITIAL SAMPLE DESCRIPTION^*^ ^+^: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
 
-REPLICATION SAMPLE DESCRIPTION^*^ ^+^ ^$^: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
+REPLICATION SAMPLE DESCRIPTION^*^ ^+^: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
 
 REGION^*^: Cytogenetic region associated with rs number
 
@@ -106,7 +104,7 @@ MAPPED_TRAIT^*^ ^+^: Mapped Experimental Factor Ontology trait for this study
 
 MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 
-STUDY ACCESSION^*^ ^+^ ^$^: Accession ID allocated to a GWAS Catalog study
+STUDY ACCESSION^*^ ^+^: Accession ID allocated to a GWAS Catalog study
 
 _Last updated: 16 September 2016_
 
@@ -114,16 +112,28 @@ _Last updated: 16 September 2016_
 
 === File headers for ancestry download
 
-STAGE ^$^: Stage of the GWAS to which the sample description applies, either initial or replication
+STUDY ACCESSION: Accession ID allocated to a GWAS Catalog study
 
-NUMBER OF INDIVDUALS ^$^: Number of individuals in this sample
+PUBMEDID: PubMed identification number
 
-BROAD ANCESTRAL CATEGORY ^$^: Broad ancestral category to which the individuals in the sample belong
+FIRST AUTHOR: Last name and initials of first author
 
-COUNTRY OF ORIGIN ^$^: Country of origin of the individuals in the sample
+DATE: Publication date (online (epub) date if available)
 
-COUNTRY OF RECRUITMENT ^$^: Country of recruitment of the individuals in the sample
+INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
 
-ADDITONAL ANCESTRY DESCRIPTION ^$^: Any other information relevant to the sample description
+REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
+
+STAGE: Stage of the GWAS to which the sample description applies, either initial or replication
+
+NUMBER OF INDIVDUALS: Number of individuals in this sample
+
+BROAD ANCESTRAL CATEGORY: Broad ancestral category to which the individuals in the sample belong
+
+COUNTRY OF ORIGIN: Country of origin of the individuals in the sample
+
+COUNTRY OF RECRUITMENT: Country of recruitment of the individuals in the sample
+
+ADDITONAL ANCESTRY DESCRIPTION: Any other information relevant to the sample description
 
 _Added: 16 September 2016_

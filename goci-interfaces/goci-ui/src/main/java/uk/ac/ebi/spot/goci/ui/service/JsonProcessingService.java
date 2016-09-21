@@ -220,12 +220,13 @@ public class JsonProcessingService {
 
         String description = "";
 
-        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
-            description = ancestry[5];
-            if(description.contains(newline)){
-                description = description.replaceAll("\n", "").replaceAll("\r", "");
-            }
-        }
+        //TO DO - replace this once additional description has been cleaned up
+//        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
+//            description = ancestry[5];
+//            if(description.contains(newline)){
+//                description = description.replaceAll("\n", "").replaceAll("\r", "");
+//            }
+//        }
         line.append(description);
         line.append("\t");
 
