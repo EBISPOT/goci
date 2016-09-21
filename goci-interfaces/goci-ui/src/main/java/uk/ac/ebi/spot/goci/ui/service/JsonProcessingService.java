@@ -329,17 +329,19 @@ public class JsonProcessingService {
         line.append(rsId);
         line.append("\t");
 
+        Map<String, String> mergedSnps = getMergedCurrent(doc);
+
         //            line.append(doc.get("merged").asText().trim());
-        line.append(""); // todo - remove this when above solr field is available
+        line.append(mergedSnps.get("merged"));
         line.append("\t");
 
-        if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
-            line.append(rsId.substring(2));
-        }
-        else {
-            line.append("");
-        }
-
+//        if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
+//            line.append(rsId.substring(2));
+//        }
+//        else {
+//            line.append("");
+//        }
+        line.append(mergedSnps.get("current"));
         line.append("\t");
 
         String context = getContext(doc);
@@ -736,6 +738,38 @@ public class JsonProcessingService {
         }
         return date;
     }
+
+    private Map<String,String> getMergedCurrent(JsonNode doc) {
+        String merged;
+        String currentSnp;
+        Map<String, String> mergedSnps = new HashMap<>();
+
+        if(doc.get("merged") != null) {
+            merged = doc.get("merged").asText().trim();
+        }
+        else{
+            merged = "";
+        }
+
+        if(doc.get("currentSnp") != null){
+            currentSnp = doc.get("currentSnp").get(0).asText().trim();
+                if (currentSnp.indexOf("rs") == 0 && currentSnp.indexOf("rs", 2) == -1) {
+                    currentSnp = currentSnp.substring(2);
+                }
+                else {
+                    currentSnp = "";
+                }
+        }
+        else {
+            currentSnp = "";
+        }
+
+        mergedSnps.put("merged", merged);
+        mergedSnps.put("current", currentSnp);
+
+        return mergedSnps;
+    }
+
 
     private Map<String, MappedGene> getMappedGenes(JsonNode doc) {
         List<String> actuallyMapped = new ArrayList<>();

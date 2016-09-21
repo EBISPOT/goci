@@ -56,6 +56,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field @NonEmbeddableField private Long merged;
+    @Field @NonEmbeddableField private String currentSnp;
 
     @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
 
@@ -369,6 +370,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     merged = snp.getMerged();
 
+                                    String current;
+                                    if(snp.getCurrentSnp() != null){
+                                        current = snp.getCurrentSnp().getRsId();
+                                    }
+                                    else{
+                                        current = snp.getRsId();
+                                    }
+                                    currentSnp = setOrAppend(currentSnp, current, primary_delimiter);
+
                                     snp.getLocations().forEach(
                                         location -> {
                                             if (!regions.contains(location.getRegion().getName())) {
@@ -443,6 +453,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     SingleNucleotidePolymorphism snp = riskAllele.getSnp();
                                     rsId = setOrAppend(rsId, snp.getRsId(), ", ");
 
+                                    merged = snp.getMerged();
+
+                                    String current;
+                                    if(snp.getCurrentSnp() != null){
+                                         current = snp.getCurrentSnp().getRsId();
+                                    }
+                                    else{
+                                        current = snp.getRsId();
+                                    }
+                                    currentSnp = setOrAppend(currentSnp, current, ", ");
 
                                     snp.getLocations().forEach(
                                             location -> {
@@ -930,5 +950,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public Set<String> getChromLocations() {
         return chromLocations;
+    }
+
+    public String getCurrentSnp() {
+        return currentSnp;
     }
 }

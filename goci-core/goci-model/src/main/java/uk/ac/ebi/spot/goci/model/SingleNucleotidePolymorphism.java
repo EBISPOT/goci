@@ -49,7 +49,7 @@ public class SingleNucleotidePolymorphism {
     @JoinTable(name = "SNP_MERGED_SNP",
                joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
-    private SingleNucleotidePolymorphism currentSNP;
+    private SingleNucleotidePolymorphism currentSnp;
 
 
     // JPA no-args constructor
@@ -62,7 +62,8 @@ public class SingleNucleotidePolymorphism {
                                         Date lastUpdateDate,
                                         Collection<Location> locations,
                                         Collection<GenomicContext> genomicContexts,
-                                        Collection<RiskAllele> riskAlleles) {
+                                        Collection<RiskAllele> riskAlleles,
+                                        SingleNucleotidePolymorphism currentSnp) {
         this.rsId = rsId;
         this.merged = merged;
         this.functionalClass = functionalClass;
@@ -70,6 +71,7 @@ public class SingleNucleotidePolymorphism {
         this.locations = locations;
         this.genomicContexts = genomicContexts;
         this.riskAlleles = riskAlleles;
+        this.currentSnp = currentSnp;
     }
 
     public Long getId() {
@@ -94,9 +96,9 @@ public class SingleNucleotidePolymorphism {
         this.merged = merged;
     }
 
-    public SingleNucleotidePolymorphism getCurrentSnp() { return currentSNP; }
+    public SingleNucleotidePolymorphism getCurrentSnp() { return currentSnp; }
 
-    public void setCurrentSnp(SingleNucleotidePolymorphism currentSNP) { this.currentSNP = currentSNP; }
+    public void setCurrentSnp(SingleNucleotidePolymorphism currentSnp) { this.currentSnp = currentSnp; }
 
     public String getFunctionalClass() {
         return functionalClass;

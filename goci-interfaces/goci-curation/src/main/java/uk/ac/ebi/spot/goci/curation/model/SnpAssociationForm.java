@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,6 +35,8 @@ public abstract class SnpAssociationForm {
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
     private Collection<GenomicContext> genomicContexts = new ArrayList<>();
+
+    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     private String snpType;
 
@@ -71,6 +74,7 @@ public abstract class SnpAssociationForm {
                               List<SnpMappingForm> snpMappingForms,
                               Collection<EfoTrait> efoTraits,
                               Collection<GenomicContext> genomicContexts,
+                              Collection<SingleNucleotidePolymorphism> snps,
                               String snpType,
                               Boolean snpApproved,
                               Float standardError,
@@ -90,6 +94,7 @@ public abstract class SnpAssociationForm {
         this.snpMappingForms = snpMappingForms;
         this.efoTraits = efoTraits;
         this.genomicContexts = genomicContexts;
+        this.snps = snps;
         this.snpType = snpType;
         this.snpApproved = snpApproved;
         this.standardError = standardError;
@@ -253,6 +258,14 @@ public abstract class SnpAssociationForm {
 
     public void setRiskFrequency(String riskFrequency) {
         this.riskFrequency = riskFrequency;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> getSnps() {
+        return snps;
+    }
+
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
     }
 }
 

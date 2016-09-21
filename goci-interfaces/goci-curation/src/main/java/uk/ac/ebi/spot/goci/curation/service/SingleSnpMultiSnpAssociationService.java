@@ -99,6 +99,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         // Handle snp rows
         Collection<GenomicContext> snpGenomicContexts = new ArrayList<GenomicContext>();
+        Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
         List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
         List<SnpMappingForm> snpMappingForms = new ArrayList<SnpMappingForm>();
         for (RiskAllele riskAllele : locusRiskAlleles) {
@@ -106,6 +107,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
             snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
 
             SingleNucleotidePolymorphism snp = riskAllele.getSnp();
+            snps.add(snp);
             String rsID = snp.getRsId();
             snpFormRow.setSnp(rsID);
 
@@ -130,6 +132,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         form.setSnpMappingForms(snpMappingForms);
         form.setGenomicContexts(snpGenomicContexts);
+        form.setSnps(snps);
         form.setSnpFormRows(snpFormRows);
         return form;
     }
