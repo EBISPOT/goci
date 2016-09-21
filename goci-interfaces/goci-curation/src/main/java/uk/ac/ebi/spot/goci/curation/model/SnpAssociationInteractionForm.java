@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.model;
 
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
+import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +33,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
                                          List<SnpMappingForm> snpMappingForms,
                                          Collection<EfoTrait> efoTraits,
                                          Collection<GenomicContext> genomicContexts,
+                                         Collection<SingleNucleotidePolymorphism> snps,
                                          String snpType,
                                          Boolean snpApproved,
                                          Float standardError,
@@ -52,6 +54,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
               snpMappingForms,
               efoTraits,
               genomicContexts,
+              snps,
               snpType,
               snpApproved,
               standardError,

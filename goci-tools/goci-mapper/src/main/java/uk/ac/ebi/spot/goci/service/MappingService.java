@@ -198,6 +198,8 @@ public class MappingService {
                 snpLinkedToLocus.setFunctionalClass(ensemblMappingResult.getFunctionalClass());
                 snpLinkedToLocus.setLastUpdateDate(new Date());
 
+                snpLinkedToLocus.setMerged(Long.valueOf(ensemblMappingResult.getMerged()));
+
                 // Update the merge table
                 if (ensemblMappingResult.getMerged() == 1) {
                     String currentSnpId = ensemblMappingResult.getCurrentSnpId();

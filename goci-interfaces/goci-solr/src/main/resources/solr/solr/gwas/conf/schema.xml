@@ -220,6 +220,8 @@
     <field name="positionLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="merged" type="long" indexed="true" stored="true" multiValued="false" />
     <field name="locusDescription" type="text_general" indexed="true" stored="true" multiValued="false" />
+    <field name="currentSnp" type="text_general" indexed="true" stored="true" multiValued="true" />
+
 
 
     <!-- embedded association -->

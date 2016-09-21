@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="functional_mapping_table">
+
+<div class="form-group">
+    <label class="control-label col-md-2">Functional mapping(s)</label>
+
+    <div class="col-md-9">
+        <table class="table table-hover table-bordered" id="functional_mapping_table">
+
+            <thead>
+            <tr>
+                <th>SNP</th>
+                <th>Functional class</th>
+                <th>Merged?</th>
+                <th>New SNP</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row,rowStat : *{snps}" th:id="functional_tr_+${rowStat.count}">
+                <td>
+                    <span th:text="*{snps[__${rowStat.index}__].rsId}">SNP</span>
+                    <input type="hidden" th:field="*{snps[__${rowStat.index}__].rsId}"/>
+                </td>
+                <td>
+                    <span th:text="*{snps[__${rowStat.index}__].functionalClass}">Functional class</span>
+                    <input type="hidden" th:field="*{snps[__${rowStat.index}__].functionalClass}"/>
+                </td>
+                <td>
+                    <!--<input type="text" th:field="*{regions[__${rowStat.index}__].name}"/>-->
+                    <span th:switch="*{snps[__${rowStat.index}__].merged}">
+                        <span th:case="0">No</span>
+                        <span th:case="1">Yes</span>
+                    </span>
+                    <input type="hidden" th:field="*{snps[__${rowStat.index}__].merged}"/>
+                </td>
+                <td>
+                    <span th:if="*{snps[__${rowStat.index}__].currentSnp != null}" th:text="*{snps[__${rowStat.index}__].currentSnp.rsId}">New SNP</span>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

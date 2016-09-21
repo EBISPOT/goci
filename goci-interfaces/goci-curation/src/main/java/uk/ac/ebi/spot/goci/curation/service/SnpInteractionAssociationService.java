@@ -79,6 +79,7 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         Collection<Locus> loci = association.getLoci();
 
         Collection<GenomicContext> snpGenomicContexts = new ArrayList<GenomicContext>();
+        Collection<SingleNucleotidePolymorphism> snps = new ArrayList<SingleNucleotidePolymorphism>();
         List<SnpMappingForm> snpMappingForms = new ArrayList<SnpMappingForm>();
 
         // Create a column per locus
@@ -110,6 +111,7 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
                         snp = riskAllele.getSnp().getRsId();
 
                         SingleNucleotidePolymorphism snp_obj = riskAllele.getSnp();
+                        snps.add(snp_obj);
                         Collection<Location> locations = snp_obj.getLocations();
                         for (Location location : locations) {
                             SnpMappingForm snpMappingForm = new SnpMappingForm(snp, location);
@@ -157,6 +159,7 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
         }
         form.setSnpMappingForms(snpMappingForms);
         form.setGenomicContexts(snpGenomicContexts);
+        form.setSnps(snps);
         form.setSnpFormColumns(snpFormColumns);
         form.setNumOfInteractions(snpFormColumns.size());
         return form;
