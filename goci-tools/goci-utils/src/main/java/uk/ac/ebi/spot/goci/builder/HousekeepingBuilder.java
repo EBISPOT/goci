@@ -51,6 +51,11 @@ public class HousekeepingBuilder {
         return this;
     }
 
+    public HousekeepingBuilder setIsPublished(Boolean isPublished) {
+        housekeeping.setIsPublished(isPublished);
+        return this;
+    }
+
     public HousekeepingBuilder setCatalogPublishDate(Date catalogPublishDate) {
         housekeeping.setCatalogPublishDate(catalogPublishDate);
         return this;

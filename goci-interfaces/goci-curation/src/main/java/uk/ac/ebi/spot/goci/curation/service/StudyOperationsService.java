@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.service.EventTypeService;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
@@ -23,6 +21,8 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EventTypeService;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.Collection;
 import java.util.Date;
@@ -266,10 +266,15 @@ public class StudyOperationsService {
         switch (housekeeping.getCurationStatus().getStatus()) {
             case "Publish study":
                 // If there is no existing publish date then update
-                if (housekeeping.getCatalogPublishDate() == null) {
-                    Date publishDate = new Date();
-                    housekeeping.setCatalogPublishDate(publishDate);
+                if(!housekeeping.getIsPublished()){
+                    housekeeping.setIsPublished(true);
+
+                    if (housekeeping.getCatalogPublishDate() == null) {
+                        Date publishDate = new Date();
+                        housekeeping.setCatalogPublishDate(publishDate);
+                    }
                 }
+
 
                 // Save and create event
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);

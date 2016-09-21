@@ -50,6 +50,7 @@
                     <th>Catalog Publish Date</th>
                     <th>Catalog Unpublish Date</th>
                     <th>Send to NCBI Date</th>
+                    <th>Is currently published?</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,6 +61,19 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:switch="${study.housekeeping.isPublished}">
+                        <span th:case="'null'"></span>
+
+                        <span th:case="false">No</span>
+
+                        <span th:case="true">Yes</span>
+                    </td>
+                    <!--<td th:if="${study.housekeeping != null and study.housekeeping.isPublished !=null}">-->
+                        <!--<span th:switch="${study.housekeeping.isPublished}">-->
+                             <!--<span th:case="true">No</span>-->
+                            <!--<span th:case="false">Yes</span>-->
+                        <!--</span>-->
+                    <!--</td>-->
                 </tr>
                 </tbody>
             </table>
@@ -121,9 +135,7 @@
                     <label for="id" class="control-label col-md-2"></label>
                     <input id="id" type="hidden" th:field="*{id}"/>
                 </div>
-                <!--End hidden-->
 
-                <!--Hidden-->
                 <div class="form-group">
                     <label for="catalogPublishDate" class="control-label col-md-2"></label>
                     <input id="catalogPublishDate" type="hidden" th:field="*{catalogPublishDate}"/>
@@ -132,6 +144,10 @@
                 <div class="form-group">
                     <label for="sendToNCBIDate" class="control-label col-md-2"></label>
                     <input id="sendToNCBIDate" type="hidden" th:field="*{sendToNCBIDate}"/>
+                </div>
+                <div class="form-group">
+                    <label for="isPublished" class="control-label col-md-2"></label>
+                    <input id="isPublished" type="hidden" th:field="*{isPublished}"/>
                 </div>
                 <!--End hidden-->
 
