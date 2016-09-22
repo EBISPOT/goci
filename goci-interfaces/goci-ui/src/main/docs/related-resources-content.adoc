@@ -3,6 +3,11 @@
 === GWAS Webinar
 On Thursday, July 18th, 2013, the Division of Genomic Medicine held http://www.genome.gov/27554296[a webinar] to highlight current uses and explore  priorities and future directions for the GWAS catalog.
 
+
+=== GWAS Catalog training materials
+Training materials from workshops held by the GWAS Catalog team are available on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/training_materials/[ our FTP server]. If you would like to make use of these slides, please cite the GWAS Catalog as detailed on the link:about[About] page.
+
+
 === Various resources & projects
 http://www.ensembl.org[Ensembl Genome Browser]
 

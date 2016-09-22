@@ -31,12 +31,15 @@
 
 9. <<faq-A9,What happened to the "CNV" annotation in the interface?>>
 
+10. <<faq-A10,Why do some SNPs not have any corresponding mapping information?>>
 
-10. <<faq-A10,How is the ancestry data in the GWAS Catalog provided?>>
+11. <<faq-A11,How is the ancestry data in the GWAS Catalog provided?>>
 
+12. <<faq-A12,What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?>>
 
-11. <<faq-A11,Why do some SNPs not have any corresponding mapping information?>>
+13. <<faq-A13,Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?>>
 
+14. <<faq-A14,What do the new "accession numbers" in some of the download files means?>>
 
 === B. Searching
 
@@ -147,7 +150,7 @@ You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs 
 
 ==== [[faq-A7]]7. How often are the GWAS Catalog and diagram updated?
 
-New data is added to the GWAS Catalog and diagram on a weekly basis, with new data generally going public every Tuesday.
+New data is added to the GWAS Catalog and diagram on a weekly basis, with new data generally going public every Tuesday. Data releases include all downloadable spreadsheets.
 
 ==== [[faq-A8]]8. Why does the data I just downloaded look different from what I downloaded in the old Catalog?
 
@@ -157,13 +160,25 @@ Due to the way we now process the Catalog data for the full download, you may fi
 
 Studies looking at copy number variations (CNV) are not part of the remit of the GWAS Catalog. Historically, a couple of CNV studies had been included in the Catalog but these have now been removed. As the Catalog no longer contains any CNV studies, the decision was made to also eliminate the CNV flag from the search results for studies. The corresponding column is still available in the downloadable full Catalog spreadsheet to preserve backwards compatibility with previous spreadsheet versions.
 
-==== [[faq-A10]]10. How is the ancestry data in the GWAS Catalog provided?
+==== [[faq-A10]]10. Why do some SNPs not have any corresponding mapping information?
+
+SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
+
+==== [[faq-A11]]11. How is the ancestry data in the GWAS Catalog provided?
 
 Ancestry data is provided in two forms: a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms and includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment. For more information please view our link:methods[Methods] page.
 
-==== [[faq-A11]]11. Why do some SNPs not have any corresponding mapping information?
+==== [[faq-A12]]12. What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?
 
-SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
+As of September 2016, we release publicly all ancestry data extracted from the GWAS Catalog. Ancestry data from studies published before 2011 has not been reviewed by a second curator and so may not always conform to the strict standardised way we present more recent ancestry data.
+
+==== [[faq-A13]]13. Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?
+
+Most GWAS Catalog studies include at least two ancestry entries, one for the inital stage and one for the replication stage, and some studies may have several entries for each stage. As there is no way of usefully representing this multi-dimensional data in a single row in a spreadsheet, this data is instead provided in a separate spreadsheet, with each ancestry entry in its own row.
+
+==== [[faq-A14]]14. What do the new "accession numbers" in some of the download files means?
+
+As detailed in the link:methods[ Methods] section, some publications are split into multiple GWAS Catalog entries, each of which represents one analysis for a distinct trait, sample cohort or other unique characteristic. In order to be able to link publication-level information, associations, sample descriptions and traits for each separate entry or "GWAS Catalog study", we have introduced a stable accession number for each entry. The accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. The decision was made to not include the accession numbers in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
 
 
 == B. Searching
