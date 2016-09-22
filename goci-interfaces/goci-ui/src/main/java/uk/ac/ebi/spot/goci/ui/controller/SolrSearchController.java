@@ -806,7 +806,7 @@ public class SolrSearchController {
 
     //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
     @RequestMapping(value = "api/search/downloads")
-    @CrossOrigin
+//    @CrossOrigin
     public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pval,
