@@ -781,7 +781,7 @@ public class StudyController {
         // If so warn the curator
         if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
             model.addAttribute("study", studyToUnpublish);
-            return "unpublish_study_with_associations_warning";
+            return "sounpublish_study_with_associations_warning";
 
         }
         else {

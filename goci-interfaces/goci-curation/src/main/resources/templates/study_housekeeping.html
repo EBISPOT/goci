@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
     <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
     <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
@@ -18,8 +31,9 @@
     <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
     <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script th:src="@{/js/goci-editing.js}"></script>
+
 
 </head>
 <body>
@@ -37,6 +51,15 @@
 
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
+
+
+<div class="form-group">
+    <label for="publish_flag" class="control-label col-md-2"></label>
+
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -122,7 +145,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 dataForm">
             <form id="studyHousekeeping" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
                   name="studyHousekeeping">
 

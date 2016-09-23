@@ -30,6 +30,9 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
+
+
 </head>
 <body>
 
@@ -76,7 +79,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 dataForm">
 
             <form id="studyForm" class="form-horizontal" method="post" th:object="${study}" name="studyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
@@ -87,6 +90,14 @@
 
                     <div class="col-md-10">
                         <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="publish_flag" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{housekeeping.isPublished}" class="form-control" id="publish_flag"/>
                     </div>
                 </div>
 
@@ -117,6 +128,8 @@
                     </div>
                 </div>
 
+
+
                 <!--Visible fields-->
                 <div class="form-group">
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
@@ -131,7 +144,9 @@
                     <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
+                        <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
                         <input type="text" th:field="*{author}" class="form-control" id="author"/>
+
                     </div>
                 </div>
 
@@ -158,7 +173,7 @@
                         <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
 
                         <div class="btn-group pull-right">
-                            <button type="button" data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle">
+                            <button type="button" data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle always-clickable">
                                 View paper<span class="caret"></span></button>
 
                             <ul class="dropdown-menu">
