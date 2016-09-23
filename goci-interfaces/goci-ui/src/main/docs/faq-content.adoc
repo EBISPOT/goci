@@ -39,7 +39,7 @@
 
 13. <<faq-A13,Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?>>
 
-14. <<faq-A14,What do the new "accession numbers" in some of the download files means?>>
+14. <<faq-A14,What do the new "accession numbers" in some of the download files mean?>>
 
 === B. Searching
 
@@ -176,7 +176,7 @@ As of September 2016, we release publicly all ancestry data extracted from the G
 
 Most GWAS Catalog studies include at least two ancestry entries, one for the inital stage and one for the replication stage, and some studies may have several entries for each stage. As there is no way of usefully representing this multi-dimensional data in a single row in a spreadsheet, this data is instead provided in a separate spreadsheet, with each ancestry entry in its own row.
 
-==== [[faq-A14]]14. What do the new "accession numbers" in some of the download files means?
+==== [[faq-A14]]14. What do the new "accession numbers" in some of the download files mean?
 
 As detailed in the link:methods[ Methods] section, some publications are split into multiple GWAS Catalog entries, each of which represents one analysis for a distinct trait, sample cohort or other unique characteristic. In order to be able to link publication-level information, associations, sample descriptions and traits for each separate entry or "GWAS Catalog study", we have introduced a stable accession number for each entry. The accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. The decision was made to not include the accession numbers in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
 
