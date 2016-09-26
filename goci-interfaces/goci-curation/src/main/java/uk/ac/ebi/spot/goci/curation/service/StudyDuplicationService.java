@@ -68,9 +68,6 @@ public class StudyDuplicationService {
                 "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
-        // Save newly duplicated study and housekeeping
-        housekeepingOperationsService.saveHousekeeping(duplicateStudy, duplicateStudyHousekeeping);
-
         // Copy existing ethnicity
         Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyToDuplicate.getId());
         Collection<Ethnicity> newEthnicities = new ArrayList<>();
@@ -84,6 +81,9 @@ public class StudyDuplicationService {
 
         duplicateStudy.setEthnicities(newEthnicities);
         studyRepository.save(duplicateStudy);
+
+        // Save newly duplicated study and housekeeping
+        housekeepingOperationsService.saveHousekeeping(duplicateStudy, duplicateStudyHousekeeping);
 
         return duplicateStudy;
     }
