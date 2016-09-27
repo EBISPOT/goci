@@ -100,7 +100,14 @@
 </div>
 
 <!--Top level buttons and modals-->
-<div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"></div>
+<div th:switch="${study.housekeeping.isPublished}">
+    <div th:case="false">
+        <div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"></div>
+    </div>
+    <div th:case="true">
+        <div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"></div>
+    </div>
+</div>
 <br/>
 
 <div class="form-group">
@@ -457,7 +464,9 @@
 <br/>
 
 <!--Bottom level buttons and modals-->
-<div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>
+<div th:if="(${study.housekeeping.isPublished} == false)">
+    <div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>
+</div>
 
 <div th:include="fragments/footer :: page_footer"></div>
 
