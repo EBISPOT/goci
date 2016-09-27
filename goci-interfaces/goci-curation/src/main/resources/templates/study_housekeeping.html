@@ -176,13 +176,17 @@
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" th:field="*{fileName}" class="col-md-8"></textarea>
+                    <div class="col-md-8">
+                        <textarea id="fileName" th:field="*{fileName}" class="form-control"></textarea>
+                    </div>
                 </div>
 
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" th:field="*{notes}" class="col-md-8"></textarea>
+                    <div class="col-md-8">
+                        <textarea id="notes" th:field="*{notes}" class="col-md-8 form-control"></textarea>
+                    </div>
                 </div>
 
                 <!--Checkboxes-->

@@ -16,6 +16,7 @@ function setInputsToReadOnly(){
 
     $('.dataForm').find('input').attr('readonly', true);
     $('.dataForm').find('textarea').attr('readonly', true);
+    $('.dataForm').find(':checkbox').attr('disabled', true);
     $('.dataForm').find('select').attr('disabled', true);
     $('.dataForm').find('button').attr('disabled', true);
     $('.dataForm').find('a').attr('preventClick', true)
