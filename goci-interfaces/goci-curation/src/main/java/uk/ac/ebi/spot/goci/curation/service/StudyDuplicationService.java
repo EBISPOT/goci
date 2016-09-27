@@ -68,6 +68,8 @@ public class StudyDuplicationService {
                 "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
+        studyRepository.save(duplicateStudy);
+
         // Copy existing ethnicity
         Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyToDuplicate.getId());
         Collection<Ethnicity> newEthnicities = new ArrayList<>();
