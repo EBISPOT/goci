@@ -146,7 +146,8 @@
         <td>
             <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>
 
-            <div id="assignCuratorForm">
+            <div id="assignCuratorForm"
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)}">
 
                 <form class="form-inline" name="assignCuratorForm" role="form" method="post"
                       th:action="@{/studies/{studyId}/assign(studyId=${study.id})}"
@@ -177,7 +178,8 @@
         <td>
             <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></p>
 
-            <div id="assignStatusForm">
+            <div id="assignStatusForm"
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)}">
 
                 <form class="form-inline" name="assignStatusForm" role="form" method="post"
                       th:action="@{/studies/{studyId}/status_update(studyId=${study.id})}"
