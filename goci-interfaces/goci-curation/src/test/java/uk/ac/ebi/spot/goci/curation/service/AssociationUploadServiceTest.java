@@ -192,7 +192,7 @@ public class AssociationUploadServiceTest {
                                                           EventType.ASSOCIATION_BATCH_UPLOAD, "1 associations created from upload of 'filename.txt'");
         verify(studyRepository, times(1)).save(STUDY);
 
-        verify(associationOperationsService, times(1)).savAssociation(ASSOCIATION,
+        verify(associationOperationsService, times(1)).saveAssociation(ASSOCIATION,
                                                                       STUDY,
                                                                       ASSOCIATION_SUMMARY_NO_ERROR.getErrors());
         verify(associationOperationsService, times(1)).createAssociationCreationEvent(ASSOCIATION, SECURE_USER);

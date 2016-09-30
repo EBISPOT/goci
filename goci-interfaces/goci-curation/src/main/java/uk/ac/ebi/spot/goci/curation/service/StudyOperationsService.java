@@ -216,6 +216,8 @@ public class StudyOperationsService {
         //Set the reason for unpublishing
         housekeepingAttachedToStudy.setUnpublishReason(unpublishReason);
 
+        housekeepingAttachedToStudy.setIsPublished(false);
+
         //Set the unpublised status in housekeeping
         CurationStatus status = curationStatusRepository.findByStatus("Unpublished from catalog");
         housekeepingAttachedToStudy.setCurationStatus(status);
@@ -272,6 +274,21 @@ public class StudyOperationsService {
                     if (housekeeping.getCatalogPublishDate() == null) {
                         Date publishDate = new Date();
                         housekeeping.setCatalogPublishDate(publishDate);
+                    }
+
+                    if (housekeeping.getCatalogUnpublishDate() != null && housekeeping.getUnpublishReason() != null){
+                        String republish_message = "Study unpublished on "
+                                + housekeeping.getCatalogUnpublishDate().toString()
+                                + " for reason "
+                                + housekeeping.getUnpublishReason().getReason()
+                                + " and republished on "
+                                + new Date().toString();
+
+                        String notes = housekeeping.getNotes();
+
+                        housekeeping.setNotes(notes.concat("****").concat(republish_message));
+                        housekeeping.setCatalogUnpublishDate(null);
+                        housekeeping.setUnpublishReason(null);
                     }
                 }
 

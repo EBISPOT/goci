@@ -44,6 +44,9 @@
     <script src="../static/js/goci-snp-association-mapping.js"
             th:src="@{../js/goci-snp-association-mapping.js}"></script>
 
+    <script th:src="@{../js/goci-editing.js}"></script>
+
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
 <body>
@@ -57,6 +60,14 @@
         <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
         <li class="active">Edit Standard SNP association</li>
     </ol>
+</div>
+
+<div class="form-group" style="display: none">
+    <label for="publish_flag" class="control-label col-md-2"></label>
+
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+    </div>
 </div>
 
 <div class="container-fluid">
@@ -77,7 +88,7 @@
     <div class="row">
         <div th:include="fragments/association_mapping_details :: mapping_details"></div>
         <div class="col-md-10">
-            <div id="editSNPForm">
+            <div id="editSNPForm" class="dataForm">
 
                 <form class="form-horizontal"
                       method="post"

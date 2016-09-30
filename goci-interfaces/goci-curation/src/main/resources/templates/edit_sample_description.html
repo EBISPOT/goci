@@ -32,6 +32,7 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <script th:src="@{/js/goci-editing.js}"></script>
 
 </head>
 <body>
@@ -47,11 +48,23 @@
     </ol>
 </div>
 
+<div class="form-group" style="display: none">
+    <label for="publish_flag" class="control-label col-md-2"></label>
+
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-10">
-            <div id="editEthnicityForm">
+            <div id="editEthnicityForm" class="dataForm">
                 <form class="form-horizontal" method="post" name="editEthnicityForm">
+
+                    <div th:include="fragments/ancestry_published_alert :: ancestry_published"
+                         th:if="*{#bools.isTrue(study.housekeeping.isPublished)}"></div>
+
 
                     <!--Hidden fields-->
                     <div class="form-group">
@@ -178,7 +191,13 @@
                     </div>
 
                     <!--Button -->
-                    <div class="form-group">
+                    <!--<div class="form-group">-->
+                        <!--<div class="col-md-offset-2 col-md-10">-->
+                            <!--<button type="submit" class="btn btn-primary">Save</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <div class="form-group" th:if="*{#bools.isFalse(study.housekeeping.isPublished)}">
                         <div class="col-md-offset-2 col-md-10">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>

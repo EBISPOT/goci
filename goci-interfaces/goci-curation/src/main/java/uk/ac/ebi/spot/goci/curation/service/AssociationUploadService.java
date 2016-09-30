@@ -155,7 +155,7 @@ public class AssociationUploadService {
             // Add creation event
             associationOperationsService.createAssociationCreationEvent(newAssociation, user);
             // Save association
-            associationOperationsService.savAssociation(newAssociation,
+            associationOperationsService.saveAssociation(newAssociation,
                                                         study,
                                                         associationSummary.getErrors());
 

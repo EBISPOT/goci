@@ -45,7 +45,6 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -775,19 +774,19 @@ public class StudyController {
         Study studyToUnpublish = studyRepository.findOne(studyId);
 
         // Check if it has any associations or ethnicity information
-        Collection<Association> associations = associationRepository.findByStudyId(studyId);
-        Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
-
-        // If so warn the curator
-        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
-            model.addAttribute("study", studyToUnpublish);
-            return "sounpublish_study_with_associations_warning";
-
-        }
-        else {
+//        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+//        Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
+//
+//        // If so warn the curator
+//        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
+//            model.addAttribute("study", studyToUnpublish);
+//            return "unpublish_study_with_associations_warning";
+//
+//        }
+//        else {
             model.addAttribute("studyToUnpublish", studyToUnpublish);
             return "unpublish_study";
-        }
+//        }
 
     }
 
