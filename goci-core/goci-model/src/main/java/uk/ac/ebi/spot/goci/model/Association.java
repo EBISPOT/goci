@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -96,7 +97,7 @@ public class Association implements Trackable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
 
-    @OneToMany
+    @OneToMany(fetch= FetchType.EAGER)
     @JoinTable(name = "ASSOCIATION_EVENT",
                joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))

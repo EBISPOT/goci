@@ -50,6 +50,7 @@ public class AssociationQueryService {
                 });
 
         association.getEvents();
+
     }
 
     // Sort options
