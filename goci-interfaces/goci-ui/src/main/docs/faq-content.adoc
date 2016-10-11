@@ -41,6 +41,8 @@
 
 14. <<faq-A14,What do the new "accession numbers" in some of the download files mean?>>
 
+15. <<faq-A15,Why are there no recent studies in the GWAS Catalog?>>
+
 === B. Searching
 
 1. <<faq-B1,How do I do a search?>>
@@ -179,6 +181,10 @@ Most GWAS Catalog studies include at least two ancestry entries, one for the ini
 ==== [[faq-A14]]14. What do the new "accession numbers" in some of the download files mean?
 
 As detailed in the link:methods[ Methods] section, some publications are split into multiple GWAS Catalog entries, each of which represents one analysis for a distinct trait, sample cohort or other unique characteristic. In order to be able to link publication-level information, associations, sample descriptions and traits for each separate entry or "GWAS Catalog study", we have introduced a stable accession number for each entry. The accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. The decision was made to not include the accession numbers in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
+
+==== [[faq-A15]]15. Why are there no recent studies in the GWAS Catalog?
+
+Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialing various approaches to speed up the curation process including automation of some parts of the data extraction process and data submission by study authors.
 
 
 == B. Searching
