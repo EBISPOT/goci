@@ -184,7 +184,7 @@ As detailed in the link:methods[ Methods] section, some publications are split i
 
 ==== [[faq-A15]]15. Why are there no recent studies in the GWAS Catalog?
 
-Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialing various approaches to speed up the curation process including automation of some parts of the data extraction process and data submission by study authors.
+Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. As the complexity of studies in terms of study design and statistical analysis of results continues to increase, so does the curation effort required to extract the correct information in line with our extraction guidelines. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialing various approaches to speed up the curation process including automation of some parts of the data extraction process and data submission by study authors.
 
 
 == B. Searching
