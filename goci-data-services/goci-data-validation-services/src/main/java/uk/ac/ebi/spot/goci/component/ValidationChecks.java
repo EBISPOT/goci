@@ -224,17 +224,22 @@ public class ValidationChecks {
      *
      * @param value Value to be checked
      */
+    // GOCI-1554
     public String checkExponentIsPresentAndNegative(Integer value) {
         String error = null;
 
         if (value == null) {
             error = "Value is empty";
         }
-        else {
-            if (value >= 0) {
-                error = "Value is greater than or equal to zero";
-            }
+
+        if ((error == null ) && (value >= 0)) {
+            error = "Value is greater than or equal to zero";
         }
+
+        if ((error == null) && ((Math.abs(value)) < 6)) {
+            error = "Exponents must be < -5";
+        }
+
         return error;
     }
 
