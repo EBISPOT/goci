@@ -27,6 +27,7 @@
         <module>goci-db-binding</module>
         <module>goci-tracking</module>
         <module>goci-spi</module>
+        <module>goci-rest</module>
     </modules>
 
 </project>
