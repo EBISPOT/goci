@@ -237,7 +237,7 @@ public class ValidationChecks {
         }
 
         if ((error == null) && ((Math.abs(value)) < 6)) {
-            error = "Exponents must be < -5";
+            error = "Exponent must be < -5";
         }
 
         return error;

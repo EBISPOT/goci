@@ -30,8 +30,33 @@ function processStudy(study, table) {
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
+    //TO DO - uncomment once FTP structure & Solr variable are available
+
+    //var fullpvalset = study.fullPvalueSet;
+    var fullpvalset = 1;
+
+    var pvalueflag = '';
+
+    if(fullpvalset == 1) {
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'</a>";
+
+        //var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
+        //        .concat(study.pubmedId).concat(" target='_blank'</a>");
+
+        pvalueflag = "<span class='glyphicon glyphicon-question-sign clickable context-help'" +
+                        " data-toggle='tooltip'" +
+                         "data-original-title='Click for full p-value set'>"
+                                 .concat(ftplink).concat("</span>");
+
+
+
+    }
+
     //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(study.associationCount).concat("</a></span>");
-    row.append($("<td>").html(study.associationCount));
+    var associationLink = study.associationCount.concat(" ").concat(pvalueflag);
+    row.append($("<td>").html(associationLink));
+
+    //row.append($("<td>").html(study.associationCount));
 
     var id = (study.id).replace(':', '-');
     var plusicon = "<button class='row-toggle btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(
