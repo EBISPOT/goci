@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
  *         <p>
  *         Repository to access CurationStatus entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface CurationStatusRepository extends JpaRepository<CurationStatus, Long> {
 
     CurationStatus findByStatus(String status);

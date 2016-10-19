@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.model.Housekeeping;
  *         Repository accessing Housekeeping entity object
  */
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface HousekeepingRepository extends JpaRepository<Housekeeping, Long> {
 
 }

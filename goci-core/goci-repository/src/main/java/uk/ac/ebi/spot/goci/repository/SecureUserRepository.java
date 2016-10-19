@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
  *         <p>
  *         Repository accessing User entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface SecureUserRepository extends JpaRepository<SecureUser, Long> {
     SecureUser findByEmail(String email);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
@@ -33,16 +34,20 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
 
     // Pageable queries for filtering main page
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
                                                                            Long curator,
                                                                            Pageable pageable);
-
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCurationStatusIdNot(Long status, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
 
+    @RestResource(exported = false)
     // Custom query to find studies in reports table
     @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
     Page<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") Long curator, @Param("status") Long status,
@@ -60,6 +65,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
                                                                                     Long status,
                                                                                     Pageable pageable);
@@ -72,6 +78,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
     // Query housekeeping notes field
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 
     // Custom query to get list of study authors
@@ -79,18 +86,24 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
+    @RestResource(exported = false)
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
 
+    @RestResource(exported = false)
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Sort sort);
 
+    @RestResource(exported = false)
     Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
 
+    @RestResource(exported = false)
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long snpId);
 
+    @RestResource(exported = false)
     List<Study> findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long associationId);
 
+    @RestResource(exported = false)
     List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long diseaseTraitId);
 

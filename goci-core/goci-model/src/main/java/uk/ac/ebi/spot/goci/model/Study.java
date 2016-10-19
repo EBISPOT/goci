@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -101,12 +103,16 @@ public class Study implements Trackable {
     private Collection<EfoTrait> efoTraits;
 
     @OneToOne(orphanRemoval = true)
+    @RestResource(exported = false)
+    @JsonIgnore
     private Housekeeping housekeeping;
 
     @OneToOne(mappedBy = "study", orphanRemoval = true)
     private StudyReport studyReport;
 
     @OneToMany
+    @RestResource(exported = false)
+    @JsonIgnore
     @JoinTable(name = "STUDY_EVENT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))

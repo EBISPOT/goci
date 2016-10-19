@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.Curator;
  *         <p>
  *         Repository accessing Curator entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface CuratorRepository extends JpaRepository<Curator, Long> {
     Curator findByLastName(String curator);
 }
