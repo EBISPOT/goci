@@ -54,6 +54,7 @@ public class EmbeddableDocumentTest {
                                false,
                                "study design comment",
                                "GCST999999",
+                               false,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,
