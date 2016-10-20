@@ -32,18 +32,18 @@ function processStudy(study, table) {
 
     //TO DO - uncomment once FTP structure & Solr variable are available
 
-    //var fullpvalset = study.fullPvalueSet;
-    var fullpvalset = 1;
+    var fullpvalset = study.fullPvalueSet;
+    // var fullpvalset = 1;
 
     var pvalueflag = '';
 
     if(fullpvalset == 1) {
-        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'>";
+        // var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'>";
 
-        //var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
-        //        .concat(study.pubmedId).concat(" target='_blank'</a>");
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
+               .concat(study.pubmedId).concat(" target='_blank'</a>");
 
-        pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-question-sign clickable context-help'" +
+        pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
                         " data-toggle='tooltip'" +
                          "data-original-title='Click for full p-value set'></span></a>");
 
