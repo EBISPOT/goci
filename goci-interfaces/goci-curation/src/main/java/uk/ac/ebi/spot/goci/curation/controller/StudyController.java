@@ -258,7 +258,7 @@ public class StudyController {
                                                                                           sort));
             }
 
-            if (studyType.equals("Full Pvalue Set")) {
+            if (studyType.equals("p-Value Set")) {
                 studyPage = studyRepository.findByFullPvalueSet(true,constructPageSpecification(page - 1,
                         sort));
             }
@@ -976,7 +976,7 @@ public class StudyController {
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");
-        studyTypesOptions.add("Full Pvalue Set");
+        studyTypesOptions.add("p-Value Set");
         return studyTypesOptions;
     }
 
