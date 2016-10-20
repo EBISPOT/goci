@@ -96,5 +96,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Study findByAssociationsId(Long associationId);
 
+    Page<Study> findByFullPvalueSet(Boolean fullPvalueSet, Pageable pageable);
+
 }
 
