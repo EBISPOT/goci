@@ -28,7 +28,7 @@ public class ErrorModelAndView {
 
         if (error_code.equals("404")) {
             mav.addObject("user_error", "Page Not Found");
-            mav.addObject("user_error_alternative", "The page requested is not available.");
+            mav.addObject("user_error_alternative", "The requested page is not found");
         }
         else if (error_code.equals("500")) {
             mav.addObject("user_error", "Internal Server Error");
