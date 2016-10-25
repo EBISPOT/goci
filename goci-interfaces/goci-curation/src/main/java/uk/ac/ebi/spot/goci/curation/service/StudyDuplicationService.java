@@ -116,6 +116,7 @@ public class StudyDuplicationService {
         duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
         duplicateStudy.setImputed(studyToDuplicate.getImputed());
         duplicateStudy.setPooled(studyToDuplicate.getPooled());
+        duplicateStudy.setFullPvalueSet(studyToDuplicate.getFullPvalueSet()); 
         duplicateStudy.setStudyDesignComment(studyToDuplicate.getStudyDesignComment());
 
         // Deal with EFO traits
