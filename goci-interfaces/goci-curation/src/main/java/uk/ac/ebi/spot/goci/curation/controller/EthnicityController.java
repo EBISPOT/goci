@@ -340,8 +340,8 @@ public class EthnicityController {
         types.add("East Asian");
         types.add("Asian unspecified");
         types.add("African American/Afro-Caribbean");
-        types.add("Middle East/North African");
-        types.add("Oceania");
+        types.add("Middle Eastern/North African");
+        types.add("Oceanian");
         types.add("Native American");
         types.add("Hispanic/Latin American");
         types.add("Other");

@@ -28,9 +28,7 @@ function getSnpData(rsId) {
     $.getJSON('/gwas/api/search/association',
               {
                   'q': "rsId:"+rsId,
-                  'group': 'true',
-                  'group.by': 'resourcename',
-                  'group.limit': 5
+                  'max': 1000
               })
               .done(function(data) {
                   console.log(data.response);
