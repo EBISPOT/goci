@@ -167,7 +167,7 @@ public class AssociationOperationsService {
 
         if (errorCount == 0) {
             createAssociationCreationEvent(association, user);
-            savAssociation(association, study, associationValidationErrors);
+            saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
             runMapping(study.getHousekeeping().getCurator(), association, user);
@@ -217,7 +217,57 @@ public class AssociationOperationsService {
 
             // Add update event and save
             createAssociationUpdateEvent(association, user);
-            savAssociation(association, study, associationValidationErrors);
+            saveAssociation(association, study, associationValidationErrors);
+
+            // Run mapping on association
+            runMapping(study.getHousekeeping().getCurator(), association, user);
+
+        }
+        return associationValidationViews;
+    }
+
+
+    /**
+     * Validate & save association
+     *
+     * @param study         Study to assign association to
+     * @param association   Association to validate and save
+     * @param user
+     */
+    public Collection<AssociationValidationView> validateAndSaveAssociation(Study study,
+                                                                               Association association,
+                                                                               SecureUser user)
+            throws EnsemblMappingException {
+
+        // Validate association
+        Collection<ValidationError> associationValidationErrors =
+                validationService.runAssociationValidation(association, "full");
+
+        // Create errors view that will be returned via controller
+        Collection<AssociationValidationView> associationValidationViews =
+                processAssociationValidationErrors(associationValidationErrors);
+
+        // Validation returns warnings and errors, errors prevent a save action
+        long errorCount = associationValidationErrors.parallelStream()
+                .filter(validationError -> !validationError.getWarning())
+                .count();
+
+        if (errorCount == 0) {
+//            // Set ID of new association to the ID of the association we're currently editing
+//            association.setId(associationId);
+//
+//            // Check for existing loci, when editing delete any existing loci and risk alleles
+//            // They will be recreated as part of the save method
+//            Association associationUserIsEditing =
+//                    associationRepository.findOne(associationId);
+//            lociAttributesService.deleteLocusAndRiskAlleles(associationUserIsEditing);
+
+            // Add events
+//            association.setEvents(associationUserIsEditing.getEvents());
+
+            // Add update event and save
+            createAssociationUpdateEvent(association, user);
+            saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
             runMapping(study.getHousekeeping().getCurator(), association, user);
@@ -233,7 +283,7 @@ public class AssociationOperationsService {
      * @param study       Study to assign association to
      * @param errors      Validation errors, these errors do not prevent a save but should be reviewed by curators
      */
-    public void savAssociation(Association association, Study study, Collection<ValidationError> errors) {
+    public void saveAssociation(Association association, Study study, Collection<ValidationError> errors) {
 
         association.getLoci().forEach(this::saveLocusAttributes);
 

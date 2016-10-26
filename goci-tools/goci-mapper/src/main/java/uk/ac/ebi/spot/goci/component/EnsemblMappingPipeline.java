@@ -101,7 +101,11 @@ public class EnsemblMappingPipeline {
             else if (variationResult.length() > 0) {
 
                 // Merged SNP
-                getEnsemblMappingResult().setMerged((variationResult.getString("name").equals(rsId)) ? 0 : 1);
+                String currentRsId = variationResult.getString("name");
+                getEnsemblMappingResult().setMerged((currentRsId.equals(rsId)) ? 0 : 1);
+                if (getEnsemblMappingResult().getMerged() == 1) {
+                    getEnsemblMappingResult().setCurrentSnpId(currentRsId);
+                }
 
                 // Mapping errors
                 if (variationResult.has("failed")) {

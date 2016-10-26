@@ -16,6 +16,7 @@ import java.util.List;
  *
  * @author Tony Burdett
  * @date 23/12/14
+ *
  */
 public class StudyDocument extends OntologyEnabledDocument<Study> {
     // basic study information
@@ -27,15 +28,19 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
     @Field private String platform;
-
+    @Field private String accessionId;
+    @Field @NonEmbeddableField private Boolean fullPvalueSet;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
     @Field private Collection<String> ancestralGroups;
+    @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
     @Field private Collection<Integer> numberOfIndividuals;
+    @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
+
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -72,6 +77,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.title = study.getTitle();
         this.author = study.getAuthor();
         this.publication = study.getPublication();
+        this.accessionId = study.getAccessionId();
+        this.fullPvalueSet = study.getFullPvalueSet();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -99,8 +106,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.platform = embedPlatformField(study);
 
         this.ancestralGroups = new LinkedHashSet<>();
+        this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
         this.numberOfIndividuals = new LinkedHashSet<>();
+        this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
         embedAncestryData(study);
 
@@ -276,6 +285,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     ancestryLink = type;
 
+                    String coo;
+
+                    if(ethnicity.getCountryOfOrigin() != null) {
+                        coo = ethnicity.getCountryOfOrigin();
+                    }
+                    else {
+                        coo = "NR";
+                    }
+
+                    ancestryLink = ancestryLink.concat("|").concat(coo);
+
+
                     String cor;
 
                     if (ethnicity.getCountryOfRecruitment() != null) {
@@ -292,6 +313,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     if (ethnicity.getEthnicGroup() != null) {
                         ancestry = ethnicity.getEthnicGroup();
                     }
+                    else{
+                        ancestry = "NR";
+                    }
 
                     ancestralGroups.add(ancestry);
                     ancestryLink = ancestryLink.concat("|").concat(ancestry);
@@ -302,8 +326,23 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                         numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
                         noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
                     }
+                    else{
+                        noInds = "NA";
+                    }
 
                     ancestryLink = ancestryLink.concat("|").concat(noInds);
+
+                    String description = "";
+
+                    if(ethnicity.getDescription() != null && ethnicity.getDescription().trim() != ""){
+                        additionalAncestryDescription.add(ethnicity.getDescription());
+                        description = ethnicity.getDescription();
+                    }
+                    else {
+                        description = "NA";
+                    }
+
+                    ancestryLink = ancestryLink.concat("|").concat(description);
 
                     ancestryLinks.add(ancestryLink);
 
@@ -376,4 +415,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
 
+    public Collection<String> getAdditionalAncestryDescription() {
+        return additionalAncestryDescription;
+    }
+
+    public String getAccessionId() {
+        return accessionId;
+    }
+
+    public Boolean getFullPvalueSet() { return fullPvalueSet; }
 }

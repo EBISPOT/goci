@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
     <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
     <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
@@ -18,8 +31,9 @@
     <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
     <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script th:src="@{/js/goci-editing.js}"></script>
+
 
 </head>
 <body>
@@ -38,6 +52,15 @@
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
+
+<div class="form-group" style="display: none">
+    <label for="publish_flag" class="control-label col-md-2"></label>
+
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+    </div>
+</div>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10">
@@ -50,6 +73,7 @@
                     <th>Catalog Publish Date</th>
                     <th>Catalog Unpublish Date</th>
                     <th>Send to NCBI Date</th>
+                    <th>Is currently published?</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,6 +84,19 @@
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
                     <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:switch="${study.housekeeping.isPublished}">
+                        <span th:case="'null'"></span>
+
+                        <span th:case="false">No</span>
+
+                        <span th:case="true">Yes</span>
+                    </td>
+                    <!--<td th:if="${study.housekeeping != null and study.housekeeping.isPublished !=null}">-->
+                        <!--<span th:switch="${study.housekeeping.isPublished}">-->
+                             <!--<span th:case="true">No</span>-->
+                            <!--<span th:case="false">Yes</span>-->
+                        <!--</span>-->
+                    <!--</td>-->
                 </tr>
                 </tbody>
             </table>
@@ -108,7 +145,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 dataForm">
             <form id="studyHousekeeping" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
                   name="studyHousekeeping">
 
@@ -121,9 +158,7 @@
                     <label for="id" class="control-label col-md-2"></label>
                     <input id="id" type="hidden" th:field="*{id}"/>
                 </div>
-                <!--End hidden-->
 
-                <!--Hidden-->
                 <div class="form-group">
                     <label for="catalogPublishDate" class="control-label col-md-2"></label>
                     <input id="catalogPublishDate" type="hidden" th:field="*{catalogPublishDate}"/>
@@ -133,17 +168,25 @@
                     <label for="sendToNCBIDate" class="control-label col-md-2"></label>
                     <input id="sendToNCBIDate" type="hidden" th:field="*{sendToNCBIDate}"/>
                 </div>
+                <div class="form-group">
+                    <label for="isPublished" class="control-label col-md-2"></label>
+                    <input id="isPublished" type="hidden" th:field="*{isPublished}"/>
+                </div>
                 <!--End hidden-->
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" th:field="*{fileName}" class="col-md-8"></textarea>
+                    <div class="col-md-8">
+                        <textarea id="fileName" th:field="*{fileName}" class="form-control"></textarea>
+                    </div>
                 </div>
 
 
                 <div class="form-group">
                     <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" th:field="*{notes}" class="col-md-8"></textarea>
+                    <div class="col-md-8">
+                        <textarea id="notes" th:field="*{notes}" class="col-md-8 form-control"></textarea>
+                    </div>
                 </div>
 
                 <!--Checkboxes-->

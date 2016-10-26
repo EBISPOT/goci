@@ -7,7 +7,6 @@ import uk.ac.ebi.spot.goci.curation.model.EventView;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -30,8 +29,7 @@ public class AssociationEventsViewService implements EventsViewService {
     private StudyRepository studyRepository;
 
     @Autowired
-    public AssociationEventsViewService(AssociationRepository associationRepository,
-                                        SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
+    public AssociationEventsViewService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
                                         StudyRepository studyRepository) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.studyRepository = studyRepository;

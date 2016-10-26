@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,6 +62,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -280,6 +282,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doFilterSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -391,6 +394,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/sort", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doSortSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -531,6 +535,7 @@ public class SolrSearchController {
     }
 
     @RequestMapping(value = "api/search/moreresults", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
     public void doMoreResultsSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -801,6 +806,7 @@ public class SolrSearchController {
 
     //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
     @RequestMapping(value = "api/search/downloads")
+//    @CrossOrigin
     public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pval,
@@ -811,6 +817,7 @@ public class SolrSearchController {
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
             @RequestParam(value = "facet", required = true) String facet,
+            @RequestParam(value = "ancestry", defaultValue = "false") boolean ancestry,
             HttpServletResponse response) throws IOException {
 
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -885,6 +892,10 @@ public class SolrSearchController {
                 }
             }
         }
+        else if (ancestry){
+            fileName = "gwas_catalog-ancestry-downloaded_".concat(now).concat(".tsv");
+
+        }
         else {
             fileName = "gwas-".concat(facet).concat("-downloaded_").concat(now)
                     .concat("-")
@@ -894,13 +905,13 @@ public class SolrSearchController {
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
-        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet);
+        dispatchDownloadSearch(searchString, response.getOutputStream(), efo, facet, ancestry);
 
 
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
         System.out.println(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -926,7 +937,7 @@ public class SolrSearchController {
             String output;
             while ((output = br.readLine()) != null) {
 
-                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet);
+                JsonProcessingService jsonProcessor = new JsonProcessingService(output, efo, facet, ancestry);
                 file = jsonProcessor.processJson();
 
             }

@@ -48,6 +48,9 @@ public class AssociationQueryService {
                     locus.getAuthorReportedGenes().size();
                     locus.getStrongestRiskAlleles().size();
                 });
+
+        association.getEvents();
+
     }
 
     // Sort options

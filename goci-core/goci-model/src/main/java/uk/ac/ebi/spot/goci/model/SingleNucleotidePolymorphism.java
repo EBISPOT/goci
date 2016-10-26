@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Date;
@@ -44,6 +45,13 @@ public class SingleNucleotidePolymorphism {
     @OneToMany(mappedBy = "snp")
     private Collection<RiskAllele> riskAlleles;
 
+    @ManyToOne
+    @JoinTable(name = "SNP_MERGED_SNP",
+               joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
+    private SingleNucleotidePolymorphism currentSnp;
+
+
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
     }
@@ -54,7 +62,8 @@ public class SingleNucleotidePolymorphism {
                                         Date lastUpdateDate,
                                         Collection<Location> locations,
                                         Collection<GenomicContext> genomicContexts,
-                                        Collection<RiskAllele> riskAlleles) {
+                                        Collection<RiskAllele> riskAlleles,
+                                        SingleNucleotidePolymorphism currentSnp) {
         this.rsId = rsId;
         this.merged = merged;
         this.functionalClass = functionalClass;
@@ -62,6 +71,7 @@ public class SingleNucleotidePolymorphism {
         this.locations = locations;
         this.genomicContexts = genomicContexts;
         this.riskAlleles = riskAlleles;
+        this.currentSnp = currentSnp;
     }
 
     public Long getId() {
@@ -80,13 +90,15 @@ public class SingleNucleotidePolymorphism {
         this.rsId = rsId;
     }
 
-    public Long getMerged() {
-        return merged;
-    }
+    public Long getMerged() { return merged; }
 
     public void setMerged(Long merged) {
         this.merged = merged;
     }
+
+    public SingleNucleotidePolymorphism getCurrentSnp() { return currentSnp; }
+
+    public void setCurrentSnp(SingleNucleotidePolymorphism currentSnp) { this.currentSnp = currentSnp; }
 
     public String getFunctionalClass() {
         return functionalClass;

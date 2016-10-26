@@ -7,37 +7,43 @@
 |===
 |Description | Download Link |Format  | Column header descriptions
 
-|The most recent edition of all the associations in the GWAS Catalog
+|All associations
 |link:../api/search/downloads/full[ Click to download]
 |tab separated file
 |link:fileheaders[ Click to view]
 
 
 
-|The most recent edition of all the associations in the GWAS Catalog *with added ontology annotations*
+|All associations *with added ontology annotations*
 |link:../api/search/downloads/alternative[ Click to download]
 |tab separated file
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
 
 
-|The most recent edition of all the studies in the GWAS Catalog
+|All studies
 |link:../api/search/downloads/studies[ Click to download]
 |tab separated file
 |link:fileheaders[ Click to view]
 
 
 
-|The most recent edition of all the studies in the GWAS Catalog *with added ontology annotations*
+|All studies *with added ontology annotations*
 |link:../api/search/downloads/studies_alternative[ Click to download]
 |tab separated file
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
+
+
+|All ancestry data
+|link:../api/search/downloads/ancestry[ Click to download]
+|tab separated file
+|link:fileheaders#_file_headers_for_ancestry_download[ Click to view]
 |===
 
 
 File name conventions:
 
 * v1.0 indicates the columns originally proposed by the NCBI
-* v1.0.1 indicates the addition of ontology annotations
+* v1.0.1 indicates the addition of ontology annotations and other new columns
 * eXX indicates the Ensembl release version that the data is mapped to
 * rYYYY-MM-DD indicates the date on which the GWAS Catalog was released
 

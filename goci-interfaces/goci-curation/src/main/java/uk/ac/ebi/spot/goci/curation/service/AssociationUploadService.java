@@ -3,18 +3,22 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationSummary;
+import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.RowValidationSummary;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.ValidationError;
 import uk.ac.ebi.spot.goci.model.ValidationSummary;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.AssociationFileUploadService;
+import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +42,10 @@ public class AssociationUploadService {
 
     private AssociationOperationsService associationOperationsService;
 
+    private StudyRepository studyRepository;
+
+    private TrackingOperationService trackingOperationService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -45,12 +53,16 @@ public class AssociationUploadService {
     }
 
     @Autowired
-    public AssociationUploadService(StudyFileService studyFileService,
-                                    AssociationFileUploadService associationFileUploadService,
-                                    AssociationOperationsService associationOperationsService) {
-        this.studyFileService = studyFileService;
+    public AssociationUploadService(AssociationFileUploadService associationFileUploadService,
+                                    AssociationOperationsService associationOperationsService,
+                                    StudyFileService studyFileService,
+                                    StudyRepository studyRepository,
+                                    @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService) {
         this.associationFileUploadService = associationFileUploadService;
         this.associationOperationsService = associationOperationsService;
+        this.studyFileService = studyFileService;
+        this.studyRepository = studyRepository;
+        this.trackingOperationService = trackingOperationService;
     }
 
     public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, SecureUser user)
@@ -70,7 +82,6 @@ public class AssociationUploadService {
             ValidationSummary validationSummary =
                     associationFileUploadService.processAndValidateAssociationFile(uploadedFile, "full");
 
-            List<Association> associationsToSave = new ArrayList<>();
             if (validationSummary != null) {
                 // Check if we have any row errors
                 long rowErrorCount = validationSummary.getRowValidationSummaries().parallelStream()
@@ -104,7 +115,14 @@ public class AssociationUploadService {
                         );
                     }
                     else {
-                        studyFileService.createFileUploadEvent(study.getId(), user);
+
+                        Integer numberOfAssociations = validationSummary.getAssociationSummaries().size();
+                        String description = numberOfAssociations.toString()
+                                .concat(" associations created from upload of '")
+                                .concat(originalFilename)
+                                .concat("'");
+
+                        createBatchUploadEvent(study, description, user);
                         saveAssociations(validationSummary.getAssociationSummaries(), study, user);
                     }
                 }
@@ -116,6 +134,19 @@ public class AssociationUploadService {
         }
     }
 
+    /**
+     * Record batch upload event
+     *
+     * @param study       Study to assign event to
+     * @param description Description of update
+     * @param user        User that triggered event
+     */
+    private void createBatchUploadEvent(Study study, String description, SecureUser user) {
+        trackingOperationService.update(study, user, EventType.ASSOCIATION_BATCH_UPLOAD, description);
+        studyRepository.save(study);
+    }
+
+
     private void saveAssociations(Collection<AssociationSummary> associationSummaries, Study study, SecureUser user)
             throws EnsemblMappingException {
 
@@ -124,7 +155,7 @@ public class AssociationUploadService {
             // Add creation event
             associationOperationsService.createAssociationCreationEvent(newAssociation, user);
             // Save association
-            associationOperationsService.savAssociation(newAssociation,
+            associationOperationsService.saveAssociation(newAssociation,
                                                         study,
                                                         associationSummary.getErrors());
 

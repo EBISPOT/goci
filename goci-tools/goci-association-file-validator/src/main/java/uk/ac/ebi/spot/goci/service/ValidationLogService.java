@@ -49,9 +49,14 @@ public class ValidationLogService {
             filePath = Paths.get(".").toAbsolutePath().normalize().toString();
         }
 
+        String input_name = "";
+        if(checkedFile.getName().contains(".xlsx")){
+            input_name = checkedFile.getName().replace(".xlsx", "");
+        }
+
         String logName = filePath
                 .concat(File.separator)
-                .concat(("Validation_results_").concat(now).concat(".txt"));
+                .concat(("Validation_results_").concat(input_name).concat("_").concat(now).concat(".txt"));
 
         System.out.println("Validation log written to " + logName);
         getLog().info("Validation log written to " + logName);

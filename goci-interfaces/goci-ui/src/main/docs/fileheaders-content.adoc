@@ -12,6 +12,8 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 
 <<File headers for catalog version 1.0.1>>
 
+<<File headers for ancestry download>>
+
 *Available in associations download files
 
 +Available in studies download files
@@ -102,4 +104,36 @@ MAPPED_TRAIT^*^ ^+^: Mapped Experimental Factor Ontology trait for this study
 
 MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 
-_Added: 10 March 2015_
+STUDY ACCESSION^*^ ^+^: Accession ID allocated to a GWAS Catalog study
+
+_Last updated: 16 September 2016_
+
+'''
+
+=== File headers for ancestry download
+
+STUDY ACCESSION: Accession ID allocated to a GWAS Catalog study
+
+PUBMEDID: PubMed identification number
+
+FIRST AUTHOR: Last name and initials of first author
+
+DATE: Publication date (online (epub) date if available)
+
+INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
+
+REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
+
+STAGE: Stage of the GWAS to which the sample description applies, either initial or replication
+
+NUMBER OF INDIVDUALS: Number of individuals in this sample
+
+BROAD ANCESTRAL CATEGORY: Broad ancestral category to which the individuals in the sample belong
+
+COUNTRY OF ORIGIN: Country of origin of the individuals in the sample
+
+COUNTRY OF RECRUITMENT: Country of recruitment of the individuals in the sample
+
+ADDITONAL ANCESTRY DESCRIPTION: Any other information relevant to the sample description
+
+_Added: 16 September 2016_

@@ -64,6 +64,14 @@
 
                 <!--//Hidden fields-->
 
+                <div class="form-group">
+                    <label for="accessionId" class="control-label col-md-2">Accession ID</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:text="${studyToUnpublish.accessionId} ? ${studyToUnpublish.accessionId} : 'Awaiting accession'" id="accessionId"></span>
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>

@@ -36,6 +36,8 @@ public class Housekeeping {
 
     private Boolean snpsRechecked = false;
 
+    private Boolean isPublished = false;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date catalogPublishDate;
 
@@ -75,6 +77,7 @@ public class Housekeeping {
                         Boolean ethnicityBackFilled,
                         Boolean checkedMappingError,
                         Boolean snpsRechecked,
+                        Boolean isPublished,
                         Date catalogPublishDate,
                         Date sendToNCBIDate,
                         Date studyAddedDate,
@@ -92,6 +95,7 @@ public class Housekeeping {
         this.ethnicityBackFilled = ethnicityBackFilled;
         this.checkedMappingError = checkedMappingError;
         this.snpsRechecked = snpsRechecked;
+        this.isPublished = isPublished;
         this.catalogPublishDate = catalogPublishDate;
         this.sendToNCBIDate = sendToNCBIDate;
         this.studyAddedDate = studyAddedDate;
@@ -248,4 +252,11 @@ public class Housekeeping {
         this.unpublishReason = unpublishReason;
     }
 
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Boolean published) {
+        isPublished = published;
+    }
 }

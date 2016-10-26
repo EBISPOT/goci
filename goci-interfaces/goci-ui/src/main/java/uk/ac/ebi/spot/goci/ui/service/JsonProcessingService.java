@@ -22,11 +22,13 @@ public class JsonProcessingService {
     private String newline;
     private boolean isMultiSnpHaplotype;
     private boolean isSnpInteraction;
+    private boolean includeAncestry;
 
-    public JsonProcessingService(String json, boolean includeAnnotations, String type) {
+    public JsonProcessingService(String json, boolean includeAnnotations, String type, boolean includeAncestry) {
         this.json = json;
         this.includeAnnotations = includeAnnotations;
         this.type = type;
+        this.includeAncestry = includeAncestry;
         newline = System.getProperty("line.separator");
 
     }
@@ -34,9 +36,13 @@ public class JsonProcessingService {
     public String processJson() throws IOException {
         String header;
         
-        if(type.equals("study")){
+        if(type.equals("study") && !includeAncestry){
             header =
                     "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tPLATFORM [SNPS PASSING QC]\tASSOCIATION COUNT";
+        }
+        else if(includeAncestry){
+            header =
+                    "STUDY ACCCESSION\tPUBMEDID\tFIRST AUTHOR\tDATE\tINITIAL SAMPLE DESCRIPTION\tREPLICATION SAMPLE DESCRIPTION\tSTAGE\tNUMBER OF INDIVDUALS\tBROAD ANCESTRAL CATEGORY\tCOUNTRY OF ORIGIN\tCOUNTRY OF RECRUITMENT\tADDITONAL ANCESTRY DESCRIPTION";
         }
         else{
             header =
@@ -44,7 +50,7 @@ public class JsonProcessingService {
         }
 
         if(includeAnnotations){
-            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI");
+            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI\tSTUDY ACCESSION");
         }
 
         header = header.concat("\r\n");
@@ -61,8 +67,17 @@ public class JsonProcessingService {
         for (JsonNode doc : docs) {
             StringBuilder line = new StringBuilder();
 
-            if(type.equals("study")) {
+            if(type.equals("study") && !includeAncestry) {
                 processStudyJson(line, doc);
+            }
+            else if(includeAncestry){
+
+                if(doc.get("ancestryLinks") != null){
+                    for(JsonNode a : doc.get("ancestryLinks")){
+                        processAncestryJson(line, doc, a);
+                    }
+                }
+
             }
             else {
                 processAssociationJson(line, doc);
@@ -134,10 +149,88 @@ public class JsonProcessingService {
             line.append(traits.get("trait"));
             line.append("\t");
             line.append(traits.get("uri"));
+            line.append("\t");
+            line.append(getAccessionId(doc));
         }
 
         line.append("\r\n");
         
+    }
+
+    public void processAncestryJson(StringBuilder line, JsonNode doc, JsonNode ancestryRow) throws IOException {
+
+        String pubmedid = getPubmedId(doc);
+
+        line.append(getAccessionId(doc));
+        line.append("\t");
+        line.append(pubmedid);
+        line.append("\t");
+        line.append(getAuthor(doc));
+        line.append("\t");
+        line.append(getPublicationDate(doc));
+        line.append("\t");
+
+        String init = getInitSample(doc);
+        if (init.contains(newline)) {
+            init = init.replaceAll("\n", "").replaceAll("\r", "");
+        }
+
+        line.append(init);
+        line.append("\t");
+
+        String rep = getRepSample(doc);
+        if (rep.contains(newline)) {
+            rep = rep.replaceAll("\n", "").replaceAll("\r", "");
+        }
+        line.append(rep);
+        line.append("\t");
+
+        String[] ancestry = ancestryRow.asText().trim().split("\\|");
+
+        String stage = ancestry[0];
+        line.append(stage);
+        line.append("\t");
+
+        String sampleSize = "";
+
+        if(!ancestry[4].equals("NA")){
+            sampleSize = ancestry[4];
+        }
+        line.append(sampleSize);
+        line.append("\t");
+
+        String ancestralGroup = "";
+
+        if(ancestry[3] != "NA") {
+            ancestralGroup = ancestry[3];
+            if(ancestralGroup.contains(newline)){
+                ancestralGroup = ancestralGroup.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
+        line.append(ancestralGroup);
+        line.append("\t");
+
+        String coo = ancestry[1];
+        line.append(coo);
+        line.append("\t");
+
+        String cor = ancestry[2];
+        line.append(cor);
+        line.append("\t");
+
+        String description = "";
+
+        //TO DO - replace this once additional description has been cleaned up
+//        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
+//            description = ancestry[5];
+//            if(description.contains(newline)){
+//                description = description.replaceAll("\n", "").replaceAll("\r", "");
+//            }
+//        }
+        line.append(description);
+        line.append("\t");
+
+        line.append("\r\n");
     }
 
     public void processAssociationJson(StringBuilder line, JsonNode doc) throws IOException {
@@ -237,17 +330,19 @@ public class JsonProcessingService {
         line.append(rsId);
         line.append("\t");
 
+        Map<String, String> mergedSnps = getMergedCurrent(doc);
+
         //            line.append(doc.get("merged").asText().trim());
-        line.append(""); // todo - remove this when above solr field is available
+        line.append(mergedSnps.get("merged"));
         line.append("\t");
 
-        if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
-            line.append(rsId.substring(2));
-        }
-        else {
-            line.append("");
-        }
-
+//        if (rsId.indexOf("rs") == 0 && rsId.indexOf("rs", 2) == -1) {
+//            line.append(rsId.substring(2));
+//        }
+//        else {
+//            line.append("");
+//        }
+        line.append(mergedSnps.get("current"));
         line.append("\t");
 
         String context = getContext(doc);
@@ -300,6 +395,8 @@ public class JsonProcessingService {
             line.append(traits.get("trait"));
             line.append("\t");
             line.append(traits.get("uri"));
+            line.append("\t");
+            line.append(getAccessionId(doc));
         }
 
         line.append("\r\n");
@@ -643,6 +740,38 @@ public class JsonProcessingService {
         return date;
     }
 
+    private Map<String,String> getMergedCurrent(JsonNode doc) {
+        String merged;
+        String currentSnp;
+        Map<String, String> mergedSnps = new HashMap<>();
+
+        if(doc.get("merged") != null) {
+            merged = doc.get("merged").asText().trim();
+        }
+        else{
+            merged = "";
+        }
+
+        if(doc.get("currentSnp") != null){
+            currentSnp = doc.get("currentSnp").get(0).asText().trim();
+                if (currentSnp.indexOf("rs") == 0 && currentSnp.indexOf("rs", 2) == -1) {
+                    currentSnp = currentSnp.substring(2);
+                }
+                else {
+                    currentSnp = "";
+                }
+        }
+        else {
+            currentSnp = "";
+        }
+
+        mergedSnps.put("merged", merged);
+        mergedSnps.put("current", currentSnp);
+
+        return mergedSnps;
+    }
+
+
     private Map<String, MappedGene> getMappedGenes(JsonNode doc) {
         List<String> actuallyMapped = new ArrayList<>();
         List<String> processed = new ArrayList<>();
@@ -754,6 +883,17 @@ public class JsonProcessingService {
 
         return traits;
     }
+
+    private String getAccessionId(JsonNode doc) {
+        String accessionId = "";
+
+        if(doc.get("accessionId") != null){
+            accessionId = doc.get("accessionId").asText().trim();
+        }
+
+        return accessionId;
+    }
+
 
     public boolean isMultiSnpHaplotype() {
         return isMultiSnpHaplotype;

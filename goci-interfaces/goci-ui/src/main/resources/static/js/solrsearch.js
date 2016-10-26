@@ -25,10 +25,18 @@ $(document).ready(function() {
 
 
     // Tooltips for various filter and table headings
+    // $('[data-toggle="tooltip"]').tooltip({
+    //                                          placement: 'top',
+    //                                          container: 'body'
+    //                                      });
+
+
+    $('body').tooltip({
+                          selector: '[data-toggle="tooltip"]'
+                      });
     $('[data-toggle="tooltip"]').tooltip({
-                                             placement: 'top',
-                                             container: 'body'
-                                         });
+                                   container: 'body'
+                               });
 
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function() {

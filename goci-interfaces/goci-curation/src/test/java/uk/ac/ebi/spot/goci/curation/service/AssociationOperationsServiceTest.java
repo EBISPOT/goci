@@ -348,8 +348,8 @@ public class AssociationOperationsServiceTest {
     }
 
     @Test
-    public void savAssociation() throws Exception {
-        associationOperationsService.savAssociation(ASS_MULTI, STUDY, Collections.singletonList(WARNING));
+    public void saveAssociation() throws Exception {
+        associationOperationsService.saveAssociation(ASS_MULTI, STUDY, Collections.singletonList(WARNING));
         verify(associationRepository, times(1)).save(ASS_MULTI);
         verify(associationValidationReportService,
                times(1)).createAssociationValidationReport(Collections.singletonList(WARNING), ASS_MULTI.getId());

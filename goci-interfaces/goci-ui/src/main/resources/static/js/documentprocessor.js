@@ -30,8 +30,31 @@ function processStudy(study, table) {
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
-    //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(study.associationCount).concat("</a></span>");
-    row.append($("<td>").html(study.associationCount));
+    //TO DO - uncomment once FTP structure & Solr variable are available
+
+    var fullpvalset = study.fullPvalueSet;
+    // var fullpvalset = 1;
+
+    var pvalueflag = '';
+
+    if(fullpvalset == 1) {
+        // var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'>";
+
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
+               .concat(study.pubmedId).concat(" target='_blank'</a>");
+
+        pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
+                        " data-toggle='tooltip'" +
+                         "data-original-title='Click for full p-value set'></span></a>");
+
+    }
+
+    var count = study.associationCount;
+    //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
+    var associationLink = (count + " ").concat(pvalueflag);
+    row.append($("<td>").html(associationLink));
+
+    //row.append($("<td>").html(study.associationCount));
 
     var id = (study.id).replace(':', '-');
     var plusicon = "<button class='row-toggle btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(
@@ -52,8 +75,7 @@ function processStudy(study, table) {
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Initial sample description")).append(
             $("<td>").html(study.initialSampleDescription)));
 
-    if ($.datepicker.parseDate("yy-mm-dd", pubdate) > $.datepicker.parseDate("yy-mm-dd", "2010-12-31") &&
-            study.ancestryLinks != null) {
+    if (study.ancestryLinks != null) {
         var initial = '';
         var replication = '';
         var iniancestries = [];
@@ -62,9 +84,10 @@ function processStudy(study, table) {
         for (var j = 0; j < study.ancestryLinks.length; j++) {
             var link = study.ancestryLinks[j].split("|");
 
-            var cor = link[1];
-            var ancestry = link[2];
-            var num = link[3];
+            var coo = link[1];
+            var cor = link[2];
+            var ancestry = link[3];
+            var num = link[4];
 
             if (link[0] == 'initial') {
                 var existing = false;
@@ -210,13 +233,20 @@ function processStudy(study, table) {
             replication = replication.concat("NR");
         }
 
+        var ancestry_flag = '';
+        // flag pre-2011 studies!
+        if($.datepicker.parseDate("yy-mm-dd", pubdate) < $.datepicker.parseDate("yy-mm-dd", "2011-01-01")){
+            ancestry_flag = "<span class='glyphicon glyphicon-exclamation-sign context-help' " +
+                    "data-toggle='tooltip' data-original-title='Pre-2011 ancestry not double-curated'></span>"
+        }
+
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html(
-                "Initial ancestry (country of recruitment)")).append($("<td>").html(initial)));
+                "Initial ancestry (country of recruitment)")).append($("<td>").html(initial.concat(ancestry_flag))));
         innerTable.append($("<tr>").append($("<th>").attr('style',
                                                           'width: 30%').html("Replication sample description")).append($(
                 "<td>").html(study.replicateSampleDescription)));
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html(
-                "Replication ancestry (country of recruitment)")).append($("<td>").html(replication)));
+                "Replication ancestry (country of recruitment)")).append($("<td>").html(replication.concat(ancestry_flag))));
     }
     else {
         innerTable.append($("<tr>").append($("<th>").attr('style',

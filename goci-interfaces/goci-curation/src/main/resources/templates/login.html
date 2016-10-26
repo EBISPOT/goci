@@ -28,7 +28,7 @@
                 You have been logged out.
             </div>
 
-            <form class="form" role="form" th:action="@{/login}" method="post">
+            <form class="form" role="form"  method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <h2 class="form-signin-heading">Please login to the GWAS curation tool</h2>
