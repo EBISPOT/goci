@@ -30,8 +30,31 @@ function processStudy(study, table) {
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
-    //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(study.associationCount).concat("</a></span>");
-    row.append($("<td>").html(study.associationCount));
+    //TO DO - uncomment once FTP structure & Solr variable are available
+
+    var fullpvalset = study.fullPvalueSet;
+    // var fullpvalset = 1;
+
+    var pvalueflag = '';
+
+    if(fullpvalset == 1) {
+        // var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'>";
+
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
+               .concat(study.pubmedId).concat(" target='_blank'</a>");
+
+        pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
+                        " data-toggle='tooltip'" +
+                         "data-original-title='Click for full p-value set'></span></a>");
+
+    }
+
+    var count = study.associationCount;
+    //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
+    var associationLink = (count + " ").concat(pvalueflag);
+    row.append($("<td>").html(associationLink));
+
+    //row.append($("<td>").html(study.associationCount));
 
     var id = (study.id).replace(':', '-');
     var plusicon = "<button class='row-toggle btn btn-default btn-xs accordion-toggle' data-toggle='collapse' data-target='.".concat(

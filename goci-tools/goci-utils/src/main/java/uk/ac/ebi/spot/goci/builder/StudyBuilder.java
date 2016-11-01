@@ -88,6 +88,12 @@ public class StudyBuilder {
         return this;
     }
 
+    public StudyBuilder setFullPvalueSet(Boolean fullPvalueSet) {
+        study.setFullPvalueSet(fullPvalueSet);
+        return this;
+    }
+
+
     public StudyBuilder setDiseaseTrait(DiseaseTrait diseaseTrait) {
         study.setDiseaseTrait(diseaseTrait);
         return this;

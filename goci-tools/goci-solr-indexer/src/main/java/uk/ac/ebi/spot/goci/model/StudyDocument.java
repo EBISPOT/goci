@@ -16,6 +16,7 @@ import java.util.List;
  *
  * @author Tony Burdett
  * @date 23/12/14
+ *
  */
 public class StudyDocument extends OntologyEnabledDocument<Study> {
     // basic study information
@@ -28,7 +29,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String publicationLink;
     @Field private String platform;
     @Field private String accessionId;
-
+    @Field @NonEmbeddableField private Boolean fullPvalueSet;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -39,6 +40,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<Integer> numberOfIndividuals;
     @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
+
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -76,6 +78,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.author = study.getAuthor();
         this.publication = study.getPublication();
         this.accessionId = study.getAccessionId();
+        this.fullPvalueSet = study.getFullPvalueSet();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -419,4 +422,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     public String getAccessionId() {
         return accessionId;
     }
+
+    public Boolean getFullPvalueSet() { return fullPvalueSet; }
 }

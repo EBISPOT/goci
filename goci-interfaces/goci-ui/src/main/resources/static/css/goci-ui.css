@@ -271,6 +271,10 @@ a > .toplevel-view {
     border-bottom: 2px solid #ddd;
 }
 
+.sample-info-border {
+    border: 1px solid #ddd;
+}
+
 .context-help {
     margin-left: 1px;
     font-size: x-small;
@@ -284,6 +288,11 @@ a > .toplevel-view {
 
 .link-icon {
     width: 1.5em;
+    height: auto;
+}
+
+.link-icon-smaller {
+    width: 1.2em;
     height: auto;
 }
 

@@ -147,7 +147,7 @@
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
-
+    <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true" />

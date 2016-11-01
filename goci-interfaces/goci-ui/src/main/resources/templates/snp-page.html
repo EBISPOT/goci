@@ -15,20 +15,19 @@
     <title>GWAS Catalog</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{/css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{/css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
-    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link href="../static/css/jumbotron.css" th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
-    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
-    <link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{/css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{/css/goci-color-palette-1.css}"/>
 
 
 
@@ -55,29 +54,29 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>
+            <a class="navbar-brand" href="index.html" th:href="@{/home}">GWAS Catalog</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
-                <li><a href="search.html" th:href="@{search}">Search</a></li>
+                <li><a href="index.html" th:href="@{/home}">Home <span class="sr-only">(/current)</span></a></li>
+                <li><a href="search.html" th:href="@{/search}">Search</a></li>
                 <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
-                <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
+                <li class="hidden-sm"><a href="docs/downloads" th:href="@{/docs/downloads}">Download</a></li>
                 <li><a href="docs" th:href="@{docs}">Help</a></li>
-                <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
+                <li class="hidden-sm"><a href="docs/about" th:href="@{/docs/about}">About</a></li>
 
                 <li>
                     <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
                         <img alt="EBI logo"
                              src="../static/icons/EMBL_EBI_Logo_white.png"
-                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
+                             th:src="@{/icons/EMBL_EBI_Logo_white.png}"/>
                     </a>
                 </li>
                 <li>
                     <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
                         <img alt="GWAS logo"
                              src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
-                             th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                             th:src="@{/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
                     </a>
                 </li>
             </ul>
@@ -95,22 +94,21 @@
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
     <div class="container">
-            <!-- search box goes here -->
-            <div class="input-group" style="width: 250px; float: right;">
-                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
-                <span class="input-group-btn">
+        <!-- search box goes here -->
+        <div class="input-group" style="width: 250px; float: right;">
+            <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
+            <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="search-button">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                 </span>
-            </div>
-
         </div>
-        <div class="container">
 
-            <h1><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{icons/dna13.png}">&nbsp;SNP: rs653178</h1>
+    </div>
+    <div class="container">
 
-        </div>
+        <h2><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{/icons/dna13.png}"/><span style="padding-left:5px">SNP: </span><span th:text="${rsId}"></span></h2>
+
     </div>
 </div>
 
@@ -119,263 +117,260 @@
 <div class="container-fluid" style="padding-top: 30px">
 
     <ol class="breadcrumb background-color-complementary-accent">
-        <li><a href="home">GWAS</a></li>
-        <li><a href="search">SNPs</a></li>
-        <li class="active">rs653178</li>
+        <li><a href="index.html" th:href="@{/home}">GWAS</a></li>
+        <li><a href="search.html" th:href="@{/search}">SNPs</a></li>
+        <li class="active" th:text="${rsId}"></li>
     </ol>
 
+
+    <div style="display: none">
+        <ul th:object="${result}" id="variables">
+            <li id="query" th:text="*{query}">User query</li>
+            <li id="facet" th:text="*{facet}">Facet</li>
+            <li id="filter" th:text="*{filter}">Disease trait</li>
+        </ul>
+    </div>
+
     <div class="container-fluid" id="lower_container">
-    <div class="row">
-        <!--<div class="col-md-2 tight-to-side" id="filter-bar">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading background-color-primary-accent">-->
-                    <!--<h3 class="panel-title">Jump to</h3>-->
-                                <!--<span class="pull-right clickable"-->
-                                      <!--onclick="toggleSidebar('.panel-heading span.clickable')">-->
-                                    <!--<i class="glyphicon glyphicon-chevron-up"></i>-->
-                                <!--</span>-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<div id="facets">-->
-                        <!--<div class="list-group">-->
-                            <!--&lt;!&ndash;add an "active" class annotation to each a tag when it's selected&ndash;&gt;-->
-                            <!--<a href="#study" class="list-group-item" id="study-facet">-->
-                                <!--<span class="badge">0</span>Studies-->
-                            <!--</a>-->
-                            <!--<a href="#association" class="list-group-item" id="association-facet">-->
-                                <!--<span class="badge">0</span>Associations-->
-                            <!--</a>-->
-                            <!--<a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">-->
-                                <!--<span class="badge">0</span>Catalog traits-->
-                            <!--</a>-->
-                        <!--</div>-->
-                    <!--</div>-->
+        <div class="row" style="margin-top:10px">
+            <div class="clearfix">
+                <div id="summary-info" class="col-lg-8 col-md-7 col-sm-7 col-xs-7" style="padding-left:0px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">SNP information</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="clearfix">
+                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Base pair location</div>
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpLocation">-</div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Cytogenetic region</div>
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpRegion">-</div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Functional class</div>
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6"><span class="tag tag-info" id="snpClass"></span></div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Reported gene(s)</div>
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpReportedGenes"></div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Mapped gene(s)</div>
+                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpMappedGenes"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="links" class="col-lg-2 col-md-3 col-sm-4 col-xs-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-xs-offset-1" style="padding-right:0px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">External links</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div style="margin-bottom: 1em">
+                                <button type="button" class="btn btn-default" id="ensembl_button">View in Ensembl</button>
+                            </div>
+                            <!--<div style="margin-bottom: 1em"><button type="button" class="btn btn-default" id="dbgap_button">View in dbGap</button>
+                            </div>-->
+                            <div style="margin-bottom: 1em"><button type="button" class="btn btn-default" id="dbsnp_button">View in dbSNP</button></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
+            <!-- Associations table -->
+            <div id="associations_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">SNP information</h3>
+                    <h3 class="panel-title">
+                        <span id="association_label">Associations</span><span id="association_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
+                    </h3>
+
+                    <span class="pull-right clickable" onclick="toggleSidebar('#associations_panel span.clickable')">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </span>
                 </div>
+
                 <div class="panel-body">
-                    <div id="summary-info" class="col-md-8">
-                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Base pair location</span><span> chr12:111569952</span> </div>
-                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Cytogenetic region</span><span> 12q24.12  </span> </div>
-                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Functional class</span><span> intron      </span> </div>
-                        <div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Mapped gene(s)</span><span> ATXN2         </span> </div>
-                        <!--<div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Identified associations</span><span><a href="#">10</a></span> </div>-->
-                        <!--<div><span style="font-weight: bold; display: inline-block; width: 30%; margin-bottom: 1em">Identified traits</span><span> <a href="#">9</a></span> </div>-->
+                    <button type="button" id="expand-table" class="btn btn-default btn-sm pull-right table-collapsed" onclick="">Expand all associations  </button>
+
+                    <table id="association-table" class="table table-striped">
+                        <thead id="association-table-header">
+                        <tr>
+                            <th style="width: 10%" id="strongestAllele">Risk allele
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                            </th>
+                            <th style="width: 8%" id="riskFrequency">RAF
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 12%" id="pValue">p-value
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 6%" id="orPerCopyNum">OR
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 14%" id="orType">Beta
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 6%">CI
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
+                            </th>
+
+                            <th style="width: 8%">Reported gene(s)
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
+                            </th>
+
+                            <th style="width: 13%" id="traitName_s-alt">Reported trait
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 13%" id="traitName-alt">Mapped trait
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait mapped to the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 15%" id="author_s-alt" colspan="2">Study
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="association-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- Diseases/traits table -->
+            <div class="row">
+                <div id="diseasetrait_panel" class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">
+                            <span id="diseasetrait_label">Traits</span><span id="diseasetrait_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
+                        </h3>
+                        <span class="pull-right clickable" onclick="toggleSidebar('#diseasetrait_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
                     </div>
-                    <div id="links" class="col-md-4">
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default">View in Ensembl</button>
 
-                        </div>
-                        <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in dbGap</button>
-                        </div>
-                        <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in dbSNP</button></div>
-
-                        <div style="margin-bottom: 1em">other links to external sites</div>
-
+                    <div class="panel-body">
+                        <table id="diseasetrait-table" class="table table-striped">
+                            <thead id="diseasetrait-table-header">
+                            <tr>
+                                <th style="width: 25%" id="traitName_s-alt2">Reported trait
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 25%">Mapped ontology traits
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
+                                </th>
+                                <th style="width: 35%">Ontology traits synonyms
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="An alternative Experimental Factor Ontology for a given term such as a commonly used abbreviation or synonym"></span>
+                                </th>
+                                <th style="width: 15%">Study
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody id="diseasetrait-table-body"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
 
-    <!--<div class="row">-->
-        <div class="panel panel-default">
-            <div class="panel-heading background-color-primary-accent">
-                <h3 class="panel-title">Associations   <span class="badge" style="background-color: #398A96;">10</span>
-                </h3>
+            <!-- LD widget -->
+            <div class="row">
+                <div class="panel panel-default">
+                    <div id="ld_panel" class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Linkage disequilibrium - <span style="color:red;font-weight:bold">functionality to be implemented!</span></h3>
+                        <span class="pull-right clickable" onclick="toggleSidebar('#ld_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </div>
 
-                  <span class="pull-right clickable"
-                        onclick="toggleSidebar('.panel-heading span.clickable')">
-                                    <i class="glyphicon glyphicon-chevron-up"></i>
-                                </span>
+                    <div class="panel-body">
+                        <div>
+                            <span>Population
+                                <select name="select" id="ld-population-selection">
+                                    <option value="0">---</option>
+                                </select>
+                            </span>
+                            <span style="padding-left:40px">r<sup>2</sup> threshold
+                                <select name="select">
+                                    <option value="">---</option>
+                                    <option value="1">1</option>
+                                    <option value="0.9">0.9</option>
+                                    <option value="0.8" selected="selected">0.8</option>
+                                    <option value="0.7">0.7</option>
+                                    <option value="0.6">0.6</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div style="margin:15px 5px 5px;padding:8px 4px;width: 400px;text-align:center;border:2px solid #006dcc">** Place the LD widget here **</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="panel-body">
-                <button type="button" id="expand-table" class="btn btn-default btn-sm pull-right table-collapsed" onclick="">Expand all associations  </button>
-
-                <table id="association-table" class="table">
-                    <thead id="association-table-header">
-                    <tr>
-                        <th style="width: 10%" id="strongestAllele">Risk allele
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
-                                                                    <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                        </th>
-                        <th style="width: 8%" id="riskFrequency">RAF
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 12%" id="pValue">p-value
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 6%" id="orPerCopyNum">OR
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 14%" id="orType">Beta
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 6%">CI
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
-                        </th>
-
-                        <th style="width: 8%">Reported gene(s)
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
-                        </th>
-
-                        <th style="width: 13%" id="traitName_s-alt">Reported trait
-                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 13%" id="traitName-alt">Mapped trait
-                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait mapped to the study"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 10%" id="author_s-alt">Study
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 5%"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="association-table-body">
-                    <tr>
-                        <td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td>
-                        <td>0.59</td>
-                        <td>7 x10<sup>-20</sup> (Mean Arterial Pressure)</td>
-                        <td></td>
-                        <td>0.429 mmHg decrease</td>
-                        <td>[0.34-0.52]</td>
-                        <td><span><a href="search?query=ATXN2">ATXN2</a></span></td>
-                        <td><span><a href="search?query=Blood pressure">Blood pressure</a></span></td>
-                        <td>blood pressure</td>
-                        <td><span><a href="search?query=Wain LV">Wain LV, 2011</a> (PMID: 21909110)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21909110" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td>
-                        <td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td>
-                    </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.51</td><td>7 x10<sup>-12</sup></td><td></td><td>0.035 mg/dl decrease</td><td>[0.025-0.045]</td><td><span><a href="search?query=ATXN2">ATXN2</a></span>, <span><a href="search?query=PTPN11">PTPN11</a></span></td><td><span><a href="search?query=Urate levels">Urate levels</a></span></td><td>urate measurement</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2012</a> (PMID: 23263486)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23263486" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td>
-                        <td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-minus tgb"></span></button></td>
-                    </tr>
-                    <tr class="study-7047 accordion-body hidden-study-row collapse in" aria-expanded="true">
-                        <td colspan="11" style="border-top: none"><table class="sample-info">
-                            <tbody><tr><th style="width: 30%">Initial sample description</th><td>49,825 European ancestry males, 60,522 European ancestry females</td><td><button type="button" class="btn btn-default">View study page</button></td></tr>
-                            <tr><th style="width: 30%">Replication sample description</th><td>Up to 32,813 European ancestry individuals</td></tr>
-
-                            </tbody></table></td></tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.53</td><td>3 x10<sup>-18</sup></td><td></td><td>0.46 mm Hg decrease</td><td>[0.36-0.56]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Diastolic blood pressure">Diastolic blood pressure</a></span></td><td>blood pressure</td><td><span><a href="search?query=Newton-Cheh C">Newton-Cheh C, 2009</a> (PMID: 19430483)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/19430483" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.40</td><td>1 x10<sup>-9</sup></td><td>1.14</td><td></td><td>[1.08-1.19]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Thyroid peroxidase antibody positivity">Thyroid peroxidase antibody positivity</a></span></td><td>thyroid peroxidase antibody measurement</td><td><span><a href="search?query=Medici M">Medici M, 2014</a> (PMID: 24586183)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.40</td><td>1 x10<sup>-7</sup></td><td></td><td>0.0147 unit increase</td><td>[0.0059-0.0235]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Thyroid peroxidase antibody levels">Thyroid peroxidase antibody levels</a></span></td><td>thyroid peroxidase antibody measurement</td><td><span><a href="search?query=Medici M">Medici M, 2014</a> (PMID: 24586183)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.469</td><td>6 x10<sup>-7</sup></td><td>1.22</td><td></td><td>[1.13-1.32]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Peripheral artery disease">Peripheral artery disease</a></span></td><td>peripheral artery disease</td><td><span><a href="search?query=Kullo IJ">Kullo IJ, 2014</a> (PMID: 25009551)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/25009551" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.48</td><td>8 x10<sup>-8</sup>  </td><td>1.21</td><td></td><td>[1.13-1.30]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>, <span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td>celiac disease</td><td><span><a href="search?query=Hunt KA">Hunt KA, 2008</a> (PMID: 18311140)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/18311140" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.50</td><td>4 x10<sup>-11</sup> (eGFRcys)</td><td></td><td>0.01 ml/min/1.73 m2 increase</td><td>[0.009-0.017]</td><td><span><a href="search?query=ATXN2">ATXN2</a></span></td><td><span><a href="search?query=Chronic kidney disease">Chronic kidney disease</a></span></td><td>chronic kidney disease</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2010</a> (PMID: 20383146)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20383146" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-G</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>0.50</td><td>7 x10<sup>-21</sup></td><td>1.2</td><td></td><td>[1.15-1.24]</td><td><span><a href="search?query=SH2B3">SH2B3</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=10019" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td>celiac disease</td><td><span><a href="search?query=Dubois PC">Dubois PC, 2010</a> (PMID: 20190752)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20190752" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr>
-                    <tr><td><span><a href="search?query=rs653178">rs653178-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs653178" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td>NR</td><td>3 x10<sup>-19</sup></td><td></td><td></td><td></td><td><span><a href="search?query=SH2B3">SH2B3</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=10019" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><span><a href="search?query=Celiac disease and Rheumatoid arthritis">Celiac disease and Rheumatoid arthritis</a></span></td><td>immune system disease</td><td><span><a href="search?query=Zhernakova A">Zhernakova A, 2011</a> (PMID: 21383967)</span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21383967" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td><td><button class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-7612.hidden-study-row" aria-expanded="false" aria-controls="study:7612"><span class="glyphicon glyphicon-plus tgb"></span></button></td> </tr></tbody>
-
-                </table>
-            </div>
-        </div>
-    <!--</div>-->
-
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading background-color-primary-accent">
-                <h3 class="panel-title">Traits <span class="badge" style="background-color: #398A96;">9</span>
-                </h3>
-                  <span class="pull-right clickable"
-                        onclick="toggleSidebar('.panel-heading span.clickable')">
-                                    <i class="glyphicon glyphicon-chevron-up"></i>
-                                </span>
-            </div>
-
-            <div class="panel-body">
-                <table id="diseasetrait-table" class="table table-striped">
-                    <thead id="diseasetrait-table-header">
-                    <tr>
-                        <th style="width: 25%" id="traitName_s-alt2">Reported trait
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
-                            <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                        </th>
-                        <th style="width: 25%">Mapped ontology traits
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
-                        </th>
-                        <th style="width: 35%">Ontology traits synonyms
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="An alternative Experimental Factor Ontology for a given term such as a commonly used abbreviation or synonym"></span>
-                        </th>
-                        <th style="width: 15%">Study
-                            <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody id="diseasetrait-table-body">
-                    <tr><td><span><a href="search?query=Peripheral artery disease">Peripheral artery disease</a></span></td><td><span><a href="search?query=peripheral arterial disease">peripheral arterial disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004265" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=peripheral arterial diseases">peripheral arterial diseases</a></span>, <span><a href="search?query=peripheral artery disease">peripheral artery disease</a></span></td><td><span><a href="search?query=Kullo IJ">Kullo IJ, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/25009551" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Thyroid peroxidase antibody levels">Thyroid peroxidase antibody levels</a></span></td><td><span><a href="search?query=thyroid peroxidase antibody measurement">thyroid peroxidase antibody measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005666" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td></td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Thyroid peroxidase antibody positivity">Thyroid peroxidase antibody positivity</a></span></td><td><span><a href="search?query=thyroid peroxidase antibody measurement">thyroid peroxidase antibody measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005666" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td></td><td><span><a href="search?query=Medici M">Medici M, 2014</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/24586183" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Celiac disease and Rheumatoid arthritis">Celiac disease and Rheumatoid arthritis</a></span></td><td><span><a href="search?query=immune system disease">immune system disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0000540" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=autoimmune diseases">autoimmune diseases</a></span>, <span><a href="search?query=Other specified disorders of the immune mechanism (disorder)">Other specified disorders of the immune mechanism (disorder)</a></span>, <span><a href="search?query=DEFIC CELL IMMUNITY NOS">DEFIC CELL IMMUNITY NOS</a></span>, <span><a href="search?query=[X]Disorder involving the immune mechanism, unspecified">[X]Disorder involving the immune mechanism, unspecified</a></span>, <span><a href="search?query=Other deficiency of cell-mediated immunity">Other deficiency of cell-mediated immunity</a></span>, [...]</td><td><span><a href="search?query=Zhernakova A">Zhernakova A, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21383967" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Celiac disease">Celiac disease</a></span></td><td><span><a href="search?query=celiac disease">celiac disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0001060" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></td><td><span><a href="search?query=Celiac syndrome">Celiac syndrome</a></span>, <span><a href="search?query=Celiac rickets (disorder)">Celiac rickets (disorder)</a></span>, <span><a href="search?query=Coeliac sprue">Coeliac sprue</a></span>, <span><a href="search?query=CS - Celiac sprue">CS - Celiac sprue</a></span>, <span><a href="search?query=Gluten-Induced Enteropathy">Gluten-Induced Enteropathy</a></span>, [...]</td><td><span><a href="search?query=Dubois PC">Dubois PC, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20190752" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span>,<br><span><a href="search?query=Hunt KA">Hunt KA, 2008</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/18311140" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Chronic kidney disease">Chronic kidney disease</a></span></td><td><span><a href="search?query=chronic kidney disease">chronic kidney disease</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0003884" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></td><td><span><a href="search?query=ESRD">ESRD</a></span>, <span><a href="search?query=Renal Disease, End-Stage">Renal Disease, End-Stage</a></span>, <span><a href="search?query=End-Stage Renal Failure">End-Stage Renal Failure</a></span>, <span><a href="search?query=chronic kidney failure">chronic kidney failure</a></span>, <span><a href="search?query=Chronic Renal Insufficiencies">Chronic Renal Insufficiencies</a></span>, [...]</td><td><span><a href="search?query=Kottgen A">Kottgen A, 2010</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/20383146" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{../static/icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Urate levels">Urate levels</a></span></td><td><span><a href="search?query=urate measurement">urate measurement</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004531" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=urate levels">urate levels</a></span></td><td><span><a href="search?query=Kottgen A">Kottgen A, 2012</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/23263486" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Blood pressure">Blood pressure</a></span></td><td><span><a href="search?query=blood pressure">blood pressure</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004325" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=diastolic blood pressure">diastolic blood pressure</a></span>, <span><a href="search?query=systolic pressure">systolic pressure</a></span>, <span><a href="search?query=systolic blood pressure">systolic blood pressure</a></span>, <span><a href="search?query=diastolic pressure">diastolic pressure</a></span></td><td><span><a href="search?query=Wain LV">Wain LV, 2011</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/21909110" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    <tr><td><span><a href="search?query=Diastolic blood pressure">Diastolic blood pressure</a></span></td><td><span><a href="search?query=blood pressure">blood pressure</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0004325" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td><td><span><a href="search?query=diastolic blood pressure">diastolic blood pressure</a></span>, <span><a href="search?query=systolic pressure">systolic pressure</a></span>, <span><a href="search?query=systolic blood pressure">systolic blood pressure</a></span>, <span><a href="search?query=diastolic pressure">diastolic pressure</a></span></td><td><span><a href="search?query=Newton-Cheh C">Newton-Cheh C, 2009</a></span>&nbsp;&nbsp;<span><a href="http://www.europepmc.org/abstract/MED/19430483" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td></tr>
-                    </table>
-            </div>
-        </div>
-    </div>
+            <hr/>
 
         </div>
-    </div>
+      </div>
 
-    <hr/>
+        <!-- /container -->
 
+        <footer class="footer background-color-primary-accent">
+            <!--<div class="footer-banner background-color-primary"></div>-->
+            <div class="container">
+                <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
+                    <a href="http://www.embl.org">European Molecular
+                                                  Biology
+                                                  Laboratory</a> |
+                    <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+                    <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+                    <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+            </div>
+        </footer>
+
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+
+        <!-- GOCI JavaScript
+        ================================================== -->
+        <script src="../static/js/goci-ui.js" th:src="@{/js/goci-ui.js}"></script>
+        <script src="../static/js/snpresult.js" th:src="@{/js/snpresult.js}"></script>
+        <!--<script type="javascript">
+            window.onload = function() {
+              getSnpData();
+            };
+        </script>-->
+
+        <!-- Google analytics
+        ================================================== -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-60195133-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
 </div>
-<!-- /container -->
-
-<footer class="footer background-color-primary-accent">
-    <!--<div class="footer-banner background-color-primary"></div>-->
-    <div class="container">
-        <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
-            <a href="http://www.embl.org">European Molecular
-                                          Biology
-                                          Laboratory</a> |
-            <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
-            <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
-            <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
-    </div>
-</footer>
-
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
-
-<!-- GOCI JavaScript
-================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
-
-<!-- Google analytics
-================================================== -->
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-60195133-1', 'auto');
-    ga('send', 'pageview');
-
-</script>
-
 </body>
 </html>

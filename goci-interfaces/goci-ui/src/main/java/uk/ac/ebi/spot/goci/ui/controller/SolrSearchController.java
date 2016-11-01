@@ -207,7 +207,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Association");
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "association");
         addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
 
