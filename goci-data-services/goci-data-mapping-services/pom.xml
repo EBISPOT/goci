@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>goci-mapper</artifactId>
+    <artifactId>goci-data-mapping-services</artifactId>
     <version>2.2.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>GOCI Catalog Mapper</name>
-    <description>Maps all associations in the database using Ensembl mapping pipeline</description>
+    <name>GOCI Catalog Mapping Service</name>
+    <description>A set of service classes to map all associations in the database using Ensembl mapping pipeline</description>
 
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
@@ -20,21 +20,25 @@
 
     <dependencies>
 
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-db-binding</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-db-binding</artifactId>
+        </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-model</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-model</artifactId>
+        </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-repository</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>commons-cli</groupId>
@@ -50,28 +54,12 @@
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-tracking</artifactId>-->
-        <!--</dependency>-->
-
-
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-data-mapping-services</artifactId>
+            <artifactId>goci-tracking</artifactId>
         </dependency>
     </dependencies>
 
-
-    <build>
-        <finalName>gwas-mapper</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

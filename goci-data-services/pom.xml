@@ -17,6 +17,7 @@
         <module>goci-data-filtering-services</module>
         <module>goci-association-upload-services</module>
         <module>goci-data-validation-services</module>
+        <module>goci-data-mapping-services</module>
     </modules>
 
     <packaging>pom</packaging>

@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci;
 
-import org.apache.solr.client.solrj.SolrServer;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+//import org.apache.solr.client.solrj.SolrServer;
+//import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
@@ -27,10 +29,15 @@ public class SolrIndexerConfiguration {
     @NotNull @Value("${efo.location}")
     private Resource efoResource;
 
-    @Bean SolrServer solrServer() {
-        // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
-        return new HttpSolrServer(solrServer.substring(0, solrServer.lastIndexOf('/')));
-    }
+//    @Bean SolrServer solrServer() {
+//        // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
+//        return new HttpSolrServer(solrServer.substring(0, solrServer.lastIndexOf('/')));
+//    }
+
+        @Bean SolrClient solrServer() {
+            // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
+            return new HttpSolrClient(solrServer.substring(0, solrServer.lastIndexOf('/')));
+        }
 
     @Bean OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();
