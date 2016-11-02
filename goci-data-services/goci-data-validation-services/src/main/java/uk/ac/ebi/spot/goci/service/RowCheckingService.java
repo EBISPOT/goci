@@ -42,6 +42,12 @@ public class RowCheckingService {
                 errors.addAll(synthaxErrors);
             }
         }
+
+        //Check cells with Types error: Eg. convertion
+        if (!row.getListErrorCellType().isEmpty()){
+            errors.addAll(row.getListErrorCellType());
+        }
+
         return errors;
     }
 }

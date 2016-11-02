@@ -197,6 +197,7 @@ public class AssociationController {
         model.addAttribute("study", study);
 
         List<AssociationUploadErrorView> fileErrors = null;
+        List<AssociationUploadErrorView> xlsErrors = null;
         try {
             fileErrors =
                     associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
@@ -206,9 +207,13 @@ public class AssociationController {
         }
 
         if (fileErrors != null && !fileErrors.isEmpty()) {
+            // Split
             getLog().error("Errors found in file: " + file.getOriginalFilename());
+            xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
             model.addAttribute("fileName", file.getOriginalFilename());
             model.addAttribute("fileErrors", fileErrors);
+            model.addAttribute("xlsErrors", xlsErrors);
+
             return "error_pages/association_file_upload_error";
         }
         else {

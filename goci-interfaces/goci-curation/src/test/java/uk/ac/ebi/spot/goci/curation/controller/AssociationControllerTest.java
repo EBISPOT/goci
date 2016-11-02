@@ -206,7 +206,7 @@ public class AssociationControllerTest {
         MockMultipartFile file =
                 new MockMultipartFile("file", "filename.txt", "text/plain", "TEST".getBytes());
         AssociationUploadErrorView associationUploadErrorView1 =
-                new AssociationUploadErrorView(1, "OR", "Value is not empty", false);
+                new AssociationUploadErrorView(1, "OR", "Value is not empty", false, "data");
         List<AssociationUploadErrorView> uploadErrorViews = Collections.singletonList(associationUploadErrorView1);
 
         // Stubbing

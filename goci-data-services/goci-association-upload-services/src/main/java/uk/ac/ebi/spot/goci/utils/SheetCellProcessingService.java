@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.utils;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import uk.ac.ebi.spot.goci.exception.CellProcessingException;
 
 /**
  * Created by emma on 13/04/2016.
@@ -11,6 +12,21 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
  *         Simple utility class to handle values in the upload spreadsheet
  */
 public class SheetCellProcessingService {
+
+
+    // This method raises an exception if the cell has conversion problem.
+    public static String processMandatoryStringValue(XSSFCell cell) {
+        String stringValue = null;
+        try {
+            stringValue = cell.getRichStringCellValue()
+                    .getString()
+                    .trim();
+        } catch (Exception ise){
+            throw new CellProcessingException("The field must be a String");
+        }
+        return stringValue;
+    }
+
 
     public static String processStringValue(XSSFCell cell) {
         String stringValue = null;
@@ -22,6 +38,8 @@ public class SheetCellProcessingService {
                 case Cell.CELL_TYPE_NUMERIC:
                     stringValue = Double.toString(cell.getNumericCellValue());
                     break;
+                default:
+                    throw new CellProcessingException("The field value cannot be converted");
             }
         }
         return stringValue;
@@ -36,8 +54,7 @@ public class SheetCellProcessingService {
                     intValue = roundedValue.intValue();
                     break;
                 default:
-                    intValue = null;
-                    break;
+                    throw new CellProcessingException("The field must be a Number");
             }
         }
         return intValue;
@@ -51,8 +68,7 @@ public class SheetCellProcessingService {
                     floatValue = (float) cell.getNumericCellValue();
                     break;
                 default:
-                    floatValue = null;
-                    break;
+                    throw new CellProcessingException("The field must be a Float");
             }
         }
         return floatValue;

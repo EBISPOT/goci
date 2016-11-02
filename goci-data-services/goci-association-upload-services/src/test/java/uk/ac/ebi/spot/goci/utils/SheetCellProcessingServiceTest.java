@@ -4,10 +4,14 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Rule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
+import static org.hamcrest.CoreMatchers.containsString;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.exception.CellProcessingException;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -35,6 +39,9 @@ public class SheetCellProcessingServiceTest {
 
     XSSFCell cellWithNumericString;
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Before
     public void setUp() throws Exception {
         // Create spreadsheet for testing
@@ -55,17 +62,30 @@ public class SheetCellProcessingServiceTest {
     }
 
     @Test
-    public void testProcessIntValues() throws Exception {
-        assertNull(processIntValues(cellWithString));
-        assertNull(processIntValues(blankCell));
+    public void testValidProcessIntValues() throws Exception {
         assertEquals(Integer.valueOf(12), processIntValues(cellWithInteger));
     }
 
     @Test
-    public void testProcessFloatValues() throws Exception {
+    public void testInvalidProcessIntValues() throws Exception {
+        exception.expect(CellProcessingException.class);
+        exception.expectMessage(containsString("The field must be a Number"));
+        processIntValues(cellWithString);
+        processIntValues(blankCell);
+    }
+
+    @Test
+    public void testValidProcessFloatValues() throws Exception {
+        assertEquals(Float.valueOf(String.valueOf(1.22)), processFloatValues(cellWithFloat));
+    }
+
+    @Test
+    public void testInvalidProcessFloatValues() throws Exception {
+        exception.expect(CellProcessingException.class);
+        exception.expectMessage(containsString("The field must be a Float"));
         assertNull(processFloatValues(cellWithString));
         assertNull(processFloatValues(blankCell));
-        assertEquals(Float.valueOf(String.valueOf(1.22)), processFloatValues(cellWithFloat));
+
     }
 
     @Test
