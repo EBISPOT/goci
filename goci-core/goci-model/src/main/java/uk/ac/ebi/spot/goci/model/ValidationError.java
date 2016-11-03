@@ -11,6 +11,7 @@ import javax.validation.Valid;
  *         <p>
  *         Class used to represent errors generated after validation of an upload spreadsheet containing association
  *         values
+ *         Added field typeError: this field is used to define if the error is data or xls issue.
  */
 public class ValidationError {
 

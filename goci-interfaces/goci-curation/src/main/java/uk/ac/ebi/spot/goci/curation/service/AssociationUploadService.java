@@ -53,8 +53,8 @@ public class AssociationUploadService {
         return log;
     }
 
-
-
+    // This static method allow us to split the List in two different lists.
+    // The original list will contain the scientific data error. The xlsListError will contain the XLS errors.
     public static List<AssociationUploadErrorView> splitByXLSError (List<AssociationUploadErrorView> originalList) {
         List<AssociationUploadErrorView> xlsListError = new ArrayList<>();
 

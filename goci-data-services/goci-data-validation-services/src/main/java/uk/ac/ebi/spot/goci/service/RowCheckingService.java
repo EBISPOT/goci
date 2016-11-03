@@ -43,7 +43,7 @@ public class RowCheckingService {
             }
         }
 
-        //Check cells with Types error: Eg. convertion
+        //Add the XLS convertion errors to the general error list.
         if (!row.getListErrorCellType().isEmpty()){
             errors.addAll(row.getListErrorCellType());
         }

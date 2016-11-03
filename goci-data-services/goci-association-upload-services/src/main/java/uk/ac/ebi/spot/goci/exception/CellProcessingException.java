@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.exception;
 
 /**
  * Created by cinzia on 25/10/2016.
+  *   Exception used when XLS convertation failed. Eg. convertion String, Integer, Float.
+ *
  */
 public class CellProcessingException extends RuntimeException {
     public CellProcessingException() {

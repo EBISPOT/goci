@@ -14,7 +14,7 @@ import uk.ac.ebi.spot.goci.exception.CellProcessingException;
 public class SheetCellProcessingService {
 
 
-    // This method raises an exception if the cell has conversion problem.
+    // This method raises an exception if the cell is not a String. The cell must be a String.
     public static String processMandatoryStringValue(XSSFCell cell) {
         String stringValue = null;
         try {
@@ -27,7 +27,7 @@ public class SheetCellProcessingService {
         return stringValue;
     }
 
-
+    // This method raises an exception if the conversation fails.
     public static String processStringValue(XSSFCell cell) {
         String stringValue = null;
         if (cell != null) {
@@ -45,6 +45,7 @@ public class SheetCellProcessingService {
         return stringValue;
     }
 
+    // This method raises an exception if the conversation fails.
     public static Integer processIntValues(XSSFCell cell) {
         Integer intValue = null;
         if (cell != null) {
@@ -60,6 +61,7 @@ public class SheetCellProcessingService {
         return intValue;
     }
 
+    // This method raises an exception if the conversation fails.
     public static Float processFloatValues(XSSFCell cell) {
         Float floatValue = null;
         if (cell != null) {

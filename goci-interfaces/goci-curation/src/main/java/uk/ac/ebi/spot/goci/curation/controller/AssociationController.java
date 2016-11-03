@@ -209,6 +209,8 @@ public class AssociationController {
         if (fileErrors != null && !fileErrors.isEmpty()) {
             // Split
             getLog().error("Errors found in file: " + file.getOriginalFilename());
+
+            // Split the general collection of errors in two different structures. For view purpose.
             xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
             model.addAttribute("fileName", file.getOriginalFilename());
             model.addAttribute("fileErrors", fileErrors);

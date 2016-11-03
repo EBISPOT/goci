@@ -153,7 +153,7 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                     break;
                             }
                         } catch (CellProcessingException cpe) {
-                             // Add the error to the associationUploadRow.
+                            // Add an excel error to the list of the errors.
                             ValidationError cpeValidationError = new ValidationError(headerName.toString(),cpe.getMessage(),false,"excel");
                             associationUploadRow.addCellErrorType(cpeValidationError);
 
@@ -164,8 +164,6 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
             }
             rowNum++;
         }
-
-
         return associationUploadRows;
     }
 

@@ -9,6 +9,7 @@ import java.util.Collection;
  * @author emma
  *         <p>
  *         Object that represents a row in an upload spreadsheet containing association data
+ *         Added listErrorCellType to manage the XLS formatting error.
  */
 public class AssociationUploadRow {
 
