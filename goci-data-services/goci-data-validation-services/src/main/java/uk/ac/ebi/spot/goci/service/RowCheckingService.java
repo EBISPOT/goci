@@ -42,6 +42,12 @@ public class RowCheckingService {
                 errors.addAll(synthaxErrors);
             }
         }
+
+        //Add the XLS convertion errors to the general error list.
+        if (!row.getListErrorCellType().isEmpty()){
+            errors.addAll(row.getListErrorCellType());
+        }
+
         return errors;
     }
 }

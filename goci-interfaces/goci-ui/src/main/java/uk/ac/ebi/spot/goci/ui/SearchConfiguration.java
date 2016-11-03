@@ -1,8 +1,8 @@
 package uk.ac.ebi.spot.goci.ui;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
-import org.springframework.boot.context.web.ErrorPageFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.support.ErrorPageFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 

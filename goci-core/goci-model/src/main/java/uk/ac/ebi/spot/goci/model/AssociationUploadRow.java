@@ -1,11 +1,15 @@
 package uk.ac.ebi.spot.goci.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Created by emma on 21/03/2016.
  *
  * @author emma
  *         <p>
  *         Object that represents a row in an upload spreadsheet containing association data
+ *         Added listErrorCellType to manage the XLS formatting error.
  */
 public class AssociationUploadRow {
 
@@ -60,6 +64,8 @@ public class AssociationUploadRow {
     private String snpType;
 
     private String efoTrait;
+
+    private Collection<ValidationError> listErrorCellType = new ArrayList<>();
 
     public Integer getRowNumber() {
         return rowNumber;
@@ -260,4 +266,11 @@ public class AssociationUploadRow {
     public void setOtherAllele(String otherAllele) {
         this.otherAllele = otherAllele;
     }
+
+    public Collection<ValidationError> getListErrorCellType() { return this.listErrorCellType; }
+
+    public void setListErrorCellType(Collection<ValidationError> listErrorCellType) {this.listErrorCellType = listErrorCellType; }
+
+    public void addCellErrorType(ValidationError validationError) { this.listErrorCellType.add(validationError);}
+
 }
