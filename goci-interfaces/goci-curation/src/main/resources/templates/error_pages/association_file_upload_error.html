@@ -71,7 +71,7 @@
                 <table id="excelTable"
                        class="table table-hover table-bordered"
                        th:if="${not #lists.isEmpty(xlsErrors)}" cellspacing="0" width="100%">
-                    <p class="col-md-10 lead text-left">Please, fix formatting errors first as these may effect data errors</p>
+                    <p class="col-md-10 lead text-left">Please, fix formatting errors first as these may effect scientific data errors</p>
                     <br/><br/>
                     <p class="col-md-10 lead text-left"><b><font color="red">Formatting data errors</font></b></p>
                     <br/>
@@ -85,10 +85,10 @@
                     </thead>
                     <tbody>
                     <tr th:each="xlsError: ${xlsErrors}">
-                        <td th:text="${xlsError.row}?: '' "></td>
-                        <td th:text="${xlsError.columnName}?: '' "></td>
-                        <td th:text="${xlsError.error}?: '' "></td>
-                        <td>Excel Format</td>
+                        <td style="color: red" th:text="${xlsError.row}?: '' "></td>
+                        <td style="color: red" th:text="${xlsError.columnName}?: '' "></td>
+                        <td style="color: red" th:text="${xlsError.error}?: '' "></td>
+                        <td style="color: red">Excel Format</td>
 
                     </tr>
                     </tbody>
