@@ -139,7 +139,7 @@ Please see the link:about[About] page for citation guidance.
 
 ==== [[faq-A4]]4. What are the terms and conditions for accessing the GWAS Catalog data and code?
 
-The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use
+The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use. Our code is available under the http://www.apache.org/licenses/LICENSE-2.0[Apache version 2.0 license]
 
 ==== [[faq-A5]]5. Which genome build is the Catalog on?
 ++++
