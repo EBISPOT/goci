@@ -22,7 +22,7 @@ public class SheetCellProcessingService {
                     .getString()
                     .trim();
         } catch (Exception ise){
-            throw new CellProcessingException("The field must be a String");
+            throw new CellProcessingException("The field must contain both letters and numbers");
         }
         return stringValue;
     }
