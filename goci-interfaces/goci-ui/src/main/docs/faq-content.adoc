@@ -43,6 +43,8 @@
 
 15. <<faq-A15,Why are there no recent studies in the GWAS Catalog?>>
 
+16. <<faq-A16,Where can I find the GWAS Catalog infrastructure code?>>
+
 === B. Searching
 
 1. <<faq-B1,How do I do a search?>>
@@ -139,7 +141,7 @@ Please see the link:about[About] page for citation guidance.
 
 ==== [[faq-A4]]4. What are the terms and conditions for accessing the GWAS Catalog data and code?
 
-The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use
+The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use. Our code is available under the http://www.apache.org/licenses/LICENSE-2.0[Apache version 2.0 license]
 
 ==== [[faq-A5]]5. Which genome build is the Catalog on?
 ++++
@@ -185,6 +187,10 @@ As detailed in the link:methods[ Methods] section, some publications are split i
 ==== [[faq-A15]]15. Why are there no recent studies in the GWAS Catalog?
 
 Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. As the complexity of studies in terms of study design and statistical analysis of results continues to increase, so does the curation effort required to extract the correct information in line with our extraction guidelines. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialing various approaches to speed up the curation process including automation of some parts of the data extraction process and data submission by study authors.
+
+==== [[faq-A16]]16. Where can I find the GWAS Catalog infrastructure code?
+
+All our code is freely available from https://github.com/EBISPOT/goci[our Github repository].
 
 
 == B. Searching

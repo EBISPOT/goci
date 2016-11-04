@@ -10,17 +10,34 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
 
-    <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script th:src="@{/js/console-plugin.js}"></script>
+    <script th:src="@{/js/goci-curation-login.js}"></script>
+
+
 </head>
 <body>
-<div class="container">
+
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-6">
             <div th:if="${param.error}">
                 Invalid username and password.
             </div>
@@ -28,10 +45,21 @@
                 You have been logged out.
             </div>
 
+            <div>
+                <h2>This is the login page for the GWAS Catalog curation system</h2>
+                <p>If your are a GWAS Catalog-approved curator, please login to the system
+                using your GWAS Catalog curation credentials. If you have lost your credentials, please email
+                    <a href="mailto:gwas-curator@ebi.ac.uk?Subject=Forgotten%20password" target="_top">gwas-curator@ebi.ac.uk</a> </p>
+                <p>To obtain an account, please contact
+                    <a href="mailto:gwas-info@ebi.ac.uk?Subject=Curation%20system%20account" target="_top">gwas-info@ebi.ac.uk</a>
+                </p>
+                <br/>
+            </div>
+
             <form class="form" role="form"  method="post">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-                <h2 class="form-signin-heading">Please login to the GWAS curation tool</h2>
+                <!--<h4 class="form-signin-heading">Please login to the GWAS curation tool</h4>-->
 
                 <div class="form-group">
                     <label for="useremail" class="control-label">User email</label>
@@ -49,6 +77,7 @@
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
 
 </body>
 </html>

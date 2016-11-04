@@ -24,7 +24,7 @@ import java.util.Collections;
 @Component
 public class SolrIndexerConfiguration {
     @NotNull @Value("${search.server}")
-    private String solrServer;
+    private String solrClient;
 
     @NotNull @Value("${efo.location}")
     private Resource efoResource;
@@ -34,10 +34,11 @@ public class SolrIndexerConfiguration {
 //        return new HttpSolrServer(solrServer.substring(0, solrServer.lastIndexOf('/')));
 //    }
 
-        @Bean SolrClient solrServer() {
-            // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
-            return new HttpSolrClient(solrServer.substring(0, solrServer.lastIndexOf('/')));
-        }
+    @Bean SolrClient solrClient() {
+        // return new http solr server from "search.server" config element, but remove core name (probably /gwas)
+        //updated from SolrServer to SolrClient followind deprecation of SolrServer
+        return new HttpSolrClient(solrClient.substring(0, solrClient.lastIndexOf('/')));
+    }
 
     @Bean OntologyLoader ontologyLoader() {
         ReasonedOntologyLoader loader = new ReasonedOntologyLoader();

@@ -22,7 +22,7 @@
                         </button>
                             <!--<a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>-->
                             <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand"
-                               th:style="'background:url(' + @{/images/GWAS_Catalog_banner_logo_34x40.png} + ') no-repeat !important; background-position: left center; padding-left: 40px;'">
+                               th:style="'background:url(' + @{/icons/GWAS_Catalog_banner_logo_34x40.png} + ') no-repeat !important; background-position: left center; padding-left: 40px;'">
                                 GWAS Catalog</a>
                     </div>
                     <div id="navbarCollapseTop" class="navbar-collapse collapse">
@@ -61,33 +61,31 @@
         <div class="navbar-bottom-banner-3 background-color-primary">
         </div>
 
-            <div class="row navbar-default">
+        <div class="row navbar-default" id="curationNavigation">
 
-                    <div id="navbarCollapseBottom" class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li><a th:href="@{/studies}">Curation Home</a></li>
-                            <li><a th:href="@{/studies/new}">Add Study</a></li>
-                            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-                            <li><a th:href="@{/reports/monthly}">Reports</a></li>
-                            <li>
-                                <div class="btn-group">
-                                    <button type="button"
-                                            data-toggle="dropdown"
-                                            class="btn btn-default dropdown-toggle navbar-btn">
-                                        Download files<span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
-                                        <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                <div id="navbarCollapseBottom" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a th:href="@{/studies}">Curation Home</a></li>
+                        <li><a th:href="@{/studies/new}">Add Study</a></li>
+                        <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
+                        <li><a th:href="@{/reports/monthly}">Reports</a></li>
+                        <li>
+                            <div class="btn-group">
+                                <button type="button"
+                                        data-toggle="dropdown"
+                                        class="btn btn-default dropdown-toggle navbar-btn">
+                                    Download files<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
+                                    <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+            </div>
 
-        <!--</div>-->
-
-    </nav>
+        </nav>
     <br/>
 </div>
 
