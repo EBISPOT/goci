@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.StudyReport;
  *         <p>
  *         Repository accessing Study Report entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface StudyReportRepository extends JpaRepository<StudyReport, Long> {
     StudyReport findByStudyId(Long studyId);
 }

@@ -14,7 +14,7 @@ import java.util.List;
  *         <p>
  *         Repository accessing montly curator totals view
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface MonthlyTotalsSummaryViewRepository extends JpaRepository<MonthlyTotalsSummaryView, Long> {
 
     @Query("select distinct month from MonthlyTotalsSummaryView order by month desc") List<Integer> getAllMonths();

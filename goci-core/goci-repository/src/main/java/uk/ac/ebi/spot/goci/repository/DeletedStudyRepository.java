@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.DeletedStudy;
  *         <p>
  *         Repository accessing Deleted Study entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface DeletedStudyRepository extends JpaRepository<DeletedStudy, Long> {
 }
 

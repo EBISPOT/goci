@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by dwelter on 15/04/16.
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface WeeklyTotalsSummaryViewRepository extends JpaRepository<WeeklyTotalsSummaryView, Long> {
 
    @Query("select w from WeeklyTotalsSummaryView w where rownum < 9") List<WeeklyTotalsSummaryView> getLastEightWeeks();

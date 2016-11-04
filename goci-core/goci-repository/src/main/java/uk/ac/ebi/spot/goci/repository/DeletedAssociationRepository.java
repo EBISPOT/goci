@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.DeletedAssociation;
  *         <p>
  *         Repository accessing Deleted Association entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface DeletedAssociationRepository extends JpaRepository<DeletedAssociation, Long> {
 }
 

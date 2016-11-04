@@ -14,7 +14,7 @@ import java.util.List;
  *         <p>
  *         Repository accessing yearly curator totals view
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface YearlyTotalsSummaryViewRepository extends JpaRepository<YearlyTotalsSummaryView, Long> {
     @Query("select distinct year from YearlyTotalsSummaryView order by year desc") List<Integer> getAllYears();
 

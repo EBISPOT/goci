@@ -13,7 +13,7 @@ import java.util.List;
  *         <p>
  *         Repository accessing Deleted Ethnicity entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface DeletedEthnicityRepository extends JpaRepository<DeletedEthnicity, Long> {
 
     List<DeletedEthnicity> findByStudyId(Long id);

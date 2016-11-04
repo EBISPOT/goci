@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -83,9 +84,11 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    @JsonIgnore
     @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "association", orphanRemoval = true)
     private Collection<AssociationValidationReport> associationValidationReports = new ArrayList<>();
 
@@ -97,6 +100,7 @@ public class Association implements Trackable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
 
+    @JsonIgnore
     @OneToMany(fetch= FetchType.EAGER)
     @JoinTable(name = "ASSOCIATION_EVENT",
                joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),

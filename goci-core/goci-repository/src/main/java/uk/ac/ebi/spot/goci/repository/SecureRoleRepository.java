@@ -11,6 +11,6 @@ import uk.ac.ebi.spot.goci.model.SecureRole;
  *         <p>
  *         Repository accessing Role entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface SecureRoleRepository extends JpaRepository<SecureRole, Long> {
 }

@@ -11,6 +11,6 @@ import uk.ac.ebi.spot.goci.model.WeeklyProgressView;
  *         <p>
  *         Repository accessing weekly curator progress
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface WeeklyProgressViewRepository extends JpaRepository<WeeklyProgressView, Long> {
 }

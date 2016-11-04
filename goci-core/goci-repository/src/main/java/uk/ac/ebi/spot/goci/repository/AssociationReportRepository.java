@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
  *         <p>
  *         Repository accessing Association Report entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface AssociationReportRepository extends JpaRepository<AssociationReport, Long> {
 
     AssociationReport findByAssociationId(Long id);

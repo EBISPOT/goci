@@ -13,7 +13,7 @@ import java.util.List;
  *         <p>
  *         Repository accessing Event entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByUserId(Long id);
 }
