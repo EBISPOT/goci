@@ -345,8 +345,84 @@
        destination field is to use the dynamic field syntax.
        copyField also supports a maxChars to copy setting.  -->
 
-    <copyField source="*" dest="text" />
+
+    <copyField source="pubmedId" dest="text" />
+    <copyField source="publication" dest="text" />
+    <copyField source="publicationDate" dest="text" />
+    <copyField source="catalogPublishDate" dest="text" />
+    <copyField source="platform" dest="text" />
+    <copyField source="initialSampleDescription" dest="text" />
+    <copyField source="replicateSampleDescription" dest="text" />
+    <copyField source="associationCount" dest="text" />
+    <copyField source="ancestralGroups" dest="text" />
+    <copyField source="countriesOfOrigin" dest="text" />
+    <copyField source="countriesOfRecruitment" dest="text" />
+    <copyField source="numberOfIndividuals" dest="text" />
+    <copyField source="additionalAncestryDescription" dest="text" />
+    <copyField source="accessionId" dest="text" />
+    <copyField source="fullPvalueSet" dest="text" />
+    <copyField source="study_author" dest="text" />
+    <copyField source="study_title" dest="text" />
+    <copyField source="study_pubmedId" dest="text" />
+    <copyField source="study_publication" dest="text" />
+    <copyField source="study_publicationDate" dest="text" />
+    <copyField source="study_catalogPublishDate" dest="text" />
+    <copyField source="study_platform" dest="text" />
+    <copyField source="study_initialSampleDescription" dest="text" />
+    <copyField source="study_replicateSampleDescription" dest="text" />
+    <copyField source="study_ancestralGroups" dest="text" />
+    <copyField source="study_countriesOfOrigin" dest="text" />
+    <copyField source="study_countriesOfRecruitment" dest="text" />
+    <copyField source="study_additionalAncestryDescription" dest="text" />
+    <copyField source="study_accessionId" dest="text" />
+    <copyField source="traitName" dest="text" />
+    <copyField source="mappedLabel" dest="text" />
+    <copyField source="mappedUri" dest="text" />
+    <copyField source="trait" dest="text" />
+    <copyField source="traitUri" dest="text" />
+    <copyField source="shortForm" dest="text" />
+    <copyField source="label" dest="text" />
+    <copyField source="synonym" dest="text" />
+    <copyField source="parent" dest="text" />
+    <copyField source="child" dest="text" />
+    <copyField source="riskFrequency" dest="text" />
+    <copyField source="qualifier" dest="text" />
+    <copyField source="pValueMantissa" dest="text" />
+    <copyField source="pValueExponent" dest="text" />
+    <copyField source="orPerCopyNum" dest="text" />
+    <copyField source="betaNum" dest="text" />
+    <copyField source="betaUnit" dest="text" />
+    <copyField source="betaDirection" dest="text" />
+    <copyField source="orDescription" dest="text" />
+    <copyField source="snpInteraction" dest="text" />
+    <copyField source="multiSnpHaplotype" dest="text" />
+    <copyField source="rsId" dest="text" />
+    <copyField source="strongestAllele" dest="text" />
+    <copyField source="context" dest="text" />
+    <copyField source="region" dest="text" />
+    <copyField source="entrezMappedGenes" dest="text" />
+    <copyField source="reportedGene" dest="text" />
+    <copyField source="studyId" dest="text" />
+    <copyField source="chromosomeName" dest="text" />
+    <copyField source="chromosomePosition" dest="text" />
+    <copyField source="merged" dest="text" />
+    <copyField source="locusDescription" dest="text" />
+    <copyField source="currentSnp" dest="text" />
+    <copyField source="association_qualifier" dest="text" />
+    <copyField source="association_rsId" dest="text" />
+    <copyField source="association_strongestAllele" dest="text" />
+    <copyField source="association_context" dest="text" />
+    <copyField source="association_regions" dest="text" />
+    <copyField source="association_entrezMappedGenes" dest="text" />
+    <copyField source="association_reportedGene" dest="text" />
+    <copyField source="association_chromosomeName" dest="text" />
+    <copyField source="association_chromosomePosition" dest="text" />
+    <copyField source="association_last_modified" dest="text" />
+
+
+    <!--<copyField source="*" dest="text" />-->
     <!--<copyField source="*_t" dest="*_t_facet" />-->
+
 
     <dynamicField name="*_ss" type="string" indexed="true" stored="false" multiValued="true" />
     <copyField source="label" dest="label_ss" />;
