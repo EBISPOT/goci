@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ public class Platform {
     @NotBlank
     private String manufacturer;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "platforms")
     private Collection<Study> studies;
 
