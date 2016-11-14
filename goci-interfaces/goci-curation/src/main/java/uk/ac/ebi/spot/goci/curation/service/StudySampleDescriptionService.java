@@ -59,7 +59,7 @@ public class StudySampleDescriptionService {
         study.setReplicateSampleSize(replicationSampleDescription.getReplicationSampleDescription());
 
         // Save study
-        trackingOperationService.update(study, user, EventType.STUDY_SAMPLE_DESCRIPTION_UPDATE, updateDescription);
+        trackingOperationService.update(study, user, "STUDY_SAMPLE_DESCRIPTION_UPDATE", updateDescription);
         studyRepository.save(study);
     }
 

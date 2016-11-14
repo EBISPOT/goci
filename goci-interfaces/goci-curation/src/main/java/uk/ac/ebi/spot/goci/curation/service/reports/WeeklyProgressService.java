@@ -65,7 +65,7 @@ public class WeeklyProgressService {
             Set<Long> studiesCreatedThatWeek = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
-                            EventType.STUDY_CREATION))
+                            "STUDY_CREATION"))
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
@@ -73,7 +73,7 @@ public class WeeklyProgressService {
             Set<Long> studiesPublishedThatWeek = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
-                            EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY))
+                            "STUDY_STATUS_CHANGE_PUBLISH_STUDY"))
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
@@ -81,7 +81,7 @@ public class WeeklyProgressService {
             Set<Long> studiesWithLevel1Completed = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
-                            EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE))
+                            "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE"))
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
@@ -89,7 +89,7 @@ public class WeeklyProgressService {
             Set<Long> studiesWithLevel2Completed = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
-                            EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE))
+                            "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE"))
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 

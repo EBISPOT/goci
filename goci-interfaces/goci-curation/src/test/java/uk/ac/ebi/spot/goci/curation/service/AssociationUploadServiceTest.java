@@ -189,7 +189,7 @@ public class AssociationUploadServiceTest {
 
         // Verify batch upload event
         verify(trackingOperationService, times(1)).update(STUDY,SECURE_USER,
-                                                          EventType.ASSOCIATION_BATCH_UPLOAD, "1 associations created from upload of 'filename.txt'");
+                                                          "ASSOCIATION_BATCH_UPLOAD", "1 associations created from upload of 'filename.txt'");
         verify(studyRepository, times(1)).save(STUDY);
 
         verify(associationOperationsService, times(1)).saveAssociation(ASSOCIATION,

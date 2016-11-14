@@ -1,66 +1,60 @@
 package uk.ac.ebi.spot.goci.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Created by emma on 28/04/2016.
  *
- * @author emma
+ * @author emma/cinzia
  *         <p>
- *         Enum class to hold various events the curation system should track
+ * @Note: This enum class is deprecated. DB table: EVENT_TYPE
  */
-public enum EventType {
-    STUDY_CREATION,
 
-    // Status assignment
-    STUDY_STATUS_CHANGE_LEVEL_1_ANCESTRY_DONE,
-    STUDY_STATUS_CHANGE_LEVEL_2_ANCESTRY_DONE,
-    STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE,
-    STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE,
-    STUDY_STATUS_CHANGE_PUBLISH_STUDY,
-    STUDY_STATUS_CHANGE_AWAITING_CURATION,
-    STUDY_STATUS_CHANGE_OUTSTANDING_QUERY,
-    STUDY_STATUS_CHANGE_CNV_PAPER,
-    STUDY_STATUS_CHANGE_CURATION_ABANDONED,
-    STUDY_STATUS_CHANGE_CONVERSION_PROBLEM,
-    STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG,
-    STUDY_STATUS_CHANGE_PENDING_AUTHOR_QUERY,
-    STUDY_STATUS_CHANGE_AWAITING_EFO_ASSIGNMENT,
-    STUDY_STATUS_CHANGE_UNKNOWN,
+@Entity
+public class EventType {
 
-    // Curator assignment
-    STUDY_CURATOR_ASSIGNMENT_MORALES,
-    STUDY_CURATOR_ASSIGNMENT_MACARTHUR,
-    STUDY_CURATOR_ASSIGNMENT_HINDORFF,
-    STUDY_CURATOR_ASSIGNMENT_JUNKINS,
-    STUDY_CURATOR_ASSIGNMENT_HALL,
-    STUDY_CURATOR_ASSIGNMENT_WELTER,
-    STUDY_CURATOR_ASSIGNMENT_UNASSIGNED,
-    STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG,
-    STUDY_CURATOR_ASSIGNMENT_LEVEL_2_CURATOR,
-    STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR,
-    STUDY_CURATOR_ASSIGNMENT_LEVEL_1_ETHNICITY_CURATOR,
-    STUDY_CURATOR_ASSIGNMENT_CEREZO,
-    STUDY_CURATOR_ASSIGNMENT_MILANO,
-    STUDY_CURATOR_ASSIGNMENT_MCMAHON,
-    STUDY_CURATOR_ASSIGNMENT_UNKNOWN,
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    STUDY_FILE_UPLOAD,
-    STUDY_UPDATE,
-    STUDY_DELETION,
-    STUDY_DUPLICATION,
-    STUDY_SAMPLE_DESCRIPTION_UPDATE,
+    private String action;
 
-    // Association tracking
-    ASSOCIATION_CREATION,
-    ASSOCIATION_UPDATE,
-    ASSOCIATION_MAPPING,
-    ASSOCIATION_APPROVED,
-    ASSOCIATION_UNAPPROVED,
-    ASSOCIATION_DELETION,
-    ASSOCIATION_BATCH_UPLOAD,
-    ASSOCIATION_BATCH_DELETE,
+    private String eventType;
 
-    // Ethnicity tracking
-    ETHNICITY_CREATED,
-    ETHNICITY_UPDATED,
-    ETHNICITY_DELETED
+    private String translatedEvent;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getTranslatedEvent() {
+        return translatedEvent;
+    }
+
+    public void setTranslatedEvent(String translatedEvent) {
+        this.translatedEvent = translatedEvent;
+    }
 }

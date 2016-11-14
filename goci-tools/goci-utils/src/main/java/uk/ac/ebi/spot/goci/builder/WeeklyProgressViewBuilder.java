@@ -26,7 +26,7 @@ public class WeeklyProgressViewBuilder {
         return this;
     }
 
-    public WeeklyProgressViewBuilder setEventType(EventType eventType) {
+    public WeeklyProgressViewBuilder setEventType(String eventType) {
         weeklyProgressView.setEventType(eventType);
         return this;
     }

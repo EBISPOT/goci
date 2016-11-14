@@ -27,8 +27,8 @@ public class Event {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date eventDate;
 
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    //@Enumerated(EnumType.STRING)
+    private String eventType;
 
     @ManyToOne
     private SecureUser user;
@@ -39,7 +39,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(Date eventDate, String eventDescription, EventType eventType, SecureUser user) {
+    public Event(Date eventDate, String eventDescription, String eventType, SecureUser user) {
         this.eventDate = eventDate;
         this.eventDescription = eventDescription;
         this.eventType = eventType;
@@ -62,11 +62,11 @@ public class Event {
         this.eventDate = eventDate;
     }
 
-    public EventType getEventType() {
+    public String getEventType() {
         return eventType;
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(String eventType) {
         this.eventType = eventType;
     }
 

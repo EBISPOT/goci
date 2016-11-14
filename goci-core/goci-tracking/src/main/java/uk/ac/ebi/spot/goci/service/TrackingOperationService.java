@@ -34,7 +34,7 @@ public interface TrackingOperationService {
      * @param trackable  Trackable object that requires event tracking
      * @param secureUser User initiating event
      */
-    void update(Trackable trackable, SecureUser secureUser, EventType eventType);
+    void update(Trackable trackable, SecureUser secureUser, String eventType);
 
     /**
      * Method to create an update event
@@ -43,6 +43,6 @@ public interface TrackingOperationService {
      * @param secureUser        User initiating event
      * @param updateDescription Description of update event
      */
-    void update(Trackable trackable, SecureUser secureUser, EventType eventType, String updateDescription);
+    void update(Trackable trackable, SecureUser secureUser, String eventType, String updateDescription);
 
 }

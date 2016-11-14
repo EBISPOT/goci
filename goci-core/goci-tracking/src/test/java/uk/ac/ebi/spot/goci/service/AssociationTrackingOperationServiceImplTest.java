@@ -40,37 +40,37 @@ public class AssociationTrackingOperationServiceImplTest {
     private static final Event CREATE_EVENT = new EventBuilder().setId(99L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_CREATION)
+            .setEventType("ASSOCIATION_CREATION")
             .build();
 
     private static final Event UPDATE_EVENT = new EventBuilder().setId(97L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_UPDATE)
+            .setEventType("ASSOCIATION_UPDATE")
             .build();
 
     private static final Event MAPPING_EVENT = new EventBuilder().setId(97L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_MAPPING)
+            .setEventType("ASSOCIATION_MAPPING")
             .build();
 
     private static final Event APPROVE = new EventBuilder().setId(97L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_APPROVED)
+            .setEventType("ASSOCIATION_APPROVED")
             .build();
 
     private static final Event UNAPPROVE = new EventBuilder().setId(97L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_UNAPPROVED)
+            .setEventType("ASSOCIATION_UNAPPROVED")
             .build();
 
     private static final Event DELETE_EVENT = new EventBuilder().setId(96L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ASSOCIATION_DELETION)
+            .setEventType("ASSOCIATION_DELETION")
             .build();
 
     @Mock
@@ -85,90 +85,90 @@ public class AssociationTrackingOperationServiceImplTest {
     @Test
     public void create() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_CREATION, SECURE_USER)).thenReturn(CREATE_EVENT);
+        when(eventOperationsService.createEvent("ASSOCIATION_CREATION", SECURE_USER)).thenReturn(CREATE_EVENT);
 
         associationTrackingOperationService.create(ASSOCIATION, SECURE_USER);
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_CREATION);
+                .containsOnly("ASSOCIATION_CREATION");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_CREATION, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_CREATION", SECURE_USER);
     }
 
     @Test
     public void update() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_UPDATE, SECURE_USER)).thenReturn(UPDATE_EVENT);
+        when(eventOperationsService.createEvent("ASSOCIATION_UPDATE", SECURE_USER)).thenReturn(UPDATE_EVENT);
 
-        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,EventType.ASSOCIATION_UPDATE);
+        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,"ASSOCIATION_UPDATE");
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_UPDATE);
+                .containsOnly("ASSOCIATION_UPDATE");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_UPDATE, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_UPDATE", SECURE_USER);
     }
 
     @Test
     public void mapping() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_MAPPING, SECURE_USER)).thenReturn(MAPPING_EVENT);
+        when(eventOperationsService.createEvent("ASSOCIATION_MAPPING", SECURE_USER)).thenReturn(MAPPING_EVENT);
 
-        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,EventType.ASSOCIATION_MAPPING);
+        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,"ASSOCIATION_MAPPING");
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_MAPPING);
+                .containsOnly("ASSOCIATION_MAPPING");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_MAPPING, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_MAPPING", SECURE_USER);
     }
 
     @Test
     public void approve() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_APPROVED, SECURE_USER)).thenReturn(APPROVE);
+        when(eventOperationsService.createEvent("ASSOCIATION_APPROVED", SECURE_USER)).thenReturn(APPROVE);
 
-        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,EventType.ASSOCIATION_APPROVED);
+        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,"ASSOCIATION_APPROVED");
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_APPROVED);
+                .containsOnly("ASSOCIATION_APPROVED");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_APPROVED, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_APPROVED", SECURE_USER);
     }
 
     @Test
     public void unapprove() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_UNAPPROVED, SECURE_USER)).thenReturn(UNAPPROVE);
+        when(eventOperationsService.createEvent("ASSOCIATION_UNAPPROVED", SECURE_USER)).thenReturn(UNAPPROVE);
 
-        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,EventType.ASSOCIATION_UNAPPROVED);
+        associationTrackingOperationService.update(ASSOCIATION, SECURE_USER,"ASSOCIATION_UNAPPROVED");
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_UNAPPROVED);
+                .containsOnly("ASSOCIATION_UNAPPROVED");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_UNAPPROVED, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_UNAPPROVED", SECURE_USER);
     }
 
     @Test
     public void delete() throws Exception {
         // Stubbing
-        when(eventOperationsService.createEvent(EventType.ASSOCIATION_DELETION, SECURE_USER)).thenReturn(DELETE_EVENT);
+        when(eventOperationsService.createEvent("ASSOCIATION_DELETION", SECURE_USER)).thenReturn(DELETE_EVENT);
 
         associationTrackingOperationService.delete(ASSOCIATION, SECURE_USER);
         assertThat(ASSOCIATION.getEvents()).hasSize(1);
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventType)
-                .containsOnly(EventType.ASSOCIATION_DELETION);
+                .containsOnly("ASSOCIATION_DELETION");
         assertThat(ASSOCIATION.getEvents()).extracting(event -> event.getUser().getEmail())
                 .containsOnly(SECURE_USER.getEmail());
         assertThat(ASSOCIATION.getEvents()).extracting(Event::getEventDate).isNotNull();
-        verify(eventOperationsService, times(1)).createEvent(EventType.ASSOCIATION_DELETION, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ASSOCIATION_DELETION", SECURE_USER);
     }
 }

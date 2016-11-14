@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EventTypeService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,12 +28,15 @@ public class AssociationEventsViewService implements EventsViewService {
 
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
     private StudyRepository studyRepository;
+    private EventTypeService eventTypeService;
 
     @Autowired
     public AssociationEventsViewService(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository,
-                                        StudyRepository studyRepository) {
+                                        StudyRepository studyRepository,
+                                        EventTypeService eventTypeService) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.studyRepository = studyRepository;
+        this.eventTypeService = eventTypeService;
     }
 
     @Override public List<EventView> createViews(Long studyId) {
@@ -60,7 +64,7 @@ public class AssociationEventsViewService implements EventsViewService {
                 associationSummary = snpJoiner.toString();
 
                 events.forEach(event -> {
-                    String eventName = translateEventEnum(event.getEventType());
+                    String eventName = eventTypeService.translateEventByEventType(event.getEventType());
                     EventView eventView =
                             new AssociationEventView(eventName,
                                                      event.getEventDate(),
@@ -73,4 +77,6 @@ public class AssociationEventsViewService implements EventsViewService {
         }
         return views;
     }
+
+
 }

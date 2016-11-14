@@ -11,7 +11,6 @@ import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -233,7 +232,7 @@ public class StudyOperationsService {
      */
     private void recordStudyStatusChange(Study study, SecureUser user, CurationStatus newStatus) {
         // Create syudy event
-        EventType eventType = eventTypeService.determineEventTypeFromStatus(newStatus);
+        String eventType = eventTypeService.determineEventTypeFromStatus(newStatus);
         trackingOperationService.update(study, user, eventType);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));
@@ -249,7 +248,7 @@ public class StudyOperationsService {
     private void recordStudyCuratorChange(Study study, SecureUser user, Curator curator) {
 
         // Create study event
-        EventType eventType = eventTypeService.determineEventTypeFromCurator(curator);
+        String eventType = eventTypeService.determineEventTypeFromCurator(curator);
         trackingOperationService.update(study, user, eventType);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" status updated"));

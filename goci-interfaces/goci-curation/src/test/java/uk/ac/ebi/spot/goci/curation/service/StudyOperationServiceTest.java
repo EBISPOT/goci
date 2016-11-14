@@ -231,7 +231,7 @@ public class StudyOperationServiceTest {
     public void testAssignStudyStatusToLevelOneCurationDone() {
 
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_01);
-        when(eventTypeService.determineEventTypeFromStatus(LEVEL_01)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+        when(eventTypeService.determineEventTypeFromStatus(LEVEL_01)).thenReturn("STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE");
 
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
@@ -240,7 +240,7 @@ public class StudyOperationServiceTest {
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(LEVEL_01);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+                                                          "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE");
         verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(publishStudyCheckService);
@@ -254,7 +254,7 @@ public class StudyOperationServiceTest {
     public void testAssignStudyStatusToLevelTwoCurationDone() {
 
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_02);
-        when(eventTypeService.determineEventTypeFromStatus(LEVEL_02)).thenReturn(EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE);
+        when(eventTypeService.determineEventTypeFromStatus(LEVEL_02)).thenReturn("STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE");
 
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
@@ -262,7 +262,7 @@ public class StudyOperationServiceTest {
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(LEVEL_02);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE);
+                                                          "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE");
         verify(studyRepository, times(1)).save(STU1);
 
         verifyZeroInteractions(mailService);
@@ -278,7 +278,7 @@ public class StudyOperationServiceTest {
 
         // No change to status
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(AWAITING_CURATION);
-        when(eventTypeService.determineEventTypeFromStatus(AWAITING_CURATION)).thenReturn(EventType.STUDY_STATUS_CHANGE_AWAITING_CURATION);
+        when(eventTypeService.determineEventTypeFromStatus(AWAITING_CURATION)).thenReturn("STUDY_STATUS_CHANGE_AWAITING_CURATION");
 
         String message =
                 studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
@@ -307,7 +307,7 @@ public class StudyOperationServiceTest {
         when(curationStatusRepository.findOne(Matchers.anyLong())).thenReturn(PUBLISH);
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
-        when(eventTypeService.determineEventTypeFromStatus(PUBLISH)).thenReturn(EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+        when(eventTypeService.determineEventTypeFromStatus(PUBLISH)).thenReturn("STUDY_STATUS_CHANGE_PUBLISH_STUDY");
 
         String message = studyOperationsService.assignStudyStatus(STU1, STATUS_ASSIGNMENT, SECURE_USER);
         verify(curationStatusRepository, times(1)).findOne(Matchers.anyLong());
@@ -317,7 +317,7 @@ public class StudyOperationServiceTest {
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(PUBLISH);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+                                                          "STUDY_STATUS_CHANGE_PUBLISH_STUDY");
         verify(studyRepository, times(1)).save(STU1);
 
 
@@ -352,12 +352,12 @@ public class StudyOperationServiceTest {
 
         // Stubbing
         when(curatorRepository.findOne(Matchers.anyLong())).thenReturn(LEVEL_1_CURATOR);
-        when(eventTypeService.determineEventTypeFromCurator(LEVEL_1_CURATOR)).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+        when(eventTypeService.determineEventTypeFromCurator(LEVEL_1_CURATOR)).thenReturn("STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR");
 
         studyOperationsService.assignStudyCurator(STU1, ASSIGNEE, SECURE_USER);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+                                                          "STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR");
         verify(studyRepository, times(1)).save(STU1);
 
         assertThat(STU1.getHousekeeping().getCurator()).extracting("lastName").containsOnly("Level 1 Curator");
@@ -367,20 +367,20 @@ public class StudyOperationServiceTest {
     @Test
     public void testUpdateHousekeepingWithStatusAndCuratorChange() {
 
-        when(eventTypeService.determineEventTypeFromCurator(LEVEL_01_HOUSEKEEPING.getCurator())).thenReturn(EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+        when(eventTypeService.determineEventTypeFromCurator(LEVEL_01_HOUSEKEEPING.getCurator())).thenReturn("STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR");
         when(eventTypeService.determineEventTypeFromStatus(LEVEL_01_HOUSEKEEPING.getCurationStatus())).thenReturn(
-                EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+                "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE");
 
         // Test updating housekeeping where the status and curator has changed
         String message = studyOperationsService.updateHousekeeping(LEVEL_01_HOUSEKEEPING, STU1, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR);
+                                                          "STUDY_CURATOR_ASSIGNMENT_LEVEL_1_CURATOR");
         verify(mailService).sendEmailNotification(STU1, LEVEL_01_HOUSEKEEPING.getCurationStatus().getStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE);
+                                                          "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE");
         verify(studyRepository, times(2)).save(STU1);
         verifyZeroInteractions(associationRepository);
         verifyZeroInteractions(publishStudyCheckService);
@@ -391,9 +391,9 @@ public class StudyOperationServiceTest {
     public void testUpdateHousekeepingNoStatusChangeAndNoCuratorChange() {
 
         when(eventTypeService.determineEventTypeFromCurator(NEW_HOUSEKEEPING_NO_STATUS_CHANGE.getCurator())).thenReturn(
-                EventType.STUDY_CURATOR_ASSIGNMENT_UNASSIGNED);
+                "STUDY_CURATOR_ASSIGNMENT_UNASSIGNED");
         when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING_NO_STATUS_CHANGE.getCurationStatus())).thenReturn(
-                EventType.STUDY_STATUS_CHANGE_AWAITING_CURATION);
+                "STUDY_STATUS_CHANGE_AWAITING_CURATION");
 
         // Test updating housekeeping where the status has not changed
         String message =
@@ -415,9 +415,9 @@ public class StudyOperationServiceTest {
 
         // Stub behaviour
         when(eventTypeService.determineEventTypeFromCurator(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurator())).thenReturn(
-                EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
+                "STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG");
         when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()))
-                .thenReturn(EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+                .thenReturn("STUDY_STATUS_CHANGE_PUBLISH_STUDY");
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn(null);
 
@@ -429,13 +429,13 @@ public class StudyOperationServiceTest {
         verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
+                                                          "STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG");
         verify(mailService).sendEmailNotification(STU1,
                                                   NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()
                                                           .getStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+                                                          "STUDY_STATUS_CHANGE_PUBLISH_STUDY");
         verify(studyRepository, times(2)).save(STU1);
         assertNull(message);
     }
@@ -449,9 +449,9 @@ public class StudyOperationServiceTest {
 
         // Stub behaviour
         when(eventTypeService.determineEventTypeFromCurator(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurator())).thenReturn(
-                EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
+                "STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG");
         when(eventTypeService.determineEventTypeFromStatus(NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH.getCurationStatus()))
-                .thenReturn(EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY);
+                .thenReturn("STUDY_STATUS_CHANGE_PUBLISH_STUDY");
         when(associationRepository.findByStudyId(STU1.getId())).thenReturn(associations);
         when(publishStudyCheckService.runChecks(STU1, associations)).thenReturn("ERROR");
 
@@ -461,7 +461,7 @@ public class StudyOperationServiceTest {
 
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG);
+                                                          "STUDY_CURATOR_ASSIGNMENT_GWAS_CATALOG");
         verify(associationRepository, times(1)).findByStudyId(STU1.getId());
         verify(publishStudyCheckService, times(1)).runChecks(STU1, associations);
         verifyZeroInteractions(mailService);
@@ -483,7 +483,7 @@ public class StudyOperationServiceTest {
         when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
         when(housekeepingRepository.findOne(STU1.getHousekeeping().getId())).thenReturn(STU1.getHousekeeping());
         when(curationStatusRepository.findByStatus("Unpublished from catalog")).thenReturn(UNPUBLISH);
-        when(eventTypeService.determineEventTypeFromStatus(UNPUBLISH)).thenReturn(EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG);
+        when(eventTypeService.determineEventTypeFromStatus(UNPUBLISH)).thenReturn("STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG");
 
         studyOperationsService.unpublishStudy(STU1.getId(), Matchers.any(UnpublishReason.class), SECURE_USER);
 
@@ -493,7 +493,7 @@ public class StudyOperationServiceTest {
         verify(eventTypeService, times(1)).determineEventTypeFromStatus(STU1.getHousekeeping().getCurationStatus());
         verify(trackingOperationService, times(1)).update(STU1,
                                                           SECURE_USER,
-                                                          EventType.STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG);
+                                                          "STUDY_STATUS_CHANGE_UNPUBLISHED_FROM_CATALOG");
         verify(studyRepository, times(1)).save(STU1);
         verifyZeroInteractions(mailService);
         verifyZeroInteractions(publishStudyCheckService);

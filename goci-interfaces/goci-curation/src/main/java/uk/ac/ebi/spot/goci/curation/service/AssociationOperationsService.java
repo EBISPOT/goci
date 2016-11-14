@@ -425,7 +425,7 @@ public class AssociationOperationsService {
      * @param user        User performing request
      */
     private void createAssociationApproveEvent(Association association, SecureUser user) {
-        trackingOperationService.update(association, user, EventType.ASSOCIATION_APPROVED);
+        trackingOperationService.update(association, user, "ASSOCIATION_APPROVED");
     }
 
     /**
@@ -435,7 +435,7 @@ public class AssociationOperationsService {
      * @param user        User performing request
      */
     private void createAssociationUnapproveEvent(Association association, SecureUser user) {
-        trackingOperationService.update(association, user, EventType.ASSOCIATION_UNAPPROVED);
+        trackingOperationService.update(association, user, "ASSOCIATION_UNAPPROVED");
     }
 
     /**
@@ -445,7 +445,7 @@ public class AssociationOperationsService {
      * @param user        User performing request
      */
     private void createAssociationUpdateEvent(Association association, SecureUser user) {
-        trackingOperationService.update(association, user, EventType.ASSOCIATION_UPDATE);
+        trackingOperationService.update(association, user, "ASSOCIATION_UPDATE");
     }
 
     /**

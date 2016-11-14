@@ -124,7 +124,7 @@ public class StudyFileServiceTest {
         verify(studyRepository, times(1)).findOne(STUDY_ID);
         verify(trackingOperationService, times(1)).update(STUDY,
                                                           SECURE_USER,
-                                                          EventType.STUDY_FILE_UPLOAD);
+                                                          "STUDY_FILE_UPLOAD");
         verify(studyRepository, times(1)).save(STUDY);
     }
 }

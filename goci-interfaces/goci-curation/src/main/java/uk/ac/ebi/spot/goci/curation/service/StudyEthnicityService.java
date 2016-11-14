@@ -117,7 +117,7 @@ public class StudyEthnicityService {
         ethnicity.setEthnicGroup(ethnicGroupJoined);
 
         // Saves the new information returned from form
-        trackingOperationService.update(ethnicity, user, EventType.ETHNICITY_UPDATED);
+        trackingOperationService.update(ethnicity, user, "ETHNICITY_UPDATED");
         ethnicityRepository.save(ethnicity);
         getLog().info("Ethnicity ".concat(ethnicity.getId().toString()).concat(" updated"));
     }
