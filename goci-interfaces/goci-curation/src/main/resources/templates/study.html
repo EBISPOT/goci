@@ -135,7 +135,8 @@
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
 
                     <div class="col-md-10 static-field">
-                        <span type="text" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
+                        <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
+                        <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
                     </div>
                 </div>
 
