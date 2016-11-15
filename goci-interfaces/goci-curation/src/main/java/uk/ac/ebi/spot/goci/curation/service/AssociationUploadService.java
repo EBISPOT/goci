@@ -160,7 +160,7 @@ public class AssociationUploadService {
      * @param user        User that triggered event
      */
     private void createBatchUploadEvent(Study study, String description, SecureUser user) {
-        trackingOperationService.update(study, user, EventType.ASSOCIATION_BATCH_UPLOAD, description);
+        trackingOperationService.update(study, user, "ASSOCIATION_BATCH_UPLOAD", description);
         studyRepository.save(study);
     }
 

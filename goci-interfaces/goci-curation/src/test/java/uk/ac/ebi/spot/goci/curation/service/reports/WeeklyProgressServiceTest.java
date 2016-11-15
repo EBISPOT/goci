@@ -41,16 +41,16 @@ public class WeeklyProgressServiceTest {
 
     private static final WeeklyProgressView STUDY_CREATION =
             new WeeklyProgressViewBuilder().setStudyId((long) 100).setEventType(
-                    EventType.STUDY_CREATION).setId((long) 1).setWeekStartDay(testDate).build();
+                    "STUDY_CREATION").setId((long) 1).setWeekStartDay(testDate).build();
 
     private static final WeeklyProgressView STUDY_PUBLISH =
             new WeeklyProgressViewBuilder().setStudyId((long) 101).setEventType(
-                    EventType.STUDY_STATUS_CHANGE_PUBLISH_STUDY).setId((long) 2).setWeekStartDay(testDate).build();
+                    "STUDY_STATUS_CHANGE_PUBLISH_STUDY").setId((long) 2).setWeekStartDay(testDate).build();
 
     private static final WeeklyProgressView STUDY_LEVEL_1_EV_01 =
             new WeeklyProgressViewBuilder().setStudyId((long) 102)
                     .setEventType(
-                            EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE)
+                            "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE")
                     .setId((long) 3)
                     .setWeekStartDay(testDate)
                     .build();
@@ -58,7 +58,7 @@ public class WeeklyProgressServiceTest {
     private static final WeeklyProgressView STUDY_LEVEL_1_EV_02 =
             new WeeklyProgressViewBuilder().setStudyId((long) 102)
                     .setEventType(
-                            EventType.STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE)
+                            "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE")
                     .setId((long) 4)
                     .setWeekStartDay(testDate)
                     .build();
@@ -66,7 +66,7 @@ public class WeeklyProgressServiceTest {
     private static final WeeklyProgressView STUDY_LEVEL_2 =
             new WeeklyProgressViewBuilder().setStudyId((long) 103)
                     .setEventType(
-                            EventType.STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE)
+                            "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE")
                     .setId((long) 5)
                     .setWeekStartDay(testDate)
                     .build();

@@ -340,7 +340,7 @@ public class AssociationOperationsServiceTest {
         verify(associationRepository, times(1)).findOne((long) 100);
         verify(lociAttributesService, times(1)).deleteLocusAndRiskAlleles(ASS_INTER);
         verify(associationTrackingOperationService, times(1)).update(ASS_INTER_EDITED, USER,
-                                                                     EventType.ASSOCIATION_UPDATE);
+                                                                     "ASSOCIATION_UPDATE");
         verify(associationRepository, times(1)).save(ASS_INTER_EDITED);
         verify(associationValidationReportService, times(1)).createAssociationValidationReport(Collections.singleton(
                 WARNING), ASS_INTER_EDITED.getId());
@@ -396,7 +396,7 @@ public class AssociationOperationsServiceTest {
         associationOperationsService.approveAssociation(ASS_APPROVE_UNAPPROVE, USER);
         verify(associationTrackingOperationService, times(1)).update(ASS_APPROVE_UNAPPROVE,
                                                                      USER,
-                                                                     EventType.ASSOCIATION_APPROVED);
+                                                                     "ASSOCIATION_APPROVED");
         verify(associationRepository, times(1)).save(ASS_APPROVE_UNAPPROVE);
     }
 
@@ -405,7 +405,7 @@ public class AssociationOperationsServiceTest {
         associationOperationsService.unapproveAssociation(ASS_APPROVE_UNAPPROVE, USER);
         verify(associationTrackingOperationService, times(1)).update(ASS_APPROVE_UNAPPROVE,
                                                                      USER,
-                                                                     EventType.ASSOCIATION_UNAPPROVED);
+                                                                     "ASSOCIATION_UNAPPROVED");
         verify(associationRepository, times(1)).save(ASS_APPROVE_UNAPPROVE);
     }
 

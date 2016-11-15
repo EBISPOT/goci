@@ -158,7 +158,7 @@ public class StudyFileService {
      */
     public void createFileUploadEvent(Long studyId, SecureUser user) {
         Study study = studyRepository.findOne(studyId);
-        trackingOperationService.update(study, user, EventType.STUDY_FILE_UPLOAD);
+        trackingOperationService.update(study, user, "STUDY_FILE_UPLOAD");
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
     }

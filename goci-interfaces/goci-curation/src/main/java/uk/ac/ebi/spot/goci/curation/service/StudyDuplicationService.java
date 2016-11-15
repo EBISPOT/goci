@@ -53,7 +53,7 @@ public class StudyDuplicationService {
     public Study duplicateStudy(Study studyToDuplicate, SecureUser user) {
 
         // Record duplication event
-        trackingOperationService.update(studyToDuplicate, user, EventType.STUDY_DUPLICATION);
+        trackingOperationService.update(studyToDuplicate, user, "STUDY_DUPLICATION");
         studyRepository.save(studyToDuplicate);
 
         // New study will be created by copying existing study details

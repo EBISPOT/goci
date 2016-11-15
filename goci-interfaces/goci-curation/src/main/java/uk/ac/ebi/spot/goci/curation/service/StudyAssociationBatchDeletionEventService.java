@@ -45,7 +45,7 @@ public class StudyAssociationBatchDeletionEventService {
     }
 
     private void createEvent(Study study, SecureUser user, String description) {
-        trackingOperationService.update(study, user, EventType.ASSOCIATION_BATCH_DELETE, description);
+        trackingOperationService.update(study, user, "ASSOCIATION_BATCH_DELETE", description);
         studyRepository.save(study);
     }
 }

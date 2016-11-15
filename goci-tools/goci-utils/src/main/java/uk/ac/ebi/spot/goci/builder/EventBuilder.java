@@ -27,7 +27,7 @@ public class EventBuilder {
         return this;
     }
 
-    public EventBuilder setEventType(EventType eventType) {
+    public EventBuilder setEventType(String eventType) {
         event.setEventType(eventType);
         return this;
     }

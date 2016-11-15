@@ -141,7 +141,7 @@ public class StudyDuplicationServiceTest {
         // Verification
         verify(studyTrackingOperationService, times(1)).update(STUDY_TO_DUPLICATE,
                                                                SECURE_USER,
-                                                               EventType.STUDY_DUPLICATION);
+                                                              "STUDY_DUPLICATION");
         verify(studyRepository, times(1)).save(STUDY_TO_DUPLICATE);
         verify(studyTrackingOperationService, times(1)).create(duplicateStudy, SECURE_USER);
         verify(housekeepingOperationsService, times(1)).createHousekeeping();

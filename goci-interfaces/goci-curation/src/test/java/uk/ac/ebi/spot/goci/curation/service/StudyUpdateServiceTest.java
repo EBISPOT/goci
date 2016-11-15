@@ -98,7 +98,7 @@ public class StudyUpdateServiceTest {
 
         verify(trackingOperationService, times(1)).update(STU1_UPDATED,
                                                           SECURE_USER,
-                                                          EventType.STUDY_UPDATE,
+                                                          "STUDY_UPDATE",
                                                           null);
         verify(studyRepository, times(1)).save(STU1_UPDATED);
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),
@@ -124,7 +124,7 @@ public class StudyUpdateServiceTest {
 
         verify(trackingOperationService, times(1)).update(STU2_UPDATED,
                                                           SECURE_USER,
-                                                          EventType.STUDY_UPDATE,
+                                                          "STUDY_UPDATE",
                                                           "Disease Trait updated from 'Acne' to 'Asthma', EFO Trait set to 'asthma'");
         verify(studyRepository, times(1)).save(STU2_UPDATED);
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),

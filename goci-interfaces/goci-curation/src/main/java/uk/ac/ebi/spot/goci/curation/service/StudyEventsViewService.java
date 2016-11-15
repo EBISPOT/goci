@@ -6,6 +6,7 @@ import uk.ac.ebi.spot.goci.curation.model.EventView;
 import uk.ac.ebi.spot.goci.curation.model.StudyEventView;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EventTypeService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,10 +23,14 @@ import java.util.List;
 public class StudyEventsViewService implements EventsViewService {
 
     private StudyRepository studyRepository;
+    private EventTypeService eventTypeService;
+
 
     @Autowired
-    public StudyEventsViewService(StudyRepository studyRepository) {
+    public StudyEventsViewService(StudyRepository studyRepository,
+                                  EventTypeService eventTypeService) {
         this.studyRepository = studyRepository;
+        this.eventTypeService = eventTypeService;
     }
 
     @Override public List<EventView> createViews(Long trackableId) {
@@ -34,7 +39,7 @@ public class StudyEventsViewService implements EventsViewService {
         Collection<Event> events = studyRepository.findOne(trackableId).getEvents();
 
         events.forEach(event -> {
-            String eventName = translateEventEnum(event.getEventType());
+            String eventName = eventTypeService.translateEventByEventType(event.getEventType());
             EventView eventView =
                     new StudyEventView(eventName, event.getEventDate(), trackableId, event.getUser().getEmail(), event.getEventDescription());
             views.add(eventView);
@@ -42,4 +47,5 @@ public class StudyEventsViewService implements EventsViewService {
 
         return views;
     }
+
 }

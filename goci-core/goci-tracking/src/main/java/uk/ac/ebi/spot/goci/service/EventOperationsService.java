@@ -33,7 +33,7 @@ public class EventOperationsService {
      * @param user      User Initiating event
      * @return Event object
      */
-    public synchronized Event createEvent(EventType eventType, SecureUser user) {
+    public synchronized Event createEvent(String eventType, SecureUser user) {
         // Create and save event
         Event event = new Event();
         event.setEventDate(new Date());
@@ -51,7 +51,7 @@ public class EventOperationsService {
      * @param eventDescription Description of update event
      * @return Event object
      */
-    public synchronized Event createEvent(EventType eventType, SecureUser user, String eventDescription) {
+    public synchronized Event createEvent(String eventType, SecureUser user, String eventDescription) {
         // Create and save event
         Event event = new Event();
         event.setEventDate(new Date());

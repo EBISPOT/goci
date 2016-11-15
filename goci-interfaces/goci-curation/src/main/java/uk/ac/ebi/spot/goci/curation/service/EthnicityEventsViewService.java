@@ -8,6 +8,7 @@ import uk.ac.ebi.spot.goci.model.DeletedEthnicity;
 import uk.ac.ebi.spot.goci.model.Ethnicity;
 import uk.ac.ebi.spot.goci.repository.DeletedEthnicityRepository;
 import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.service.EventTypeService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,11 +29,15 @@ public class EthnicityEventsViewService implements EventsViewService {
 
     private DeletedEthnicityRepository deletedEthnicityRepository;
 
+    private EventTypeService eventTypeService;
+
     @Autowired
     public EthnicityEventsViewService(DeletedEthnicityRepository deletedEthnicityRepository,
-                                      EthnicityRepository ethnicityRepository) {
+                                      EthnicityRepository ethnicityRepository,
+                                      EventTypeService eventTypeService) {
         this.deletedEthnicityRepository = deletedEthnicityRepository;
         this.ethnicityRepository = ethnicityRepository;
+        this.eventTypeService = eventTypeService;
     }
 
     @Override public List<EventView> createViews(Long studyId) {
@@ -46,7 +51,7 @@ public class EthnicityEventsViewService implements EventsViewService {
 
 
                                             ethnicity.getEvents().forEach(event -> {
-                                                String eventName = translateEventEnum(event.getEventType());
+                                                String eventName = eventTypeService.translateEventByEventType(event.getEventType());
                                                 EventView eventView =
                                                         new EthnicityEventView(eventName,
                                                                                event.getEventDate(),
@@ -79,6 +84,8 @@ public class EthnicityEventsViewService implements EventsViewService {
         return views;
     }
 
+
+
     private String createEthnicitySummary(Ethnicity ethnicity) {
         String ethnicitySummary = null;
         StringJoiner joiner = new StringJoiner("; ");
@@ -89,4 +96,5 @@ public class EthnicityEventsViewService implements EventsViewService {
         ethnicitySummary = joiner.toString();
         return ethnicitySummary;
     }
+
 }

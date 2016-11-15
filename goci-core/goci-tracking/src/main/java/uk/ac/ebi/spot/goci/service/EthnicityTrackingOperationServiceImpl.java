@@ -25,22 +25,22 @@ public class EthnicityTrackingOperationServiceImpl implements TrackingOperationS
     }
 
     @Override public void create(Trackable trackable, SecureUser secureUser) {
-        Event createEvent = eventOperationsService.createEvent(EventType.ETHNICITY_CREATED, secureUser);
+        Event createEvent = eventOperationsService.createEvent("ETHNICITY_CREATED", secureUser);
         trackable.addEvent(createEvent);
     }
 
     @Override public void delete(Trackable trackable, SecureUser secureUser) {
-        Event deleteEvent = eventOperationsService.createEvent(EventType.ETHNICITY_DELETED, secureUser);
+        Event deleteEvent = eventOperationsService.createEvent("ETHNICITY_DELETED", secureUser);
         trackable.addEvent(deleteEvent);
     }
 
-    @Override public void update(Trackable trackable, SecureUser secureUser, EventType eventType) {
+    @Override public void update(Trackable trackable, SecureUser secureUser, String eventType) {
         Event updateEvent = eventOperationsService.createEvent(eventType, secureUser);
         trackable.addEvent(updateEvent);
     }
 
     @Override
-    public void update(Trackable trackable, SecureUser secureUser, EventType eventType, String description) {
+    public void update(Trackable trackable, SecureUser secureUser, String eventType, String description) {
         Event updateEvent = eventOperationsService.createEvent(eventType, secureUser, description);
         trackable.addEvent(updateEvent);
     }

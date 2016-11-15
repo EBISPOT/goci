@@ -42,19 +42,19 @@ public class EthnicityTrackingOperationServiceImplTest {
     private static final Event CREATE_EVENT = new EventBuilder().setId(99L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ETHNICITY_CREATED)
+            .setEventType("ETHNICITY_CREATED")
             .build();
 
     private static final Event UPDATE_EVENT = new EventBuilder().setId(97L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ETHNICITY_UPDATED)
+            .setEventType("ETHNICITY_UPDATED")
             .build();
 
     private static final Event DELETE_EVENT = new EventBuilder().setId(96L)
             .setEventDate(new Date())
             .setUser(SECURE_USER)
-            .setEventType(EventType.ETHNICITY_DELETED)
+            .setEventType("ETHNICITY_DELETED")
             .build();
 
 
@@ -66,46 +66,46 @@ public class EthnicityTrackingOperationServiceImplTest {
 
     @Test
     public void create() throws Exception {
-        when(eventOperationsService.createEvent(EventType.ETHNICITY_CREATED, SECURE_USER)).thenReturn(CREATE_EVENT);
+        when(eventOperationsService.createEvent("ETHNICITY_CREATED", SECURE_USER)).thenReturn(CREATE_EVENT);
         trackingOperationService.create(ETHNICITY, SECURE_USER);
-        verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_CREATED, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ETHNICITY_CREATED", SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getUser().getEmail())
                 .contains("test@test.com");
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getEventType())
-                .contains(EventType.ETHNICITY_CREATED);
+                .contains("ETHNICITY_CREATED");
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
     @Test
     public void delete() throws Exception {
-        when(eventOperationsService.createEvent(EventType.ETHNICITY_DELETED, SECURE_USER)).thenReturn(DELETE_EVENT);
+        when(eventOperationsService.createEvent("ETHNICITY_DELETED", SECURE_USER)).thenReturn(DELETE_EVENT);
         trackingOperationService.delete(ETHNICITY, SECURE_USER);
-        verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_DELETED, SECURE_USER);
+        verify(eventOperationsService, times(1)).createEvent("ETHNICITY_DELETED", SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getUser().getEmail())
                 .contains("test@test.com");
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getEventType())
-                .contains(EventType.ETHNICITY_DELETED);
+                .contains("ETHNICITY_DELETED");
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 
     @Test
     public void update() throws Exception {
-        when(eventOperationsService.createEvent(EventType.ETHNICITY_UPDATED, SECURE_USER)).thenReturn(UPDATE_EVENT);
-        trackingOperationService.update(ETHNICITY, SECURE_USER, EventType.ETHNICITY_UPDATED);
-        verify(eventOperationsService, times(1)).createEvent(EventType.ETHNICITY_UPDATED, SECURE_USER);
+        when(eventOperationsService.createEvent("ETHNICITY_UPDATED", SECURE_USER)).thenReturn(UPDATE_EVENT);
+        trackingOperationService.update(ETHNICITY, SECURE_USER, "ETHNICITY_UPDATED");
+        verify(eventOperationsService, times(1)).createEvent("ETHNICITY_UPDATED", SECURE_USER);
         Assertions.assertThat(ETHNICITY.getEvents()).hasSize(1);
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getUser().getEmail())
                 .contains("test@test.com");
         Assertions.assertThat(ETHNICITY.getEvents())
                 .extracting(event -> event.getEventType())
-                .contains(EventType.ETHNICITY_UPDATED);
+                .contains("ETHNICITY_UPDATED");
         Assertions.assertThat(ETHNICITY.getEvents()).extracting(event -> event.getEventDate()).isNotNull();
     }
 }

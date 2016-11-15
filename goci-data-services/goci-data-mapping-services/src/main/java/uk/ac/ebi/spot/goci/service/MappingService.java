@@ -94,7 +94,7 @@ public class MappingService {
             doMapping(association);
 
             // Update mapping event
-            trackingOperationService.update(association, user, EventType.ASSOCIATION_MAPPING);
+            trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
 
             // Once mapping is complete, update mapping record
             getLog().debug("Update mapping record");
@@ -123,7 +123,7 @@ public class MappingService {
                 doMapping(association);
 
                 // Update mapping event
-                trackingOperationService.update(association, user, EventType.ASSOCIATION_MAPPING);
+                trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
 
                 // Once mapping is complete, update mapping record
                 getLog().debug("Update mapping record");
