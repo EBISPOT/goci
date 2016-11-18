@@ -8,15 +8,15 @@ import uk.ac.ebi.spot.goci.model.Study;
  */
 
 //@NoRepositoryBean
-@RepositoryRestResource
+@RepositoryRestResource(collectionResourceRel = "studies", path = "studies")
 public interface ReadOnlyStudyRepository extends ReadOnlyRepository<Study, Long> {
 
     Study findOne(Long id);
 
-//    Iterable<Study> findAll();
-//
+    Iterable<Study> findAll();
+
 //    Iterable<Study> findAll(Sort sort, int depth);
-//
+
 //    Iterable<Study> findAll(Iterable<Long> ids, int depth);
 //
 //    Iterable<Study> findAll(Iterable<Long> ids, Sort sort);

@@ -1,0 +1,3 @@
+== GWAS Catalog REST API documentation
+
+Welcome to the GWAS Catalog REST API

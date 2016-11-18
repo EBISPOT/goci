@@ -7,13 +7,13 @@ package uk.ac.ebi.spot.goci.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.io.Serializable;
 
-//@NoRepositoryBean
-@RepositoryRestResource
+@NoRepositoryBean
+//@RepositoryRestResource
 public interface ReadOnlyRepository<T, ID extends Serializable> extends Repository<T, ID> {
 
     /**
