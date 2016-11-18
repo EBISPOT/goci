@@ -310,6 +310,15 @@ public class StudyOperationsService {
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);
                 recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
                 break;
+            case "Level 2 curation done":
+                // Send notification email to curators
+                getLog().info("Sending email... Level 2 curation Done");
+                mailService.sendEmailNotification(study, "Level 2 curation done");
+
+                // Save and create event
+                housekeepingOperationsService.saveHousekeeping(study, housekeeping);
+                recordStudyStatusChange(study, user, housekeeping.getCurationStatus());
+                break;
             default:
                 // Save and create event
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);

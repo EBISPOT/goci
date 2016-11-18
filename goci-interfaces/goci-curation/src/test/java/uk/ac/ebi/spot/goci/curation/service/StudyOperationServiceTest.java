@@ -265,7 +265,7 @@ public class StudyOperationServiceTest {
                                                           "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE");
         verify(studyRepository, times(1)).save(STU1);
 
-        verifyZeroInteractions(mailService);
+        verify(mailService).sendEmailNotification(STU1, LEVEL_02.getStatus());
         verifyZeroInteractions(publishStudyCheckService);
         verifyZeroInteractions(associationRepository);
 
