@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -17,6 +16,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.RequestDispatcher;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.halLinks;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
@@ -29,6 +30,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -42,12 +44,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@WebAppConfiguration
 //@Ignore
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+//@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 public class ApiDocumentation {
 
     @Rule
     public final JUnitRestDocumentation
             restDocumentation = new JUnitRestDocumentation("src/main/asciidoc/generated-snippets");
+
 
     private RestDocumentationResultHandler restDocumentationResultHandler;
 
@@ -62,24 +66,30 @@ public class ApiDocumentation {
                                                        preprocessRequest(prettyPrint()),
                                                        preprocessResponse(prettyPrint())
         );
+//
+//        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
+//                .apply(documentationConfiguration(this.restDocumentation)
+//                                .uris()
+//                                .withScheme("http")
+//                                .withHost("www.ebi.ac.uk/gwas")
+//                                .withPort(80)
+//                )
+//                .alwaysDo(this.restDocumentationResultHandler)
+//                .build();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-                .apply(documentationConfiguration(this.restDocumentation)
-                                .uris()
-                                .withScheme("http")
-                                .withHost("www.ebi.ac.uk/gwas")
-                                .withPort(80)
-                )
+                .apply(documentationConfiguration(this.restDocumentation))
                 .alwaysDo(this.restDocumentationResultHandler)
                 .build();
     }
 
-//    @Test
-//    public void basicTest() throws Exception {
-//        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andDo(document("index"));
-//    }
+
+    @Test
+    public void index() throws Exception {
+        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("index"));
+    }
 
     @Test
     public void pageExample () throws Exception {
@@ -111,24 +121,47 @@ public class ApiDocumentation {
 
     @Test
     public void errorExample() throws Exception {
-        this.restDocumentationResultHandler.document(
-                responseFields(
-                        fieldWithPath("error").description("The HTTP error that occurred, e.g. `Bad Request`").optional(),
-//                fieldWithPath("exception").description("A description of the cause of the error").optional(),
-                        fieldWithPath("message").description("A description of the cause of the error").optional(),
-                        fieldWithPath("path").description("The path to which the request was made").optional(),
-                        fieldWithPath("status").description("The HTTP status code, e.g. `400`").optional(),
-                        fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred").optional()));
-
         this.mockMvc
                 .perform(get("/error")
-                        .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 404)
-                        .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
-                                "/api/studies/foobar")
-                        .requestAttr(RequestDispatcher.ERROR_MESSAGE,
-                                "Resource not found"))
-        ;
+                                 .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
+                                 .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
+                                              "/notes")
+                                 .requestAttr(RequestDispatcher.ERROR_MESSAGE,
+                                              "The tag 'http://localhost:8080/tags/123' does not exist"))
+                .andDo(print()).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("error", is("Bad Request")))
+                .andExpect(jsonPath("timestamp", is(notNullValue())))
+                .andExpect(jsonPath("status", is(400)))
+                .andExpect(jsonPath("path", is(notNullValue())))
+                .andDo(document("error-example",
+                                responseFields(
+                                        fieldWithPath("error").description("The HTTP error that occurred, e.g. `Bad Request`"),
+                                        fieldWithPath("message").description("A description of the cause of the error"),
+                                        fieldWithPath("path").description("The path to which the request was made"),
+                                        fieldWithPath("status").description("The HTTP status code, e.g. `400`"),
+                                        fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
     }
+
+//    @Test
+//    public void errorExample() throws Exception {
+//        this.restDocumentationResultHandler.document(
+//                responseFields(
+//                        fieldWithPath("error").description("The HTTP error that occurred, e.g. `Bad Request`").optional(),
+////                fieldWithPath("exception").description("A description of the cause of the error").optional(),
+//                        fieldWithPath("message").description("A description of the cause of the error").optional(),
+//                        fieldWithPath("path").description("The path to which the request was made").optional(),
+//                        fieldWithPath("status").description("The HTTP status code, e.g. `400`").optional(),
+//                        fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred").optional()));
+//
+//        this.mockMvc
+//                .perform(get("/error")
+//                        .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 404)
+//                        .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
+//                                "/api/studies/foobar")
+//                        .requestAttr(RequestDispatcher.ERROR_MESSAGE,
+//                                "Resource not found"))
+//        ;
+//    }
 
     @Test
     public void apiExample () throws Exception {
@@ -206,115 +239,6 @@ public class ApiDocumentation {
 //                .andExpect(status().isOk());
 //    }
 
-//    @Test
-//    public void termsListExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"))
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms", "efo").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
 
-//    @Test
-//    public void termsListIriExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"),
-//                        parameterWithName("iri").description("Filter by IRI, when using IRI the result will always be one")
-//                )
-//
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?iri={iri}", "go", "http://purl.obolibrary.org/obo/GO_0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
 
-//    @Test
-//    public void termsListShortformExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog")
-//                        ,
-//                        parameterWithName("short_form").description("Filter by IRI shortform, these values aren't guaranteed to be unique")
-//                )
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?short_form={short_form}", "go","GO_0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void termsListOboExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog")
-//                        ,
-//                        parameterWithName("obo_id").description("Filter by OBO id. This is OBO style id taht aren't guaranteed to be unique within a given ontology")
-//                )
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?obo_id={obo_id}", "go","GO:0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void termsExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the terms, this value must be double URL encoded")),
-//
-//                links(halLinks(),
-//                        linkWithRel("self").description("Link to this resource"),
-//                        linkWithRel("parents").description("Link to the direct parent resources for this term"),
-//                        linkWithRel("hierarchicalParents").description("Link to the direct hierarchical parent resources for this term. Hierarchical parents include is-a and other related parents, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("hierarchicalAncestors").description("Link to all hierarchical ancestors (all parents's parents) resources for this term. Hierarchical ancestors include is-a and other related parents, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("ancestors").description("Link to all parent resources for this term"),
-//                        linkWithRel("children").description("Link to the direct children resources for this term"),
-//                        linkWithRel("hierarchicalChildren").description("Link to the direct hierarchical children resources for this term. Hierarchical children include is-a and other related children, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("hierarchicalDescendants").description("Link to all hierarchical children resources for this term. Hierarchical children include is-a and other related children, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("descendants").description("Link to all child resources for this term"),
-//                        linkWithRel("jstree").description("A JSON tree structure of the term hierarchy"),
-//                        linkWithRel("graph").description("A JSON graph structure of the immediately related nodes")));
-//
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/terms/{iri}", "go", URLEncoder.encode("http://purl.obolibrary.org/obo/GO_0043226", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
-
-//    @Test
-//    public void propertiesExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the relation, this value must be double URL encoded"))
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/properties/{iri}", "go", URLEncoder.encode("http://purl.obolibrary.org/obo/BFO_0000050", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
-
-//    @Test
-//    public void individualsExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the individual, this value must be double URL encoded"))
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/individuals/{iri}", "ro", URLEncoder.encode("http://purl.obolibrary.org/obo/RO_0001901", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
 }
