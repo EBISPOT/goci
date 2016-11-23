@@ -51,6 +51,9 @@ public class SingleNucleotidePolymorphism {
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
     private SingleNucleotidePolymorphism currentSnp;
 
+    @ManyToMany(mappedBy = "snps")
+    private Collection<Association> associations;
+
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
@@ -63,7 +66,8 @@ public class SingleNucleotidePolymorphism {
                                         Collection<Location> locations,
                                         Collection<GenomicContext> genomicContexts,
                                         Collection<RiskAllele> riskAlleles,
-                                        SingleNucleotidePolymorphism currentSnp) {
+                                        SingleNucleotidePolymorphism currentSnp,
+                                        Collection<Association> associations) {
         this.rsId = rsId;
         this.merged = merged;
         this.functionalClass = functionalClass;
@@ -138,5 +142,13 @@ public class SingleNucleotidePolymorphism {
 
     public void setRiskAlleles(Collection<RiskAllele> riskAlleles) {
         this.riskAlleles = riskAlleles;
+    }
+
+    public Collection<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(Collection<Association> associations) {
+        this.associations = associations;
     }
 }

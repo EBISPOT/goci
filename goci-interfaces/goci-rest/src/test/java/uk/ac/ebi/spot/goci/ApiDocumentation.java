@@ -74,12 +74,12 @@ public class ApiDocumentation {
                 .build();
     }
 
-//    @Test
-//    public void basicTest() throws Exception {
-//        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andDo(document("index"));
-//    }
+    @Test
+    public void basicTest() throws Exception {
+        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("index"));
+    }
 
     @Test
     public void pageExample () throws Exception {
@@ -194,127 +194,6 @@ public class ApiDocumentation {
 //                .andExpect(status().isOk());
 //    }
 
-//    @Test
-//    public void rootsExample () throws Exception {
-//
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                          parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"))
-//        );
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms/roots", "efo").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
 
-//    @Test
-//    public void termsListExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"))
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms", "efo").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
 
-//    @Test
-//    public void termsListIriExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"),
-//                        parameterWithName("iri").description("Filter by IRI, when using IRI the result will always be one")
-//                )
-//
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?iri={iri}", "go", "http://purl.obolibrary.org/obo/GO_0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void termsListShortformExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog")
-//                        ,
-//                        parameterWithName("short_form").description("Filter by IRI shortform, these values aren't guaranteed to be unique")
-//                )
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?short_form={short_form}", "go","GO_0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void termsListOboExample() throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog")
-//                        ,
-//                        parameterWithName("obo_id").description("Filter by OBO id. This is OBO style id taht aren't guaranteed to be unique within a given ontology")
-//                )
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms?obo_id={obo_id}", "go","GO:0043226").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void termsExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the terms, this value must be double URL encoded")),
-//
-//                links(halLinks(),
-//                        linkWithRel("self").description("Link to this resource"),
-//                        linkWithRel("parents").description("Link to the direct parent resources for this term"),
-//                        linkWithRel("hierarchicalParents").description("Link to the direct hierarchical parent resources for this term. Hierarchical parents include is-a and other related parents, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("hierarchicalAncestors").description("Link to all hierarchical ancestors (all parents's parents) resources for this term. Hierarchical ancestors include is-a and other related parents, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("ancestors").description("Link to all parent resources for this term"),
-//                        linkWithRel("children").description("Link to the direct children resources for this term"),
-//                        linkWithRel("hierarchicalChildren").description("Link to the direct hierarchical children resources for this term. Hierarchical children include is-a and other related children, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("hierarchicalDescendants").description("Link to all hierarchical children resources for this term. Hierarchical children include is-a and other related children, such as part-of/develops-from, that imply a hierarchical relationship"),
-//                        linkWithRel("descendants").description("Link to all child resources for this term"),
-//                        linkWithRel("jstree").description("A JSON tree structure of the term hierarchy"),
-//                        linkWithRel("graph").description("A JSON graph structure of the immediately related nodes")));
-//
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/terms/{iri}", "go", URLEncoder.encode("http://purl.obolibrary.org/obo/GO_0043226", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
-
-//    @Test
-//    public void propertiesExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the relation, this value must be double URL encoded"))
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/properties/{iri}", "go", URLEncoder.encode("http://purl.obolibrary.org/obo/BFO_0000050", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
-
-//    @Test
-//    public void individualsExample () throws Exception {
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology").description("The OLS ontology id e.g. go"),
-//                        parameterWithName("iri").description("The IRI of the individual, this value must be double URL encoded"))
-//                );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology}/individuals/{iri}", "ro", URLEncoder.encode("http://purl.obolibrary.org/obo/RO_0001901", "UTF-8")).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//    }
 }
