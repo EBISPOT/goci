@@ -4,6 +4,9 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +29,12 @@ public abstract class SnpAssociationForm {
 
     private String pvalueDescription;
 
+
+    @Min(value=1,message = "The Mantissa must be between [1..9]")
+    @Max(value=9,message = "The Mantissa must be between [1..9]")
     private Integer pvalueMantissa;
 
+    @Max(value=-6, message = "The exponent must < -5")
     private Integer pvalueExponent;
 
     private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
