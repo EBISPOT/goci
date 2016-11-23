@@ -5,13 +5,13 @@
     <parent>
         <artifactId>goci-parent</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
-        <version>2.2.6-SNAPSHOT</version>
+        <version>2.2.7-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-data-filtering-services</artifactId>
-    <version>2.2.6-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
 
     <name>GOCI Data Filtering Services</name>
     <description>A set of service classes to filter a set of associations for the most significant association in each LD bloack</description>

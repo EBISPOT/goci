@@ -6,7 +6,7 @@
 
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci</artifactId>
-    <version>2.2.6-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
