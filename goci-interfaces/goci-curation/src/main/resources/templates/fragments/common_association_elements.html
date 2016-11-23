@@ -10,6 +10,7 @@
     <div class="col-md-10">
         <input type="text" class="form-control" id="pvalueMantissa"
                th:field="*{pvalueMantissa}" name="pvalueMantissa"/>
+        <span style="color:red" th:if="${#fields.hasErrors('pvalueMantissa')}" th:errors="*{pvalueMantissa}">Mantissa Error</span>
     </div>
 </div>
 
@@ -19,6 +20,7 @@
     <div class="col-md-10">
         <input type="text" class="form-control" id="pvalueExponent"
                th:field="*{pvalueExponent}" placeholder="Exponent must &lt; -5" name="pvalueExponent"/>
+        <span style="color:red" th:if="${#fields.hasErrors('pvalueExponent')}" th:errors="*{pvalueExponent}">Exponent Error</span>
     </div>
 </div>
 
