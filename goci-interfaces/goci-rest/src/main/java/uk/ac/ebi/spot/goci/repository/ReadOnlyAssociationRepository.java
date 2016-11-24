@@ -12,7 +12,7 @@ import java.util.Collection;
 
 //@NoRepositoryBean
 @RepositoryRestResource(collectionResourceRel = "associations", path = "associations")
-public interface ReadOnlyAssociationInterface extends ReadOnlyRepository<Association, Long> {
+public interface ReadOnlyAssociationRepository extends ReadOnlyRepository<Association, Long> {
 
     Association findOne(Long id);
 
@@ -32,4 +32,6 @@ public interface ReadOnlyAssociationInterface extends ReadOnlyRepository<Associa
     Collection<Association> findByStudyId(long studyId);
 
     Collection<Association> findByStudyId(long studyId, Sort sort);
+
+
 }
