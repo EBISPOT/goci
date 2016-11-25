@@ -113,6 +113,12 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    private Collection<Gene> genes = new ArrayList<>();
+
     // JPA no-args constructor
     public Association() {
     }
@@ -143,7 +149,8 @@ public class Association implements Trackable {
                        String lastMappingPerformedBy,
                        Date lastUpdateDate,
                        Collection<Event> events,
-                       Collection<SingleNucleotidePolymorphism> snps) {
+                       Collection<SingleNucleotidePolymorphism> snps,
+                        Collection<Gene> genes) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -171,6 +178,7 @@ public class Association implements Trackable {
         this.lastUpdateDate = lastUpdateDate;
         this.events = events;
         this.snps = snps;
+        this.genes = genes;
     }
 
     public Long getId() {

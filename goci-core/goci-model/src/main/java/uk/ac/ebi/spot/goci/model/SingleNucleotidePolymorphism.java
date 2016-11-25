@@ -8,6 +8,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -54,6 +55,12 @@ public class SingleNucleotidePolymorphism {
     @ManyToMany(mappedBy = "snps")
     private Collection<Association> associations;
 
+    @ManyToMany
+    @JoinTable(name = "SNP_GENE_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    private Collection<Gene> genes = new ArrayList<>();
+
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
@@ -67,7 +74,8 @@ public class SingleNucleotidePolymorphism {
                                         Collection<GenomicContext> genomicContexts,
                                         Collection<RiskAllele> riskAlleles,
                                         SingleNucleotidePolymorphism currentSnp,
-                                        Collection<Association> associations) {
+                                        Collection<Association> associations,
+                                        Collection<Gene> genes) {
         this.rsId = rsId;
         this.merged = merged;
         this.functionalClass = functionalClass;
@@ -76,6 +84,8 @@ public class SingleNucleotidePolymorphism {
         this.genomicContexts = genomicContexts;
         this.riskAlleles = riskAlleles;
         this.currentSnp = currentSnp;
+        this.associations = associations;
+        this.genes = genes;
     }
 
     public Long getId() {
@@ -150,5 +160,13 @@ public class SingleNucleotidePolymorphism {
 
     public void setAssociations(Collection<Association> associations) {
         this.associations = associations;
+    }
+
+    public Collection<Gene> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(Collection<Gene> genes) {
+        this.genes = genes;
     }
 }

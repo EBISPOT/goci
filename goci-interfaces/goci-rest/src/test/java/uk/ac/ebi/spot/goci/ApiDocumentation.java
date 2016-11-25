@@ -99,6 +99,7 @@ public class ApiDocumentation {
         );
 
         this.mockMvc.perform(get("/api/studies?page=1&size=1"))
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 
@@ -112,7 +113,7 @@ public class ApiDocumentation {
                                  .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
                                               "/notes")
                                  .requestAttr(RequestDispatcher.ERROR_MESSAGE,
-                                              "The tag 'http://localhost:8080/tags/123' does not exist"))
+                                              "The tag 'http://localhost:8080/api/studies/123' does not exist"))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("error", is("Bad Request")))
                 .andExpect(jsonPath("timestamp", is(notNullValue())))
@@ -127,26 +128,6 @@ public class ApiDocumentation {
                                         fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred"))));
     }
 
-//    @Test
-//    public void errorExample() throws Exception {
-//        this.restDocumentationResultHandler.document(
-//                responseFields(
-//                        fieldWithPath("error").description("The HTTP error that occurred, e.g. `Bad Request`").optional(),
-////                fieldWithPath("exception").description("A description of the cause of the error").optional(),
-//                        fieldWithPath("message").description("A description of the cause of the error").optional(),
-//                        fieldWithPath("path").description("The path to which the request was made").optional(),
-//                        fieldWithPath("status").description("The HTTP status code, e.g. `400`").optional(),
-//                        fieldWithPath("timestamp").description("The time, in milliseconds, at which the error occurred").optional()));
-//
-//        this.mockMvc
-//                .perform(get("/error")
-//                        .requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 404)
-//                        .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
-//                                "/api/studies/foobar")
-//                        .requestAttr(RequestDispatcher.ERROR_MESSAGE,
-//                                "Resource not found"))
-//        ;
-//    }
 
     @Test
     public void apiExample () throws Exception {
@@ -169,62 +150,14 @@ public class ApiDocumentation {
     }
 
 
-    @Test
-    public void studiesListExample () throws Exception {
-
-        this.mockMvc.perform(get("/api/studies").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-    }
-
 //    @Test
-//    public void ontologiesExample () throws Exception {
+//    public void studiesListExample () throws Exception {
 //
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog")),
-//
-//                responseFields(
-//                        fieldWithPath("_links").description("<<ontologies-links,Links>> to other resources"),
-//                        fieldWithPath("ontologyId").description("The short unique id for the ontology"),
-//                        fieldWithPath("updated").description("Date the ontology was checked for updates"),
-//                        fieldWithPath("loaded").description("Date the ontology was succesfully loaded"),
-//                        fieldWithPath("version").description("Version name associated with the ontology"),
-//                        fieldWithPath("status").description("Status of the ontology {LOADED,LOADING,FAILED}"),
-//                        fieldWithPath("message").description("Any message relating to the status of the ontology"),
-//                        fieldWithPath("numberOfTerms").description("Number of terms/classes in the ontology "),
-//                        fieldWithPath("numberOfProperties").description("Number of properties/relations in the ontology "),
-//                        fieldWithPath("numberOfIndividuals").description("Number of individuals/instances in the ontology "),
-//                        fieldWithPath("config").description(
-//                                "Basic meta-data about the ontology such as its title, description and any other ontology"
-//                                        + " annotations extracted from the file. It also includes the and download location. and information used by OLS at index time (such as the synonym and description predicates)")
-//                ),
-//                links(halLinks(),
-//                        linkWithRel("self").description("This ontology"),
-//                        linkWithRel("terms").description("<<overview-pagination,Paginated>> list of <<resources-terms,terms>> in the ontology"),
-//                        linkWithRel("properties").description("<<overview-pagination,Paginated>> list of <<properties-resources,properties>> in the ontology"),
-//                        linkWithRel("individuals").description("<<overview-pagination,Paginated>> list of <<individuals-resources,individuals>> in the ontology")
-//                )
-//
-//        );
-//
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}", "efo").accept(MediaType.APPLICATION_JSON))
+//        this.mockMvc.perform(get("/api/studies").accept(MediaType.APPLICATION_JSON))
+//                .andDo(print())
 //                .andExpect(status().isOk());
-//    }
-
-//    @Test
-//    public void rootsExample () throws Exception {
 //
-//
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                          parameterWithName("ontology_id").description("The ontology id in the GWAS Catalog"))
-//        );
-//        this.mockMvc.perform(get("/api/ontologies/{ontology_id}/terms/roots", "efo").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
 //    }
-
 
 
 }

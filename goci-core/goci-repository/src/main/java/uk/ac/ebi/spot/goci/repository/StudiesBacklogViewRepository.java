@@ -8,7 +8,7 @@ import uk.ac.ebi.spot.goci.model.StudiesBacklogView;
  * Created by cinzia on 31/10/2016.
  */
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface StudiesBacklogViewRepository extends JpaRepository<StudiesBacklogView, Long> {
 
 }

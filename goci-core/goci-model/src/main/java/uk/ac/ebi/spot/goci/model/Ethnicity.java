@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -46,6 +48,7 @@ public class Ethnicity implements Trackable {
     @OneToOne
     private Study study;
 
+    @JsonIgnore
     @OneToMany
     @JoinTable(name = "ETHNICITY_EVENT",
                joinColumns = @JoinColumn(name = "ETHNICITY_ID"),

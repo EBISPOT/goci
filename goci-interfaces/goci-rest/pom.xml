@@ -24,10 +24,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-hateoas</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -55,10 +55,10 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-model</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>uk.ac.ebi.spot</groupId>-->
-            <!--<artifactId>goci-repository</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-repository</artifactId>
+        </dependency>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-db-binding</artifactId>
