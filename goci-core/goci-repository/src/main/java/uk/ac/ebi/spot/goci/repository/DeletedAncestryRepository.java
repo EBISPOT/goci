@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import uk.ac.ebi.spot.goci.model.DeletedEthnicity;
+import uk.ac.ebi.spot.goci.model.DeletedAncestry;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import java.util.List;
  *
  * @author emma
  *         <p>
- *         Repository accessing Deleted Ethnicity entity object
+ *         Repository accessing Deleted Ancestry entity object
  */
 @RepositoryRestResource
-public interface DeletedEthnicityRepository extends JpaRepository<DeletedEthnicity, Long> {
+public interface DeletedAncestryRepository extends JpaRepository<DeletedAncestry, Long> {
 
-    List<DeletedEthnicity> findByStudyId(Long id);
+    List<DeletedAncestry> findByStudyId(Long id);
 }
 

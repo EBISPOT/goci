@@ -2,7 +2,7 @@ package uk.ac.ebi.spot.goci.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 
 import java.util.Collection;
 
@@ -11,12 +11,12 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Repository accessing Ethnicity entity object
+ *         Repository accessing Ancestry entity object
  */
 @RepositoryRestResource
-public interface EthnicityRepository extends JpaRepository<Ethnicity, Long> {
-    Collection<Ethnicity> findByStudyIdAndType(Long studyId, String Type);
+public interface AncestryRepository extends JpaRepository<Ancestry, Long> {
+    Collection<Ancestry> findByStudyIdAndType(Long studyId, String Type);
 
-    Collection<Ethnicity> findByStudyId(Long studyId);
+    Collection<Ancestry> findByStudyId(Long studyId);
 
 }

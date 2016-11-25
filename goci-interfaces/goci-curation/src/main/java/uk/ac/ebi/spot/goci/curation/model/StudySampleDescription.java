@@ -7,7 +7,7 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         DTO used to store study, ethnicity and relevant housekeeyping information. Designed to allow curators ability
+ *         DTO used to store study, ancestry and relevant housekeeyping information. Designed to allow curators ability
  *         to download a spreadsheet of the sample description, detailed ancestry and country information for all
  *         studies.
  */
@@ -25,15 +25,15 @@ public class StudySampleDescription {
 
     private String replicateSampleSize;
 
-    private Boolean ethnicityCheckedLevelOne = false;
+    private Boolean ancestryCheckedLevelOne = false;
 
-    private Boolean ethnicityCheckedLevelTwo = false;
+    private Boolean ancestryCheckedLevelTwo = false;
 
     private String type;
 
     private Integer numberOfIndividuals;
 
-    private String ethnicGroup;
+    private String ancestralGroup;
 
     private String countryOfOrigin;
 
@@ -51,11 +51,11 @@ public class StudySampleDescription {
                                   String pubmedId,
                                   String initialSampleSize,
                                   String replicateSampleSize,
-                                  Boolean ethnicityCheckedLevelOne,
-                                  Boolean ethnicityCheckedLevelTwo,
+                                  Boolean ancestryCheckedLevelOne,
+                                  Boolean ancestryCheckedLevelTwo,
                                   String type,
                                   Integer numberOfIndividuals,
-                                  String ethnicGroup,
+                                  String ancestralGroup,
                                   String countryOfOrigin,
                                   String countryOfRecruitment,
                                   String description,
@@ -67,11 +67,11 @@ public class StudySampleDescription {
         this.pubmedId = pubmedId;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
         this.type = type;
         this.numberOfIndividuals = numberOfIndividuals;
-        this.ethnicGroup = ethnicGroup;
+        this.ancestralGroup = ancestralGroup;
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
@@ -132,21 +132,21 @@ public class StudySampleDescription {
         return this;
     }
 
-    public Boolean isEthnicityCheckedLevelOne() {
-        return ethnicityCheckedLevelOne;
+    public Boolean isAncestryCheckedLevelOne() {
+        return ancestryCheckedLevelOne;
     }
 
-    public StudySampleDescription setEthnicityCheckedLevelOne(Boolean ethnicityCheckedLevelOne) {
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
+    public StudySampleDescription setAncestryCheckedLevelOne(Boolean ancestryCheckedLevelOne) {
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
         return this;
     }
 
-    public Boolean isEthnicityCheckedLevelTwo() {
-        return ethnicityCheckedLevelTwo;
+    public Boolean isAncestryCheckedLevelTwo() {
+        return ancestryCheckedLevelTwo;
     }
 
-    public StudySampleDescription setEthnicityCheckedLevelTwo(Boolean ethnicityCheckedLevelTwo) {
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
+    public StudySampleDescription setAncestryCheckedLevelTwo(Boolean ancestryCheckedLevelTwo) {
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
         return this;
     }
 
@@ -168,12 +168,12 @@ public class StudySampleDescription {
         return this;
     }
 
-    public String getEthnicGroup() {
-        return ethnicGroup;
+    public String getAncestralGroup() {
+        return ancestralGroup;
     }
 
-    public StudySampleDescription setEthnicGroup(String ethnicGroup) {
-        this.ethnicGroup = ethnicGroup;
+    public StudySampleDescription setAncestralGroup(String ancestralGroup) {
+        this.ancestralGroup = ancestralGroup;
         return this;
     }
 

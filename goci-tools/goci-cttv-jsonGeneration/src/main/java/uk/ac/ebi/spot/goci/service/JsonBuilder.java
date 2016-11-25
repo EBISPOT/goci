@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,6 @@ import uk.ac.ebi.spot.goci.service.model.SnpInfo;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonString;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -104,18 +102,18 @@ public class JsonBuilder {
         Collection<EfoTrait> efoTraits = association.getEfoTraits();
         Collection<Locus> loci = association.getLoci();
 
-        Collection<Ethnicity> ethnicities = association.getStudy().getEthnicities();
+        Collection<Ancestry> ancestries = association.getStudy().getAncestries();
         int sampleSize = 0;
 
-        System.out.println("\n\nethnicity size = " + ethnicities.size());
-        for (Ethnicity ethnicity : ethnicities) {
-//            if("initial".equals(ethnicity.getType())) {
-                int ethnicityCount = 0;
-                if (ethnicity.getNumberOfIndividuals() != null) {
-                    ethnicityCount = ethnicity.getNumberOfIndividuals();
+        System.out.println("\n\nancestry size = " + ancestries.size());
+        for (Ancestry ancestry : ancestries) {
+//            if("initial".equals(ancestry.getType())) {
+                int ancestryCount = 0;
+                if (ancestry.getNumberOfIndividuals() != null) {
+                    ancestryCount = ancestry.getNumberOfIndividuals();
                 }
-                System.out.println("ethnicityCount = " + ethnicityCount);
-                sampleSize = sampleSize + ethnicityCount;
+                System.out.println("ancestryCount = " + ancestryCount);
+                sampleSize = sampleSize + ancestryCount;
                 System.out.println("sampleSize = " + sampleSize);
 //            }
         }

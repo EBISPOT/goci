@@ -26,18 +26,18 @@ public class HousekeepingBuilder {
         return this;
     }
 
-    public HousekeepingBuilder setEthnicityCheckedLevelOne(Boolean ethnicityCheckedLevelOne) {
-        housekeeping.setEthnicityCheckedLevelOne(ethnicityCheckedLevelOne);
+    public HousekeepingBuilder setAncestryCheckedLevelOne(Boolean ancestryCheckedLevelOne) {
+        housekeeping.setAncestryCheckedLevelOne(ancestryCheckedLevelOne);
         return this;
     }
 
-    public HousekeepingBuilder setEthnicityCheckedLevelTwo(Boolean ethnicityCheckedLevelTwo) {
-        housekeeping.setEthnicityCheckedLevelTwo(ethnicityCheckedLevelTwo);
+    public HousekeepingBuilder setAncestryCheckedLevelTwo(Boolean ancestryCheckedLevelTwo) {
+        housekeeping.setAncestryCheckedLevelTwo(ancestryCheckedLevelTwo);
         return this;
     }
 
-    public HousekeepingBuilder setEthnicityBackFilled(Boolean ethnicityBackFilled) {
-        housekeeping.setEthnicityBackFilled(ethnicityBackFilled);
+    public HousekeepingBuilder setAncestryBackFilled(Boolean ancestryBackFilled) {
+        housekeeping.setAncestryBackFilled(ancestryBackFilled);
         return this;
     }
 

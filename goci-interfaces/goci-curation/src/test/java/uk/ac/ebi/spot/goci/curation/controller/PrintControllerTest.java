@@ -9,15 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
+import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.service.StudyPrintService;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
@@ -48,24 +48,24 @@ public class PrintControllerTest {
     private StudyRepository studyRepository;
 
     @Mock
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Mock
     private StudyPrintService studyPrintService;
 
     private MockMvc mockMvc;
 
-    private static final Ethnicity ETH1 = new EthnicityBuilder().setNotes("ETH1 notes")
+    private static final Ancestry ETH1 = new AncestryBuilder().setNotes("ETH1 notes")
             .setId(40L)
             .setType("initial")
             .build();
 
-    private static final Ethnicity ETH2 = new EthnicityBuilder().setNotes("ETH2 notes")
+    private static final Ancestry ETH2 = new AncestryBuilder().setNotes("ETH2 notes")
             .setId(60L)
             .setType("replication")
             .build();
 
-    private static final Ethnicity ETH3 = new EthnicityBuilder().setNotes("ETH2 notes")
+    private static final Ancestry ETH3 = new AncestryBuilder().setNotes("ETH2 notes")
             .setId(60L)
             .setType("replication")
             .build();
@@ -86,7 +86,7 @@ public class PrintControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        PrintController printController = new PrintController(studyRepository, ethnicityRepository, studyPrintService);
+        PrintController printController = new PrintController(studyRepository, ancestryRepository, studyPrintService);
         mockMvc = MockMvcBuilders.standaloneSetup(printController).build();
     }
 
@@ -102,16 +102,16 @@ public class PrintControllerTest {
         // Stub
         when(studyRepository.findOne(STUDY.getId())).thenReturn(STUDY);
 
-        Collection<Ethnicity> initialStudyEthnicityDescriptions = new ArrayList<>();
-        Collection<Ethnicity> replicationStudyEthnicityDescriptions = new ArrayList<>();
-        initialStudyEthnicityDescriptions.add(ETH1);
-        replicationStudyEthnicityDescriptions.add(ETH2);
-        replicationStudyEthnicityDescriptions.add(ETH3);
+        Collection<Ancestry> initialStudyAncestryDescriptions = new ArrayList<>();
+        Collection<Ancestry> replicationStudyAncestryDescriptions = new ArrayList<>();
+        initialStudyAncestryDescriptions.add(ETH1);
+        replicationStudyAncestryDescriptions.add(ETH2);
+        replicationStudyAncestryDescriptions.add(ETH3);
 
-        when(ethnicityRepository.findByStudyIdAndType(STUDY.getId(), "initial")).thenReturn(
-                initialStudyEthnicityDescriptions);
-        when(ethnicityRepository.findByStudyIdAndType(STUDY.getId(), "replication")).thenReturn(
-                replicationStudyEthnicityDescriptions);
+        when(ancestryRepository.findByStudyIdAndType(STUDY.getId(), "initial")).thenReturn(
+                initialStudyAncestryDescriptions);
+        when(ancestryRepository.findByStudyIdAndType(STUDY.getId(), "replication")).thenReturn(
+                replicationStudyAncestryDescriptions);
         when(studyPrintService.generatePrintView(STUDY.getId())).thenReturn(Arrays.asList(snpAssociationTableView1,
                                                                                           snpAssociationTableView2));
 
@@ -134,10 +134,10 @@ public class PrintControllerTest {
                 .andExpect(model().attributeExists("replicateSampleDescription"))
                 .andExpect(model().attribute("replicateSampleDescription", instanceOf(String.class)))
                 .andExpect(model().attribute("replicateSampleDescription", is("Replicate Sample Size")))
-                .andExpect(model().attributeExists("initialStudyEthnicityDescriptions"))
-                .andExpect(model().attribute("initialStudyEthnicityDescriptions", hasSize(1)))
-                .andExpect(model().attributeExists("replicationStudyEthnicityDescriptions"))
-                .andExpect(model().attribute("replicationStudyEthnicityDescriptions", hasSize(2)))
+                .andExpect(model().attributeExists("initialStudyAncestryDescriptions"))
+                .andExpect(model().attribute("initialStudyAncestryDescriptions", hasSize(1)))
+                .andExpect(model().attributeExists("replicationStudyAncestryDescriptions"))
+                .andExpect(model().attribute("replicationStudyAncestryDescriptions", hasSize(2)))
                 .andExpect(model().attributeExists("snpAssociationTableViews"))
                 .andExpect(model().attribute("snpAssociationTableViews", hasSize(2)));
     }

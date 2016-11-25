@@ -88,7 +88,7 @@ public class Study implements Trackable {
     private Collection<Association> associations;
 
     @OneToMany(mappedBy = "study")
-    private Collection<Ethnicity> ethnicities;
+    private Collection<Ancestry> ancestries;
 
     @ManyToOne
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
@@ -139,7 +139,7 @@ public class Study implements Trackable {
                  Boolean fullPvalueSet,
                  Collection<Platform> platforms,
                  Collection<Association> associations,
-                 Collection<Ethnicity> ethnicities,
+                 Collection<Ancestry> ancestries,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
                  Housekeeping housekeeping,
@@ -165,7 +165,7 @@ public class Study implements Trackable {
         this.fullPvalueSet = fullPvalueSet;
         this.platforms = platforms;
         this.associations = associations;
-        this.ethnicities = ethnicities;
+        this.ancestries = ancestries;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
         this.housekeeping = housekeeping;
@@ -317,12 +317,12 @@ public class Study implements Trackable {
         this.studyReport = studyReport;
     }
 
-    public Collection<Ethnicity> getEthnicities() {
-        return ethnicities;
+    public Collection<Ancestry> getAncestries() {
+        return ancestries;
     }
 
-    public void setEthnicities(Collection<Ethnicity> ethnicities) {
-        this.ethnicities = ethnicities;
+    public void setAncestries(Collection<Ancestry> ancestries) {
+        this.ancestries = ancestries;
     }
 
 

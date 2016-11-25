@@ -12,7 +12,6 @@ import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
 import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
@@ -23,7 +22,6 @@ import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -31,7 +29,7 @@ import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -82,7 +80,7 @@ public class StudyOperationServiceTest {
     private TrackingOperationService trackingOperationService;
 
     @Mock
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Mock
     private EventTypeService eventTypeService;
@@ -138,7 +136,7 @@ public class StudyOperationServiceTest {
                     .setCurationStatus(LEVEL_01)
                     .setCurator(LEVEL_1_CURATOR)
                     .setNotes("Some notes")
-                    .setEthnicityCheckedLevelOne(true)
+                    .setAncestryCheckedLevelOne(true)
                     .setStudySnpCheckedLevelOne(true)
                     .build();
 
@@ -148,7 +146,7 @@ public class StudyOperationServiceTest {
                     .setCurationStatus(AWAITING_CURATION)
                     .setCurator(UNASSIGNED)
                     .setNotes("Some notes")
-                    .setEthnicityCheckedLevelOne(true)
+                    .setAncestryCheckedLevelOne(true)
                     .build();
 
     private static final Housekeeping NEW_HOUSEKEEPING_STATUS_CHANGE_TO_PUBLISH =
@@ -157,7 +155,7 @@ public class StudyOperationServiceTest {
                     .setCurationStatus(PUBLISH)
                     .setCurator(PUBLISH_CURATOR)
                     .setNotes("Some notes")
-                    .setEthnicityCheckedLevelOne(true)
+                    .setAncestryCheckedLevelOne(true)
                     .setStudyAddedDate(new Date())
                     .build();
 

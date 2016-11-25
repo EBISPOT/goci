@@ -7,16 +7,16 @@ public class AncestralGroupAnnotation {
 
     private Long id;
 
-    private String ethnicGroup;
+    private String ancestralGroup;
 
     private String ontologyLabel;
 
     private String ontologyURI;
 
 
-    public AncestralGroupAnnotation(Long id, String ethnicGroup, String ontologyLabel, String ontologyURI) {
+    public AncestralGroupAnnotation(Long id, String ancestralGroup, String ontologyLabel, String ontologyURI) {
         this.id = id;
-        this.ethnicGroup = ethnicGroup;
+        this.ancestralGroup = ancestralGroup;
         this.ontologyLabel = ontologyLabel;
         this.ontologyURI = ontologyURI;
     }
@@ -26,8 +26,8 @@ public class AncestralGroupAnnotation {
         return id;
     }
 
-    public String getEthnicGroup() {
-        return ethnicGroup;
+    public String getAncestralGroup() {
+        return ancestralGroup;
     }
 
     public String getOntologyURI() {

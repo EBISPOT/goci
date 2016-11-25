@@ -178,7 +178,7 @@
 
             <table id="initialTable"
                    class="table table-hover table-bordered"
-                   th:if="${not #lists.isEmpty(initialStudyEthnicityDescriptions)}">
+                   th:if="${not #lists.isEmpty(initialStudyAncestryDescriptions)}">
                 <caption>Initial ancestry details</caption>
                 <thead>
                 <tr>
@@ -194,22 +194,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}">
-                    <td th:text="${initialStudyEthnicityDescription.type} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.description} ?: ''"></td>
-                    <td th:text="${initialStudyEthnicityDescription.notes} ?: ''"></td>
+                <tr th:each="initialStudyAncestryDescription: ${initialStudyAncestryDescriptions}">
+                    <td th:text="${initialStudyAncestryDescription.type} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.numberOfIndividuals} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.description} ?: ''"></td>
+                    <td th:text="${initialStudyAncestryDescription.notes} ?: ''"></td>
                 </tr>
                 </tbody>
             </table>
             <table id="replicationTable"
                    class="table table-hover table-bordered"
-                   th:if="${not #lists.isEmpty(replicationStudyEthnicityDescriptions)}">
+                   th:if="${not #lists.isEmpty(replicationStudyAncestryDescriptions)}">
                 <caption>Replication ancestry details</caption>
                 <thead>
                 <tr>
@@ -225,16 +225,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-                    <td th:text="${replicationStudyEthnicityDescription.type}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.previouslyReported}  ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch} ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.description} ?: ''"></td>
-                    <td th:text="${replicationStudyEthnicityDescription.notes} ?: ''"></td>
+                <tr th:each="replicationStudyAncestryDescription: ${replicationStudyAncestryDescriptions}">
+                    <td th:text="${replicationStudyAncestryDescription.type}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.numberOfIndividuals}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.ancestralGroup}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.countryOfOrigin}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.countryOfRecruitment}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.previouslyReported}  ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.description} ?: ''"></td>
+                    <td th:text="${replicationStudyAncestryDescription.notes} ?: ''"></td>
                 </tr>
                 </tbody>
             </table>
@@ -386,7 +386,7 @@
                 </tr>
                 <tr>
                     <th>Ancestry checked, first level</th>
-                    <td th:switch="${housekeeping.ethnicityCheckedLevelOne}">
+                    <td th:switch="${housekeeping.ancestryCheckedLevelOne}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
@@ -396,7 +396,7 @@
                 </tr>
                 <tr>
                     <th>Ancestry checked, second level</th>
-                    <td th:switch="${housekeeping.ethnicityCheckedLevelTwo}">
+                    <td th:switch="${housekeeping.ancestryCheckedLevelTwo}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>
@@ -406,7 +406,7 @@
                 </tr>
                 <tr>
                     <th>Ancestry backfilled</th>
-                    <td th:switch="${housekeeping.ethnicityBackFilled}">
+                    <td th:switch="${housekeeping.ancestryBackFilled}">
                         <p th:case="'null'"></p>
 
                         <p th:case="false">No</p>

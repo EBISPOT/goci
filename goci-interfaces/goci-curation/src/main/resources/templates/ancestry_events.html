@@ -56,7 +56,7 @@
                                                                                                    Tracking</a>
                 </li>
                 <li role="presentation" class="active">
-                    <a th:href="@{/studies/{studyId}/ethnicity_tracking(studyId=*{id})}">Ancestry
+                    <a th:href="@{/studies/{studyId}/ancestry_tracking(studyId=*{id})}">Ancestry
                                                                                          Tracking</a>
                 </li>
                 <li role="presentation"><a th:href="@{/studies/{studyId}/association_tracking(studyId=*{id})}">Association
@@ -73,8 +73,8 @@
             <table id="eventTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th>Ethnicity ID</th>
-                    <th>Ethnicity Summary</th>
+                    <th>Ancestry ID</th>
+                    <th>Ancestry Summary</th>
                     <th>Event</th>
                     <th>Event Date</th>
                     <th>User</th>
@@ -84,7 +84,7 @@
                 <tr th:each="event : ${events}">
                     <td th:text="${event.trackableId} ?: '' "></td>
                     <td>
-                        <span> <p th:text="${event.ethnicitySummary} ?: '' "></p>
+                        <span> <p th:text="${event.ancestrySummary} ?: '' "></p>
                         <a th:href="@{/sampledescriptions/{trackableId}(trackableId=${event.trackableId})}"><i
                                 class="fa fa-external-link"
                                 aria-hidden="true"></i></a></span></td>

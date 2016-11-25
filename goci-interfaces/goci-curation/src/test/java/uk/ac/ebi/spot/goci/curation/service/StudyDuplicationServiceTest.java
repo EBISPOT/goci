@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
 import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
+import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
@@ -19,12 +19,11 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
-import uk.ac.ebi.spot.goci.model.EventType;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Arrays;
@@ -46,7 +45,7 @@ import static org.mockito.Mockito.when;
 public class StudyDuplicationServiceTest {
 
     @Mock
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Mock
     private HousekeepingOperationsService housekeepingOperationsService;
@@ -68,22 +67,22 @@ public class StudyDuplicationServiceTest {
                     .setUri("http://www.ebi.ac.uk/efo/EFO_0000270")
                     .build();
 
-    private static final Ethnicity ETH1 = new EthnicityBuilder().setNotes("ETH1 notes")
+    private static final Ancestry ETH1 = new AncestryBuilder().setNotes("ETH1 notes")
             .setId(40L)
             .setCountryOfOrigin("Ireland")
             .setCountryOfRecruitment("Ireland")
             .setDescription("ETH1 description")
-            .setEthnicGroup("European")
+            .setAncestralGroup("European")
             .setNumberOfIndividuals(100)
             .setType("initial")
             .build();
 
-    private static final Ethnicity ETH2 = new EthnicityBuilder().setNotes("ETH2 notes")
+    private static final Ancestry ETH2 = new AncestryBuilder().setNotes("ETH2 notes")
             .setId(60L)
             .setCountryOfOrigin("U.K.")
             .setCountryOfRecruitment("U.K.")
             .setDescription("ETH2 description")
-            .setEthnicGroup("European")
+            .setAncestralGroup("European")
             .setNumberOfIndividuals(200)
             .setType("replication")
             .build();
@@ -110,7 +109,7 @@ public class StudyDuplicationServiceTest {
             .setStudyDesignComment("comment")
             .setInitialSampleSize("initial")
             .setReplicateSampleSize("rep")
-            .setEthnicities(Arrays.asList(ETH1, ETH2))
+            .setAncestries(Arrays.asList(ETH1, ETH2))
             .build();
 
     private static final Housekeeping NEW_HOUSEKEEPING =
@@ -123,7 +122,7 @@ public class StudyDuplicationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        studyDuplicationService = new StudyDuplicationService(ethnicityRepository,
+        studyDuplicationService = new StudyDuplicationService(ancestryRepository,
                                                               housekeepingOperationsService,
                                                               studyTrackingOperationService,
                                                               studyRepository);
@@ -134,7 +133,7 @@ public class StudyDuplicationServiceTest {
 
         // Stubbing
         when(housekeepingOperationsService.createHousekeeping()).thenReturn(NEW_HOUSEKEEPING);
-        when(ethnicityRepository.findByStudyId(STUDY_TO_DUPLICATE.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
+        when(ancestryRepository.findByStudyId(STUDY_TO_DUPLICATE.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
 
         Study duplicateStudy = studyDuplicationService.duplicateStudy(STUDY_TO_DUPLICATE, SECURE_USER);
 
@@ -145,8 +144,8 @@ public class StudyDuplicationServiceTest {
         verify(studyRepository, times(1)).save(STUDY_TO_DUPLICATE);
         verify(studyTrackingOperationService, times(1)).create(duplicateStudy, SECURE_USER);
         verify(housekeepingOperationsService, times(1)).createHousekeeping();
-        verify(ethnicityRepository, times(1)).findByStudyId(STUDY_TO_DUPLICATE.getId());
-        verify(ethnicityRepository, times(2)).save(Matchers.any(Ethnicity.class));
+        verify(ancestryRepository, times(1)).findByStudyId(STUDY_TO_DUPLICATE.getId());
+        verify(ancestryRepository, times(2)).save(Matchers.any(Ancestry.class));
         verify(housekeepingOperationsService, times(1)).saveHousekeeping(duplicateStudy,
                                                                          duplicateStudy.getHousekeeping());
 
@@ -154,7 +153,7 @@ public class StudyDuplicationServiceTest {
         // Assertions;
         assertThat(duplicateStudy).isEqualToIgnoringGivenFields(STUDY_TO_DUPLICATE,
                                                                 "housekeeping",
-                                                                "ethnicities",
+                                                                "ancestries",
                                                                 "id",
                                                                 "author");
         assertThat(duplicateStudy.getHousekeeping().getNotes()).isEqualToIgnoringCase(
@@ -163,8 +162,8 @@ public class StudyDuplicationServiceTest {
         assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
         assertThat(duplicateStudy.getHousekeeping().getStudyAddedDate()).isToday();
 
-        /// Check ethnicity
-        assertThat(duplicateStudy.getEthnicities()).extracting("id", "numberOfIndividuals", "ethnicGroup",
+        /// Check ancestry
+        assertThat(duplicateStudy.getAncestries()).extracting("id", "numberOfIndividuals", "ancestralGroup",
                                                                "description",
                                                                "countryOfOrigin",
                                                                "countryOfRecruitment", "type")

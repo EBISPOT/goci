@@ -187,20 +187,20 @@ public class StudyService {
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        int ethnicityCount = study.getEthnicities().size();
+        int ancestryCount = study.getAncestries().size();
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations, " + ethnicityCount +
+                            "has " + associationCount + " associations, " + ancestryCount +
                             " ancestry entries, " + platformCount + " platform manufacturers "  +
                             " and was published on " + publishDate.toString());
         }
         else {
             getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations, " + ethnicityCount +
+                            "has " + associationCount + " associations, " + ancestryCount +
                             " ancestry entries , " + platformCount + " platform manufacturers " +
                             "and is not yet published");
         }
@@ -235,7 +235,7 @@ public class StudyService {
             int locationCount = snp.getLocations().size();
             getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
 
-            int ethnicityCount = study.getEthnicities().size();
+            int ancestryCount = study.getAncestries().size();
 
             for (Association association : study.getAssociations()) {
                 int lociCount = association.getLoci().size();
@@ -259,7 +259,7 @@ public class StudyService {
             if (publishDate != null) {
                 getLog().trace(
                         "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                                "has " + associationCount + " associations, " + snpCount + " snps, " + ethnicityCount +
+                                "has " + associationCount + " associations, " + snpCount + " snps, " + ancestryCount +
                                 " ancestry entries , " + platformCount + " platform manufacturers " +
                                 " and was published on " +
                                 publishDate.toString());
@@ -268,7 +268,7 @@ public class StudyService {
                 getLog().trace(
                         "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
                                 "has " + associationCount + " associations, " + snpCount + " snps, , " +
-                                ethnicityCount + " ancestry entries , " + platformCount + " platform manufacturers "  +
+                                ancestryCount + " ancestry entries , " + platformCount + " platform manufacturers "  +
                                 " and is not yet published");
             }
         }

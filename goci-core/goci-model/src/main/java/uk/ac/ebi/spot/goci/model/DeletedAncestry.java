@@ -13,10 +13,10 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Model object representing a deleted ethnicity
+ *         Model object representing a deleted ancestry
  */
 @Entity
-public class DeletedEthnicity {
+public class DeletedAncestry {
 
     @Id
     private Long id;
@@ -26,16 +26,16 @@ public class DeletedEthnicity {
     private Long studyId;
 
     @OneToMany
-    @JoinTable(name = "DELETED_ETHNICITY_EVENT",
-               joinColumns = @JoinColumn(name = "DELETED_ETHNICITY_ID"),
+    @JoinTable(name = "DELETED_ANCESTRY_EVENT",
+               joinColumns = @JoinColumn(name = "DELETED_ANCESTRY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
 
 
-    public DeletedEthnicity() {
+    public DeletedAncestry() {
     }
 
-    public DeletedEthnicity(Long id, Long studyId, Collection<Event> events) {
+    public DeletedAncestry(Long id, Long studyId, Collection<Event> events) {
         this.id = id;
         this.studyId = studyId;
         this.events = events;
