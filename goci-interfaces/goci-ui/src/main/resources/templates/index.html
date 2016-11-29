@@ -51,13 +51,21 @@
 
 <div class="container">
     <div class="row">
-        <a href="docs/about" th:href="@{docs/about}">
+        <a href="search.html" th:href="@{search}">
             <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-information9 color-primary-bold">About</h2>
+                <h2 class="flaticon-search11 color-primary-bold">Search</h2>
 
-                <p>A description of the GWAS Catalog, including background and citation information.</p>
+                <p>You can search the Catalog in a number of ways, including by trait, SNP identifier, study and
+                   gene. </p>
             </div>
         </a>
+        <!--<a href="docs/about" th:href="@{docs/about}">-->
+            <!--<div class="col-md-4 toplevel-view">-->
+                <!--<h2 class="flaticon-information9 color-primary-bold">About</h2>-->
+
+                <!--<p>A description of the GWAS Catalog, including background and citation information.</p>-->
+            <!--</div>-->
+        <!--</a>-->
         <a href="diagram.html" th:href="@{diagram}">
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-image11 color-primary-bold">Diagram</h2>
@@ -66,7 +74,7 @@
                    (p&le;5 x10<sup>-8</sup>). </p>
             </div>
         </a>
-        <a href="docs/downloads" th:href="@{docs/downloads}">
+        <a href="downloads" th:href="@{downloads}">
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-mailbox2 color-primary-bold">Download</h2>
 
@@ -76,26 +84,40 @@
     </div>
 
     <div class="row">
-        <a href="search.html" th:href="@{search}">
+        <a href="docs" th:href="@{docs}">
             <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-search11 color-primary-bold">Search</h2>
+                <h2 class="flaticon-information9 color-primary-bold">Documentation</h2>
 
-                <p>You can search the Catalog in a number of ways, including by trait, SNP identifier, study and
-                   gene. </p>
+                <p>All GWAS Catalog documentation, including FAQs, an introduction to our curation process, related resources and a comprehensive
+                list of abbreviations used in the Catalog.</p>
             </div>
         </a>
-        <a href="docs/methods" th:href="@{docs/methods}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-statistics color-primary-bold">Methods</h2>
+        <!--<a href="docs/methods" th:href="@{docs/methods}">-->
+            <!--<div class="col-md-4 toplevel-view">-->
+                <!--<h2 class="flaticon-statistics color-primary-bold">Methods</h2>-->
 
-                <p>A full description of the Catalog eligibility criteria and methods.</p>
+                <!--<p>A full description of the Catalog eligibility criteria and methods.</p>-->
+            <!--</div>-->
+        <!--</a>-->
+        <!--<a href="docs/ontology" th:href="@{docs/ontology}">-->
+            <!--<div class="col-md-4 toplevel-view">-->
+                <!--<h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>-->
+
+                <!--<p>Details of the ontology representation of GWAS Catalog traits.</p>-->
+            <!--</div>-->
+        <!--</a>-->
+        <a href="downloads/summary-statistics" th:href="@{downloads/summary-statistics}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-statistics color-primary-bold">Full summary statistics</h2>
+
+                <p>A list of all studies for which full summary statistics are available in the GWAS Catalog.</p>
             </div>
         </a>
-        <a href="docs/ontology" th:href="@{docs/ontology}">
+        <a href="ancestry" th:href="@{ancestry}">
             <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>
+                <h2 class="flaticon-group12 color-primary-bold">Ancestry</h2>
 
-                <p>Details of the ontology representation of GWAS Catalog traits.</p>
+                <p>An introduction to our ancestry curation process.</p>
             </div>
         </a>
     </div>

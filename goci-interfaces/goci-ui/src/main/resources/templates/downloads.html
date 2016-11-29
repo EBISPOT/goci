@@ -1,4 +1,5 @@
-<!DOCTYPE html> <html lang="en"
+<!DOCTYPE html>
+<html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 
@@ -10,25 +11,25 @@
           content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
     <meta name="keywords" content="GWAS Catalog, GWAS, NHGRI, EBI, EMBL-EBI, SPOT"/>
     <meta name="author" content="Tony Burdett, Emma Hastings, Dani Welter, SPOT, EMBL-EBI, NHGRI"/>
-    <link rel="icon" href="../static/images/favicon.ico" th:href="@{../images/favicon.ico}"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
 
     <title>GWAS Catalog</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
           rel="stylesheet"/>
-    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
-    <link href="../static/css/sticky-footer-navbar.css" th:href="@{../css/sticky-footer-navbar.css}" rel="stylesheet"/>
+    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../css/icons/flaticon.css}"/>
-    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{../css/goci-color-palette-1.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -38,10 +39,10 @@
     <![endif]-->
 
     <script src="../static/js/console-plugin.js" th:src="@{js/console-plugin.js}"></script>
+
 </head>
 
 <body>
-
 
 <div th:include="fragments/header :: navbar"></div>
 
@@ -50,23 +51,36 @@
 <div class="container-fluid">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="../home">Home</a></li>
-        <li id="docs-crumb"><a href="../docs">Documentation</a></li>
-        <li id="downloads-crumb" style="display: none"><a href="../downloads">Downloads</a></li>
-        <li id="current-page" class="active">Current page</li>
+        <li class="active">Downloads</li>
     </ol>
 </div>
 
 <div class="container tight-to-top">
 
-    <div id="docs-content">
+    <div class="row">
+        <a href="docs/file-downloads" th:href="@{docs/file-downloads}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-mail2 color-primary-bold">Files</h2>
 
-        <!--
+                <p>Full GWAS Catalog data files in TSV and OWL/RDF format, as well as GWAS trait to EFO mappings</p>
+            </div>
+        </a>
 
-        #####################################
-        #  Page specific content goes here  #
-        #####################################
 
-        -->
+        <a href="docs/diagram-downloads" th:href="@{docs/diagram-downloads}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-image11 color-primary-bold">Diagrams</h2>
+
+                <p>Pre-filtered and historic version of the GWAS diagram</p>
+            </div>
+        </a>
+        <a th:href="@{/downloads/summary-statistics}">
+            <div class="col-md-4 toplevel-view">
+                <h2 class="flaticon-group12 color-primary-bold">Full summary statistics</h2>
+
+                <p>A list of studies for which full summary statistics are available in the Catalog</p>
+            </div>
+        </a>
 
     </div>
 
@@ -84,14 +98,13 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{../js/ie10-viewport-bug-workaround.js}"></script>
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
-<script src="../static/js/goci-documentation.js" th:src="@{../js/goci-documentation.js}"></script>
+<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 
 <!-- Google analytics
 ================================================== -->

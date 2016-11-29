@@ -393,6 +393,28 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/summaryStatistics", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doFullPvalueSetSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Study");
+        addQuery(solrSearchBuilder, query);
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
+
     @RequestMapping(value = "api/search/sort", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public void doSortSolrSearch(
