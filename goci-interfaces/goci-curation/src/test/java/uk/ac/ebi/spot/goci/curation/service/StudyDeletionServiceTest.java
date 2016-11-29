@@ -7,15 +7,15 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
-import uk.ac.ebi.spot.goci.builder.EthnicityBuilder;
+import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class StudyDeletionServiceTest {
 
     @Mock
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Mock
     private StudyTrackingOperationServiceImpl trackingOperationService;
@@ -47,22 +47,22 @@ public class StudyDeletionServiceTest {
 
     private StudyDeletionService studyDeletionService;
 
-    private static final Ethnicity ETH1 = new EthnicityBuilder().setNotes("ETH1 notes")
+    private static final Ancestry ETH1 = new AncestryBuilder().setNotes("ETH1 notes")
             .setId(40L)
             .setCountryOfOrigin("Ireland")
             .setCountryOfRecruitment("Ireland")
             .setDescription("ETH1 description")
-            .setEthnicGroup("European")
+            .setAncestralGroup("European")
             .setNumberOfIndividuals(100)
             .setType("initial")
             .build();
 
-    private static final Ethnicity ETH2 = new EthnicityBuilder().setNotes("ETH2 notes")
+    private static final Ancestry ETH2 = new AncestryBuilder().setNotes("ETH2 notes")
             .setId(60L)
             .setCountryOfOrigin("U.K.")
             .setCountryOfRecruitment("U.K.")
             .setDescription("ETH2 description")
-            .setEthnicGroup("European")
+            .setAncestralGroup("European")
             .setNumberOfIndividuals(200)
             .setType("replication")
             .build();
@@ -79,11 +79,11 @@ public class StudyDeletionServiceTest {
             .setStudyDesignComment("comment")
             .setInitialSampleSize("initial")
             .setReplicateSampleSize("rep")
-            .setEthnicities(Arrays.asList(ETH1, ETH2)).build();
+            .setAncestries(Arrays.asList(ETH1, ETH2)).build();
 
     @Before
     public void setUp() throws Exception {
-        studyDeletionService = new StudyDeletionService(ethnicityRepository,
+        studyDeletionService = new StudyDeletionService(ancestryRepository,
                                                         trackingOperationService,
                                                         studyRepository,
                                                         deletedStudyRepository);
@@ -91,10 +91,10 @@ public class StudyDeletionServiceTest {
 
     @Test
     public void deleteStudy() throws Exception {
-        when(ethnicityRepository.findByStudyId(STUDY.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
+        when(ancestryRepository.findByStudyId(STUDY.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
         studyDeletionService.deleteStudy(STUDY, SECURE_USER);
-        verify(ethnicityRepository, times(1)).delete(ETH1);
-        verify(ethnicityRepository, times(1)).delete(ETH2);
+        verify(ancestryRepository, times(1)).delete(ETH1);
+        verify(ancestryRepository, times(1)).delete(ETH2);
         verify(trackingOperationService, times(1)).delete(STUDY, SECURE_USER);
         verify(studyRepository, times(1)).delete(STUDY);
         verify(deletedStudyRepository, times(1)).save(Matchers.any(DeletedStudy.class));

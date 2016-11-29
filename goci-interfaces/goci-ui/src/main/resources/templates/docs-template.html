@@ -47,12 +47,16 @@
 
 <div th:include="fragments/header :: jumbotron"></div>
 
-<div class="container tight-to-top">
+<div class="container-fluid">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="../home">Home</a></li>
-        <li><a href="../docs">Documentation</a></li>
+        <li id="docs-crumb"><a href="../docs">Documentation</a></li>
+        <li id="downloads-crumb" style="display: none"><a href="../downloads">Downloads</a></li>
         <li id="current-page" class="active">Current page</li>
     </ol>
+</div>
+
+<div class="container tight-to-top">
 
     <div id="docs-content">
 

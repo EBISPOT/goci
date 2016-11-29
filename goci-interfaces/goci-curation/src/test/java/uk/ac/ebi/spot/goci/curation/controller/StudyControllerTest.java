@@ -32,7 +32,7 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -88,7 +88,7 @@ public class StudyControllerTest {
     private AssociationRepository associationRepository;
 
     @Mock
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Mock
     private UnpublishReasonRepository unpublishReasonRepository;
@@ -172,7 +172,7 @@ public class StudyControllerTest {
                                                               curationStatusRepository,
                                                               platformRepository,
                                                               associationRepository,
-                                                              ethnicityRepository,
+                                                              ancestryRepository,
                                                               unpublishReasonRepository,
                                                               defaultPubMedSearchService,
                                                               studyOperationsService,

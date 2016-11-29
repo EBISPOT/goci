@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.AncestralGroupAnnotation;
 import uk.ac.ebi.spot.goci.model.CoOAnnotation;
 import uk.ac.ebi.spot.goci.model.CoRAnnotation;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Set;
 @Service
 public class AncestryMappingService {
 
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private OntologyLoader ontologyLoader;
     private OntologyExtractionService ontologyExtractionService;
 
@@ -30,10 +30,10 @@ public class AncestryMappingService {
     List<CoRAnnotation> coRAnnotations;
 
     @Autowired
-    public AncestryMappingService(EthnicityRepository ethnicityRepository,
+    public AncestryMappingService(AncestryRepository ancestryRepository,
                                   OntologyLoader ontologyLoader,
                                   OntologyExtractionService ontologyExtractionService) {
-        this.ethnicityRepository = ethnicityRepository;
+        this.ancestryRepository = ancestryRepository;
         this.ontologyLoader = ontologyLoader;
         this.ontologyExtractionService = ontologyExtractionService;
 
@@ -60,8 +60,8 @@ public class AncestryMappingService {
         return errors;
     }
 
-    public List<Ethnicity> getAllAncestries() {
-        List<Ethnicity> ancestries = ethnicityRepository.findAll();
+    public List<Ancestry> getAllAncestries() {
+        List<Ancestry> ancestries = ancestryRepository.findAll();
         getErrors().info("Found " + ancestries.size() + " ancestry records");
         return ancestries;
     }
@@ -88,12 +88,12 @@ public class AncestryMappingService {
         printOutOntologyContent();
         ;
 
-        List<Ethnicity> allAncestries = getAllAncestries();
+        List<Ancestry> allAncestries = getAllAncestries();
 
-        for (Ethnicity ancestry : allAncestries) {
+        for (Ancestry ancestry : allAncestries) {
 
             Long id = ancestry.getId();
-            String ancestralGroup = ancestry.getEthnicGroup();
+            String ancestralGroup = ancestry.getAncestralGroup();
             String coo = ancestry.getCountryOfOrigin();
             String cor = ancestry.getCountryOfRecruitment();
 
@@ -194,7 +194,7 @@ public class AncestryMappingService {
 
         getOutput().info("Ancestral groups: ");
         for (AncestralGroupAnnotation annot : ancestralGroups) {
-            getOutput().info(annot.getId() + ", " + annot.getEthnicGroup() + ", " + annot.getOntologyLabel() + ", " +
+            getOutput().info(annot.getId() + ", " + annot.getAncestralGroup() + ", " + annot.getOntologyLabel() + ", " +
                                      annot.getOntologyURI());
         }
     }

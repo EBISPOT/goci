@@ -3,7 +3,7 @@ package uk.ac.ebi.spot.goci.builder;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
@@ -104,8 +104,8 @@ public class StudyBuilder {
         return this;
     }
 
-    public StudyBuilder setEthnicities(Collection<Ethnicity> ethnicities) {
-        study.setEthnicities(ethnicities);
+    public StudyBuilder setAncestries(Collection<Ancestry> ancestries) {
+        study.setAncestries(ancestries);
         return this;
     }
 

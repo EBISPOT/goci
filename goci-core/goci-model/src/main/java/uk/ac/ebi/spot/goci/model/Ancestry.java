@@ -17,11 +17,11 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Model object representing ethnicity information attached to a study
+ *         Model object representing ancestrality information attached to a study
  */
 
 @Entity
-public class Ethnicity implements Trackable {
+public class Ancestry implements Trackable {
     @Id
     @GeneratedValue
     private Long id;
@@ -30,7 +30,7 @@ public class Ethnicity implements Trackable {
 
     private Integer numberOfIndividuals;
 
-    private String ethnicGroup;
+    private String ancestralGroup;
 
     private String countryOfOrigin;
 
@@ -50,27 +50,27 @@ public class Ethnicity implements Trackable {
 
     @JsonIgnore
     @OneToMany
-    @JoinTable(name = "ETHNICITY_EVENT",
-               joinColumns = @JoinColumn(name = "ETHNICITY_ID"),
+    @JoinTable(name = "ANCESTRY_EVENT",
+               joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
 
     // JPA no-args constructor
-    public Ethnicity() {
+    public Ancestry() {
     }
 
-    public Ethnicity(String countryOfOrigin,
-                     String countryOfRecruitment,
-                     String description,
-                     String ethnicGroup,
-                     Collection<Event> events,
-                     String notes,
-                     Integer numberOfIndividuals,
-                     String previouslyReported, String sampleSizesMatch, Study study, String type) {
+    public Ancestry(String countryOfOrigin,
+                    String countryOfRecruitment,
+                    String description,
+                    String ancestralGroup,
+                    Collection<Event> events,
+                    String notes,
+                    Integer numberOfIndividuals,
+                    String previouslyReported, String sampleSizesMatch, Study study, String type) {
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
-        this.ethnicGroup = ethnicGroup;
+        this.ancestralGroup = ancestralGroup;
         this.events = events;
         this.notes = notes;
         this.numberOfIndividuals = numberOfIndividuals;
@@ -104,12 +104,12 @@ public class Ethnicity implements Trackable {
         this.numberOfIndividuals = numberOfIndividuals;
     }
 
-    public String getEthnicGroup() {
-        return ethnicGroup;
+    public String getAncestralGroup() {
+        return ancestralGroup;
     }
 
-    public void setEthnicGroup(String ethnicGroup) {
-        this.ethnicGroup = ethnicGroup;
+    public void setAncestralGroup(String ancestralGroup) {
+        this.ancestralGroup = ancestralGroup;
     }
 
     public String getCountryOfOrigin() {

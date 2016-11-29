@@ -38,7 +38,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="../static/js/console-plugin.js" th:src="@{js/console-plugin.js}"></script>
+    <script th:src="@{js/console-plugin.js}"></script>
 
 </head>
 
@@ -48,7 +48,16 @@
 
 <div th:include="fragments/header :: jumbotron"></div>
 
+<div class="container-fluid">
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="../home">Home</a></li>
+        <li class="active">Documentation</li>
+    </ol>
+</div>
+
 <div class="container">
+
+
     <div class="row">
         <a href="docs/faq" th:href="@{docs/faq}">
             <div class="col-md-4 toplevel-view">

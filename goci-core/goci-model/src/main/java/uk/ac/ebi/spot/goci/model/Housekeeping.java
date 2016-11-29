@@ -26,11 +26,11 @@ public class Housekeeping {
 
     private Boolean studySnpCheckedLevelTwo = false;
 
-    private Boolean ethnicityCheckedLevelOne = false;
+    private Boolean ancestryCheckedLevelOne = false;
 
-    private Boolean ethnicityCheckedLevelTwo = false;
+    private Boolean ancestryCheckedLevelTwo = false;
 
-    private Boolean ethnicityBackFilled = false;
+    private Boolean ancestryBackFilled = false;
 
     private Boolean checkedMappingError = false;
 
@@ -72,9 +72,9 @@ public class Housekeeping {
 
     public Housekeeping(Boolean studySnpCheckedLevelOne,
                         Boolean studySnpCheckedLevelTwo,
-                        Boolean ethnicityCheckedLevelOne,
-                        Boolean ethnicityCheckedLevelTwo,
-                        Boolean ethnicityBackFilled,
+                        Boolean ancestryCheckedLevelOne,
+                        Boolean ancestryCheckedLevelTwo,
+                        Boolean ancestryBackFilled,
                         Boolean checkedMappingError,
                         Boolean snpsRechecked,
                         Boolean isPublished,
@@ -90,9 +90,9 @@ public class Housekeeping {
                         UnpublishReason unpublishReason) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
-        this.ethnicityBackFilled = ethnicityBackFilled;
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
+        this.ancestryBackFilled = ancestryBackFilled;
         this.checkedMappingError = checkedMappingError;
         this.snpsRechecked = snpsRechecked;
         this.isPublished = isPublished;
@@ -132,28 +132,28 @@ public class Housekeeping {
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
     }
 
-    public Boolean getEthnicityCheckedLevelOne() {
-        return ethnicityCheckedLevelOne;
+    public Boolean getAncestryCheckedLevelOne() {
+        return ancestryCheckedLevelOne;
     }
 
-    public void setEthnicityCheckedLevelOne(Boolean ethnicityCheckedLevelOne) {
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
+    public void setAncestryCheckedLevelOne(Boolean ancestryCheckedLevelOne) {
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
     }
 
-    public Boolean getEthnicityCheckedLevelTwo() {
-        return ethnicityCheckedLevelTwo;
+    public Boolean getAncestryCheckedLevelTwo() {
+        return ancestryCheckedLevelTwo;
     }
 
-    public void setEthnicityCheckedLevelTwo(Boolean ethnicityCheckedLevelTwo) {
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
+    public void setAncestryCheckedLevelTwo(Boolean ancestryCheckedLevelTwo) {
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
     }
 
-    public Boolean getEthnicityBackFilled() {
-        return ethnicityBackFilled;
+    public Boolean getAncestryBackFilled() {
+        return ancestryBackFilled;
     }
 
-    public void setEthnicityBackFilled(Boolean ethnicityBackFilled) {
-        this.ethnicityBackFilled = ethnicityBackFilled;
+    public void setAncestryBackFilled(Boolean ancestryBackFilled) {
+        this.ancestryBackFilled = ancestryBackFilled;
     }
 
     public Boolean getCheckedMappingError() {

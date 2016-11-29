@@ -21,20 +21,29 @@ var loadDocumentation = function(pagename, content) {
 
         displayName = displayName.replace("-", " ");
 
-        if (displayName.toLowerCase() == "about") {
-            $("#help-item").removeClass("active");
-            $("#downloads-item").removeClass("active");
-            $("#about-item").addClass("active");
-        }
-        else if (displayName.toLowerCase() == "downloads") {
-            $("#about-item").removeClass("active");
-            $("#help-item").removeClass("active");
+        // if (displayName.toLowerCase() == "about") {
+        //     $("#help-item").removeClass("active");
+        //     $("#downloads-item").removeClass("active");
+        //     $("#about-item").addClass("active");
+        //     $("#downloads-crumb").hide();
+        //     $("#docs-crumb").show();
+        // }
+        //
+        // else
+        if (displayName.toLowerCase() == "downloads" || displayName.toLowerCase() == "file downloads" || displayName.toLowerCase() == "diagram downloads" || displayName.toLowerCase() == "summary statistics" ) {
+            // $("#about-item").removeClass("active");
+            $("#documentation-item").removeClass("active");
             $("#downloads-item").addClass("active");
+            $("#docs-crumb").hide();
+            $("#downloads-crumb").show();
+
         }
         else {
-            $("#about-item").removeClass("active");
+            // $("#about-item").removeClass("active");
             $("#downloads-item").removeClass("active");
-            $("#help-item").addClass("active");
+            $("#documentation-item").addClass("active");
+            $("#docs-crumb").show();
+            $("#downloads-crumb").hide();
         }
         $("#current-page").text(displayName);
 

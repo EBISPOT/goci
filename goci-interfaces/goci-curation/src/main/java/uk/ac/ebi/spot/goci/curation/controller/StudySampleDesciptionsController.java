@@ -22,7 +22,7 @@ import java.util.Date;
  *
  * @author emma
  *         <p>
- *         Controller designed to handle the download of all studies with sample description and ethnicity data
+ *         Controller designed to handle the download of all studies with sample description and ancestry data
  */
 @Controller
 @RequestMapping("/sampledescriptions")
@@ -52,7 +52,7 @@ public class StudySampleDesciptionsController {
         Date date = new Date();
         String now = dateFormat.format(date);
 
-        String fileName = "GWASEthnicity".concat("-").concat(now).concat(".tsv");
+        String fileName = "GWASAncestry".concat("-").concat(now).concat(".tsv");
         response.setContentType("text/tsv");
         response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -61,7 +61,7 @@ public class StudySampleDesciptionsController {
                                                                       studySampleDescriptions);
         }
         catch (IOException e) {
-            getLog().error("Cannot create ethnicity download file");
+            getLog().error("Cannot create ancestry download file");
             e.printStackTrace();
         }
     }

@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
 import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
-import uk.ac.ebi.spot.goci.curation.model.EthnicGroup;
+import uk.ac.ebi.spot.goci.curation.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
-import uk.ac.ebi.spot.goci.curation.service.StudyEthnicityService;
+import uk.ac.ebi.spot.goci.curation.service.StudyAncestryService;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
 import uk.ac.ebi.spot.goci.model.Country;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.CountryRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,64 +41,64 @@ import java.util.concurrent.Callable;
  *
  * @author emma
  *         <p>
- *         Ethnicity Controller, interpret user input and transform it into a ethniciy model that is represented to the
- *         user by the associated HTML page. Used to view, add and edit existing ethnicity/sample information.
+ *         Ancestry Controller, interpret user input and transform it into a ancestraliy model that is represented to the
+ *         user by the associated HTML page. Used to view, add and edit existing ancestry/sample information.
  */
 @Controller
-public class EthnicityController {
+public class AncestryController {
 
     // Repositories allowing access to database objects associated with a study
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private CountryRepository countryRepository;
     private StudyRepository studyRepository;
 
     private StudySampleDescriptionService studySampleDescriptionService;
     private CurrentUserDetailsService currentUserDetailsService;
-    private StudyEthnicityService ethnicityService;
+    private StudyAncestryService ancestryService;
     private EventsViewService eventsViewService;
 
     @Autowired
-    public EthnicityController(EthnicityRepository ethnicityRepository,
-                               CountryRepository countryRepository,
-                               StudyRepository studyRepository,
-                               StudySampleDescriptionService studySampleDescriptionService,
-                               CurrentUserDetailsService currentUserDetailsService,
-                               StudyEthnicityService ethnicityService,
-                               @Qualifier("ethnicityEventsViewService") EventsViewService eventsViewService) {
-        this.ethnicityRepository = ethnicityRepository;
+    public AncestryController(AncestryRepository ancestryRepository,
+                              CountryRepository countryRepository,
+                              StudyRepository studyRepository,
+                              StudySampleDescriptionService studySampleDescriptionService,
+                              CurrentUserDetailsService currentUserDetailsService,
+                              StudyAncestryService ancestryService,
+                              @Qualifier("ancestryEventsViewService") EventsViewService eventsViewService) {
+        this.ancestryRepository = ancestryRepository;
         this.countryRepository = countryRepository;
         this.studyRepository = studyRepository;
         this.studySampleDescriptionService = studySampleDescriptionService;
         this.currentUserDetailsService = currentUserDetailsService;
-        this.ethnicityService = ethnicityService;
+        this.ancestryService = ancestryService;
         this.eventsViewService = eventsViewService;
     }
 
-    /* Ethnicity/Sample information associated with a study */
+    /* Ancestry/Sample information associated with a study */
 
-    // Generate view of ethnicity/sample information linked to a study
+    // Generate view of ancestry/sample information linked to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String viewStudySampleDescription(Model model, @PathVariable Long studyId) {
 
-        // Two types of ethnicity information which the view needs to form two different tables
-        Collection<Ethnicity> initialStudyEthnicityDescriptions = new ArrayList<>();
-        Collection<Ethnicity> replicationStudyEthnicityDescriptions = new ArrayList<>();
+        // Two types of ancestry information which the view needs to form two different tables
+        Collection<Ancestry> initialStudyAncestryDescriptions = new ArrayList<>();
+        Collection<Ancestry> replicationStudyAncestryDescriptions = new ArrayList<>();
 
         String initialType = "initial";
         String replicationType = "replication";
 
-        initialStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId, initialType));
-        replicationStudyEthnicityDescriptions.addAll(ethnicityRepository.findByStudyIdAndType(studyId,
-                                                                                              replicationType));
+        initialStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId, initialType));
+        replicationStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId,
+                                                                                            replicationType));
 
-        // Add all ethnicity/sample information for the study to our model
-        model.addAttribute("initialStudyEthnicityDescriptions", initialStudyEthnicityDescriptions);
-        model.addAttribute("replicationStudyEthnicityDescriptions", replicationStudyEthnicityDescriptions);
+        // Add all ancestry/sample information for the study to our model
+        model.addAttribute("initialStudyAncestryDescriptions", initialStudyAncestryDescriptions);
+        model.addAttribute("replicationStudyAncestryDescriptions", replicationStudyAncestryDescriptions);
 
-        // Return an empty ethnicity object so curators can add new ethnicity/sample information to study
-        model.addAttribute("ethnicity", new Ethnicity());
+        // Return an empty ancestry object so curators can add new ancestry/sample information to study
+        model.addAttribute("ancestry", new Ancestry());
 
         // Return an SampleDescription object for each type
         Study study = studyRepository.findOne(studyId);
@@ -150,15 +150,15 @@ public class EthnicityController {
     }
 
 
-    // Add new ethnicity/sample information to a study
+    // Add new ancestry/sample information to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addStudySampleDescription(@ModelAttribute Ethnicity ethnicity,
+    public String addStudySampleDescription(@ModelAttribute Ancestry ancestry,
                                             @PathVariable Long studyId,
                                             RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        ethnicityService.addEthnicity(studyId, ethnicity, currentUserDetailsService.getUserFromRequest(request));
+        ancestryService.addAncestry(studyId, ancestry, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -167,34 +167,34 @@ public class EthnicityController {
     }
 
 
-    /* Existing ethnicity/sample information */
+    /* Existing ancestry/sample information */
 
-    // View ethnicity/sample information
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}",
+    // View ancestry/sample information
+    @RequestMapping(value = "/sampledescriptions/{ancestryId}",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String viewSampleDescription(Model model, @PathVariable Long ethnicityId) {
-        Ethnicity ethnicityToView = ethnicityRepository.findOne(ethnicityId);
-        model.addAttribute("ethnicity", ethnicityToView);
+    public String viewSampleDescription(Model model, @PathVariable Long ancestryId) {
+        Ancestry ancestryToView = ancestryRepository.findOne(ancestryId);
+        model.addAttribute("ancestry", ancestryToView);
 
-    /*  Country of origin, country of recruitment and ethnic group are stored as a string in database
+    /*  Country of origin, country of recruitment and ancestral group are stored as a string in database
         In order to work with these in view we need to wrap them in a service object
         that returns the values to the view as an array */
 
         // Country of origin
-        String ethnicityCountryOfOrigin = ethnicityToView.getCountryOfOrigin();
+        String ancestryCountryOfOrigin = ancestryToView.getCountryOfOrigin();
         CountryOfOrigin countryOfOrigin = new CountryOfOrigin(); // service object
 
-        if (ethnicityCountryOfOrigin != null) {
+        if (ancestryCountryOfOrigin != null) {
             // multiple values separated by comma
-            if (ethnicityCountryOfOrigin.contains(",")) {
-                String[] countries = ethnicityCountryOfOrigin.split(",");
+            if (ancestryCountryOfOrigin.contains(",")) {
+                String[] countries = ancestryCountryOfOrigin.split(",");
                 countryOfOrigin.setOriginCountryValues(countries);
             }
             // single value
             else {
                 String[] countries = new String[1];
-                countries[0] = ethnicityCountryOfOrigin;
+                countries[0] = ancestryCountryOfOrigin;
                 countryOfOrigin.setOriginCountryValues(countries);
             }
         }
@@ -202,75 +202,75 @@ public class EthnicityController {
         model.addAttribute("countryOfOrigin", countryOfOrigin);
 
         //Country of recruitment
-        String ethnicityCountryOfRecruitment = ethnicityToView.getCountryOfRecruitment();
+        String ancestryCountryOfRecruitment = ancestryToView.getCountryOfRecruitment();
         CountryOfRecruitment countryOfRecruitment = new CountryOfRecruitment(); // service object
 
-        if (ethnicityCountryOfRecruitment != null) {
+        if (ancestryCountryOfRecruitment != null) {
             // multiple values separated by comma
-            if (ethnicityCountryOfRecruitment.contains(",")) {
-                String[] countries = ethnicityCountryOfRecruitment.split(",");
+            if (ancestryCountryOfRecruitment.contains(",")) {
+                String[] countries = ancestryCountryOfRecruitment.split(",");
                 countryOfRecruitment.setRecruitmentCountryValues(countries);
             }
             // single value
             else {
                 String[] countries = new String[1];
-                countries[0] = ethnicityCountryOfRecruitment;
+                countries[0] = ancestryCountryOfRecruitment;
                 countryOfRecruitment.setRecruitmentCountryValues(countries);
             }
         }
 
         model.addAttribute("countryOfRecruitment", countryOfRecruitment);
 
-        // Ethnic group
-        String ethnicityEthnicGroup = ethnicityToView.getEthnicGroup();
-        EthnicGroup ethnicGroup = new EthnicGroup(); // service class
+        // Ancestral group
+        String ancestryAncestralGroup = ancestryToView.getAncestralGroup();
+        AncestralGroup ancestralGroup = new AncestralGroup(); // service class
 
-        if (ethnicityEthnicGroup != null) {
+        if (ancestryAncestralGroup != null) {
             // multiple values separated by comma
-            if (ethnicityEthnicGroup.contains(",")) {
-                String[] groups = ethnicityEthnicGroup.split(",");
-                ethnicGroup.setEthnicGroupValues(groups);
+            if (ancestryAncestralGroup.contains(",")) {
+                String[] groups = ancestryAncestralGroup.split(",");
+                ancestralGroup.setAncestralGroupValues(groups);
             }
             // single value
             else {
                 String[] groups = new String[1];
-                groups[0] = ethnicityEthnicGroup;
-                ethnicGroup.setEthnicGroupValues(groups);
+                groups[0] = ancestryAncestralGroup;
+                ancestralGroup.setAncestralGroupValues(groups);
             }
         }
 
-        model.addAttribute("ethnicGroup", ethnicGroup);
+        model.addAttribute("ancestralGroup", ancestralGroup);
 
-        model.addAttribute("study", studyRepository.findOne(ethnicityToView.getStudy().getId()));
+        model.addAttribute("study", studyRepository.findOne(ancestryToView.getStudy().getId()));
         return "edit_sample_description";
     }
 
-    // Edit existing ethnicity/sample information
+    // Edit existing ancestry/sample information
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    @RequestMapping(value = "/sampledescriptions/{ethnicityId}",
+    @RequestMapping(value = "/sampledescriptions/{ancestryId}",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String updateSampleDescription(@ModelAttribute Ethnicity ethnicity,
+    public String updateSampleDescription(@ModelAttribute Ancestry ancestry,
                                           @ModelAttribute CountryOfOrigin countryOfOrigin,
                                           @ModelAttribute CountryOfRecruitment countryOfRecruitment,
-                                          EthnicGroup ethnicGroup,
+                                          AncestralGroup ancestralGroup,
                                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
 
-        ethnicityService.updateEthnicity(ethnicity,
+        ancestryService.updateAncestry(ancestry,
                                          countryOfOrigin,
                                          countryOfRecruitment,
-                                         ethnicGroup,
+                                         ancestralGroup,
                                          currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
-        return "redirect:/studies/" + ethnicity.getStudy().getId() + "/sampledescription";
+        return "redirect:/studies/" + ancestry.getStudy().getId() + "/sampledescription";
     }
 
 
-    // Delete checked ethnicity/sample information linked to a study
+    // Delete checked ancestry/sample information linked to a study
     @RequestMapping(value = "/studies/{studyId}/sampledescription/delete_checked",
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET)
@@ -280,17 +280,17 @@ public class EthnicityController {
 
         String message = "";
 
-        // Get all ethnicities
-        Collection<Ethnicity> studyEthnicity = new ArrayList<>();
+        // Get all ancestries
+        Collection<Ancestry> studyAncestry = new ArrayList<>();
         for (String sampleDescriptionId : sampleDescriptionIds) {
-            studyEthnicity.add(ethnicityRepository.findOne(Long.valueOf(sampleDescriptionId)));
+            studyAncestry.add(ancestryRepository.findOne(Long.valueOf(sampleDescriptionId)));
         }
 
-        // Delete ethnicity
-        ethnicityService.deleteChecked(studyEthnicity, currentUserDetailsService.getUserFromRequest(request));
+        // Delete ancestry
+        ancestryService.deleteChecked(studyAncestry, currentUserDetailsService.getUserFromRequest(request));
 
         // Return success message to view
-        message = "Successfully deleted " + studyEthnicity.size() + " sample description(s)";
+        message = "Successfully deleted " + studyAncestry.size() + " sample description(s)";
         Map<String, String> result = new HashMap<>();
         result.put("message", message);
         return result;
@@ -303,33 +303,33 @@ public class EthnicityController {
     public Callable<String> deleteAllStudySampleDescription(@PathVariable Long studyId, HttpServletRequest request) {
 
         return () -> {
-            ethnicityService.deleteAll(studyId, currentUserDetailsService.getUserFromRequest(request));
+            ancestryService.deleteAll(studyId, currentUserDetailsService.getUserFromRequest(request));
             return "redirect:/studies/" + studyId + "/sampledescription";
         };
     }
 
-    @RequestMapping(value = "/studies/{studyId}/ethnicity_tracking",
+    @RequestMapping(value = "/studies/{studyId}/ancestry_tracking",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String getStudyEvents(Model model, @PathVariable Long studyId) {
         model.addAttribute("events", eventsViewService.createViews(studyId));
         model.addAttribute("study", studyRepository.findOne(studyId));
-        return "ethnicity_events";
+        return "ancestry_events";
     }
 
 
-    // Ethnicity Types
-    @ModelAttribute("ethnicityTypes")
-    public List<String> populateEthnicityTypes(Model model) {
+    // Ancestry Types
+    @ModelAttribute("ancestryTypes")
+    public List<String> populateAncestryTypes(Model model) {
         List<String> types = new ArrayList<>();
         types.add("initial");
         types.add("replication");
         return types;
     }
 
-    // Ethnicity Types
-    @ModelAttribute("ethnicGroups")
-    public List<String> populateEthnicGroups(Model model) {
+    // Ancestry Types
+    @ModelAttribute("ancestralGroups")
+    public List<String> populateAncestralGroups(Model model) {
         List<String> types = new ArrayList<>();
         types.add("European");
         types.add("Sub-Saharan African");
