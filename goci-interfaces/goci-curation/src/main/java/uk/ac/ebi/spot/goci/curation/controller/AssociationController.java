@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -63,7 +65,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.springframework.validation.BindingResult;
 
 /**
  * Created by emma on 06/01/15.
@@ -407,7 +409,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addStandardSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+    public String addStandardSnps(@ModelAttribute("form") @Valid SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                                  BindingResult bindingResult,
                                   @PathVariable Long studyId,
                                   Model model,
                                   @RequestParam(required = true) String measurementType,
@@ -417,6 +420,14 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
         model.addAttribute("measurementType", measurementType);
+
+
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            return "add_standard_snp_association";
+        }
+
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> rowErrors =
@@ -466,7 +477,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addMultiSnps(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+    public String addMultiSnps(@ModelAttribute("form") @Valid SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                               BindingResult bindingResult,
                                @PathVariable Long studyId,
                                Model model,
                                @RequestParam(required = true) String measurementType,
@@ -476,6 +488,13 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
         model.addAttribute("measurementType", measurementType);
+
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            return "add_multi_snp_association";
+        }
+
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> rowErrors =
@@ -525,7 +544,8 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String addSnpInteraction(@ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
+    public String addSnpInteraction(@ModelAttribute("form") @Valid SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                    BindingResult bindingResult,
                                     @PathVariable Long studyId,
                                     Model model,
                                     @RequestParam(required = true) String measurementType, HttpServletRequest request)
@@ -534,6 +554,13 @@ public class AssociationController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
         model.addAttribute("measurementType", measurementType);
+
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationInteractionForm);
+            return "add_snp_interaction_association";
+        }
+
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> colErrors =

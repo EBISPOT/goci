@@ -54,7 +54,7 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -96,7 +96,7 @@ public class StudyController {
     private CurationStatusRepository curationStatusRepository;
     private PlatformRepository platformRepository;
     private AssociationRepository associationRepository;
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
 
     // Services
@@ -127,7 +127,7 @@ public class StudyController {
                            CurationStatusRepository curationStatusRepository,
                            PlatformRepository platformRepository,
                            AssociationRepository associationRepository,
-                           EthnicityRepository ethnicityRepository,
+                           AncestryRepository ancestryRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
@@ -146,7 +146,7 @@ public class StudyController {
         this.curationStatusRepository = curationStatusRepository;
         this.platformRepository = platformRepository;
         this.associationRepository = associationRepository;
-        this.ethnicityRepository = ethnicityRepository;
+        this.ancestryRepository = ancestryRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
@@ -779,9 +779,9 @@ public class StudyController {
 
         Study studyToUnpublish = studyRepository.findOne(studyId);
 
-        // Check if it has any associations or ethnicity information
+        // Check if it has any associations or ancestry information
 //        Collection<Association> associations = associationRepository.findByStudyId(studyId);
-//        Collection<Ethnicity> ancestryInfo = ethnicityRepository.findByStudyId(studyId);
+//        Collection<Ancestry> ancestryInfo = ancestryRepository.findByStudyId(studyId);
 //
 //        // If so warn the curator
 //        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {

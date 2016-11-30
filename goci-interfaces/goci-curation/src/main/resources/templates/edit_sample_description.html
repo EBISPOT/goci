@@ -59,8 +59,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-10">
-            <div id="editEthnicityForm" class="dataForm">
-                <form class="form-horizontal" method="post" name="editEthnicityForm">
+            <div id="editAncestryForm" class="dataForm">
+                <form class="form-horizontal" method="post" name="editAncestryForm">
 
                     <div th:include="fragments/ancestry_published_alert :: ancestry_published"
                          th:if="*{#bools.isTrue(study.housekeeping.isPublished)}"></div>
@@ -71,7 +71,7 @@
                         <label for="id" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="${ethnicity.id}" class="form-control" id="id"/>
+                            <input type="hidden" th:field="${ancestry.id}" class="form-control" id="id"/>
                         </div>
                     </div>
 
@@ -79,7 +79,7 @@
                         <label for="studyId" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="${ethnicity.study.id}" class="form-control" id="studyID"/>
+                            <input type="hidden" th:field="${ancestry.study.id}" class="form-control" id="studyID"/>
                         </div>
                     </div>
 
@@ -87,7 +87,7 @@
                         <label for="events" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="${ethnicity.events}" class="form-control" id="events"/>
+                            <input type="hidden" th:field="${ancestry.events}" class="form-control" id="events"/>
                         </div>
                     </div>
 
@@ -95,7 +95,7 @@
                         <label for="previouslyReported" class="control-label col-md-2"></label>
 
                         <div class="col-md-10">
-                            <input type="hidden" th:field="${ethnicity.previouslyReported}" class="form-control"
+                            <input type="hidden" th:field="${ancestry.previouslyReported}" class="form-control"
                                    id="previouslyReported"/>
                         </div>
                     </div>
@@ -105,32 +105,32 @@
                     <div class="form-group">
                         <label for="type" class="control-label col-md-2">Type</label>
 
-                        <select th:field="${ethnicity.type}" id="type">
-                            <option th:each="ethnicityType : ${ethnicityTypes}"
-                                    th:value="${ethnicityType}"
-                                    th:text="${ethnicityType}"></option>
+                        <select th:field="${ancestry.type}" id="type">
+                            <option th:each="ancestryType : ${ancestryTypes}"
+                                    th:value="${ancestryType}"
+                                    th:text="${ancestryType}"></option>
                         </select>
 
                     </div>
 
                     <div class="form-group">
                         <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
-                        <input id="numberOfIndividuals" type="text" th:field="${ethnicity.numberOfIndividuals}"/>
+                        <input id="numberOfIndividuals" type="text" th:field="${ancestry.numberOfIndividuals}"/>
                     </div>
 
 
                     <!--Dropdowns-->
                     <div class="form-group">
-                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ancestry:</label>
+                        <label for="ancestralGroup" class="control-label col-md-2">Inferred Ancestry:</label>
 
                         <div class="col-md-10">
-                            <select name="ethnicGroup" class="form-control select2-select"
+                            <select name="ancestralGroup" class="form-control select2-select"
                                     multiple="multiple" data-placeholder="Choose Ancestry"
-                                    th:field="${ethnicGroup.ethnicGroupValues}"
-                                    id="ethnicGroup">
-                                <option th:each="ethnicGroup : ${ethnicGroups}"
-                                        th:value="${ethnicGroup}"
-                                        th:text="${ethnicGroup}"></option>
+                                    th:field="${ancestralGroup.ancestralGroupValues}"
+                                    id="ancestralGroup">
+                                <option th:each="ancestralGroup : ${ancestralGroups}"
+                                        th:value="${ancestralGroup}"
+                                        th:text="${ancestralGroup}"></option>
                             </select>
                         </div>
                     </div>
@@ -171,19 +171,19 @@
                         <textarea class="col-md-6"
                                   rows="10"
                                   id="description"
-                                  th:field="${ethnicity.description}"></textarea>
+                                  th:field="${ancestry.description}"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea class="col-md-6" rows="10" id="notes" th:field="${ethnicity.notes}"></textarea>
+                        <textarea class="col-md-6" rows="10" id="notes" th:field="${ancestry.notes}"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
                                                                                      Study Level?</label>
 
-                        <select th:field="${ethnicity.sampleSizesMatch}" id="sampleSizesMatch">
+                        <select th:field="${ancestry.sampleSizesMatch}" id="sampleSizesMatch">
                             <option th:each="match : ${sampleSizesMatchOptions}"
                                     th:value="${match}"
                                     th:text="${match}"></option>
@@ -214,7 +214,7 @@
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#ethnicGroup').select2();
+        $('#ancestralGroup').select2();
 
 
     });

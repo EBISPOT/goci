@@ -1,13 +1,15 @@
 = Downloading the GWAS Diagram
 
-Click each link to view and save the corresponding diagram. All diagrams currently in SVG format. Other formats will be available soon.
+== Downloading the GWAS Diagram
+
+link:../pussycat/gwasdiagram/download?pvaluemax=5e-8[ Download the latest version] of the iconic http://www.ebi.ac.uk/gwas/diagram[GWAS diagram], as well as older versions of the diagram, available below or on our link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries[ FTP] to generate for a visually striking time lapse.
+
+
+_Click each link to view and save the corresponding diagram. All diagrams currently in SVG format. Other formats will be available soon._
 
 [width="60%",options="header",cols="4", frame="all", grid="cols", halign = "center"]
 |===
 |The most recent edition of the GWAS Catalog
-|===
-
-link:../pussycat/gwasdiagram/download?pvaluemax=5e-8[ Latest GWAS diagram]
 |===
 
 link:../pussycat/gwasdiagram/download?pvaluemax=5e-8&datemax=2014-12[ Quarter 4, 2014]

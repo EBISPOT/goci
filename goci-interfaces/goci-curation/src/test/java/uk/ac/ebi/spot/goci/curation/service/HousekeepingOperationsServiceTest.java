@@ -69,7 +69,7 @@ public class HousekeepingOperationsServiceTest {
     private static final Housekeeping NEW_HOUSEKEEPING =
             new HousekeepingBuilder().setId(799L)
                     .setNotes("Testing saving")
-                    .setEthnicityCheckedLevelOne(true)
+                    .setAncestryCheckedLevelOne(true)
                     .setStudySnpCheckedLevelOne(true)
                     .setCurationStatus(LEVEL_01)
                     .setCurator(LEVEL_1_CURATOR)

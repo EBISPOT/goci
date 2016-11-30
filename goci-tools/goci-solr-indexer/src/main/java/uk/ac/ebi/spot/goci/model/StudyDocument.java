@@ -277,18 +277,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
 
     private void embedAncestryData(Study study) {
-        study.getEthnicities().forEach(
-                ethnicity -> {
+        study.getAncestries().forEach(
+                ancestry -> {
                     String ancestryLink = "";
 
-                    String type = ethnicity.getType();
+                    String type = ancestry.getType();
 
                     ancestryLink = type;
 
                     String coo;
 
-                    if(ethnicity.getCountryOfOrigin() != null) {
-                        coo = ethnicity.getCountryOfOrigin();
+                    if(ancestry.getCountryOfOrigin() != null) {
+                        coo = ancestry.getCountryOfOrigin();
                     }
                     else {
                         coo = "NR";
@@ -299,8 +299,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     String cor;
 
-                    if (ethnicity.getCountryOfRecruitment() != null) {
-                        cor = ethnicity.getCountryOfRecruitment();
+                    if (ancestry.getCountryOfRecruitment() != null) {
+                        cor = ancestry.getCountryOfRecruitment();
                     }
                     else {
                         cor = "NR";
@@ -308,23 +308,23 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     countriesOfRecruitment.add(cor);
                     ancestryLink = ancestryLink.concat("|").concat(cor);
 
-                    String ancestry = "";
+                    String ances = "";
 
-                    if (ethnicity.getEthnicGroup() != null) {
-                        ancestry = ethnicity.getEthnicGroup();
+                    if (ancestry.getAncestralGroup() != null) {
+                        ances = ancestry.getAncestralGroup();
                     }
                     else{
-                        ancestry = "NR";
+                        ances = "NR";
                     }
 
-                    ancestralGroups.add(ancestry);
-                    ancestryLink = ancestryLink.concat("|").concat(ancestry);
+                    ancestralGroups.add(ances);
+                    ancestryLink = ancestryLink.concat("|").concat(ances);
 
                     String noInds = "";
 
-                    if (ethnicity.getNumberOfIndividuals() != null) {
-                        numberOfIndividuals.add(ethnicity.getNumberOfIndividuals());
-                        noInds = String.valueOf(ethnicity.getNumberOfIndividuals());
+                    if (ancestry.getNumberOfIndividuals() != null) {
+                        numberOfIndividuals.add(ancestry.getNumberOfIndividuals());
+                        noInds = String.valueOf(ancestry.getNumberOfIndividuals());
                     }
                     else{
                         noInds = "NA";
@@ -334,9 +334,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     String description = "";
 
-                    if(ethnicity.getDescription() != null && ethnicity.getDescription().trim() != ""){
-                        additionalAncestryDescription.add(ethnicity.getDescription());
-                        description = ethnicity.getDescription();
+                    if(ancestry.getDescription() != null && ancestry.getDescription().trim() != ""){
+                        additionalAncestryDescription.add(ancestry.getDescription());
+                        description = ancestry.getDescription();
                     }
                     else {
                         description = "NA";

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.StudySampleDescription;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,24 +29,24 @@ import java.util.Date;
 public class StudySampleDescriptionsDownloadService {
 
     // Repositories allowing access to database objects associated with a study
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
 
     @Autowired
-    public StudySampleDescriptionsDownloadService(EthnicityRepository ethnicityRepository) {
-        this.ethnicityRepository = ethnicityRepository;
+    public StudySampleDescriptionsDownloadService(AncestryRepository ancestryRepository) {
+        this.ancestryRepository = ancestryRepository;
     }
 
     public Collection<StudySampleDescription> generateStudySampleDescriptions() {
-        // Get all ethnicities, this will also find all studies with ethnicity information
-        Collection<Ethnicity> ethnicities = ethnicityRepository.findAll(sortByPublicationDateDesc());
+        // Get all ancestries, this will also find all studies with ancestry information
+        Collection<Ancestry> ancestries = ancestryRepository.findAll(sortByPublicationDateDesc());
         Collection<StudySampleDescription> studySampleDescriptions = new ArrayList<>();
 
-        for (Ethnicity ethnicity : ethnicities) {
+        for (Ancestry ancestry : ancestries) {
 
-            // Make sure ethnicity has an attached study
-            if (ethnicity.getStudy() != null) {
+            // Make sure ancestry has an attached study
+            if (ancestry.getStudy() != null) {
 
-                Study study = ethnicity.getStudy();
+                Study study = ancestry.getStudy();
 
                 // Study attributes
                 Long studyId = study.getId();
@@ -57,35 +57,35 @@ public class StudySampleDescriptionsDownloadService {
                 String replicateSampleSize = study.getReplicateSampleSize();
 
                 // Housekeeping attributes
-                Boolean ethnicityCheckedLevelOne = false;
-                Boolean ethnicityCheckedLevelTwo = false;
+                Boolean ancestryCheckedLevelOne = false;
+                Boolean ancestryCheckedLevelTwo = false;
 
                 if (study.getHousekeeping() != null) {
-                    ethnicityCheckedLevelOne = study.getHousekeeping().getEthnicityCheckedLevelOne();
-                    ethnicityCheckedLevelTwo = study.getHousekeeping().getEthnicityCheckedLevelTwo();
+                    ancestryCheckedLevelOne = study.getHousekeeping().getAncestryCheckedLevelOne();
+                    ancestryCheckedLevelTwo = study.getHousekeeping().getAncestryCheckedLevelTwo();
 
                 }
 
-                // Ethnicity attributes
-                String type = ethnicity.getType();
-                Integer numberOfIndividuals = ethnicity.getNumberOfIndividuals();
-                String ethnicGroup = ethnicity.getEthnicGroup();
-                String countryOfOrigin = ethnicity.getCountryOfOrigin();
-                String countryOfRecruitment = ethnicity.getCountryOfRecruitment();
-                String sampleSizesMatch = ethnicity.getSampleSizesMatch();
-                String description = ethnicity.getDescription();
-                String notes = ethnicity.getNotes();
+                // Ancestry attributes
+                String type = ancestry.getType();
+                Integer numberOfIndividuals = ancestry.getNumberOfIndividuals();
+                String ancestralGroup = ancestry.getAncestralGroup();
+                String countryOfOrigin = ancestry.getCountryOfOrigin();
+                String countryOfRecruitment = ancestry.getCountryOfRecruitment();
+                String sampleSizesMatch = ancestry.getSampleSizesMatch();
+                String description = ancestry.getDescription();
+                String notes = ancestry.getNotes();
 
                 StudySampleDescription studySampleDescription = new StudySampleDescription(studyId, author,
                                                                                            publicationDate,
                                                                                            pubmedId,
                                                                                            initialSampleSize,
                                                                                            replicateSampleSize,
-                                                                                           ethnicityCheckedLevelOne,
-                                                                                           ethnicityCheckedLevelTwo,
+                                                                                           ancestryCheckedLevelOne,
+                                                                                           ancestryCheckedLevelTwo,
                                                                                            type,
                                                                                            numberOfIndividuals,
-                                                                                           ethnicGroup,
+                                                                                           ancestralGroup,
                                                                                            countryOfOrigin,
                                                                                            countryOfRecruitment,
                                                                                            description,
@@ -115,7 +115,7 @@ public class StudySampleDescriptionsDownloadService {
     private String processStudySampleDescriptions(Collection<StudySampleDescription> studySampleDescriptions) {
 
         String header =
-                "Study ID\tAuthor\tPublication Date\tPubmed ID\tInitial Sample Description\tReplication Sample Description\tType\tNumber of Individuals\tEthnic Group\tCountry of Origin\tCountry of Recruitment\tAdditional Description\tSample Sizes Match\tEthnicty Checked Level One\tEthnicty Checked Level Two\tNotes\n";
+                "Study ID\tAuthor\tPublication Date\tPubmed ID\tInitial Sample Description\tReplication Sample Description\tType\tNumber of Individuals\tAncestral Group\tCountry of Origin\tCountry of Recruitment\tAdditional Description\tSample Sizes Match\tAncestralty Checked Level One\tAncestralty Checked Level Two\tNotes\n";
 
 
         StringBuilder output = new StringBuilder();
@@ -203,13 +203,13 @@ public class StudySampleDescriptionsDownloadService {
             }
             line.append("\t");
 
-            // Ethnic group
-            String ethnicGroup = studySampleDescription.getEthnicGroup();
-            if (ethnicGroup == null) {
+            // Ancestral group
+            String ancestralGroup = studySampleDescription.getAncestralGroup();
+            if (ancestralGroup == null) {
                 line.append("");
             }
             else {
-                line.append(tidyStringForOutput(ethnicGroup));
+                line.append(tidyStringForOutput(ancestralGroup));
             }
             line.append("\t");
 
@@ -259,11 +259,11 @@ public class StudySampleDescriptionsDownloadService {
             line.append("\t");
 
             // Housekeeping information
-            if (studySampleDescription.isEthnicityCheckedLevelOne() == null) {
+            if (studySampleDescription.isAncestryCheckedLevelOne() == null) {
                 line.append("");
             }
             else {
-                if (studySampleDescription.isEthnicityCheckedLevelOne()) {
+                if (studySampleDescription.isAncestryCheckedLevelOne()) {
                     line.append("Y");
                 }
                 else {
@@ -272,11 +272,11 @@ public class StudySampleDescriptionsDownloadService {
             }
             line.append("\t");
 
-            if (studySampleDescription.isEthnicityCheckedLevelTwo() == null) {
+            if (studySampleDescription.isAncestryCheckedLevelTwo() == null) {
                 line.append("");
             }
             else {
-                if (studySampleDescription.isEthnicityCheckedLevelTwo()) {
+                if (studySampleDescription.isAncestryCheckedLevelTwo()) {
                     line.append("Y");
                 }
                 else {

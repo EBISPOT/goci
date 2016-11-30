@@ -44,6 +44,13 @@ public class Gene {
     @OneToMany(mappedBy = "gene")
     private Collection<GenomicContext> genomicContexts;
 
+    @ManyToMany(mappedBy = "genes")
+    private Collection<Association> associations;
+
+
+    @ManyToMany(mappedBy = "genes")
+    private Collection<SingleNucleotidePolymorphism> snps;
+
     // JPA no-args constructor
     public Gene() {
     }
@@ -121,4 +128,19 @@ public class Gene {
         this.genomicContexts = genomicContexts;
     }
 
+    public Collection<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(Collection<Association> associations) {
+        this.associations = associations;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> getSnps() {
+        return snps;
+    }
+
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
+    }
 }

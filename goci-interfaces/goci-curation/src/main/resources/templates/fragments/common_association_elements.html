@@ -4,21 +4,24 @@
 
 <body th:fragment="association_elemets">
 
-<div class="form-group">
+<div class="form-group" th:classappend="${#fields.hasErrors('pvalueMantissa')} ? 'has-error'">
+
     <label for="pvalueMantissa" class="control-label col-md-2">P-value mantissa</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" id="pvalueMantissa"
                th:field="*{pvalueMantissa}" name="pvalueMantissa"/>
+        <span class="help-inline help-block" th:if="${#fields.hasErrors('pvalueMantissa')}" th:errors="*{pvalueMantissa}">Mantissa Error</span>
     </div>
 </div>
 
-<div class="form-group">
+<div class="form-group" th:classappend="${#fields.hasErrors('pvalueExponent')} ? 'has-error'">
     <label for="pvalueExponent" class="control-label col-md-2">P-value exponent</label>
 
     <div class="col-md-10">
         <input type="text" class="form-control" id="pvalueExponent"
                th:field="*{pvalueExponent}" placeholder="Exponent must &lt; -5" name="pvalueExponent"/>
+        <span class="help-inline help-block" th:if="${#fields.hasErrors('pvalueExponent')}" th:errors="*{pvalueExponent}">Exponent Error</span>
     </div>
 </div>
 

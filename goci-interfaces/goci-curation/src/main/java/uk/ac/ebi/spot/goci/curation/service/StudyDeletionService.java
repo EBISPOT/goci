@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Collection;
@@ -28,7 +28,7 @@ import java.util.Collection;
 @Service
 public class StudyDeletionService {
 
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
     private DeletedStudyRepository deletedStudyRepository;
@@ -40,11 +40,11 @@ public class StudyDeletionService {
     }
 
     @Autowired
-    public StudyDeletionService(EthnicityRepository ethnicityRepository,
+    public StudyDeletionService(AncestryRepository ancestryRepository,
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
                                 DeletedStudyRepository deletedStudyRepository) {
-        this.ethnicityRepository = ethnicityRepository;
+        this.ancestryRepository = ancestryRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
@@ -59,12 +59,12 @@ public class StudyDeletionService {
 
         getLog().warn("Deleting study: ".concat(String.valueOf(study.getId())));
 
-        // Before we delete the study get its associated ethnicity
-        Collection<Ethnicity> ethnicitiesAttachedToStudy = ethnicityRepository.findByStudyId(study.getId());
+        // Before we delete the study get its associated ancestry
+        Collection<Ancestry> ancestriesAttachedToStudy = ancestryRepository.findByStudyId(study.getId());
 
-        // Delete ethnicity information linked to this study
-        for (Ethnicity ethnicity : ethnicitiesAttachedToStudy) {
-            ethnicityRepository.delete(ethnicity);
+        // Delete ancestry information linked to this study
+        for (Ancestry ancestry : ancestriesAttachedToStudy) {
+            ancestryRepository.delete(ancestry);
         }
 
         // Add deletion event

@@ -5,13 +5,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ethnicity;
-import uk.ac.ebi.spot.goci.model.EventType;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
@@ -27,17 +26,17 @@ import java.util.Collection;
 @Service
 public class StudyDuplicationService {
 
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private HousekeepingOperationsService housekeepingOperationsService;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
 
     @Autowired
-    public StudyDuplicationService(EthnicityRepository ethnicityRepository,
+    public StudyDuplicationService(AncestryRepository ancestryRepository,
                                    HousekeepingOperationsService housekeepingOperationsService,
                                    @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                    StudyRepository studyRepository) {
-        this.ethnicityRepository = ethnicityRepository;
+        this.ancestryRepository = ancestryRepository;
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
@@ -70,18 +69,18 @@ public class StudyDuplicationService {
 
         studyRepository.save(duplicateStudy);
 
-        // Copy existing ethnicity
-        Collection<Ethnicity> studyToDuplicateEthnicities = ethnicityRepository.findByStudyId(studyToDuplicate.getId());
-        Collection<Ethnicity> newEthnicities = new ArrayList<>();
+        // Copy existing ancestry
+        Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());
+        Collection<Ancestry> newAncestries = new ArrayList<>();
 
-        studyToDuplicateEthnicities.forEach(studyToDuplicateEthnicity -> {
-            Ethnicity duplicateEthnicity = copyEthnicity(studyToDuplicateEthnicity);
-            duplicateEthnicity.setStudy(duplicateStudy);
-            newEthnicities.add(duplicateEthnicity);
-            ethnicityRepository.save(duplicateEthnicity);
+        studyToDuplicateAncestries.forEach(studyToDuplicateAncestry -> {
+            Ancestry duplicateAncestry = copyAncestry(studyToDuplicateAncestry);
+            duplicateAncestry.setStudy(duplicateStudy);
+            newAncestries.add(duplicateAncestry);
+            ancestryRepository.save(duplicateAncestry);
         });
 
-        duplicateStudy.setEthnicities(newEthnicities);
+        duplicateStudy.setAncestries(newAncestries);
         studyRepository.save(duplicateStudy);
 
         // Save newly duplicated study and housekeeping
@@ -142,20 +141,20 @@ public class StudyDuplicationService {
     /**
      * Create a study entry in the database
      *
-     * @param studyToDuplicateEthnicity Ethnicity to duplicate
-     * @return ethnicity
+     * @param studyToDuplicateAncestry Ancestry to duplicate
+     * @return ancestry
      */
-    private Ethnicity copyEthnicity(Ethnicity studyToDuplicateEthnicity) {
-        Ethnicity duplicateEthnicity = new Ethnicity();
-        duplicateEthnicity.setType(studyToDuplicateEthnicity.getType());
-        duplicateEthnicity.setNumberOfIndividuals(studyToDuplicateEthnicity.getNumberOfIndividuals());
-        duplicateEthnicity.setEthnicGroup(studyToDuplicateEthnicity.getEthnicGroup());
-        duplicateEthnicity.setCountryOfOrigin(studyToDuplicateEthnicity.getCountryOfOrigin());
-        duplicateEthnicity.setCountryOfRecruitment(studyToDuplicateEthnicity.getCountryOfRecruitment());
-        duplicateEthnicity.setDescription(studyToDuplicateEthnicity.getDescription());
-        duplicateEthnicity.setPreviouslyReported(studyToDuplicateEthnicity.getPreviouslyReported());
-        duplicateEthnicity.setSampleSizesMatch(studyToDuplicateEthnicity.getSampleSizesMatch());
-        duplicateEthnicity.setNotes(studyToDuplicateEthnicity.getNotes());
-        return duplicateEthnicity;
+    private Ancestry copyAncestry(Ancestry studyToDuplicateAncestry) {
+        Ancestry duplicateAncestry = new Ancestry();
+        duplicateAncestry.setType(studyToDuplicateAncestry.getType());
+        duplicateAncestry.setNumberOfIndividuals(studyToDuplicateAncestry.getNumberOfIndividuals());
+        duplicateAncestry.setAncestralGroup(studyToDuplicateAncestry.getAncestralGroup());
+        duplicateAncestry.setCountryOfOrigin(studyToDuplicateAncestry.getCountryOfOrigin());
+        duplicateAncestry.setCountryOfRecruitment(studyToDuplicateAncestry.getCountryOfRecruitment());
+        duplicateAncestry.setDescription(studyToDuplicateAncestry.getDescription());
+        duplicateAncestry.setPreviouslyReported(studyToDuplicateAncestry.getPreviouslyReported());
+        duplicateAncestry.setSampleSizesMatch(studyToDuplicateAncestry.getSampleSizesMatch());
+        duplicateAncestry.setNotes(studyToDuplicateAncestry.getNotes());
+        return duplicateAncestry;
     }
 }

@@ -107,6 +107,18 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
+               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    private Collection<Gene> genes = new ArrayList<>();
+
     // JPA no-args constructor
     public Association() {
     }
@@ -136,7 +148,9 @@ public class Association implements Trackable {
                        Date lastMappingDate,
                        String lastMappingPerformedBy,
                        Date lastUpdateDate,
-                       Collection<Event> events) {
+                       Collection<Event> events,
+                       Collection<SingleNucleotidePolymorphism> snps,
+                        Collection<Gene> genes) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -163,6 +177,8 @@ public class Association implements Trackable {
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.lastUpdateDate = lastUpdateDate;
         this.events = events;
+        this.snps = snps;
+        this.genes = genes;
     }
 
     public Long getId() {
@@ -393,5 +409,13 @@ public class Association implements Trackable {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
+    }
+
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> getSnps(){
+        return snps;
     }
 }

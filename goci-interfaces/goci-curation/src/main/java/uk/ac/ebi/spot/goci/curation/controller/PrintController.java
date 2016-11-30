@@ -13,7 +13,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.service.StudyPrintService;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.EthnicityRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ import java.util.concurrent.Callable;
 public class PrintController {
 
     private StudyRepository studyRepository;
-    private EthnicityRepository ethnicityRepository;
+    private AncestryRepository ancestryRepository;
     private StudyPrintService studyPrintService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -41,10 +41,10 @@ public class PrintController {
 
     @Autowired
     public PrintController(StudyRepository studyRepository,
-                           EthnicityRepository ethnicityRepository,
+                           AncestryRepository ancestryRepository,
                            StudyPrintService studyPrintService) {
         this.studyRepository = studyRepository;
-        this.ethnicityRepository = ethnicityRepository;
+        this.ancestryRepository = ancestryRepository;
         this.studyPrintService = studyPrintService;
     }
 
@@ -61,7 +61,7 @@ public class PrintController {
             // Get association information
             Collection<SnpAssociationTableView> snpAssociationTableViews = studyPrintService.generatePrintView(studyId);
 
-            // Get housekeeping and ethnicity information
+            // Get housekeeping and ancestry information
             Housekeeping housekeeping = studyToView.getHousekeeping();
             String initialSampleDescription = studyToView.getInitialSampleSize();
             String replicateSampleDescription = studyToView.getReplicateSampleSize();
@@ -71,12 +71,12 @@ public class PrintController {
             model.addAttribute("initialSampleDescription", initialSampleDescription);
             model.addAttribute("replicateSampleDescription", replicateSampleDescription);
 
-            // Two types of ethnicity information which the view needs to form two different tables
-            model.addAttribute("initialStudyEthnicityDescriptions",
-                               ethnicityRepository.findByStudyIdAndType(studyId, "initial"));
-            model.addAttribute("replicationStudyEthnicityDescriptions",
-                               ethnicityRepository.findByStudyIdAndType(studyId,
-                                                                        "replication"));
+            // Two types of ancestry information which the view needs to form two different tables
+            model.addAttribute("initialStudyAncestryDescriptions",
+                               ancestryRepository.findByStudyIdAndType(studyId, "initial"));
+            model.addAttribute("replicationStudyAncestryDescriptions",
+                               ancestryRepository.findByStudyIdAndType(studyId,
+                                                                       "replication"));
 
             model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
             return "study_printview";

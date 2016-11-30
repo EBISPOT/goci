@@ -28,8 +28,8 @@
                 </a></li>
                 <li th:classappend="${#httpServletRequest.getServletPath() == '/search' ? 'active':''}"><a th:href="@{/search}">Search</a></li>
                 <li th:classappend="${#httpServletRequest.getServletPath() == '/diagram' ? 'active':''}"><a th:href="@{/diagram}">Diagram</a></li>
-                <li th:classappend="${#httpServletRequest.getServletPath() == '/docs/downloads' ? 'active':''}" class="hidden-sm"><a th:href="@{/docs/downloads}">Download</a></li>
-                <li th:classappend="${#httpServletRequest.getServletPath() == '/docs' ? 'active':''}"><a th:href="@{/docs}">Help</a></li>
+                <li id="downloads-item" th:classappend="${#httpServletRequest.getServletPath() == '/downloads' ? 'active':''}" class="hidden-sm"><a th:href="@{/downloads}">Download</a></li>
+                <li id="documentation-item" th:classappend="${#httpServletRequest.getServletPath() == '/docs' ? 'active':''}"><a th:href="@{/docs}">Documentation</a></li>
                 <li th:classappend="${#httpServletRequest.getServletPath() == '/docs/about' ? 'active':''}" class="hidden-sm"><a th:href="@{/docs/about}">About</a></li>
 
                 <li>

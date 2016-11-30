@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.2.6-SNAPSHOT</version>
+        <version>2.2.7-SNAPSHOT</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-sparql-renderlets</artifactId>
-    <version>2.2.6-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
 
     <name>GOCI Pussycat SPARQL renderlets</name>
     <url>http://www.ebi.ac.uk/seqdb/confluence/display/GOCI/Home</url>
