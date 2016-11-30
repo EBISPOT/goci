@@ -25,10 +25,12 @@ import java.util.List;
 @RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
+    @RestResource(exported = false)
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
     Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);
 
+    @RestResource(exported = false)
     Collection<Study> findByPubmedId(String pubmedId);
 
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
