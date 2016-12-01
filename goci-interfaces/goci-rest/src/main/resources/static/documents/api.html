@@ -581,9 +581,9 @@ that describes the problem. The error object has the following structure:</p>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 146
+Content-Length: 153
 
-{"timestamp":1480006859367,"status":400,"error":"Bad Request","message":"The tag 'http://localhost:8080/tags/123' does not exist","path":"/notes"}</code></pre>
+{"timestamp":1480604504704,"status":400,"error":"Bad Request","message":"The tag 'http://localhost:8080/api/studies/123' does not exist","path":"/notes"}</code></pre>
 </div>
 </div>
 </div>
@@ -693,7 +693,7 @@ Content-Type: application/json
 <div class="sect3">
 <h4 id="_response_structure_2"><a class="anchor" href="#_response_structure_2"></a>Response structure</h4>
 <div class="paragraph">
-<p>Unresolved directive in api.adoc - include::/home/dwelter/CodeCellar/GWAS/goci/goci-interfaces/goci-rest/src/main/asciidoc/generated-snippets/api-example/response-fields.adoc[]</p>
+<p>Unresolved directive in api.adoc - include::/Users/dani/Development/goci/goci-interfaces/goci-rest/src/main/asciidoc/generated-snippets/api-example/response-fields.adoc[]</p>
 </div>
 </div>
 <div class="sect3">
@@ -702,84 +702,76 @@ Content-Type: application/json
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2528
+Content-Length: 2258
 
 {
   "_links" : {
-    "genes" : {
-      "href" : "http://localhost:8080/api/genes{?page,size,sort}",
-      "templated" : true
-    },
-    "riskAlleles" : {
-      "href" : "http://localhost:8080/api/riskAlleles{?page,size,sort}",
-      "templated" : true
-    },
-    "genomicContexts" : {
-      "href" : "http://localhost:8080/api/genomicContexts{?page,size,sort}",
-      "templated" : true
-    },
-    "ensemblGenes" : {
-      "href" : "http://localhost:8080/api/ensemblGenes{?page,size,sort}",
+    "studies" : {
+      "href" : "http://localhost:8080/api/studies{?page,size,sort}",
       "templated" : true
     },
     "countries" : {
       "href" : "http://localhost:8080/api/countries{?page,size,sort}",
       "templated" : true
     },
+    "genomicContexts" : {
+      "href" : "http://localhost:8080/api/genomicContexts{?page,size,sort}",
+      "templated" : true
+    },
+    "ancestries" : {
+      "href" : "http://localhost:8080/api/ancestries{?page,size,sort}",
+      "templated" : true
+    },
+    "ensemblGenes" : {
+      "href" : "http://localhost:8080/api/ensemblGenes{?page,size,sort}",
+      "templated" : true
+    },
     "platforms" : {
       "href" : "http://localhost:8080/api/platforms{?page,size,sort}",
-      "templated" : true
-    },
-    "ethnicities" : {
-      "href" : "http://localhost:8080/api/ethnicities{?page,size,sort}",
-      "templated" : true
-    },
-    "singleNucleotidePolymorphisms" : {
-      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms{?page,size,sort}",
-      "templated" : true
-    },
-    "studies" : {
-      "href" : "http://localhost:8080/api/studies{?page,size,sort}",
-      "templated" : true
-    },
-    "eventTypes" : {
-      "href" : "http://localhost:8080/api/eventTypes{?page,size,sort}",
-      "templated" : true
-    },
-    "entrezGenes" : {
-      "href" : "http://localhost:8080/api/entrezGenes{?page,size,sort}",
-      "templated" : true
-    },
-    "studiesBacklogViews" : {
-      "href" : "http://localhost:8080/api/studiesBacklogViews{?page,size,sort}",
-      "templated" : true
-    },
-    "diseaseTraits" : {
-      "href" : "http://localhost:8080/api/diseaseTraits{?page,size,sort}",
-      "templated" : true
-    },
-    "loci" : {
-      "href" : "http://localhost:8080/api/loci{?page,size,sort}",
-      "templated" : true
-    },
-    "efoTraits" : {
-      "href" : "http://localhost:8080/api/efoTraits{?page,size,sort}",
-      "templated" : true
-    },
-    "regions" : {
-      "href" : "http://localhost:8080/api/regions{?page,size,sort}",
-      "templated" : true
-    },
-    "locations" : {
-      "href" : "http://localhost:8080/api/locations{?page,size,sort}",
       "templated" : true
     },
     "associations" : {
       "href" : "http://localhost:8080/api/associations{?page,size,sort}",
       "templated" : true
     },
+    "loci" : {
+      "href" : "http://localhost:8080/api/loci{?page,size,sort}",
+      "templated" : true
+    },
+    "entrezGenes" : {
+      "href" : "http://localhost:8080/api/entrezGenes{?page,size,sort}",
+      "templated" : true
+    },
+    "singleNucleotidePolymorphisms" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms{?page,size,sort}",
+      "templated" : true
+    },
+    "locations" : {
+      "href" : "http://localhost:8080/api/locations{?page,size,sort}",
+      "templated" : true
+    },
+    "genes" : {
+      "href" : "http://localhost:8080/api/genes{?page,size,sort}",
+      "templated" : true
+    },
+    "regions" : {
+      "href" : "http://localhost:8080/api/regions{?page,size,sort}",
+      "templated" : true
+    },
+    "riskAlleles" : {
+      "href" : "http://localhost:8080/api/riskAlleles{?page,size,sort}",
+      "templated" : true
+    },
+    "efoTraits" : {
+      "href" : "http://localhost:8080/api/efoTraits{?page,size,sort}",
+      "templated" : true
+    },
     "mappingMetadatas" : {
       "href" : "http://localhost:8080/api/mappingMetadatas{?page,size,sort}",
+      "templated" : true
+    },
+    "diseaseTraits" : {
+      "href" : "http://localhost:8080/api/diseaseTraits{?page,size,sort}",
       "templated" : true
     },
     "profile" : {
@@ -793,7 +785,7 @@ Content-Length: 2528
 <div class="sect3">
 <h4 id="resources-api-links"><a class="anchor" href="#resources-api-links"></a>Links</h4>
 <div class="paragraph">
-<p>Unresolved directive in api.adoc - include::/home/dwelter/CodeCellar/GWAS/goci/goci-interfaces/goci-rest/src/main/asciidoc/generated-snippets/api-example/links.adoc[]</p>
+<p>Unresolved directive in api.adoc - include::/Users/dani/Development/goci/goci-interfaces/goci-rest/src/main/asciidoc/generated-snippets/api-example/links.adoc[]</p>
 </div>
 </div>
 </div>
@@ -802,7 +794,7 @@ Content-Length: 2528
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-11-24 16:34:26 GMT
+Last updated 2016-11-30 15:49:24 GMT
 </div>
 </div>
 </body>

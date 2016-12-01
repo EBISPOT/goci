@@ -125,7 +125,8 @@
                 <executions>
                     <execution>
                         <id>output-html</id>
-                        <phase>prepare-package</phase>
+                        <!--<phase>prepare-package</phase>-->
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
