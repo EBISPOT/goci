@@ -93,23 +93,29 @@
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
-    <div class="container">
-        <!-- search box goes here -->
-        <div class="input-group" style="width: 250px; float: right;">
-            <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
-            <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="search-button">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
+    <div class="container clearfix">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+            <h2 style="margin:0px">
+                <img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Variant</span><span th:text="${rsId}" style="padding-left:15px"></span>
+            </h2>
         </div>
-
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+            <!-- search box goes here -->
+            <div class="input-group" style="width: 250px; float: right;">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
+                <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="search-button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+            </div>
+        </div>
     </div>
-    <div class="container">
-
-        <h2><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{/icons/dna13.png}"/><span style="padding-left:5px">SNP: </span><span th:text="${rsId}"></span></h2>
-
-    </div>
+    <!--<div class="container">
+        <h2>
+            <img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Variant</span><span th:text="${rsId}" style="padding-left:15px"></span>
+        </h2>
+    </div>-->
 </div>
 
 
@@ -118,7 +124,7 @@
 
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="index.html" th:href="@{/home}">GWAS</a></li>
-        <li><a href="search.html" th:href="@{/search}">SNPs</a></li>
+        <li><a href="search.html" th:href="@{/search}">Variants</a></li>
         <li class="active" th:text="${rsId}"></li>
     </ol>
 
@@ -133,51 +139,66 @@
 
     <div class="container-fluid" id="lower_container">
         <div class="row" style="margin-top:10px">
-            <div class="clearfix">
-                <div id="summary-info" class="col-lg-8 col-md-7 col-sm-7 col-xs-7" style="padding-left:0px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading background-color-primary-accent">
-                            <h3 class="panel-title">SNP information</h3>
+            <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">Variant information</h3>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-xs" id="download_data">
+                            <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
+                            <span>Download variant data</span>
+                        </button>
+                    </span>
+                </div>
+                <div class="clearfix">
+                    <div class="panel-body col-lg-9 col-md-8 col-sm-8 col-xs-8">
+                        <div class="clearfix">
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Base pair location</div>
+                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-location">-</div>
                         </div>
-                        <div class="panel-body">
-                            <div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Base pair location</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpLocation">-</div>
-                            </div>
-                            <div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Cytogenetic region</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpRegion">-</div>
-                            </div>
-                            <div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Functional class</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6"><span class="tag tag-info" id="snpClass"></span></div>
-                            </div>
-                            <div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Reported gene(s)</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpReportedGenes"></div>
-                            </div>
-                            <div class="clearfix">
-                                <div class="col-lg-3 col-md-4 col-sm-5 col-xs-6" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Mapped gene(s)</div>
-                                <div class="col-lg-9 col-md-8 col-sm-7 col-xs-6" id="snpMappedGenes"></div>
-                            </div>
+                        <div class="clearfix">
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Cytogenetic region</div>
+                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-region">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Functional class</div>
+                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7"><span class="tag tag-info" id="variant-class"></span></div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Mapped gene(s)</div>
+                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-mapped-genes"></div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Known trait(s)</div>
+                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-traits"></div>
+                        </div>
+                    </div>
+                    <div id="links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1" style="text-align:right">
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ensembl_button">View in Ensembl</button>
+                        </div>
+                        <!--<div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ensembl_phe_button">Phenotype information</button>
+                        </div>
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ensembl_gen_button">Gene/transcript information</button>
+                        </div>
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ensembl_reg_button">Regulatory information</button>
+                        </div>
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ensembl_pg_button">Population genetics</button>
+                        </div>-->
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="ucsc_button">View in UCSC</button>
+                        </div>
+                        <div style="margin-bottom: 1em">
+                            <button type="button" class="btn btn-default" id="dbsnp_button">View in dbSNP</button>
                         </div>
                     </div>
                 </div>
-                <div id="links" class="col-lg-2 col-md-3 col-sm-4 col-xs-4 col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-xs-offset-1" style="padding-right:0px">
-                    <div class="panel panel-default">
-                        <div class="panel-heading background-color-primary-accent">
-                            <h3 class="panel-title">External links</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div style="margin-bottom: 1em">
-                                <button type="button" class="btn btn-default" id="ensembl_button">View in Ensembl</button>
-                            </div>
-                            <!--<div style="margin-bottom: 1em"><button type="button" class="btn btn-default" id="dbgap_button">View in dbGap</button>
-                            </div>-->
-                            <div style="margin-bottom: 1em"><button type="button" class="btn btn-default" id="dbsnp_button">View in dbSNP</button></div>
-
-                        </div>
-                    </div>
+                <div id="variant-summary">
+                    <span class="glyphicon glyphicon-info-sign" style="padding-right:2px"></span>
+                    <span id="variant-summary-content"></span>
                 </div>
             </div>
 
@@ -201,7 +222,7 @@
                         <thead id="association-table-header">
                         <tr>
                             <th style="width: 10%" id="strongestAllele">Risk allele
-                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>
                                                                         <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
                             </th>
                             <th style="width: 8%" id="riskFrequency">RAF
@@ -209,15 +230,15 @@
                                 <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                             </th>
                             <th style="width: 12%" id="pValue">p-value
-                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>
                                 <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                             </th>
                             <th style="width: 6%" id="orPerCopyNum">OR
-                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with variant"></span>
                                 <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                             </th>
                             <th style="width: 14%" id="orType">Beta
-                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>
                                 <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                             </th>
                             <th style="width: 6%">CI
@@ -352,12 +373,8 @@
         <!-- GOCI JavaScript
         ================================================== -->
         <script src="../static/js/goci-ui.js" th:src="@{/js/goci-ui.js}"></script>
-        <script src="../static/js/snpresult.js" th:src="@{/js/snpresult.js}"></script>
-        <!--<script type="javascript">
-            window.onload = function() {
-              getSnpData();
-            };
-        </script>-->
+        <script src="../static/js/variantresult.js" th:src="@{/js/variantresult.js}"></script>
+
 
         <!-- Google analytics
         ================================================== -->

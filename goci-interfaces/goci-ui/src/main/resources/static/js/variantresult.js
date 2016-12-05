@@ -54,19 +54,12 @@ function getSnpInfo(data,rsId) {
     var region = data.docs[0].region[0];
     var func = data.docs[0].context[0];
 
-    var genes_reported = [];
-    var genes_reported_url = [];
+
     var genes_mapped = [];
     var genes_mapped_url = [];
+    var traits_reported = [];
+    var traits_reported_url = [];
     $.each(data.docs, function (index, doc) {
-        // Reported genes
-        var reportedGenes = doc.reportedGene;
-        $.each(reportedGenes, function (index, gene) {
-            if (jQuery.inArray(gene, genes_reported) == -1) {
-                genes_reported.push(gene);
-                genes_reported_url.push(setQueryUrl(gene));
-            }
-        });
         // Mapped genes
         var mappedGenes = doc.entrezMappedGenes;
         $.each(mappedGenes, function (index, gene) {
@@ -75,20 +68,34 @@ function getSnpInfo(data,rsId) {
                 genes_mapped_url.push(setQueryUrl(gene));
             }
         });
+        // Reported traits
+        var traits = [];
+        var reportedTraits = doc.traitName;
+        if (reportedTraits) {
+            $.each(reportedTraits, function(index, trait) {
+                if (jQuery.inArray(trait, traits_reported) == -1) {
+                    traits_reported.push(trait);
+                    traits_reported_url.push(setQueryUrl(trait));
+                }
+            });
+        } else {
+        }
     });
-    genes_reported_url.sort();
     genes_mapped_url.sort();
+    traits_reported_url.sort();
 
-    $("#snpLocation").html("chr"+chr+":"+pos);
-    $("#snpRegion").html(region);
-    $("#snpClass").html(func);
-    $("#snpReportedGenes").html(genes_reported_url.join(', '));
-    $("#snpMappedGenes").html(genes_mapped_url.join(', '));
+    $("#variant-location").html("chr"+chr+":"+pos);
+    $("#variant-region").html(region);
+    $("#variant-class").html(func);
+    $("#variant-mapped-genes").html(genes_mapped_url.join(', '));
+    $("#variant-traits").html(traits_reported_url.join(', '));
+    $("#variant-summary-content").html(getSummary(data.docs));
 }
 
 function getLinkButtons (rsId) {
-    $("#ensembl_button").attr('onclick', "window.location.href='http://www.ensembl.org/Homo_sapiens/Variation/Explore?v="+rsId+"'");
-    $("#dbsnp_button").attr('onclick', "window.location.href='http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"'");
+    $("#ensembl_button").attr('onclick', "window.open('http://www.ensembl.org/Homo_sapiens/Variation/Explore?v="+rsId+"', '_blank')");
+    $("#ucsc_button").attr('onclick',    "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
+    $("#dbsnp_button").attr('onclick',   "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
 }
 
 function getSnpAssociations(data) {
@@ -182,7 +189,7 @@ function getSnpAssociations(data) {
             });
             row.append(newCell(traits.join(', ')));
         } else {
-           row.append(newCell('-'));
+            row.append(newCell('-'));
         }
 
         // Mapped traits
@@ -285,7 +292,7 @@ function getSnpTraits(data) {
     var mappedtraitsUri = {};
     var synonymtraits = {};
     var studytraits = {};
-    $.each(data, function(index,asso) {
+    $.each(data, function(index, asso) {
         // Trait
         var trait = asso.traitName_s;
         if (jQuery.inArray(trait, traits) == -1) {
@@ -305,7 +312,7 @@ function getSnpTraits(data) {
         var pubDate = publicationDate.split("-");
         var pubmedId = asso.pubmedId;
         var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += setExternalLink(EPMC+pubmedId);
+        study += setExternalLink(EPMC + pubmedId);
         if (jQuery.inArray(study, studytraits[trait]) == -1) {
             if (!studytraits[trait]) {
                 studytraits[trait] = [];
@@ -313,7 +320,6 @@ function getSnpTraits(data) {
             studytraits[trait].push(study);
         }
     });
-
 
     // Display/print data //
     $("#diseasetrait_count").html(traits.length);
@@ -363,6 +369,53 @@ function getSnpTraits(data) {
         $("#diseasetrait-table-body").append(row);
     });
 }
+
+function getSummary(data) {
+    var first_report  = getFirstReportYear(data);
+    var count_studies = countStudies(data);
+
+    if (first_report != '' && count_studies != '') {
+        first_report += ', ';
+    }
+    return first_report+count_studies;
+}
+
+// Pick up the most recent publication year
+function getFirstReportYear(data) {
+    var study_date = '';
+    $.each(data, function(index,asso) {
+        var p_date = asso.publicationDate;
+        var year = p_date.split('-')[0];
+        if (year < study_date || study_date == '') {
+            study_date = year;
+        }
+    });
+    if (study_date != '') {
+        study_date = "Variant first reported in <b>" + study_date + "</b>";
+    }
+    return study_date;
+}
+
+// Pick up the most recent publication year
+function countStudies(data) {
+    var study_text = '';
+    var studies = [];
+    $.each(data, function(index,asso) {
+        var study_id = asso.studyId;
+        if (jQuery.inArray(study_id, studies) == -1) {
+            studies.push(study_id);
+        }
+    });
+
+    if (studies.length == 1) {
+        study_text = '<b>1</b> study reports this variant';
+    }
+    else if (studies.length > 1) {
+        study_text = '<b>'+studies.length+'</b> studies report this variant';
+    }
+    return study_text;
+}
+
 
 function setQueryUrl(query, label) {
     if (!label) {
