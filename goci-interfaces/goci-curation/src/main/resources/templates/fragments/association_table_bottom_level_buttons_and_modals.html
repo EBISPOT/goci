@@ -132,8 +132,10 @@
 
                     <!--Form object is a study, this is so we can pass back ID which can be used-->
                     <!--in URLs created by controller-->
+                    <!--th:action="@{studies/{studyId}/associations/upload(studyId=${study.id})}"-->
+
                     <form class="form-inline" name="uploadSNPsForn" role="form" method="post"
-                          th:action="@{/studies/{studyId}/associations/upload(studyId=${study.id})}"
+                          th:action="@{associations/upload(studyId=${study.id})}"
                           enctype="multipart/form-data" th:object="${study} ">
 
                         <div class="form-group">
