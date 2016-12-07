@@ -28,4 +28,7 @@ public class DocumentationController {
         model.addAttribute("page", pageName);
         return "docs-template";
     }
+
+
+
 }

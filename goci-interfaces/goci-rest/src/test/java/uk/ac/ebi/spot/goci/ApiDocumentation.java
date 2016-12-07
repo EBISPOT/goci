@@ -150,14 +150,14 @@ public class ApiDocumentation {
     }
 
 
-//    @Test
-//    public void studiesListExample () throws Exception {
-//
-//        this.mockMvc.perform(get("/api/studies").accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void studiesListExample () throws Exception {
+
+        this.mockMvc.perform(get("/api/studies").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
 
 
 }
