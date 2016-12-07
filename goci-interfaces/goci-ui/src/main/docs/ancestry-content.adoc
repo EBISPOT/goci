@@ -1,0 +1,11 @@
+= Ancestry
+
+== Ancestry data extraction
+
+Sample ancestry information is available in two distinct forms; a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms, enabling searching, visualisation and integration. It includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment.
+
+The ancestry is derived from the ancestry descriptors used in the publication. Country of recruitment is extracted if an author states the country of recruitment of the samples. It is not assumed from an ancestry identifier or from a cohort name. Where a country of recruitment but no ancestry is provided, published population demographic information, such as the https://www.cia.gov/library/publications/the-world-factbook/[CIA World Factbook] is consulted.
+
+== Ancestry download
+
+All ancestry data in the GWAS Catalog is available to download in a dedicated spreadsheed, available from link:fileheaders[ our download page]. For an overview of the kind of data found in this file, refer to link:fileheaders#_file_headers_for_ancestry_download[ the file header descriptions].
