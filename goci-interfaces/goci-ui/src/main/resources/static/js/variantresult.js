@@ -18,7 +18,7 @@ $(document).ready(function() {
         console.log("Start search for SNP "+searchTerm);
         getSnpData(searchTerm);
     }
-    getLDPopulations();
+    //getLDPopulations();
 });
 
 function getSnpData(rsId) {
@@ -39,16 +39,18 @@ function getSnpData(rsId) {
 
 function processSnpData(data,rsId) {
     // Snp summary panel
-    getSnpInfo(data);
+    getVariantInfo(data);
     // External links panel
     getLinkButtons(rsId);
     // Associations table
-    getSnpAssociations(data.docs);
+    getVariantAssociations(data.docs);
+    // Studies table
+    getVariantStudies(data.docs);
     // Traits table
-    getSnpTraits(data.docs);
+    getVariantTraits(data.docs);
 }
 
-function getSnpInfo(data,rsId) {
+function getVariantInfo(data,rsId) {
     var chr = data.docs[0].chromosomeName[0];
     var pos = data.docs[0].chromosomePosition[0];
     var region = data.docs[0].region[0];
@@ -84,11 +86,38 @@ function getSnpInfo(data,rsId) {
     genes_mapped_url.sort();
     traits_reported_url.sort();
 
+    // Traits display
+    if (traits_reported.length <= 5) {
+        $("#variant-traits").html(traits_reported_url.join(', '));
+    }
+    else {
+        var div_id = 'known_traits_div';
+
+        var traits_reported_text = $('<span></span>');
+        traits_reported_text.css('padding-right', '8px');
+        traits_reported_text.html('<b>'+traits_reported_url.length+'</b> traits');
+
+        var traits_reported_div  = $('<div></div>');
+        traits_reported_div.attr('id', div_id);
+        traits_reported_div.addClass('collapse');
+
+        var traits_reported_list = $('<ul></ul>');
+        traits_reported_list.css('padding-left', '25px');
+        traits_reported_list.css('padding-top', '6px');
+        $.each(traits_reported_url, function(index, trait_url) {
+            traits_reported_list.append(newItem(trait_url));
+        });
+        traits_reported_div.append(traits_reported_list);
+
+        $("#variant-traits").append(traits_reported_text);
+        $("#variant-traits").append(showHideDiv(div_id));
+        $("#variant-traits").append(traits_reported_div);
+    }
+
     $("#variant-location").html("chr"+chr+":"+pos);
     $("#variant-region").html(region);
     $("#variant-class").html(func);
     $("#variant-mapped-genes").html(genes_mapped_url.join(', '));
-    $("#variant-traits").html(traits_reported_url.join(', '));
     $("#variant-summary-content").html(getSummary(data.docs));
 }
 
@@ -98,7 +127,7 @@ function getLinkButtons (rsId) {
     $("#dbsnp_button").attr('onclick',   "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
 }
 
-function getSnpAssociations(data) {
+function getVariantAssociations(data) {
     var asso_count = data.length;
 
     $("#association_count").html(asso_count);
@@ -211,14 +240,14 @@ function getSnpAssociations(data) {
 
         var studyId = asso.studyId;
 
-        row.append(newCell(showHideStudy(studyId)));
+        //row.append(newCell(showHideStudy(studyId)));
 
         // Populate the table
         $("#association-table-body").append(row);
 
 
         // Add hidden study description/details
-        var studyRow = $('<tr/>');
+        /*var studyRow = $('<tr/>');
         studyRow.addClass("accordion-body hidden-study-row collapse");
         studyRow.attr('id',"study-"+studyId);
 
@@ -258,33 +287,71 @@ function getSnpAssociations(data) {
 
         studyTable.append(studyTableContent);
 
-        /*var content = '<table class="sample-info sample-info-border"><thead><tr><th colspan="2" style="background-color:#E7F7F9">Study information</th></tr></thead>' +
-        '  <tbody>' +
-        '    <tr>' +
-        '      <td style="max-width:30%;text-align:right;font-weight:bold">Initial sample description</td>' +
-        '      <td style="text-align:left">'+initialSampleDescription+'</td>' +
-        '    </tr>' +
-        '    <tr>' +
-        '      <td style="max-width:30%;text-align:right;font-weight:bold">Replication sample description</td>' +
-        '      <td style="text-align:left">'+replicateSampleDescription+'</td>' +
-        '    </tr>' +
-        '    <tr>' +
-        '      <td style="max-width:30%;text-align:right;font-weight:bold">Ancestral groups</td>' +
-        '      <td style="text-align:left">'+ancestralGroups.join(', ')+'</td>' +
-        '    </tr>' +
-        '  </tbody>' +
-        '</table>';
-
-        sudyContent.html(content);*/
         sudyContent.html(studyTable);
         studyRow.append(sudyContent);
 
-        $("#association-table-body").append(studyRow);
+        $("#association-table-body").append(studyRow);*/
     });
 }
 
 
-function getSnpTraits(data) {
+function getVariantStudies(data) {
+    var study_ids = [];
+    $.each(data, function(index, asso) {
+        var study_id = asso.studyId;
+        if (jQuery.inArray(study_id, study_ids) == -1) {
+
+            var row = $('<tr/>');
+
+            study_ids.push(study_id);
+
+            // Author
+            var author = asso.author_s;
+            var publicationDate = asso.publicationDate;
+            var pubDate = publicationDate.split("-");
+            var pubmedId = asso.pubmedId;
+            var study_author = setQueryUrl(author, author);
+            study_author += '<div><small><a class="external_link" href="'+EPMC+pubmedId+'">PMID:'+pubmedId+' <img class="link-icon-smaller" src="../icons/external1.png"/></a></small></div>';
+            row.append(newCell(study_author));
+
+
+            // Publication date
+            var p_date = asso.publicationDate;
+            var publi = p_date.split('T')[0];
+            row.append(newCell(publi));
+
+            // Journal
+            row.append(newCell(asso.publication));
+
+            // Title
+            row.append(newCell(asso.title));
+
+            // Initial sample desc
+            var initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
+            row.append(newCell(initial_sample_text));
+
+            // Replicate sample desc
+            var replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
+            row.append(newCell(replicate_sample_text));
+
+            // ancestralGroups
+            var ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
+            row.append(newCell(ancestral_groups_text));
+
+            // Populate the table
+            $("#study-table-body").append(row);
+        }
+    });
+    // Study count //
+    $("#study_count").html(study_ids.length);
+
+    if (study_ids.length == 1) {
+        $("#study_label").html("Study");
+    }
+}
+
+
+function getVariantTraits(data) {
 
     // Fetch data //
     var traits = [];
@@ -374,6 +441,16 @@ function getSummary(data) {
     var first_report  = getFirstReportYear(data);
     var count_studies = countStudies(data);
 
+    if (count_studies == 0) {
+        count_studies = '';
+    }
+    else if (count_studies == 1) {
+        count_studies = '<b>1</b> study reports this variant';
+    }
+    else if (count_studies > 1) {
+        count_studies = '<b>'+count_studies+'</b> studies report this variant';
+    }
+
     if (first_report != '' && count_studies != '') {
         first_report += ', ';
     }
@@ -406,16 +483,25 @@ function countStudies(data) {
             studies.push(study_id);
         }
     });
-
-    if (studies.length == 1) {
-        study_text = '<b>1</b> study reports this variant';
-    }
-    else if (studies.length > 1) {
-        study_text = '<b>'+studies.length+'</b> studies report this variant';
-    }
-    return study_text;
+    return studies.length;
 }
 
+// Display the input array as a HTML list
+function displayArrayAsList(data_array) {
+    var data_text = '';
+    if (data_array.length == 1) {
+        data_text = data_array[0];
+    }
+    else if (data_array.length > 1) {
+        var list = $('<ul/>');
+        list.css('padding-left', '0px');
+        $.each(data_array, function(index, value) {
+            list.append(newItem(value));
+        });
+        data_text = list;
+    }
+    return data_text;
+}
 
 function setQueryUrl(query, label) {
     if (!label) {
@@ -432,6 +518,10 @@ function newCell(content) {
     return $("<td></td>").html(content);
 }
 
+function newItem(content) {
+    return $("<li></li>").html(content);
+}
+
 function showHideStudy(studyId) {
     //return '<button title="Click to show/hide more study information" class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-'+studyId+'.hidden-study-row" aria-expanded="false" aria-controls="study:'+studyId+'">' +
     var study_button = $("<button></button>");
@@ -444,7 +534,19 @@ function showHideStudy(studyId) {
     return study_button;
 }
 
-function getLDPopulations() {
+
+function showHideDiv(div_id) {
+    var div_button = $("<button></button>");
+    div_button.attr('title', 'Click to show/hide more information');
+    div_button.attr('id', 'button-'+div_id);
+    div_button.attr('onclick', 'toggleDiv("'+div_id+'")');
+    div_button.addClass("btn btn-default btn-xs btn-study");
+    div_button.html('<span class="glyphicon glyphicon-plus tgb"></span>');
+
+    return div_button;
+}
+
+/*function getLDPopulations() {
     $.getJSON('http://rest.ensembl.org/info/variation/populations/homo_sapiens?content-type=application/json;filter=LD')
             .done(function(data) {
                 console.log(data);
@@ -459,7 +561,7 @@ function processLDPopulationData(data) {
         var popLabel = popName.split(':')[2] + " - " + pop.description;
         $('#ld-population-selection').append($("<option>").attr("value", popName).html(popLabel));
     });
-}
+}*/
 
 function setState(state) {
     var loading = $('#loading');
