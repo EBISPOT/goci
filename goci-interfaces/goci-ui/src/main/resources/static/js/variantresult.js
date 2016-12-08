@@ -9,6 +9,7 @@ var SearchState = {
 };
 
 var EPMC = "http://www.europepmc.org/abstract/MED/";
+var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
 
 $(document).ready(function() {
     var searchTerm = $('#query').text();
@@ -116,7 +117,7 @@ function getVariantInfo(data,rsId) {
 
     $("#variant-location").html("chr"+chr+":"+pos);
     $("#variant-region").html(region);
-    $("#variant-class").html(func);
+    $("#variant-class").html(setExternalLink(OLS+func,variationClassLabel(func)));
     $("#variant-mapped-genes").html(genes_mapped_url.join(', '));
     $("#variant-summary-content").html(getSummary(data.docs));
 }
@@ -235,7 +236,7 @@ function getVariantAssociations(data) {
         var pubDate = publicationDate.split("-");
         var pubmedId = asso.pubmedId;
         var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += ' <small><a class="external_link" href="'+EPMC+pubmedId+'">PMID:'+pubmedId+' <img class="link-icon-smaller" src="../icons/external1.png"/></a></small>';
+        study += ' <small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small>';
         row.append(newCell(study));
 
         var studyId = asso.studyId;
@@ -311,7 +312,7 @@ function getVariantStudies(data) {
             var pubDate = publicationDate.split("-");
             var pubmedId = asso.pubmedId;
             var study_author = setQueryUrl(author, author);
-            study_author += '<div><small><a class="external_link" href="'+EPMC+pubmedId+'">PMID:'+pubmedId+' <img class="link-icon-smaller" src="../icons/external1.png"/></a></small></div>';
+            study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
             row.append(newCell(study_author));
 
 
@@ -379,7 +380,7 @@ function getVariantTraits(data) {
         var pubDate = publicationDate.split("-");
         var pubmedId = asso.pubmedId;
         var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += setExternalLink(EPMC + pubmedId);
+        study += setExternalLinkIcon(EPMC + pubmedId);
         if (jQuery.inArray(study, studytraits[trait]) == -1) {
             if (!studytraits[trait]) {
                 studytraits[trait] = [];
@@ -408,7 +409,7 @@ function getVariantTraits(data) {
             var mappedtrait = [];
             $.each(mappedtraits[trait], function(index, mtrait) {
                 var mapped_html = setQueryUrl(mtrait);
-                mapped_html += setExternalLink(mappedtraitsUri[trait][index]);
+                mapped_html += setExternalLinkIcon(mappedtraitsUri[trait][index]);
                 mappedtrait.push(mapped_html);
             });
             row.append(newCell(mappedtrait.join(',<br />')));
@@ -510,7 +511,16 @@ function setQueryUrl(query, label) {
     return '<a href="/gwas/search?query='+query+'">'+label+'</a>';
 }
 
-function setExternalLink(url) {
+function variationClassLabel(label) {
+    var new_label = label.replace('_', ' ');
+    return new_label.charAt(0).toUpperCase() + new_label.slice(1);
+}
+
+function setExternalLink(url,label) {
+    return '<a class="external_link" href="'+url+'">'+label+' <img class="link-icon-smaller" src="../icons/external1.png"/></a>';
+}
+
+function setExternalLinkIcon(url) {
     return '<span style="padding-left:5px"><a href="'+url+'" target="_blank"><img alt="externalLink" class="link-icon" src="../icons/external1.png"/></a></span>';
 }
 
@@ -521,19 +531,6 @@ function newCell(content) {
 function newItem(content) {
     return $("<li></li>").html(content);
 }
-
-function showHideStudy(studyId) {
-    //return '<button title="Click to show/hide more study information" class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-'+studyId+'.hidden-study-row" aria-expanded="false" aria-controls="study:'+studyId+'">' +
-    var study_button = $("<button></button>");
-    study_button.attr('title', 'Click to show/hide more study information');
-    study_button.attr('id', 'button-study-'+studyId);
-    study_button.attr('onclick', 'toggleDiv("study-'+studyId+'")');
-    study_button.addClass("btn btn-default btn-xs btn-study");
-    study_button.html('<span class="glyphicon glyphicon-plus tgb"></span>');
-
-    return study_button;
-}
-
 
 function showHideDiv(div_id) {
     var div_button = $("<button></button>");
@@ -546,7 +543,20 @@ function showHideDiv(div_id) {
     return div_button;
 }
 
-/*function getLDPopulations() {
+
+/*function showHideStudy(studyId) {
+    //return '<button title="Click to show/hide more study information" class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-'+studyId+'.hidden-study-row" aria-expanded="false" aria-controls="study:'+studyId+'">' +
+    var study_button = $("<button></button>");
+    study_button.attr('title', 'Click to show/hide more study information');
+    study_button.attr('id', 'button-study-'+studyId);
+    study_button.attr('onclick', 'toggleDiv("study-'+studyId+'")');
+    study_button.addClass("btn btn-default btn-xs btn-study");
+    study_button.html('<span class="glyphicon glyphicon-plus tgb"></span>');
+
+    return study_button;
+}
+
+function getLDPopulations() {
     $.getJSON('http://rest.ensembl.org/info/variation/populations/homo_sapiens?content-type=application/json;filter=LD')
             .done(function(data) {
                 console.log(data);
