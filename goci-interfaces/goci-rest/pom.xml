@@ -134,7 +134,9 @@
                 </executions>
                 <configuration>
                     <sourceDirectory>src/main/asciidoc</sourceDirectory>
-                    <outputDirectory>src/main/resources/static/documents/</outputDirectory>
+                    <!--<outputDirectory>src/main/resources/static/documents/</outputDirectory>-->
+                    <!--<outputDirectory>${project.build.directory}/classes/static/docs/content/</outputDirectory>-->
+                    <outputDirectory>${project.build.directory}/classes/static/documents/</outputDirectory>
                     <backend>html</backend>
                     <doctype>book</doctype>
                     <attributes>

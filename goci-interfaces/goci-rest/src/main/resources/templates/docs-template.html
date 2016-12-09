@@ -22,13 +22,96 @@
     <link href="../css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
+    <!--<link href="../css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>-->
     <link href="../css/sticky-footer-navbar.css" th:href="@{../css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
     <link rel="stylesheet" href="../css/icons/flaticon.css" th:href="@{../css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../css/goci-color-palette-1.css" th:href="@{../css/goci-color-palette-1.css}"/>
+
+    <style type="text/css">
+        /* You have the option of setting a maximum width for your page, and making sure everything is centered */
+        /* body { max-width: 1600px; margin: 0 auto; } */
+
+        #toc {
+            border-bottom: 1px solid #efefed;
+            padding-top: .5em;
+            padding-bottom: .5em;
+        }
+
+        .sect1+.sect1 {
+            border-top: 1px solid #efefed;
+            padding-bottom: .5em;
+
+        }
+
+        #toctitle {
+            padding: 0 9px;
+            color: #207a7a;
+            font-size: 277%;
+            line-height: 1.11;
+            font-family: 'HelveticaNeueLT Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+            -webkit-margin-before: 0.83em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+        }
+
+        #toc a {
+            text-decoration: none;
+            border-bottom-style: none;
+            font-size: medium;
+        }
+
+        #toc ul {
+            font-family: "Open Sans","DejaVu Sans",sans-serif;
+            list-style-type: none;
+        }
+
+        #toc>ul {
+            margin-left: .125em;
+        }
+
+        #footer {
+            padding: 0 9px;
+            color: lightgray;
+        }
+
+        .imageblock {
+            padding: 9px;
+        }
+
+        .author {
+            padding-left: 9px;;
+        }
+        /*body.toc2{padding-left:15em;padding-right:0}*/
+        /*#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}*/
+        /*#toc.toc2 #toctitle{margin-top:0;font-size:1.2em}*/
+        /*#toc.toc2>ul{font-size:.9em;margin-bottom:0}*/
+        /*#toc.toc2 ul ul{margin-left:0;padding-left:1em}*/
+        /*#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}*/
+        /*body.toc2.toc-right{padding-left:0;padding-right:15em}*/
+        /*body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}*/
+        /*#toc.toc2{width:20em}*/
+        /*#toc.toc2 #toctitle{font-size:1.375em}*/
+        /*#toc.toc2>ul{font-size:.95em}*/
+        /*#toc.toc2 ul ul{padding-left:1.25em}*/
+        /*body.toc2.toc-right{padding-left:0;padding-right:20em}}#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}*/
+
+
+        div.toc2 {
+            float: right;;
+        }
+        #toctitle {
+            postion: fixed;
+        }
+
+
+        .section0 {
+            position: fixed;
+        }
+    </style>
+
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -37,7 +120,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="../js/console-plugin.js" th:src="@{js/console-plugin.js}"></script>
+    <script src="../js/console-plugin.js" th:src="@{../js/console-plugin.js}"></script>
 </head>
 
 <body>
@@ -45,20 +128,23 @@
 
 <div th:include="fragments/header :: navbar"></div>
 
-<!--<div th:include="fragments/header :: jumbotron"></div>-->
 
-<!--<div class="container-fluid">-->
-    <!--<ol class="breadcrumb background-color-complementary-accent">-->
-        <!--<li><a href="../home">Home</a></li>-->
-        <!--<li id="docs-crumb"><a href="../docs">Documentation</a></li>-->
-        <!--<li id="downloads-crumb" style="display: none"><a href="../downloads">Downloads</a></li>-->
-        <!--<li id="current-page" class="active">Current page</li>-->
-    <!--</ol>-->
-<!--</div>-->
+<div class="container-fluid">
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="../home">Home</a></li>
+        <li id="docs-crumb"><a href="../docs">Documentation</a></li>
+        <li id="current-page" class="active">Current page</li>
+    </ol>
+</div>
 
-<div class="container tight-to-top">
+<div class="container">
 
-    <div id="docs-content">
+    <div id="docs-header">
+
+    </div>
+
+
+    <div id="docs-content" style="overflow: hidden;">
 
         <!--
 
@@ -67,6 +153,10 @@
         #####################################
 
         -->
+
+    </div>
+
+    <div id="docs-footer">
 
     </div>
 
@@ -90,8 +180,8 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
-<script th:src="@{../js/api-documentation.js}"></script>
+<script src="../static/js/api-documentation.js" th:src="@{../js/api-documentation.js}"></script>
+<!--<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>-->
 
 <!-- Google analytics
 ================================================== -->

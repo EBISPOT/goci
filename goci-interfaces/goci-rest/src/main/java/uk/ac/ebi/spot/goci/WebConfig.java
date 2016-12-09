@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -10,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * Created by dwelter on 10/11/16.
  */
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -26,5 +25,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         // core pages
         registry.addViewController("/").setViewName("index");
+//        registry.addViewController("/docs/index").setViewName("docs-template");
+//        registry.addViewController("/docs/api").setViewName("docs-template");
+
+
     }
 }

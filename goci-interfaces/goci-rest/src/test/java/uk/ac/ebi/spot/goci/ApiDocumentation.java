@@ -29,6 +29,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -159,5 +161,113 @@ public class ApiDocumentation {
 
     }
 
+    @Test
+    public void studiesExample() throws Exception {
+        this.restDocumentationResultHandler.document(
+                pathParameters(
+                        parameterWithName("study_id").description("The id of the study in the GWAS Catalog")),
+
+                responseFields(
+                        fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
+                        fieldWithPath("pubmedId").description("The pubmed ID for the study"),
+                        fieldWithPath("accessionId").description("The study's GWAS Catalog accession ID"),
+                        fieldWithPath("fullPvalueSet").description("Whether full summary statistics are available for this study")
+                ),
+                links(halLinks(),
+                      linkWithRel("self").description("This study"),
+                      linkWithRel("ancestries").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
+                      linkWithRel("diseaseTrait").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
+                      linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
+                      linkWithRel("platforms").description("<<overview-pagination,Paginated>> list of <<platforms-resources,platforms>> in this study"),
+                      linkWithRel("associations").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study")
+
+                      )
+
+        );
+
+        this.mockMvc.perform(get("/api/studies/{study_id}", "5993").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void associationsExample() throws Exception {
+
+    }
+
+    @Test
+    public void locationsExample() throws Exception {
+
+    }
+
+    @Test
+    public void regionsExample() throws Exception {
+
+    }
+
+    @Test
+    public void genomicContextsExample() throws Exception {
+
+    }
+
+    @Test
+    public void efoTraitsExample() throws Exception {
+
+    }
+
+    @Test
+    public void mappingMetadatasExample() throws Exception {
+
+    }
+
+    @Test
+    public void riskAllelesExample() throws Exception {
+
+    }
+
+    @Test
+    public void diseaseTraitsExample() throws Exception {
+
+    }
+
+    @Test
+    public void countriesExample() throws Exception {
+
+    }
+
+    @Test
+    public void singleNucleotidePolymorphismsExample() throws Exception {
+
+    }
+
+    @Test
+    public void ancestriesExample() throws Exception {
+
+    }
+
+    @Test
+    public void entrezGenesExample() throws Exception {
+
+    }
+
+    @Test
+    public void ensemblGenesExample() throws Exception {
+
+    }
+
+    @Test
+    public void genesExample() throws Exception {
+
+    }
+
+
+    @Test
+    public void lociExample() throws Exception {
+
+    }
+
+    @Test
+    public void platformsExample() throws Exception {
+
+    }
 
 }

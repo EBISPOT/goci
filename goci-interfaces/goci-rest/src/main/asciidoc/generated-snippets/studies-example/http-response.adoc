@@ -1,0 +1,51 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1421
+
+{
+  "author" : "Perlis RH",
+  "publicationDate" : "2010-11-01T00:00:00.000+0000",
+  "publication" : "Am J Psychiatry",
+  "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
+  "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
+  "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
+  "pubmedId" : "21041247",
+  "cnv" : false,
+  "gxe" : false,
+  "gxg" : false,
+  "genomewideArray" : true,
+  "targetedArray" : false,
+  "snpCount" : 1922309,
+  "qualifier" : null,
+  "imputed" : true,
+  "pooled" : false,
+  "studyDesignComment" : null,
+  "accessionId" : "GCST000854",
+  "fullPvalueSet" : false,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/api/studies/5993"
+    },
+    "study" : {
+      "href" : "http://localhost:8080/api/studies/5993"
+    },
+    "platforms" : {
+      "href" : "http://localhost:8080/api/studies/5993/platforms"
+    },
+    "ancestries" : {
+      "href" : "http://localhost:8080/api/studies/5993/ancestries"
+    },
+    "associations" : {
+      "href" : "http://localhost:8080/api/studies/5993/associations"
+    },
+    "diseaseTrait" : {
+      "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+    },
+    "efoTraits" : {
+      "href" : "http://localhost:8080/api/studies/5993/efoTraits"
+    }
+  }
+}
+----

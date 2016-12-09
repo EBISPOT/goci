@@ -5,42 +5,61 @@
 
 $(document).ready(function() {
 
+
+    var content = $("#docs-content");
+
     // read the window location to set the breadcrumb
     var path = window.location.pathname;
     var pagename = path.substr(path.lastIndexOf('/') + 1);
-    if (pagename == 'docs') {
-        pagename = "/index";
-    }
-    //var url_header = "../documents/".concat(pagename).concat(".html #header");
-    //var url_footer = "../documents/".concat(pagename).concat(".html #footer");
+    var url_header = "../documents/".concat(pagename).concat(".html #header");
+    var url_footer = "../documents/".concat(pagename).concat(".html #footer");
     var url = "../documents/".concat(pagename).concat(".html #content");
-    //console.log("Documentation should be loaded from " + url + "...");
+    console.log("Documentation should be loaded from " + url + "...");
 
-    //$("#docs-header").load (url_header);
+    $("#docs-header").load (url_header);
     $("#docs-content").load (url);
-    //$("#docs-footer").load (url_footer);
+    $("#docs-footer").load (url_footer);
 
-    //if (pagename == 'about') {
-    //    $('#local-nav-about').addClass('active');
-    //} else {
-    //    $('#local-nav-docs').addClass('active');
-    //
-    //}
+    var displayName = pagename.replace(/(^| )(\w)/g, function(x) {
+        return x.toUpperCase();
+    });
+
+    displayName = displayName.replace("-", " ");
+    
+    $("#current-page").text(displayName);
+    console.log("Updated breadcrumb (" + displayName + ")");
+    
+    console.log("Done!");
 
     // load the page content
-//    $.get(url, loadDocumentation(pagename, content)).fail(console.log("Failed to get content from " + url));
+    // $.get(url, loadDocumentation(pagename, content)).fail(console.log("Failed to get content from " + url));
 });
 
 
-//$(document).ready(function() {
-//    var content = $("#docs-content");
+
+
+// var loadDocumentation = function(pagename, content) {
+//     console.log("Attempting to load documentation...");
+//     return function(data, textStatus, jqXHR) {
+//         // set breadcrumb
+//         var displayName = pagename.replace(/(^| )(\w)/g, function(x) {
+//             return x.toUpperCase();
+//         });
 //
-//    // read the window location to set the breadcrumb
-//    var path = window.location.pathname;
-//    var pagename = path.substr(path.lastIndexOf('/') + 1);
-//    var url = "content/".concat(pagename).concat("-content.html");
-//    console.log("Documentation should be loaded from " + url + "...");
+//         displayName = displayName.replace("-", " ");
 //
-//    // load the page content
-//    $.get(url, loadDocumentation(pagename, content)).fail(console.log("Failed to get content from " + url));
-//});
+//         $("#current-page").text(displayName);
+//
+//         console.log("Updated breadcrumb (" + displayName + ")");
+//         // load the data content
+//         console.log("Updating " + content + "...");
+//         //console.log(data);
+//         content.html(data);
+//
+//
+//         console.log("Done!");
+//
+//     }
+//
+//
+// };

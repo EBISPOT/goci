@@ -1,7 +1,7 @@
 = GWAS CATALOG API Guide
 :doctype: book
 :toc: left
-:toc-title: OLS API
+:toc-title: GWAS Catalog API
 :sectanchors:
 :sectlinks:
 :toclevels: 4
@@ -89,19 +89,19 @@ Content-Type: application/json
 {
   "_links" : {
     "first" : {
-      "href" : "http://www.ebi.ac.uk/ols/api/ontologies?page=0&size=1"
+      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=0&size=1"
     },
     "prev" : {
-      "href" : "http://www.ebi.ac.uk/ols/api/ontologies?page=0&size=1"
+      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=0&size=1"
     },
     "self" : {
-      "href" : "http://www.ebi.ac.uk/ols/api/ontologies"
+      "href" : "http://www.ebi.ac.uk/gwas/api/studies"
     },
     "next" : {
-      "href" : "http://www.ebi.ac.uk/ols/api/ontologies?page=2&size=1"
+      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=2&size=1"
     },
     "last" : {
-      "href" : "http://www.ebi.ac.uk/ols/api/ontologies?page=140&size=1"
+      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=140&size=1"
     }
   },
   "_embedded" : {
@@ -118,12 +118,12 @@ Content-Type: application/json
 
 ==== Response structure
 
-//include::{snippets}/page-example/response-fields.adoc[]
+include::{snippets}/page-example/response-fields.adoc[]
 
 [[resources-page-links]]
 ==== Links
 
-//include::{snippets}/page-example/links.adoc[]
+include::{snippets}/page-example/links.adoc[]
 
 [[resources]]
 = Resources

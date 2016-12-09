@@ -10,21 +10,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-@RequestMapping("")
+//@RequestMapping("")
 public class DocumentationController {
 
+//    @RequestMapping({""})
+//    public String showHomeIndex(Model model) {
+//        return "redirect:docs/index";
+//    }
 
-    @RequestMapping({"docs"})
+    @RequestMapping(value = {"docs"})
     public String showDocsIndex(Model model) {
         return "redirect:docs/index";
     }
-    // ok, this is bad, need to find a way to deal with trailing slashes and constructing relative URLs in the thymeleaf template...
+//    // ok, this is bad, need to find a way to deal with trailing slashes and constructing relative URLs in the thymeleaf template...
     @RequestMapping({"docs/"})
     public String showDocsIndex2(Model model) {
         return "redirect:index";
     }
     @RequestMapping({"docs/{page}"})
     public String showDocs(@PathVariable("page") String pageName, Model model) {
+
+
         model.addAttribute("page", pageName);
         return "docs-template";
     }
