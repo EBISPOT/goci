@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.FilterAssociation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,31 +35,46 @@ public class FilterDataProcessingService {
         return log;
     }
 
-    public String[][] filterInputData(String[][] data, Boolean pruneOutput){
+    public String[][] filterInputData(String[][] data, Double threshold, Boolean pruneOutput) throws Exception {
         headers = data[0];
 
         processHeaders();
-        List<FilterAssociation> associations = processInputData(data);
+        Map<String, List<FilterAssociation>> allAssociations = processInputData(data, threshold);
 
-        getLog().info("Starting sorting by chromosome");
-        Map<String, List<FilterAssociation>> byChrom = filteringService.groupByChromosomeName(associations);
-
-        getLog().info("Sorting by chromosome done");
-
-        getLog().info("Starting sorting by bp location");
-
-        Map<String, List<FilterAssociation>> byLoc = filteringService.sortByBPLocation(byChrom);
-
-        getLog().info("Sorting by bp location done");
+        if(allAssociations.get("included").size() != 0) {
+            List<FilterAssociation> associations = allAssociations.get("included");
 
 
-        getLog().info("Starting filtering process");
+            getLog().info("Starting sorting by chromosome");
+            Map<String, List<FilterAssociation>> byChrom = filteringService.groupByChromosomeName(associations);
 
-        List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLoc);
-        getLog().info("Filtering process complete");
+            getLog().info("Sorting by chromosome done");
 
-        String[][] output = transformAssociations(filtered, pruneOutput);
-        return output;
+            getLog().info("Starting sorting by bp location");
+
+            Map<String, List<FilterAssociation>> byLoc = filteringService.sortByBPLocation(byChrom);
+
+            getLog().info("Sorting by bp location done");
+
+
+            getLog().info("Starting filtering process");
+
+            List<FilterAssociation> filtered = filteringService.filterTopAssociations(byLoc);
+            getLog().info("Filtering process complete");
+
+
+            if(allAssociations.get("excluded").size() != 0 && !pruneOutput) {
+                  filtered.addAll(allAssociations.get("excluded"));
+            }
+
+            String[][] output = transformAssociations(filtered);
+            return output;
+        }
+        else{
+            System.err.println("Your data contains no associations below your chosen significance threshold");
+
+            throw new Exception("Your data contains no associations below your chosen significance threshold");
+        }
     }
 
     public void processHeaders(){
@@ -88,8 +104,11 @@ public class FilterDataProcessingService {
     }
 
 
-    public List<FilterAssociation> processInputData(String[][] data) {
-        List<FilterAssociation> associations = new ArrayList<>();
+    public Map<String, List<FilterAssociation>> processInputData(String[][] data, Double threshold) {
+        Map<String, List<FilterAssociation>> associations = new HashMap<>();
+
+        List<FilterAssociation> included = new ArrayList<>();
+        List<FilterAssociation> excluded = new ArrayList<>();
 
         int entries = data.length-1;
         System.out.println("About to process " + entries + " entries");
@@ -148,13 +167,22 @@ public class FilterDataProcessingService {
             
             fa.setOtherInformation(otherVals);
 
-            associations.add(fa);
+            if(pvalueFull < threshold){
+                included.add(fa);
+            }
+            else{
+                excluded.add(fa);
+            }
+
         }
+
+        associations.put("included", included);
+        associations.put("excluded", excluded);
         return associations;
     }
 
 
-    public String[][] transformAssociations(List<FilterAssociation> filtered, Boolean pruneOutput) {
+    public String[][] transformAssociations(List<FilterAssociation> filtered) {
         List<String[]> lines = new ArrayList<>();
 
         String[] newHeaders = new String[headers.length+1];
@@ -173,39 +201,38 @@ public class FilterDataProcessingService {
                 System.out.println((filtered.indexOf(f)*100)/filtered.size() + " % done");
             }
 
-            if(!pruneOutput || (pruneOutput && f.getPvalueExponent() < -5)) {
-                String[] line = new String[headers.length + 1];
+            String[] line = new String[headers.length + 1];
 
-                line[rs_id] = f.getStrongestAllele();
-                line[chromosome] = f.getChromosomeName();
-                line[bp_location] = f.getChromosomePosition().toString();
+            line[rs_id] = f.getStrongestAllele();
+            line[chromosome] = f.getChromosomeName();
+            line[bp_location] = f.getChromosomePosition().toString();
 
-                if(f.getIsAmbigious() && f.getIsTopAssociation()) {
-                    line[headers.length] = "REQUIRES REVIEW";
-                }
-                else {
-                    line[headers.length] = f.getIsTopAssociation().toString();
-                }
-
-                if (f.getPrecisionConcern()) {
-                    String m = f.getPvalueMantissa().toString();
-                    String e = f.getPvalueExponent().toString();
-                    line[pvalue] = m + "e" + e;
-                }
-                else {
-                    line[pvalue] = String.valueOf(f.getPvalue());
-                }
-
-                for (int o : other) {
-                    line[o] = f.getOtherInformation().get(other.indexOf(o));
-                }
-
-                if (ld_block != null) {
-                    line[ld_block] = f.getLdBlock();
-                }
-
-                lines.add(line);
+            if(f.getIsAmbigious() && f.getIsTopAssociation()) {
+                line[headers.length] = "REQUIRES REVIEW";
             }
+            else {
+                line[headers.length] = f.getIsTopAssociation().toString();
+            }
+
+            if (f.getPrecisionConcern()) {
+                String m = f.getPvalueMantissa().toString();
+                String e = f.getPvalueExponent().toString();
+                line[pvalue] = m + "e" + e;
+            }
+            else {
+                line[pvalue] = String.valueOf(f.getPvalue());
+            }
+
+            for (int o : other) {
+                line[o] = f.getOtherInformation().get(other.indexOf(o));
+            }
+
+            if (ld_block != null) {
+                line[ld_block] = f.getLdBlock();
+            }
+
+            lines.add(line);
+
         }
         return lines.toArray(new String[lines.size()][]);
     }
