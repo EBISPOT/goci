@@ -4,5 +4,5 @@ HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
 Content-Length: 153
 
-{"timestamp":1480606963193,"status":400,"error":"Bad Request","message":"The tag 'http://localhost:8080/api/studies/123' does not exist","path":"/notes"}
+{"timestamp":1481194133951,"status":400,"error":"Bad Request","message":"The tag 'http://localhost:8080/api/studies/123' does not exist","path":"/notes"}
 ----

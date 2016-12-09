@@ -12,12 +12,14 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
+@EnableWebMvc
 public class RestApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(RestApplication.class, args);

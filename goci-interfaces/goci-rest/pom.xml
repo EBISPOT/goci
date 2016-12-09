@@ -135,6 +135,7 @@
                 <configuration>
                     <sourceDirectory>src/main/asciidoc</sourceDirectory>
                     <outputDirectory>src/main/resources/static/documents/</outputDirectory>
+                    <!--<outputDirectory>${project.build.directory}/classes/static/docs/content/</outputDirectory>-->
                     <backend>html</backend>
                     <doctype>book</doctype>
                     <attributes>
@@ -142,8 +143,8 @@
                         <!--<imagesdir>img</imagesdir>-->
                         <snippets>${snippetsDirectory}</snippets>
                     </attributes>
-                    <!--<headerFooter>false</headerFooter>-->
-                    <!--<preserveDirectories>true</preserveDirectories>-->
+                    <headerFooter>false</headerFooter>
+                    <preserveDirectories>true</preserveDirectories>
                 </configuration>
             </plugin>
         </plugins>

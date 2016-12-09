@@ -26,5 +26,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         // core pages
         registry.addViewController("/").setViewName("index");
+//        registry.addViewController("/docs/index").setViewName("docs-template");
+//        registry.addViewController("/docs/api").setViewName("docs-template");
+
+
     }
 }
