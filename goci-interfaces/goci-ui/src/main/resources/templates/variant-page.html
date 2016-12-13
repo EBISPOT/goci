@@ -368,6 +368,22 @@
             </div>
         </div>
 
+        <!-- LD plot widget -->
+        <div class="row" style="margin-top:20px">
+            <div id="ldplot_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span id="ldplot_panel_label">LD plot</span>
+                    </h3>
+                    <span class="pull-right clickable" onclick="toggleSidebar('#ldplot_panel span.clickable')">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </span>
+                </div>
+
+                <div class="panel-body _ld_graph _widget"></div>
+            </div>
+        </div>
+
     </div>
 
     <!-- /container -->
@@ -412,6 +428,71 @@
         ga('create', 'UA-60195133-1', 'auto');
         ga('send', 'pageview');
     </script>
+
+
+    <!-- LD widget JavaScript
+    ================================================== -->
+    <!-- JS for widgets -->
+    <script type="text/javascript" src="http://test-5.ensembl.org/Widgets/core.js"></script>
+
+    <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
+    <link type="text/css" rel="stylesheet" href="http://test-5.ensembl.org/ld_graph.css"/>
+    <!--<script type="text/javascript" src="d3.v3.js"></script> -->
+    <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
+
+
+    <script type="text/javascript">
+
+        Ensembl.newWidget(
+
+            function() {
+                return {
+                    container   : '._ld_graph',
+                    widgetType  : Ensembl.widgets.LDPlot
+                }
+            },
+
+            function() {
+                return {
+                    configuration : {
+                        ID            : (window.location.pathname.match(/variant\W(\w+)/) || []).pop(),
+                        window_size   : '50',
+                        population    : '1000GENOMES:phase_3:GBR',
+                        svgSize       : {
+                            width   : 800,
+                            height  : 300,
+                            padding : 50
+                        },
+                        panelSize     : {
+                            width       : 800,
+                            min_height  : 100,
+                            tab_height  : 30,
+                            padding     : 50
+                        },
+                        heatmap       : {
+                            parameter : {
+                                color_low : "white",
+                                color_high: "black"
+                            },
+                            maf       : {
+                                color_low : "black",
+                                color_high: "white"
+                            }
+                        },
+                        filters       : {
+                            selected_filters : [],
+                            maf_sign         : "below",
+                            maf_thr          : 0.25,
+                            parameter        : "r2",   //"r2"  or "d_prime"
+                            parameter_sign   : "above",
+                            parameter_thr    : "0.8"
+                        }
+                    }
+                };
+            });
+    </script>
+    <!-- JS for widgets ends -->
 </div>
 
 </body>
