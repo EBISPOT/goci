@@ -11,6 +11,8 @@ var SearchState = {
 var EPMC = "http://www.europepmc.org/abstract/MED/";
 var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
 
+var list_min = 5;
+
 $(document).ready(function() {
     var searchTerm = $('#query').text();
     console.log("Loading search module!");
@@ -89,7 +91,7 @@ function getVariantInfo(data,rsId) {
     traits_reported_url.sort();
 
     // Traits display
-    if (traits_reported.length <= 5) {
+    if (traits_reported.length <= list_min) {
         $("#variant-traits").html(traits_reported_url.join(', '));
     }
     else {
@@ -369,14 +371,15 @@ function getVariantTraits(data) {
     }
 
     traits.sort();
-
     $.each(traits, function(index,trait) {
+
         var row = $('<tr/>');
 
         // Trait
         row.append(newCell(setQueryUrl(trait)));
 
         // Mapped trait(s)
+        var mappedtrait_html = newCell('-');
         if (mappedtraits[trait]) {
             var mappedtrait = [];
             $.each(mappedtraits[trait], function(index, mtrait) {
@@ -384,28 +387,45 @@ function getVariantTraits(data) {
                 mapped_html += setExternalLinkIcon(mappedtraitsUri[trait][index]);
                 mappedtrait.push(mapped_html);
             });
-            row.append(newCell(mappedtrait.join(',<br />')));
-        } else {
-            row.append(newCell('-'));
+            mappedtrait.sort();
+            if (mappedtrait.length <= list_min) {
+                mappedtrait_html = newCell(mappedtrait.join(',<br />'));
+            }
+            else {
+                mappedtrait_html = newCell(longContentList("mapped_traits_div_" + index, '', mappedtrait, 'mapped traits'));
+            }
         }
+        row.append(mappedtrait_html);
 
         // Synonym trait(s)
+        var synonym_html = newCell('-');
         if (synonymtraits[trait]) {
             var synonymtrait = [];
-            $.each(synonymtraits[trait], function(index, syntrait) {
+            $.each(synonymtraits[trait], function(i, syntrait) {
                 synonymtrait.push(setQueryUrl(syntrait));
             });
-            row.append(newCell(synonymtrait.join(', ')));
-        } else {
-            row.append(newCell('-'));
+            synonymtrait.sort();
+            if (synonymtrait.length <= list_min) {
+                synonym_html = newCell(synonymtrait.join(',<br />'));
+            }
+            else {
+                synonym_html = newCell(longContentList("syn_traits_div_" + index, '', synonymtrait, 'synonym traits'));
+            }
         }
+        row.append(synonym_html);
 
         // Study trait(s)
+        var studytrait_html = newCell('-');
         if (studytraits[trait]) {
-            row.append(newCell(studytraits[trait].join(',<br />')));
-        } else {
-            row.append(newCell('-'));
+            if (studytraits[trait].length <= list_min) {
+                studytrait_html = newCell(studytraits[trait].join(',<br />'));
+            }
+            else {
+                studytrait_html = newCell(longContentList("study_traits_div_" + index, '', studytraits[trait], 'study traits'));
+            }
         }
+        row.append(studytrait_html);
+
         $("#diseasetrait-table-body").append(row);
     });
 }
@@ -520,7 +540,7 @@ function newItem(content) {
 }
 
 // Create a hidden list of items - Used when we have to display a more or less long list of information
-function longContentList (content_id,container_id, list, type) {
+function longContentList (content_id, container_id, list, type) {
 
     var content_text = $('<span></span>');
     content_text.css('padding-right', '8px');
@@ -538,9 +558,18 @@ function longContentList (content_id,container_id, list, type) {
     });
     content_div.append(content_list);
 
-    $("#"+container_id).append(content_text);
-    $("#"+container_id).append(showHideDiv(content_id));
-    $("#"+container_id).append(content_div);
+    if (container_id == '') {
+        var span = $('<span></span>');
+        span.append(content_text);
+        span.append(showHideDiv(content_id));
+        span.append(content_div);
+        return span;
+    }
+    else {
+        $("#" + container_id).append(content_text);
+        $("#" + container_id).append(showHideDiv(content_id));
+        $("#" + container_id).append(content_div);
+    }
 }
 
 // Create a button to show/hide content
