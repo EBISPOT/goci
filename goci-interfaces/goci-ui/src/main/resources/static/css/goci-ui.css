@@ -286,6 +286,20 @@ a > .toplevel-view {
 /*color: #A6703F;*/
 /*}*/
 
+.external-link {
+    margin-left: 6px;
+    color: #333;
+    font-size:0.9em;
+}
+.external-link:hover, external-link:active, external-link:focus {
+    text-decoration: none;
+}
+
+.external-link-smaller {
+    margin-left: 5px;
+    font-size:0.8em;
+}
+
 .link-icon {
     width: 1.5em;
     height: auto;

@@ -39,8 +39,8 @@ function getSnpData(rsId) {
 }
 
 function processSnpData(data,rsId) {
-    // Snp summary panel
-    getVariantInfo(data);
+    // Variant summary panel
+    getVariantInfo(data.docs);
     // External links panel
     getLinkButtons(rsId);
     // Associations table
@@ -52,17 +52,18 @@ function processSnpData(data,rsId) {
 }
 
 function getVariantInfo(data,rsId) {
-    var chr = data.docs[0].chromosomeName[0];
-    var pos = data.docs[0].chromosomePosition[0];
-    var region = data.docs[0].region[0];
-    var func = data.docs[0].context[0];
+    var data_sample = data[0];
+    var chr = data_sample.chromosomeName[0];
+    var pos = data_sample.chromosomePosition[0];
+    var region = data_sample.region[0];
+    var func = data_sample.context[0];
 
 
     var genes_mapped = [];
     var genes_mapped_url = [];
     var traits_reported = [];
     var traits_reported_url = [];
-    $.each(data.docs, function (index, doc) {
+    $.each(data, function (index, doc) {
         // Mapped genes
         var mappedGenes = doc.entrezMappedGenes;
         $.each(mappedGenes, function (index, gene) {
@@ -92,41 +93,16 @@ function getVariantInfo(data,rsId) {
         $("#variant-traits").html(traits_reported_url.join(', '));
     }
     else {
-        var div_id = 'known_traits_div';
-
-        var traits_reported_text = $('<span></span>');
-        traits_reported_text.css('padding-right', '8px');
-        traits_reported_text.html('<b>'+traits_reported_url.length+'</b> traits');
-
-        var traits_reported_div  = $('<div></div>');
-        traits_reported_div.attr('id', div_id);
-        traits_reported_div.addClass('collapse');
-
-        var traits_reported_list = $('<ul></ul>');
-        traits_reported_list.css('padding-left', '25px');
-        traits_reported_list.css('padding-top', '6px');
-        $.each(traits_reported_url, function(index, trait_url) {
-            traits_reported_list.append(newItem(trait_url));
-        });
-        traits_reported_div.append(traits_reported_list);
-
-        $("#variant-traits").append(traits_reported_text);
-        $("#variant-traits").append(showHideDiv(div_id));
-        $("#variant-traits").append(traits_reported_div);
+        longContentList("known_traits_div","variant-traits",traits_reported_url,'traits');
     }
 
     $("#variant-location").html("chr"+chr+":"+pos);
     $("#variant-region").html(region);
     $("#variant-class").html(setExternalLink(OLS+func,variationClassLabel(func)));
     $("#variant-mapped-genes").html(genes_mapped_url.join(', '));
-    $("#variant-summary-content").html(getSummary(data.docs));
+    $("#variant-summary-content").html(getSummary(data));
 }
 
-function getLinkButtons (rsId) {
-    $("#ensembl_button").attr('onclick', "window.open('http://www.ensembl.org/Homo_sapiens/Variation/Explore?v="+rsId+"', '_blank')");
-    $("#ucsc_button").attr('onclick',    "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
-    $("#dbsnp_button").attr('onclick',   "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
-}
 
 function getVariantAssociations(data) {
     var asso_count = data.length;
@@ -246,7 +222,6 @@ function getVariantAssociations(data) {
         // Populate the table
         $("#association-table-body").append(row);
 
-
         // Add hidden study description/details
         /*var studyRow = $('<tr/>');
         studyRow.addClass("accordion-body hidden-study-row collapse");
@@ -315,7 +290,6 @@ function getVariantStudies(data) {
             study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
             row.append(newCell(study_author));
 
-
             // Publication date
             var p_date = asso.publicationDate;
             var publi = p_date.split('T')[0];
@@ -376,11 +350,9 @@ function getVariantTraits(data) {
 
         // Study trait(s)
         var author = asso.author_s;
-        var publicationDate = asso.publicationDate;
-        var pubDate = publicationDate.split("-");
-        var pubmedId = asso.pubmedId;
-        var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += setExternalLinkIcon(EPMC + pubmedId);
+        var publicationDate = asso.publicationDate.split("-");
+        var study  = setQueryUrl(author, author + " - " + publicationDate[0]);
+            study += setExternalLinkIcon(EPMC + asso.pubmedId);
         if (jQuery.inArray(study, studytraits[trait]) == -1) {
             if (!studytraits[trait]) {
                 studytraits[trait] = [];
@@ -438,6 +410,7 @@ function getVariantTraits(data) {
     });
 }
 
+// Generate the summary sentence, at the bottom of the summary panel
 function getSummary(data) {
     var first_report  = getFirstReportYear(data);
     var count_studies = countStudies(data);
@@ -456,6 +429,13 @@ function getSummary(data) {
         first_report += ', ';
     }
     return first_report+count_studies;
+}
+
+// Create external link buttons
+function getLinkButtons (rsId) {
+    $("#ensembl_button").attr('onclick', "window.open('http://www.ensembl.org/Homo_sapiens/Variation/Explore?v="+rsId+"', '_blank')");
+    $("#ucsc_button").attr('onclick',    "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
+    $("#dbsnp_button").attr('onclick',   "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
 }
 
 // Pick up the most recent publication year
@@ -504,6 +484,7 @@ function displayArrayAsList(data_array) {
     return data_text;
 }
 
+// Generate an internal link to the GWAS search page
 function setQueryUrl(query, label) {
     if (!label) {
         label = query;
@@ -511,27 +492,58 @@ function setQueryUrl(query, label) {
     return '<a href="/gwas/search?query='+query+'">'+label+'</a>';
 }
 
+// Update the display of the variant functional class
 function variationClassLabel(label) {
     var new_label = label.replace('_', ' ');
     return new_label.charAt(0).toUpperCase() + new_label.slice(1);
 }
 
+// Generate an external link (text + icon)
 function setExternalLink(url,label) {
-    return '<a class="external_link" href="'+url+'">'+label+' <img class="link-icon-smaller" src="../icons/external1.png"/></a>';
+    return '<a href="'+url+'">'+label+'<span class="glyphicon glyphicon-new-window external-link-smaller"></span></a>';
+
 }
 
+// Generate an external link (icon only)
 function setExternalLinkIcon(url) {
-    return '<span style="padding-left:5px"><a href="'+url+'" target="_blank"><img alt="externalLink" class="link-icon" src="../icons/external1.png"/></a></span>';
+    return '<a href="'+url+'" class="glyphicon glyphicon-new-window external-link" title="External link" target="_blank"></a>';
 }
 
+// Create a cell tag (<td>) and add content in it
 function newCell(content) {
     return $("<td></td>").html(content);
 }
 
+// Create a list item tag (<li>) and add content in it
 function newItem(content) {
     return $("<li></li>").html(content);
 }
 
+// Create a hidden list of items - Used when we have to display a more or less long list of information
+function longContentList (content_id,container_id, list, type) {
+
+    var content_text = $('<span></span>');
+    content_text.css('padding-right', '8px');
+    content_text.html('<b>'+list.length+'</b> '+type);
+
+    var content_div  = $('<div></div>');
+    content_div.attr('id', content_id);
+    content_div.addClass('collapse');
+
+    var content_list = $('<ul></ul>');
+    content_list.css('padding-left', '25px');
+    content_list.css('padding-top', '6px');
+    $.each(list, function(index, item) {
+        content_list.append(newItem(item));
+    });
+    content_div.append(content_list);
+
+    $("#"+container_id).append(content_text);
+    $("#"+container_id).append(showHideDiv(content_id));
+    $("#"+container_id).append(content_div);
+}
+
+// Create a button to show/hide content
 function showHideDiv(div_id) {
     var div_button = $("<button></button>");
     div_button.attr('title', 'Click to show/hide more information');
@@ -542,7 +554,6 @@ function showHideDiv(div_id) {
 
     return div_button;
 }
-
 
 /*function showHideStudy(studyId) {
     //return '<button title="Click to show/hide more study information" class="row-toggle btn btn-default btn-xs accordion-toggle" data-toggle="collapse" data-target=".study-'+studyId+'.hidden-study-row" aria-expanded="false" aria-controls="study:'+studyId+'">' +
