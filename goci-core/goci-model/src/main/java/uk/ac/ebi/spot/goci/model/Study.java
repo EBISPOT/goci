@@ -55,6 +55,7 @@ public class Study implements Trackable {
     private String pubmedId;
 
     // Defaults set as false
+    @JsonIgnore
     private Boolean cnv = false;
 
     private Boolean gxe = false;

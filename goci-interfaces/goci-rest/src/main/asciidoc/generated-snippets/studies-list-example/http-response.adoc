@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 31794
+Content-Length: 31374
 
 {
   "_embedded" : {
@@ -14,7 +14,6 @@ Content-Length: 31794
       "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
       "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
       "pubmedId" : "21041247",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -33,20 +32,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/5993"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5993/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5993/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5993/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5993/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5993/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5993/efoTraits"
         }
       }
     }, {
@@ -57,7 +56,6 @@ Content-Length: 31794
       "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
       "replicateSampleSize" : "NA",
       "pubmedId" : "20971583",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -76,20 +74,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5996/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5996/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5996/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5996/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         }
       }
     }, {
@@ -100,7 +98,6 @@ Content-Length: 31794
       "initialSampleSize" : "up to 17,723 European ancestry individuals",
       "replicateSampleSize" : "up to 37,774 European ancestry individuals, up to 9,665 Indian Asian ancestry individuals",
       "pubmedId" : "20864672",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -119,20 +116,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/5979"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5979/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5979/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5979/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5979/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5979/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5979/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5979/efoTraits"
         }
       }
     }, {
@@ -143,7 +140,6 @@ Content-Length: 31794
       "initialSampleSize" : "15,358 European ancestry individuals",
       "replicateSampleSize" : "6,652 European ancestry individuals",
       "pubmedId" : "21060863",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -162,20 +158,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6007"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6007/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6007/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6007/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6007/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6007/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6007/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6007/efoTraits"
         }
       }
     }, {
@@ -186,7 +182,6 @@ Content-Length: 31794
       "initialSampleSize" : "105 East Asian ancestry cases",
       "replicateSampleSize" : "NA",
       "pubmedId" : "21079520",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -205,20 +200,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6017"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6017/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6017/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6017/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6017/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6017/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6017/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6017/efoTraits"
         }
       }
     }, {
@@ -229,7 +224,6 @@ Content-Length: 31794
       "initialSampleSize" : "12,441 European ancestry children",
       "replicateSampleSize" : "5,548 European ancestry children",
       "pubmedId" : "23358156",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -248,20 +242,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/7089"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/7089/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/7089/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/7089/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/7089/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/7089/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/7089/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/7089/efoTraits"
         }
       }
     }, {
@@ -272,7 +266,6 @@ Content-Length: 31794
       "initialSampleSize" : "2,132 Indian ancestry individuals, 2,313 Malay ancestry individuals",
       "replicateSampleSize" : "9,326 European ancestry individuals",
       "pubmedId" : "21307088",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -291,20 +284,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6161"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6161/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6161/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6161/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6161/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6161/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6161/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6161/efoTraits"
         }
       }
     }, {
@@ -315,7 +308,6 @@ Content-Length: 31794
       "initialSampleSize" : "1,339 European ancestry cases",
       "replicateSampleSize" : "677 European ancestry cases",
       "pubmedId" : "21326295",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -334,20 +326,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6168"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6168/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6168/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6168/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6168/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6168/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6168/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6168/efoTraits"
         }
       }
     }, {
@@ -358,7 +350,6 @@ Content-Length: 31794
       "initialSampleSize" : "31,580 European ancestry individuals",
       "replicateSampleSize" : "31,277 European ancestry individuals",
       "pubmedId" : "21355061",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -377,20 +368,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6181"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6181/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6181/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6181/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6181/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6181/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6181/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6181/efoTraits"
         }
       }
     }, {
@@ -401,7 +392,6 @@ Content-Length: 31794
       "initialSampleSize" : "7,473 African American individuals",
       "replicateSampleSize" : "1,188 Sub-Saharan African individuals, 10,694 African American individuals, 69,899 European ancestry individuals",
       "pubmedId" : "21378095",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -420,20 +410,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6191"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6191/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6191/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6191/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6191/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6191/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6191/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6191/efoTraits"
         }
       }
     }, {
@@ -444,7 +434,6 @@ Content-Length: 31794
       "initialSampleSize" : "811 anti-dsDNA positive European ancestry cases, 906 anti-dsDNA negative European ancestry cases, 4,813 European ancestry controls",
       "replicateSampleSize" : "NA",
       "pubmedId" : "21408207",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -463,20 +452,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6203"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6203/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6203/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6203/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6203/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6203/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6203/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6203/efoTraits"
         }
       }
     }, {
@@ -487,7 +476,6 @@ Content-Length: 31794
       "initialSampleSize" : "1,831 European ancestry cases, 1,764 European ancestry controls",
       "replicateSampleSize" : "751 cases, 751 controls",
       "pubmedId" : "21390209",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -506,20 +494,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6204"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6204/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6204/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6204/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6204/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6204/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6204/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6204/efoTraits"
         }
       }
     }, {
@@ -530,7 +518,6 @@ Content-Length: 31794
       "initialSampleSize" : "880 Amish individuals, 6,296 European ancestry individuals",
       "replicateSampleSize" : "592 European ancestry cases, 1,405 European ancestry controls",
       "pubmedId" : "21423719",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -549,20 +536,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6209"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6209/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6209/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6209/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6209/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6209/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6209/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6209/efoTraits"
         }
       }
     }, {
@@ -573,7 +560,6 @@ Content-Length: 31794
       "initialSampleSize" : "229 Hispanic individuals from 34 families",
       "replicateSampleSize" : "961 Hispanic individuals",
       "pubmedId" : "20600896",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -592,20 +578,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6099"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6099/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6099/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6099/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6099/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6099/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6099/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6099/efoTraits"
         }
       }
     }, {
@@ -616,7 +602,6 @@ Content-Length: 31794
       "initialSampleSize" : "51 European ancestry rapid progressor male cases, 57 European ancestry moderate progressor male cases, 48 European ancestry long-term progressor male cases",
       "replicateSampleSize" : "590 European ancestry seroconverter male cases",
       "pubmedId" : "20064070",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -635,20 +620,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/6100"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/6100/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/6100/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/6100/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/6100/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/6100/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/6100/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/6100/efoTraits"
         }
       }
     }, {
@@ -659,7 +644,6 @@ Content-Length: 31794
       "initialSampleSize" : "7,827 East Asian ancestry individuals",
       "replicateSampleSize" : "10,252 East Asian ancestry individuals",
       "pubmedId" : "24105470",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -678,20 +662,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/7494"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/7494/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/7494/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/7494/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/7494/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/7494/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/7494/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/7494/efoTraits"
         }
       }
     }, {
@@ -702,7 +686,6 @@ Content-Length: 31794
       "initialSampleSize" : "417 European ancestry male individuals, 423 European ancestry female individuals",
       "replicateSampleSize" : "412 African American male individuals and 839 African American female individuals from 402 families, 3,491 European ancestry male individuals and 4,132 European ancestry female individuals from 1,731 families",
       "pubmedId" : "19188921",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -721,20 +704,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/5374"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5374/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5374/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5374/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5374/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5374/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5374/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5374/efoTraits"
         }
       }
     }, {
@@ -745,7 +728,6 @@ Content-Length: 31794
       "initialSampleSize" : "2,247 European ancestry individuals",
       "replicateSampleSize" : "NA",
       "pubmedId" : "23382691",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -764,20 +746,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/7295"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/7295/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/7295/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/7295/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/7295/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/7295/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/7295/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/7295/efoTraits"
         }
       }
     }, {
@@ -788,7 +770,6 @@ Content-Length: 31794
       "initialSampleSize" : "886 European ancestry individuals",
       "replicateSampleSize" : "NA",
       "pubmedId" : "17903294",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -807,20 +788,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/56"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/56/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/56/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/56/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/56/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/56/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/56/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/56/efoTraits"
         }
       }
     }, {
@@ -831,7 +812,6 @@ Content-Length: 31794
       "initialSampleSize" : "1,087 European ancestry individuals from 307 families",
       "replicateSampleSize" : "1,465 European ancestry individuals, 1,464 European ancestry cases, 1,467 European ancestry controls, 300 Pima Indian ancestry cases, 334 Pima Indian ancestry controls, 287 Mexican American cases, 316 Mexican American controls, 124 Old Order Amish cases, 295 Old Order Amish controls",
       "pubmedId" : "17848626",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -850,20 +830,20 @@ Content-Length: 31794
         "study" : {
           "href" : "http://localhost:8080/api/studies/57"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/57/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/57/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/57/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/57/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/57/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/57/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/57/efoTraits"
         }
       }
     } ]

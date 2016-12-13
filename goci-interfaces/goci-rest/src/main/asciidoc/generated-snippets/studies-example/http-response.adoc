@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1421
+Content-Length: 1404
 
 {
   "author" : "Perlis RH",
@@ -12,7 +12,6 @@ Content-Length: 1421
   "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
   "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
   "pubmedId" : "21041247",
-  "cnv" : false,
   "gxe" : false,
   "gxg" : false,
   "genomewideArray" : true,
@@ -31,20 +30,20 @@ Content-Length: 1421
     "study" : {
       "href" : "http://localhost:8080/api/studies/5993"
     },
+    "associations" : {
+      "href" : "http://localhost:8080/api/studies/5993/associations"
+    },
     "platforms" : {
       "href" : "http://localhost:8080/api/studies/5993/platforms"
     },
     "ancestries" : {
       "href" : "http://localhost:8080/api/studies/5993/ancestries"
     },
-    "associations" : {
-      "href" : "http://localhost:8080/api/studies/5993/associations"
+    "efoTraits" : {
+      "href" : "http://localhost:8080/api/studies/5993/efoTraits"
     },
     "diseaseTrait" : {
       "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
-    },
-    "efoTraits" : {
-      "href" : "http://localhost:8080/api/studies/5993/efoTraits"
     }
   }
 }

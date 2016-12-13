@@ -1,0 +1,8 @@
+./api/studies/{study_id}
+|===
+|Parameter|Description
+
+|`study_id`
+|The id of the study in the GWAS Catalog
+
+|===

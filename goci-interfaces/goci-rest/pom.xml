@@ -145,7 +145,7 @@
                         <snippets>${snippetsDirectory}</snippets>
                     </attributes>
                     <!--<headerFooter>false</headerFooter>-->
-                    <!--<preserveDirectories>true</preserveDirectories>-->
+                    <preserveDirectories>true</preserveDirectories>
                 </configuration>
             </plugin>
         </plugins>

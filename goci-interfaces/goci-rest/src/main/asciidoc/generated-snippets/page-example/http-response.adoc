@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2199
+Content-Length: 2178
 
 {
   "_embedded" : {
@@ -14,7 +14,6 @@ Content-Length: 2199
       "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
       "replicateSampleSize" : "NA",
       "pubmedId" : "20971583",
-      "cnv" : false,
       "gxe" : false,
       "gxg" : false,
       "genomewideArray" : true,
@@ -33,20 +32,20 @@ Content-Length: 2199
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5996/associations"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5996/platforms"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5996/ancestries"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5996/associations"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         }
       }
     } ]

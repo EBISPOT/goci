@@ -109,8 +109,8 @@ Content-Type: application/json
   },
   "page" : {
     "size" : 1,
-    "totalElements" : 141,
-    "totalPages" : 141,
+    "totalElements" : 3783,
+    "totalPages" : 3783,
     "number" : 1
   }
 }
@@ -155,4 +155,43 @@ include::{snippets}/api-example/http-response.adoc[]
 ==== Links
 
 include::{snippets}/api-example/links.adoc[]
+
+
+[[resources-studies]]
+== Studies
+
+The Studies resources is used to list studies in the GWAS Catalog
+
+[[resources-studies-list]]
+=== Listing studies
+
+A `GET` request will list all of the Catalog studies.
+
+==== Example request
+
+include::{snippets}/studies-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-study,study resources>>  are in the `_embedded.studies` field.
+
+[[resources-study]]
+== Study
+
+=== Retrieve an study
+
+include::{snippets}/studies-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/studies-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/studies-example/http-response.adoc[]
+
+[[resources-study-links]]
+==== Links
+
+include::{snippets}/studies-example/links.adoc[]
 
