@@ -18,13 +18,13 @@ $(document).ready(function() {
     console.log("Loading search module!");
     console.log("rsID: "+searchTerm);
     if (searchTerm != '') {
-        console.log("Start search for SNP "+searchTerm);
-        getSnpData(searchTerm);
+        console.log("Start search for the variant "+searchTerm);
+        getVariantData(searchTerm);
     }
-    //getLDPopulations();
+    getVariantInfoFromEnsembl(searchTerm);
 });
 
-function getSnpData(rsId) {
+function getVariantData(rsId) {
     console.log("Solr research request received for " + rsId);
 
     setState(SearchState.LOADING);
@@ -35,12 +35,12 @@ function getSnpData(rsId) {
               })
               .done(function(data) {
                   console.log(data.response);
-                  processSnpData(data.response,rsId);
+                  processVariantData(data.response,rsId);
               });
     console.log("Solr research done for " + rsId);
 }
 
-function processSnpData(data,rsId) {
+function processVariantData(data,rsId) {
     // Variant summary panel
     getVariantInfo(data.docs);
     // External links panel
@@ -55,11 +55,9 @@ function processSnpData(data,rsId) {
 
 function getVariantInfo(data,rsId) {
     var data_sample = data[0];
-    var chr = data_sample.chromosomeName[0];
-    var pos = data_sample.chromosomePosition[0];
+    var location = data_sample.chromLocation[0];
     var region = data_sample.region[0];
     var func = data_sample.context[0];
-
 
     var genes_mapped = [];
     var genes_mapped_url = [];
@@ -67,25 +65,21 @@ function getVariantInfo(data,rsId) {
     var traits_reported_url = [];
     $.each(data, function (index, doc) {
         // Mapped genes
-        var mappedGenes = doc.entrezMappedGenes;
-        $.each(mappedGenes, function (index, gene) {
+        $.each(doc.entrezMappedGenes, function (index, gene) {
             if (jQuery.inArray(gene, genes_mapped) == -1) {
                 genes_mapped.push(gene);
                 genes_mapped_url.push(setQueryUrl(gene));
             }
         });
+
         // Reported traits
         var traits = [];
-        var reportedTraits = doc.traitName;
-        if (reportedTraits) {
-            $.each(reportedTraits, function(index, trait) {
-                if (jQuery.inArray(trait, traits_reported) == -1) {
-                    traits_reported.push(trait);
-                    traits_reported_url.push(setQueryUrl(trait));
-                }
-            });
-        } else {
-        }
+        $.each(doc.traitName, function(index, trait) {
+            if (jQuery.inArray(trait, traits_reported) == -1) {
+                traits_reported.push(trait);
+                traits_reported_url.push(setQueryUrl(trait));
+            }
+        });
     });
     genes_mapped_url.sort();
     traits_reported_url.sort();
@@ -95,10 +89,10 @@ function getVariantInfo(data,rsId) {
         $("#variant-traits").html(traits_reported_url.join(', '));
     }
     else {
-        longContentList("known_traits_div","variant-traits",traits_reported_url,'traits');
+        $("#variant-traits").html(longContentList("known_traits_div",traits_reported_url,'traits'));
     }
 
-    $("#variant-location").html("chr"+chr+":"+pos);
+    $("#variant-location").html(location);
     $("#variant-region").html(region);
     $("#variant-class").html(setExternalLink(OLS+func,variationClassLabel(func)));
     $("#variant-mapped-genes").html(genes_mapped_url.join(', '));
@@ -121,7 +115,11 @@ function getVariantAssociations(data) {
 
         // Risk allele
         var riskAllele = asso.strongestAllele[0];
-        riskAllele = setQueryUrl(riskAllele);
+        var riskAlleleLabel = riskAllele;
+        if (riskAlleleLabel.match(/\w+-.+/)) {
+            riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
+        }
+        riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
         row.append(newCell(riskAllele));
 
         // Risk allele frequency
@@ -169,13 +167,8 @@ function getVariantAssociations(data) {
         }
 
         // CI
-        var ci = asso.range;
-        if (ci) {
-            row.append(newCell(ci));
-        } else {
-            row.append(newCell('-'));
-        }
-
+        var ci = (asso.range) ? asso.range : '-';
+        row.append(newCell(ci));
         // Reported genes
         var genes = [];
         var reportedGenes = asso.reportedGene;
@@ -214,7 +207,7 @@ function getVariantAssociations(data) {
         var pubDate = publicationDate.split("-");
         var pubmedId = asso.pubmedId;
         var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += ' <small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small>';
+        study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
         row.append(newCell(study));
 
         var studyId = asso.studyId;
@@ -392,7 +385,7 @@ function getVariantTraits(data) {
                 mappedtrait_html = newCell(mappedtrait.join(',<br />'));
             }
             else {
-                mappedtrait_html = newCell(longContentList("mapped_traits_div_" + index, '', mappedtrait, 'mapped traits'));
+                mappedtrait_html = newCell(longContentList("mapped_traits_div_" + index, mappedtrait, 'mapped traits'));
             }
         }
         row.append(mappedtrait_html);
@@ -409,7 +402,7 @@ function getVariantTraits(data) {
                 synonym_html = newCell(synonymtrait.join(',<br />'));
             }
             else {
-                synonym_html = newCell(longContentList("syn_traits_div_" + index, '', synonymtrait, 'synonym traits'));
+                synonym_html = newCell(longContentList("syn_traits_div_" + index, synonymtrait, 'synonym traits'));
             }
         }
         row.append(synonym_html);
@@ -421,7 +414,7 @@ function getVariantTraits(data) {
                 studytrait_html = newCell(studytraits[trait].join(',<br />'));
             }
             else {
-                studytrait_html = newCell(longContentList("study_traits_div_" + index, '', studytraits[trait], 'study traits'));
+                studytrait_html = newCell(longContentList("study_traits_div_" + index, studytraits[trait], 'study traits'));
             }
         }
         row.append(studytrait_html);
@@ -490,16 +483,19 @@ function countStudies(data) {
 // Display the input array as a HTML list
 function displayArrayAsList(data_array) {
     var data_text = '';
-    if (data_array.length == 1) {
-        data_text = data_array[0];
-    }
-    else if (data_array.length > 1) {
-        var list = $('<ul/>');
-        list.css('padding-left', '0px');
-        $.each(data_array, function(index, value) {
-            list.append(newItem(value));
-        });
-        data_text = list;
+
+    if (data_array) {
+        if (data_array.length == 1) {
+            data_text = data_array[0];
+        }
+        else if (data_array.length > 1) {
+            var list = $('<ul/>');
+            list.css('padding-left', '0px');
+            $.each(data_array, function(index, value) {
+                list.append(newItem(value));
+            });
+            data_text = list;
+        }
     }
     return data_text;
 }
@@ -514,7 +510,7 @@ function setQueryUrl(query, label) {
 
 // Update the display of the variant functional class
 function variationClassLabel(label) {
-    var new_label = label.replace('_', ' ');
+    var new_label = label.replace(/_/g, ' '); // Replace all the underscores by a space
     return new_label.charAt(0).toUpperCase() + new_label.slice(1);
 }
 
@@ -540,7 +536,7 @@ function newItem(content) {
 }
 
 // Create a hidden list of items - Used when we have to display a more or less long list of information
-function longContentList (content_id, container_id, list, type) {
+function longContentList (content_id, list, type) {
 
     var content_text = $('<span></span>');
     content_text.css('padding-right', '8px');
@@ -558,18 +554,12 @@ function longContentList (content_id, container_id, list, type) {
     });
     content_div.append(content_list);
 
-    if (container_id == '') {
-        var span = $('<span></span>');
-        span.append(content_text);
-        span.append(showHideDiv(content_id));
-        span.append(content_div);
-        return span;
-    }
-    else {
-        $("#" + container_id).append(content_text);
-        $("#" + container_id).append(showHideDiv(content_id));
-        $("#" + container_id).append(content_div);
-    }
+    var container = $('<div></div>');
+    container.append(content_text);
+    container.append(showHideDiv(content_id));
+    container.append(content_div);
+
+    return container;
 }
 
 // Create a button to show/hide content
@@ -595,23 +585,38 @@ function showHideDiv(div_id) {
 
     return study_button;
 }
+}*/
 
-function getLDPopulations() {
-    $.getJSON('http://rest.ensembl.org/info/variation/populations/homo_sapiens?content-type=application/json;filter=LD')
+
+function getVariantInfoFromEnsembl(rsID) {
+    $.getJSON('http://rest.ensembl.org/variation/human/'+rsID+'?content-type=application/json')
             .done(function(data) {
                 console.log(data);
-                processLDPopulationData(data);
+                processVariantInfoFromEnsembl(data);
             });
-    console.log("Ensembl REST query done to retrieve LD populations");
+    console.log("Ensembl REST query done to retrieve variant information");
 }
+function processVariantInfoFromEnsembl(data) {
+    if (!data.error) {
+        var alleles = 'NA';
+        var strand  = '';
+        $.each(data.mappings, function(index, mapping) {
+            if (mapping.seq_region_name.match(/\w{1,2}/)) {
+                alleles = mapping.allele_string;
+                strand  = (mapping.strand == 1) ? 'forward' : 'reverse';
+                strand  = '<span style="padding-left:5px"><small>('+strand+' strand)</small></span>';
+                alleles += strand;
+            }
+        });
+        var maf = (data.MAF) ? data.MAF : 'NA';
+        var ma  = (data.minor_allele) ? data.minor_allele : 'NA';
 
-function processLDPopulationData(data) {
-    $.each(data, function(index, pop) {
-        var popName = pop.name;
-        var popLabel = popName.split(':')[2] + " - " + pop.description;
-        $('#ld-population-selection').append($("<option>").attr("value", popName).html(popLabel));
-    });
-}*/
+        $("#variant-alleles").html(alleles);
+        $("#variant-strand").html(strand);
+        $("#minor-allele").html(ma);
+        $("#minor-allele-freq").html(maf);
+    }
+}
 
 function setState(state) {
     var loading = $('#loading');
@@ -637,6 +642,6 @@ function setState(state) {
             break;
         default:
             console.log("Unknown search state; redirecting to search page");
-            window.location = "snp";
+            window.location = "variant";
     }
 }
