@@ -22,4 +22,7 @@
 |`associations`
 |<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study
 
+|`snps`
+|<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study
+
 |===

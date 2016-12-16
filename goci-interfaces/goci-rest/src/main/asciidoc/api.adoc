@@ -310,7 +310,4 @@ include::{snippets}/genomic-contexts-example/http-response.adoc[]
 
 include::{snippets}/genomic-contexts-example/response-fields.adoc[]
 
-[[resources-genomic-context-links]]
-==== Links
 
-include::{snippets}/genomic-contexts-example/links.adoc[]

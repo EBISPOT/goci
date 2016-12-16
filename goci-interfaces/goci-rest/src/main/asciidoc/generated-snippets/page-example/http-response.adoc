@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2178
+Content-Length: 2273
 
 {
   "_embedded" : {
@@ -32,20 +32,23 @@ Content-Length: 2178
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5996/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5996/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5996/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/5996/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/5996/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5996/platforms"
         }
       }
     } ]

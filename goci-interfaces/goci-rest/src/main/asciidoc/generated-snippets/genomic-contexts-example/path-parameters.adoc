@@ -1,0 +1,8 @@
+./api/genomicContexts/{genomicContext_id}
+|===
+|Parameter|Description
+
+|`genomicContext_id`
+|The id of the genomic context in the GWAS Catalog
+
+|===

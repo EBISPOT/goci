@@ -32,8 +32,8 @@ Content-Length: 1188
     "loci" : {
       "href" : "http://localhost:8080/api/associations/16510553/loci"
     },
-    "snps" : {
-      "href" : "http://localhost:8080/api/associations/16510553/snps"
+    "study" : {
+      "href" : "http://localhost:8080/api/associations/16510553/study"
     },
     "efoTraits" : {
       "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
@@ -41,8 +41,8 @@ Content-Length: 1188
     "genes" : {
       "href" : "http://localhost:8080/api/associations/16510553/genes"
     },
-    "study" : {
-      "href" : "http://localhost:8080/api/associations/16510553/study"
+    "snps" : {
+      "href" : "http://localhost:8080/api/associations/16510553/snps"
     }
   }
 }

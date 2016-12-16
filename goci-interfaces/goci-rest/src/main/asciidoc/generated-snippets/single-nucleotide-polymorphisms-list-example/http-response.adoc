@@ -1,0 +1,718 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 27727
+
+{
+  "_embedded" : {
+    "singleNucleotidePolymorphisms" : [ {
+      "rsId" : "rs6538678",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T16:40:37.327+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs433852",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T16:27:52.977+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs3786749",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T16:27:31.507+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs75900745",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:33:22.946+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs76439045",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:33:05.147+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs12019358",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:32:48.740+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs76270203",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:32:15.000+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs59403466",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:32:05.651+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs11664027",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:53.507+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs3914785",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:47.901+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs8134605",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:29.033+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs9815195",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:25.055+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs1146509",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:13.585+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs73028893",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:31:11.143+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs1919796",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:30:56.945+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs11012167",
+      "merged" : 0,
+      "functionalClass" : "intergenic_variant",
+      "lastUpdateDate" : "2016-10-18T17:30:52.881+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs57017013",
+      "merged" : 0,
+      "functionalClass" : "3_prime_UTR_variant",
+      "lastUpdateDate" : "2016-10-18T17:30:23.733+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs150968551",
+      "merged" : 0,
+      "functionalClass" : "downstream_gene_variant",
+      "lastUpdateDate" : "2016-10-18T17:30:13.322+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs11198013",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-10-18T17:29:44.662+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/genes"
+        }
+      }
+    }, {
+      "rsId" : "rs9491696",
+      "merged" : 0,
+      "functionalClass" : "intron_variant",
+      "lastUpdateDate" : "2016-07-26T06:06:56.305+0000",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/riskAlleles"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/currentSnp"
+        },
+        "studies" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/studies"
+        },
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/associations"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/locations"
+        },
+        "genes" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/genes"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "first" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms?page=0&size=20"
+    },
+    "self" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms"
+    },
+    "next" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms?page=1&size=20"
+    },
+    "last" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms?page=1436&size=20"
+    },
+    "profile" : {
+      "href" : "http://localhost:8080/api/profile/singleNucleotidePolymorphisms"
+    },
+    "search" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/search"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 28733,
+    "totalPages" : 1437,
+    "number" : 0
+  }
+}
+----

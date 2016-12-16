@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1404
+Content-Length: 1487
 
 {
   "author" : "Perlis RH",
@@ -30,20 +30,23 @@ Content-Length: 1404
     "study" : {
       "href" : "http://localhost:8080/api/studies/5993"
     },
-    "diseaseTrait" : {
-      "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+    "snps" : {
+      "href" : "http://localhost:8080/api/studies/5993/snps"
     },
     "associations" : {
       "href" : "http://localhost:8080/api/studies/5993/associations"
     },
-    "platforms" : {
-      "href" : "http://localhost:8080/api/studies/5993/platforms"
+    "ancestries" : {
+      "href" : "http://localhost:8080/api/studies/5993/ancestries"
     },
     "efoTraits" : {
       "href" : "http://localhost:8080/api/studies/5993/efoTraits"
     },
-    "ancestries" : {
-      "href" : "http://localhost:8080/api/studies/5993/ancestries"
+    "diseaseTrait" : {
+      "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+    },
+    "platforms" : {
+      "href" : "http://localhost:8080/api/studies/5993/platforms"
     }
   }
 }

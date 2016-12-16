@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 31374
+Content-Length: 33270
 
 {
   "_embedded" : {
@@ -32,20 +32,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/5993"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5993/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5993/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5993/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/5993/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5993/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/5993/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5993/platforms"
         }
       }
     }, {
@@ -74,20 +77,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5996/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5996/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5996/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/5996/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/5996/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5996/platforms"
         }
       }
     }, {
@@ -116,20 +122,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/5979"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5979/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5979/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5979/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5979/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/5979/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5979/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/5979/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5979/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5979/platforms"
         }
       }
     }, {
@@ -158,20 +167,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6007"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6007/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6007/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6007/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6007/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6007/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6007/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6007/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6007/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6007/platforms"
         }
       }
     }, {
@@ -200,20 +212,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6017"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6017/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6017/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6017/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6017/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6017/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6017/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6017/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6017/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6017/platforms"
         }
       }
     }, {
@@ -242,20 +257,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/7089"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/7089/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/7089/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/7089/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/7089/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/7089/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/7089/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/7089/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/7089/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/7089/platforms"
         }
       }
     }, {
@@ -284,20 +302,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6161"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6161/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6161/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6161/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6161/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6161/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6161/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6161/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6161/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6161/platforms"
         }
       }
     }, {
@@ -326,20 +347,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6168"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6168/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6168/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6168/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6168/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6168/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6168/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6168/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6168/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6168/platforms"
         }
       }
     }, {
@@ -368,20 +392,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6181"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6181/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6181/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6181/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6181/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6181/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6181/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6181/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6181/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6181/platforms"
         }
       }
     }, {
@@ -410,20 +437,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6191"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6191/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6191/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6191/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6191/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6191/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6191/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6191/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6191/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6191/platforms"
         }
       }
     }, {
@@ -452,20 +482,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6203"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6203/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6203/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6203/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6203/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6203/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6203/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6203/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6203/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6203/platforms"
         }
       }
     }, {
@@ -494,20 +527,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6204"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6204/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6204/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6204/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6204/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6204/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6204/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6204/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6204/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6204/platforms"
         }
       }
     }, {
@@ -536,20 +572,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6209"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6209/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6209/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6209/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6209/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6209/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6209/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6209/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6209/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6209/platforms"
         }
       }
     }, {
@@ -578,20 +617,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6099"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6099/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6099/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6099/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6099/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6099/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6099/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6099/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6099/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6099/platforms"
         }
       }
     }, {
@@ -620,20 +662,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/6100"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/6100/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/6100/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/6100/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/6100/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/6100/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/6100/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/6100/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/6100/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/6100/platforms"
         }
       }
     }, {
@@ -662,20 +707,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/7494"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/7494/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/7494/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/7494/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/7494/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/7494/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/7494/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/7494/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/7494/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/7494/platforms"
         }
       }
     }, {
@@ -704,20 +752,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/5374"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5374/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5374/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5374/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5374/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/5374/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5374/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/5374/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5374/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5374/platforms"
         }
       }
     }, {
@@ -746,20 +797,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/7295"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/7295/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/7295/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/7295/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/7295/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/7295/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/7295/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/7295/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/7295/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/7295/platforms"
         }
       }
     }, {
@@ -788,20 +842,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/56"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/56/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/56/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/56/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/56/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/56/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/56/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/56/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/56/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/56/platforms"
         }
       }
     }, {
@@ -830,20 +887,23 @@ Content-Length: 31374
         "study" : {
           "href" : "http://localhost:8080/api/studies/57"
         },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/57/diseaseTrait"
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/57/snps"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/57/associations"
         },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/57/platforms"
+        "ancestries" : {
+          "href" : "http://localhost:8080/api/studies/57/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/57/efoTraits"
         },
-        "ancestries" : {
-          "href" : "http://localhost:8080/api/studies/57/ancestries"
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/57/diseaseTrait"
+        },
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/57/platforms"
         }
       }
     } ]

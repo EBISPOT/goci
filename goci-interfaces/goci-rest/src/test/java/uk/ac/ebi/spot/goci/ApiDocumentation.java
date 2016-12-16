@@ -208,8 +208,8 @@ public class ApiDocumentation {
                               linkWithRel("diseaseTrait").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
                               linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
                               linkWithRel("platforms").description("<<overview-pagination,Paginated>> list of <<platforms-resources,platforms>> in this study"),
-                              linkWithRel("associations").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study")
-
+                              linkWithRel("associations").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study"),
+                              linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study")
                         )
 
                 ))
@@ -279,7 +279,7 @@ public class ApiDocumentation {
         this.mockMvc.perform(get("/api/genomicContexts/{genomicContext_id}", "16147615").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
-                                parameterWithName("snp_id").description("The id of the genomic context in the GWAS Catalog")),
+                                parameterWithName("genomicContext_id").description("The id of the genomic context in the GWAS Catalog")),
                         responseFields(
                                 fieldWithPath("_links").description("Links to other resources"),
                                 fieldWithPath("isIntergenic").description("Whether the SNP is intergenic"),
