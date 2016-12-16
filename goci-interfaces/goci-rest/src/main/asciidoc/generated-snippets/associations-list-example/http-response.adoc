@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 27102
+Content-Length: 26542
 
 {
   "_embedded" : {
@@ -13,7 +13,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : null,
@@ -35,17 +34,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14347/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14347/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14347/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14347/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14347/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14347/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14347/study"
         }
       }
     }, {
@@ -55,7 +54,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : null,
@@ -77,17 +75,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14350/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14350/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14350/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14350/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14350/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14350/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14350/study"
         }
       }
     }, {
@@ -97,7 +95,6 @@ Content-Length: 27102
       "pvalueExponent" : -7,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : null,
@@ -119,17 +116,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14352/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14352/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14352/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14352/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14352/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14352/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14352/study"
         }
       }
     }, {
@@ -139,7 +136,6 @@ Content-Length: 27102
       "pvalueExponent" : -14,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[1.069-1.141]",
@@ -161,17 +157,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/25563/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/25563/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/25563/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/25563/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/25563/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/25563/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/25563/study"
         }
       }
     }, {
@@ -181,7 +177,6 @@ Content-Length: 27102
       "pvalueExponent" : -22,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[1.30-1.54]",
@@ -203,17 +198,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14826/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14826/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14826/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14826/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14826/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14826/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14826/study"
         }
       }
     }, {
@@ -223,7 +218,6 @@ Content-Length: 27102
       "pvalueExponent" : -28,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.01-0.02]",
@@ -245,17 +239,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12441/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12441/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12441/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12441/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12441/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12441/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12441/study"
         }
       }
     }, {
@@ -265,7 +259,6 @@ Content-Length: 27102
       "pvalueExponent" : -6,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : null,
@@ -287,17 +280,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14627/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14627/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14627/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14627/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14627/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14627/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14627/study"
         }
       }
     }, {
@@ -307,7 +300,6 @@ Content-Length: 27102
       "pvalueExponent" : -11,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[1.20-1.39]",
@@ -329,17 +321,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/14628/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/14628/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/14628/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14628/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14628/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14628/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/14628/study"
         }
       }
     }, {
@@ -349,7 +341,6 @@ Content-Length: 27102
       "pvalueExponent" : -12,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.004-0.008]",
@@ -371,17 +362,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12937/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12937/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12937/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12937/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12937/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12937/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12937/study"
         }
       }
     }, {
@@ -391,7 +382,6 @@ Content-Length: 27102
       "pvalueExponent" : -9,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.72-1.44]",
@@ -413,17 +403,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12946/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12946/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12946/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12946/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12946/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12946/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12946/study"
         }
       }
     }, {
@@ -433,7 +423,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.26-0.54]",
@@ -455,17 +444,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12939/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12939/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12939/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12939/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12939/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12939/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12939/study"
         }
       }
     }, {
@@ -475,7 +464,6 @@ Content-Length: 27102
       "pvalueExponent" : -12,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.33-0.59]",
@@ -497,17 +485,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12941/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12941/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12941/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12941/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12941/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12941/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12941/study"
         }
       }
     }, {
@@ -517,7 +505,6 @@ Content-Length: 27102
       "pvalueExponent" : -9,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.48-0.94]",
@@ -539,17 +526,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12942/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12942/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12942/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12942/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12942/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12942/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12942/study"
         }
       }
     }, {
@@ -559,7 +546,6 @@ Content-Length: 27102
       "pvalueExponent" : -9,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.28-0.56]",
@@ -581,17 +567,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12943/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12943/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12943/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12943/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12943/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12943/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12943/study"
         }
       }
     }, {
@@ -601,7 +587,6 @@ Content-Length: 27102
       "pvalueExponent" : -7,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.67-1.45]",
@@ -623,17 +608,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12944/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12944/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12944/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12944/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12944/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12944/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12944/study"
         }
       }
     }, {
@@ -643,7 +628,6 @@ Content-Length: 27102
       "pvalueExponent" : -6,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.37-0.89]",
@@ -665,17 +649,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12945/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12945/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12945/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12945/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12945/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12945/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12945/study"
         }
       }
     }, {
@@ -685,7 +669,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "novel",
       "standardError" : null,
       "range" : "[0.04-0.10]",
@@ -707,17 +690,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12913/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12913/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12913/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12913/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12913/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12913/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12913/study"
         }
       }
     }, {
@@ -727,7 +710,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.04-0.10]",
@@ -749,17 +731,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12919/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12919/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12919/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12919/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12919/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12919/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12919/study"
         }
       }
     }, {
@@ -769,7 +751,6 @@ Content-Length: 27102
       "pvalueExponent" : -9,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.04-0.10]",
@@ -791,17 +772,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12922/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12922/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12922/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12922/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12922/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12922/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12922/study"
         }
       }
     }, {
@@ -811,7 +792,6 @@ Content-Length: 27102
       "pvalueExponent" : -8,
       "multiSnpHaplotype" : false,
       "snpInteraction" : false,
-      "snpApproved" : true,
       "snpType" : "known",
       "standardError" : null,
       "range" : "[0.04-0.08]",
@@ -833,17 +813,17 @@ Content-Length: 27102
         "loci" : {
           "href" : "http://localhost:8080/api/associations/12924/loci"
         },
-        "study" : {
-          "href" : "http://localhost:8080/api/associations/12924/study"
-        },
         "snps" : {
           "href" : "http://localhost:8080/api/associations/12924/snps"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12924/efoTraits"
         },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12924/genes"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12924/efoTraits"
+        "study" : {
+          "href" : "http://localhost:8080/api/associations/12924/study"
         }
       }
     } ]

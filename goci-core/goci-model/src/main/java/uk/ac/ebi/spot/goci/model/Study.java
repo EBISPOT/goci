@@ -119,6 +119,12 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "STUDY_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+
     // JPA no-args constructor
     public Study() {
     }

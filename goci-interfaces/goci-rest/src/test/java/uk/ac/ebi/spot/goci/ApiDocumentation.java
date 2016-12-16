@@ -81,25 +81,6 @@ public class ApiDocumentation {
     @Test
     public void pageExample () throws Exception {
 
-//        this.restDocumentationResultHandler.document(
-//                responseFields(
-//                        fieldWithPath("_links").description("<<resources-page-links,Links>> to other resources"),
-//                        fieldWithPath("_embedded").description("The list of resources"),
-//                        fieldWithPath("page.size").description("The number of resources in this page"),
-//                        fieldWithPath("page.totalElements").description("The total number of resources"),
-//                        fieldWithPath("page.totalPages").description("The total number of pages"),
-//                        fieldWithPath("page.number").description("The page number")
-//                ),
-//                links(halLinks(),
-//                        linkWithRel("self").description("This resource list"),
-//                        linkWithRel("first").description("The first page in the resource list"),
-//                        linkWithRel("next").description("The next page in the resource list"),
-//                        linkWithRel("prev").description("The previous page in the resource list"),
-//                        linkWithRel("last").description("The last page in the resource list")
-//                )
-//
-//        );
-
         this.mockMvc.perform(get("/api/studies?page=1&size=1"))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
@@ -153,18 +134,6 @@ public class ApiDocumentation {
     @Test
     public void apiExample () throws Exception {
 
-//        this.restDocumentationResultHandler.document(
-//                responseFields(
-//                        fieldWithPath("_links").description("<<resources-ontologies-links,Links>> to other resources")
-//                ),
-//                links(halLinks(),
-//                        linkWithRel("studies").description("Link to the studies in the GWAS Catalog"),
-//                        linkWithRel("associations").description("Link to all the associations in the GWAS Catalog"),
-//                        linkWithRel("ethnicities").description("Link to all the ancestry entries in the GWAS Catalog"),
-//                        linkWithRel("efoTraits").description("Link to all the EFO traits in the GWAS Catalog"),
-//                        linkWithRel("genes").description("Link to all the genes in the GWAS Catalog")
-//                        )
-//        );
         this.mockMvc.perform(get("/api").accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
@@ -265,35 +234,36 @@ public class ApiDocumentation {
 
                         responseFields(
                                 fieldWithPath("_links").description("<<associations-links,Links>> to other resources"),
-                                fieldWithPath("riskFrequency").description("The pubmed ID for the study"),
-                                fieldWithPath("pvalueDescription").description("The study's GWAS Catalog accession ID"),
-                                fieldWithPath("pvalueMantissa").description("Whether full summary statistics are available for this study"),
-                                fieldWithPath("pvalueExponent").description("The study's first author"),
-                                fieldWithPath("multiSnpHaplotype").description("The study's publication date"),
-                                fieldWithPath("snpInteraction").description("The study's journal"),
-                                fieldWithPath("snpApproved").description("The study title"),
-                                fieldWithPath("snpType").description("Initial sample description"),
-                                fieldWithPath("standardError").description("Replication sample description"),
-                                fieldWithPath("range").description("Whether the study investigates a gene-environment interaction"),
-                                fieldWithPath("description").description("Whether the study investigates a gene-gene interaction"),
-                                fieldWithPath("orPerCopyNum").description("Whether a genome-wide array was used"),
+                                fieldWithPath("riskFrequency").description("Reported risk/effect allele frequency associated with strongest SNP in controls"),
+                                fieldWithPath("pvalue").description("Reported p-value"),
+                                fieldWithPath("pvalueMantissa").description("Mantissa of reported p-value"),
+                                fieldWithPath("pvalueExponent").description("Exponent of reported p-value"),
+                                fieldWithPath("pvalueDescription").description("Information describing context of p-value"),
+                                fieldWithPath("multiSnpHaplotype").description("Whether the association is for a multi-SNP haplotype"),
+                                fieldWithPath("snpInteraction").description("Whether the association is for a SNP-SNP interaction"),
+//                                fieldWithPath("snpApproved").description("The study title"),
+                                fieldWithPath("snpType").description("Whether a SNP has previously been reported"),
+                                fieldWithPath("standardError").description("Standard error of the effect size"),
+                                fieldWithPath("range").description("95% confidence interval"),
+                                fieldWithPath("orPerCopyNum").description("Odds ratio"),
 //                                fieldWithPath("orPerCopyRecip").description("Whether a targted array was used"),
 //                                fieldWithPath("orPerCopyRecipRange").description("Number of SNPs passing QC"),
-                                fieldWithPath("betaNum").description("Qualifier of number of SNPs passing QC (eg >)"),
-                                fieldWithPath("betaUnit").description("Whether SNPs were imputed"),
-                                fieldWithPath("betaDirection").description("Whether samples were pooled"),
-                                fieldWithPath("pvalue").description("Whether samples were pooled"),
-                                fieldWithPath("lastMappingDate").description("Whether samples were pooled"),
-                                fieldWithPath("lastUpdateDate").description("Any other relevant study design information")
+                                fieldWithPath("betaNum").description("Beta coefficient"),
+                                fieldWithPath("betaUnit").description("Beta coefficient unit"),
+                                fieldWithPath("betaDirection").description("Beta coefficient direction"),
+                                fieldWithPath("description").description("Additional beta coefficient comment"),
+
+                                fieldWithPath("lastMappingDate").description("Last time this association was mapped to Ensembl"),
+                                fieldWithPath("lastUpdateDate").description("Last time this association was updated")
                         ),
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
                               linkWithRel("association").description("This association"),
-                              linkWithRel("loci").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
-                              linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
-                              linkWithRel("genes").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
-                              linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
-                              linkWithRel("study").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study")
+                              linkWithRel("loci").description("<<overview-pagination,Paginated>> list of <<loci-resources,locis>> in this association"),
+                              linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this association"),
+                              linkWithRel("genes").description("<<overview-pagination,Paginated>> list of <<genes-resources,genes>> in this association"),
+                              linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this association"),
+                              linkWithRel("study").description("Link to the <<studies-resources,study>> for this association")
 
                         )
 
@@ -301,22 +271,57 @@ public class ApiDocumentation {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void locationsExample() throws Exception {
 
-    }
 
 
     @Test
     public void genomicContextsExample() throws Exception {
+        this.mockMvc.perform(get("/api/genomicContexts/{genomicContext_id}", "16147615").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        pathParameters(
+                                parameterWithName("snp_id").description("The id of the genomic context in the GWAS Catalog")),
+                        responseFields(
+                                fieldWithPath("_links").description("Links to other resources"),
+                                fieldWithPath("isIntergenic").description("Whether the SNP is intergenic"),
+                                fieldWithPath("isUpstream").description("Whether the linked gene is upstream to the SNP"),
+                                fieldWithPath("isDownstream").description("Whether the linked gene is downstream to the SNP"),
+                                fieldWithPath("distance").description("The distance between the current SNP and gene"),
+                                fieldWithPath("source").description("NCBI or Ensembl gene"),
+                                fieldWithPath("mappingMethod").description("How the mapping was obtained"),
+                                fieldWithPath("isClosestGene").description("Whether gene is the closest one to the current SNP")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void singleNucleotidePolymorphismsListExample () throws Exception {
+
+        this.mockMvc.perform(get("/api/singleNucleotidePolymorphisms").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
 
     }
 
-
-
     @Test
     public void singleNucleotidePolymorphismsExample() throws Exception {
-
+        this.mockMvc.perform(get("/api/singleNucleotidePolymorphisms/{snp_id}", "15078813").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        pathParameters(
+                                parameterWithName("snp_id").description("The id of the SNP in the GWAS Catalog")),
+                        links(halLinks(),
+                              linkWithRel("self").description("This SNP"),
+                              linkWithRel("singleNucleotidePolymorphism").description("This SNP"),
+                              linkWithRel("studies").description("Link to the <<studies-resources,studies>> this SNP is identified in"),
+                              linkWithRel("locations").description("This SNP's chromosomal location(s)"),
+                              linkWithRel("currentSnp").description("Current rsId in case of a merged SNP"),
+                              linkWithRel("genes").description("Genes this SNP is located in or near"),
+                              linkWithRel("riskAlleles").description("Risk alleles for this SNP"),
+                              linkWithRel("associations").description("Associations this SNP is found in"),
+                              linkWithRel("genomicContexts").description("This SNP's genomic context")
+                              )
+                ))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -336,20 +341,20 @@ public class ApiDocumentation {
                                 parameterWithName("ancestry_id").description("The id of the ancestry entry in the GWAS Catalog")),
 
                         responseFields(
-                                fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
-                                fieldWithPath("type").description("The pubmed ID for the study"),
-                                fieldWithPath("numberOfIndividuals").description("The study's GWAS Catalog accession ID"),
-                                fieldWithPath("ancestralGroup").description("Whether full summary statistics are available for this study"),
-                                fieldWithPath("countryOfOrigin").description("The study's first author"),
-                                fieldWithPath("countryOfRecruitment").description("The study's publication date"),
-                                fieldWithPath("description").description("The study's journal"),
-                                fieldWithPath("previouslyReported").description("Initial sample description"),
-                                fieldWithPath("notes").description("Any other relevant study design information")
+                                fieldWithPath("_links").description("<<ancestries-links,Links>> to other resources"),
+                                fieldWithPath("type").description("The stage this ancestry entry applies to"),
+                                fieldWithPath("numberOfIndividuals").description("The number of individuals in this sample"),
+                                fieldWithPath("ancestralGroup").description("The wider ancestral group(s) this sample belongs to"),
+                                fieldWithPath("countryOfOrigin").description("The countries of origin of the sample"),
+                                fieldWithPath("countryOfRecruitment").description("The countries of recruitment of the sample"),
+                                fieldWithPath("description").description("Additional sample information such as recruitment information"),
+                                fieldWithPath("previouslyReported").description("Whether this cohort was previously reported"),
+                                fieldWithPath("notes").description("Any other relevant ancestry-related information")
                         ),
                         links(halLinks(),
-                              linkWithRel("self").description("This study"),
-                              linkWithRel("study").description("This study"),
-                              linkWithRel("ancestry").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study")
+                              linkWithRel("self").description("This ancestry entry"),
+                              linkWithRel("study").description("This ancestry entry"),
+                              linkWithRel("ancestry").description("Link to the <<studies-resources,studies>> for this ancestry entry")
                         )
 
                 ))
@@ -357,8 +362,4 @@ public class ApiDocumentation {
     }
 
 
-    @Test
-    public void genesExample() throws Exception {
-
-    }
 }

@@ -42,6 +42,7 @@ public class Association implements Trackable {
 
     private Boolean snpInteraction = false;
 
+    @JsonIgnore
     private Boolean snpApproved = false;
 
     private String snpType;

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1212
+Content-Length: 1188
 
 {
   "riskFrequency" : "NR",
@@ -11,7 +11,6 @@ Content-Length: 1212
   "pvalueExponent" : -18,
   "multiSnpHaplotype" : false,
   "snpInteraction" : false,
-  "snpApproved" : true,
   "snpType" : "known",
   "standardError" : null,
   "range" : "[12.41-19.61]",
@@ -33,17 +32,17 @@ Content-Length: 1212
     "loci" : {
       "href" : "http://localhost:8080/api/associations/16510553/loci"
     },
-    "study" : {
-      "href" : "http://localhost:8080/api/associations/16510553/study"
-    },
     "snps" : {
       "href" : "http://localhost:8080/api/associations/16510553/snps"
+    },
+    "efoTraits" : {
+      "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
     },
     "genes" : {
       "href" : "http://localhost:8080/api/associations/16510553/genes"
     },
-    "efoTraits" : {
-      "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
+    "study" : {
+      "href" : "http://localhost:8080/api/associations/16510553/study"
     }
   }
 }

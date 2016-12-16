@@ -8,18 +8,18 @@
 |This association
 
 |`loci`
-|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+|<<overview-pagination,Paginated>> list of <<loci-resources,locis>> in this association
 
 |`snps`
-|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+|<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this association
 
 |`genes`
-|<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study
+|<<overview-pagination,Paginated>> list of <<genes-resources,genes>> in this association
 
 |`efoTraits`
-|<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study
+|<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this association
 
 |`study`
-|<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study
+|Link to the <<studies-resources,study>> for this association
 
 |===

@@ -3,38 +3,38 @@
 
 |`_links`
 |`Object`
-|<<studies-links,Links>> to other resources
+|<<ancestries-links,Links>> to other resources
 
 |`type`
 |`String`
-|The pubmed ID for the study
+|The stage this ancestry entry applies to
 
 |`numberOfIndividuals`
 |`Number`
-|The study's GWAS Catalog accession ID
+|The number of individuals in this sample
 
 |`ancestralGroup`
 |`String`
-|Whether full summary statistics are available for this study
+|The wider ancestral group(s) this sample belongs to
 
 |`countryOfOrigin`
 |`String`
-|The study's first author
+|The countries of origin of the sample
 
 |`countryOfRecruitment`
 |`String`
-|The study's publication date
+|The countries of recruitment of the sample
 
 |`description`
 |`String`
-|The study's journal
+|Additional sample information such as recruitment information
 
 |`previouslyReported`
 |`Null`
-|Initial sample description
+|Whether this cohort was previously reported
 
 |`notes`
 |`Null`
-|Any other relevant study design information
+|Any other relevant ancestry-related information
 
 |===

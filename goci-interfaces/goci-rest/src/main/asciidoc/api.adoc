@@ -175,6 +175,8 @@ include::{snippets}/studies-list-example/curl-request.adoc[]
 
 The response is <<overview-pagination,paginated>> where the individual <<resources-study,study resources>>  are in the `_embedded.studies` field.
 
+
+
 [[resources-study]]
 == Study
 
@@ -189,6 +191,11 @@ include::{snippets}/studies-example/curl-request.adoc[]
 ==== Example response
 
 include::{snippets}/studies-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/studies-example/response-fields.adoc[]
+
 
 [[resources-study-links]]
 ==== Links
@@ -229,6 +236,10 @@ include::{snippets}/associations-example/curl-request.adoc[]
 
 include::{snippets}/associations-example/http-response.adoc[]
 
+==== Response structure
+
+include::{snippets}/associations-example/response-fields.adoc[]
+
 [[resources-association-links]]
 ==== Links
 
@@ -268,8 +279,38 @@ include::{snippets}/ancestries-example/curl-request.adoc[]
 
 include::{snippets}/ancestries-example/http-response.adoc[]
 
+==== Response structure
+
+include::{snippets}/ancestries-example/response-fields.adoc[]
+
 [[resources-ancestry-links]]
 ==== Links
 
 include::{snippets}/ancestries-example/links.adoc[]
 
+
+[[resources-genomic-context]]
+== Genomic context
+
+A genomic context is a convenience model to link a SNP to a gene. It details some additional information about the relationship between that specific SNP and gene.
+
+=== Retrieve a genomic context
+
+include::{snippets}/genomic-contexts-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/genomic-contexts-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/genomic-contexts-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/genomic-contexts-example/response-fields.adoc[]
+
+[[resources-genomic-context-links]]
+==== Links
+
+include::{snippets}/genomic-contexts-example/links.adoc[]

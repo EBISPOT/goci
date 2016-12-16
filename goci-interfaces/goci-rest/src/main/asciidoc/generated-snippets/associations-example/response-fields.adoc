@@ -7,74 +7,70 @@
 
 |`riskFrequency`
 |`String`
-|The pubmed ID for the study
-
-|`pvalueDescription`
-|`Null`
-|The study's GWAS Catalog accession ID
-
-|`pvalueMantissa`
-|`Number`
-|Whether full summary statistics are available for this study
-
-|`pvalueExponent`
-|`Number`
-|The study's first author
-
-|`multiSnpHaplotype`
-|`Boolean`
-|The study's publication date
-
-|`snpInteraction`
-|`Boolean`
-|The study's journal
-
-|`snpApproved`
-|`Boolean`
-|The study title
-
-|`snpType`
-|`String`
-|Initial sample description
-
-|`standardError`
-|`Null`
-|Replication sample description
-
-|`range`
-|`String`
-|Whether the study investigates a gene-environment interaction
-
-|`description`
-|`Null`
-|Whether the study investigates a gene-gene interaction
-
-|`orPerCopyNum`
-|`Null`
-|Whether a genome-wide array was used
-
-|`betaNum`
-|`Number`
-|Qualifier of number of SNPs passing QC (eg >)
-
-|`betaUnit`
-|`String`
-|Whether SNPs were imputed
-
-|`betaDirection`
-|`String`
-|Whether samples were pooled
+|Reported risk/effect allele frequency associated with strongest SNP in controls
 
 |`pvalue`
 |`Number`
-|Whether samples were pooled
+|Reported p-value
+
+|`pvalueMantissa`
+|`Number`
+|Mantissa of reported p-value
+
+|`pvalueExponent`
+|`Number`
+|Exponent of reported p-value
+
+|`pvalueDescription`
+|`Null`
+|Information describing context of p-value
+
+|`multiSnpHaplotype`
+|`Boolean`
+|Whether the association is for a multi-SNP haplotype
+
+|`snpInteraction`
+|`Boolean`
+|Whether the association is for a SNP-SNP interaction
+
+|`snpType`
+|`String`
+|Whether a SNP has previously been reported
+
+|`standardError`
+|`Null`
+|Standard error of the effect size
+
+|`range`
+|`String`
+|95% confidence interval
+
+|`orPerCopyNum`
+|`Null`
+|Odds ratio
+
+|`betaNum`
+|`Number`
+|Beta coefficient
+
+|`betaUnit`
+|`String`
+|Beta coefficient unit
+
+|`betaDirection`
+|`String`
+|Beta coefficient direction
+
+|`description`
+|`Null`
+|Additional beta coefficient comment
 
 |`lastMappingDate`
 |`String`
-|Whether samples were pooled
+|Last time this association was mapped to Ensembl
 
 |`lastUpdateDate`
 |`String`
-|Any other relevant study design information
+|Last time this association was updated
 
 |===

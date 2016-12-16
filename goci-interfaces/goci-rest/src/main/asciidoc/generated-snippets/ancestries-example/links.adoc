@@ -2,12 +2,12 @@
 |Relation|Description
 
 |`self`
-|This study
+|This ancestry entry
 
 |`study`
-|This study
+|This ancestry entry
 
 |`ancestry`
-|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+|Link to the <<studies-resources,studies>> for this ancestry entry
 
 |===
