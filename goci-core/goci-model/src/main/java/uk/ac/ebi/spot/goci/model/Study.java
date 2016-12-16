@@ -154,7 +154,8 @@ public class Study implements Trackable {
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
                  Housekeeping housekeeping,
-                 StudyReport studyReport, Collection<Event> events) {
+                 StudyReport studyReport, Collection<Event> events,
+                 Collection<SingleNucleotidePolymorphism> snps) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -182,6 +183,7 @@ public class Study implements Trackable {
         this.housekeeping = housekeeping;
         this.studyReport = studyReport;
         this.events = events;
+        this.snps = snps;
     }
 
     public Long getId() {
@@ -411,5 +413,13 @@ public class Study implements Trackable {
 
     public void setFullPvalueSet(Boolean fullPvalueSet) {
         this.fullPvalueSet = fullPvalueSet;
+    }
+
+    public Collection<SingleNucleotidePolymorphism> getSnps() {
+        return snps;
+    }
+
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
     }
 }

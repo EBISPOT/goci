@@ -61,6 +61,9 @@ public class SingleNucleotidePolymorphism {
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     private Collection<Gene> genes = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "snps")
+    private Collection<Study> studies;
+
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
@@ -75,7 +78,8 @@ public class SingleNucleotidePolymorphism {
                                         Collection<RiskAllele> riskAlleles,
                                         SingleNucleotidePolymorphism currentSnp,
                                         Collection<Association> associations,
-                                        Collection<Gene> genes) {
+                                        Collection<Gene> genes,
+                                        Collection<Study> studies) {
         this.rsId = rsId;
         this.merged = merged;
         this.functionalClass = functionalClass;
@@ -86,6 +90,7 @@ public class SingleNucleotidePolymorphism {
         this.currentSnp = currentSnp;
         this.associations = associations;
         this.genes = genes;
+        this.studies = studies;
     }
 
     public Long getId() {
@@ -168,5 +173,13 @@ public class SingleNucleotidePolymorphism {
 
     public void setGenes(Collection<Gene> genes) {
         this.genes = genes;
+    }
+
+    public Collection<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(Collection<Study> studies) {
+        this.studies = studies;
     }
 }
