@@ -60,7 +60,7 @@ public class EmbeddableDocumentTest {
                                Collections.EMPTY_LIST,
                                null,
                                Collections.EMPTY_LIST,
-                               h, null, Collections.EMPTY_LIST);
+                               h, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
