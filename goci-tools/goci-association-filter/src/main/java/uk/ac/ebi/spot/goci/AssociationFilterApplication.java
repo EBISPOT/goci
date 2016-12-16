@@ -19,7 +19,6 @@ import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 import uk.ac.ebi.spot.goci.service.FilterDataProcessingService;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by dwelter on 05/04/16.
@@ -30,6 +29,7 @@ public class AssociationFilterApplication {
     private static File outputFile;
     private static File inputFile;
     private static Boolean prune = false;
+    private static Double threshold = 1e-5;
 
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
@@ -53,12 +53,12 @@ public class AssociationFilterApplication {
 
     @Bean CommandLineRunner run() {
         return strings -> {
-            System.out.println("About to filter the input list");
-            getLog().debug("About to filter the input list");
 
             int parseArgs = parseArguments(strings);
             if (parseArgs == 0) {
-                // execute mapper
+                System.out.println("About to filter the input listagainst threshold " + threshold);
+                getLog().debug("About to filter the input list against threshold " + threshold);
+
                 this.doFiltering(inputFile, outputFile);
             }
             else {
@@ -109,6 +109,9 @@ public class AssociationFilterApplication {
                 if(cl.hasOption("p")) {
                     prune = true;
                 }
+                if(cl.hasOption("t")){
+                    threshold = Double.valueOf(cl.getOptionValue("t"));
+                }
             }
         }
         catch (ParseException e) {
@@ -150,6 +153,14 @@ public class AssociationFilterApplication {
         pruneOption.setRequired(false);
         options.addOption(pruneOption);
 
+        Option thresholdOption = new Option(
+                "t",
+                "threshold",
+                true,
+                "Filter only associations below the provided threshold. If no threshold is provided, the default of 1e-5 will be used.");
+        thresholdOption.setRequired(false);
+        options.addOption(thresholdOption);
+
         return options;
     }
 
@@ -158,11 +169,14 @@ public class AssociationFilterApplication {
             getLog().info("Reading input file");
             String[][] data = catalogSpreadsheetExporter.readFromFile(inputFile);
             getLog().info("Input file processed, starting data transformation and filtering process");
-            String[][] transformAssocations = filterDataProcessingService.filterInputData(data, prune);
+            String[][] transformAssocations = filterDataProcessingService.filterInputData(data, threshold, prune);
             getLog().info("Exporting filtered data to file");
             catalogSpreadsheetExporter.writeToFile(transformAssocations, outputFile);
         }
-        catch (IOException e) {
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

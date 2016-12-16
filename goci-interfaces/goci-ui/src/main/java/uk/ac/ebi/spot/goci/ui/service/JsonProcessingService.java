@@ -624,9 +624,9 @@ public class JsonProcessingService {
                         region = locs[2];
                     }
                 }
-                else {
-                    System.out.println(loc);
-                }
+//                else {
+//                    System.out.println(loc);
+//                }
             }
         }
 
