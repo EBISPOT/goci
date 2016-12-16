@@ -205,27 +205,6 @@ public class ApiDocumentation {
 
     @Test
     public void studiesExample() throws Exception {
-//        this.restDocumentationResultHandler.document(
-//                pathParameters(
-//                        parameterWithName("study_id").description("The id of the study in the GWAS Catalog")),
-//
-//                responseFields(
-//                        fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
-//                        fieldWithPath("pubmedId").description("The pubmed ID for the study"),
-//                        fieldWithPath("accessionId").description("The study's GWAS Catalog accession ID"),
-//                        fieldWithPath("fullPvalueSet").description("Whether full summary statistics are available for this study")
-//                ),
-//                links(halLinks(),
-//                      linkWithRel("self").description("This study"),
-//                      linkWithRel("ancestries").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
-//                      linkWithRel("diseaseTrait").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
-//                      linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
-//                      linkWithRel("platforms").description("<<overview-pagination,Paginated>> list of <<platforms-resources,platforms>> in this study"),
-//                      linkWithRel("associations").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study")
-//
-//                      )
-//
-//        );
 
         this.mockMvc.perform(get("/api/studies/{study_id}", "5993").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
@@ -269,8 +248,57 @@ public class ApiDocumentation {
     }
 
     @Test
-    public void associationsExample() throws Exception {
+    public void associationsListExample () throws Exception {
 
+        this.mockMvc.perform(get("/api/associations").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void associationsExample() throws Exception {
+        this.mockMvc.perform(get("/api/associations/{association_id}", "16510553").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        pathParameters(
+                                parameterWithName("association_id").description("The id of the association in the GWAS Catalog")),
+
+                        responseFields(
+                                fieldWithPath("_links").description("<<associations-links,Links>> to other resources"),
+                                fieldWithPath("riskFrequency").description("The pubmed ID for the study"),
+                                fieldWithPath("pvalueDescription").description("The study's GWAS Catalog accession ID"),
+                                fieldWithPath("pvalueMantissa").description("Whether full summary statistics are available for this study"),
+                                fieldWithPath("pvalueExponent").description("The study's first author"),
+                                fieldWithPath("multiSnpHaplotype").description("The study's publication date"),
+                                fieldWithPath("snpInteraction").description("The study's journal"),
+                                fieldWithPath("snpApproved").description("The study title"),
+                                fieldWithPath("snpType").description("Initial sample description"),
+                                fieldWithPath("standardError").description("Replication sample description"),
+                                fieldWithPath("range").description("Whether the study investigates a gene-environment interaction"),
+                                fieldWithPath("description").description("Whether the study investigates a gene-gene interaction"),
+                                fieldWithPath("orPerCopyNum").description("Whether a genome-wide array was used"),
+//                                fieldWithPath("orPerCopyRecip").description("Whether a targted array was used"),
+//                                fieldWithPath("orPerCopyRecipRange").description("Number of SNPs passing QC"),
+                                fieldWithPath("betaNum").description("Qualifier of number of SNPs passing QC (eg >)"),
+                                fieldWithPath("betaUnit").description("Whether SNPs were imputed"),
+                                fieldWithPath("betaDirection").description("Whether samples were pooled"),
+                                fieldWithPath("pvalue").description("Whether samples were pooled"),
+                                fieldWithPath("lastMappingDate").description("Whether samples were pooled"),
+                                fieldWithPath("lastUpdateDate").description("Any other relevant study design information")
+                        ),
+                        links(halLinks(),
+                              linkWithRel("self").description("This association"),
+                              linkWithRel("association").description("This association"),
+                              linkWithRel("loci").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
+                              linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
+                              linkWithRel("genes").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
+                              linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
+                              linkWithRel("study").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study")
+
+                        )
+
+                ))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -278,40 +306,13 @@ public class ApiDocumentation {
 
     }
 
-    @Test
-    public void regionsExample() throws Exception {
-
-    }
 
     @Test
     public void genomicContextsExample() throws Exception {
 
     }
 
-    @Test
-    public void efoTraitsExample() throws Exception {
 
-    }
-
-    @Test
-    public void mappingMetadatasExample() throws Exception {
-
-    }
-
-    @Test
-    public void riskAllelesExample() throws Exception {
-
-    }
-
-    @Test
-    public void diseaseTraitsExample() throws Exception {
-
-    }
-
-    @Test
-    public void countriesExample() throws Exception {
-
-    }
 
     @Test
     public void singleNucleotidePolymorphismsExample() throws Exception {
@@ -319,34 +320,45 @@ public class ApiDocumentation {
     }
 
     @Test
+    public void ancestriesListExample () throws Exception {
+
+        this.mockMvc.perform(get("/api/ancestries").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
     public void ancestriesExample() throws Exception {
+        this.mockMvc.perform(get("/api/ancestries/{ancestry_id}", "14852643").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        pathParameters(
+                                parameterWithName("ancestry_id").description("The id of the ancestry entry in the GWAS Catalog")),
 
+                        responseFields(
+                                fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
+                                fieldWithPath("type").description("The pubmed ID for the study"),
+                                fieldWithPath("numberOfIndividuals").description("The study's GWAS Catalog accession ID"),
+                                fieldWithPath("ancestralGroup").description("Whether full summary statistics are available for this study"),
+                                fieldWithPath("countryOfOrigin").description("The study's first author"),
+                                fieldWithPath("countryOfRecruitment").description("The study's publication date"),
+                                fieldWithPath("description").description("The study's journal"),
+                                fieldWithPath("previouslyReported").description("Initial sample description"),
+                                fieldWithPath("notes").description("Any other relevant study design information")
+                        ),
+                        links(halLinks(),
+                              linkWithRel("self").description("This study"),
+                              linkWithRel("study").description("This study"),
+                              linkWithRel("ancestry").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study")
+                        )
+
+                ))
+                .andExpect(status().isOk());
     }
 
-    @Test
-    public void entrezGenesExample() throws Exception {
-
-    }
-
-    @Test
-    public void ensemblGenesExample() throws Exception {
-
-    }
 
     @Test
     public void genesExample() throws Exception {
 
     }
-
-
-    @Test
-    public void lociExample() throws Exception {
-
-    }
-
-    @Test
-    public void platformsExample() throws Exception {
-
-    }
-
 }

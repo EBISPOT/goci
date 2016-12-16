@@ -1,0 +1,40 @@
+|===
+|Path|Type|Description
+
+|`_links`
+|`Object`
+|<<studies-links,Links>> to other resources
+
+|`type`
+|`String`
+|The pubmed ID for the study
+
+|`numberOfIndividuals`
+|`Number`
+|The study's GWAS Catalog accession ID
+
+|`ancestralGroup`
+|`String`
+|Whether full summary statistics are available for this study
+
+|`countryOfOrigin`
+|`String`
+|The study's first author
+
+|`countryOfRecruitment`
+|`String`
+|The study's publication date
+
+|`description`
+|`String`
+|The study's journal
+
+|`previouslyReported`
+|`Null`
+|Initial sample description
+
+|`notes`
+|`Null`
+|Any other relevant study design information
+
+|===

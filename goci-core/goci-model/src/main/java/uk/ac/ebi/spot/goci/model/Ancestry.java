@@ -41,6 +41,7 @@ public class Ancestry implements Trackable {
     // In database but not available in curation interface forms as no longer used
     private String previouslyReported;
 
+    @JsonIgnore
     private String sampleSizesMatch;
 
     private String notes;

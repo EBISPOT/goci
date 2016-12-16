@@ -195,3 +195,81 @@ include::{snippets}/studies-example/http-response.adoc[]
 
 include::{snippets}/studies-example/links.adoc[]
 
+
+[[resources-associations]]
+== Associations
+
+The Associations resources is used to list assocations in the GWAS Catalog
+
+[[resources-associations-list]]
+=== Listing associations
+
+A `GET` request will list all of the Catalog associations.
+
+==== Example request
+
+include::{snippets}/associations-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-association,association resources>>  are in the `_embedded.associations` field.
+
+[[resources-association]]
+== Association
+
+=== Retrieve an association
+
+include::{snippets}/associations-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/associations-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/associations-example/http-response.adoc[]
+
+[[resources-association-links]]
+==== Links
+
+include::{snippets}/associations-example/links.adoc[]
+
+
+[[resources-ancestries]]
+== Ancestries
+
+The Ancestries resource is used to list ancestries in the GWAS Catalog
+
+[[resources-ancestries-list]]
+=== Listing ancestries
+
+A `GET` request will list all of the Catalog ancestries.
+
+==== Example request
+
+include::{snippets}/ancestries-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-ancestry,ancestry resources>>  are in the `_embedded.ancestries` field.
+
+[[resources-ancestry]]
+== Ancestry
+
+=== Retrieve an ancestry
+
+include::{snippets}/ancestries-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/ancestries-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/ancestries-example/http-response.adoc[]
+
+[[resources-ancestry-links]]
+==== Links
+
+include::{snippets}/ancestries-example/links.adoc[]
+

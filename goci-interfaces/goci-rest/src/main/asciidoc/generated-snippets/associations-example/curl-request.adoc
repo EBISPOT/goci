@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/api/associations/16510553' -i -H 'Accept: application/json'
+----

@@ -1,0 +1,80 @@
+|===
+|Path|Type|Description
+
+|`_links`
+|`Object`
+|<<associations-links,Links>> to other resources
+
+|`riskFrequency`
+|`String`
+|The pubmed ID for the study
+
+|`pvalueDescription`
+|`Null`
+|The study's GWAS Catalog accession ID
+
+|`pvalueMantissa`
+|`Number`
+|Whether full summary statistics are available for this study
+
+|`pvalueExponent`
+|`Number`
+|The study's first author
+
+|`multiSnpHaplotype`
+|`Boolean`
+|The study's publication date
+
+|`snpInteraction`
+|`Boolean`
+|The study's journal
+
+|`snpApproved`
+|`Boolean`
+|The study title
+
+|`snpType`
+|`String`
+|Initial sample description
+
+|`standardError`
+|`Null`
+|Replication sample description
+
+|`range`
+|`String`
+|Whether the study investigates a gene-environment interaction
+
+|`description`
+|`Null`
+|Whether the study investigates a gene-gene interaction
+
+|`orPerCopyNum`
+|`Null`
+|Whether a genome-wide array was used
+
+|`betaNum`
+|`Number`
+|Qualifier of number of SNPs passing QC (eg >)
+
+|`betaUnit`
+|`String`
+|Whether SNPs were imputed
+
+|`betaDirection`
+|`String`
+|Whether samples were pooled
+
+|`pvalue`
+|`Number`
+|Whether samples were pooled
+
+|`lastMappingDate`
+|`String`
+|Whether samples were pooled
+
+|`lastUpdateDate`
+|`String`
+|Any other relevant study design information
+
+|===

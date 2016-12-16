@@ -1,0 +1,25 @@
+|===
+|Relation|Description
+
+|`self`
+|This association
+
+|`association`
+|This association
+
+|`loci`
+|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+
+|`snps`
+|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+
+|`genes`
+|<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study
+
+|`efoTraits`
+|<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study
+
+|`study`
+|<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study
+
+|===

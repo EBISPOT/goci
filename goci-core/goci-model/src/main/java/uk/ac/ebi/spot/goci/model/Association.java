@@ -55,8 +55,10 @@ public class Association implements Trackable {
     // OR specific values
     private Float orPerCopyNum;
 
+    @JsonIgnore
     private Float orPerCopyRecip;
 
+    @JsonIgnore
     private String orPerCopyRecipRange;
 
     // Beta specific values
@@ -95,6 +97,7 @@ public class Association implements Trackable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastMappingDate;
 
+    @JsonIgnore
     private String lastMappingPerformedBy;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

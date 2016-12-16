@@ -1,0 +1,13 @@
+|===
+|Relation|Description
+
+|`self`
+|This study
+
+|`study`
+|This study
+
+|`ancestry`
+|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+
+|===
