@@ -139,12 +139,6 @@
             <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Variant information</h3>
-                    <span class="pull-right">
-                        <button type="button" class="btn btn-xs" id="download_data">
-                            <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
-                            <span>Download variant data</span>
-                        </button>
-                    </span>
                 </div>
                 <div class="clearfix">
                     <!--<div class="panel-body col-lg-9 col-md-8 col-sm-8 col-xs-8">-->
@@ -182,16 +176,16 @@
                         <div class="clearfix">
                             <!--<div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
                             <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-alleles">-</div>-->
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-alleles">-</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="variant-alleles">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Minor allele</div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="minor-allele">-</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Minor allele</div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Minor Allele Frequency">MAF</div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="minor-allele-freq">-</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Minor Allele Frequency">MAF</div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
                         </div>
                     </div>
 
@@ -233,14 +227,19 @@
                     <h3 class="panel-title">
                         <span id="association_label">Associations</span><span id="association_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
                     </h3>
-
-                    <span class="pull-right clickable" onclick="toggleSidebar('#associations_panel span.clickable')">
-                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-xs" id="download_data">
+                            <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
+                            <span>Download association data</span>
+                        </button>
+                        <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#associations_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
                     </span>
                 </div>
 
                 <div class="panel-body">
-                    <button type="button" id="expand-table" class="btn btn-default btn-sm pull-right table-collapsed" onclick="">Expand all associations  </button>
+                    <!--<button type="button" id="expand-table" class="btn btn-default btn-sm pull-right table-collapsed" onclick="">Expand all associations  </button>-->
 
                     <table id="association-table" class="table table-striped">
                         <thead id="association-table-header">

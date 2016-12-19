@@ -26,7 +26,6 @@ $(document).ready(function() {
 
 function getVariantData(rsId) {
     console.log("Solr research request received for " + rsId);
-
     setState(SearchState.LOADING);
     $.getJSON('/gwas/api/search/association',
               {
@@ -40,17 +39,24 @@ function getVariantData(rsId) {
     console.log("Solr research done for " + rsId);
 }
 
+// Parse the Solr results and display the data on the HTML page
 function processVariantData(data,rsId) {
-    // Variant summary panel
-    getVariantInfo(data.docs);
-    // External links panel
-    getLinkButtons(rsId);
-    // Associations table
-    getVariantAssociations(data.docs);
-    // Studies table
-    getVariantStudies(data.docs);
-    // Traits table
-    getVariantTraits(data.docs);
+    // Check if Solr returns some results
+    if (data.docs.length == 0) {
+        $('#lower_container').html("<h2>The variant <em>"+rsId+"</em> cannot be found in the GWAS Catalog database</h2>");
+    }
+    else {
+        // Variant summary panel
+        getVariantInfo(data.docs);
+        // External links panel
+        getLinkButtons(rsId);
+        // Associations table
+        getVariantAssociations(data.docs);
+        // Studies table
+        getVariantStudies(data.docs);
+        // Traits table
+        getVariantTraits(data.docs);
+    }
 }
 
 function getVariantInfo(data,rsId) {
