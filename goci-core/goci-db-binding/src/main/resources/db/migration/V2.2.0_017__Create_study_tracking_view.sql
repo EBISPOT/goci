@@ -1,0 +1,23 @@
+/*
+
+################################################################################
+
+Migration script to create a view study->has_event->housekeeping info
+
+author: Cinzia Malangone
+date:    23th Nov 2016
+version: 2.2.0.017
+################################################################################
+*/
+
+--------------------------------------------------------
+--  CREATE VIEW
+--------------------------------------------------------
+
+
+CREATE OR REPLACE VIEW STUDY_TRACKING_VIEW (STUDY_ID,HAS_EVENT,STATUS, PUBMED_ID, HOUSEKEEPING_ID,PUBLICATION_DATE, LAST_UPDATE_DATE,CATALOG_PUBLISH_DATE,STUDY_ADDED_DATE,CURATION_STATUS_ID,CURATOR_ID, CATALOG_UNPUBLISH_DATE,UNPUBLISH_REASON_ID,IS_PUBLISHED)
+AS SELECT DISTINCT S.ID AS STUDY_ID, DECODE(SE.STUDY_ID, NULL, 0, 1) HAS_EVENT, CS.STATUS, S.PUBMED_ID, S.HOUSEKEEPING_ID, S.PUBLICATION_DATE,HK."LAST_UPDATE_DATE",HK."CATALOG_PUBLISH_DATE",HK."STUDY_ADDED_DATE",HK."CURATION_STATUS_ID",HK."CURATOR_ID",HK."CATALOG_UNPUBLISH_DATE",HK."UNPUBLISH_REASON_ID",HK."IS_PUBLISHED"
+FROM STUDY S LEFT JOIN HOUSEKEEPING HK ON (HK.ID = S.HOUSEKEEPING_ID)
+JOIN CURATION_STATUS CS ON (HK.CURATION_STATUS_ID = CS.ID)
+LEFT JOIN STUDY_EVENT SE ON (SE.STUDY_ID = S.ID)
+ORDER BY S.ID ASC;

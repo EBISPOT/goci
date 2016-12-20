@@ -7,7 +7,7 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.repository.EventRepository;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by emma on 06/05/2016.
@@ -36,7 +36,7 @@ public class EventOperationsService {
     public synchronized Event createEvent(String eventType, SecureUser user) {
         // Create and save event
         Event event = new Event();
-        event.setEventDate(new Date());
+        event.setEventDate(new java.sql.Date(System.currentTimeMillis()));
         event.setEventType(eventType);
         event.setUser(user);
         eventRepository.save(event);
@@ -54,7 +54,7 @@ public class EventOperationsService {
     public synchronized Event createEvent(String eventType, SecureUser user, String eventDescription) {
         // Create and save event
         Event event = new Event();
-        event.setEventDate(new Date());
+        event.setEventDate(new java.sql.Date(System.currentTimeMillis()));
         event.setEventType(eventType);
         event.setUser(user);
         event.setEventDescription(eventDescription);

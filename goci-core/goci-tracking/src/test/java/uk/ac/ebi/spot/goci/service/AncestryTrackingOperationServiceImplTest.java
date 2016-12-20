@@ -14,7 +14,7 @@ import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,19 +39,19 @@ public class AncestryTrackingOperationServiceImplTest {
     private static final Ancestry ANCESTRY = new AncestryBuilder().setId(100L).build();
 
     private static final Event CREATE_EVENT = new EventBuilder().setId(99L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ANCESTRY_CREATED")
             .build();
 
     private static final Event UPDATE_EVENT = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ANCESTRY_UPDATED")
             .build();
 
     private static final Event DELETE_EVENT = new EventBuilder().setId(96L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ANCESTRY_DELETED")
             .build();

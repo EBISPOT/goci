@@ -15,6 +15,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
             th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
 
+    <script src="http://d3js.org/d3.v3.min.js"
+            th:src="@{http://d3js.org/d3.v3.min.js}"></script>
+
+
     <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
           th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
           rel="stylesheet"/>
@@ -27,6 +31,7 @@
           th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
           rel="stylesheet"/>
 
+
     <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
     <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
@@ -35,6 +40,15 @@
     <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
     <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
     <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/date-euro.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
+    <script th:src="@{/js/reports/report_stats_excel.js}"></script>
 
 </head>
 <body>
@@ -45,54 +59,37 @@
 <div class="container-fluid">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Monthly Curator Totals</a></li>
+            <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
             <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
             <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
             <li><a th:href="@{/reports/weekly_progress}">Weekly progress</a></li>
             <li><a th:href="@{/reports/studies_backlog}">Studies Backlog Graph</a></li>
-            <li><a th:href="@{/reports/stats}">Stats</a></li>
+            <li class="active"><a href="#">Stats</a></li>
         </ul>
     </div>
 </div>
 
-<!--Include filter options-->
-<div th:include="fragments/reports_filter :: monthly_search_filter"></div>
-
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <table id="mainTable" class="table table-hover table-bordered"
-                   data-toggle="table" data-show-columns="true">
-                <thead>
-                <tr>
-                    <th class="col-md-1" data-sortable="true">Year</th>
-                    <th class="col-md-1" data-sortable="true">Month</th>
-                    <th class="col-md-2" data-sortable="true">Curator</th>
-                    <th class="col-md-2" data-sortable="true">Total number per curator</th>
-                    <th class="col-md-2" data-sortable="true">Curation Status</th>
-                    <th class="col-md-2">Link to studies</th>
-                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="monthlyTotalsSummaryView: ${monthlyTotalsSummaryViews}">
-                    <td th:text="${monthlyTotalsSummaryView.year} ?: 'null'"></td>
-                    <!--Some thymeleaf wrangling to get the month name for a date-->
-                    <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
-                    <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
-                    <td><a th:href="@{/reports/monthly/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
-                           class="btn btn-link">Show studies</a></td>
-                    <td th:text="${monthlyTotalsSummaryView.monthlyTotal} ?: 'null'"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-md-3">
+            <div id="ButtonsMenu">
+            <br/>
+            <a href="#" class="btn btn-primary" id="generateStats">Generate Stats</a>
+            <br/>
+            <br/>
+            <a th:href="@{/reports/stats/downloadStatsExcel}" class="btn btn-primary" id="downloadStatsExcel">Download XLS Stats</a>
+            <br/>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div id="loader" style="display:none;"></div>
+            <div id="d3ProgressiveQueue">
+            </div>
         </div>
     </div>
 </div>
 
-<div th:include="fragments/footer :: page_footer"></div>
 
+<div th:include="fragments/footer :: page_footer"></div>
 </body>
 </html>
