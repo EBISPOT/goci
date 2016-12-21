@@ -49,7 +49,17 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/date-euro.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
     <script th:src="@{/js/reports/report_stats_excel.js}"></script>
-
+    <style>
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-family: Lato;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
@@ -83,8 +93,7 @@
         </div>
         <div class="col-md-9">
             <div id="loader" style="display:none;"></div>
-            <div id="d3ProgressiveQueue">
-            </div>
+            <svg id="d3ProgressiveQueue" width="1000" height="500"></svg>
         </div>
     </div>
 </div>

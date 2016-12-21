@@ -36,10 +36,10 @@ public class StatsController {
     private WeeklyProgressReportService weeklyProgressReportService;
 
     @Autowired
-    public StatsController ( StudyTrackingViewService studyTrackingViewService,
-                             CuratorTrackingService curatorTrackingService,
-                             WeeklyTrackingService weeklyTrackingService,
-                             WeeklyProgressReportService weeklyProgressReportService) {
+    public StatsController(StudyTrackingViewService studyTrackingViewService,
+                           CuratorTrackingService curatorTrackingService,
+                           WeeklyTrackingService weeklyTrackingService,
+                           WeeklyProgressReportService weeklyProgressReportService) {
 
         this.studyTrackingViewService = studyTrackingViewService;
         this.weeklyTrackingService = weeklyTrackingService;
@@ -64,33 +64,40 @@ public class StatsController {
     }
 
 
-    @RequestMapping(value="/downloadStatsExcel", method=RequestMethod.GET)
+    @RequestMapping(value = "/downloadStatsExcel", method = RequestMethod.GET)
     public ModelAndView getMyData(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         Map<String, Object> model = new HashMap<String, Object>();
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, 1);
 
-        ArrayList<Integer[]> ProgressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
-        model.put("progressiveQueues", ProgressiveQueues);
+        ArrayList<Integer[]> progressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
+        model.put("progressiveQueues", progressiveQueues);
 
 
         List<Object> reportWeekly = weeklyTrackingService.findAllWeekStatsReport();
         model.put("reportWeekly", reportWeekly);
 
 
-        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR)-1);
+        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR) - 1);
 
         model.put("curatorsStatsByWeek", curatorsStatsByWeek);
-        String period = Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR)-1) +"/"+ Integer.toString(calendar.get(Calendar.YEAR));
-        model.put("periodStatsByWeek",period);
+        String period = Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR) - 1) + "/" + Integer.toString(calendar.get(Calendar.YEAR));
+        model.put("periodStatsByWeek", period);
 
         List<String> curators = curatorTrackingService.findAllCurators();
-        for (String curatorName:curators) {
+        for (String curatorName : curators) {
             List<Object> curatorStats = curatorTrackingService.statsByCuration(curatorName);
-            model.put("curator_"+curatorName, curatorStats);
+            model.put("curator_" + curatorName, curatorStats);
         }
 
         return new ModelAndView(new StatsReportExcelView(), model);
+    }
+
+    @RequestMapping(value = "/getProgressiveQueuesJson", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public ArrayList<Integer[]> getProgressiveQueuesJson() {
+        ArrayList<Integer[]> progressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
+        return progressiveQueues;
     }
 
 }
