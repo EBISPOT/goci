@@ -452,9 +452,11 @@ function getSummary(data) {
 
 // Create external link buttons
 function getLinkButtons (rsId) {
-    $("#ensembl_button").attr('onclick', "window.open('http://www.ensembl.org/Homo_sapiens/Variation/Explore?v="+rsId+"', '_blank')");
+    var ensvar = 'http://www.ensembl.org/Homo_sapiens/Variation/';
+    $("#ensembl_button").attr('onclick', "window.open('"+ensvar+"Explore?v="+rsId+"', '_blank')");
     $("#ucsc_button").attr('onclick',    "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
     $("#dbsnp_button").attr('onclick',   "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
+    $("#ens_ld_button").attr('onclick',  "window.open('"+ensvar+"HighLD?v="+rsId+"', '_blank')");
 }
 
 // Pick up the most recent publication year
