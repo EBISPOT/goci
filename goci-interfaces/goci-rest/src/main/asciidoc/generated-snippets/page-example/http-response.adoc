@@ -32,23 +32,23 @@ Content-Length: 2273
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
-        "snps" : {
-          "href" : "http://localhost:8080/api/studies/5996/snps"
-        },
-        "associations" : {
-          "href" : "http://localhost:8080/api/studies/5996/associations"
-        },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5996/ancestries"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
         },
+        "associations" : {
+          "href" : "http://localhost:8080/api/studies/5996/associations"
+        },
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/studies/5996/efoTraits"
+        },
         "platforms" : {
           "href" : "http://localhost:8080/api/studies/5996/platforms"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5996/snps"
         }
       }
     } ]
