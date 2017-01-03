@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,7 +118,11 @@ public class Study implements Trackable {
     @JoinTable(name = "STUDY_EVENT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
+    @OrderBy // important don't remove. Tracking ticket
     private Collection<Event> events = new ArrayList<>();
+
+    @OneToMany(mappedBy = "study")
+    private Collection<WeeklyTracking> weeklyTrackings;
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP_VIEW",

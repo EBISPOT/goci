@@ -40,31 +40,31 @@ public class StudyTrackingOperationServiceImplTest {
     private static final Study STUDY = new StudyBuilder().setId(100L).build();
 
     private static final Event CREATE_EVENT = new EventBuilder().setId(99L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("STUDY_CREATION")
             .build();
 
     private static final Event STATUS_EVENT = new EventBuilder().setId(98L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE")
             .build();
 
     private static final Event UPDATE_EVENT = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("STUDY_UPDATE")
             .build();
 
     private static final Event DELETE_EVENT = new EventBuilder().setId(96L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("STUDY_DELETION")
             .build();
 
     private static final Event UPDATE_EVENT_WITH_DESCRIPTION = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("STUDY_UPDATE")
             .setEventDescription("DESCRIPTION")

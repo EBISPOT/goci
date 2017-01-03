@@ -4,7 +4,7 @@ import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by emma on 24/05/2016.

@@ -2,13 +2,10 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import java.util.Date;
+import javax.persistence.*;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by emma on 28/04/2016.
@@ -34,6 +31,17 @@ public class Event {
     private SecureUser user;
 
     private String eventDescription;
+
+    // The week is from Sunday to Saturday.
+    @Transient
+    public int weekOfYear() {
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(this.eventDate);
+        cal.add(Calendar.DATE, +1);
+        int weekOfYear = cal.get(Calendar.WEEK_OF_YEAR);
+
+        return weekOfYear;
+    }
 
     // JPA no-args constructor
     public Event() {

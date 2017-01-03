@@ -38,37 +38,37 @@ public class AssociationTrackingOperationServiceImplTest {
     private static final Association ASSOCIATION = new AssociationBuilder().setId((long) 200).build();
 
     private static final Event CREATE_EVENT = new EventBuilder().setId(99L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_CREATION")
             .build();
 
     private static final Event UPDATE_EVENT = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_UPDATE")
             .build();
 
     private static final Event MAPPING_EVENT = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_MAPPING")
             .build();
 
     private static final Event APPROVE = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_APPROVED")
             .build();
 
     private static final Event UNAPPROVE = new EventBuilder().setId(97L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_UNAPPROVED")
             .build();
 
     private static final Event DELETE_EVENT = new EventBuilder().setId(96L)
-            .setEventDate(new Date())
+            .setEventDate(new java.sql.Date(System.currentTimeMillis()))
             .setUser(SECURE_USER)
             .setEventType("ASSOCIATION_DELETION")
             .build();
