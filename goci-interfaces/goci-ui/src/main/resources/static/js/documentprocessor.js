@@ -38,14 +38,13 @@ function processStudy(study, table) {
     var pvalueflag = '';
 
     if(fullpvalset == 1) {
-        // var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas' target='_blank'>";
 
-        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/'"
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/'"
                .concat(study.pubmedId).concat(" target='_blank'</a>");
 
         pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
                         " data-toggle='tooltip'" +
-                         "data-original-title='Click for full p-value set'></span></a>");
+                         "data-original-title='Click for full summary statistics'></span></a>");
 
     }
 
