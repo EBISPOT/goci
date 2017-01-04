@@ -35,9 +35,10 @@ public class WeeklyProgressReportService {
         int year = yearBigDecimal.intValue();
         BigDecimal weekBigDecimal = (BigDecimal) progressionQueues.get(0)[1];
         int week = weekBigDecimal.intValue();
-        ArrayList<Integer[]> ProgressiveQueues = new ArrayList<Integer[]>();
+        ArrayList<Integer[]> progressiveQueues = new ArrayList<Integer[]>();
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, 1);
+
         Integer maxYear = calendar.get(Calendar.YEAR);
         Integer maxWeek = calendar.get(Calendar.WEEK_OF_YEAR);
 
@@ -47,7 +48,7 @@ public class WeeklyProgressReportService {
 
         List<WeeklyTracking>  weeklyTrackingList = weeklyTrackingService.findAll();
 
-        while ((year != maxYear) & (week != maxWeek)) {
+        while (!((year == maxYear) && (week == maxWeek))) {
             //HashSet<Long>  queueLevel1_week = weeklyTrackingService.findStudyByStatusAndYearAndWeek("In level 1 queue", year,week);
             Integer weekQuery = new Integer(week);
             Integer yearQuery = new Integer(year);
@@ -96,7 +97,7 @@ public class WeeklyProgressReportService {
             queueLevel3.addAll(queueLevel3_week);
 
             Integer row[]={year, week, queueLevel1.size(), queueLevel2.size(), queueLevel3.size()};
-            ProgressiveQueues.add(row);
+            progressiveQueues.add(row);
             // to change
             if (week == 52) {
                 week = 1;
@@ -106,7 +107,7 @@ public class WeeklyProgressReportService {
 
         }
 
-        return ProgressiveQueues;
+        return progressiveQueues;
     }
 
 }
