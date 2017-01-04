@@ -312,16 +312,3 @@ a > .toplevel-view {
     font-style: italic;
 }
 
-
-.sup-new {
-    position: relative;
-    bottom: 1.7em;
-    color: #a94442;
-    font-size: 30%;
-    background: #FFF6EC;
-    border-radius: 50px;
-}
-
-
-
-
