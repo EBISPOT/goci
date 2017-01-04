@@ -22,5 +22,6 @@
         <module>goci-ui</module>
         <module>goci-cttv-rest</module>
         <module>goci-pussycat</module>
+        <module>goci-rest</module>
     </modules>
 </project>
