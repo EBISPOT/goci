@@ -76,7 +76,9 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
     List<Object> findAllWeekStatsByStatus();
 
 
-    @Query(value = "select min(wt.year), min(wt.week) from weekly_tracking wt  where status like '%queue%'",
+    @Query(value = "select t.year, t.week from "+
+                   "(select wt.year, wt.week from weekly_tracking wt where status like '%queue%' order by year asc, week asc) t "+
+                   "where ROWNUM <= 1",
             nativeQuery = true)
     ArrayList<Object[]> getMinYearWeek();
 

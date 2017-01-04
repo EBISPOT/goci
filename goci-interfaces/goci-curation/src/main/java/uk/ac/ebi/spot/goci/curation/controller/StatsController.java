@@ -70,6 +70,14 @@ public class StatsController {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, 1);
 
+        int lastWeek = calendar.get(Calendar.WEEK_OF_YEAR) - 1;
+        int year = calendar.get(Calendar.YEAR);
+
+        if (lastWeek == 0) {
+            lastWeek = 52;
+            year = year-1;
+        }
+
         ArrayList<Integer[]> progressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
         model.put("progressiveQueues", progressiveQueues);
 
@@ -78,10 +86,10 @@ public class StatsController {
         model.put("reportWeekly", reportWeekly);
 
 
-        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR) - 1);
+        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(year, lastWeek);
 
         model.put("curatorsStatsByWeek", curatorsStatsByWeek);
-        String period = Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR) - 1) + "/" + Integer.toString(calendar.get(Calendar.YEAR));
+        String period = Integer.toString(lastWeek) + "/" + Integer.toString(year);
         model.put("periodStatsByWeek", period);
 
         List<String> curators = curatorTrackingService.findAllCurators();
