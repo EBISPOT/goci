@@ -120,7 +120,7 @@ FIRST AUTHOR: Last name and initials of first author
 
 DATE: Publication date (online (epub) date if available)
 
-INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
+INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for GWAS stage (summing across multiple populations, if applicable)
 
 REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
 
@@ -134,6 +134,6 @@ COUNTRY OF ORIGIN: Country of origin of the individuals in the sample
 
 COUNTRY OF RECRUITMENT: Country of recruitment of the individuals in the sample
 
-ADDITONAL ANCESTRY DESCRIPTION: Any other information relevant to the sample description
+ADDITONAL ANCESTRY DESCRIPTION: Any additional ancestry descriptors relevant to the sample description
 
 _Added: 16 September 2016_
