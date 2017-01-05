@@ -18,26 +18,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52538/riskAlleles"
         }
       }
     }, {
@@ -52,26 +52,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52392/riskAlleles"
         }
       }
     }, {
@@ -86,26 +86,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/52389/riskAlleles"
         }
       }
     }, {
@@ -120,26 +120,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46762/riskAlleles"
         }
       }
     }, {
@@ -154,26 +154,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46776/riskAlleles"
         }
       }
     }, {
@@ -188,26 +188,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46788/riskAlleles"
         }
       }
     }, {
@@ -222,26 +222,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46815/riskAlleles"
         }
       }
     }, {
@@ -256,26 +256,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46822/riskAlleles"
         }
       }
     }, {
@@ -290,26 +290,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46831/riskAlleles"
         }
       }
     }, {
@@ -324,26 +324,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46836/riskAlleles"
         }
       }
     }, {
@@ -358,26 +358,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46847/riskAlleles"
         }
       }
     }, {
@@ -392,26 +392,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46750/riskAlleles"
         }
       }
     }, {
@@ -426,26 +426,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46850/riskAlleles"
         }
       }
     }, {
@@ -460,26 +460,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46852/riskAlleles"
         }
       }
     }, {
@@ -494,26 +494,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46861/riskAlleles"
         }
       }
     }, {
@@ -528,26 +528,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46866/riskAlleles"
         }
       }
     }, {
@@ -562,26 +562,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46885/riskAlleles"
         }
       }
     }, {
@@ -596,26 +596,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46890/riskAlleles"
         }
       }
     }, {
@@ -630,26 +630,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/46901/riskAlleles"
         }
       }
     }, {
@@ -664,26 +664,26 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234"
         },
-        "locations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/locations"
-        },
-        "currentSnp" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/currentSnp"
-        },
-        "genomicContexts" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/genomicContexts"
-        },
-        "riskAlleles" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/riskAlleles"
+        "associations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/associations"
         },
         "studies" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/studies"
         },
-        "associations" : {
-          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/associations"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/genes"
+        },
+        "locations" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/locations"
+        },
+        "genomicContexts" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/genomicContexts"
+        },
+        "currentSnp" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/currentSnp"
+        },
+        "riskAlleles" : {
+          "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/16234/riskAlleles"
         }
       }
     } ]

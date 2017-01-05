@@ -31,20 +31,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14347"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14347/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14347/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14347/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14347/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14347/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14347/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14347/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14347/loci"
         }
       }
     }, {
@@ -72,20 +72,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14350"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14350/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14350/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14350/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14350/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14350/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14350/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14350/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14350/loci"
         }
       }
     }, {
@@ -113,20 +113,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14352"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14352/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14352/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14352/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14352/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14352/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14352/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14352/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14352/loci"
         }
       }
     }, {
@@ -154,20 +154,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/25563"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/25563/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/25563/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/25563/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/25563/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/25563/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/25563/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/25563/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/25563/loci"
         }
       }
     }, {
@@ -195,20 +195,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14826"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14826/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14826/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14826/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14826/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14826/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14826/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14826/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14826/loci"
         }
       }
     }, {
@@ -236,20 +236,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12441"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12441/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12441/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12441/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12441/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12441/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12441/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12441/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12441/loci"
         }
       }
     }, {
@@ -277,20 +277,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14627"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14627/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14627/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14627/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14627/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14627/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14627/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14627/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14627/loci"
         }
       }
     }, {
@@ -318,20 +318,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/14628"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14628/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/14628/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/14628/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/14628/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14628/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/14628/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/14628/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/14628/loci"
         }
       }
     }, {
@@ -359,20 +359,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12937"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12937/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12937/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12937/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12937/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12937/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12937/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12937/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12937/loci"
         }
       }
     }, {
@@ -400,20 +400,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12946"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12946/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12946/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12946/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12946/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12946/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12946/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12946/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12946/loci"
         }
       }
     }, {
@@ -441,20 +441,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12939"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12939/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12939/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12939/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12939/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12939/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12939/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12939/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12939/loci"
         }
       }
     }, {
@@ -482,20 +482,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12941"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12941/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12941/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12941/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12941/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12941/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12941/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12941/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12941/loci"
         }
       }
     }, {
@@ -523,20 +523,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12942"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12942/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12942/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12942/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12942/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12942/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12942/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12942/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12942/loci"
         }
       }
     }, {
@@ -564,20 +564,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12943"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12943/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12943/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12943/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12943/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12943/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12943/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12943/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12943/loci"
         }
       }
     }, {
@@ -605,20 +605,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12944"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12944/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12944/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12944/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12944/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12944/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12944/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12944/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12944/loci"
         }
       }
     }, {
@@ -646,20 +646,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12945"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12945/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12945/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12945/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12945/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12945/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12945/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12945/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12945/loci"
         }
       }
     }, {
@@ -687,20 +687,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12913"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12913/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12913/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12913/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12913/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12913/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12913/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12913/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12913/loci"
         }
       }
     }, {
@@ -728,20 +728,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12919"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12919/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12919/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12919/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12919/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12919/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12919/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12919/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12919/loci"
         }
       }
     }, {
@@ -769,20 +769,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12922"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12922/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12922/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12922/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12922/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12922/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12922/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12922/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12922/loci"
         }
       }
     }, {
@@ -810,20 +810,20 @@ Content-Length: 26542
         "association" : {
           "href" : "http://localhost:8080/api/associations/12924"
         },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12924/loci"
-        },
-        "snps" : {
-          "href" : "http://localhost:8080/api/associations/12924/snps"
+        "efoTraits" : {
+          "href" : "http://localhost:8080/api/associations/12924/efoTraits"
         },
         "study" : {
           "href" : "http://localhost:8080/api/associations/12924/study"
         },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12924/efoTraits"
-        },
         "genes" : {
           "href" : "http://localhost:8080/api/associations/12924/genes"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/associations/12924/snps"
+        },
+        "loci" : {
+          "href" : "http://localhost:8080/api/associations/12924/loci"
         }
       }
     } ]
