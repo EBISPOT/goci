@@ -63,8 +63,14 @@ function InitChart() {
             })
             .y(function(d) {
                 return yScale(d[1]);
-            })
-            .interpolate("basis");
+            });
+            //.interpolate("basis");  //smoothy line. Added dot. remove this
+
+        vis.append("text")
+            .attr("class", "title")
+            .attr("x", 70)
+            .attr("y", 50)
+            .text("Progressive Queues");
 
         vis.append("text")
             .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
@@ -82,17 +88,92 @@ function InitChart() {
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
+        vis.selectAll("dot")
+            .data(level1)
+            .enter().append("circle")
+            .attr("r", 2.3).style("fill", "green")
+            .attr("cx", function(d) { return xScale(d[0]); })
+            .attr("cy", function(d) { return yScale(d[1]); });
+
         vis.append('svg:path')
             .attr('d', lineGen(level2))
             .attr('stroke', 'blue')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
 
+        vis.selectAll("dot")
+            .data(level2)
+            .enter().append("circle")
+            .attr("r", 2.3).style("fill", "blue")
+            .attr("cx", function(d) { return xScale(d[0]); })
+            .attr("cy", function(d) { return yScale(d[1]); });
+
         vis.append('svg:path')
             .attr('d', lineGen(level3))
-            .attr('stroke', 'red')
+            .attr('stroke', 'orange')
             .attr('stroke-width', 2)
             .attr('fill', 'none');
+
+        vis.selectAll("dot")
+            .data(level3)
+            .enter().append("circle")
+            .attr("r", 2.3).style("fill", "orange")
+            .attr("cx", function(d) { return xScale(d[0]); })
+            .attr("cy", function(d) { return yScale(d[1]); });
+
+        var legend = vis.append("g")
+            .attr("class", "legend")
+            .attr("x", WIDTH - 65)
+            .attr("y", 25)
+            .attr("height", 100)
+            .attr("width", 100);
+
+        legend.append("g").append("rect")
+            .attr("x", WIDTH - 65)
+            .attr("y", 1*25)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", "green");
+
+        legend.append("g").append("text")
+            .attr("x", WIDTH - 50)
+            .attr("y", 1 * 25 + 8)
+            .attr("height",30)
+            .attr("width",100)
+            .style("fill", "green")
+            .text("Level 1");
+
+        legend.append("g").append("rect")
+            .attr("x", WIDTH - 65)
+            .attr("y", 2*25)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", "blue");
+
+        legend.append("g").append("text")
+            .attr("x", WIDTH - 50)
+            .attr("y", 2 * 25 + 8)
+            .attr("height",30)
+            .attr("width",100)
+            .style("fill", "blue")
+            .text("Level 2");
+
+        legend.append("g").append("rect")
+            .attr("x", WIDTH - 65)
+            .attr("y", 3*25)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", "orange");
+
+        legend.append("g").append("text")
+            .attr("x", WIDTH - 50)
+            .attr("y", 3 * 25 + 8)
+            .attr("height",30)
+            .attr("width",100)
+            .style("fill", "orange")
+            .text("Level 3");
+
+
 
     });
 
