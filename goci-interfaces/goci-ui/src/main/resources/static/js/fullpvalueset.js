@@ -27,7 +27,7 @@ function loadStudiesList() {
 
     $.getJSON('../api/search/alltraits', {
                 'q': searchTerm,
-                'max': 1,
+                'max': 100,
             })
             .done(function(data) {
                 displayStudies(data);
@@ -83,7 +83,7 @@ function processStudyDoc(study, table) {
 
 
 
-    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/".concat(study.pubmedId).concat("' target='_blank'>Click for full p-value set</a>");
+    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(study.pubmedId).concat("' target='_blank'>Click for full summary statistics</a>");
 
     row.append($("<td>").html(ftplink));
 
