@@ -126,6 +126,13 @@ public class StudyService {
         return studies;
     }
 
+    @Transactional(readOnly = true)
+    public List<Study> deepFindUnPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
 
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
@@ -183,6 +190,8 @@ public class StudyService {
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
+
+
 
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
