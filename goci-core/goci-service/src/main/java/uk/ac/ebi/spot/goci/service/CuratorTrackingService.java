@@ -61,4 +61,13 @@ public class CuratorTrackingService {
     }
 
     public void deleteAll() { curatorTrackingRepository.deleteAll();}
+
+    public void deleteByStudy(Study study) {
+        // Before we delete the study get its associated ancestry
+        List<CuratorTracking> curatorTrackingAttachedToStudy = curatorTrackingRepository.findByStudy(study);
+
+        for (CuratorTracking curatorTracking : curatorTrackingAttachedToStudy) {
+            curatorTrackingRepository.delete(curatorTracking);
+        }
+    }
 }
