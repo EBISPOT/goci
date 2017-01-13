@@ -93,11 +93,8 @@
                     <h3 class="panel-title">Variant information</h3>
                 </div>
                 <div class="clearfix">
-                    <!--<div class="panel-body col-lg-9 col-md-8 col-sm-8 col-xs-8">-->
                     <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
                         <div class="clearfix">
-                            <!--<div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Base pair location</div>
-                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-location">-</div>-->
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Base pair location</div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-location">-</div>
                         </div>
@@ -114,20 +111,14 @@
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-mapped-genes">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Known trait(s)</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">GWAS Catalog traits</div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-traits">-</div>
                         </div>
-                        <!--<div class="clearfix">
-                            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Merged with</div>
-                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-merged"></div>
-                        </div>-->
                     </div>
 
                     <!-- Ensembl data -->
                     <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
                         <div class="clearfix">
-                            <!--<div class="col-lg-2 col-md-3 col-sm-4 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
-                            <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7" id="variant-alleles">-</div>-->
                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="variant-alleles">-</div>
                         </div>
@@ -139,29 +130,39 @@
                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Minor Allele Frequency">MAF</div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
                         </div>
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" id="merged-variant-label" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Variant merged into a new variant ID"></div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="merged-variant"></div>
+                        </div>
                     </div>
 
                     <div id="links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3" style="text-align:right">
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ensembl_button">View in Ensembl<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        <div style="margin-bottom: 0.6em">
+                            <button type="button" class="btn btn-default" id="ensembl_button">Variant in Ensembl<span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
-                        <!--<div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ensembl_phe_button">Phenotype information</button>
+                        <button title="Click to show/hide more Ensembl links" id="button-more_ens_links" onclick="toggleDiv('more_ens_links')" class="btn btn-default btn-xs btn-study">More Ensembl links <span class="glyphicon glyphicon-plus"></span></button>
+                        <div id="more_ens_links" class="collapse">
+                            <div style="margin-bottom: 0.6em;margin-top: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_gc_button">Genomic context<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_phe_button">Phenotype information<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_gr_button">Genes and regulation<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_pg_button">Population genetics<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_cit_button">Citations<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
                         </div>
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ensembl_gen_button">Gene/transcript information</button>
+                        <div style="margin-top: 1.1em;margin-bottom: 1.1em">
+                            <button type="button" class="btn btn-default" id="dbsnp_button">Variant in dbSNP<span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ensembl_reg_button">Regulatory information</button>
-                        </div>
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ensembl_pg_button">Population genetics</button>
-                        </div>-->
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="ucsc_button">View in UCSC<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                        </div>
-                        <div style="margin-bottom: 1em">
-                            <button type="button" class="btn btn-default" id="dbsnp_button">View in dbSNP<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        <div style="margin-bottom: 0.2em">
+                            <button type="button" class="btn btn-default" id="ucsc_button">Variant in UCSC<span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
                     </div>
                 </div>
@@ -172,12 +173,30 @@
             </div>
         </div>
 
+        <!-- List the available tables -->
+        <div class="row" style="margin-top:0px">
+            <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
+                <span style="margin-right:10px;font-weight:bold">Available data:</span>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#association_panel')">
+                    <span class="association_label">Associations</span><span class="association_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#study_panel')">
+                    <span class="study_label">Studies</span><span class="study_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">
+                    <span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#ld_panel')">
+                    <span>Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span></button>
+            </div>
+        </div>
+
         <!-- Associations table -->
         <div class="row" style="margin-top:20px">
-            <div id="associations_panel" class="panel panel-default">
+            <div id="association_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
-                        <span id="association_label">Associations</span><span id="association_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
+                        <span class="association_label">Associations</span><span class="association_count badge" style="background-color: #398A96;margin-left:10px"></span>
                     </h3>
                     <span class="pull-right">
                         <button type="button" class="btn btn-default btn-xs" id="download_data">
@@ -191,7 +210,6 @@
                 </div>
 
                 <div class="panel-body">
-                    <!--<button type="button" id="expand-table" class="btn btn-default btn-sm pull-right table-collapsed" onclick="">Expand all associations  </button>-->
 
                     <table id="association-table" class="table table-striped">
                         <thead id="association-table-header">
@@ -250,7 +268,7 @@
             <div id="study_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
-                        <span id="study_label">Studies</span><span id="study_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
+                        <span class="study_label">Studies</span><span class="study_count badge" style="background-color: #398A96;margin-left:10px"></span>
                     </h3>
 
                     <span class="pull-right clickable panel-collapsed" onclick="toggleSidebar('#study_panel span.clickable')">
@@ -303,7 +321,7 @@
             <div id="diseasetrait_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
-                        <span id="diseasetrait_label">Traits</span><span id="diseasetrait_count" class="badge" style="background-color: #398A96;margin-left:10px"></span>
+                        <span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>
                     </h3>
                     <span class="pull-right clickable panel-collapsed" onclick="toggleSidebar('#diseasetrait_panel span.clickable')">
                         <span class="glyphicon glyphicon-chevron-down"></span>
@@ -340,11 +358,11 @@
             <div id="ld_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
-                        <span id="ld_panel_label">Linkage disequilibrium (LD)</span>
+                        <span id="ld_panel_label">Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
                     </h3>
                     <span class="pull-right">
                         <button type="button" class="btn btn-default btn-xs" id="ens_ld_button">
-                            <span><span th:text="${rsId}"></span> LDs in Ensembl<span class="glyphicon glyphicon-new-window external-link-smaller"></span></span>
+                            <span><span th:text="${rsId}"></span> LD information in Ensembl<span class="glyphicon glyphicon-new-window external-link-smaller"></span></span>
                         </button>
                         <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#ld_panel span.clickable')">
                             <span class="glyphicon glyphicon-chevron-up"></span>

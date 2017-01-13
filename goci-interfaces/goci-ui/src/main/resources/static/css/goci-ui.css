@@ -285,6 +285,9 @@ a > .toplevel-view {
 /*.glyphicon-link {*/
 /*color: #A6703F;*/
 /*}*/
+.inpage-link:hover, inpage-link:active, inpage-link:focus {
+    cursor: pointer;
+}
 
 .external-link {
     margin-left: 6px;
