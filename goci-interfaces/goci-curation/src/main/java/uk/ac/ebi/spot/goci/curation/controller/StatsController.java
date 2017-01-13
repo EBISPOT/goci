@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Cinzia on 19/12/16.
@@ -34,6 +37,11 @@ public class StatsController {
     private CuratorTrackingService curatorTrackingService;
     private WeeklyTrackingService weeklyTrackingService;
     private WeeklyProgressReportService weeklyProgressReportService;
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public StatsController(StudyTrackingViewService studyTrackingViewService,
@@ -56,8 +64,11 @@ public class StatsController {
     @RequestMapping(value = "/generateStats", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String generateWeeklyReport() {
+        getLog().info("Start process generateStats");
         weeklyTrackingService.deleteAll();
         curatorTrackingService.deleteAll();
+        getLog().info("Delete tables done");
+
         studyTrackingViewService.generateReport();
         return "{\"success\":1}";
 
