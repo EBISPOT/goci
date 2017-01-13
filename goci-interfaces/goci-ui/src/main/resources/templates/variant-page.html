@@ -127,11 +127,14 @@
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Minor Allele Frequency">MAF</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">
+                                <span>MAF</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency" style="margin-left:2px;font-size:smaller"></span>
+                            </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" id="merged-variant-label" style="font-weight: bold; margin-bottom: 1em;padding-left:0px" title="Variant merged into a new variant ID"></div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" id="merged-variant-label" style="font-weight:bold; margin-bottom: 1em;padding-left:0px" title="Variant merged into a new variant ID"></div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="merged-variant"></div>
                         </div>
                     </div>
@@ -391,6 +394,11 @@
     <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 
     <!-- GOCI JavaScript
     ================================================== -->

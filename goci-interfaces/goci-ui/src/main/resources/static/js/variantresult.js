@@ -10,7 +10,8 @@ var SearchState = {
 
 var EPMC = "http://www.europepmc.org/abstract/MED/";
 var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
-var ENSVAR = 'http://www.ensembl.org/Homo_sapiens/Variation/';
+var ENSVAR = "http://www.ensembl.org/Homo_sapiens/Variation/";
+var DBSNP  = "http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs=";
 
 var list_min = 5;
 
@@ -412,7 +413,7 @@ function getLinkButtons (rsId) {
     $("#ensembl_gr_button").attr('onclick',  "window.open('"+ENSVAR+"Mappings?v="+rsId+"',   '_blank')");
     $("#ensembl_pg_button").attr('onclick',  "window.open('"+ENSVAR+"Population?v="+rsId+"', '_blank')");
     $("#ensembl_cit_button").attr('onclick', "window.open('"+ENSVAR+"Citations?v="+rsId+"',  '_blank')");
-    $("#dbsnp_button").attr('onclick', "window.open('http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs="+rsId+"', '_blank')");
+    $("#dbsnp_button").attr('onclick', "window.open('"+DBSNP+rsId+"', '_blank')");
     $("#ucsc_button").attr('onclick', "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
     // LD
     $("#ens_ld_button").attr('onclick',  "window.open('"+ENSVAR+"HighLD?v="+rsId+"', '_blank')");
@@ -579,7 +580,7 @@ function processVariantInfoFromEnsembl(rsId, data) {
         $("#minor-allele-freq").html(maf);
 
         if (var_id != rsId) {
-            var var_link = setExternalLink(ENSVAR+var_id,var_id);
+            var var_link = setExternalLink(DBSNP+var_id,var_id);
             $("#merged-variant-label").html("Merged into");
             $("#merged-variant").html(var_link);
         }
