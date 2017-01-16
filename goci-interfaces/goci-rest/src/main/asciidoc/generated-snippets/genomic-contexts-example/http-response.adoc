@@ -22,11 +22,11 @@ Content-Length: 685
     "gene" : {
       "href" : "http://localhost:8080/api/genomicContexts/16147615/gene"
     },
-    "snp" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615/snp"
-    },
     "location" : {
       "href" : "http://localhost:8080/api/genomicContexts/16147615/location"
+    },
+    "snp" : {
+      "href" : "http://localhost:8080/api/genomicContexts/16147615/snp"
     }
   }
 }

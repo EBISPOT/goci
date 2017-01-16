@@ -32,17 +32,17 @@ Content-Length: 1188
     "efoTraits" : {
       "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
     },
-    "study" : {
-      "href" : "http://localhost:8080/api/associations/16510553/study"
-    },
-    "genes" : {
-      "href" : "http://localhost:8080/api/associations/16510553/genes"
+    "loci" : {
+      "href" : "http://localhost:8080/api/associations/16510553/loci"
     },
     "snps" : {
       "href" : "http://localhost:8080/api/associations/16510553/snps"
     },
-    "loci" : {
-      "href" : "http://localhost:8080/api/associations/16510553/loci"
+    "genes" : {
+      "href" : "http://localhost:8080/api/associations/16510553/genes"
+    },
+    "study" : {
+      "href" : "http://localhost:8080/api/associations/16510553/study"
     }
   }
 }
