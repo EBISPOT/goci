@@ -60,16 +60,25 @@ public class DataDeletionService {
 
         getLog().info("Found " + unpublishedStudies.size() + " unpublished studies to be removed");
 
+
         unpublishedStudies.forEach(this::deleteStudy);
     }
 
     private void deleteStudy(Study study) {
 
+        getLog().debug("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ")");
+
         Collection<Association> associations = study.getAssociations();
+
+        getLog().debug("Removing \t" + associations.size() + "\t associations");
+
 
         associations.forEach(this::deleteAssociation);
 
         Collection<Ancestry> ancestries = study.getAncestries();
+
+        getLog().debug("Removing \t" + ancestries.size() + "\t sample descriptions");
+
 
         ancestries.forEach(
                 ancestry -> ancestryRepository.delete(ancestry)

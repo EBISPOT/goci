@@ -32,23 +32,23 @@ Content-Length: 2273
         "study" : {
           "href" : "http://localhost:8080/api/studies/5996"
         },
-        "snps" : {
-          "href" : "http://localhost:8080/api/studies/5996/snps"
+        "platforms" : {
+          "href" : "http://localhost:8080/api/studies/5996/platforms"
         },
         "associations" : {
           "href" : "http://localhost:8080/api/studies/5996/associations"
+        },
+        "snps" : {
+          "href" : "http://localhost:8080/api/studies/5996/snps"
+        },
+        "diseaseTrait" : {
+          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
         },
         "ancestries" : {
           "href" : "http://localhost:8080/api/studies/5996/ancestries"
         },
         "efoTraits" : {
           "href" : "http://localhost:8080/api/studies/5996/efoTraits"
-        },
-        "platforms" : {
-          "href" : "http://localhost:8080/api/studies/5996/platforms"
-        },
-        "diseaseTrait" : {
-          "href" : "http://localhost:8080/api/studies/5996/diseaseTrait"
         }
       }
     } ]
@@ -67,7 +67,7 @@ Content-Length: 2273
       "href" : "http://localhost:8080/api/studies?page=2&size=1"
     },
     "last" : {
-      "href" : "http://localhost:8080/api/studies?page=3782&size=1"
+      "href" : "http://localhost:8080/api/studies?page=3783&size=1"
     },
     "profile" : {
       "href" : "http://localhost:8080/api/profile/studies"
@@ -78,8 +78,8 @@ Content-Length: 2273
   },
   "page" : {
     "size" : 1,
-    "totalElements" : 3783,
-    "totalPages" : 3783,
+    "totalElements" : 3784,
+    "totalPages" : 3784,
     "number" : 1
   }
 }
