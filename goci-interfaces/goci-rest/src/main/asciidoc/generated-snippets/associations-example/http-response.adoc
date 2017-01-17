@@ -29,6 +29,9 @@ Content-Length: 1188
     "association" : {
       "href" : "http://localhost:8080/api/associations/16510553"
     },
+    "efoTraits" : {
+      "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
+    },
     "loci" : {
       "href" : "http://localhost:8080/api/associations/16510553/loci"
     },
@@ -37,9 +40,6 @@ Content-Length: 1188
     },
     "snps" : {
       "href" : "http://localhost:8080/api/associations/16510553/snps"
-    },
-    "efoTraits" : {
-      "href" : "http://localhost:8080/api/associations/16510553/efoTraits"
     },
     "study" : {
       "href" : "http://localhost:8080/api/associations/16510553/study"

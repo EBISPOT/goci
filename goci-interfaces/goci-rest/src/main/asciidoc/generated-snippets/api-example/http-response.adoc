@@ -6,36 +6,16 @@ Content-Length: 2258
 
 {
   "_links" : {
-    "genomicContexts" : {
-      "href" : "http://localhost:8080/api/genomicContexts{?page,size,sort}",
-      "templated" : true
-    },
-    "diseaseTraits" : {
-      "href" : "http://localhost:8080/api/diseaseTraits{?page,size,sort}",
-      "templated" : true
-    },
     "regions" : {
       "href" : "http://localhost:8080/api/regions{?page,size,sort}",
       "templated" : true
     },
-    "riskAlleles" : {
-      "href" : "http://localhost:8080/api/riskAlleles{?page,size,sort}",
-      "templated" : true
-    },
-    "genes" : {
-      "href" : "http://localhost:8080/api/genes{?page,size,sort}",
+    "ensemblGenes" : {
+      "href" : "http://localhost:8080/api/ensemblGenes{?page,size,sort}",
       "templated" : true
     },
     "singleNucleotidePolymorphisms" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms{?page,size,sort}",
-      "templated" : true
-    },
-    "countries" : {
-      "href" : "http://localhost:8080/api/countries{?page,size,sort}",
-      "templated" : true
-    },
-    "ancestries" : {
-      "href" : "http://localhost:8080/api/ancestries{?page,size,sort}",
       "templated" : true
     },
     "mappingMetadatas" : {
@@ -46,32 +26,52 @@ Content-Length: 2258
       "href" : "http://localhost:8080/api/locations{?page,size,sort}",
       "templated" : true
     },
-    "ensemblGenes" : {
-      "href" : "http://localhost:8080/api/ensemblGenes{?page,size,sort}",
-      "templated" : true
-    },
-    "loci" : {
-      "href" : "http://localhost:8080/api/loci{?page,size,sort}",
-      "templated" : true
-    },
-    "entrezGenes" : {
-      "href" : "http://localhost:8080/api/entrezGenes{?page,size,sort}",
-      "templated" : true
-    },
     "studies" : {
       "href" : "http://localhost:8080/api/studies{?page,size,sort}",
+      "templated" : true
+    },
+    "genomicContexts" : {
+      "href" : "http://localhost:8080/api/genomicContexts{?page,size,sort}",
+      "templated" : true
+    },
+    "ancestries" : {
+      "href" : "http://localhost:8080/api/ancestries{?page,size,sort}",
+      "templated" : true
+    },
+    "countries" : {
+      "href" : "http://localhost:8080/api/countries{?page,size,sort}",
+      "templated" : true
+    },
+    "diseaseTraits" : {
+      "href" : "http://localhost:8080/api/diseaseTraits{?page,size,sort}",
       "templated" : true
     },
     "efoTraits" : {
       "href" : "http://localhost:8080/api/efoTraits{?page,size,sort}",
       "templated" : true
     },
+    "entrezGenes" : {
+      "href" : "http://localhost:8080/api/entrezGenes{?page,size,sort}",
+      "templated" : true
+    },
+    "loci" : {
+      "href" : "http://localhost:8080/api/loci{?page,size,sort}",
+      "templated" : true
+    },
     "platforms" : {
       "href" : "http://localhost:8080/api/platforms{?page,size,sort}",
       "templated" : true
     },
+    "genes" : {
+      "href" : "http://localhost:8080/api/genes{?page,size,sort}",
+      "templated" : true
+    },
     "associations" : {
       "href" : "http://localhost:8080/api/associations{?page,size,sort}",
+      "templated" : true
+    },
+    "riskAlleles" : {
+      "href" : "http://localhost:8080/api/riskAlleles{?page,size,sort}",
       "templated" : true
     },
     "profile" : {

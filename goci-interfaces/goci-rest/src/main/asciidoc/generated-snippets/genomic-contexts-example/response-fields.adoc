@@ -1,0 +1,36 @@
+|===
+|Path|Type|Description
+
+|`_links`
+|`Object`
+|Links to other resources
+
+|`isIntergenic`
+|`Boolean`
+|Whether the SNP is intergenic
+
+|`isUpstream`
+|`Boolean`
+|Whether the linked gene is upstream to the SNP
+
+|`isDownstream`
+|`Boolean`
+|Whether the linked gene is downstream to the SNP
+
+|`distance`
+|`Number`
+|The distance between the current SNP and gene
+
+|`source`
+|`String`
+|NCBI or Ensembl gene
+
+|`mappingMethod`
+|`String`
+|How the mapping was obtained
+
+|`isClosestGene`
+|`Boolean`
+|Whether gene is the closest one to the current SNP
+
+|===
