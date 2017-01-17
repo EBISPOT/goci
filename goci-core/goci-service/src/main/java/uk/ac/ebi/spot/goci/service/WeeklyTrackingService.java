@@ -79,4 +79,13 @@ public class WeeklyTrackingService {
 
     public List<WeeklyTracking> findAll() { return weeklyTrackingRepository.findAll(); }
 
+    public void deleteByStudy(Study study) {
+        // Before we delete the study get its associated ancestry
+        List<WeeklyTracking> weeklyTrackingAttachedToStudy = weeklyTrackingRepository.findByStudy(study);
+
+        for (WeeklyTracking weeklyTracking : weeklyTrackingAttachedToStudy) {
+            weeklyTrackingRepository.delete(weeklyTracking);
+        }
+    }
+
 }

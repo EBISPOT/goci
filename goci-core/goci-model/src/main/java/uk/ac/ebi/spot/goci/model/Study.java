@@ -126,7 +126,7 @@ public class Study implements Trackable {
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP_VIEW",
-               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               joinColumns = @JoinColumn(name = "STUDY_ID", insertable=false, updatable=false),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 

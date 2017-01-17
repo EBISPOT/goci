@@ -87,4 +87,7 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
 
     @Query(value = "select wt.study_id from weekly_tracking wt where wt.status = :status and week = :week and year = :year", nativeQuery = true)
     HashSet<Long> findStudyByStatusAndYearAndWeek(@Param("status") String status, @Param("year") Integer year, @Param("week") Integer week);
+
+    List<WeeklyTracking> findByStudy(Study study);
+
 }
