@@ -14,6 +14,8 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
+import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 
 import java.util.Collection;
 
@@ -32,6 +34,8 @@ public class StudyDeletionService {
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
     private DeletedStudyRepository deletedStudyRepository;
+    private CuratorTrackingService curatorTrackingService;
+    private WeeklyTrackingService weeklyTrackingService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,11 +47,16 @@ public class StudyDeletionService {
     public StudyDeletionService(AncestryRepository ancestryRepository,
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
-                                DeletedStudyRepository deletedStudyRepository) {
+                                DeletedStudyRepository deletedStudyRepository,
+                                CuratorTrackingService curatorTrackingService,
+                                WeeklyTrackingService weeklyTrackingService) {
         this.ancestryRepository = ancestryRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
+        this.curatorTrackingService = curatorTrackingService;
+        this.weeklyTrackingService = weeklyTrackingService;
+
     }
     /**
      * Delete a study
@@ -66,6 +75,12 @@ public class StudyDeletionService {
         for (Ancestry ancestry : ancestriesAttachedToStudy) {
             ancestryRepository.delete(ancestry);
         }
+
+        // Delete the curatorTracking rows related
+        curatorTrackingService.deleteByStudy(study);
+
+        // Delete the weeklyTracking rows related
+        weeklyTrackingService.deleteByStudy(study);
 
         // Add deletion event
         trackingOperationService.delete(study, user);

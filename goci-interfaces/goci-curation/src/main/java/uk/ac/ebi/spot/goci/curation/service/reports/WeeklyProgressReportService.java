@@ -47,7 +47,7 @@ public class WeeklyProgressReportService {
 
         List<WeeklyTracking>  weeklyTrackingList = weeklyTrackingService.findAll();
 
-        while ((year <= maxYear) && (week<=maxWeek)) {
+        while (!((year == maxYear) && (week == maxWeek))) {
             //HashSet<Long>  queueLevel1_week = weeklyTrackingService.findStudyByStatusAndYearAndWeek("In level 1 queue", year,week);
             Integer weekQuery = new Integer(week);
             Integer yearQuery = new Integer(year);

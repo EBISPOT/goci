@@ -17,6 +17,8 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
+import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -44,6 +46,13 @@ public class StudyDeletionServiceTest {
 
     @Mock
     private DeletedStudyRepository deletedStudyRepository;
+
+    @Mock
+    private CuratorTrackingService curatorTrackingService;
+
+    @Mock
+    private WeeklyTrackingService weeklyTrackingService;
+
 
     private StudyDeletionService studyDeletionService;
 
@@ -86,7 +95,9 @@ public class StudyDeletionServiceTest {
         studyDeletionService = new StudyDeletionService(ancestryRepository,
                                                         trackingOperationService,
                                                         studyRepository,
-                                                        deletedStudyRepository);
+                                                        deletedStudyRepository,
+                                                        curatorTrackingService,
+                                                        weeklyTrackingService);
     }
 
     @Test
