@@ -1,33 +1,5 @@
 [source,http,options="nowrap"]
 ----
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 685
+HTTP/1.1 404 Not Found
 
-{
-  "isIntergenic" : true,
-  "isUpstream" : false,
-  "isDownstream" : true,
-  "distance" : 32033,
-  "source" : "NCBI",
-  "mappingMethod" : "Ensembl_pipeline",
-  "isClosestGene" : true,
-  "_links" : {
-    "self" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615"
-    },
-    "genomicContext" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615"
-    },
-    "gene" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615/gene"
-    },
-    "location" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615/location"
-    },
-    "snp" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16147615/snp"
-    }
-  }
-}
 ----

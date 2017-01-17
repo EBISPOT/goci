@@ -8,7 +8,7 @@ Content-Length: 1230
   "rsId" : "rs490608",
   "merged" : 0,
   "functionalClass" : "intron_variant",
-  "lastUpdateDate" : "2016-10-18T10:27:08.209+0000",
+  "lastUpdateDate" : "2016-12-24T11:30:30.770+0000",
   "_links" : {
     "self" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813"
@@ -16,26 +16,26 @@ Content-Length: 1230
     "singleNucleotidePolymorphism" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813"
     },
-    "genes" : {
-      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/genes"
-    },
-    "riskAlleles" : {
-      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/riskAlleles"
-    },
-    "associations" : {
-      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/associations"
-    },
     "genomicContexts" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/genomicContexts"
     },
     "currentSnp" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/currentSnp"
     },
-    "studies" : {
-      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/studies"
+    "genes" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/genes"
+    },
+    "riskAlleles" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/riskAlleles"
     },
     "locations" : {
       "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/locations"
+    },
+    "associations" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/associations"
+    },
+    "studies" : {
+      "href" : "http://localhost:8080/api/singleNucleotidePolymorphisms/15078813/studies"
     }
   }
 }
