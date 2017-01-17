@@ -76,9 +76,7 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
     List<Object> findAllWeekStatsByStatus();
 
 
-    @Query(value = "select t.year, t.week from "+
-                   "(select wt.year, wt.week from weekly_tracking wt where status like '%queue%' order by year asc, week asc) t "+
-                   "where ROWNUM <= 1",
+    @Query(value = "select min(wt.year), min(wt.week) from weekly_tracking wt  where status like '%queue%'",
             nativeQuery = true)
     ArrayList<Object[]> getMinYearWeek();
 
@@ -89,5 +87,4 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
     HashSet<Long> findStudyByStatusAndYearAndWeek(@Param("status") String status, @Param("year") Integer year, @Param("week") Integer week);
 
     List<WeeklyTracking> findByStudy(Study study);
-
 }

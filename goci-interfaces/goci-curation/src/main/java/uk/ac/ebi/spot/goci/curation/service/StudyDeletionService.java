@@ -5,15 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
+import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 
 import java.util.Collection;
 
@@ -34,6 +36,7 @@ public class StudyDeletionService {
     private DeletedStudyRepository deletedStudyRepository;
     private CuratorTrackingService curatorTrackingService;
     private WeeklyTrackingService weeklyTrackingService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -53,6 +56,7 @@ public class StudyDeletionService {
         this.deletedStudyRepository = deletedStudyRepository;
         this.curatorTrackingService = curatorTrackingService;
         this.weeklyTrackingService = weeklyTrackingService;
+
     }
     /**
      * Delete a study
@@ -77,7 +81,6 @@ public class StudyDeletionService {
 
         // Delete the weeklyTracking rows related
         weeklyTrackingService.deleteByStudy(study);
-
 
         // Add deletion event
         trackingOperationService.delete(study, user);
