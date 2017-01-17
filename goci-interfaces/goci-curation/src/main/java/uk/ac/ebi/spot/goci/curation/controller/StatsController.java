@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Cinzia on 19/12/16.
@@ -34,6 +36,10 @@ public class StatsController {
     private CuratorTrackingService curatorTrackingService;
     private WeeklyTrackingService weeklyTrackingService;
     private WeeklyProgressReportService weeklyProgressReportService;
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() { return log; }
+
 
     @Autowired
     public StatsController(StudyTrackingViewService studyTrackingViewService,
@@ -56,8 +62,11 @@ public class StatsController {
     @RequestMapping(value = "/generateStats", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String generateWeeklyReport() {
+        getLog().info("Start process generateStats");
         weeklyTrackingService.deleteAll();
         curatorTrackingService.deleteAll();
+        getLog().info("Delete tables done");
+
         studyTrackingViewService.generateReport();
         return "{\"success\":1}";
 
@@ -70,6 +79,14 @@ public class StatsController {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.DATE, 1);
 
+        int lastWeek = calendar.get(Calendar.WEEK_OF_YEAR) - 1;
+        int year = calendar.get(Calendar.YEAR);
+
+        if (lastWeek == 0) {
+            lastWeek = 52;
+            year = year-1;
+        }
+
         ArrayList<Integer[]> progressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
         model.put("progressiveQueues", progressiveQueues);
 
@@ -77,11 +94,10 @@ public class StatsController {
         List<Object> reportWeekly = weeklyTrackingService.findAllWeekStatsReport();
         model.put("reportWeekly", reportWeekly);
 
-
-        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR) - 1);
+        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(year, lastWeek);
 
         model.put("curatorsStatsByWeek", curatorsStatsByWeek);
-        String period = Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR) - 1) + "/" + Integer.toString(calendar.get(Calendar.YEAR));
+        String period = Integer.toString(lastWeek) + "/" + Integer.toString(year);
         model.put("periodStatsByWeek", period);
 
         List<String> curators = curatorTrackingService.findAllCurators();

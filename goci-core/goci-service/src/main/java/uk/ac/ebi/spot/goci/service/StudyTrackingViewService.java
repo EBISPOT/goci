@@ -87,6 +87,7 @@ public class StudyTrackingViewService {
                     if (studyTracked.getIsPublished() == 1) { eventDatePublished = studyTracked.getCatalogPublishDate(); }
                     Date eventDateUnpublished;
                     Curator curator = null;
+                    Boolean hasStatusPublished = false;
 
                     Iterator<Event> eventsIterator = eventi.iterator();
 
@@ -105,8 +106,11 @@ public class StudyTrackingViewService {
                                 hasStudyCreationEvent = true;
                                 break;
                             case "STUDY_STATUS_CHANGE_PUBLISH_STUDY":
-                                eventDatePublished = event.getEventDate();
-                                insertCuratorStats(studyTracked, study, event, curator, "Published");
+                                if (!hasStatusPublished) {
+                                    eventDatePublished = event.getEventDate();
+                                    insertCuratorStats(studyTracked, study, event, curator, "Published");
+                                    hasStatusPublished = true;
+                                }
                                 break;
                             case "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE":
                                 if (hasStudyCreationEvent) {
