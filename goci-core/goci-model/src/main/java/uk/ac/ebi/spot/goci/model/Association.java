@@ -111,16 +111,20 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_SNP_VIEW",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    /**REST API fix: reversal of control of association-SNP and association-gene relationship from association to SNP/gene to fix deletion issues with respect to
+     * the association-SNP/gene view table. Works but not optimal, improve solution if possible**/
+//    @ManyToMany
+//    @JoinTable(name = "ASSOCIATION_SNP_VIEW",
+//               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    @ManyToMany(mappedBy = "associations")
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
-               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
-               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+//    @ManyToMany
+//    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
+//               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    @ManyToMany(mappedBy = "associations")
     private Collection<Gene> genes = new ArrayList<>();
 
     // JPA no-args constructor

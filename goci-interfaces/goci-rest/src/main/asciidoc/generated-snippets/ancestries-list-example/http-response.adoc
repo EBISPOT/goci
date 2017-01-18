@@ -419,7 +419,7 @@ Content-Length: 13232
       "href" : "http://localhost:8080/api/ancestries?page=1&size=20"
     },
     "last" : {
-      "href" : "http://localhost:8080/api/ancestries?page=353&size=20"
+      "href" : "http://localhost:8080/api/ancestries?page=360&size=20"
     },
     "profile" : {
       "href" : "http://localhost:8080/api/profile/ancestries"
@@ -430,8 +430,8 @@ Content-Length: 13232
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 7067,
-    "totalPages" : 354,
+    "totalElements" : 7217,
+    "totalPages" : 361,
     "number" : 0
   }
 }

@@ -124,10 +124,13 @@ public class Study implements Trackable {
     @OneToMany(mappedBy = "study")
     private Collection<WeeklyTracking> weeklyTrackings;
 
-    @ManyToMany
-    @JoinTable(name = "STUDY_SNP_VIEW",
-               joinColumns = @JoinColumn(name = "STUDY_ID", insertable=false, updatable=false),
-               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    /**REST API fix: reversal of control of study-SNP relationship from study to SNP to fix deletion issues with respect to
+     * the study-SNP view table. Works but not optimal, improve solution if possible**/
+//    @ManyToMany
+//    @JoinTable(name = "STUDY_SNP_VIEW",
+//               joinColumns = @JoinColumn(name = "STUDY_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
+    @ManyToMany(mappedBy = "studies")
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     // JPA no-args constructor

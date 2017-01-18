@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
@@ -19,6 +18,7 @@ import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
+import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -97,8 +97,7 @@ public class StudyDeletionServiceTest {
                                                         studyRepository,
                                                         deletedStudyRepository,
                                                         curatorTrackingService,
-                                                        weeklyTrackingService
-                );
+                                                        weeklyTrackingService);
     }
 
     @Test
