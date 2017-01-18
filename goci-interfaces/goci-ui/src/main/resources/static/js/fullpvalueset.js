@@ -66,7 +66,7 @@ function displayStudies(data) {
 function processStudyDoc(study, table) {
 
     var row = $("<tr>");
-    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
+    var authorsearch = "<span><a href='../search?query=".concat(study.author).concat("'>").concat(study.author).concat(
             "</a></span>");
 
     var pubdate = study.publicationDate.substring(0, 10);
@@ -74,7 +74,7 @@ function processStudyDoc(study, table) {
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
-    var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
+    var traitsearch = "<span><a href='../search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 

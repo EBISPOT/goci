@@ -40,7 +40,7 @@ function doSearch() {
 
     // redirect to search page
 
-    if (path.indexOf("docs") != -1 && pagename != "docs") {
+    if ((path.indexOf("docs") != -1 && pagename != "docs") || (path.indexOf("downloads") != -1 && pagename != "downloads")) {
         window.location = "../search?query=" + searchTerm;
     }
     else {
