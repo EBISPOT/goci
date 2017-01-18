@@ -44,7 +44,11 @@ public class Gene {
     @OneToMany(mappedBy = "gene")
     private Collection<GenomicContext> genomicContexts;
 
-    @ManyToMany(mappedBy = "genes")
+//    @ManyToMany(mappedBy = "genes")
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
+               joinColumns = @JoinColumn(name = "GENE_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
     private Collection<Association> associations;
 
 

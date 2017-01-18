@@ -52,7 +52,11 @@ public class SingleNucleotidePolymorphism {
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
     private SingleNucleotidePolymorphism currentSnp;
 
-    @ManyToMany(mappedBy = "snps")
+//    @ManyToMany(mappedBy = "snps")
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
     private Collection<Association> associations;
 
     @ManyToMany
@@ -61,7 +65,11 @@ public class SingleNucleotidePolymorphism {
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     private Collection<Gene> genes = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "snps")
+//    @ManyToMany(mappedBy = "snps")
+    @ManyToMany
+    @JoinTable(name = "STUDY_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "STUDY_ID"))
     private Collection<Study> studies;
 
 
