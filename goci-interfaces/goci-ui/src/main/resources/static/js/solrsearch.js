@@ -67,6 +67,7 @@ function loadResults() {
     $('#welcome-container').hide();
     $('#search-results-container').show();
     $('#loadingResults').show();
+    $('#search-box').val(searchTerm);
 
     if ($('#filter').text() != '') {
         if ($('#filter').text() == 'recent') {
