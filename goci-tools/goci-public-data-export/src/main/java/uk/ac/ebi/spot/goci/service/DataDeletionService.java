@@ -65,6 +65,7 @@ public class DataDeletionService {
     }
 
     private void deleteStudy(Study study) {
+        System.out.println("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ")");
 
         getLog().debug("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ")");
 
@@ -72,12 +73,14 @@ public class DataDeletionService {
 
         getLog().debug("Removing \t" + associations.size() + "\t associations");
 
+        System.out.println("Removing \t" + associations.size() + "\t associations");
 
         associations.forEach(this::deleteAssociation);
 
         Collection<Ancestry> ancestries = study.getAncestries();
 
         getLog().debug("Removing \t" + ancestries.size() + "\t sample descriptions");
+        System.out.println("Removing \t" + ancestries.size() + "\t sample descriptions");
 
 
         ancestries.forEach(
@@ -92,10 +95,19 @@ public class DataDeletionService {
 
         Collection<RiskAllele> riskAlleles = new ArrayList<>();
         for (Locus locus : association.getLoci()) {
+            getLog().debug("Removing locus number\t" + locus.getId());
+            System.out.println("Removing locus number\t" + locus.getId());
+
             locus.getStrongestRiskAlleles().forEach(riskAlleles::add);
             locusRepository.delete(locus);
         }
+        getLog().debug("Removing\t" + riskAlleles.size() + " risk alleles");
+        System.out.println("Removing\t" + riskAlleles.size() + " risk alleles");
+
         riskAlleles.forEach(riskAllele -> riskAlleleRepository.delete(riskAllele));
+
+        getLog().debug("Removing association \t" + association.getId());
+        System.out.println("Removing association \t" + association.getId());
 
         associationRepository.delete(association);
     }
