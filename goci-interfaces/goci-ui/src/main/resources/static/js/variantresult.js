@@ -58,6 +58,9 @@ function processVariantData(data,rsId) {
         getVariantStudies(data.docs);
         // Traits table
         getVariantTraits(data.docs);
+
+        //downloads link
+        setDownloadLink(rsId);
     }
 }
 
@@ -558,6 +561,7 @@ function getVariantInfoFromEnsembl(rsId) {
             });
     console.log("Ensembl REST query done to retrieve variant information");
 }
+
 function processVariantInfoFromEnsembl(rsId, data) {
     if (!data.error) {
         var var_id  = data.name;
@@ -613,4 +617,19 @@ function setState(state) {
             console.log("Unknown search state; redirecting to search page");
             window.location = "variant";
     }
+}
+
+function setDownloadLink(rsId) {
+    var baseUrl = '../api/search/downloads?';
+    var q = "q=".concat(rsId);
+
+    var facet = '&facet=association';
+    var efo = '&efo=true';
+    var params = '&pvalfilter=&orfilter=&betafilter=&datefilter=&traitfilter[]=&dateaddedfilter=';
+
+
+    var url = "window.open('".concat(baseUrl).concat(q).concat(params).concat(facet).concat(efo).concat("',    '_blank')");
+
+    $("#download_data").attr('onclick', url);
+
 }

@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
-
+    <link rel="stylesheet" href="https://www.ebi.ac.uk/web_guidelines/EBI-Icon-fonts/v1.1/fonts.css" />
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -55,22 +55,22 @@
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-search11 color-primary-bold">Search</h2>
 
-                <p>You can search the Catalog in a number of ways, including by trait, SNP identifier, study and
+                <p>Search the Catalog in a number of ways, including by trait, SNP identifier, study and
                    gene. </p>
             </div>
         </a>
         <!--<a href="docs/about" th:href="@{docs/about}">-->
-            <!--<div class="col-md-4 toplevel-view">-->
-                <!--<h2 class="flaticon-information9 color-primary-bold">About</h2>-->
+        <!--<div class="col-md-4 toplevel-view">-->
+        <!--<h2 class="flaticon-information9 color-primary-bold">About</h2>-->
 
-                <!--<p>A description of the GWAS Catalog, including background and citation information.</p>-->
-            <!--</div>-->
+        <!--<p>A description of the GWAS Catalog, including background and citation information.</p>-->
+        <!--</div>-->
         <!--</a>-->
         <a href="diagram.html" th:href="@{diagram}">
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-image11 color-primary-bold">Diagram</h2>
 
-                <p>An interactive visualisation of all SNP-trait associations with genome-wide significance
+                <p>Explore an interactive visualisation of all SNP-trait associations with genome-wide significance
                    (p&le;5 x10<sup>-8</sup>). </p>
             </div>
         </a>
@@ -78,7 +78,7 @@
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-mailbox2 color-primary-bold">Download</h2>
 
-                <p>Including a full copy of the GWAS Catalog in spreadsheet format and current and older versions of GWAS diagram in SVG format.</p>
+                <p>Download a full copy of the GWAS Catalog in spreadsheet format and current and older versions of GWAS diagram in SVG format.</p>
             </div>
         </a>
     </div>
@@ -88,29 +88,29 @@
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-information9 color-primary-bold">Documentation</h2>
 
-                <p>All GWAS Catalog documentation, including FAQs, an introduction to our curation process, related resources and a comprehensive
-                list of abbreviations used in the Catalog.</p>
+                <p>Including FAQs, our curation process, related resources and a
+                   list of abbreviations.</p>
             </div>
         </a>
         <!--<a href="docs/methods" th:href="@{docs/methods}">-->
-            <!--<div class="col-md-4 toplevel-view">-->
-                <!--<h2 class="flaticon-statistics color-primary-bold">Methods</h2>-->
+        <!--<div class="col-md-4 toplevel-view">-->
+        <!--<h2 class="flaticon-statistics color-primary-bold">Methods</h2>-->
 
-                <!--<p>A full description of the Catalog eligibility criteria and methods.</p>-->
-            <!--</div>-->
+        <!--<p>A full description of the Catalog eligibility criteria and methods.</p>-->
+        <!--</div>-->
         <!--</a>-->
         <!--<a href="docs/ontology" th:href="@{docs/ontology}">-->
-            <!--<div class="col-md-4 toplevel-view">-->
-                <!--<h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>-->
+        <!--<div class="col-md-4 toplevel-view">-->
+        <!--<h2 class="flaticon-owl3 color-primary-bold">Ontology</h2>-->
 
-                <!--<p>Details of the ontology representation of GWAS Catalog traits.</p>-->
-            <!--</div>-->
+        <!--<p>Details of the ontology representation of GWAS Catalog traits.</p>-->
+        <!--</div>-->
         <!--</a>-->
         <a href="downloads/summary-statistics" th:href="@{downloads/summary-statistics}">
             <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-statistics color-primary-bold">Full summary statistics</h2>
+                <h2 class="flaticon-statistics color-primary-bold">Summary statistics<span class="sup-new">&nbsp;&nbsp;NEW&nbsp;&nbsp;</span></h2>
 
-                <p>A list of all studies for which full summary statistics are available in the GWAS Catalog.</p>
+                <p>A list of all studies for which full summary statistics are available in the Catalog.</p>
             </div>
         </a>
         <a href="ancestry" th:href="@{ancestry}">
@@ -123,7 +123,7 @@
     </div>
 
     <div class="row" style="text-align: center" id="homepageStats">
-       <p> As of <span id="lastUpdateDate"></span>, the GWAS Catalog contains <span id="studyCount"></span> studies and <span id="associationCount"></span> unique SNP-trait associations.<br/> GWAS Catalog data is currently mapped to Genome Assembly <span id="genomeAssembly"></span> and dbSNP Build <span id="dbSNP"></span>.</p>
+        <p> As of <span id="lastUpdateDate"></span>, the GWAS Catalog contains <span id="studyCount"></span> studies and <span id="associationCount"></span> unique SNP-trait associations.<br/> GWAS Catalog data is currently mapped to Genome Assembly <span id="genomeAssembly"></span> and dbSNP Build <span id="dbSNP"></span>.</p>
     </div>
 
     <div class="row" style="text-align: center">
@@ -132,6 +132,11 @@
             <a href="mailto:gwas-info@ebi.ac.uk">gwas-info@ebi.ac.uk</a>.<br/>
             If you think you've found a bug, take a look at our <a href="docs/known-issues"
                                                                    th:href="@{docs/known-issues}">known issues page</a>
+            <br/>
+            Follow us:
+            <a id="follow-button" class="btn-twitter" title="Follow GWAS Catalog on Twitter" href="https://twitter.com/gwascatalog" th:target="_blank">
+                <img
+                        th:src="@{/images/Twitter_Social_Icon_Blue.png}" th:width="20" th:height="20"/></a>
         </p>
     </div>
 
@@ -147,6 +152,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script src="https://platform.twitter.com/widgets.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
@@ -171,10 +177,8 @@
         a.src = g;
         m.parentNode.insertBefore(a, m)
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
     ga('create', 'UA-60195133-1', 'auto');
     ga('send', 'pageview');
-
 </script>
 
 </body>

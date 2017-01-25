@@ -27,7 +27,7 @@ function loadStudiesList() {
 
     $.getJSON('../api/search/alltraits', {
                 'q': searchTerm,
-                'max': 1,
+                'max': 100,
             })
             .done(function(data) {
                 displayStudies(data);
@@ -66,7 +66,7 @@ function displayStudies(data) {
 function processStudyDoc(study, table) {
 
     var row = $("<tr>");
-    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
+    var authorsearch = "<span><a href='../search?query=".concat(study.author).concat("'>").concat(study.author).concat(
             "</a></span>");
 
     var pubdate = study.publicationDate.substring(0, 10);
@@ -74,7 +74,7 @@ function processStudyDoc(study, table) {
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
-    var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
+    var traitsearch = "<span><a href='../search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
@@ -83,7 +83,7 @@ function processStudyDoc(study, table) {
 
 
 
-    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/full_pvalue_sets/".concat(study.pubmedId).concat("' target='_blank'>Click for full p-value set</a>");
+    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(study.pubmedId).concat("' target='_blank'>Click for full summary statistics</a>");
 
     row.append($("<td>").html(ftplink));
 
