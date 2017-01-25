@@ -29,7 +29,7 @@ public class LocationCreationService {
     }
 
     public Location createLocation(String chromosomeName,
-                                   String chromosomePosition,
+                                   Integer chromosomePosition,
                                    String regionName) {
 
 

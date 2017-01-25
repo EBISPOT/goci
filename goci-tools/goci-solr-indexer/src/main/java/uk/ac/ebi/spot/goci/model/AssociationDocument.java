@@ -401,7 +401,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         chromosomeNames.add(chromName);
 
                                         if (snpLocation.getChromosomePosition() != null) {
-                                            chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
+                                            chromosomePositions.add(snpLocation.getChromosomePosition());
                                         }
                                         positionLinks.add(createPositionLink(snpLocation));
 
@@ -490,7 +490,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                         chromosomeNames.add(chromName);
 
                                         if (snpLocation.getChromosomePosition() != null) {
-                                            chromosomePositions.add(Integer.parseInt(snpLocation.getChromosomePosition()));
+                                            chromosomePositions.add(snpLocation.getChromosomePosition());
                                         }
                                         positionLinks.add(createPositionLink(snpLocation));
 
@@ -521,9 +521,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     private String getPositionString(Location snpLocation) {
         String chrom = snpLocation.getChromosomeName();
-        String position = snpLocation.getChromosomePosition();
+        Integer position = snpLocation.getChromosomePosition();
 
-        String location = "chr".concat(chrom).concat(":").concat(position);
+        String location = "chr".concat(chrom).concat(":").concat(position.toString());
 
         return location;
     }
@@ -604,7 +604,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             positionLink = "NA";
         }
         if (snpLocation.getChromosomePosition() != null) {
-            positionLink = positionLink.concat("|").concat(snpLocation.getChromosomePosition());
+            positionLink = positionLink.concat("|").concat(snpLocation.getChromosomePosition().toString());
         }
         else {
             positionLink = positionLink.concat("|NA");

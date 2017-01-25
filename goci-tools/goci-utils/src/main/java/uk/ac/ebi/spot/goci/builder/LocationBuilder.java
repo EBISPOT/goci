@@ -22,7 +22,7 @@ public class LocationBuilder {
         return this;
     }
 
-    public LocationBuilder setChromosomePosition(String chromosomePosition) {
+    public LocationBuilder setChromosomePosition(Integer chromosomePosition) {
         location.setChromosomePosition(chromosomePosition);
         return this;
     }
