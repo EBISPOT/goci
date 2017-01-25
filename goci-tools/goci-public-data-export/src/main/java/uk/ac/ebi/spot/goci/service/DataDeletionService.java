@@ -27,11 +27,7 @@ public class DataDeletionService {
     }
 
     private StudyService studyService;
-    private AncestryRepository ancestryRepository;
     private StudyRepository studyRepository;
-    private AssociationRepository associationRepository;
-    private LocusRepository locusRepository;
-    private RiskAlleleRepository riskAlleleRepository;
 
     @Autowired
     public DataDeletionService(StudyService studyService,
@@ -42,10 +38,6 @@ public class DataDeletionService {
                                RiskAlleleRepository riskAlleleRepository){
         this.studyService = studyService;
         this.studyRepository = studyRepository;
-        this.ancestryRepository = ancestryRepository;
-        this.associationRepository = associationRepository;
-        this.locusRepository = locusRepository;
-        this.riskAlleleRepository = riskAlleleRepository;
     }
 
     public void deleteNonPublicStudies(){
@@ -67,9 +59,6 @@ public class DataDeletionService {
         getLog().debug("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ") with \t"
                                + study.getAssociations().size() + "\t association and \t"
                                 + study.getAncestries().size() + "\t ancestries");
-
-
-
 
         studyRepository.delete(study);
 
