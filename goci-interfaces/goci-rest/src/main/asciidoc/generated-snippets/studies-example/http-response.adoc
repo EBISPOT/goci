@@ -33,14 +33,14 @@ Content-Length: 1487
     "snps" : {
       "href" : "http://localhost:8080/api/studies/5993/snps"
     },
-    "ancestries" : {
-      "href" : "http://localhost:8080/api/studies/5993/ancestries"
+    "diseaseTrait" : {
+      "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
     },
     "associations" : {
       "href" : "http://localhost:8080/api/studies/5993/associations"
     },
-    "diseaseTrait" : {
-      "href" : "http://localhost:8080/api/studies/5993/diseaseTrait"
+    "ancestries" : {
+      "href" : "http://localhost:8080/api/studies/5993/ancestries"
     },
     "efoTraits" : {
       "href" : "http://localhost:8080/api/studies/5993/efoTraits"

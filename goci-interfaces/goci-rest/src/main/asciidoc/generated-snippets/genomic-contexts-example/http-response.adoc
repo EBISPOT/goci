@@ -2,31 +2,31 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 686
+Content-Length: 685
 
 {
   "isIntergenic" : true,
   "isUpstream" : false,
   "isDownstream" : true,
-  "distance" : 142690,
+  "distance" : 32033,
   "source" : "NCBI",
   "mappingMethod" : "Ensembl_pipeline",
   "isClosestGene" : true,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347"
+      "href" : "http://localhost:8080/api/genomicContexts/16147615"
     },
     "genomicContext" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347"
-    },
-    "location" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/location"
+      "href" : "http://localhost:8080/api/genomicContexts/16147615"
     },
     "gene" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/gene"
+      "href" : "http://localhost:8080/api/genomicContexts/16147615/gene"
     },
     "snp" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/snp"
+      "href" : "http://localhost:8080/api/genomicContexts/16147615/snp"
+    },
+    "location" : {
+      "href" : "http://localhost:8080/api/genomicContexts/16147615/location"
     }
   }
 }
