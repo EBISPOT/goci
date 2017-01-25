@@ -285,6 +285,23 @@ a > .toplevel-view {
 /*.glyphicon-link {*/
 /*color: #A6703F;*/
 /*}*/
+.inpage-link:hover, inpage-link:active, inpage-link:focus {
+    cursor: pointer;
+}
+
+.external-link {
+    margin-left: 6px;
+    color: #333;
+    font-size:0.9em;
+}
+.external-link:hover, external-link:active, external-link:focus {
+    text-decoration: none;
+}
+
+.external-link-smaller {
+    margin-left: 5px;
+    font-size:0.8em;
+}
 
 .link-icon {
     width: 1.5em;
@@ -312,3 +329,8 @@ a > .toplevel-view {
     font-style: italic;
 }
 
+#variant-summary {
+    padding: 4px 0px;
+    margin: 0px 15px;
+    border-top: 1px solid rgb(221, 221, 221);
+}

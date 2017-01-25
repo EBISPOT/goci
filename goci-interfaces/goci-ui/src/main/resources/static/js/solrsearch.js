@@ -69,6 +69,7 @@ function loadResults() {
     $('#loadingResults').show();
     $('#search-box').val(searchTerm);
 
+
     if ($('#filter').text() != '') {
         if ($('#filter').text() == 'recent') {
             getMostRecentStudies();
