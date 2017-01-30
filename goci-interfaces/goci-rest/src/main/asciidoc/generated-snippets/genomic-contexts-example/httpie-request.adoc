@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/api/genomicContexts/16792347' 'Accept:application/json'
-----

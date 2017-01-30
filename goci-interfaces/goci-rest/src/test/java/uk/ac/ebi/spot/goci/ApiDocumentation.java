@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -67,7 +66,11 @@ public class ApiDocumentation {
         );
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-                .apply(documentationConfiguration(this.restDocumentation))
+                .apply(documentationConfiguration(this.restDocumentation).uris()
+                               .withScheme("https")
+                               .withHost("www.ebi.ac.uk/gwas/rest")
+                               .withPort(443))
+
                 .alwaysDo(this.restDocumentationResultHandler)
                 .build();
     }
@@ -117,7 +120,7 @@ public class ApiDocumentation {
                                  .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
                                               "/notes")
                                  .requestAttr(RequestDispatcher.ERROR_MESSAGE,
-                                              "The tag 'http://localhost:8080/gwas/rest/api/studies/123' does not exist"))
+                                              "The tag 'https://www.ebi.ac.uk/gwas/rest/api/studies/123' does not exist"))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("error", is("Bad Request")))
                 .andExpect(jsonPath("timestamp", is(notNullValue())))

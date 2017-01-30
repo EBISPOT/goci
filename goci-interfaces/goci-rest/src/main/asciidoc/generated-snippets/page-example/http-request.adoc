@@ -1,6 +1,0 @@
-[source,http,options="nowrap"]
-----
-GET /api/studies?page=1&size=1 HTTP/1.1
-Host: localhost:8080
-
-----

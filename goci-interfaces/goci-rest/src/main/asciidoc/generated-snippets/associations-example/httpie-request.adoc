@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/api/associations/16510553' 'Accept:application/json'
-----

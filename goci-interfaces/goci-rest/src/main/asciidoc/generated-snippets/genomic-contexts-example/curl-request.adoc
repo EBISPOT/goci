@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/api/genomicContexts/16792347' -i -H 'Accept: application/json'
-----

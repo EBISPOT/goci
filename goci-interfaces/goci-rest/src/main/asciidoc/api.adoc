@@ -81,40 +81,8 @@ include::{snippets}/page-example/curl-request.adoc[]
 
 ==== Example response
 
-[source,http]
-----
-HTTP/1.1 200 OK
-Content-Type: application/json
+include::{snippets}/page-example/http-response.adoc[]
 
-{
-  "_links" : {
-    "first" : {
-      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=0&size=1"
-    },
-    "prev" : {
-      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=0&size=1"
-    },
-    "self" : {
-      "href" : "http://www.ebi.ac.uk/gwas/api/studies"
-    },
-    "next" : {
-      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=2&size=1"
-    },
-    "last" : {
-      "href" : "http://www.ebi.ac.uk/gwas/api/studies?page=140&size=1"
-    }
-  },
-  "_embedded" : {
-    ...
-  },
-  "page" : {
-    "size" : 1,
-    "totalElements" : 3783,
-    "totalPages" : 3783,
-    "number" : 1
-  }
-}
-----
 
 ==== Response structure
 

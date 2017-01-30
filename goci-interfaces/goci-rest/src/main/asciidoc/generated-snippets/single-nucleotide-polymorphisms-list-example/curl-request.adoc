@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/api/singleNucleotidePolymorphisms' -i -H 'Accept: application/json'
-----
