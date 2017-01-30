@@ -326,7 +326,7 @@ public class SnpGenomicContextMappingService {
 
                         // Location details
                         String chromosomeName = genomicContextFromMapping.getLocation().getChromosomeName();
-                        String chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
+                        Integer chromosomePosition = genomicContextFromMapping.getLocation().getChromosomePosition();
                         Region regionFromMapping = genomicContextFromMapping.getLocation().getRegion();
                         String regionName = null;
 

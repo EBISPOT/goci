@@ -3,7 +3,10 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Laurent on 15/05/15.
@@ -17,16 +20,19 @@ public class Location {
 
     private String chromosomeName;
 
-    private String chromosomePosition;
+    private Integer chromosomePosition;
 
     @ManyToOne
     private Region region;
+
+    @ManyToMany(mappedBy = "locations")
+    private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     // JPA no-args constructor
     public Location() {}
 
     public Location(String chromosomeName,
-                    String chromosomePosition,
+                    Integer chromosomePosition,
                     Region region) {
         this.chromosomeName = chromosomeName;
         this.chromosomePosition = chromosomePosition;
@@ -50,11 +56,11 @@ public class Location {
         this.chromosomeName = chromosomeName;
     }
 
-    public String getChromosomePosition() {
+    public Integer getChromosomePosition() {
         return chromosomePosition;
     }
 
-    public void setChromosomePosition(String chromosomePosition) {
+    public void setChromosomePosition(Integer chromosomePosition) {
         this.chromosomePosition = chromosomePosition;
     }
 
@@ -76,4 +82,11 @@ public class Location {
                 '}';
     }
 
+    public Collection<SingleNucleotidePolymorphism> getSnps() {
+        return snps;
+    }
+
+    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+        this.snps = snps;
+    }
 }

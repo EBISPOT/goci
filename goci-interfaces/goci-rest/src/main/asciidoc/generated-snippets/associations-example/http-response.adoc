@@ -1,0 +1,49 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1188
+
+{
+  "riskFrequency" : "NR",
+  "pvalueDescription" : null,
+  "pvalueMantissa" : 3,
+  "pvalueExponent" : -18,
+  "multiSnpHaplotype" : false,
+  "snpInteraction" : false,
+  "snpType" : "known",
+  "standardError" : null,
+  "range" : "[12.41-19.61]",
+  "description" : null,
+  "orPerCopyNum" : null,
+  "betaNum" : 16.01,
+  "betaUnit" : "unit",
+  "betaDirection" : "decrease",
+  "lastMappingDate" : "2016-12-24T07:37:21.000+0000",
+  "lastUpdateDate" : "2016-11-22T13:37:07.000+0000",
+  "pvalue" : 3.0000000000000002E-18,
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553"
+    },
+    "association" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553"
+    },
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553/efoTraits"
+    },
+    "loci" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553/loci"
+    },
+    "genes" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553/genes"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553/snps"
+    },
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/api/associations/16510553/study"
+    }
+  }
+}
+----

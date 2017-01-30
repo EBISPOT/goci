@@ -10,7 +10,6 @@ import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 import uk.ac.ebi.spot.goci.repository.LocationRepository;
-import uk.ac.ebi.spot.goci.repository.RegionRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
 import java.util.ArrayList;
@@ -82,10 +81,10 @@ public class SnpLocationMappingService {
                         chromosomeNameFromMapping = chromosomeNameFromMapping.trim();
                     }
 
-                    String chromosomePositionFromMapping = snpLocationFromMapping.getChromosomePosition();
-                    if (chromosomePositionFromMapping != null) {
-                        chromosomePositionFromMapping = chromosomePositionFromMapping.trim();
-                    }
+                    Integer chromosomePositionFromMapping = snpLocationFromMapping.getChromosomePosition();
+//                    if (chromosomePositionFromMapping != null) {
+//                        chromosomePositionFromMapping = chromosomePositionFromMapping.trim();
+//                    }
 
                     Region regionFromMapping = snpLocationFromMapping.getRegion();
                     String regionNameFromMapping = null;

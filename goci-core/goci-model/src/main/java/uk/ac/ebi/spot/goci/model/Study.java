@@ -87,10 +87,10 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
     private Collection<Platform> platforms;
 
-    @OneToMany(mappedBy = "study")
+    @OneToMany(mappedBy = "study", orphanRemoval = true)
     private Collection<Association> associations;
 
-    @OneToMany(mappedBy = "study")
+    @OneToMany(mappedBy = "study", orphanRemoval = true)
     private Collection<Ancestry> ancestries;
 
     @ManyToOne

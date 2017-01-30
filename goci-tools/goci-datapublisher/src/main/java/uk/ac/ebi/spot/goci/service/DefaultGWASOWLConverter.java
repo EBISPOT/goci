@@ -259,7 +259,9 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
             for (Location snpLocation : snp.getLocations()) {
                 if (snpLocation.getChromosomePosition() != null) {
                     OWLLiteral bp_pos =
-                            getDataFactory().getOWLLiteral(snpLocation.getChromosomePosition(), OWL2Datatype.XSD_INT);
+//                            getDataFactory().getOWLLiteral(snpLocation.getChromosomePosition(), OWL2Datatype.XSD_INT);
+                            getDataFactory().getOWLLiteral(snpLocation.getChromosomePosition());
+
                     OWLDataPropertyAssertionAxiom bp_pos_relation =
                             getDataFactory().getOWLDataPropertyAssertionAxiom(has_bp_pos, snpIndiv, bp_pos);
                     AddAxiom add_bp_pos = new AddAxiom(ontology, bp_pos_relation);
