@@ -18,17 +18,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/genes"
@@ -36,8 +30,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52538/genomicContexts"
         }
       }
     }, {
@@ -52,17 +52,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/genes"
@@ -70,8 +64,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52392/genomicContexts"
         }
       }
     }, {
@@ -86,17 +86,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/genes"
@@ -104,8 +98,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/52389/genomicContexts"
         }
       }
     }, {
@@ -120,17 +120,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/genes"
@@ -138,8 +132,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46762/genomicContexts"
         }
       }
     }, {
@@ -154,17 +154,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/genes"
@@ -172,8 +166,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46776/genomicContexts"
         }
       }
     }, {
@@ -188,17 +188,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/genes"
@@ -206,8 +200,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46788/genomicContexts"
         }
       }
     }, {
@@ -222,17 +222,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/genes"
@@ -240,8 +234,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46815/genomicContexts"
         }
       }
     }, {
@@ -256,17 +256,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/genes"
@@ -274,8 +268,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46822/genomicContexts"
         }
       }
     }, {
@@ -290,17 +290,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/genes"
@@ -308,8 +302,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46831/genomicContexts"
         }
       }
     }, {
@@ -324,17 +324,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/genes"
@@ -342,8 +336,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46836/genomicContexts"
         }
       }
     }, {
@@ -358,17 +358,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/genes"
@@ -376,8 +370,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46847/genomicContexts"
         }
       }
     }, {
@@ -392,17 +392,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/genes"
@@ -410,8 +404,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46750/genomicContexts"
         }
       }
     }, {
@@ -426,17 +426,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/genes"
@@ -444,8 +438,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46850/genomicContexts"
         }
       }
     }, {
@@ -460,17 +460,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/genes"
@@ -478,8 +472,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46852/genomicContexts"
         }
       }
     }, {
@@ -494,17 +494,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/genes"
@@ -512,8 +506,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46861/genomicContexts"
         }
       }
     }, {
@@ -528,17 +528,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/genes"
@@ -546,8 +540,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46866/genomicContexts"
         }
       }
     }, {
@@ -562,17 +562,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/genes"
@@ -580,8 +574,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46885/genomicContexts"
         }
       }
     }, {
@@ -596,17 +596,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/genes"
@@ -614,8 +608,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46890/genomicContexts"
         }
       }
     }, {
@@ -630,17 +630,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/genes"
@@ -648,8 +642,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/46901/genomicContexts"
         }
       }
     }, {
@@ -664,17 +664,11 @@ Content-Length: 27727
         "singleNucleotidePolymorphism" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234"
         },
-        "riskAlleles" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/riskAlleles"
-        },
         "locations" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/locations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/studies"
-        },
-        "genomicContexts" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/genomicContexts"
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/associations"
         },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/genes"
@@ -682,8 +676,14 @@ Content-Length: 27727
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/currentSnp"
         },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/associations"
+        "riskAlleles" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/riskAlleles"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/studies"
+        },
+        "genomicContexts" : {
+          "href" : "https://www.ebi.ac.uk/api/singleNucleotidePolymorphisms/16234/genomicContexts"
         }
       }
     } ]
