@@ -1,0 +1,28 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 555
+
+{
+  "type" : "initial",
+  "numberOfIndividuals" : 1109,
+  "ancestralGroup" : "South Asian",
+  "countryOfOrigin" : "NR",
+  "countryOfRecruitment" : "India",
+  "description" : "Indo-European",
+  "previouslyReported" : null,
+  "notes" : null,
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
+    },
+    "ancestry" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
+    },
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
+    }
+  }
+}
+----

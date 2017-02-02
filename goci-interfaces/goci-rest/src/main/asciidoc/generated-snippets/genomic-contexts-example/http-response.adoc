@@ -1,0 +1,33 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 736
+
+{
+  "isIntergenic" : true,
+  "isUpstream" : false,
+  "isDownstream" : true,
+  "distance" : 142690,
+  "source" : "NCBI",
+  "mappingMethod" : "Ensembl_pipeline",
+  "isClosestGene" : true,
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347"
+    },
+    "genomicContext" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347"
+    },
+    "snp" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/snp"
+    },
+    "gene" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/gene"
+    },
+    "location" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/location"
+    }
+  }
+}
+----

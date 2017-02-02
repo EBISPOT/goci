@@ -1,0 +1,13 @@
+|===
+|Relation|Description
+
+|`self`
+|This ancestry entry
+
+|`study`
+|This ancestry entry
+
+|`ancestry`
+|Link to the <<studies-resources,studies>> for this ancestry entry
+
+|===

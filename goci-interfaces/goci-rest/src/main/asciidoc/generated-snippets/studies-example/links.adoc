@@ -1,0 +1,28 @@
+|===
+|Relation|Description
+
+|`self`
+|This study
+
+|`study`
+|This study
+
+|`ancestries`
+|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
+
+|`diseaseTrait`
+|<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study
+
+|`efoTraits`
+|<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study
+
+|`platforms`
+|<<overview-pagination,Paginated>> list of <<platforms-resources,platforms>> in this study
+
+|`associations`
+|<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study
+
+|`snps`
+|<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study
+
+|===

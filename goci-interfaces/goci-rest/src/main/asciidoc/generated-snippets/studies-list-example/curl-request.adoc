@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'https://www.ebi.ac.uk/gwas/rest/api/studies' -i -H 'Accept: application/json'
+----

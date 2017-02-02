@@ -1,0 +1,8 @@
+./gwas/rest/api/ancestries/{ancestry_id}
+|===
+|Parameter|Description
+
+|`ancestry_id`
+|The id of the ancestry entry in the GWAS Catalog
+
+|===
