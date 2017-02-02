@@ -68,7 +68,7 @@ public class ApiDocumentation {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(documentationConfiguration(this.restDocumentation).uris()
                                .withScheme("https")
-                               .withHost("www.ebi.ac.uk/gwas/rest")
+                               .withHost("www.ebi.ac.uk")
                                .withPort(443))
 
                 .alwaysDo(this.restDocumentationResultHandler)
@@ -86,7 +86,7 @@ public class ApiDocumentation {
     @Test
     public void pageExample () throws Exception {
 
-        this.mockMvc.perform(get("/api/studies?page=1&size=1"))
+        this.mockMvc.perform(get("/gwas/rest/api/studies?page=1&size=1").contextPath("/gwas/rest"))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
                                 fieldWithPath("_links").description("<<resources-page-links,Links>> to other resources"),
@@ -139,7 +139,7 @@ public class ApiDocumentation {
     @Test
     public void apiExample () throws Exception {
 
-        this.mockMvc.perform(get("/api").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
                                 fieldWithPath("_links").description("<<resources-ontologies-links,Links>> to other resources")
@@ -171,7 +171,7 @@ public class ApiDocumentation {
     @Test
     public void studiesListExample () throws Exception {
 
-        this.mockMvc.perform(get("/api/studies").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/studies").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -180,7 +180,7 @@ public class ApiDocumentation {
     @Test
     public void studiesExample() throws Exception {
 
-        this.mockMvc.perform(get("/api/studies/{study_id}", "5993").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/studies/{study_id}", "5993").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("study_id").description("The id of the study in the GWAS Catalog")),
@@ -224,7 +224,7 @@ public class ApiDocumentation {
     @Test
     public void associationsListExample () throws Exception {
 
-        this.mockMvc.perform(get("/api/associations").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/associations").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -232,7 +232,7 @@ public class ApiDocumentation {
 
     @Test
     public void associationsExample() throws Exception {
-        this.mockMvc.perform(get("/api/associations/{association_id}", "16510553").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/associations/{association_id}", "16510553").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("association_id").description("The id of the association in the GWAS Catalog")),
@@ -281,7 +281,7 @@ public class ApiDocumentation {
 
     @Test
     public void genomicContextsExample() throws Exception {
-        this.mockMvc.perform(get("/api/genomicContexts/{genomicContext_id}", "16792347").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/genomicContexts/{genomicContext_id}", "16792347").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("genomicContext_id").description("The id of the genomic context in the GWAS Catalog")),
@@ -302,7 +302,7 @@ public class ApiDocumentation {
     @Test
     public void singleNucleotidePolymorphismsListExample () throws Exception {
 
-        this.mockMvc.perform(get("/api/singleNucleotidePolymorphisms").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -310,7 +310,7 @@ public class ApiDocumentation {
 
     @Test
     public void singleNucleotidePolymorphismsExample() throws Exception {
-        this.mockMvc.perform(get("/api/singleNucleotidePolymorphisms/{snp_id}", "15078813").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms/{snp_id}", "15078813").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("snp_id").description("The id of the SNP in the GWAS Catalog")),
@@ -332,7 +332,7 @@ public class ApiDocumentation {
     @Test
     public void ancestriesListExample () throws Exception {
 
-        this.mockMvc.perform(get("/api/ancestries").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/ancestries").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -340,7 +340,7 @@ public class ApiDocumentation {
 
     @Test
     public void ancestriesExample() throws Exception {
-        this.mockMvc.perform(get("/api/ancestries/{ancestry_id}", "14852643").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/ancestries/{ancestry_id}", "14852643").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("ancestry_id").description("The id of the ancestry entry in the GWAS Catalog")),
