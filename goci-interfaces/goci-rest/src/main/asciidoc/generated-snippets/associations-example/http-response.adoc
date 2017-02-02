@@ -29,20 +29,20 @@ Content-Length: 1258
     "association" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
     },
-    "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
-    },
     "snps" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-    },
-    "loci" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
     },
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
     },
+    "loci" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
+    },
     "genes" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/genes"
+    },
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
     }
   }
 }
