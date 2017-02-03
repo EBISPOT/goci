@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
     SingleNucleotidePolymorphism findByRsId(String rsId);
 
-    SingleNucleotidePolymorphism findByRsIdIgnoreCase(String rsId);
+    SingleNucleotidePolymorphism findByRsIdIgnoreCase(@Param("rsId") String rsId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyId(Long studyId);
 
@@ -29,6 +30,10 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
 
     List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
+
+    List<SingleNucleotidePolymorphism> findByLocationsChromosomePosition(@Param("bpLocation") int chromosomePosition);
+
+    List<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId);
 }
