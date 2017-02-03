@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 686
+Content-Length: 736
 
 {
   "isIntergenic" : true,
@@ -14,19 +14,19 @@ Content-Length: 686
   "isClosestGene" : true,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347"
     },
     "genomicContext" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347"
-    },
-    "location" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/location"
-    },
-    "gene" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/gene"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347"
     },
     "snp" : {
-      "href" : "http://localhost:8080/api/genomicContexts/16792347/snp"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/snp"
+    },
+    "gene" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/gene"
+    },
+    "location" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/location"
     }
   }
 }

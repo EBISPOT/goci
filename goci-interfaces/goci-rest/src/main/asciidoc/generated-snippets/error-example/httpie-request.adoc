@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/error'
+$ http GET 'https://www.ebi.ac.uk/error'
 ----

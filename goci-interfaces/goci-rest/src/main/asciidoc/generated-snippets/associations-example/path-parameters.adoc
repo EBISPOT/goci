@@ -1,4 +1,4 @@
-./api/associations/{association_id}
+./gwas/rest/api/associations/{association_id}
 |===
 |Parameter|Description
 

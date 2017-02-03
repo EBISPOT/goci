@@ -1,7 +1,7 @@
 [source,http,options="nowrap"]
 ----
-GET /api/genomicContexts/16792347 HTTP/1.1
+GET /gwas/rest/api/genomicContexts/16792347 HTTP/1.1
 Accept: application/json
-Host: localhost:8080
+Host: www.ebi.ac.uk
 
 ----

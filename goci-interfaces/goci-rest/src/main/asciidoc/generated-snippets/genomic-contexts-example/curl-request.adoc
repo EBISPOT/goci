@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/api/genomicContexts/16792347' -i -H 'Accept: application/json'
+$ curl 'https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347' -i -H 'Accept: application/json'
 ----

@@ -31,35 +31,8 @@ $(document).ready(function() {
     
     console.log("Done!");
 
-    // load the page content
-    // $.get(url, loadDocumentation(pagename, content)).fail(console.log("Failed to get content from " + url));
 });
 
 
 
 
-// var loadDocumentation = function(pagename, content) {
-//     console.log("Attempting to load documentation...");
-//     return function(data, textStatus, jqXHR) {
-//         // set breadcrumb
-//         var displayName = pagename.replace(/(^| )(\w)/g, function(x) {
-//             return x.toUpperCase();
-//         });
-//
-//         displayName = displayName.replace("-", " ");
-//
-//         $("#current-page").text(displayName);
-//
-//         console.log("Updated breadcrumb (" + displayName + ")");
-//         // load the data content
-//         console.log("Updating " + content + "...");
-//         //console.log(data);
-//         content.html(data);
-//
-//
-//         console.log("Done!");
-//
-//     }
-//
-//
-// };

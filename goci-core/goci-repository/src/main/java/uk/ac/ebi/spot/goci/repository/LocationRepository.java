@@ -15,6 +15,6 @@ import uk.ac.ebi.spot.goci.model.Location;
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Location findByChromosomeNameAndChromosomePositionAndRegionName(String chromosomeName,
-                                                                    String chromosomePosition,
+                                                                    Integer chromosomePosition,
                                                                     String regionName);
 }

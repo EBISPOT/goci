@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/error' -i
+$ curl 'https://www.ebi.ac.uk/error' -i
 ----
