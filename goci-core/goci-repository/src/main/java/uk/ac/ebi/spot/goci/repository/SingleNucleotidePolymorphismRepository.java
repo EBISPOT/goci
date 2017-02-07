@@ -19,7 +19,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
-    SingleNucleotidePolymorphism findByRsId(String rsId);
+    SingleNucleotidePolymorphism findByRsId(@Param("rsId") String rsId);
 
     SingleNucleotidePolymorphism findByRsIdIgnoreCase(@Param("rsId") String rsId);
 
