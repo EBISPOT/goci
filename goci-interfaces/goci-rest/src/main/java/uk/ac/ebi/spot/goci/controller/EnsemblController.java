@@ -1,7 +1,14 @@
 package uk.ac.ebi.spot.goci.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
-
-import java.util.List;
 
 /**
  * Created by dwelter on 03/02/17.
@@ -41,8 +46,24 @@ public class EnsemblController {
 //         return snps;
 //    }
 
-    @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET)
-    public ResponseEntity search(@PathVariable String range) {
+//    @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET, produces = "application/json")
+//    public HttpEntity<List<SingleNucleotidePolymorphism>> search(@PathVariable String range) {
+//
+//        String chrom = range.split(":")[0];
+//        String locs = range.split(":")[1];
+//
+//        int start = Integer.parseInt(locs.split("-")[0]);
+//        int end = Integer.parseInt(locs.split("-")[1]);
+//
+//        List<SingleNucleotidePolymorphism>
+//                snps = singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(chrom, start, end);
+//
+//        return new ResponseEntity(snps, HttpStatus.OK);
+//    }
+
+    @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpEntity<PagedResources<SingleNucleotidePolymorphism>> search(@PathVariable String range,
+                                                                           @PageableDefault(size = 20, page = 0) Pageable pageable) {
 
         String chrom = range.split(":")[0];
         String locs = range.split(":")[1];
@@ -50,9 +71,11 @@ public class EnsemblController {
         int start = Integer.parseInt(locs.split("-")[0]);
         int end = Integer.parseInt(locs.split("-")[1]);
 
-        List<SingleNucleotidePolymorphism>
-                snps = singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(chrom, start, end);
+        Page<SingleNucleotidePolymorphism>
+                snps = singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(chrom, start, end, pageable);
 
-        return new ResponseEntity(snps, HttpStatus.OK);
+        Resource<SingleNucleotidePolymorphism> snpResource = new Resource(snps);
+
+        return new ResponseEntity(snpResource, HttpStatus.OK);
     }
 }
