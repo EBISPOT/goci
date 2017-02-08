@@ -22,11 +22,11 @@ Content-Length: 736
     "snp" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/snp"
     },
-    "location" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/location"
-    },
     "gene" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/gene"
+    },
+    "location" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/16792347/location"
     }
   }
 }

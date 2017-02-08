@@ -6,32 +6,44 @@ Content-Length: 2438
 
 {
   "_links" : {
-    "platforms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/platforms{?page,size,sort}",
+    "ensemblGenes" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ensemblGenes{?page,size,sort}",
+      "templated" : true
+    },
+    "mappingMetadatas" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/mappingMetadatas{?page,size,sort}",
       "templated" : true
     },
     "genes" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/genes{?page,size,sort}",
       "templated" : true
     },
-    "singleNucleotidePolymorphisms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
+    "loci" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/loci{?page,size,sort}",
       "templated" : true
     },
     "entrezGenes" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/entrezGenes{?page,size,sort}",
       "templated" : true
     },
-    "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries{?page,size,sort}",
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort}",
       "templated" : true
     },
-    "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
+    "studies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies{?page,size,sort}",
       "templated" : true
     },
-    "ensemblGenes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ensemblGenes{?page,size,sort}",
+    "genomicContexts" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts{?page,size,sort}",
+      "templated" : true
+    },
+    "regions" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/regions{?page,size,sort}",
+      "templated" : true
+    },
+    "diseaseTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
       "templated" : true
     },
     "riskAlleles" : {
@@ -42,36 +54,24 @@ Content-Length: 2438
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/countries{?page,size,sort}",
       "templated" : true
     },
-    "diseaseTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
+    "singleNucleotidePolymorphisms" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
       "templated" : true
     },
-    "loci" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/loci{?page,size,sort}",
+    "ancestries" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries{?page,size,sort}",
       "templated" : true
     },
-    "studies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies{?page,size,sort}",
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
       "templated" : true
     },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort}",
-      "templated" : true
-    },
-    "mappingMetadatas" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/mappingMetadatas{?page,size,sort}",
-      "templated" : true
-    },
-    "regions" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/regions{?page,size,sort}",
+    "platforms" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/platforms{?page,size,sort}",
       "templated" : true
     },
     "locations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/locations{?page,size,sort}",
-      "templated" : true
-    },
-    "genomicContexts" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts{?page,size,sort}",
       "templated" : true
     },
     "profile" : {

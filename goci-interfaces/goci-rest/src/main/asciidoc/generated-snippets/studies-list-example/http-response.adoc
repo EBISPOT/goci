@@ -35,17 +35,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
@@ -80,17 +80,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
@@ -125,17 +125,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
@@ -170,17 +170,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
@@ -215,17 +215,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
@@ -260,17 +260,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
@@ -305,17 +305,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
@@ -350,17 +350,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
@@ -395,17 +395,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
@@ -440,17 +440,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
@@ -485,17 +485,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
@@ -530,17 +530,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
@@ -575,17 +575,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
@@ -620,17 +620,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
@@ -665,17 +665,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
@@ -710,17 +710,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
@@ -755,17 +755,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
@@ -800,17 +800,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
@@ -845,17 +845,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
@@ -890,17 +890,17 @@ Content-Length: 34930
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/efoTraits"
         },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
-        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/platforms"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
         },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
