@@ -1,0 +1,8 @@
+./gwas/rest/api/associations/{association_id}
+|===
+|Parameter|Description
+
+|`association_id`
+|The id of the association in the GWAS Catalog
+
+|===

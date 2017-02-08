@@ -1,0 +1,53 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 1567
+
+{
+  "author" : "Perlis RH",
+  "publicationDate" : "2010-11-01T00:00:00.000+0000",
+  "publication" : "Am J Psychiatry",
+  "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
+  "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
+  "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
+  "pubmedId" : "21041247",
+  "gxe" : false,
+  "gxg" : false,
+  "genomewideArray" : true,
+  "targetedArray" : false,
+  "snpCount" : 1922309,
+  "qualifier" : null,
+  "imputed" : true,
+  "pooled" : false,
+  "studyDesignComment" : null,
+  "accessionId" : "GCST000854",
+  "fullPvalueSet" : false,
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+    },
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+    },
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
+    },
+    "diseaseTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+    },
+    "ancestries" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
+    },
+    "platforms" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
+    },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
+    }
+  }
+}
+----

@@ -1,0 +1,80 @@
+|===
+|Path|Type|Description
+
+|`_links`
+|`Object`
+|<<studies-links,Links>> to other resources
+
+|`pubmedId`
+|`String`
+|The pubmed ID for the study
+
+|`accessionId`
+|`String`
+|The study's GWAS Catalog accession ID
+
+|`fullPvalueSet`
+|`Boolean`
+|Whether full summary statistics are available for this study
+
+|`author`
+|`String`
+|The study's first author
+
+|`publicationDate`
+|`String`
+|The study's publication date
+
+|`publication`
+|`String`
+|The study's journal
+
+|`title`
+|`String`
+|The study title
+
+|`initialSampleSize`
+|`String`
+|Initial sample description
+
+|`replicateSampleSize`
+|`String`
+|Replication sample description
+
+|`gxe`
+|`Boolean`
+|Whether the study investigates a gene-environment interaction
+
+|`gxg`
+|`Boolean`
+|Whether the study investigates a gene-gene interaction
+
+|`genomewideArray`
+|`Boolean`
+|Whether a genome-wide array was used
+
+|`targetedArray`
+|`Boolean`
+|Whether a targted array was used
+
+|`snpCount`
+|`Number`
+|Number of SNPs passing QC
+
+|`qualifier`
+|`Null`
+|Qualifier of number of SNPs passing QC (eg >)
+
+|`imputed`
+|`Boolean`
+|Whether SNPs were imputed
+
+|`pooled`
+|`Boolean`
+|Whether samples were pooled
+
+|`studyDesignComment`
+|`Null`
+|Any other relevant study design information
+
+|===
