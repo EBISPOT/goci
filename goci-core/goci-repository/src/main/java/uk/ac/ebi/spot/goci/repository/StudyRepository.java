@@ -109,6 +109,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     List<Study> findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long diseaseTraitId);
 
+    @RestResource(exported = false)
+    List<Study> findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+
     Study findByAssociationsId(Long associationId);
 
     Page<Study> findByFullPvalueSet(Boolean fullPvalueSet, Pageable pageable);

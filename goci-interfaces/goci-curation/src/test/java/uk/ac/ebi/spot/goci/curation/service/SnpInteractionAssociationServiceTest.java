@@ -81,7 +81,7 @@ public class SnpInteractionAssociationServiceTest {
     private static Region REGION_01 = new RegionBuilder().setId(655L).setName("9q33.1").build();
 
     private static Location LOCATION_01 =
-            new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
+            new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition(159001296).build();
 
     private static SingleNucleotidePolymorphism SNP_04 = new SingleNucleotidePolymorphismBuilder().setId(378L)
             .setLastUpdateDate(new Date())

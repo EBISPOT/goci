@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/api' 'Accept:application/json'
+$ http GET 'https://www.ebi.ac.uk/gwas/rest/api' 'Accept:application/json'
 ----

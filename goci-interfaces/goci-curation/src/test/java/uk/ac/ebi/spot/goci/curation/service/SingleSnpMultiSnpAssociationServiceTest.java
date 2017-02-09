@@ -24,7 +24,6 @@ import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
 
 import java.util.Arrays;
@@ -76,7 +75,7 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     private static Region REGION_01 = new RegionBuilder().setId(897L).setName("9q33.1").build();
 
     private static Location LOCATION_01 =
-            new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition("159001296").build();
+            new LocationBuilder().setId(654L).setChromosomeName("1").setChromosomePosition(159001296).build();
 
     private static SingleNucleotidePolymorphism
             PROXY_SNP_01 = new SingleNucleotidePolymorphismBuilder().setId(311L)

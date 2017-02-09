@@ -1,4 +1,4 @@
-./api/genomicContexts/{genomicContext_id}
+./gwas/rest/api/genomicContexts/{genomicContext_id}
 |===
 |Parameter|Description
 

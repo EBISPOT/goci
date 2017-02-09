@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/api/studies?page=1&size=1'
+$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=1'
 ----

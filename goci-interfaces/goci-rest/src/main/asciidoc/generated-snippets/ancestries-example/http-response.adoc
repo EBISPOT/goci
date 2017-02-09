@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 525
+Content-Length: 555
 
 {
   "type" : "initial",
@@ -15,13 +15,13 @@ Content-Length: 525
   "notes" : null,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/ancestries/14852643"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
     },
     "ancestry" : {
-      "href" : "http://localhost:8080/api/ancestries/14852643"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
     },
     "study" : {
-      "href" : "http://localhost:8080/api/ancestries/14852643/study"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
     }
   }
 }

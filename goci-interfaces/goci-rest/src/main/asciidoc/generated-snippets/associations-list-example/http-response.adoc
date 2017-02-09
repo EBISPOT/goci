@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 26542
+Content-Length: 28002
 
 {
   "_embedded" : {
@@ -26,25 +26,25 @@ Content-Length: 26542
       "pvalue" : 7.0E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14347"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14347"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14347/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14347/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14347/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14347/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14347/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
         }
       }
     }, {
@@ -67,25 +67,25 @@ Content-Length: 26542
       "pvalue" : 8.0E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14350"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14350"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14350/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14350/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14350/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14350/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14350/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
         }
       }
     }, {
@@ -108,25 +108,25 @@ Content-Length: 26542
       "pvalue" : 2.0E-7,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14352"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14352"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14352/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14352/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14352/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14352/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14352/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
         }
       }
     }, {
@@ -149,25 +149,25 @@ Content-Length: 26542
       "pvalue" : 3.0E-14,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/25563"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/25563"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/25563/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/25563/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/25563/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/25563/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/25563/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
         }
       }
     }, {
@@ -190,25 +190,25 @@ Content-Length: 26542
       "pvalue" : 9.0E-22,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14826"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14826"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14826/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14826/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14826/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14826/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14826/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
         }
       }
     }, {
@@ -231,25 +231,25 @@ Content-Length: 26542
       "pvalue" : 7.0E-28,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12441"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12441"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12441/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12441/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12441/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12441/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12441/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
         }
       }
     }, {
@@ -272,25 +272,25 @@ Content-Length: 26542
       "pvalue" : 6.0E-6,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14627"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14627"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14627/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14627/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14627/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14627/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14627/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
         }
       }
     }, {
@@ -313,25 +313,25 @@ Content-Length: 26542
       "pvalue" : 2.0E-11,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/14628"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/14628"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/14628/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/14628/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/14628/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/14628/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/14628/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
         }
       }
     }, {
@@ -354,25 +354,25 @@ Content-Length: 26542
       "pvalue" : 8.0E-12,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12937"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12937"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12937/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12937/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12937/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12937/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12937/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
         }
       }
     }, {
@@ -395,25 +395,25 @@ Content-Length: 26542
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12946"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12946"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12946/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12946/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12946/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12946/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12946/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
         }
       }
     }, {
@@ -436,25 +436,25 @@ Content-Length: 26542
       "pvalue" : 3.0000000000000004E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12939"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12939"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12939/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12939/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12939/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12939/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12939/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
         }
       }
     }, {
@@ -477,25 +477,25 @@ Content-Length: 26542
       "pvalue" : 6.0E-12,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12941"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12941"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12941/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12941/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12941/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12941/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12941/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
         }
       }
     }, {
@@ -518,25 +518,25 @@ Content-Length: 26542
       "pvalue" : 1.0E-9,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12942"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12942"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12942/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12942/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12942/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12942/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12942/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
         }
       }
     }, {
@@ -559,25 +559,25 @@ Content-Length: 26542
       "pvalue" : 2.0E-9,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12943"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12943"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12943/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12943/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12943/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12943/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12943/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
         }
       }
     }, {
@@ -600,25 +600,25 @@ Content-Length: 26542
       "pvalue" : 1.0E-7,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12944"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12944"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12944/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12944/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12944/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12944/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12944/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
         }
       }
     }, {
@@ -641,25 +641,25 @@ Content-Length: 26542
       "pvalue" : 3.0E-6,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12945"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12945"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12945/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12945/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12945/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12945/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12945/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
         }
       }
     }, {
@@ -682,25 +682,25 @@ Content-Length: 26542
       "pvalue" : 6.000000000000001E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12913"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12913"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12913/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12913/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12913/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12913/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12913/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
         }
       }
     }, {
@@ -723,25 +723,25 @@ Content-Length: 26542
       "pvalue" : 5.0E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12919"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12919"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12919/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12919/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12919/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12919/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12919/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
         }
       }
     }, {
@@ -764,25 +764,25 @@ Content-Length: 26542
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12922"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12922"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12922/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12922/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12922/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12922/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12922/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
         }
       }
     }, {
@@ -805,53 +805,53 @@ Content-Length: 26542
       "pvalue" : 1.0E-8,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/associations/12924"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
         },
         "association" : {
-          "href" : "http://localhost:8080/api/associations/12924"
-        },
-        "efoTraits" : {
-          "href" : "http://localhost:8080/api/associations/12924/efoTraits"
-        },
-        "loci" : {
-          "href" : "http://localhost:8080/api/associations/12924/loci"
-        },
-        "genes" : {
-          "href" : "http://localhost:8080/api/associations/12924/genes"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
         },
         "snps" : {
-          "href" : "http://localhost:8080/api/associations/12924/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/loci"
+        },
+        "genes" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/genes"
         },
         "study" : {
-          "href" : "http://localhost:8080/api/associations/12924/study"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
         }
       }
     } ]
   },
   "_links" : {
     "first" : {
-      "href" : "http://localhost:8080/api/associations?page=0&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=0&size=20"
     },
     "self" : {
-      "href" : "http://localhost:8080/api/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations"
     },
     "next" : {
-      "href" : "http://localhost:8080/api/associations?page=1&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
     },
     "last" : {
-      "href" : "http://localhost:8080/api/associations?page=1843&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1844&size=20"
     },
     "profile" : {
-      "href" : "http://localhost:8080/api/profile/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
     },
     "search" : {
-      "href" : "http://localhost:8080/api/associations/search"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
     }
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 36867,
-    "totalPages" : 1844,
+    "totalElements" : 36881,
+    "totalPages" : 1845,
     "number" : 0
   }
 }

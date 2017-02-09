@@ -126,6 +126,13 @@ public class StudyService {
         return studies;
     }
 
+    @Transactional(readOnly = true)
+    public List<Study> deepFindUnPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
 
     @Transactional(readOnly = true)
     public List<Study> findPublishedStudies(Sort sort) {
@@ -184,6 +191,8 @@ public class StudyService {
         return studies;
     }
 
+
+
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
@@ -212,6 +221,8 @@ public class StudyService {
 //        int snpCount = study.getSingleNucleotidePolymorphisms().size();
         int platformCount = study.getPlatforms().size();
 
+        int ancestryCount = study.getAncestries().size();
+
         Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
         study.getAssociations().forEach(
                 association -> {
@@ -235,7 +246,6 @@ public class StudyService {
             int locationCount = snp.getLocations().size();
             getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
 
-            int ancestryCount = study.getAncestries().size();
 
             for (Association association : study.getAssociations()) {
                 int lociCount = association.getLoci().size();

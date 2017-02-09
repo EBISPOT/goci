@@ -228,7 +228,7 @@ public class EnsemblMappingPipeline {
                 continue;
             }
             String chromosome = mapping.getString("seq_region_name");
-            String position = String.valueOf(mapping.getInt("start"));
+            Integer position = Integer.valueOf(mapping.getInt("start"));
 
             Region cytogeneticBand = getRegion(chromosome, position);
 
@@ -246,7 +246,7 @@ public class EnsemblMappingPipeline {
      * @param position   the position of the variant
      * @return Region object only containing a region name
      */
-    private Region getRegion(String chromosome, String position) throws EnsemblRestIOException {
+    private Region getRegion(String chromosome, Integer position) throws EnsemblRestIOException {
 
         String band = null; // Default value
         String rest_opt = "feature=band";
@@ -324,7 +324,7 @@ public class EnsemblMappingPipeline {
             throws EnsemblRestIOException {
 
         String chromosome = snp_location.getChromosomeName();
-        String position = snp_location.getChromosomePosition();
+        Integer position = snp_location.getChromosomePosition();
 
         // Check if there are overlap genes
         JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, position, position, rest_opt);
@@ -360,13 +360,13 @@ public class EnsemblMappingPipeline {
         String type = "upstream";
 
         String chromosome = snp_location.getChromosomeName();
-        String position = snp_location.getChromosomePosition();
+        Integer position = snp_location.getChromosomePosition();
 
-        int position_up = Integer.parseInt(snp_location.getChromosomePosition()) - getGenomicDistance();
+        int position_up = snp_location.getChromosomePosition() - getGenomicDistance();
         if (position_up < 0) {
             position_up = chr_start;
         }
-        String pos_up = String.valueOf(position_up);
+        Integer pos_up = Integer.valueOf(position_up);
 
         // Check if there are overlap genes
         JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, pos_up, position, rest_opt);
@@ -399,15 +399,15 @@ public class EnsemblMappingPipeline {
         String type = "downstream";
 
         String chromosome = snp_location.getChromosomeName();
-        String position = snp_location.getChromosomePosition();
+        Integer position = snp_location.getChromosomePosition();
 
-        int position_down = Integer.parseInt(snp_location.getChromosomePosition()) + getGenomicDistance();
+        int position_down = snp_location.getChromosomePosition() + getGenomicDistance();
         // Check the downstream position to avoid having a position over the 3' end of the chromosome
         if (chr_end != 0) {
             if (position_down > chr_end) {
                 position_down = chr_end;
             }
-            String pos_down = String.valueOf(position_down);
+            Integer pos_down = Integer.valueOf(position_down);
 
             // Check if there are overlap genes
             JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, position, pos_down, rest_opt);
@@ -446,7 +446,7 @@ public class EnsemblMappingPipeline {
         boolean upstream = (type.equals("upstream")) ? true : false;
         boolean downstream = (type.equals("downstream")) ? true : false;
 
-        String position = snp_location.getChromosomePosition();
+        Integer position = snp_location.getChromosomePosition();
 
         SingleNucleotidePolymorphism snp_tmp =
                 new SingleNucleotidePolymorphism();
@@ -454,7 +454,7 @@ public class EnsemblMappingPipeline {
 
         // Get closest gene
         if (intergenic) {
-            int pos = Integer.parseInt(position);
+            int pos = position;
 
             for (int i = 0; i < json_gene_list.length(); ++i) {
                 JSONObject json_gene = json_gene_list.getJSONObject(i);
@@ -515,7 +515,7 @@ public class EnsemblMappingPipeline {
                     }
                 }
 
-                int pos = Integer.parseInt(position);
+                int pos = position;
                 if (type.equals("upstream")) {
                     distance = pos - json_gene.getInt("end");
                 }
@@ -573,15 +573,15 @@ public class EnsemblMappingPipeline {
      * downstream) over the 100kb range
      */
     private JSONArray getNearestGene(String chromosome,
-                                     String snp_position,
-                                     String position,
+                                     Integer snp_position,
+                                     Integer position,
                                      int boundary,
                                      String rest_opt,
                                      String type, String source) throws EnsemblRestIOException {
 
-        int position1 = Integer.parseInt(position);
-        int position2 = Integer.parseInt(position);
-        int snp_pos = Integer.parseInt(snp_position);
+        int position1 = position;
+        int position2 = position;
+        int snp_pos = snp_position;
 
         int new_pos = position1;
 
@@ -601,9 +601,9 @@ public class EnsemblMappingPipeline {
             }
         }
 
-        String pos1 = String.valueOf(position1);
-        String pos2 = String.valueOf(position2);
-        String new_pos_string = String.valueOf(new_pos);
+        Integer pos1 = Integer.valueOf(position1);
+        Integer pos2 = Integer.valueOf(position2);
+        Integer new_pos_string = Integer.valueOf(new_pos);
 
         JSONArray json_gene_list = this.getOverlapRegionCalls(chromosome, pos1, pos2, rest_opt);
 
@@ -675,7 +675,7 @@ public class EnsemblMappingPipeline {
      * @param rest_opt   the extra parameters to add at the end of the REST call url (inherited from other methods)
      * @return A JSONArray object containing a list of JSONObjects corresponding to the genes overlapping the region
      */
-    private JSONArray getOverlapRegionCalls(String chromosome, String position1, String position2, String rest_opt)
+    private JSONArray getOverlapRegionCalls(String chromosome, Integer position1, Integer position2, String rest_opt)
             throws EnsemblRestIOException {
 
         String data = chromosome + ":" + position1 + "-" + position2;
