@@ -334,3 +334,9 @@ a > .toplevel-view {
     margin: 0px 15px;
     border-top: 1px solid rgb(221, 221, 221);
 }
+
+#beta-icon {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+}
