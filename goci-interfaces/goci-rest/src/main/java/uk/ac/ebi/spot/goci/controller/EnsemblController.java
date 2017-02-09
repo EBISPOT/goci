@@ -31,36 +31,6 @@ public class EnsemblController {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
-//    @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public @ResponseBody List<SingleNucleotidePolymorphism> search(@PathVariable String range) {
-//
-//        String chrom = range.split(":")[0];
-//        String locs = range.split(":")[1];
-//
-//        int start = Integer.parseInt(locs.split("-")[0]);
-//        int end = Integer.parseInt(locs.split("-")[1]);
-//
-//        List<SingleNucleotidePolymorphism>
-//                snps = singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(chrom, start, end);
-//
-//         return snps;
-//    }
-
-//    @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET, produces = "application/json")
-//    public HttpEntity<List<SingleNucleotidePolymorphism>> search(@PathVariable String range) {
-//
-//        String chrom = range.split(":")[0];
-//        String locs = range.split(":")[1];
-//
-//        int start = Integer.parseInt(locs.split("-")[0]);
-//        int end = Integer.parseInt(locs.split("-")[1]);
-//
-//        List<SingleNucleotidePolymorphism>
-//                snps = singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(chrom, start, end);
-//
-//        return new ResponseEntity(snps, HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/api/snpLocation/{range}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<PagedResources<SingleNucleotidePolymorphism>> search(@PathVariable String range,
                                                                            @PageableDefault(size = 20, page = 0) Pageable pageable) {
