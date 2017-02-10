@@ -430,54 +430,57 @@
 
 
     <script type="text/javascript">
-
-        Ensembl.newWidget(
-
-            function() {
-                return {
-                    container   : '._ld_graph',
-                    widgetType  : Ensembl.widgets.LDPlot
-                }
-            },
-
-            function() {
-                return {
-                    configuration : {
-                        ID            : (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
-                        window_size   : '50',
-                        population    : '1000GENOMES:phase_3:GBR',
-                        svgSize       : {
-                            width   : 800,
-                            height  : 300,
-                            padding : 50
-                        },
-                        panelSize     : {
-                            width       : 800,
-                            min_height  : 100,
-                            tab_height  : 30,
-                            padding     : 50
-                        },
-                        heatmap       : {
-                            parameter : {
-                                color_low : "white",
-                                color_high: "black"
-                            },
-                            maf       : {
-                                color_low : "black",
-                                color_high: "white"
-                            }
-                        },
-                        filters       : {
-                            selected_filters : [],
-                            maf_sign         : "below",
-                            maf_thr          : 0.25,
-                            parameter        : "r2",   //"r2"  or "d_prime"
-                            parameter_sign   : "above",
-                            parameter_thr    : "0.8"
-                        }
+        try {
+            Ensembl.newWidget(
+                function() {
+                    return {
+                        container: '._ld_graph',
+                        widgetType: Ensembl.widgets.LDPlot
                     }
-                };
+                },
+
+                function() {
+                    return {
+                        configuration: {
+                            ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
+                            window_size: '50',
+                            population: '1000GENOMES:phase_3:GBR',
+                            svgSize: {
+                                width: 800,
+                                height: 300,
+                                padding: 50
+                            },
+                            panelSize: {
+                                width: 800,
+                                min_height: 100,
+                                tab_height: 30,
+                                padding: 50
+                            },
+                            heatmap: {
+                                parameter: {
+                                    color_low: "white",
+                                    color_high: "black"
+                                },
+                                maf: {
+                                    color_low: "black",
+                                    color_high: "white"
+                                }
+                            },
+                            filters: {
+                                selected_filters: [],
+                                maf_sign: "below",
+                                maf_thr: 0.25,
+                                parameter: "r2",   //"r2"  or "d_prime"
+                                parameter_sign: "above",
+                                parameter_thr: "0.8"
+                            }
+                        }
+                    };
             });
+        }
+        catch(err) {
+            $("._ld_graph").html('<div class="alert alert-danger" role="alert"><h4 class="has-warning">The LD widget is not available</h4><div>'+err+'</div></div>');
+        }
     </script>
     <!-- JS for widgets ends -->
 </div>
