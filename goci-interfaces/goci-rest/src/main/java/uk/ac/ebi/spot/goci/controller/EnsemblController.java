@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.controller;
 
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,5 +48,14 @@ public class EnsemblController {
         Resource<SingleNucleotidePolymorphism> snpResource = new Resource(snps);
 
         return new ResponseEntity(snpResource, HttpStatus.OK);
+    }
+
+
+
+    public HttpEntity<Object> getEfoColour(@PathVariable String shortForm){
+
+
+
+        return new ResponseEntity("foo", HttpStatus.OK);
     }
 }
