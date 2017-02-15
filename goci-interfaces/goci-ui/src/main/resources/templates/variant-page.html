@@ -423,10 +423,10 @@
     <!-- LD widget JavaScript
     ================================================== -->
     <!-- JS for widgets -->
-    <script type="text/javascript" src="http://test-5.ensembl.org/Widgets/core.js"></script>
+    <script type="text/javascript" src="http://test-3.ensembl.org/Widgets/core.js"></script>
 
     <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
-    <link type="text/css" rel="stylesheet" href="http://test-5.ensembl.org/ld_graph.css"/>
+    <link type="text/css" rel="stylesheet" href="http://test-3.ensembl.org/ld_graph.css"/>
     <!--<script type="text/javascript" src="d3.v3.js"></script> -->
     <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
@@ -461,20 +461,8 @@
                             legend: {
                                 color_by: "gwas"
                             },
-                            heatmap: {
-                                parameter: {
-                                    color_low: "white",
-                                    color_high: "black"
-                                },
-                                maf: {
-                                    color_low: "black",
-                                    color_high: "white"
-                                }
-                            },
                             filters: {
                                 selected_filters: [],
-                                maf_sign: "below",
-                                maf_thr: 0.25,
                                 parameter: "r2",   //"r2" or "d_prime"
                                 sign_fix: 1, //no dropdown for above or below
                                 parameter_sign: "above",
