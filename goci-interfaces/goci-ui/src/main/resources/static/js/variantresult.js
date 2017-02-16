@@ -260,15 +260,24 @@ function getVariantStudies(data) {
             row.append(newCell(asso.title));
 
             // Initial sample desc
-            var initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
+            var initial_sample_text = '-';
+            if (asso.initialSampleDescription) {
+                initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
+            }
             row.append(newCell(initial_sample_text));
 
             // Replicate sample desc
-            var replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
+            var replicate_sample_text = '-';
+            if (asso.replicateSampleDescription) {
+                replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
+            }
             row.append(newCell(replicate_sample_text));
 
             // ancestralGroups
-            var ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
+            var ancestral_groups_text = '-';
+            if (asso.ancestralGroups) {
+                ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
+            }
             row.append(newCell(ancestral_groups_text));
 
             // Populate the table

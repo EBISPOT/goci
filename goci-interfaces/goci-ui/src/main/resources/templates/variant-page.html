@@ -180,6 +180,9 @@
         <div class="row" style="margin-top:0px">
             <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
                 <span style="margin-right:10px;font-weight:bold">Available data:</span>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#ld_panel')">
+                    <span>Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                </button>
                 <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#association_panel')">
                     <span class="association_label">Associations</span><span class="association_count badge" style="background-color: #398A96;margin-left:10px"></span>
                 </button>
@@ -189,10 +192,33 @@
                 <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">
                     <span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>
                 </button>
-                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#ld_panel')">
-                    <span>Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span></button>
             </div>
         </div>
+
+
+        <!-- Linkage disequilibrium -->
+        <div class="row" style="margin-top:20px">
+            <div id="ld_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span id="ld_panel_label">Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                    </h3>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-default btn-xs" id="ens_ld_button">
+                            <span><span th:text="${rsId}"></span> LD information in Ensembl<span class="glyphicon glyphicon-new-window external-link-smaller"></span></span>
+                        </button>
+                        <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#ld_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <!-- LD plot widget -->
+                    <div class="_ld_graph _widget"></div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Associations table -->
         <div class="row" style="margin-top:20px">
@@ -206,13 +232,13 @@
                             <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
                             <span>Download association data</span>
                         </button>
-                        <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#association_panel span.clickable')">
-                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        <span class="clickable panel-collapsed" style="margin-left:25px" onclick="toggleSidebar('#association_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
                         </span>
                     </span>
                 </div>
 
-                <div class="panel-body">
+                <div class="panel-body" style="display:none">
 
                     <table id="association-table" class="table table-striped">
                         <thead id="association-table-header">
@@ -356,29 +382,6 @@
             </div>
         </div>
 
-        <!-- Linkage disequilibrium -->
-        <div class="row" style="margin-top:20px">
-            <div id="ld_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span id="ld_panel_label">Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
-                    </h3>
-                    <span class="pull-right">
-                        <button type="button" class="btn btn-default btn-xs" id="ens_ld_button">
-                            <span><span th:text="${rsId}"></span> LD information in Ensembl<span class="glyphicon glyphicon-new-window external-link-smaller"></span></span>
-                        </button>
-                        <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#ld_panel span.clickable')">
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </span>
-                    </span>
-                </div>
-                <div class="panel-body">
-                    <!-- LD plot widget -->
-                    <div class="_ld_graph _widget"></div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 
@@ -420,64 +423,58 @@
     <!-- LD widget JavaScript
     ================================================== -->
     <!-- JS for widgets -->
-    <script type="text/javascript" src="http://test-5.ensembl.org/Widgets/core.js"></script>
+    <script type="text/javascript" src="http://test-3.ensembl.org/Widgets/core.js"></script>
 
     <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
-    <link type="text/css" rel="stylesheet" href="http://test-5.ensembl.org/ld_graph.css"/>
+    <link type="text/css" rel="stylesheet" href="http://test-3.ensembl.org/ld_graph.css"/>
     <!--<script type="text/javascript" src="d3.v3.js"></script> -->
     <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
 
 
     <script type="text/javascript">
-
-        Ensembl.newWidget(
-
-            function() {
-                return {
-                    container   : '._ld_graph',
-                    widgetType  : Ensembl.widgets.LDPlot
-                }
-            },
-
-            function() {
-                return {
-                    configuration : {
-                        ID            : (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
-                        window_size   : '50',
-                        population    : '1000GENOMES:phase_3:GBR',
-                        svgSize       : {
-                            width   : 800,
-                            height  : 300,
-                            padding : 50
-                        },
-                        panelSize     : {
-                            width       : 800,
-                            min_height  : 100,
-                            tab_height  : 30,
-                            padding     : 50
-                        },
-                        heatmap       : {
-                            parameter : {
-                                color_low : "white",
-                                color_high: "black"
-                            },
-                            maf       : {
-                                color_low : "black",
-                                color_high: "white"
-                            }
-                        },
-                        filters       : {
-                            selected_filters : [],
-                            maf_sign         : "below",
-                            maf_thr          : 0.25,
-                            parameter        : "r2",   //"r2"  or "d_prime"
-                            parameter_sign   : "above",
-                            parameter_thr    : "0.8"
-                        }
+        try {
+            Ensembl.newWidget(
+                function() {
+                    return {
+                        container: '._ld_graph',
+                        widgetType: Ensembl.widgets.LDPlot
                     }
-                };
+                },
+
+                function() {
+                    return {
+                        configuration: {
+                            ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
+                            window_size: '50',
+                            population: '1000GENOMES:phase_3:GBR',
+                            svgSize: {
+                                width: 800,
+                                height: 300,
+                                padding: 50
+                            },
+                            panelSize: {
+                                width: 800,
+                                tab_height: 30,
+                                padding: 50
+                            },
+                            legend: {
+                                color_by: "gwas"
+                            },
+                            filters: {
+                                selected_filters: [],
+                                parameter: "r2",   //"r2" or "d_prime"
+                                sign_fix: 1, //no dropdown for above or below
+                                parameter_sign: "above",
+                                parameter_thr: "0.8"
+                            }
+                        }
+                    };
             });
+        }
+        catch(err) {
+            $("._ld_graph").html('<div class="alert alert-danger" role="alert"><h4 class="has-warning">The LD widget is not available</h4><div>'+err+'</div></div>');
+        }
     </script>
     <!-- JS for widgets ends -->
 </div>
