@@ -58,7 +58,7 @@ public class EnsemblController {
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     @Autowired
-    public EnsemblController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
+    public EnsemblController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository){
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
@@ -66,8 +66,7 @@ public class EnsemblController {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<PagedResources<SingleNucleotidePolymorphism>> search(@PathVariable String range,
-                                                                           @PageableDefault(size = 20,
-                                                                                            page = 0) Pageable pageable) {
+                                                                           @PageableDefault(size = 20, page = 0) Pageable pageable) {
 
         String chrom = range.split(":")[0];
         String locs = range.split(":")[1];
