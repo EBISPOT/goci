@@ -83,7 +83,7 @@ function processStudyDoc(study, table) {
 
 
 
-    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(study.pubmedId).concat("' target='_blank'>Click for full summary statistics</a>");
+    var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(study.pubmedId).concat("' target='_blank'>Click for summary statistics</a>");
 
     row.append($("<td>").html(ftplink));
 
