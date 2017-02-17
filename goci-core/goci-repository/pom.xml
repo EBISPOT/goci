@@ -32,4 +32,16 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- make sure processor isn't used in compilation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgument>-parameters</compilerArgument>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

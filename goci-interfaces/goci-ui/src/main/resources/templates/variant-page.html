@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
+    <meta name="keywords" content="GWAS Catalog, GWAS, NHGRI, EBI, EMBL-EBI, SPOT"/>
+    <meta name="author" content="Tony Burdett, Emma Hastings, Dani Welter, SPOT, EMBL-EBI, NHGRI"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
+
+    <title>GWAS Catalog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{/css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{/css/bootstrap-theme.min.css}" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/jumbotron.css" th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{/css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{/css/goci-color-palette-1.css}"/>
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
+    <div class="container clearfix">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+            <h2 style="margin:0px">
+                <img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/dna13.png" th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Variant</span><span th:text="${rsId}" style="padding-left:15px"></span>
+            </h2>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+            <!-- search box goes here -->
+            <div class="input-group" style="width: 250px; float: right;">
+                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
+                <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="search-button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container-fluid" style="padding-top: 30px">
+
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="index.html" th:href="@{/home}">GWAS</a></li>
+        <li><a href="variants.html" th:href="@{/variants}">Variants</a></li>
+        <li class="active" th:text="${rsId}"></li>
+    </ol>
+
+
+    <div style="display: none">
+        <ul th:object="${result}" id="variables">
+            <li id="query" th:text="*{query}">User query</li>
+            <li id="facet" th:text="*{facet}">Facet</li>
+            <li id="filter" th:text="*{filter}">Disease trait</li>
+        </ul>
+    </div>
+
+    <div class="container-fluid" id="lower_container">
+
+        <!-- Summary panel -->
+        <div class="row" style="margin-top:10px">
+            <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">Variant information</h3>
+                </div>
+                <div class="clearfix">
+                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Location</div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-location">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Cytogenetic region</div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-region">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Functional class</div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-class">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Mapped gene(s)</div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-mapped-genes">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">GWAS Catalog traits</div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-traits">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Ensembl data -->
+                    <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="variant-alleles">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Minor allele</div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">
+                                <span>MAF</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency" style="margin-left:2px;font-size:smaller"></span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" id="merged-variant-label" style="font-weight:bold; margin-bottom: 1em;padding-left:0px" title="Variant merged into a new variant ID"></div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="merged-variant"></div>
+                        </div>
+                    </div>
+
+                    <div id="links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3" style="text-align:right">
+                        <div style="margin-bottom: 0.6em">
+                            <button type="button" class="btn btn-default" id="ensembl_button">Variant in Ensembl<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        </div>
+                        <button title="Click to show/hide more Ensembl links" id="button-more_ens_links" onclick="toggleDiv('more_ens_links')" class="btn btn-default btn-xs btn-study">Other Ensembl links <span class="glyphicon glyphicon-plus"></span></button>
+                        <div id="more_ens_links" class="collapse">
+                            <div style="margin-bottom: 0.6em;margin-top: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_gc_button">Genomic context<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_phe_button">Phenotype information<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_gr_button">Genes and regulation<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0.6em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_pg_button">Population genetics<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                            <div style="margin-bottom: 0em">
+                                <button type="button" class="btn btn-default btn-xs" id="ensembl_cit_button">Citations<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.1em;margin-bottom: 1.1em">
+                            <button type="button" class="btn btn-default" id="dbsnp_button">Variant in dbSNP<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        </div>
+                        <div style="margin-bottom: 0.2em">
+                            <button type="button" class="btn btn-default" id="ucsc_button">Variant in UCSC<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="variant-summary">
+                    <span class="glyphicon glyphicon-info-sign" style="padding-right:2px"></span>
+                    <span id="variant-summary-content"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- List the available tables -->
+        <div class="row" style="margin-top:0px">
+            <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
+                <span style="margin-right:10px;font-weight:bold">Available data:</span>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#ld_panel')">
+                    <span>Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#association_panel')">
+                    <span class="association_label">Associations</span><span class="association_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#study_panel')">
+                    <span class="study_label">Studies</span><span class="study_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+                <button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">
+                    <span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Linkage disequilibrium -->
+        <div class="row" style="margin-top:20px">
+            <div id="ld_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span id="ld_panel_label">Linkage disequilibrium (LD)</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                    </h3>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-default btn-xs" id="ens_ld_button">
+                            <span><span th:text="${rsId}"></span> LD information in Ensembl<span class="glyphicon glyphicon-new-window external-link-smaller"></span></span>
+                        </button>
+                        <span class="clickable" style="margin-left:25px" onclick="toggleSidebar('#ld_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                        </span>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <!-- LD plot widget -->
+                    <div class="_ld_graph _widget"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Associations table -->
+        <div class="row" style="margin-top:20px">
+            <div id="association_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span class="association_label">Associations</span><span class="association_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                    </h3>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-default btn-xs" id="download_data">
+                            <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
+                            <span>Download association data</span>
+                        </button>
+                        <span class="clickable panel-collapsed" style="margin-left:25px" onclick="toggleSidebar('#association_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="panel-body" style="display:none">
+
+                    <table id="association-table" class="table table-striped">
+                        <thead id="association-table-header">
+                        <tr>
+                            <th style="width: 10%" id="strongestAllele">Risk allele
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>
+                                <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                            </th>
+                            <th style="width: 8%" id="riskFrequency">RAF
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 12%" id="pValue">p-value
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 6%" id="orPerCopyNum">OR
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with variant"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 14%" id="orType">Beta
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 6%">CI
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
+                            </th>
+
+                            <th style="width: 8%">Reported gene(s)
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
+                            </th>
+
+                            <th style="width: 13%" id="traitName_s-alt">Reported trait
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 13%" id="traitName-alt">Mapped trait
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait mapped to the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 15%" id="author_s-alt" colspan="2">Study
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="association-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Studies table -->
+        <div class="row" style="margin-top:20px">
+            <div id="study_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span class="study_label">Studies</span><span class="study_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                    </h3>
+
+                    <span class="pull-right clickable panel-collapsed" onclick="toggleSidebar('#study_panel span.clickable')">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </span>
+                </div>
+
+                <div class="panel-body" style="display:none">
+                    <table id="study-table" class="table table-striped">
+                        <thead id="study-table-header">
+                        <tr>
+                            <th style="width: 12%" id="author_s">Author
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 10%" id="publicationDate">Date
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Publication date (YYYY-MM-DD)"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 12%" id="publication">Journal
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Abbreviated journal name"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 30%" id="title">Title
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Title of paper"></span>
+                                <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                            </th>
+                            <th style="width: 12%" id="sample_i">Initial sample description
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of the initial sample analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 12%" id="sample_r">Replication sample description
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of the replication sample analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 12%" id="ancestral_gp">Ancestral groups
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="List of the ancestral groups analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="study-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diseases/traits table -->
+        <div class="row" style="margin-top:20px">
+            <div id="diseasetrait_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>
+                    </h3>
+                    <span class="pull-right clickable panel-collapsed" onclick="toggleSidebar('#diseasetrait_panel span.clickable')">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </span>
+                </div>
+
+                <div class="panel-body" style="display:none">
+                    <table id="diseasetrait-table" class="table table-striped">
+                        <thead id="diseasetrait-table-header">
+                        <tr>
+                            <th style="width: 25%" id="traitName_s-alt2">Reported trait
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                            </th>
+                            <th style="width: 25%">Mapped ontology traits
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
+                            </th>
+                            <th style="width: 35%">Ontology traits synonyms
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="An alternative Experimental Factor Ontology for a given term such as a commonly used abbreviation or synonym"></span>
+                            </th>
+                            <th style="width: 15%">Study
+                                <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody id="diseasetrait-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!--Include footer-->
+    <div th:include="fragments/footer :: page_footer"></div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{/js/ie10-viewport-bug-workaround.js}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+    <!-- GOCI JavaScript
+    ================================================== -->
+    <script src="../static/js/goci-ui.js" th:src="@{/js/goci-ui.js}"></script>
+    <script src="../static/js/variantresult.js" th:src="@{/js/variantresult.js}"></script>
+
+    <!-- Google analytics
+    ================================================== -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-60195133-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- LD widget JavaScript
+    ================================================== -->
+    <!-- JS for widgets -->
+    <script type="text/javascript" src="http://test-3.ensembl.org/Widgets/core.js"></script>
+
+    <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
+    <link type="text/css" rel="stylesheet" href="http://test-3.ensembl.org/ld_graph.css"/>
+    <!--<script type="text/javascript" src="d3.v3.js"></script> -->
+    <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
+
+
+    <script type="text/javascript">
+        try {
+            Ensembl.newWidget(
+                function() {
+                    return {
+                        container: '._ld_graph',
+                        widgetType: Ensembl.widgets.LDPlot
+                    }
+                },
+
+                function() {
+                    return {
+                        configuration: {
+                            ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
+                            window_size: '50',
+                            population: '1000GENOMES:phase_3:GBR',
+                            svgSize: {
+                                width: 800,
+                                height: 300,
+                                padding: 50
+                            },
+                            panelSize: {
+                                width: 800,
+                                tab_height: 30,
+                                padding: 50
+                            },
+                            legend: {
+                                color_by: "gwas"
+                            },
+                            filters: {
+                                selected_filters: [],
+                                parameter: "r2",   //"r2" or "d_prime"
+                                sign_fix: 1, //no dropdown for above or below
+                                parameter_sign: "above",
+                                parameter_thr: "0.8"
+                            }
+                        }
+                    };
+            });
+        }
+        catch(err) {
+            $("._ld_graph").html('<div class="alert alert-danger" role="alert"><h4 class="has-warning">The LD widget is not available</h4><div>'+err+'</div></div>');
+        }
+    </script>
+    <!-- JS for widgets ends -->
+</div>
+
+</body>
+</html>

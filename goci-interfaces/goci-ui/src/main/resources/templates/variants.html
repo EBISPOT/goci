@@ -51,34 +51,36 @@
 <div class="container-fluid">
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="home">Home</a></li>
-        <li class="active">Ancestry</li>
+        <li class="active">Variants</li>
     </ol>
 </div>
 
 <div class="container tight-to-top">
 
     <div class="row">
-        <a href="docs/ancestry" th:href="@{docs/ancestry}">
-            <div class="col-md-4 toplevel-view">
-                <h2 class="flaticon-text21 color-primary-bold">Ancestry documentation</h2>
+       <h2>GWAS Catalog variants</h2>
+         <p>There are now dedicated pages available for all variants recorded in the GWAS Catalog. You can access a variant page by
+         appending the variant's rs Id to the variants base link <a th:href="@{/variants}">www.ebi.ac.uk/gwas/beta/variants/</a>.
+         <br/>
+         <br/>
+         <h3>Examples</h3>
+         <br/>
+             <ul>
+                <li><a th:href="@{/variants/rs780094}">rs780094</a></li>
+                <li><a th:href="@{/variants/rs1260326}">rs1260326</a></li>
+                <li><a th:href="@{/variants/rs2075650}">rs2075650</a></li>
+                <li><a th:href="@{/variants/rs7903146}">rs7903146</a></li>
+                <li><a th:href="@{/variants/rs4420638}">rs4420638</a></li>
+                <li><a th:href="@{/variants/rs780094}">rs964184</a></li>
+                <li><a th:href="@{/variants/rs174547}">rs174547 </a></li>
+                <li><a th:href="@{/variants/rs1800562}">rs1800562</a></li>
+                <li><a th:href="@{/variants/rs3184504}">rs3184504</a></li>
+                <li><a th:href="@{/variants/rs855791}">rs855791</a></li>
+            </ul>
+         </p>
 
-                <p>A description of our ancestry data extraction procedures.</p>
-            </div>
-        </a>
-
-
-        <!--<a href="ancestry" th:href="@{ancestry}">-->
-        <a disabled="disabled">
-            <div class="col-md-4 toplevel-view">                                  ssh s
-                <h2 class="flaticon-statistics color-primary-bold">Ancestry data analysis</h2>
-
-                <p><i>Coming soon!</i></p>
-            </div>
-        </a>
 
     </div>
-
-    <hr/>
 
 </div>
 <!-- /container -->

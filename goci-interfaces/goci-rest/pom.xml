@@ -63,11 +63,11 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-db-binding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-ontology</artifactId>
+        </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.data</groupId>-->
-            <!--<artifactId>spring-data-rest-core</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
@@ -92,6 +92,10 @@
             <groupId>org.springframework.restdocs</groupId>
             <artifactId>spring-restdocs-mockmvc</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-renderlets-core</artifactId>
         </dependency>
     </dependencies>
 
@@ -134,8 +138,6 @@
                 </executions>
                 <configuration>
                     <sourceDirectory>src/main/asciidoc</sourceDirectory>
-                    <!--<outputDirectory>src/main/resources/static/documents/</outputDirectory>-->
-                    <!--<outputDirectory>${project.build.directory}/classes/static/docs/content/</outputDirectory>-->
                     <outputDirectory>${project.build.directory}/classes/static/documents/</outputDirectory>
                     <backend>html</backend>
                     <doctype>book</doctype>
