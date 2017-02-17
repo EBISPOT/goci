@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,6 +59,9 @@ public class FileController {
 
     @Value("${catalog.stats.file}")
     private Resource catalogStatsFile;
+
+    @Value("${summary.stats.file}")
+    private Resource summaryStatsFile;
 
 //    @Value("${download.ensemblmapping}")
 //    private Resource ensemblMappingFileDownload;
@@ -271,6 +278,32 @@ public class FileController {
         catch (IOException e) {
             throw new RuntimeException(
                     "Unable to return catolog stats: failed to read catalog.stats.file resource", e);
+        }
+
+        return response;
+    }
+
+    @RequestMapping(value = "api/search/summaryStatsResources", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody Map<String, Object> getSummaryStatsResources() {
+        Map<String, Object> response = new HashMap<>();
+
+        List<String> resources = new ArrayList<>();
+
+        try {
+            if(summaryStatsFile.exists()){
+                InputStream in = summaryStatsFile.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    resources.add(line);
+                }
+                reader.close();
+                response.put("resources", resources);
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(
+                    "Unable to return summary stats resources: failed to read summary.stats.file resource", e);
         }
 
         return response;

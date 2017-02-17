@@ -9,6 +9,8 @@ $(document).ready(function() {
         $("#downloads-item").addClass("active");
 
         loadStudiesList();
+
+        loadResourcesList();
     }
 
 
@@ -90,3 +92,38 @@ function processStudyDoc(study, table) {
     table.append(row);
 
 };
+
+
+function loadResourcesList(){
+    var table = $('#sum-stats-table-body').empty();
+
+    $.getJSON('../api/search/summaryStatsResources')
+            .done(function(data) {
+                renderResources(data, table);
+            });
+    console.log("Resources loaded from file!");
+
+}
+
+function renderResources(data, table){
+
+    var resources = data.resources;
+
+    for(var i = 0; i < resources.length; i++){
+        var row = $("<tr>");
+
+        var r = resources[i].split(',');
+        row.append($("<td>").html(r[0]));
+        row.append($("<td>").html(r[1]));
+
+        var link = "<a href='".concat(r[2]).concat("' target='_blank'>").concat(r[2]).concat("</a>");
+
+        row.append($("<td>").html(link));
+        table.append(row);
+    }
+
+
+
+    $('#otherSumStatsDisplay').show();
+
+}
