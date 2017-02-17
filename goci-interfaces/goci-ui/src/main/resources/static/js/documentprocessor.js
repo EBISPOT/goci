@@ -44,7 +44,7 @@ function processStudy(study, table) {
 
         pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
                         " data-toggle='tooltip'" +
-                         "data-original-title='Click for full summary statistics'></span></a>");
+                         "data-original-title='Click for summary statistics'></span></a>");
 
     }
 
