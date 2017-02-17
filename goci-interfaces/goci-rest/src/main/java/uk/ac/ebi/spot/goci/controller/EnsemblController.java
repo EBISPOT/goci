@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +64,7 @@ public class EnsemblController {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/api/snpLocation/{range}",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,6 +90,7 @@ public class EnsemblController {
         return new ResponseEntity(snpResource, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/api/parentMapping/{efoTerm}",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
@@ -100,6 +103,7 @@ public class EnsemblController {
         return new ResponseEntity<EfoColourMap>(colour, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(value = "/api/parentMappings",
                     method = RequestMethod.POST,
                     consumes = "application/json",
