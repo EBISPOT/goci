@@ -112,6 +112,9 @@ AlkPhos: Alkaline phosphatase
 AMD: Age-related macular degeneration
 
 
+ANC: Absolute neutrophil count
+
+
 ANP6: N-terminal pro-atrial natriuretic peptide
 
 
