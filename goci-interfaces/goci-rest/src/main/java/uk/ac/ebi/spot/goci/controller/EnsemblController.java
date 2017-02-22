@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.EfoColourMap;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.pussycat.layout.ColourMapper;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +51,9 @@ public class EnsemblController {
 
     @Value("${ols.shortForm}")
     private String olsShortForm;
+
+//    @Value("${ols.return.type}")
+//    private String olsReturnType;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -94,13 +99,21 @@ public class EnsemblController {
     @RequestMapping(value = "/api/parentMapping/{efoTerm}",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<EfoColourMap> getColourMapping(@PathVariable String efoTerm) throws IOException {
+    public HttpEntity getColourMapping(@PathVariable String efoTerm, HttpServletResponse response) throws IOException {
 
         Map<String, String> ancestors = getAncestors(efoTerm);
 
-        EfoColourMap colour = getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label"));
+        if(ancestors.get("error") == null) {
 
-        return new ResponseEntity<EfoColourMap>(colour, HttpStatus.OK);
+            EfoColourMap colour =
+                    getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label"));
+            return new ResponseEntity<EfoColourMap>(colour, HttpStatus.OK);
+
+        }
+        else {
+            throw new NullPointerException("Term " + efoTerm + " not found in EFO");
+
+        }
     }
 
     @CrossOrigin
@@ -113,7 +126,9 @@ public class EnsemblController {
 
         for(String efoTerm : efoTerms) {
             Map<String, String> ancestors = getAncestors(efoTerm);
-            colours.add(getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label")));
+            if(ancestors.get("error") == null) {
+                colours.add(getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label")));
+            }
         }
 
         return new ResponseEntity<List<EfoColourMap>>(colours, HttpStatus.OK);
@@ -133,22 +148,35 @@ public class EnsemblController {
 
 
         RestTemplate restTemplate = new RestTemplate();
-        String efoObject = restTemplate.getForObject(uri, String.class);
+        String efoObject = null;
+        try{
+           efoObject  = restTemplate.getForObject(uri, String.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(efoObject);
-        JsonNode responseNode = node.get("_embedded").get("terms").get(0);
-        String ancestors_link = responseNode.get("_links").get("hierarchicalAncestors").get("href").asText().trim();
-        ancestors_link = java.net.URLDecoder.decode(ancestors_link, "UTF-8");
+        }
+        catch (HttpClientErrorException ex){
+//            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                result.put("error", "Term ".concat(efoTerm).concat(" not found in EFO"));
+//            }
+        }
 
-        String label = responseNode.get("label").asText().trim();
-        String iri = responseNode.get("iri").asText().trim();
 
-        String ancestorsObject = restTemplate.getForObject(ancestors_link, String.class);
 
-        result.put("iri", iri);
-        result.put("label", label);
-        result.put("ancestors", ancestorsObject);
+        if(efoObject != null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(efoObject);
+            JsonNode responseNode = node.get("_embedded").get("terms").get(0);
+            String ancestors_link = responseNode.get("_links").get("hierarchicalAncestors").get("href").asText().trim();
+            ancestors_link = java.net.URLDecoder.decode(ancestors_link, "UTF-8");
+
+            String label = responseNode.get("label").asText().trim();
+            String iri = responseNode.get("iri").asText().trim();
+
+            String ancestorsObject = restTemplate.getForObject(ancestors_link, String.class);
+
+            result.put("iri", iri);
+            result.put("label", label);
+            result.put("ancestors", ancestorsObject);
+        }
         return result;
     }
 
