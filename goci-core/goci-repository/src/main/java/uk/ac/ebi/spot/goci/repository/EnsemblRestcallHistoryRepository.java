@@ -18,4 +18,6 @@ import java.util.Collection;
 @RepositoryRestResource(exported = false)
 public interface EnsemblRestcallHistoryRepository extends JpaRepository<EnsemblRestcallHistory, Long> {
 
+    Collection<EnsemblRestcallHistory> findByRequestTypeAndEnsemblParamAndEnsemblVersion(String requestType, String ensemblParam, String ensemblVersion);
+
 }

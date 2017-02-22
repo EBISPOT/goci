@@ -151,6 +151,7 @@ public class EnsemblRestService {
             throws UnirestException, InterruptedException, EnsemblRestIOException {
 
         RestResponseResult restResponseResult = new RestResponseResult();
+        restResponseResult.setUrl(url);
 
         // Parameters to monitor API call success
         int maxTries = 5;

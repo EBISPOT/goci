@@ -11,12 +11,18 @@ import com.mashape.unirest.http.JsonNode;
  */
 public class RestResponseResult {
 
+    private String url;
+
     private String error;
 
     private JsonNode restResult;
 
     public RestResponseResult() {
     }
+
+    public String getUrl() { return url; }
+
+    public void setUrl(String url) { this.url = url; }
 
     public String getError() {
         return error;

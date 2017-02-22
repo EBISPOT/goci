@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
+import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
@@ -49,6 +50,7 @@ public class MappingService {
     private EnsemblMappingPipeline ensemblMappingPipeline;
     private TrackingOperationService trackingOperationService;
     private SecureUserRepository secureUserRepository;
+    private EnsemblRelease ensemblRelease;
 
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -66,7 +68,8 @@ public class MappingService {
                           SingleNucleotidePolymorphismQueryService singleNucleotidePolymorphismQueryService,
                           EnsemblMappingPipeline ensemblMappingPipeline,
                           @Qualifier("associationTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
-                          SecureUserRepository secureUserRepository) {
+                          SecureUserRepository secureUserRepository,
+                          EnsemblRelease ensemblRelease) {
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
         this.snpLocationMappingService = snpLocationMappingService;
         this.snpGenomicContextMappingService = snpGenomicContextMappingService;
@@ -76,8 +79,22 @@ public class MappingService {
         this.ensemblMappingPipeline = ensemblMappingPipeline;
         this.trackingOperationService = trackingOperationService;
         this.secureUserRepository = secureUserRepository;
+        this.ensemblRelease = ensemblRelease;
     }
 
+
+    private String getEnsemblRelease() {
+        String eRelease;
+
+        try {
+            eRelease = String.valueOf(ensemblRelease.getReleaseVersion());
+        }catch (Exception exception) {
+            //getReleaseVersion can throw EnsemblRestIOException, but any exceptions should not block the mapping.
+            eRelease = null;
+        }
+
+        return eRelease;
+    }
 
     /**
      * Perform validation and mapping of association
@@ -89,9 +106,9 @@ public class MappingService {
     @Transactional(rollbackFor = EnsemblMappingException.class)
     public void validateAndMapAssociation(Association association, String performer, SecureUser user)
             throws EnsemblMappingException {
-
+        String eRelease = this.getEnsemblRelease();
         try {
-            doMapping(association);
+            doMapping(association, eRelease);
 
             // Update mapping event
             trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
@@ -117,10 +134,10 @@ public class MappingService {
 
         // Default mapping user
         SecureUser user = secureUserRepository.findByEmail("automatic_mapping_process");
-
+        String eRelease = this.getEnsemblRelease();
         try {
             for (Association association : associations) {
-                doMapping(association);
+                doMapping(association, eRelease);
 
                 // Update mapping event
                 trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
@@ -135,7 +152,7 @@ public class MappingService {
         }
     }
 
-    private void doMapping(Association association) throws EnsemblMappingException {
+    private void doMapping(Association association, String eRelease) throws EnsemblMappingException {
 
         getLog().info("Mapping association: " + association.getId());
 
@@ -176,7 +193,7 @@ public class MappingService {
                 try {
                     getLog().debug("Running mapping....");
                     ensemblMappingResult =
-                            ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp);
+                            ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp, eRelease);
                 }
                 catch (Exception e) {
                     getLog().error("Encountered a " + e.getClass().getSimpleName() +
