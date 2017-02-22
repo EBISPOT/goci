@@ -52,8 +52,6 @@ public class EnsemblController {
     @Value("${ols.shortForm}")
     private String olsShortForm;
 
-//    @Value("${ols.return.type}")
-//    private String olsReturnType;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -154,9 +152,7 @@ public class EnsemblController {
 
         }
         catch (HttpClientErrorException ex){
-//            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 result.put("error", "Term ".concat(efoTerm).concat(" not found in EFO"));
-//            }
         }
 
 
