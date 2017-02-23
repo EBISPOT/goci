@@ -12,6 +12,9 @@ var EPMC = "http://www.europepmc.org/abstract/MED/";
 var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
 var ENSVAR = "http://www.ensembl.org/Homo_sapiens/Variation/";
 var DBSNP  = "http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs=";
+var UCSC   = "https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches=";
+var ENS_SHARE_LINK = 'Variant_specific_location_link/97NKbgkp09vPRy1xXwnqG1x6KGgQ8s7S';
+var CONTEXT_RANGE = 500;
 
 var list_min = 5;
 
@@ -54,7 +57,7 @@ function processVariantData(data,rsId) {
         // Variant summary panel
         getVariantInfo(data.docs);
         // External links panel
-        getLinkButtons(rsId);
+        getLinkButtons(data.docs,rsId);
         // Associations table
         getVariantAssociations(data.docs);
         // Studies table
@@ -420,16 +423,27 @@ function getSummary(data) {
 }
 
 // Create external link buttons
-function getLinkButtons (rsId) {
+function getLinkButtons (data,rsId) {
+    var data_sample = data[0];
+    var chr = data_sample.chromosomeName[0];
+    var pos = data_sample.chromosomePosition[0];
+    var pos_start = pos - CONTEXT_RANGE;
+    if (pos_start < 1) {
+        pos_start = 1;
+    }
+    var pos_end = pos + CONTEXT_RANGE;
+    var location = chr+':'+pos_start+'-'+pos_end;
+    var ens_g_context = 'http://www.ensembl.org/Homo_sapiens/Location/View?db=core;r='+location+';v='+rsId+';share_config='+ENS_SHARE_LINK;
+
     // Summary panel
     $("#ensembl_button").attr('onclick',     "window.open('"+ENSVAR+"Explore?v="+rsId+"',    '_blank')");
-    $("#ensembl_gc_button").attr('onclick',  "window.open('"+ENSVAR+"Context?v="+rsId+"',    '_blank')");
+    $("#ensembl_gc_button").attr('onclick',  "window.open('"+ens_g_context+"',               '_blank')");
     $("#ensembl_phe_button").attr('onclick', "window.open('"+ENSVAR+"Phenotype?v="+rsId+"',  '_blank')");
     $("#ensembl_gr_button").attr('onclick',  "window.open('"+ENSVAR+"Mappings?v="+rsId+"',   '_blank')");
     $("#ensembl_pg_button").attr('onclick',  "window.open('"+ENSVAR+"Population?v="+rsId+"', '_blank')");
     $("#ensembl_cit_button").attr('onclick', "window.open('"+ENSVAR+"Citations?v="+rsId+"',  '_blank')");
-    $("#dbsnp_button").attr('onclick', "window.open('"+DBSNP+rsId+"', '_blank')");
-    $("#ucsc_button").attr('onclick', "window.open('https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches="+rsId+"', '_blank')");
+    $("#dbsnp_button").attr('onclick',       "window.open('"+DBSNP+rsId+"',                  '_blank')");
+    $("#ucsc_button").attr('onclick',        "window.open('"+UCSC+rsId+"',                   '_blank')");
     // LD
     $("#ens_ld_button").attr('onclick',  "window.open('"+ENSVAR+"HighLD?v="+rsId+"', '_blank')");
 }
