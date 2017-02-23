@@ -6,7 +6,12 @@
 
 <div th:fragment="navbar">
 <nav class="navbar navbar-inverse navbar-fixed-top" >
+
     <div class="container">
+        <div id="beta-icon" style="display: none">
+            <img
+                    th:src="@{/icons/beta-icon.png}"/>
+        </div>
         <div class="navbar-header">
             <button type="button"
                     class="navbar-toggle collapsed"
@@ -57,6 +62,7 @@
 </nav>
 </div>
 
+
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div th:fragment="jumbotron">
 <div class="jumbotron background-color-primary-accent"  th:fragment="jumbotron">
@@ -90,7 +96,11 @@
         </div>
     </div>
 </div>
+
 </div>
+
+
+
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci;
+package uk.ac.ebi.spot.goci.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
