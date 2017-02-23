@@ -456,7 +456,7 @@ function setStats(data) {
         $('#releasedate-stat').text("Last data release on " + data.date);
         $('#studies-stat').text(data.studies + " publications");
         $('#snps-stat').text(data.snps + " SNPs");
-        $('#associations-stat').text(data.associations + " SNP-trait associations");
+        $('#associations-stat').text(data.associations + " unique SNP-trait associations");
         $('#genomebuild').text("Genome assembly " + data.genebuild);
         $('#dbsnpbuild').text("dbSNP Build " + data.dbsnpbuild);
         $('#ensemblbuild').text("Ensembl Build " + data.ensemblbuild);
