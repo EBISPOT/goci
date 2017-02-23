@@ -16,6 +16,9 @@ var DBSNP  = "http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs=";
 var list_min = 5;
 
 $(document).ready(function() {
+    if(window.location.pathname.indexOf("beta") != -1){
+        $('#beta-icon').show();
+    }
     var searchTerm = $('#query').text();
     console.log("Loading search module!");
     console.log("rsID: "+searchTerm);
