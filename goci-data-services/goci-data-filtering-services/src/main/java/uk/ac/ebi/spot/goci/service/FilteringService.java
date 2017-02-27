@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.FilterAssociation;
 
@@ -15,6 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class FilteringService {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     public Map<String, List<FilterAssociation>> groupByChromosomeName(List<FilterAssociation> associations){
 
@@ -43,7 +50,7 @@ public class FilteringService {
 
         List<FilterAssociation> filtered = new ArrayList<>();
         byBPLocation.forEach((chromName, associations) -> {
-            System.out.println("Processing chromosome " + chromName + " with " + associations.size() + " associations");
+            getLog().info("Processing chromosome " + chromName + " with " + associations.size() + " associations");
 
             if(associations.size() == 1 && associations.get(0).getPvalueExponent() < -5){
                 associations.get(0).setIsTopAssociation(true);

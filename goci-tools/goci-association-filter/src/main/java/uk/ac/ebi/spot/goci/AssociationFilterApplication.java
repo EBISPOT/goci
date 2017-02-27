@@ -15,7 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
+import uk.ac.ebi.spot.goci.service.DataImportExportService;
 import uk.ac.ebi.spot.goci.service.FilterDataProcessingService;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class AssociationFilterApplication {
     private static Double threshold = 1e-5;
 
     @Autowired
-    private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
+    private DataImportExportService dataImportExportService;
 
     @Autowired
     private FilterDataProcessingService filterDataProcessingService;
@@ -64,6 +64,7 @@ public class AssociationFilterApplication {
             else {
                 // could not parse arguments, exit with exit code >1 (depending on parsing problem)
                 System.err.println("Failed to parse supplied arguments");
+                getLog().error("Failed to parse supplied arguments");
                 System.exit(1 + parseArgs);
             }
             System.out.println("Filtering complete");
@@ -167,11 +168,11 @@ public class AssociationFilterApplication {
     private void doFiltering(File inputFile, File outputFile) {
         try {
             getLog().info("Reading input file");
-            String[][] data = catalogSpreadsheetExporter.readFromFile(inputFile);
+            String[][] data = dataImportExportService.readFromFile(inputFile);
             getLog().info("Input file processed, starting data transformation and filtering process");
             String[][] transformAssocations = filterDataProcessingService.filterInputData(data, threshold, prune);
             getLog().info("Exporting filtered data to file");
-            catalogSpreadsheetExporter.writeToFile(transformAssocations, outputFile);
+            dataImportExportService.writeToFile(transformAssocations, outputFile);
         }
 //        catch (IOException e) {
 //            e.printStackTrace();

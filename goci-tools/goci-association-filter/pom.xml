@@ -38,9 +38,9 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-               <dependency>
-            <groupId>uk.ac.ebi.spot</groupId>
-            <artifactId>goci-utils</artifactId>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
