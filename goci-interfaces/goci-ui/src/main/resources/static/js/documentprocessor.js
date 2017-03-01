@@ -39,8 +39,8 @@ function processStudy(study, table) {
 
     if(fullpvalset == 1) {
 
-        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/'"
-               .concat(study.pubmedId).concat(" target='_blank'</a>");
+        var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/"
+               .concat(study.pubmedId).concat("' target='_blank'</a>");
 
         pvalueflag = ftplink.concat("<span class='glyphicon glyphicon-signal clickable context-help'" +
                         " data-toggle='tooltip'" +
