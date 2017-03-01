@@ -42,3 +42,7 @@ http://www.ncbi.nlm.nih.gov/Genbank/[GenBank]
 http://www.ncbi.nlm.nih.gov/sites/entrez/[PubMed]
 
 http://www.ncbi.nlm.nih.gov/gap/PheGenIUCSC[Phenotype-Genotype Integrator]
+
+
+=== GWAS tools & data services
+https://bio.tools/?page=1&q=GWAS%20study&sort=score&ord=desc[Elixir Tools and Data Services Registry]
