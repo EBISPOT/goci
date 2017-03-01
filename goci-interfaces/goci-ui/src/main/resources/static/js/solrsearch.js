@@ -31,13 +31,6 @@ $(document).ready(function() {
     //                                      });
 
 
-    $('body').tooltip({
-                          selector: '[data-toggle="tooltip"]'
-                      });
-    $('[data-toggle="tooltip"]').tooltip({
-                                   container: 'body'
-                               });
-
     if (window.history && window.history.pushState) {
         $(window).on('popstate', function() {
             applyFacet();

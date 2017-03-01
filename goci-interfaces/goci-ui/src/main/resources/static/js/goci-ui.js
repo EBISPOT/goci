@@ -29,6 +29,14 @@ $(document).ready(function() {
                           setStats(stats);
                       });
     }
+
+    $('body').tooltip({
+                          selector: '[data-toggle="tooltip"]'
+                      });
+    $('[data-toggle="tooltip"]').tooltip({
+                                             container: 'body'
+                                         });
+
 });
 
 
