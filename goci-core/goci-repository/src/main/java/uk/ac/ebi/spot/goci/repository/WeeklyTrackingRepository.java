@@ -76,11 +76,36 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
     List<Object> findAllWeekStatsByStatus();
 
 
-    @Query(value = "select min(wt.year), min(wt.week) from weekly_tracking wt  where status like '%queue%'",
-            nativeQuery = true)
+    @Query(value = "select  res.year, res.week from  (select wt.year, wt.week from weekly_tracking wt  where status like '%queue%' order by year asc , week asc ) res where ROWNUM <= 1",
+           nativeQuery = true)
     ArrayList<Object[]> getMinYearWeek();
 
     List<WeeklyTracking> findByStatusAndYearAndWeek(String status, Integer year, Integer week);
+
+    @Query(value = "select wt.study_id from weekly_tracking wt where status = 'Creation Study' and year < 2016 " +
+            " minus select wt.study_id from weekly_tracking wt where year < 2016 " +
+            " and status = 'Publication Study'",
+            nativeQuery = true
+    )
+    HashSet<Long> findBase();
+
+
+    @Query(value = " select we.* from weekly_tracking we where study_id in " +
+            " (select wt.study_id from weekly_tracking wt where status = 'In level 1 queue' and year = 2015 " +
+            " minus " +
+            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 2 queue','In level 3 queue','Publication Study') and year = 2015) ",
+            nativeQuery = true
+    )
+    List<WeeklyTracking> find2016QueueLevel1();
+
+
+    @Query(value = " select we.* from weekly_tracking we where study_id in " +
+            " (select wt.study_id from weekly_tracking wt where status = 'In level 2 queue' and year = 2015 " +
+            " minus " +
+            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 3 queue','Publication Study') and year = 2015) ",
+            nativeQuery = true
+    )
+    List<WeeklyTracking> find2016QueueLevel2();
 
 
     @Query(value = "select wt.study_id from weekly_tracking wt where wt.status = :status and week = :week and year = :year", nativeQuery = true)

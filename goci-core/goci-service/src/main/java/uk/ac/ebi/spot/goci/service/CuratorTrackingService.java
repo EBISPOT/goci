@@ -29,8 +29,7 @@ public class CuratorTrackingService {
 
     }
 
-
-    protected void createCuratorTracking(StudyTrackingView entry, Study study, Date eventDate, String curator, String levelCuration) {
+    public void createCuratorTracking(StudyTrackingView entry, Study study, Date eventDate, String curator, String levelCuration) {
 
         CuratorTracking curatorEntry = new CuratorTracking();
         Calendar calendar;

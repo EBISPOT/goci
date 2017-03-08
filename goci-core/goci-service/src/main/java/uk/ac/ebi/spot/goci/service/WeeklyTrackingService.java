@@ -4,6 +4,7 @@ package uk.ac.ebi.spot.goci.service;
  * Created by cinzia on 15/12/2016.
  */
 
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -18,40 +19,33 @@ import java.util.*;
 public class WeeklyTrackingService {
     private WeeklyTrackingRepository weeklyTrackingRepository;
 
-
     @Autowired
     public WeeklyTrackingService (WeeklyTrackingRepository weeklyTrackingRepository) {
         this.weeklyTrackingRepository = weeklyTrackingRepository;
     }
 
 
-    public Calendar getCalendarDate(Date eventSQLDate) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(eventSQLDate);
-        return calendar;
-    }
-
-
-    public WeeklyTracking createWeeklyTracking(StudyTrackingView item, Study study, Date eventDate, String status) {
+    public WeeklyTracking createWeeklyTracking(StudyTrackingView item, Study study,
+                                               Date eventDate,  Calendar eventCalendarDate,
+                                               String status) {
         WeeklyTracking weeklyTracking = new WeeklyTracking();
-        Calendar calendar;
-
         weeklyTracking.setPubmedId(item.getPubmedId());
         weeklyTracking.setStudy(study);
         weeklyTracking.setEventDate(eventDate);
-        calendar = getCalendarDate(eventDate);
-        // The week is from On Sunday to on Sat. We do some jobs on Sunday.
-        calendar.add(Calendar.DATE, 1);
-        weeklyTracking.setWeek(calendar.get(Calendar.WEEK_OF_YEAR));
-        weeklyTracking.setYear(calendar.get(Calendar.YEAR));
+        // The week is from On Sunday to on Sat. JMorales.
+        eventCalendarDate.add(Calendar.DATE, 1);
+        weeklyTracking.setWeek(eventCalendarDate.get(Calendar.WEEK_OF_YEAR));
+        weeklyTracking.setYear(eventCalendarDate.get(Calendar.YEAR));
         weeklyTracking.setStatus(status);
 
         return weeklyTracking;
     }
 
 
-    public WeeklyTracking createAndSaveWeeklyTracking(StudyTrackingView item, Study study, Date eventDate, String status) {
-        WeeklyTracking newWeeklyTracking = createWeeklyTracking(item, study, eventDate, status);
+    public WeeklyTracking createAndSaveWeeklyTracking(StudyTrackingView item, Study study,
+                                                      Date eventDate, Calendar eventCalendarDate,
+                                                      String status) {
+        WeeklyTracking newWeeklyTracking = createWeeklyTracking(item, study, eventDate, eventCalendarDate, status);
         weeklyTrackingRepository.save(newWeeklyTracking);
 
         return newWeeklyTracking;
@@ -78,6 +72,10 @@ public class WeeklyTrackingService {
     public void deleteAll() { weeklyTrackingRepository.deleteAll();}
 
     public List<WeeklyTracking> findAll() { return weeklyTrackingRepository.findAll(); }
+
+    public List<WeeklyTracking> find2016QueueLevel1() { return weeklyTrackingRepository.find2016QueueLevel1(); }
+
+    public List<WeeklyTracking> find2016QueueLevel2() { return weeklyTrackingRepository.find2016QueueLevel2(); }
 
 
     public void deleteByStudy(Study study) {
