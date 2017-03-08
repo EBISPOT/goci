@@ -27,7 +27,6 @@ import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -37,6 +36,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.service.AssociationTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.service.ErrorCreationService;
+import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 

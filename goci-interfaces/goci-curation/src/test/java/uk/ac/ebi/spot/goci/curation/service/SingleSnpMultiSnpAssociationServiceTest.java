@@ -25,6 +25,7 @@ import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.GenomicContextRepository;
+import uk.ac.ebi.spot.goci.service.LociAttributesService;
 
 import java.util.Arrays;
 import java.util.Collection;

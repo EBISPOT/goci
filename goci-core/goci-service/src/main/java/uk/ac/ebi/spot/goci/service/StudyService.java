@@ -283,4 +283,9 @@ public class StudyService {
             }
         }
     }
+
+//convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time
+    public void deleteByStudyId(Long studyId){
+        studyRepository.delete(studyId);
+    }
 }

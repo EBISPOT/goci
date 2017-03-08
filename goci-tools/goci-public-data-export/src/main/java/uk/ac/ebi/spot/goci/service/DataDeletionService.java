@@ -4,13 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.LocusRepository;
-import uk.ac.ebi.spot.goci.repository.RiskAlleleRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,17 +26,25 @@ public class DataDeletionService {
     }
 
     private StudyService studyService;
-    private StudyRepository studyRepository;
+    private AncestryRepository ancestryRepository;
+    private CuratorTrackingService curatorTrackingService;
+    private WeeklyTrackingService weeklyTrackingService;
+    private LociAttributesService lociAttributesService;
+    private AssociationService associationService;
 
     @Autowired
     public DataDeletionService(StudyService studyService,
-                               StudyRepository studyRepository,
                                AncestryRepository ancestryRepository,
-                               AssociationRepository associationRepository,
-                               LocusRepository locusRepository,
-                               RiskAlleleRepository riskAlleleRepository){
+                               CuratorTrackingService curatorTrackingService,
+                               WeeklyTrackingService weeklyTrackingService,
+                               LociAttributesService lociAttributesService,
+                               AssociationService associationService){
         this.studyService = studyService;
-        this.studyRepository = studyRepository;
+        this.ancestryRepository = ancestryRepository;
+        this.curatorTrackingService = curatorTrackingService;
+        this.weeklyTrackingService = weeklyTrackingService;
+        this.lociAttributesService = lociAttributesService;
+        this.associationService = associationService;
     }
 
     public void deleteNonPublicStudies(){
@@ -60,9 +67,39 @@ public class DataDeletionService {
                                + study.getAssociations().size() + "\t association and \t"
                                 + study.getAncestries().size() + "\t ancestries");
 
-        studyRepository.delete(study);
+
+        Collection<Association> associations = study.getAssociations();
+
+        associations.forEach(this::deleteAssociation);
+
+        Collection<Ancestry> ancestries = ancestryRepository.findByStudyId(study.getId());
+
+        for (Ancestry ancestry : ancestries) {
+            ancestryRepository.delete(ancestry);
+        }
+
+        // Delete the curatorTracking rows related
+        curatorTrackingService.deleteByStudy(study);
+
+        // Delete the weeklyTracking rows related
+        weeklyTrackingService.deleteByStudy(study);
+
+        // Delete study
+        studyService.deleteByStudyId(study.getId());
+
 
     }
+
+    public void deleteAssociation(Association association) {
+
+        getLog().info("Deleting association ".concat(String.valueOf(association.getId())));
+        //delete all the loci and risk alleles that are dependent on this association
+        lociAttributesService.deleteLocusAndRiskAlleles(association);
+
+        // Delete association
+         associationService.deleteByAssociationId(association.getId());
+    }
+
 
 
 }

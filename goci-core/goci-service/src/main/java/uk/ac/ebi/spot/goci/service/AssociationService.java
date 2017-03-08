@@ -251,4 +251,9 @@ public class AssociationService {
                                "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
                                "mapped to " + mappedGenes.size() + " genes.");
     }
+
+//convenience method for when an already loaded & modified association needs to be deleted - this method lazy-loads the association from scratch at deletion time
+    public void deleteByAssociationId(Long associationId){
+        associationRepository.delete(associationId);
+    }
 }

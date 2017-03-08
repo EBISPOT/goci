@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.repository.GeneRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
 import uk.ac.ebi.spot.goci.repository.RiskAlleleRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
+import uk.ac.ebi.spot.goci.service.LociAttributesService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
