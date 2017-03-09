@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ebi.spot.goci.curation.component.StatsReportExcelView;
+import uk.ac.ebi.spot.goci.curation.service.StudyTrackingViewService;
 import uk.ac.ebi.spot.goci.curation.service.reports.WeeklyProgressReportService;
 import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
-import uk.ac.ebi.spot.goci.service.StudyTrackingViewService;
+import uk.ac.ebi.spot.goci.service.SQLDateUtilityService;
 import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.*;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ public class StatsController {
     private CuratorTrackingService curatorTrackingService;
     private WeeklyTrackingService weeklyTrackingService;
     private WeeklyProgressReportService weeklyProgressReportService;
+    private SQLDateUtilityService sqlDateUtilityService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -44,15 +47,17 @@ public class StatsController {
     }
 
     @Autowired
-    public StatsController(StudyTrackingViewService studyTrackingViewService,
-                           CuratorTrackingService curatorTrackingService,
-                           WeeklyTrackingService weeklyTrackingService,
-                           WeeklyProgressReportService weeklyProgressReportService) {
+    public StatsController( StudyTrackingViewService studyTrackingViewService,
+                            CuratorTrackingService curatorTrackingService,
+                            WeeklyTrackingService weeklyTrackingService,
+                            WeeklyProgressReportService weeklyProgressReportService,
+                            SQLDateUtilityService sqlDateUtilityService) {
 
         this.studyTrackingViewService = studyTrackingViewService;
         this.weeklyTrackingService = weeklyTrackingService;
         this.curatorTrackingService = curatorTrackingService;
         this.weeklyProgressReportService = weeklyProgressReportService;
+        this.sqlDateUtilityService =sqlDateUtilityService;
     }
 
 
@@ -64,10 +69,10 @@ public class StatsController {
     @RequestMapping(value = "/generateStats", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String generateWeeklyReport() {
-        getLog().info("Start process generateStats");
+        getLog().info("Truncate weekly_tracking and curator_tracking");
         weeklyTrackingService.deleteAll();
         curatorTrackingService.deleteAll();
-        getLog().info("Delete tables done");
+        getLog().info("Truncate done!");
 
         studyTrackingViewService.generateReport();
         return "{\"success\":1}";
@@ -78,29 +83,21 @@ public class StatsController {
     @RequestMapping(value = "/downloadStatsExcel", method = RequestMethod.GET)
     public ModelAndView getMyData(HttpServletRequest request, HttpServletResponse response) throws SQLException {
         Map<String, Object> model = new HashMap<String, Object>();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DATE, 1);
+        List<Integer> lastWeekYear = sqlDateUtilityService.getLastWeekStats();
 
-        int lastWeek = calendar.get(Calendar.WEEK_OF_YEAR) - 1;
-        int year = calendar.get(Calendar.YEAR);
-
-        if (lastWeek == 0) {
-            lastWeek = 52;
-            year = year-1;
-        }
+        int week = lastWeekYear.get(0);
+        int year = lastWeekYear.get(1);
 
         ArrayList<Integer[]> progressiveQueues = weeklyProgressReportService.calculateProgressiveQueues();
         model.put("progressiveQueues", progressiveQueues);
 
-
         List<Object> reportWeekly = weeklyTrackingService.findAllWeekStatsReport();
         model.put("reportWeekly", reportWeekly);
 
-
-        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(year, lastWeek);
-
+        List<Object> curatorsStatsByWeek = curatorTrackingService.statsByWeek(year, week);
         model.put("curatorsStatsByWeek", curatorsStatsByWeek);
-        String period = Integer.toString(lastWeek) + "/" + Integer.toString(year);
+
+        String period = Integer.toString(week) + "/" + Integer.toString(year);
         model.put("periodStatsByWeek", period);
 
         List<String> curators = curatorTrackingService.findAllCurators();

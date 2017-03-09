@@ -108,18 +108,18 @@ function InitChart() {
             .attr("cx", function(d) { return xScale(d[0]); })
             .attr("cy", function(d) { return yScale(d[1]); });
 
-        vis.append('svg:path')
-            .attr('d', lineGen(level3))
-            .attr('stroke', 'orange')
-            .attr('stroke-width', 2)
-            .attr('fill', 'none');
+       //vis.append('svg:path')
+       //     .attr('d', lineGen(level3))
+       //     .attr('stroke', 'orange')
+       //      .attr('stroke-width', 2)
+       //     .attr('fill', 'none');
 
-        vis.selectAll("dot")
-            .data(level3)
-            .enter().append("circle")
-            .attr("r", 2.3).style("fill", "orange")
-            .attr("cx", function(d) { return xScale(d[0]); })
-            .attr("cy", function(d) { return yScale(d[1]); });
+       // vis.selectAll("dot")
+       //     .data(level3)
+       //     .enter().append("circle")
+       //     .attr("r", 2.3).style("fill", "orange")
+       //     .attr("cx", function(d) { return xScale(d[0]); })
+       //     .attr("cy", function(d) { return yScale(d[1]); });
 
         var legend = vis.append("g")
             .attr("class", "legend")
@@ -158,20 +158,20 @@ function InitChart() {
             .style("fill", "blue")
             .text("Level 2");
 
-        legend.append("g").append("rect")
-            .attr("x", WIDTH - 65)
-            .attr("y", 3*25)
-            .attr("width", 10)
-            .attr("height", 10)
-            .style("fill", "orange");
+        //legend.append("g").append("rect")
+        //    .attr("x", WIDTH - 65)
+        //    .attr("y", 3*25)
+        //    .attr("width", 10)
+        //    .attr("height", 10)
+        //    .style("fill", "orange");
 
-        legend.append("g").append("text")
-            .attr("x", WIDTH - 50)
-            .attr("y", 3 * 25 + 8)
-            .attr("height",30)
-            .attr("width",100)
-            .style("fill", "orange")
-            .text("Level 3");
+        //legend.append("g").append("text")
+        //    .attr("x", WIDTH - 50)
+        //    .attr("y", 3 * 25 + 8)
+        //    .attr("height",30)
+        //    .attr("width",100)
+        //    .style("fill", "orange")
+        //    .text("Level 3");
 
 
 

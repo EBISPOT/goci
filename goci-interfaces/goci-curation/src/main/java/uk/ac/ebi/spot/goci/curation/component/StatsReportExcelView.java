@@ -189,6 +189,8 @@ public class StatsReportExcelView extends AbstractXlsxView
         sheetMainHeader.getCell(3).setCellStyle(style);
         sheetMainHeader.createCell(4).setCellValue("In level 3 queue");
         sheetMainHeader.getCell(4).setCellStyle(style);
+        sheetMainHeader.createCell(5).setCellValue("Published");
+        sheetMainHeader.getCell(5).setCellStyle(style);
 
         int currentRow = 0;
         short currentColumn = 0;
