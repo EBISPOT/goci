@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
-import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
 import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
@@ -42,6 +41,7 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
+import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -54,6 +54,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,7 +66,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.validation.BindingResult;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by emma on 06/01/15.
@@ -98,6 +104,7 @@ public class AssociationController {
     private AssociationDeletionService associationDeletionService;
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+    private StudyFileService studyFileService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -120,7 +127,8 @@ public class AssociationController {
                                  AssociationValidationReportService associationValidationReportService,
                                  AssociationDeletionService associationDeletionService,
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
-                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService) {
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
+                                 StudyFileService studyFileService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -136,6 +144,7 @@ public class AssociationController {
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
+        this.studyFileService = studyFileService;
     }
 
     /*  Study SNP/Associations */
@@ -189,40 +198,78 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/upload",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file,
-                                  @PathVariable Long studyId,
-                                  Model model,
-                                  HttpServletRequest request) throws IOException {
+    public Callable<String> uploadStudySnps(@RequestParam("file") MultipartFile file,
+                                            @PathVariable Long studyId,
+                                            Model model,
+                                            HttpServletRequest request,
+                                            HttpSession session) throws IOException {
 
         // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        List<AssociationUploadErrorView> fileErrors = null;
-        List<AssociationUploadErrorView> xlsErrors = null;
-        try {
-            fileErrors =
-                    associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
-        }
-        catch (EnsemblMappingException e) {
-            return "ensembl_mapping_failure";
-        }
+        session.setAttribute("done", false);
 
-        if (fileErrors != null && !fileErrors.isEmpty()) {
-            // Split
-            getLog().error("Errors found in file: " + file.getOriginalFilename());
+        model.addAttribute("study", studyRepository.findOne(studyId));
 
-            // Split the general collection of errors in two different structures. For view purpose.
-            xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
-            model.addAttribute("fileName", file.getOriginalFilename());
-            model.addAttribute("fileErrors", fileErrors);
-            model.addAttribute("xlsErrors", xlsErrors);
+        SecureUser user =  currentUserDetailsService.getUserFromRequest(request);
 
-            return "error_pages/association_file_upload_error";
-        }
-        else {
-            return "redirect:/studies/" + studyId + "/associations";
-        }
+
+        // Return view
+        return () -> {
+            try {
+                studyFileService.upload(file, studyId);
+                studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
+
+//                uploadExecutorService.execute(new Runnable() {
+//                    @Override public void run() {
+//                        try {
+//                            performUpload(model, session, file.getOriginalFilename(), user, studyId);
+//                        }
+//                        catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+
+                model.addAttribute("status", "201");
+                model.addAttribute("uploadProgress", "true");
+
+                performUpload(model, session, file.getOriginalFilename(), user, studyId);
+
+                return "redirect:/studies/" + studyId + "/associations";
+            }
+            catch (FileUploadException | IOException e) {
+                getLog().error("File upload exception", e);
+                return "error_pages/study_file_upload_failure";
+            }
+        };
+
+//        List<AssociationUploadErrorView> fileErrors = null;
+//        List<AssociationUploadErrorView> xlsErrors = null;
+//        try {
+//            fileErrors =
+//                    associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
+//        }
+//        catch (EnsemblMappingException e) {
+//            return "ensembl_mapping_failure";
+//        }
+//
+//        if (fileErrors != null && !fileErrors.isEmpty()) {
+//            // Split
+//            getLog().error("Errors found in file: " + file.getOriginalFilename());
+//
+//            // Split the general collection of errors in two different structures. For view purpose.
+//            xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
+//            model.addAttribute("fileName", file.getOriginalFilename());
+//            model.addAttribute("fileErrors", fileErrors);
+//            model.addAttribute("xlsErrors", xlsErrors);
+//
+//            return "error_pages/association_file_upload_error";
+//        }
+//        else {
+//            return "redirect:/studies/" + studyId + "/associations";
+//        }
     }
 
     // Generate a empty form page to add standard snp
@@ -1338,5 +1385,72 @@ public class AssociationController {
     // Sort options
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
+    }
+
+    private void performUpload(Model model, HttpSession session, String fileName, SecureUser user, Long studyId)
+            throws ExecutionException, InterruptedException {
+
+        System.out.println("Testing multi-threading");
+
+        Callable<Integer> task = () -> {
+
+            System.out.println("Model: " + model.toString());
+            System.out.println("Session: " + session.getId() + " " + session.getCreationTime());
+            System.out.println("Filename: " + fileName);
+            System.out.println("User " + user.getId());
+            System.out.println("Study " + studyId);
+
+            try {
+                boolean done = false;
+                int foo = 0;
+
+                while(!done){
+                    TimeUnit.SECONDS.sleep(1);
+
+                    if(foo == 100){
+                        System.out.println(foo + " done!");
+                        done = true;
+                    }
+                    else{
+                        System.out.println(foo + " not done yet");
+                        foo++;
+                    }
+
+
+                }
+                return 123;
+            }
+            catch (InterruptedException e) {
+                throw new IllegalStateException("task interrupted", e);
+            }
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Future<Integer> future = executor.submit(task);
+
+        System.out.println("future done? " + future.isDone());
+
+        Integer result = future.get();
+
+        System.out.println("future done? " + future.isDone());
+        System.out.print("result: " + result);
+
+
+        try {
+            System.out.println("attempt to shutdown executor");
+            executor.shutdown();
+            executor.awaitTermination(5, TimeUnit.SECONDS);
+        }
+        catch (InterruptedException e) {
+            System.err.println("tasks interrupted");
+        }
+        finally {
+            if (!executor.isTerminated()) {
+                System.err.println("cancel non-finished tasks");
+            }
+            executor.shutdownNow();
+            System.out.println("shutdown finished");
+        }
+
     }
 }
