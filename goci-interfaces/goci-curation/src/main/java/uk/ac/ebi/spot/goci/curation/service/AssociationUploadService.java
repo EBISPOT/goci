@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -82,8 +83,13 @@ public class AssociationUploadService {
         this.trackingOperationService = trackingOperationService;
     }
 
+    @Transactional(readOnly = false)
     public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, SecureUser user)
             throws IOException, EnsemblMappingException {
+
+        if(study.getEvents().size() > 0){
+            System.out.println("The study has events");
+        }
 
         // File errors will contain any validation errors and be returned to controller if any are found
         List<AssociationUploadErrorView> fileErrors = new ArrayList<>();
