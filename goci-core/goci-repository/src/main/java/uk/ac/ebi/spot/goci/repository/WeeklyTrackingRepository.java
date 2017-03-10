@@ -91,9 +91,9 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
 
 
     @Query(value = " select we.* from weekly_tracking we where study_id in " +
-            " (select wt.study_id from weekly_tracking wt where status = 'In level 1 queue' and year = 2015 " +
+            " (select wt.study_id from weekly_tracking wt where status = 'In level 1 queue' and year <= 2015 " +
             " minus " +
-            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 2 queue','In level 3 queue','Publication Study') and year = 2015) " +
+            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 2 queue','In level 3 queue','Publication Study') and year <= 2015) " +
             " and status = 'In level 1 queue' ",
             nativeQuery = true
     )
@@ -101,9 +101,9 @@ public interface WeeklyTrackingRepository extends JpaRepository<WeeklyTracking, 
 
 
     @Query(value = " select we.* from weekly_tracking we where study_id in " +
-            " (select wt.study_id from weekly_tracking wt where status = 'In level 2 queue' and year = 2015 " +
+            " (select wt.study_id from weekly_tracking wt where status = 'In level 2 queue' and year <= 2015 " +
             " minus " +
-            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 3 queue','Publication Study') and year = 2015) " +
+            " select distinct wt.study_id from weekly_tracking wt where status in ('In level 3 queue','Publication Study') and year <= 2015) " +
             " and status = 'In level 2 queue' ",
             nativeQuery = true
     )

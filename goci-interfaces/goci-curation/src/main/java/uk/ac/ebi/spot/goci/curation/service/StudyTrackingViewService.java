@@ -108,7 +108,7 @@ public class StudyTrackingViewService {
                     }
                 }
                 else {
-                    System.out.println("Same date: " + eventDatePublished.toString());
+                    //System.out.println("Same date: " + eventDatePublished.toString());
                 }
             }
             else {
