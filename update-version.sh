@@ -46,6 +46,9 @@ mvn -f $base/pom.xml versions:set -DnewVersion=$VERSION || exit 1
 mvn -f $base/goci-dependencies/pom.xml versions:set -DnewVersion=$VERSION || exit 1
 
 # finally replace version number property in goci-dependencies pom with new version
-sed -i "s/\(<goci.version>\)\([^<]*\)\(<\/goci.version>\)/\1$VERSION\3/g" $base/goci-dependencies/pom.xml || exit 1
-
+#The option -i created a problem. Below an alternative version
+#sed -i "s/\(<goci.version>\)\([^<]*\)\(<\/goci.version>\)/\1$VERSION\3/g" $base/goci-dependencies/pom.xml || exit 1
+echo "Change goci-dependencies/pom.xml"
+cp $base/goci-dependencies/pom.xml $base/goci-dependencies/pom.xml.versionsBackup
+sed "s?<goci.version>.*</goci.version>?<goci.version>$VERSION</goci.version>?" $base/goci-dependencies/pom.xml.versionsBackup > $base/goci-dependencies/pom.xml || exit 1
 
