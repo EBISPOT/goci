@@ -20,19 +20,7 @@ function checkStatus() {
 }
 
 function getResults() {
-    //window.alert("This actually worked!");
 
-    window.location.pathname.replace('uploadResults');
-     //$.ajax({
-     //           url: 'uploadResults',
-     //            dataType: 'html',
-     //            success: function(response) {
-     //                alert(response);
-     //                //window.location.href(response);
-     //                $.html(response);
-     //            },
-     //            error: function(request, status, error) {
-     //                alert(error + ": (" + request.responseText + ")");
-     //            }
-     //       });
+    window.location.replace('uploadResults');
+
 }
