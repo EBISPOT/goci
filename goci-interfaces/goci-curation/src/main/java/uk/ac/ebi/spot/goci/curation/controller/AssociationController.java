@@ -43,7 +43,6 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
-import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -107,7 +106,6 @@ public class AssociationController {
     private AssociationDeletionService associationDeletionService;
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
-    private StudyFileService studyFileService;
 
     private final ExecutorService uploadExecutorService;
 
@@ -132,8 +130,7 @@ public class AssociationController {
                                  AssociationValidationReportService associationValidationReportService,
                                  AssociationDeletionService associationDeletionService,
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
-                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
-                                 StudyFileService studyFileService) {
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -149,7 +146,6 @@ public class AssociationController {
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
-        this.studyFileService = studyFileService;
 
         this.uploadExecutorService = Executors.newFixedThreadPool(4);
 
@@ -226,19 +222,12 @@ public class AssociationController {
         // Return holding screen or error message
         return () -> {
             try {
-//                studyFileService.upload(file, studyId);
-//                studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
-
                 model.addAttribute("status", "201");
                 model.addAttribute("uploadProgress", "true");
-
-//                performUpload(model, session, file.getOriginalFilename(), user, studyId);
                 performUpload(model, session, file, user, studyId);
-
 
                 return "association_upload_progress";
             }
-//            catch (FileUploadException | IOException e) {
             catch (FileUploadException e) {
                 getLog().error("File upload exception", e);
                 return "error_pages/study_file_upload_failure";
@@ -1379,12 +1368,6 @@ public class AssociationController {
                 List<AssociationUploadErrorView> fileErrors = null;
                 List<AssociationUploadErrorView> xlsErrors = null;
 
-//                File storedFile = studyFileService.getFileFromFileName(study.getId(), fileName);
-//                DiskFileItem fileItem = new DiskFileItem("file", "text/plain", false, storedFile.getName(), (int) storedFile.length() , storedFile.getParentFile());
-//                fileItem.getInputStream();
-//                fileItem.getOutputStream();
-//                MultipartFile file = new CommonsMultipartFile(fileItem);
-
                 try {
                     fileErrors = associationUploadService.upload(file, study, user);
                     session.setAttribute("done", true);
@@ -1414,7 +1397,6 @@ public class AssociationController {
 
 
         System.out.println("future done? " + future.isDone());
-//
         Boolean result = null;
 
 
@@ -1422,7 +1404,6 @@ public class AssociationController {
             result = future.get();
 
         }
-//
         System.out.println("future done? " + future.isDone());
         System.out.print("result: " + result);
 
@@ -1448,34 +1429,6 @@ public class AssociationController {
             throw new RuntimeException("Unable to cleanly shutdown ZOOMA.", e);
         }
     }
-
-//    public String processUploadFile(){
-////            List<AssociationUploadErrorView> fileErrors = null;
-////            List<AssociationUploadErrorView> xlsErrors = null;
-////            try {
-////                fileErrors =
-//////                        associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
-////            }
-////            catch (EnsemblMappingException e) {
-////                return "ensembl_mapping_failure";
-////            }
-////
-////            if (fileErrors != null && !fileErrors.isEmpty()) {
-////                // Split
-////                getLog().error("Errors found in file: " + file.getOriginalFilename());
-////
-////                // Split the general collection of errors in two different structures. For view purpose.
-////                xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
-////                model.addAttribute("fileName", file.getOriginalFilename());
-////                model.addAttribute("fileErrors", fileErrors);
-////                model.addAttribute("xlsErrors", xlsErrors);
-////
-////                return "error_pages/association_file_upload_error";
-////            }
-////            else {
-////                return "redirect:/studies/" + studyId + "/associations";
-////            }
-//    }
 
 
     @RequestMapping(value = "/studies/{studyId}/associations/status", method = RequestMethod.GET)
@@ -1529,7 +1482,7 @@ public class AssociationController {
 
         }
         else {
-            return "redirect:/studies/" + studyId + "/associations";
+                return "redirect:/studies/" + studyId + "/associations";
         }
     }
 }

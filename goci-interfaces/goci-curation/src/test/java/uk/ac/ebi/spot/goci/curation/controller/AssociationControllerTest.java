@@ -34,7 +34,6 @@ import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
 import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
-import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -122,8 +121,6 @@ public class AssociationControllerTest {
     @Mock
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
-    @Mock
-    private StudyFileService studyFileService;
 
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
@@ -156,8 +153,7 @@ public class AssociationControllerTest {
                                                                                 associationValidationReportService,
                                                                                 associationDeletionService,
                                                                                 associationsEventsViewService,
-                                                                                studyAssociationBatchDeletionEventService,
-                                                                                studyFileService);
+                                                                                studyAssociationBatchDeletionEventService);
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
     }
 

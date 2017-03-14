@@ -4,43 +4,9 @@
 
 
 $(document).ready(function() {
-    // $("#uploadFile").click(function() {
-    //     // var file = $("#uploadSNPs").value;
-    //     // var studyId = $('#studyId').text();
-    //     // uploadFile(file, studyId);
-    //     $("#loadingResults").show();
-    //     setTimeout(checkStatus, 100);
-    //
-    // });
-
-
-    // if($("#upload_progress") == 'true'){
-
         setTimeout(checkStatus, 100);
-    // }
 });
 
-
-
-// function uploadFile(file, studyId) {
-//     var url = 'associations/upload?studyId='&studyId;
-//
-//     $.ajax({
-//                type: 'POST',
-//                url: url,
-//                contentType: 'application/json',
-//                data: file,
-//                beforeSend: function() {
-//                    $("#loadingResults").show();
-//                },
-//                success: function(response) {
-//                    setTimeout(checkStatus, 100);
-//                },
-//                error: function(request, status, error) {
-//                    alert(error + ": (" + request.responseText + ")");
-//                }
-//            });
-// }
 
 
 function checkStatus() {
@@ -54,15 +20,19 @@ function checkStatus() {
 }
 
 function getResults() {
-    window.alert("This actually worked!");
-    // $.ajax({
-    //            url: 'associations/uploadResults',
-    //            // dataType: 'json',
-    //            // success: function(response) {
-    //            //     renderResults(response);
-    //            // },
-    //            // error: function(request, status, error) {
-    //            //     alert(error + ": (" + request.responseText + ")");
-    //            // }
-    //        });
+    //window.alert("This actually worked!");
+
+    window.location.pathname.replace('uploadResults');
+     //$.ajax({
+     //           url: 'uploadResults',
+     //            dataType: 'html',
+     //            success: function(response) {
+     //                alert(response);
+     //                //window.location.href(response);
+     //                $.html(response);
+     //            },
+     //            error: function(request, status, error) {
+     //                alert(error + ": (" + request.responseText + ")");
+     //            }
+     //       });
 }

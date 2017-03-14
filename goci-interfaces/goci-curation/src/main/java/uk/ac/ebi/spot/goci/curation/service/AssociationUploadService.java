@@ -87,7 +87,10 @@ public class AssociationUploadService {
     public List<AssociationUploadErrorView> upload(MultipartFile file, Study study, SecureUser user)
             throws IOException, EnsemblMappingException {
 
-        if(study.getEvents().size() > 0){
+        int s = study.getEvents().size();
+        System.out.println(s);
+
+        if(s > 0){
             System.out.println("The study has events");
         }
 
