@@ -39,7 +39,7 @@ function processStudy(study, table) {
 
     if(fullpvalset == 1) {
 
-        var a = study.author.replace(" ","");
+        var a = (study.author_s).replace(" ","");
         var dir = a.concat("_").concat(study.pubmedId)
 
         var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/"
