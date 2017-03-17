@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
@@ -47,6 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -56,10 +58,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -212,20 +218,21 @@ public class AssociationControllerTest {
 
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
-                SECURE_USER);
-        when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(uploadErrorViews);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
-                .andExpect(status().isOk());
-//                .andExpect(model().attribute("fileName", file.getOriginalFilename()))
-//                .andExpect(model().attribute("fileErrors", instanceOf(List.class)))
-//                .andExpect(model().attribute("fileErrors", hasSize(1)))
-//                .andExpect(model().attributeExists("study")) ;
-//                .andExpect(view().name("error_pages/association_file_upload_error"));
+        HashMap<String, Object> sessionattr = new HashMap<String, Object>();
+        sessionattr.put("fileName", file.getOriginalFilename());
+        sessionattr.put("fileErrors", uploadErrorViews);
 
-//        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
-//        verify(associationUploadService, times(1)).upload(file, STUDY, SECURE_USER);
+        mockMvc.perform(get("/studies/1234/associations/uploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("fileName", file.getOriginalFilename()))
+                .andExpect(model().attribute("fileErrors", instanceOf(List.class)))
+                .andExpect(model().attribute("fileErrors", hasSize(1)))
+                .andExpect(model().attributeExists("study"))
+                .andExpect(view().name("error_pages/association_file_upload_error"));
+
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
     @Test
@@ -241,11 +248,18 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(Collections.EMPTY_LIST);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"));
-//                .andExpect(status().is3xxRedirection());
-//                .andExpect(model().attributeExists("study"));
-//                .andExpect(view().name("redirect:/studies/1234/associations"));
-//        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+        MvcResult mvcResult = this.mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
+                .andExpect(request().asyncStarted())
+                .andExpect(request().asyncResult("association_upload_progress"))
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeExists("study"))
+                .andExpect(forwardedUrl("association_upload_progress"));
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+
     }
 
     @Test
@@ -255,17 +269,21 @@ public class AssociationControllerTest {
         MockMultipartFile file =
                 new MockMultipartFile("file", "filename.txt", "text/plain", "TEST".getBytes());
 
+
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
-                SECURE_USER);
-        when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenThrow(EnsemblMappingException.class);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
-                .andExpect(status().isOk());
-//                .andExpect(model().attributeExists("study"));
-//                .andExpect(view().name("ensembl_mapping_failure"));
-//        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+        HashMap<String, Object> sessionattr = new HashMap<String, Object>();
+        sessionattr.put("fileName", file.getOriginalFilename());
+        sessionattr.put("ensemblMappingFailure", true);
+        sessionattr.put("exception", new EnsemblMappingException());
+
+        mockMvc.perform(get("/studies/1234/associations/uploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeExists("study"))
+                .andExpect(forwardedUrl("ensembl_mapping_failure"));
+        verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
     @Test

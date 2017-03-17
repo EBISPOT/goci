@@ -65,6 +65,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -209,13 +209,21 @@ public class AssociationController {
                                     HttpSession session)
             throws IOException, ExecutionException, InterruptedException {
 
+        Enumeration<String> sessionAttr = session.getAttributeNames();
+
+        while(sessionAttr.hasMoreElements()){
+            String attr = sessionAttr.nextElement();
+            if(!attr.equals("SPRING_SECURITY_CONTEXT")){
+                session.removeAttribute(attr);
+            }
+        }
+
         // Establish our study object and upload file into study dir
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
         session.setAttribute("done", false);
 
-        model.addAttribute("study", studyRepository.findOne(studyId));
 
         SecureUser user =  currentUserDetailsService.getUserFromRequest(request);
 
@@ -224,7 +232,7 @@ public class AssociationController {
             try {
                 model.addAttribute("status", "201");
                 model.addAttribute("uploadProgress", "true");
-                performUpload(model, session, file, user, studyId);
+                performUpload(model, session, file, user, study);
 
                 return "association_upload_progress";
             }
@@ -1351,61 +1359,42 @@ public class AssociationController {
     }
 
     @Async
-    private void performUpload(Model model, HttpSession session, MultipartFile file, SecureUser user, Long studyId)
+    private void performUpload(Model model, HttpSession session, MultipartFile file, SecureUser user, Study study)
             throws ExecutionException, InterruptedException {
 
-        System.out.println("Testing multi-threading");
-        /****/
-
-        Study study = studyRepository.findOne(studyId);
-        model.addAttribute("study", study);
+        getLog().debug("Upload request received");
 
         String fileName = file.getOriginalFilename();
 
-        /****/
-        Future<Boolean> future = uploadExecutorService.submit(new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
-                List<AssociationUploadErrorView> fileErrors = null;
-                List<AssociationUploadErrorView> xlsErrors = null;
+        uploadExecutorService.submit(() -> {
+            List<AssociationUploadErrorView> fileErrors = null;
+            List<AssociationUploadErrorView> xlsErrors = null;
 
-                try {
-                    fileErrors = associationUploadService.upload(file, study, user);
-                    session.setAttribute("done", true);
-                }
-                catch (EnsemblMappingException e) {
-                    session.setAttribute("ensemblMappingFailure", true);
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (fileErrors != null && !fileErrors.isEmpty()) {
-                    // Split
-                    getLog().error("Errors found in file: " + fileName);
-
-                    // Split the general collection of errors in two different structures. For view purpose.
-                    xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
-
-                    session.setAttribute("fileName", fileName);
-                    session.setAttribute("fileErrors", fileErrors);
-                    session.setAttribute("xlsErrors", xlsErrors);
-
-                }
-                return true;
+            try {
+                fileErrors = associationUploadService.upload(file, study, user);
             }
+            catch (EnsemblMappingException e) {
+                session.setAttribute("ensemblMappingFailure", true);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (fileErrors != null && !fileErrors.isEmpty()) {
+                // Split
+                getLog().error("Errors found in file: " + fileName);
+
+                // Split the general collection of errors in two different structures. For view purpose.
+                xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
+
+                session.setAttribute("fileName", fileName);
+                session.setAttribute("fileErrors", fileErrors);
+                session.setAttribute("xlsErrors", xlsErrors);
+            }
+            session.setAttribute("done", true);
+            return true;
         });
 
-
-        System.out.println("future done? " + future.isDone());
-        Boolean result = null;
-
-
-        if(future.isDone()){
-            result = future.get();
-
-        }
-        System.out.println("future done? " + future.isDone());
-        System.out.print("result: " + result);
 
 
     }
@@ -1477,12 +1466,22 @@ public class AssociationController {
             model.addAttribute("fileName", session.getAttribute("fileName"));
             model.addAttribute("fileErrors", fileErrors);
             model.addAttribute("xlsErrors", xlsErrors);
-
             return "error_pages/association_file_upload_error";
 
         }
         else {
-                return "redirect:/studies/" + studyId + "/associations";
+            return "redirect:/studies/" + studyId + "/associations";
+        }
+    }
+
+
+    private String resetSession(HttpSession session) {
+        try {
+            session.invalidate();
+            return "Your mapping session was cleared successfully";
+        }
+        catch (Exception e) {
+            return "Your mapping session could not be reset";
         }
     }
 }
