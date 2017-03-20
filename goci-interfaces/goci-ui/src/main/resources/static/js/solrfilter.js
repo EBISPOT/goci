@@ -208,6 +208,8 @@ function processTraitDropdown() {
 
         var trait = traitInput[i].value;
         trait = trait.replace(/\s/g, '+');
+        trait = trait.replace('%2B', '+');
+        trait = trait.replace('%27', "'");
         console.log(trait);
         traits[i] = trait;
 
@@ -223,6 +225,15 @@ function solrfilter(pval, or, beta, date, traits, addeddate) {
                 ", " + date + ", " + traits + " and " + addeddate);
     if (query == '*') {
         var searchTerm = 'text:'.concat(query);
+    }
+    else if(query.indexOf(':') != -1 && query.indexOf('-') != -1){
+        var elements = query.split(':');
+        var chrom = elements[0].trim();
+        var bp1 = elements[1].split('-')[0].trim();
+        var bp2 = elements[1].split('-')[1].trim();
+
+        var searchTerm = 'chromosomeName:'.concat(chrom).concat(' AND chromosomePosition:[').concat(bp1).concat(' TO ').concat(bp2).concat(']');
+
     }
     else {
         var searchTerm = 'text:"'.concat(query).concat('"');

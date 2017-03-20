@@ -132,6 +132,15 @@ function solrSearch(queryTerm) {
     if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
     }
+    else if(queryTerm.indexOf(':') != -1 && queryTerm.indexOf('-') != -1){
+        var elements = queryTerm.split(':');
+        var chrom = elements[0].trim();
+        var bp1 = elements[1].split('-')[0].trim();
+        var bp2 = elements[1].split('-')[1].trim();
+
+        var searchTerm = 'chromosomeName:'.concat(chrom).concat(' AND chromosomePosition:[').concat(bp1).concat(' TO ').concat(bp2).concat(']');
+
+    }
     else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
     }
@@ -378,9 +387,14 @@ function processTraitCounts(data) {
 
     for (var i = 0; i < traits.length; i = i + 2) {
         var trait = traits[i];
+
+        var val = trait;
+        if(trait.indexOf("'") != -1){
+             val = trait.replace("'","&#39;")
+        }
         var count = traits[i + 1];
-        $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(trait).concat(
-                "'/>&nbsp;").concat(trait).concat(" (").concat(count).concat(")</a>")));
+        $('#trait-dropdown ul').append($("<li>").html("<input type='checkbox' class='trait-check' value='".concat(val).concat(
+                "'/>&nbsp;").concat(trait).concat(" (").concat(count).concat(")")));
     }
 }
 

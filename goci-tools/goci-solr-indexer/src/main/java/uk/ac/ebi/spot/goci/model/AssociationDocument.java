@@ -523,7 +523,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         String chrom = snpLocation.getChromosomeName();
         Integer position = snpLocation.getChromosomePosition();
 
-        String location = "chr".concat(chrom).concat(":").concat(position.toString());
+        String location = chrom.concat(":").concat(position.toString());
 
         return location;
     }

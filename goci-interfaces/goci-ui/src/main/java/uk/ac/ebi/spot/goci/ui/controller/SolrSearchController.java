@@ -257,7 +257,13 @@ public class SolrSearchController {
         addFacet(solrSearchBuilder, "traitName_s");
         addFacetMincount(solrSearchBuilder, mincount);
         addFacetLimit(solrSearchBuilder, limit);
-        addFilterQuery(solrSearchBuilder, "resourcename", "study");
+
+        if(query.contains("chromosomeName") && query.contains("chromosomePosition")){
+            addFilterQuery(solrSearchBuilder, "resourcename", "association");
+        }
+        else{
+            addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        }
         if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
