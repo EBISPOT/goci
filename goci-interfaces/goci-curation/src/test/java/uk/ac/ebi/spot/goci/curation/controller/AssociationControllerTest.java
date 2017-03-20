@@ -223,7 +223,7 @@ public class AssociationControllerTest {
         sessionattr.put("fileName", file.getOriginalFilename());
         sessionattr.put("fileErrors", uploadErrorViews);
 
-        mockMvc.perform(get("/studies/1234/associations/uploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+        mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("fileName", file.getOriginalFilename()))
@@ -278,7 +278,7 @@ public class AssociationControllerTest {
         sessionattr.put("ensemblMappingFailure", true);
         sessionattr.put("exception", new EnsemblMappingException());
 
-        mockMvc.perform(get("/studies/1234/associations/uploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+        mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("study"))

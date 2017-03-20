@@ -88,10 +88,9 @@ public class AssociationUploadService {
             throws IOException, EnsemblMappingException {
 
         int s = study.getEvents().size();
-        System.out.println(s);
 
         if(s > 0){
-            System.out.println("The study has events");
+            getLog().trace("Study " + study.getId().toString() + " has " + s + " events");
         }
 
         // File errors will contain any validation errors and be returned to controller if any are found

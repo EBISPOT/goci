@@ -229,17 +229,11 @@ public class AssociationController {
 
         // Return holding screen or error message
         return () -> {
-            try {
                 model.addAttribute("status", "201");
                 model.addAttribute("uploadProgress", "true");
                 performUpload(model, session, file, user, study);
 
                 return "association_upload_progress";
-            }
-            catch (FileUploadException e) {
-                getLog().error("File upload exception", e);
-                return "error_pages/study_file_upload_failure";
-            }
         };
     }
 
@@ -1376,9 +1370,9 @@ public class AssociationController {
             catch (EnsemblMappingException e) {
                 session.setAttribute("ensemblMappingFailure", true);
             }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             if (fileErrors != null && !fileErrors.isEmpty()) {
                 // Split
@@ -1433,7 +1427,7 @@ public class AssociationController {
         return done;
     }
 
-    @RequestMapping(value = "/studies/{studyId}/associations/uploadResults",
+    @RequestMapping(value = "/studies/{studyId}/associations/getUploadResults",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
     public String getUploadResult(@PathVariable Long studyId, HttpSession session, Model model) {

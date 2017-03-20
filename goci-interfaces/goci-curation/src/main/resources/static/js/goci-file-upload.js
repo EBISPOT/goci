@@ -21,6 +21,6 @@ function checkStatus() {
 
 function getResults() {
 
-    window.location.replace('uploadResults');
+    window.location.replace('getUploadResults');
 
 }
