@@ -302,6 +302,7 @@ public class SolrSearchController {
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             HttpServletResponse response) throws IOException {
@@ -340,6 +341,10 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "publicationDate", "study_publicationDate", dateRange);
 
+        }
+        if(genomicRange != "") {
+            getLog().debug(genomicRange);
+            addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (addedDateRange != "") {
             getLog().debug(addedDateRange);
@@ -437,6 +442,7 @@ public class SolrSearchController {
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
@@ -475,6 +481,10 @@ public class SolrSearchController {
             getLog().debug(dateRange);
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+        }
+        if(genomicRange != "") {
+            getLog().debug(genomicRange);
+            addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
@@ -575,6 +585,7 @@ public class SolrSearchController {
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
@@ -618,6 +629,10 @@ public class SolrSearchController {
             else {
                 addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
             }
+        }
+        if(genomicRange != "") {
+            getLog().debug(genomicRange);
+            addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));
@@ -770,6 +785,27 @@ public class SolrSearchController {
         solrSearchBuilder.append("&fq=").append(filterString);
     }
 
+    private void addGenomicRangeFilterQuery(StringBuilder solrSearchBuilder, String genomicRange){
+        String chrom = null;
+        String bp = null;
+        if(genomicRange.contains("-")){
+            chrom = genomicRange.split("-")[0];
+            bp = genomicRange.split("-")[1];
+        }
+        else{
+            bp = genomicRange;
+        }
+        String filterString = "";
+
+        if(chrom != null){
+            filterString = "chromosomeName:".concat(chrom).concat("+AND+");
+        }
+
+        filterString = filterString.concat("chromosomePosition:").concat(bp);
+
+        solrSearchBuilder.append("&fq=").append(filterString);
+    }
+
 
     private void addFilterQuery(StringBuilder solrSearchBuilder, String filterOn, String filterOnAlt, String filterBy) {
         solrSearchBuilder.append("&fq=")
@@ -841,6 +877,7 @@ public class SolrSearchController {
             @RequestParam(value = "orfilter", required = false) String orRange,
             @RequestParam(value = "betafilter", required = false) String betaRange,
             @RequestParam(value = "datefilter", required = false) String dateRange,
+            @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
@@ -876,6 +913,10 @@ public class SolrSearchController {
         if (dateRange != "") {
             getLog().debug(dateRange);
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
+        }
+        if(genomicRange != "") {
+            getLog().debug(genomicRange);
+            addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
             System.out.println(String.valueOf(traits));

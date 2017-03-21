@@ -409,12 +409,14 @@ function setDownloadLink(searchParams) {
     var or = '&orfilter=';
     var beta = '&betafilter=';
     var date = '&datefilter=';
+    var region = '&genomicfilter=';
     var addeddate = '&dateaddedfilter=';
     var facet = '&facet=association';
 
     pval = pval.concat(processPval());
     or = or.concat(processOR());
     beta = beta.concat(processBeta());
+    region = region.concat(processGenomicRegion());
     var pubdate = date.concat(processDate());
 
     var traits = processTraitDropdown();
@@ -452,7 +454,7 @@ function setDownloadLink(searchParams) {
 
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(trait).concat(addeddate).concat(facet);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(addeddate).concat(facet);
     $('#results-download').removeAttr('href').attr('href', url);
 
 }

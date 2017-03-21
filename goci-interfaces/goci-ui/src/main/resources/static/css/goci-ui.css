@@ -87,6 +87,32 @@
     margin-right: 0;
 }
 
+
+.chrom-value {
+    display: inline-block;
+    width: 10%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.bp-value{
+    display: inline-block;
+    width: 21%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+.chrom-label {
+    font-weight: bold;
+    display: inline-block;
+    /*width: 7%;*/
+    /*width: 2em;*/
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    text-align: right;
+}
+
 .filter-values {
     display: inline-block;
     width: 60%;

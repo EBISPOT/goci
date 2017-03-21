@@ -156,6 +156,7 @@ function loadAdditionalResults(facet, expand) {
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
+    var region = processGenomicRegion();
     var traits = processTraitDropdown();
 
     if ($('#filter').text() != '') {
@@ -199,6 +200,7 @@ function loadAdditionalResults(facet, expand) {
                   'orfilter': or,
                   'betafilter': beta,
                   'datefilter': date,
+                  'genomicfilter': region,
                   'traitfilter[]': traits,
                   'sort': sort
               })

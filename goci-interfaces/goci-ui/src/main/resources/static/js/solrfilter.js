@@ -48,6 +48,7 @@ function doFiltering() {
     var orRange = processOR();
     var betaRange = processBeta();
     var dateRange = processDate();
+    var region = processGenomicRegion();
     var traits = processTraitDropdown();
     var addeddate = '';
 
@@ -66,7 +67,7 @@ function doFiltering() {
 
 
     $('#filter-form').addClass('in-use')
-    solrfilter(pvalRange, orRange, betaRange, dateRange, traits, addeddate);
+    solrfilter(pvalRange, orRange, betaRange, dateRange, region, traits, addeddate);
 }
 
 function clearFilters() {
@@ -164,6 +165,38 @@ function processBeta() {
     return betaRange;
 }
 
+function processGenomicRegion(){
+    var genomicRegion = '';
+
+    var chrom = $('#chrom').val();
+    var bpMin = $('#bp-min').val();
+    var bpMax = $('#bp-max').val();
+
+    if(chrom){
+        genomicRegion = chrom.concat("-")
+    }
+
+    if (bpMin || bpMax) {
+        genomicRegion = genomicRegion.concat("[");
+        if (bpMin) {
+            genomicRegion = genomicRegion.concat(bpMin);
+        }
+        else {
+            genomicRegion = genomicRegion.concat("*");
+        }
+        genomicRegion = genomicRegion.concat("+TO+");
+        if (bpMax) {
+            genomicRegion = genomicRegion.concat(bpMax);
+        }
+        else {
+            genomicRegion = genomicRegion.concat("*");
+        }
+        genomicRegion = genomicRegion.concat("]");
+    }
+
+    return genomicRegion;
+}
+
 function processDate() {
     var dateRange = '';
     var dateMin = $('#date-min').val();
@@ -219,7 +252,7 @@ function processTraitDropdown() {
 }
 
 
-function solrfilter(pval, or, beta, date, traits, addeddate) {
+function solrfilter(pval, or, beta, date, region, traits, addeddate) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
                 ", " + date + ", " + traits + " and " + addeddate);
@@ -247,6 +280,7 @@ function solrfilter(pval, or, beta, date, traits, addeddate) {
                 'orfilter': or,
                 'betafilter': beta,
                 'datefilter': date,
+                'genomicfilter': region,
                 'traitfilter[]': traits,
                 'dateaddedfilter': addeddate
             })
