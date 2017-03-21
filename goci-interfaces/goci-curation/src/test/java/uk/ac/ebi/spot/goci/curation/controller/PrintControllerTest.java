@@ -23,6 +23,7 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Hashtable;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.hasProperty;
@@ -123,22 +124,8 @@ public class PrintControllerTest {
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("study_printview"))
-                .andExpect(model().attributeExists("study"))
-                .andExpect(model().attribute("study", instanceOf(Study.class)))
-                .andExpect(model().attributeExists("housekeeping"))
-                .andExpect(model().attribute("housekeeping", instanceOf(Housekeeping.class)))
-                .andExpect(model().attribute("housekeeping", hasProperty("studySnpCheckedLevelOne", is(true))))
-                .andExpect(model().attributeExists("initialSampleDescription"))
-                .andExpect(model().attribute("initialSampleDescription", instanceOf(String.class)))
-                .andExpect(model().attribute("initialSampleDescription", is("Initial Sample Size")))
-                .andExpect(model().attributeExists("replicateSampleDescription"))
-                .andExpect(model().attribute("replicateSampleDescription", instanceOf(String.class)))
-                .andExpect(model().attribute("replicateSampleDescription", is("Replicate Sample Size")))
-                .andExpect(model().attributeExists("initialStudyAncestryDescriptions"))
-                .andExpect(model().attribute("initialStudyAncestryDescriptions", hasSize(1)))
-                .andExpect(model().attributeExists("replicationStudyAncestryDescriptions"))
-                .andExpect(model().attribute("replicationStudyAncestryDescriptions", hasSize(2)))
-                .andExpect(model().attributeExists("snpAssociationTableViews"))
-                .andExpect(model().attribute("snpAssociationTableViews", hasSize(2)));
+                .andExpect(model().attributeExists("studiesToPrint"))
+                .andExpect(model().attribute("studiesToPrint", instanceOf(Hashtable.class)));
+
     }
 }
