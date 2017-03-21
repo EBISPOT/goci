@@ -76,16 +76,10 @@ public class AssociationFileUploadService {
                 // Create a sheet for reading
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
-//                if(sheet.getRow(0) != null){
-                    // Process file, depending on validation level, into a generic row object
-                    UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
-                    fileRows = uploadSheetProcessor.readSheetRows(sheet);
-//                }
-//                else{
-//                    getLog().error("Parsing file failed");
-//                    throw new SheetProcessingException("File: " + file.getName() + " contains no data");
-//                }
 
+                // Process file, depending on validation level, into a generic row object
+                UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
+                fileRows = uploadSheetProcessor.readSheetRows(sheet);
             }
             catch (InvalidFormatException | InvalidOperationException | IOException | NullPointerException e) {
                 getLog().error("File: " + file.getName() + " cannot be processed", e);
@@ -99,29 +93,24 @@ public class AssociationFileUploadService {
         }
 
         // Error check each row
-        if (!fileRows.isEmpty()) {
             // Check for missing values and syntax errors that would prevent code creating an association
-            for (AssociationUploadRow row : fileRows) {
-                getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-                RowValidationSummary rowValidationSummary = createRowValidationSummary(row);
+        for (AssociationUploadRow row : fileRows) {
+            getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
+            RowValidationSummary rowValidationSummary = createRowValidationSummary(row);
 
-                // Only store summary if there is an error
-                if (!rowValidationSummary.getErrors().isEmpty()) {
-                    rowValidationSummaries.add(rowValidationSummary);
-                }
-            }
-
-            if (rowValidationSummaries.isEmpty()) {
-                //Proceed to carry out full checks of values
-                fileRows.forEach(row -> {
-                    associationSummaries.add(createAssociationSummary(row, validationLevel));
-                });
+            // Only store summary if there is an error
+            if (!rowValidationSummary.getErrors().isEmpty()) {
+                rowValidationSummaries.add(rowValidationSummary);
             }
         }
-        else {
-            getLog().error("Parsing file failed");
-            throw new SheetProcessingException("File: " + file.getName() + " contains only headers");
+
+        if (rowValidationSummaries.isEmpty()) {
+            //Proceed to carry out full checks of values
+            fileRows.forEach(row -> {
+                associationSummaries.add(createAssociationSummary(row, validationLevel));
+            });
         }
+
 
         validationSummary.setAssociationSummaries(associationSummaries);
         validationSummary.setRowValidationSummaries(rowValidationSummaries);
