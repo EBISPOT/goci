@@ -16,7 +16,9 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.concurrent.Callable;
 
 /**
@@ -48,6 +50,34 @@ public class PrintController {
         this.studyPrintService = studyPrintService;
     }
 
+
+    protected ArrayList<Object> getStudyInfoToPrint(Study studyToPrint) {
+        // Get relevant study details
+        Long studyId = studyToPrint.getId();
+
+        // Get association information
+        Collection<SnpAssociationTableView> snpAssociationTableViews = studyPrintService.generatePrintView(studyId);
+
+        // Get housekeeping and ancestry information
+        Housekeeping housekeeping = studyToPrint.getHousekeeping();
+        String initialSampleDescription = studyToPrint.getInitialSampleSize();
+        String replicateSampleDescription = studyToPrint.getReplicateSampleSize();
+
+        // Creating a Hashtable
+
+        ArrayList<Object> infoToPrint = new ArrayList<Object>();
+        infoToPrint.add(studyToPrint);
+        infoToPrint.add(housekeeping);
+        infoToPrint.add(initialSampleDescription);
+        infoToPrint.add(replicateSampleDescription);
+        infoToPrint.add(ancestryRepository.findByStudyIdAndType(studyId, "initial"));
+        infoToPrint.add(ancestryRepository.findByStudyIdAndType(studyId, "replication"));
+        infoToPrint.add(snpAssociationTableViews);
+
+        return infoToPrint;
+
+    }
+
     // View a study
     @RequestMapping(value = "/studies/{studyId}/printview",
                     produces = MediaType.TEXT_HTML_VALUE,
@@ -55,31 +85,35 @@ public class PrintController {
     public Callable<String> viewPrintableDetailsOfStudy(Model model, @PathVariable Long studyId) {
 
         return () -> {
-            // Get relevant study details
-            Study studyToView = studyRepository.findOne(studyId);
+            Hashtable<String, ArrayList<Object>> listStudies = new Hashtable<String, ArrayList<Object>>();
 
-            // Get association information
-            Collection<SnpAssociationTableView> snpAssociationTableViews = studyPrintService.generatePrintView(studyId);
+            Study studyToPrint = studyRepository.findOne(studyId);
+            ArrayList<Object> infoToPrint = getStudyInfoToPrint(studyToPrint);
+            listStudies.put(studyToPrint.getId().toString(), infoToPrint);
 
-            // Get housekeeping and ancestry information
-            Housekeeping housekeeping = studyToView.getHousekeeping();
-            String initialSampleDescription = studyToView.getInitialSampleSize();
-            String replicateSampleDescription = studyToView.getReplicateSampleSize();
-
-            model.addAttribute("study", studyToView);
-            model.addAttribute("housekeeping", housekeeping);
-            model.addAttribute("initialSampleDescription", initialSampleDescription);
-            model.addAttribute("replicateSampleDescription", replicateSampleDescription);
-
-            // Two types of ancestry information which the view needs to form two different tables
-            model.addAttribute("initialStudyAncestryDescriptions",
-                               ancestryRepository.findByStudyIdAndType(studyId, "initial"));
-            model.addAttribute("replicationStudyAncestryDescriptions",
-                               ancestryRepository.findByStudyIdAndType(studyId,
-                                                                       "replication"));
-
-            model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
+            model.addAttribute("studiesToPrint", listStudies);
             return "study_printview";
         };
     }
+
+    // View a pubmed by study_id (list of studies related)
+    @RequestMapping(value = "/pubmed/{pubmedId}/printview",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public Callable<String> viewPrintableDetailsOfPubmed(Model model, @PathVariable String pubmedId) {
+        return () -> {
+            Hashtable<String, ArrayList<Object>> listStudies = new Hashtable<String, ArrayList<Object>>();
+
+            Collection<Study> allStudiesByPubmedId = studyRepository.findByPubmedId(pubmedId);
+            for(Study studyToPrint : allStudiesByPubmedId){
+                ArrayList<Object> infoToPrint = getStudyInfoToPrint(studyToPrint);
+                listStudies.put(studyToPrint.getId().toString(),infoToPrint);
+            }
+
+            model.addAttribute("studiesToPrint", listStudies);
+            return "study_printview";
+        };
+    }
+
+
 }
