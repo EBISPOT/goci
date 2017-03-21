@@ -6,7 +6,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -77,11 +76,18 @@ public class AssociationFileUploadService {
                 // Create a sheet for reading
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
-                // Process file, depending on validation level, into a generic row object
-                UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
-                fileRows = uploadSheetProcessor.readSheetRows(sheet);
+//                if(sheet.getRow(0) != null){
+                    // Process file, depending on validation level, into a generic row object
+                    UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
+                    fileRows = uploadSheetProcessor.readSheetRows(sheet);
+//                }
+//                else{
+//                    getLog().error("Parsing file failed");
+//                    throw new SheetProcessingException("File: " + file.getName() + " contains no data");
+//                }
+
             }
-            catch (InvalidFormatException | InvalidOperationException | IOException e) {
+            catch (InvalidFormatException | InvalidOperationException | IOException | NullPointerException e) {
                 getLog().error("File: " + file.getName() + " cannot be processed", e);
                 file.delete();
                 throw new SheetProcessingException("File: " + file.getName() + " cannot be processed", e);
@@ -114,6 +120,7 @@ public class AssociationFileUploadService {
         }
         else {
             getLog().error("Parsing file failed");
+            throw new SheetProcessingException("File: " + file.getName() + " contains only headers");
         }
 
         validationSummary.setAssociationSummaries(associationSummaries);

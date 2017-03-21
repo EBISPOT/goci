@@ -73,6 +73,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -1354,13 +1355,13 @@ public class AssociationController {
 
     @Async
     private void performUpload(Model model, HttpSession session, MultipartFile file, SecureUser user, Study study)
-            throws ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException, SheetProcessingException, FileUploadException, IOException {
 
         getLog().debug("Upload request received");
 
         String fileName = file.getOriginalFilename();
 
-        uploadExecutorService.submit(() -> {
+        Future<Boolean> future = uploadExecutorService.submit(() -> {
             List<AssociationUploadErrorView> fileErrors = null;
             List<AssociationUploadErrorView> xlsErrors = null;
 
@@ -1370,9 +1371,6 @@ public class AssociationController {
             catch (EnsemblMappingException e) {
                 session.setAttribute("ensemblMappingFailure", true);
             }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             if (fileErrors != null && !fileErrors.isEmpty()) {
                 // Split
@@ -1388,6 +1386,8 @@ public class AssociationController {
             session.setAttribute("done", true);
             return true;
         });
+
+        session.setAttribute("future", future);
 
 
 
@@ -1423,6 +1423,15 @@ public class AssociationController {
         else {
             done = false;
         }
+        try {
+            Future<Boolean> f = (Future<Boolean>) session.getAttribute("future");
+            f.get();
+        }
+        catch (Exception e){
+            session.setAttribute("done", true);
+            session.setAttribute("exception", e);
+//            e.getCause().printStackTrace(System.out);
+        }
         getLog().debug("Upload done? = " + done);
         return done;
     }
@@ -1430,21 +1439,24 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/getUploadResults",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String getUploadResult(@PathVariable Long studyId, HttpSession session, Model model) {
-        //        Map<String, Object> response = new HashMap<>();
+    public String getUploadResult(@PathVariable Long studyId, HttpSession session, Model model)
+            throws ExecutionException, InterruptedException, SheetProcessingException, FileUploadException, IOException {
 
-        Exception exception = (Exception) session.getAttribute("exception");
-        if (exception == null) {
-            //            response.put("status", "OK");
-            model.addAttribute("status", "OK");
-        }
-        else {
-            //            response.put("status", exception.getMessage());
-            model.addAttribute("status", exception.getMessage());
-        }
 
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
+        Future<Boolean> f = (Future<Boolean>) session.getAttribute("future");
+        f.get();
+
+        Exception exception = (Exception) session.getAttribute("exception");
+        if (exception == null) {
+            model.addAttribute("status", "OK");
+        }
+        else {
+            model.addAttribute("status", exception.getMessage());
+        }
+
+
 
         if (session.getAttribute("ensemblMappingFailure") != null) {
             return "ensembl_mapping_failure";
@@ -1465,17 +1477,6 @@ public class AssociationController {
         }
         else {
             return "redirect:/studies/" + studyId + "/associations";
-        }
-    }
-
-
-    private String resetSession(HttpSession session) {
-        try {
-            session.invalidate();
-            return "Your mapping session was cleared successfully";
-        }
-        catch (Exception e) {
-            return "Your mapping session could not be reset";
         }
     }
 }

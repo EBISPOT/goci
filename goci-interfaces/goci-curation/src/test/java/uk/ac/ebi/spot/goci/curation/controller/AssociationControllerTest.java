@@ -50,9 +50,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -219,9 +221,12 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
 
+        Future<Boolean> f = mock(Future.class);
+
         HashMap<String, Object> sessionattr = new HashMap<String, Object>();
         sessionattr.put("fileName", file.getOriginalFilename());
         sessionattr.put("fileErrors", uploadErrorViews);
+        sessionattr.put("future", f);
 
         mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
                 .andDo(print())
@@ -273,10 +278,13 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
 
+        Future<Boolean> f = mock(Future.class);
+
         HashMap<String, Object> sessionattr = new HashMap<String, Object>();
         sessionattr.put("fileName", file.getOriginalFilename());
         sessionattr.put("ensemblMappingFailure", true);
         sessionattr.put("exception", new EnsemblMappingException());
+        sessionattr.put("future", f);
 
         mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
                 .andDo(print())
