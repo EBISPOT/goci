@@ -114,7 +114,6 @@
             </a></p>
         </td>
         <td th:text="${study.title} ?: ''"></td>
-        <td th:text="${study.title} ?: ''"></td>
         <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
             <span th:text="${study.pubmedId} ?: ''"></span>
