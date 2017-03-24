@@ -1423,9 +1423,12 @@ public class AssociationController {
         else {
             done = false;
         }
+
         try {
             Future<Boolean> f = (Future<Boolean>) session.getAttribute("future");
-            f.get();
+            if(f.isDone()) {
+                f.get();
+            }
         }
         catch (Exception e){
             session.setAttribute("done", true);
