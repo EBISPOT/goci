@@ -10,13 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
@@ -114,6 +109,12 @@ public class AssociationController {
 
     protected Logger getLog() {
         return log;
+    }
+
+    @InitBinder(value={"snpAssociationStandardMultiForm", "snpAssociationInteractionForm"})
+    public void initBinder(WebDataBinder dataBinder) {
+        //System.out.println("A binder for object: " + dataBinder.getObjectName());
+        dataBinder.setAutoGrowCollectionLimit(700);
     }
 
     @Autowired

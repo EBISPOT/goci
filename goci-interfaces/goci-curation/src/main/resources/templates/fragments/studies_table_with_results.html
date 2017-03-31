@@ -107,10 +107,21 @@
         <!-- Use a conditional here as a study can have a null attributes-->
         <!-- Using thymeleaf elvis operator for string, date attributes-->
 
-        <td th:text="${study.author} ?: '' "></td>
+        <td><p>
+            <span th:text="${study.author} ?: ''"></span>&nbsp;&nbsp;
+            <a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'" title="Print single GWA study">
+                <span class="glyphicon glyphicon-print color-primary-bold"></span>
+            </a></p>
+        </td>
         <td th:text="${study.title} ?: ''"></td>
         <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
-        <td><p th:text="${study.pubmedId} ?: ''"></p>
+        <td><p>
+            <span th:text="${study.pubmedId} ?: ''"></span>
+            &nbsp;&nbsp;
+            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
+                <span class="glyphicon glyphicon-print color-primary-bold"></span>
+            </a>
+            </p>
 
             <div class="btn-group">
                             <button type="button"

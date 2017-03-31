@@ -1,8 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
+import org.hibernate.engine.internal.JoinSequence;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -110,6 +111,12 @@ public class Association implements Trackable {
                joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
                inverseJoinColumns = @JoinColumn(name = "EVENT_ID"))
     private Collection<Event> events = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name="genericId", referencedColumnName="id",insertable=false,updatable=false)
+    @Where(clause="content_type='Association'")
+    @JsonIgnore
+    private Collection<Note> notes;
 
     /**REST API fix: reversal of control of association-SNP and association-gene relationship from association to SNP/gene to fix deletion issues with respect to
      * the association-SNP/gene view table. Works but not optimal, improve solution if possible**/
@@ -426,4 +433,8 @@ public class Association implements Trackable {
     public Collection<SingleNucleotidePolymorphism> getSnps(){
         return snps;
     }
+
+    public Collection<Note> getNotes() { return notes; }
+
+    public void setNotes(Collection<Note> notes) { this.notes = notes; }
 }

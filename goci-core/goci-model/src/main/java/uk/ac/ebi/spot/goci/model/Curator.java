@@ -1,8 +1,12 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 27/11/14.
@@ -24,6 +28,10 @@ public class Curator {
     private String email;
 
     private String userName;
+
+    @OneToMany(mappedBy = "curator")
+    @JsonIgnore
+    private Collection<Note> notes;
 
     // JPA no-args constructor
     public Curator() {
