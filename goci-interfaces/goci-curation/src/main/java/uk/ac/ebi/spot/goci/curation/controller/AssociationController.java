@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -93,6 +94,9 @@ public class AssociationController {
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
+    @Value("${collection.sizelimit}")
+    private int collectionLimit;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -102,7 +106,7 @@ public class AssociationController {
     @InitBinder(value={"snpAssociationStandardMultiForm", "snpAssociationInteractionForm"})
     public void initBinder(WebDataBinder dataBinder) {
         //System.out.println("A binder for object: " + dataBinder.getObjectName());
-        dataBinder.setAutoGrowCollectionLimit(700);
+        dataBinder.setAutoGrowCollectionLimit(collectionLimit);
     }
 
     @Autowired
