@@ -9,9 +9,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <STYLE TYPE="text/css">
+        @media print {
+            P.pagebreak {
+                page-break-after: always;
+            }
+        }
+    </STYLE>
 </head>
 <body>
 <div class="container-fluid">
+  <p th:each="entry: ${studiesToPrint}">
+  <div th:with="study=${entry.value[0]},housekeeping=${entry.value[1]},initialSampleDescription=${entry.value[2]},
+          replicateSampleDescription=${entry.value[3]},initialStudyAncestryDescriptions=${entry.value[4]},
+          replicationStudyAncestryDescriptions=${entry.value[5]}, snpAssociationTableViews=${entry.value[6]} ">
     <div class="row">
         <div class="col-sm-10">
             <table id="studyDetailsTable" class="table table-hover table-bordered">
@@ -462,6 +473,9 @@
             </table>
         </div>
     </div>
+    <p class="pagebreak"></p>
+  </div>
+  </p>
 </div>
 </body>
 </html>

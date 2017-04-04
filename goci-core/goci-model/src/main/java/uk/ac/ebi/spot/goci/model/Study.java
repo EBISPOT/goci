@@ -133,6 +133,11 @@ public class Study implements Trackable {
     @ManyToMany(mappedBy = "studies")
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
+    //If you want just the notes linked with the study please check Association.java
+    @OneToMany(mappedBy = "study")
+    @JsonIgnore
+    private Collection<Note> notes;
+
     // JPA no-args constructor
     public Study() {
     }
@@ -430,4 +435,8 @@ public class Study implements Trackable {
     public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
         this.snps = snps;
     }
+
+    public Collection<Note> getNotes() { return notes; }
+
+    public void setNotes(Collection<Note> notes) { this.notes = notes; }
 }
