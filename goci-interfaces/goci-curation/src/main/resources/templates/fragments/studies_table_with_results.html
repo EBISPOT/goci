@@ -224,7 +224,15 @@
             </div>
         </td>
 
-        <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
+        <td>
+            <span th:each="note: ${study.notes}"
+                  th:text="${note.textNote}+', ' ?: ''"
+            class="more">
+
+            </span>
+
+        </td>
+
     </tr>
     </tbody>
 </table>
