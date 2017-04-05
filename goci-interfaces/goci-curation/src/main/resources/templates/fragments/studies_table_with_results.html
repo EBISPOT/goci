@@ -224,13 +224,12 @@
             </div>
         </td>
 
-        <td>
-            <span th:each="note: ${study.notes}"
-                  th:text="${note.textNote}+', ' ?: ''"
-            class="more">
-
+        <td><span class="more">
+            <p th:inline="text" th:each="note: ${study.notes}" th:remove="tag">
+            [[${note.textNote}]]
+             <br/>
+             </p>
             </span>
-
         </td>
 
     </tr>
