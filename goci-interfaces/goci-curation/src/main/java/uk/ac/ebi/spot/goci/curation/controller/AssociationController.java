@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
@@ -103,6 +104,9 @@ public class AssociationController {
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
+    @Value("${collection.sizelimit}")
+    private int collectionLimit;
+
     private final ExecutorService executorService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -114,7 +118,7 @@ public class AssociationController {
     @InitBinder(value={"snpAssociationStandardMultiForm", "snpAssociationInteractionForm"})
     public void initBinder(WebDataBinder dataBinder) {
         //System.out.println("A binder for object: " + dataBinder.getObjectName());
-        dataBinder.setAutoGrowCollectionLimit(700);
+        dataBinder.setAutoGrowCollectionLimit(collectionLimit);
     }
 
     @Autowired
@@ -1129,7 +1133,10 @@ public class AssociationController {
 
           model.addAttribute("study", study);
 
+          session.setAttribute("study", study);
           session.setAttribute("done", false);
+
+          session.setAttribute("redirectAttributes", redirectAttributes);
 
           SecureUser user =  currentUserDetailsService.getUserFromRequest(request);
 
@@ -1330,39 +1337,28 @@ public class AssociationController {
 
                     //if an association has critical errors, go straight to that association
                     if (!criticalErrors.isEmpty()) {
-                        model.addAttribute("study", study);
-                        model.addAttribute("measurementType", measurementType);
+                        session.setAttribute("measurementType", measurementType);
 
                         // Get mapping details
-                        model.addAttribute("mappingDetails",
+                        session.setAttribute("mappingDetails",
                                            associationOperationsService.createMappingDetails(associationToValidate));
 
                         // Return any association errors
-                        model.addAttribute("errors", criticalErrors);
-                        model.addAttribute("criticalErrorsFound", true);
+                        session.setAttribute("errors", criticalErrors);
+                        session.setAttribute("criticalErrorsFound", true);
+                        session.setAttribute("association", associationToValidate);
 
                         if (associationToValidate.getSnpInteraction()) {
-                            model.addAttribute("form", associationOperationsService
+                            session.setAttribute("form", associationOperationsService
                                     .generateForm(associationToValidate));
-                            return "redirect:/associations/" + associationToValidate.getId();
-
-                            // return "edit_snp_interaction_association";
                         }
                         else {
-                            model.addAttribute("form", associationOperationsService
+                            session.setAttribute("form", associationOperationsService
                                     .generateForm(associationToValidate));
 
-                            // Determine view
-                            if (associationToValidate.getMultiSnpHaplotype()) {
-                                return "redirect:/associations/" + associationToValidate.getId();
-                                // return "edit_multi_snp_association";
-                            }
-                            else {
-                                //                             return "edit_standard_snp_association";
-                                return "redirect:/associations/" + associationToValidate.getId();
-
-                            }
                         }
+                        break;
+
                     }
 
     //     if there are no criticial errors, save the validation and go to the next association
@@ -1371,7 +1367,7 @@ public class AssociationController {
                         Collection<AssociationValidationView> errors =
                                 associationOperationsService.validateAndSaveAssociation(study,
                                                                                         associationToValidate,
-                                                                                        user));
+                                                                                        user);
 
                         // Determine if we have any errors rather than warnings
                         long errorCount = errors.stream()
@@ -1380,37 +1376,26 @@ public class AssociationController {
                         //if there are errors rather than warnings, go straight to the page to edit
                         if (errorCount > 0) {
 
-                            model.addAttribute("study", study);
-                            model.addAttribute("measurementType", measurementType);
+                            session.setAttribute("study", study);
+                            session.setAttribute("measurementType", measurementType);
                             // Get mapping details for association we're editing
-                            model.addAttribute("mappingDetails",
+                            session.setAttribute("mappingDetails",
                                                associationOperationsService.createMappingDetails(associationToValidate));
-                            model.addAttribute("errors", errors);
-                            model.addAttribute("criticalErrorsFound", true);
+                            session.setAttribute("errors", errors);
+                            session.setAttribute("criticalErrorsFound", true);
+                            session.setAttribute("association", associationToValidate);
 
                             if (associationToValidate.getSnpInteraction()) {
-                                model.addAttribute("form", associationOperationsService
+                                session.setAttribute("form", associationOperationsService
                                         .generateForm(associationToValidate));
-                                //                              return "edit_snp_interaction_association";
-                                return "redirect:/associations/" + associationToValidate.getId();
 
                             }
                             else {
-                                model.addAttribute("form", associationOperationsService
+                                session.setAttribute("form", associationOperationsService
                                         .generateForm(associationToValidate));
 
-                                // Determine view
-                                if (associationToValidate.getMultiSnpHaplotype()) {
-                                    //                                  return "edit_multi_snp_association";
-                                    return "redirect:/associations/" + associationToValidate.getId();
-
-                                }
-                                else {
-                                    //                                  return "edit_standard_snp_association";
-                                    return "redirect:/associations/" + associationToValidate.getId();
-
-                                }
                             }
+                            break;
                         }
                     }
                 }
@@ -1532,12 +1517,48 @@ public class AssociationController {
             model.addAttribute("status", exception.getMessage());
         }
 
+        //if an association has critical errors, go straight to that association
+        if (session.getAttribute("criticalErrorsFound") != null) {
+            Association association = (Association) session.getAttribute("association");
+            model.addAttribute("study", study);
+            model.addAttribute("measurementType", session.getAttribute("measurementType"));
 
+            // Get mapping details
+            model.addAttribute("mappingDetails",
+                               associationOperationsService.createMappingDetails(association));
 
+            // Return any association errors
+            model.addAttribute("errors", session.getAttribute("errors"));
+            model.addAttribute("criticalErrorsFound", true);
 
-        String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
-        redirectAttributes.addFlashAttribute("mappingComplete", message);
-        return "redirect:/studies/" + studyId + "/associations";
+            if (association.getSnpInteraction()) {
+                model.addAttribute("form", associationOperationsService
+                        .generateForm(association));
+                return "redirect:/associations/" + association.getId();
+
+                // return "edit_snp_interaction_association";
+            }
+            else {
+                model.addAttribute("form", associationOperationsService
+                        .generateForm(association));
+
+                // Determine view
+                if (association.getMultiSnpHaplotype()) {
+                    return "redirect:/associations/" + association.getId();
+                }
+                else {
+                    return "redirect:/associations/" + association.getId();
+
+                }
+            }
+        }
+       else {
+            RedirectAttributes redirectAttributes = (RedirectAttributes) session.getAttribute("redirectAttributes");
+
+            String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
+            redirectAttributes.addFlashAttribute("mappingComplete", message);
+            return "redirect:/studies/" + studyId + "/associations";
+        }
     }
 
 
