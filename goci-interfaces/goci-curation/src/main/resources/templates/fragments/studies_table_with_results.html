@@ -224,7 +224,14 @@
             </div>
         </td>
 
-        <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : ''"></td>
+        <td><span class="more">
+            <p th:inline="text" th:each="note: ${study.notes}" th:remove="tag">
+            [[${note.textNote}]]
+             <br/>
+             </p>
+            </span>
+        </td>
+
     </tr>
     </tbody>
 </table>
