@@ -296,9 +296,10 @@ public class StudyController {
 
         // Search by notes for entered string
         if (notesQuery != null && !notesQuery.isEmpty()) {
-            studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery,
-                                                                                    constructPageSpecification(page - 1,
-                                                                                                               sort));
+            studyPage = studyRepository.findDistinctByNotesTextNoteContainingIgnoreCase(notesQuery,
+                    constructPageSpecification(page - 1,
+                            sort));
+
             studySearchFilter.setNotesQuery(notesQuery);
             filters = filters + "&notesquery=" + notesQuery;
         }

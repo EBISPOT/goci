@@ -83,6 +83,11 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Page<Study> findByHousekeepingNotesContainingIgnoreCase(String query, Pageable pageable);
 
+    // Query note field
+    @RestResource(exported = false)
+    Page<Study> findDistinctByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
+
+
     // Custom query to get list of study authors
     @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
