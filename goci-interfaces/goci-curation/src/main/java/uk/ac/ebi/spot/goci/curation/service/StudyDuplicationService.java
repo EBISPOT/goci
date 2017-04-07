@@ -3,13 +3,9 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.Platform;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -30,16 +26,19 @@ public class StudyDuplicationService {
     private HousekeepingOperationsService housekeepingOperationsService;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
+    private StudyNoteService studyNoteService;
 
     @Autowired
     public StudyDuplicationService(AncestryRepository ancestryRepository,
                                    HousekeepingOperationsService housekeepingOperationsService,
                                    @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
-                                   StudyRepository studyRepository) {
+                                   StudyRepository studyRepository,
+                                   StudyNoteService studyNoteService) {
         this.ancestryRepository = ancestryRepository;
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
+        this.studyNoteService = studyNoteService;
     }
 
     /**
@@ -63,11 +62,14 @@ public class StudyDuplicationService {
 
         // Create housekeeping object and add duplicate message
         Housekeeping duplicateStudyHousekeeping = housekeepingOperationsService.createHousekeeping();
-        duplicateStudyHousekeeping.setNotes(
-                "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
         studyRepository.save(duplicateStudy);
+
+        StudyNote duplicateNote = studyNoteService.createAutomaticNote("Duplicate of study: "
+                + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
+
+        studyToDuplicate.addNote(duplicateNote);
 
         // Copy existing ancestry
         Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());

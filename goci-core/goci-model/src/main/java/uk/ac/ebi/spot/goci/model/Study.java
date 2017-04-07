@@ -449,4 +449,10 @@ public class Study implements Trackable {
     public Collection<Note> getNotes() { return notes; }
 
     public void setNotes(Collection<Note> notes) { this.notes = notes; }
+
+    public void addNote(Note note) {
+        Collection<Note> currentNotes = getNotes();
+        currentNotes.add(note);
+        setNotes((currentNotes));
+    }
 }

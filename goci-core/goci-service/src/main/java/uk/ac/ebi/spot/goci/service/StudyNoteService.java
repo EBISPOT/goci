@@ -24,17 +24,18 @@ import java.util.List;
 public class StudyNoteService {
     private StudyNoteRepository studyNoteRepository;
     private NoteSubjectRepository noteSubjectRepository;
-
     private CuratorService curatorService;
-
+    private NoteRepository noteRepository;
 
     @Autowired
     public StudyNoteService(StudyNoteRepository studyNoteRepository,
                             NoteSubjectRepository noteSubjectRepository,
-                            CuratorService curatorService) {
+                            CuratorService curatorService,
+                            NoteRepository noteRepository) {
         this.studyNoteRepository = studyNoteRepository;
         this.noteSubjectRepository = noteSubjectRepository;
         this.curatorService = curatorService;
+        this.noteRepository = noteRepository;
     }
 
 
@@ -73,7 +74,20 @@ public class StudyNoteService {
         return note;
     }
 
+    public StudyNote createAutomaticNote(String textNote, Study study, SecureUser user) {
+        StudyNote note = createEmptyStudyNote(study, user);
+        note.setTextNote(textNote);
 
+        return note;
+    }
+
+    public void deleteByStudy(Study study){
+        Collection<Note> notes = noteRepository.findByStudyId(study.getId());
+
+        for (Note note : notes) {
+            noteRepository.delete(note);
+        }
+    }
 
 }
 

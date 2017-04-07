@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
@@ -55,6 +56,9 @@ public class StudyDuplicationServiceTest {
 
     @Mock
     private StudyRepository studyRepository;
+
+    @Mock
+    private StudyNoteService studyNoteService;
 
     private StudyDuplicationService studyDuplicationService;
 
@@ -125,7 +129,8 @@ public class StudyDuplicationServiceTest {
         studyDuplicationService = new StudyDuplicationService(ancestryRepository,
                                                               housekeepingOperationsService,
                                                               studyTrackingOperationService,
-                                                              studyRepository);
+                                                              studyRepository,
+                                                              studyNoteService);
     }
 
     @Test
@@ -156,8 +161,8 @@ public class StudyDuplicationServiceTest {
                                                                 "ancestries",
                                                                 "id",
                                                                 "author");
-        assertThat(duplicateStudy.getHousekeeping().getNotes()).isEqualToIgnoringCase(
-                "Duplicate of study: MacTest T, PMID: 1234569");
+        //assertThat(duplicateStudy.getHousekeeping().getNotes()).isEqualToIgnoringCase(
+        //        "Duplicate of study: MacTest T, PMID: 1234569");
         assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
         assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
         assertThat(duplicateStudy.getHousekeeping().getStudyAddedDate()).isToday();

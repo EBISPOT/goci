@@ -27,8 +27,6 @@ public class DataDeletionService {
 
     private StudyService studyService;
     private AncestryRepository ancestryRepository;
-    private CuratorTrackingService curatorTrackingService;
-    private WeeklyTrackingService weeklyTrackingService;
     private LociAttributesService lociAttributesService;
     private AssociationService associationService;
 
@@ -41,8 +39,6 @@ public class DataDeletionService {
                                AssociationService associationService){
         this.studyService = studyService;
         this.ancestryRepository = ancestryRepository;
-        this.curatorTrackingService = curatorTrackingService;
-        this.weeklyTrackingService = weeklyTrackingService;
         this.lociAttributesService = lociAttributesService;
         this.associationService = associationService;
     }
@@ -78,11 +74,9 @@ public class DataDeletionService {
             ancestryRepository.delete(ancestry);
         }
 
-        // Delete the curatorTracking rows related
-        curatorTrackingService.deleteByStudy(study);
-
-        // Delete the weeklyTracking rows related
-        weeklyTrackingService.deleteByStudy(study);
+        // WeeklyTracking, CuratorTracking and Note. Please use this method!
+        // Shared with === DataDeletionService ===
+        studyService.deleteRelatedInfoByStudy(study);
 
         // Delete study
         studyService.deleteByStudyId(study.getId());

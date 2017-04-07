@@ -596,6 +596,7 @@ public class StudyController {
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long studyId) {
+
         Study studyToView = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToView);
         return "study";
