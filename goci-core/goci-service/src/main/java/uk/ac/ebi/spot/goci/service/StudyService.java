@@ -301,7 +301,7 @@ public class StudyService {
         weeklyTrackingService.deleteByStudy(study);
 
         // Delete the note rows related
-        studyNoteService.deleteByStudy(study);
+        studyNoteService.deleteAllNoteByStudy(study);
     }
 
 //convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time

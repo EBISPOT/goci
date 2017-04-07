@@ -66,10 +66,11 @@ public class StudyDuplicationService {
 
         studyRepository.save(duplicateStudy);
 
-        StudyNote duplicateNote = studyNoteService.createAutomaticNote("Duplicate of study: "
+        StudyNote note = studyNoteService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
-        studyToDuplicate.addNote(duplicateNote);
+        studyNoteService.saveStudyNote(note);
+        duplicateStudy.addNote(note);
 
         // Copy existing ancestry
         Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());

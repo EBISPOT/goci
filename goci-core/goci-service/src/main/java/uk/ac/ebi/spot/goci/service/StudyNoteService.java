@@ -25,17 +25,17 @@ public class StudyNoteService {
     private StudyNoteRepository studyNoteRepository;
     private NoteSubjectRepository noteSubjectRepository;
     private CuratorService curatorService;
-    private NoteRepository noteRepository;
+    private NoteService noteService;
 
     @Autowired
     public StudyNoteService(StudyNoteRepository studyNoteRepository,
                             NoteSubjectRepository noteSubjectRepository,
                             CuratorService curatorService,
-                            NoteRepository noteRepository) {
+                            NoteService noteService) {
         this.studyNoteRepository = studyNoteRepository;
         this.noteSubjectRepository = noteSubjectRepository;
         this.curatorService = curatorService;
-        this.noteRepository = noteRepository;
+        this.noteService = noteService;
     }
 
 
@@ -81,12 +81,9 @@ public class StudyNoteService {
         return note;
     }
 
-    public void deleteByStudy(Study study){
-        Collection<Note> notes = noteRepository.findByStudyId(study.getId());
-
-        for (Note note : notes) {
-            noteRepository.delete(note);
-        }
+    // This method delete ALL the notes with study_id = Study (Eg. Study, Association)
+    public void deleteAllNoteByStudy(Study study){
+        noteService.deleteAllNote(study);
     }
 
 }

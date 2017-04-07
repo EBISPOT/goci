@@ -146,7 +146,7 @@ public class Study implements Trackable {
     @JoinColumn(name="genericId", referencedColumnName="id",insertable=false,updatable=false)
     @Where(clause="content_type='Study'")
     @JsonIgnore
-    private Collection<StudyNote> notes;
+    private Collection<StudyNote> notes = new ArrayList<>();
 
     // JPA no-args constructor
     public Study() {
