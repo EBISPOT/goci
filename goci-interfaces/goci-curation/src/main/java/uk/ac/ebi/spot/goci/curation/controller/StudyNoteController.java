@@ -187,5 +187,43 @@ public class StudyNoteController {
 
         return "study_notes";
     }
+
+
+    //This will enable save/remove button for a study note and disable all other action for other notes
+    @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"editNote"})
+    public String EnableEditNote(@ModelAttribute("multiStudyNoteForm") MultiStudyNoteForm multiStudyNoteForm,
+                             Model model, @PathVariable Long studyId,
+                             HttpServletRequest req) {
+
+        //Index of value to remove
+        final Integer rowId = Integer.valueOf(req.getParameter("editNote"));
+
+        //get the study
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+
+        //get All note subjects for dropdown
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
+        model.addAttribute("availableNoteSubject",noteSubjects);
+
+        //enable the edit for the note and disable all edit for other notes
+        multiStudyNoteForm.getNoteForms().forEach(studyNoteForm -> {
+            studyNoteForm.makeNotEditable();
+        });
+        multiStudyNoteForm.getNoteForms().get(rowId.intValue()).Edit();
+
+        model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+        return "study_notes";
+    }
+
+    //This will enable save/remove button for a study note
+    @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"discardsEditNote"})
+    public String discardEditNote(@ModelAttribute("multiStudyNoteForm") MultiStudyNoteForm multiStudyNoteForm,
+                                 Model model, @PathVariable Long studyId,
+                                 HttpServletRequest req) {
+
+        return "redirect:/studies/" + studyId + "/notes";
+    }
+
 }
 

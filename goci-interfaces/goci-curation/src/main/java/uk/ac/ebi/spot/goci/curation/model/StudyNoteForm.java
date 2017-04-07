@@ -4,7 +4,6 @@ import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 /**
  * Created by xinhe on 03/04/2017.
@@ -22,6 +21,13 @@ public class StudyNoteForm  {
     private Curator curator;
 
     private Long genericId;
+
+    private Boolean canEdit = Boolean.TRUE;
+    private Boolean canRemove = Boolean.TRUE;
+    private Boolean canSave = Boolean.FALSE;
+    private Boolean canDiscard = Boolean.FALSE;
+    private Boolean editing = Boolean.FALSE;
+
 
 
     public StudyNoteForm() {
@@ -88,4 +94,93 @@ public class StudyNoteForm  {
         this.genericId = genericId;
     }
 
+    public Boolean getCanEdit() {
+        return canEdit;
+    }
+
+
+    public void setCanEdit(Boolean canEdit) {
+        this.canEdit = canEdit;
+//        if (canEdit){
+//            this.canSave = Boolean.TRUE;
+//            this.canEdit = Boolean.TRUE;
+//        }else{
+//            this.canSave = Boolean.FALSE;
+//            this.canEdit = Boolean.FALSE;
+//        }
+    }
+
+    public Boolean getCanRemove() {
+        return canRemove;
+    }
+
+//    public void setCanRemove(Boolean canRemove) {
+//        this.canRemove = canRemove;
+//    }
+
+    public Boolean getCanSave() {
+        return canSave;
+    }
+
+//    public void setCanSave(Boolean canSave) {
+//        this.canSave = canSave;
+//    }
+
+    public Boolean canEdit(){
+        return canEdit;
+    }
+
+    public void updateIconStatus(){
+        if(canEdit){
+
+        }else{
+
+        }
+    }
+
+    public void setCanRemove(Boolean canRemove) {
+        this.canRemove = canRemove;
+    }
+
+    public void setCanSave(Boolean canSave) {
+        this.canSave = canSave;
+    }
+
+    public Boolean getCanDiscard() {
+        return canDiscard;
+    }
+
+    public void setCanDiscard(Boolean canDiscard) {
+        this.canDiscard = canDiscard;
+    }
+
+    public Boolean getEditing() {
+        return editing;
+    }
+
+    public void setEditing(Boolean editing) {
+        this.editing = editing;
+    }
+
+    public void Edit() {
+        this.setEditing(Boolean.TRUE);
+        this.setCanDiscard(Boolean.TRUE);
+        this.setCanSave(Boolean.TRUE);
+        this.setCanEdit(Boolean.FALSE);
+        this.setCanRemove(Boolean.FALSE);
+    }
+
+    public void makeNotEditable(){
+        this.setCanEdit(Boolean.FALSE);
+        this.setCanRemove(Boolean.FALSE);
+        this.setCanSave(Boolean.FALSE);
+        this.setCanDiscard(Boolean.FALSE);
+    }
+
+    public void makeEditable(){
+        this.setCanEdit(Boolean.TRUE);
+        this.setCanRemove(Boolean.TRUE);
+        this.setCanSave(Boolean.FALSE);
+        this.setCanDiscard(Boolean.FALSE);
+    }
 }

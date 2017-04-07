@@ -35,6 +35,10 @@ public class StudyNoteOperationService {
         // #xintodo Should factory be use to create these instance?
         StudyNoteForm row = new StudyNoteForm(note.getId(),note.getTextNote(),note.getNoteSubject(),
                                               note.getStatus(),note.getCurator(), note.getGenericId());
+        //if study is published, disable all edit
+        if(note.getStudy().getHousekeeping().getIsPublished()){
+            row.setCanEdit(Boolean.FALSE);
+        }
         return row;
     }
 
