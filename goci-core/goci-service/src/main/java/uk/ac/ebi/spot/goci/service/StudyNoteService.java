@@ -27,6 +27,9 @@ public class StudyNoteService {
     private CuratorService curatorService;
     private NoteService noteService;
 
+    private static String DEFAULT = "General";
+    private static String SYSTEM_NOTE = "System note";
+
 
     @Autowired
     public StudyNoteService(StudyNoteRepository studyNoteRepository,
@@ -77,7 +80,7 @@ public class StudyNoteService {
         StudyNote note = createEmptyStudyNote(study, user);
         // System note subject
         note.setTextNote(textNote);
-        NoteSubject subject = noteSubjectService.findBySubject("System note");
+        NoteSubject subject = noteSubjectService.findBySubject(SYSTEM_NOTE);
         note.setNoteSubject(subject);
         return note;
     }
@@ -85,7 +88,7 @@ public class StudyNoteService {
     public StudyNote createGeneralNote( Study study, SecureUser user) {
         StudyNote note = createEmptyStudyNote(study, user);
         // general note subject
-        NoteSubject subject = noteSubjectService.findBySubject("General");
+        NoteSubject subject = noteSubjectService.findBySubject(DEFAULT);
         note.setNoteSubject(subject);
         return note;
     }

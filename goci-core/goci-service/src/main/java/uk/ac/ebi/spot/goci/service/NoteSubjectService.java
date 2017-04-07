@@ -33,7 +33,7 @@ public class NoteSubjectService {
     }
 
     public NoteSubject findBySubject(String subject) {
-        NoteSubject subjectSelected= noteSubjectRepository.findBySubject(subject);
+        NoteSubject subjectSelected= noteSubjectRepository.findBySubjectIgnoreCase(subject);
         if (subjectSelected==null) {
             //xintodo add log
             subjectSelected = findDefaultSubject();
