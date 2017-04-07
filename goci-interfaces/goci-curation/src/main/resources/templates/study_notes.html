@@ -156,15 +156,27 @@
                         </td>
                         <!--Status-->
                          <td>
-                             <input  type="hidden" th:field="*{noteForms[__${rowStat.index}__].status}"
-                                     th:readonly="${study.housekeeping.isPublished} or
-                                      not *{noteForms[__${rowStat.index}__].editing}"/>
-                             <div th:switch="*{noteForms[__${rowStat.index}__].status}">
-                                    <span th:case="true" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                    <span th:case="false" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                             <!--<input  type="hidden" th:field="*{noteForms[__${rowStat.index}__].status}"-->
+                                     <!--th:readonly="${study.housekeeping.isPublished} or-->
+                                      <!--not *{noteForms[__${rowStat.index}__].editing}"/>-->
+                             <!--<div th:switch="*{noteForms[__${rowStat.index}__].status}">-->
+                                    <!--<span th:case="true" class="glyphicon glyphicon-ok" aria-hidden="true"></span>-->
+                                    <!--<span th:case="false" class="glyphicon glyphicon-remove" aria-hidden="true"></span>-->
+                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                 <input type="radio" th:field="*{noteForms[__${rowStat.index}__].status}"  th:value="*{noteForms[__${rowStat.index}__].status}"
+                                     th:checked="*{noteForms[__${rowStat.index}__].status}"
+                                        th:disabled="${study.housekeeping.isPublished} or
+                                        not *{noteForms[__${rowStat.index}__].editing}"/>
+                                 <span  class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                <input type="radio" th:field="*{noteForms[__${rowStat.index}__].status}"  th:value="*{noteForms[__${rowStat.index}__].status}"
+                                    th:checked="not *{noteForms[__${rowStat.index}__].status}"
+                                       th:disabled="${study.housekeeping.isPublished} or
+                                        not *{noteForms[__${rowStat.index}__].editing}"/>
+
+
                                  <!--<input type="radio" th:field="*{noteForms[__${rowStat.index}__].status} value="true">yes<br>-->
                                  <!--<input type="radio" th:field="*{noteForms[__${rowStat.index}__].status} value="false">no<br>-->
-                                </div>
+                                <!--</div>-->
                          </td>
                         <!--Curator-->
                          <td>

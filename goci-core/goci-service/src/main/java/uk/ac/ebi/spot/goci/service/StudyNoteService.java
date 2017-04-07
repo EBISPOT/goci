@@ -64,6 +64,7 @@ public class StudyNoteService {
         note.setStudy(study);
 
         //defult curator will be the one who is currently adding the note
+        //#xintodo this needs to be change when a forgin key is added the curator table from the user table
         Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
         note.setCurator(curator);
 
@@ -76,7 +77,15 @@ public class StudyNoteService {
         StudyNote note = createEmptyStudyNote(study, user);
         // System note subject
         note.setTextNote(textNote);
-        NoteSubject subject = noteSubjectService.findBySubject("System note 23232");
+        NoteSubject subject = noteSubjectService.findBySubject("System note");
+        note.setNoteSubject(subject);
+        return note;
+    }
+
+    public StudyNote createGeneralNote( Study study, SecureUser user) {
+        StudyNote note = createEmptyStudyNote(study, user);
+        // general note subject
+        NoteSubject subject = noteSubjectService.findBySubject("General");
         note.setNoteSubject(subject);
         return note;
     }

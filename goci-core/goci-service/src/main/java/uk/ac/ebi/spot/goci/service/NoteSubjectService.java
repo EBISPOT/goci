@@ -28,24 +28,16 @@ public class NoteSubjectService {
 
 
     protected NoteSubject findDefaultSubject() {
-        NoteSubject subject = new NoteSubject();
-        try {
-            subject = noteSubjectRepository.findAll().get(0);
-        } catch (Exception exception) {
-            throw exception;
-        }
+        NoteSubject subject = noteSubjectRepository.findAll().get(0);
         return subject;
     }
 
     public NoteSubject findBySubject(String subject) {
-        NoteSubject subjectSelected = new NoteSubject();
-        try {
-          subjectSelected= noteSubjectRepository.findBySubject(subject);
-        } catch (Exception e) {
-          // Find the first in the list.
-          subjectSelected = findDefaultSubject();
+        NoteSubject subjectSelected= noteSubjectRepository.findBySubject(subject);
+        if (subjectSelected==null) {
+            //xintodo add log
+            subjectSelected = findDefaultSubject();
         }
-
         return subjectSelected;
     }
 

@@ -91,7 +91,7 @@ public class StudyNoteController {
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
 
         //create a default study note with detaul setting
-        StudyNote emptyNote = studyNoteService.createEmptyStudyNote(study,user);
+        StudyNote emptyNote = studyNoteService.createGeneralNote(study,user);
         StudyNoteForm emptyNoteForm = studyNoteOperationService.convertToStudyNoteForm(emptyNote);
 
         //attach the emput form
