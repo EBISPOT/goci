@@ -450,8 +450,8 @@ public class Study implements Trackable {
 
     public void setNotes(Collection<StudyNote> notes) { this.notes = notes; }
 
-    public void addNote(Note note) {
-        Collection<Note> currentNotes = getNotes();
+    public void addNote(StudyNote note) {
+        Collection<StudyNote> currentNotes = getNotes();
         currentNotes.add(note);
         setNotes((currentNotes));
     }
