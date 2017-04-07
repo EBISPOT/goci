@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="studynote_update_error">
+
+<!--Link back to study page -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <!--Only show this button if no critical errors-->
+            <!--<a class="btn btn-default" th:if="${#bools.isFalse(criticalErrorsFound)}"-->
+               <!--th:href="@{/studies/{studyId}/associations(studyId=${study.id}, associationId=*{associationId})}">Back to-->
+                                                                                                                 <!--all SNP-->
+                                                                                                                 <!--associations</a>-->
+            <button id="errorButton"
+                    th:if="${ updateError != null }"
+                    type="button"
+                    class="btn btn-danger"
+                    data-toggle="collapse"
+                    data-target="#collapseErrors"
+                    aria-expanded="false"
+                    aria-controls="collapseErrors">
+                <span class="glyphicon glyphicon-collapse-down"></span> Open errors
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="collapse" id="collapseErrors">
+            <div class="well col-md-offset-4 col-md-6">
+                <table id="mainTable"
+                       class="table table-hover table-bordered"
+                       th:if="${ updateError != null }" cellspacing="0" width="100%">
+                    <br/>
+                    <thead>
+                    <tr>
+                        <th>Error Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${updateError}?: '' "></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#collapseErrors").on("hide.bs.collapse", function() {
+            $("#errorButton").html('<span class="glyphicon glyphicon-collapse-down"></span> Open errors');
+        });
+        $("#collapseErrors").on("show.bs.collapse", function() {
+            $("#errorButton").html('<span class="glyphicon glyphicon-collapse-up"></span> Close errors');
+        });
+    });
+</script>
+
+</body>
+</html>

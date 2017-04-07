@@ -146,7 +146,7 @@ public class Study implements Trackable {
     @JoinColumn(name="genericId", referencedColumnName="id",insertable=false,updatable=false)
     @Where(clause="content_type='Study'")
     @JsonIgnore
-    private Collection<Note> notes;
+    private Collection<StudyNote> notes;
 
     // JPA no-args constructor
     public Study() {
@@ -446,9 +446,9 @@ public class Study implements Trackable {
         this.snps = snps;
     }
 
-    public Collection<Note> getNotes() { return notes; }
+    public Collection<StudyNote> getNotes() { return notes; }
 
-    public void setNotes(Collection<Note> notes) { this.notes = notes; }
+    public void setNotes(Collection<StudyNote> notes) { this.notes = notes; }
 
     public void addNote(Note note) {
         Collection<Note> currentNotes = getNotes();
