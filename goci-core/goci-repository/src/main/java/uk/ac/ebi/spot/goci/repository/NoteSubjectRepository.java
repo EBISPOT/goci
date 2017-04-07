@@ -12,4 +12,5 @@ import java.util.Collection;
 @RepositoryRestResource(exported = false)
 public interface NoteSubjectRepository extends JpaRepository<NoteSubject, Long> {
 
+    NoteSubject findBySubject(String subject);
 }

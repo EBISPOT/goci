@@ -23,17 +23,18 @@ import java.util.List;
 @Service
 public class StudyNoteService {
     private StudyNoteRepository studyNoteRepository;
-    private NoteSubjectRepository noteSubjectRepository;
+    private NoteSubjectService noteSubjectService;
     private CuratorService curatorService;
     private NoteService noteService;
 
+
     @Autowired
     public StudyNoteService(StudyNoteRepository studyNoteRepository,
-                            NoteSubjectRepository noteSubjectRepository,
+                            NoteSubjectService subjectService,
                             CuratorService curatorService,
                             NoteService noteService) {
         this.studyNoteRepository = studyNoteRepository;
-        this.noteSubjectRepository = noteSubjectRepository;
+        this.noteSubjectService = subjectService;
         this.curatorService = curatorService;
         this.noteService = noteService;
     }
@@ -61,9 +62,6 @@ public class StudyNoteService {
     public StudyNote createEmptyStudyNote(Study study, SecureUser user){
         StudyNote note = new StudyNote();
         note.setStudy(study);
-        //defult notesubject
-        NoteSubject ns = noteSubjectRepository.findOne(new Long(1));
-        note.setNoteSubject(ns);
 
         //defult curator will be the one who is currently adding the note
         Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
@@ -76,8 +74,10 @@ public class StudyNoteService {
 
     public StudyNote createAutomaticNote(String textNote, Study study, SecureUser user) {
         StudyNote note = createEmptyStudyNote(study, user);
+        // System note subject
         note.setTextNote(textNote);
-
+        NoteSubject subject = noteSubjectService.findBySubject("System note 23232");
+        note.setNoteSubject(subject);
         return note;
     }
 

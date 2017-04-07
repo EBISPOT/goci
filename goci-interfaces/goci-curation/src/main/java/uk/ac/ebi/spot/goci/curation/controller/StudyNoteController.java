@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.NoteSubjectService;
 import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationService;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.NoteSubjectService;
 import uk.ac.ebi.spot.goci.service.StudyNoteService;
 
 import javax.servlet.http.HttpServletRequest;
