@@ -55,6 +55,12 @@ public abstract class Note {
     public Note() {
     }
 
+    public Note(Study study) {
+        this.study = study;
+    }
+
+
+
     public Long getId() {
         return id;
     }

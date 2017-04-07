@@ -11,6 +11,7 @@
             <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
             <li><a th:href="@{/studies/{studyId}/studyfiles(studyId=*{id})}">Study Files</a></li>
             <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/notes(studyId=*{id})}">Notes</a></li>
             <li><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Tracking Information</a></li>
             <li><a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'">
                 Print Study</a></li>

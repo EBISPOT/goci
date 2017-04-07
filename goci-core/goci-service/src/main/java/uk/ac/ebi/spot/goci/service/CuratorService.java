@@ -37,4 +37,10 @@ public class CuratorService {
         Curator curator = curatorRepository.findByEmail(email);
         return curator;
     }
+
+
+    public Curator findOne(Long id) {
+        Curator curator = curatorRepository.findOne(id);
+        return curator;
+    }
 }
