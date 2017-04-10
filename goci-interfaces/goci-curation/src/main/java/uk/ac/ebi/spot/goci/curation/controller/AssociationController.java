@@ -48,6 +48,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.AssociationService;
 
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
@@ -103,6 +104,7 @@ public class AssociationController {
     private AssociationDeletionService associationDeletionService;
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+    private AssociationService associationService;
 
     @Value("${collection.sizelimit}")
     private int collectionLimit;
@@ -136,7 +138,8 @@ public class AssociationController {
                                  AssociationValidationReportService associationValidationReportService,
                                  AssociationDeletionService associationDeletionService,
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
-                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService) {
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
+                                 AssociationService associationService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -152,6 +155,7 @@ public class AssociationController {
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
+        this.associationService = associationService;
 
         this.executorService = Executors.newFixedThreadPool(4);
 
@@ -237,6 +241,8 @@ public class AssociationController {
         return () -> {
                 model.addAttribute("status", "201");
                 model.addAttribute("uploadProgress", "true");
+                model.addAttribute("processType", "upload");
+
                 performUpload(model, session, file, user, study);
 
                 return "association_upload_progress";
@@ -1129,7 +1135,6 @@ public class AssociationController {
           // Establish our study object and upload file into study dir
           Study study = studyRepository.findOne(studyId);
           // For the study get all associations
-          Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
 
           model.addAttribute("study", study);
 
@@ -1144,7 +1149,8 @@ public class AssociationController {
           return () -> {
               model.addAttribute("status", "201");
               model.addAttribute("uploadProgress", "true");
-              performValidation(model, session, study, studyAssociations, user);
+              model.addAttribute("processType", "validation");
+              performValidation(model, session, study, user);
 
               return "association_upload_progress";
           };
@@ -1312,92 +1318,75 @@ public class AssociationController {
     }
 
     @Async
-    private void performValidation(Model model, HttpSession session, Study study, Collection<Association> studyAssociations, SecureUser user){
+    private void performValidation(Model model, HttpSession session, Study study, SecureUser user){
+
 
         Future<Boolean> future =
             executorService.submit(() -> {
+                Collection<Association> studyAssociations = associationService.findAllByStudyId(study.getId());
 
-            for (Association associationToValidate : studyAssociations) {
-                if (!associationToValidate.getSnpApproved()) {
-                    String measurementType =
-                            associationOperationsService.determineIfAssociationIsOrType(associationToValidate);
-                    List<AssociationValidationView> criticalErrors = new ArrayList<>();
-                    if (associationToValidate.getSnpInteraction()) {
-                        criticalErrors =
-                                associationOperationsService.checkSnpAssociationInteractionFormErrors((SnpAssociationInteractionForm) associationOperationsService
-                                                                                                              .generateForm(associationToValidate),
-                                                                                                      measurementType);
-                    }
-                    else {
-                        criticalErrors =
-                                associationOperationsService.checkSnpAssociationFormErrors((SnpAssociationStandardMultiForm) associationOperationsService
-                                                                                                   .generateForm(associationToValidate),
-                                                                                           measurementType);
-                    }
-
-                    //if an association has critical errors, go straight to that association
-                    if (!criticalErrors.isEmpty()) {
-                        session.setAttribute("measurementType", measurementType);
-
-                        // Get mapping details
-                        session.setAttribute("mappingDetails",
-                                           associationOperationsService.createMappingDetails(associationToValidate));
-
-                        // Return any association errors
-                        session.setAttribute("errors", criticalErrors);
-                        session.setAttribute("criticalErrorsFound", true);
-                        session.setAttribute("association", associationToValidate);
-
+                for (Association associationToValidate : studyAssociations) {
+                    if (!associationToValidate.getSnpApproved()) {
+                        String measurementType =
+                                associationOperationsService.determineIfAssociationIsOrType(associationToValidate);
+                        List<AssociationValidationView> criticalErrors = new ArrayList<>();
                         if (associationToValidate.getSnpInteraction()) {
-                            session.setAttribute("form", associationOperationsService
-                                    .generateForm(associationToValidate));
+                            criticalErrors =
+                                    associationOperationsService.checkSnpAssociationInteractionFormErrors((SnpAssociationInteractionForm) associationOperationsService
+                                                                                                                  .generateForm(associationToValidate),
+                                                                                                          measurementType);
                         }
                         else {
-                            session.setAttribute("form", associationOperationsService
-                                    .generateForm(associationToValidate));
-
+                            criticalErrors =
+                                    associationOperationsService.checkSnpAssociationFormErrors((SnpAssociationStandardMultiForm) associationOperationsService
+                                                                                                       .generateForm(associationToValidate),
+                                                                                               measurementType);
                         }
-                        break;
 
-                    }
-
-    //     if there are no criticial errors, save the validation and go to the next association
-                    else {
-                        // Save and validate form
-                        Collection<AssociationValidationView> errors =
-                                associationOperationsService.validateAndSaveAssociation(study,
-                                                                                        associationToValidate,
-                                                                                        user);
-
-                        // Determine if we have any errors rather than warnings
-                        long errorCount = errors.stream()
-                                .filter(validationError -> !validationError.getWarning())
-                                .count();
-                        //if there are errors rather than warnings, go straight to the page to edit
-                        if (errorCount > 0) {
-
-                            session.setAttribute("study", study);
+                        //if an association has critical errors, go straight to that association
+                        if (!criticalErrors.isEmpty()) {
                             session.setAttribute("measurementType", measurementType);
-                            // Get mapping details for association we're editing
+
+                            // Get mapping details
                             session.setAttribute("mappingDetails",
                                                associationOperationsService.createMappingDetails(associationToValidate));
-                            session.setAttribute("errors", errors);
+
+                            // Return any association errors
+                            session.setAttribute("errors", criticalErrors);
                             session.setAttribute("criticalErrorsFound", true);
-                            session.setAttribute("association", associationToValidate);
+                            session.setAttribute("associationId", associationToValidate.getId());
 
-                            if (associationToValidate.getSnpInteraction()) {
-                                session.setAttribute("form", associationOperationsService
-                                        .generateForm(associationToValidate));
-
-                            }
-                            else {
-                                session.setAttribute("form", associationOperationsService
-                                        .generateForm(associationToValidate));
-
-                            }
                             break;
+
                         }
-                    }
+
+    //     if there are no criticial errors, save the validation and go to the next association
+                        else {
+                            // Save and validate form
+                            Collection<AssociationValidationView> errors =
+                                    associationOperationsService.validateAndSaveAssociation(study,
+                                                                                            associationToValidate,
+                                                                                            user);
+
+                            // Determine if we have any errors rather than warnings
+                            long errorCount = errors.stream()
+                                    .filter(validationError -> !validationError.getWarning())
+                                    .count();
+                            //if there are errors rather than warnings, go straight to the page to edit
+                            if (errorCount > 0) {
+
+                                session.setAttribute("study", study);
+                                session.setAttribute("measurementType", measurementType);
+                                // Get mapping details for association we're editing
+                                session.setAttribute("mappingDetails",
+                                                   associationOperationsService.createMappingDetails(associationToValidate));
+                                session.setAttribute("errors", errors);
+                                session.setAttribute("criticalErrorsFound", true);
+                                session.setAttribute("associationId", associationToValidate.getId());
+
+                                break;
+                            }
+                        }
                 }
             }
            session.setAttribute("done", true);
@@ -1440,7 +1429,7 @@ public class AssociationController {
 
         try {
             Future<Boolean> f = (Future<Boolean>) session.getAttribute("future");
-            if(f.isDone()) {
+             if(f.isDone()) {
                 f.get();
             }
         }
@@ -1519,7 +1508,7 @@ public class AssociationController {
 
         //if an association has critical errors, go straight to that association
         if (session.getAttribute("criticalErrorsFound") != null) {
-            Association association = (Association) session.getAttribute("association");
+            Association association = associationRepository.getOne((Long) session.getAttribute("associationId"));
             model.addAttribute("study", study);
             model.addAttribute("measurementType", session.getAttribute("measurementType"));
 
@@ -1535,8 +1524,6 @@ public class AssociationController {
                 model.addAttribute("form", associationOperationsService
                         .generateForm(association));
                 return "redirect:/associations/" + association.getId();
-
-                // return "edit_snp_interaction_association";
             }
             else {
                 model.addAttribute("form", associationOperationsService

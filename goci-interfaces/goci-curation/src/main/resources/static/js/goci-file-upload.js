@@ -21,6 +21,15 @@ function checkStatus() {
 
 function getResults() {
 
-    window.location.replace('getUploadResults');
+    if ($('#process_flag').val() == 'upload') {
+        window.location.replace('getUploadResults');
+    }
+     else{
+        window.location.replace('getValidationResults');
+
+    }
+
+
+
 
 }

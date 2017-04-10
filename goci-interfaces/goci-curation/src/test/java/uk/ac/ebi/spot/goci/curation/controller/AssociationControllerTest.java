@@ -42,6 +42,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.AssociationService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,6 +130,8 @@ public class AssociationControllerTest {
     @Mock
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
+    @Mock
+    private AssociationService associationService;
 
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
@@ -161,7 +164,8 @@ public class AssociationControllerTest {
                                                                                 associationValidationReportService,
                                                                                 associationDeletionService,
                                                                                 associationsEventsViewService,
-                                                                                studyAssociationBatchDeletionEventService);
+                                                                                studyAssociationBatchDeletionEventService,
+                                                                                associationService);
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
     }
 
