@@ -94,8 +94,13 @@ public class StudyNoteController {
         StudyNote emptyNote = studyNoteService.createGeneralNote(study,user);
         StudyNoteForm emptyNoteForm = studyNoteOperationService.convertToStudyNoteForm(emptyNote);
 
-        //attach the emput form
+        //attach the empty form
         multiStudyNoteForm.getNoteForms().add(emptyNoteForm);
+        //Index of value to add
+        final Integer rowId = multiStudyNoteForm.getNoteForms().size()-1;
+
+        //enable the edit for the new note and disable all edit for other notes
+        multiStudyNoteForm.startEdit(rowId);
 
         model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
 
@@ -121,26 +126,22 @@ public class StudyNoteController {
 
 
         StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
-
         StudyNote noteToRemove = studyNoteOperationService.convertToStudyNote(snf, study);
-
 
         //if not removing empty row
         if (noteToRemove.getId() != null){
-
             try{
                 //#xintodo better exception hande needed
                 studyNoteService.deleteStudyNote(noteToRemove);
             }
             catch (Exception e){
                 model.addAttribute("updateError", e.toString());
+                model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+                return "study_notes";
             }
         }
 
         multiStudyNoteForm.getNoteForms().remove(rowId.intValue());
-
-        model.addAttribute("study", study);
-        model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
 
         return "study_notes";
     }
@@ -151,7 +152,8 @@ public class StudyNoteController {
 
     @RequestMapping(value = "/studies/{studyId}/notes",
                     method = RequestMethod.POST, params = {"saveNote"})
-    public String saveNote(@Valid MultiStudyNoteForm multiStudyNoteForm,BindingResult bindingResult,
+    public String saveNote(@ModelAttribute("multiStudyNoteForm") @Valid MultiStudyNoteForm multiStudyNoteForm,
+                           BindingResult bindingResult,
                            Model model, @PathVariable Long studyId, HttpServletRequest req) {
 
         //Index of value to save
@@ -165,27 +167,31 @@ public class StudyNoteController {
         Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
-        //#xintodo display error properly
         if (bindingResult.hasErrors()) {
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
             return "study_notes";
         }
 
-
+        //convert studynoteform to studynote domain object and save
         StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
         StudyNote noteToEdit = studyNoteOperationService.convertToStudyNote(snf, study);
 
         try{
-            //#xintodo better exception hande needed
             studyNoteService.saveStudyNote(noteToEdit);
+            multiStudyNoteForm.getNoteForms().set(rowId,studyNoteOperationService.convertToStudyNoteForm(noteToEdit));
+            multiStudyNoteForm.finishEdit();
+            model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+            return "study_notes";
         }
         catch (Exception e){
+            //#xintodo better exception hande needed
             model.addAttribute("updateError", e.toString());
+            model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+            return "study_notes";
         }
 
-        model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
 
-        return "study_notes";
+
     }
 
 
@@ -207,10 +213,7 @@ public class StudyNoteController {
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         //enable the edit for the note and disable all edit for other notes
-        multiStudyNoteForm.getNoteForms().forEach(studyNoteForm -> {
-            studyNoteForm.makeNotEditable();
-        });
-        multiStudyNoteForm.getNoteForms().get(rowId.intValue()).Edit();
+        multiStudyNoteForm.startEdit(rowId);
 
         model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
         return "study_notes";

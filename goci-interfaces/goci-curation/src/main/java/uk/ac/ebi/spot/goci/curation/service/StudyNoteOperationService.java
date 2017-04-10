@@ -1,10 +1,14 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
+import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
+import uk.ac.ebi.spot.goci.service.CuratorService;
+import uk.ac.ebi.spot.goci.service.NoteSubjectService;
 
 import java.util.Collection;
 
@@ -15,9 +19,17 @@ import java.util.Collection;
 @Service
 public class StudyNoteOperationService {
 
-
+    CuratorService curatorService;
+    NoteSubjectService noteSubjectService;
 
     public StudyNoteOperationService() {
+    }
+
+    @Autowired
+    public StudyNoteOperationService(CuratorService curatorService,
+                                     NoteSubjectService noteSubjectService) {
+        this.curatorService = curatorService;
+        this.noteSubjectService = noteSubjectService;
     }
 
     public StudyNote convertToStudyNote(StudyNoteForm studyNoteForm, Study study){
@@ -33,27 +45,29 @@ public class StudyNoteOperationService {
 
     public StudyNoteForm convertToStudyNoteForm(StudyNote note){
         // #xintodo Should factory be use to create these instance?
-        StudyNoteForm row = new StudyNoteForm(note.getId(),note.getTextNote(),note.getNoteSubject(),
-                                              note.getStatus(),note.getCurator(), note.getGenericId());
-        //if study is published, disable all edit
-        if(note.getStudy().getHousekeeping().getIsPublished()){
-            row.setCanEdit(Boolean.FALSE);
-        }
+        StudyNoteForm row = new StudyNoteForm(note.getId(),note.getTextNote(),
+                                              noteSubjectService.findOne(note.getNoteSubject().getId()),
+                                              note.getStatus(),curatorService.findOne(note.getCurator().getId()),
+                                              note.getGenericId());
         return row;
     }
 
 
     public MultiStudyNoteForm generateMultiStudyNoteForm(Collection<StudyNote> notes, Study study){
-        MultiStudyNoteForm snf = new MultiStudyNoteForm();
+        MultiStudyNoteForm msnf = new MultiStudyNoteForm();
         if(!notes.isEmpty()){
             notes.forEach(studyNote -> {
                 StudyNoteForm row = convertToStudyNoteForm(studyNote);
-                snf.getNoteForms().add(row);
+                msnf.getNoteForms().add(row);
             });
         }
-        snf.setId(study.getId());
-        snf.setStudy(study);
-        return snf;
+        //if study is published, disable all edit
+        if(study.getHousekeeping().getIsPublished()){
+            msnf.makeNotEditable();
+        }else{
+
+        }
+        return msnf;
     }
 
 

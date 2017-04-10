@@ -1,7 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import uk.ac.ebi.spot.goci.model.Study;
-
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,40 +8,27 @@ import java.util.List;
  * Created by xinhe on 03/04/2017.
  */
 public class MultiStudyNoteForm  {
-    // depend on the form, this can be associationId or studyId.
-    private Long id;
 
-    private Study study;
 
     @Valid
     private List<StudyNoteForm> noteForms = new ArrayList<StudyNoteForm>();
+
+    private Boolean canEdit = true;
+    private Boolean editingMode = false;
+    private Integer editIndex;
 
     public MultiStudyNoteForm() {
 
     }
 
-    public MultiStudyNoteForm(Long id,
-                              Study study,
-                              List<StudyNoteForm> noteForms) {
-        this.id = id;
-        this.study = study;
+    public MultiStudyNoteForm(List<StudyNoteForm> noteForms,
+                              Boolean canEdit,
+                              Boolean editingMode,
+                              Integer editIndex) {
         this.noteForms = noteForms;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Study getStudy() {
-        return study;
-    }
-
-    public void setStudy(Study study) {
-        this.study = study;
+        this.canEdit = canEdit;
+        this.editingMode = editingMode;
+        this.editIndex = editIndex;
     }
 
     public List<StudyNoteForm> getNoteForms() {
@@ -52,5 +37,54 @@ public class MultiStudyNoteForm  {
 
     public void setNoteForms(List<StudyNoteForm> noteForms) {
         this.noteForms = noteForms;
+    }
+
+    public Boolean getEditingMode() {
+        return editingMode;
+    }
+
+    public void setEditingMode(Boolean editingMode) {
+        this.editingMode = editingMode;
+    }
+
+
+    public Integer getEditIndex() {
+        return editIndex;
+    }
+
+    public void setEditIndex(Integer editIndex) {
+        this.editIndex = editIndex;
+    }
+
+    public Boolean getCanEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(Boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public void startEdit(Integer index){
+        setEditingMode(Boolean.TRUE);
+        setEditIndex(index);
+        this.getNoteForms().forEach(studyNoteForm -> {
+            studyNoteForm.makeNotEditable();
+        });
+        this.getNoteForms().get(index).startEdit();
+    }
+
+    public void finishEdit(){
+        setEditingMode(Boolean.FALSE);
+        this.getNoteForms().forEach(studyNoteForm -> {
+            studyNoteForm.makeEditable();
+        });
+    }
+
+    public void makeNotEditable(){
+        setCanEdit(Boolean.FALSE);
+        //disable edit for all study note
+        noteForms.forEach(noteForm->{
+            noteForm.makeNotEditable();
+        });
     }
 }
