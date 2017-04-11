@@ -87,7 +87,7 @@ function doSortingSearch(facet, field, id) {
             traits = terms.split('|');
         }
         else if ($('#filter').text() == 'recent' && date == '') {
-            date = "[NOW-3MONTH+TO+*]";
+            date = "[NOW-1MONTH+TO+*]";
         }
     }
 
