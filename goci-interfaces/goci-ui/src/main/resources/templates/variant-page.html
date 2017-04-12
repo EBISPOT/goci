@@ -426,10 +426,10 @@
     <!-- LD widget JavaScript
     ================================================== -->
     <!-- JS for widgets -->
-    <script type="text/javascript" src="http://test-3.ensembl.org/Widgets/core.js"></script>
+    <script type="text/javascript" src="http://widgets.ensembl.org/Widgets/core.js"></script>
 
     <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
-    <link type="text/css" rel="stylesheet" href="http://test-3.ensembl.org/ld_graph.css"/>
+    <link type="text/css" rel="stylesheet" href="http://widgets.ensembl.org/ld_graph.css"/>
     <!--<script type="text/javascript" src="d3.v3.js"></script> -->
     <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
@@ -449,11 +449,11 @@
                     return {
                         configuration: {
                             ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
-                            window_size: '50',
+                            window_size: 50,
                             population: '1000GENOMES:phase_3:CEU',
                             svgSize: {
                                 width: 850,
-                                height: 300,
+                                height: 405,
                                 padding: 50
                             },
                             panelSize: {
