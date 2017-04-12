@@ -453,7 +453,7 @@ function processAssociation(association, table) {
                         "'  target='_blank'>").concat(
                         "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
-                var locString = "chr".concat(chromName);
+                var locString = chromName;
                 if (position == '') {
                     position = "?";
                 }

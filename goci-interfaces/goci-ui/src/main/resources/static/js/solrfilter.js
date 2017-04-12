@@ -48,6 +48,7 @@ function doFiltering() {
     var orRange = processOR();
     var betaRange = processBeta();
     var dateRange = processDate();
+    var region = processGenomicRegion();
     var traits = processTraitDropdown();
     var addeddate = '';
 
@@ -60,13 +61,13 @@ function doFiltering() {
             traits = terms.split('|');
         }
         else if ($('#filter').text() == 'recent') {
-            addeddate = "[NOW-3MONTH+TO+*]";
+            addeddate = "[NOW-1MONTH+TO+*]";
         }
     }
 
 
     $('#filter-form').addClass('in-use')
-    solrfilter(pvalRange, orRange, betaRange, dateRange, traits, addeddate);
+    solrfilter(pvalRange, orRange, betaRange, dateRange, region, traits, addeddate);
 }
 
 function clearFilters() {
@@ -164,6 +165,38 @@ function processBeta() {
     return betaRange;
 }
 
+function processGenomicRegion(){
+    var genomicRegion = '';
+
+    var chrom = $('#chrom').val();
+    var bpMin = $('#bp-min').val();
+    var bpMax = $('#bp-max').val();
+
+    if(chrom){
+        genomicRegion = chrom.concat("-")
+    }
+
+    if (bpMin || bpMax) {
+        genomicRegion = genomicRegion.concat("[");
+        if (bpMin) {
+            genomicRegion = genomicRegion.concat(bpMin);
+        }
+        else {
+            genomicRegion = genomicRegion.concat("*");
+        }
+        genomicRegion = genomicRegion.concat("+TO+");
+        if (bpMax) {
+            genomicRegion = genomicRegion.concat(bpMax);
+        }
+        else {
+            genomicRegion = genomicRegion.concat("*");
+        }
+        genomicRegion = genomicRegion.concat("]");
+    }
+
+    return genomicRegion;
+}
+
 function processDate() {
     var dateRange = '';
     var dateMin = $('#date-min').val();
@@ -208,6 +241,8 @@ function processTraitDropdown() {
 
         var trait = traitInput[i].value;
         trait = trait.replace(/\s/g, '+');
+        trait = trait.replace('%2B', '+');
+        trait = trait.replace('%27', "'");
         console.log(trait);
         traits[i] = trait;
 
@@ -217,12 +252,21 @@ function processTraitDropdown() {
 }
 
 
-function solrfilter(pval, or, beta, date, traits, addeddate) {
+function solrfilter(pval, or, beta, date, region, traits, addeddate) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
                 ", " + date + ", " + traits + " and " + addeddate);
     if (query == '*') {
         var searchTerm = 'text:'.concat(query);
+    }
+    else if(query.indexOf(':') != -1 && query.indexOf('-') != -1){
+        var elements = query.split(':');
+        var chrom = elements[0].trim();
+        var bp1 = elements[1].split('-')[0].trim();
+        var bp2 = elements[1].split('-')[1].trim();
+
+        var searchTerm = 'chromosomeName:'.concat(chrom).concat(' AND chromosomePosition:[').concat(bp1).concat(' TO ').concat(bp2).concat(']');
+
     }
     else {
         var searchTerm = 'text:"'.concat(query).concat('"');
@@ -236,6 +280,7 @@ function solrfilter(pval, or, beta, date, traits, addeddate) {
                 'orfilter': or,
                 'betafilter': beta,
                 'datefilter': date,
+                'genomicfilter': region,
                 'traitfilter[]': traits,
                 'dateaddedfilter': addeddate
             })

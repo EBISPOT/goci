@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 20/05/2015.
@@ -76,7 +77,13 @@ public class SnpAssociationTableViewService {
             }
             else { allLociGenes.add("NR"); }
 
-            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+            Collection<RiskAllele> ra = locus.getStrongestRiskAlleles().stream()
+                    .sorted((v1, v2) -> Long.compare(v1.getId(), v2.getId()))
+                    .collect(Collectors.toList());
+
+//            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+            for (RiskAllele riskAllele : ra) {
+
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
 
                 // For standard association set the risk allele frequency

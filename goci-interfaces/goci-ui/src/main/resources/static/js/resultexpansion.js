@@ -156,6 +156,7 @@ function loadAdditionalResults(facet, expand) {
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
+    var region = processGenomicRegion();
     var traits = processTraitDropdown();
 
     if ($('#filter').text() != '') {
@@ -167,7 +168,7 @@ function loadAdditionalResults(facet, expand) {
             traits = terms.split('|');
         }
         else if ($('#filter').text() == 'recent' && date == '') {
-            date = "[NOW-3MONTH+TO+*]";
+            date = "[NOW-1MONTH+TO+*]";
 
             if (sort == '') {
                 sort = "catalogPublishDate+desc";
@@ -177,6 +178,15 @@ function loadAdditionalResults(facet, expand) {
 
     if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else if(queryTerm.indexOf(':') != -1 && queryTerm.indexOf('-') != -1){
+        var elements = queryTerm.split(':');
+        var chrom = elements[0].trim();
+        var bp1 = elements[1].split('-')[0].trim();
+        var bp2 = elements[1].split('-')[1].trim();
+
+        var searchTerm = 'chromosomeName:'.concat(chrom).concat(' AND chromosomePosition:[').concat(bp1).concat(' TO ').concat(bp2).concat(']');
+
     }
     else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
@@ -190,6 +200,7 @@ function loadAdditionalResults(facet, expand) {
                   'orfilter': or,
                   'betafilter': beta,
                   'datefilter': date,
+                  'genomicfilter': region,
                   'traitfilter[]': traits,
                   'sort': sort
               })

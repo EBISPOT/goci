@@ -62,6 +62,14 @@ function doSortingSearch(facet, field, id) {
     if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
     }
+    else if(queryTerm.indexOf(':') != -1 && queryTerm.indexOf('-') != -1){
+        var elements = queryTerm.split(':');
+        var chrom = elements[0].trim();
+        var bp1 = elements[1].split('-')[0].trim();
+        var bp2 = elements[1].split('-')[1].trim();
+
+        var searchTerm = 'chromosomeName:'.concat(chrom).concat(' AND chromosomePosition:[').concat(bp1).concat(' TO ').concat(bp2).concat(']');
+    }
     else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
     }
@@ -79,7 +87,7 @@ function doSortingSearch(facet, field, id) {
             traits = terms.split('|');
         }
         else if ($('#filter').text() == 'recent' && date == '') {
-            date = "[NOW-3MONTH+TO+*]";
+            date = "[NOW-1MONTH+TO+*]";
         }
     }
 

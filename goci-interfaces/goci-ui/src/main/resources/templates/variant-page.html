@@ -129,7 +129,7 @@
                         <div class="clearfix">
                             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">
                                 <span>MAF</span>
-                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency" style="margin-left:2px;font-size:smaller"></span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency: frenquency of the second most frequent allele in the 1000 Genomes - Phase 3 combined population" style="margin-left:2px;font-size:smaller"></span>
                             </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
                         </div>
@@ -143,7 +143,7 @@
                         <div style="margin-bottom: 0.6em">
                             <button type="button" class="btn btn-default" id="ensembl_button">Variant in Ensembl<span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
-                        <button title="Click to show/hide more Ensembl links" id="button-more_ens_links" onclick="toggleDiv('more_ens_links')" class="btn btn-default btn-xs btn-study">Other Ensembl links <span class="glyphicon glyphicon-plus"></span></button>
+                        <button title="Click to show/hide more Ensembl links" id="button-more_ens_links" onclick="toggleDiv('more_ens_links')" class="btn btn-default btn-xs btn-study">Other Ensembl data <span class="glyphicon glyphicon-plus"></span></button>
                         <div id="more_ens_links" class="collapse">
                             <div style="margin-bottom: 0.6em;margin-top: 0.6em">
                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_gc_button">Genomic context<span class="glyphicon glyphicon-new-window external-link"></span></button>
@@ -397,11 +397,14 @@
     <script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
+
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
+
+
 
     <!-- GOCI JavaScript
     ================================================== -->
@@ -423,10 +426,10 @@
     <!-- LD widget JavaScript
     ================================================== -->
     <!-- JS for widgets -->
-    <script type="text/javascript" src="http://test-3.ensembl.org/Widgets/core.js"></script>
+    <script type="text/javascript" src="http://widgets.ensembl.org/Widgets/core.js"></script>
 
     <!-- TO BE IMPLEMENTED ON SERVER SIDE -->
-    <link type="text/css" rel="stylesheet" href="http://test-3.ensembl.org/ld_graph.css"/>
+    <link type="text/css" rel="stylesheet" href="http://widgets.ensembl.org/ld_graph.css"/>
     <!--<script type="text/javascript" src="d3.v3.js"></script> -->
     <!-- icons http://fortawesome.github.io/Font-Awesome/examples/ -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css"/>
@@ -446,15 +449,15 @@
                     return {
                         configuration: {
                             ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
-                            window_size: '50',
-                            population: '1000GENOMES:phase_3:GBR',
+                            window_size: 50,
+                            population: '1000GENOMES:phase_3:CEU',
                             svgSize: {
-                                width: 800,
-                                height: 300,
+                                width: 850,
+                                height: 405,
                                 padding: 50
                             },
                             panelSize: {
-                                width: 800,
+                                width: 850,
                                 tab_height: 30,
                                 padding: 50
                             },

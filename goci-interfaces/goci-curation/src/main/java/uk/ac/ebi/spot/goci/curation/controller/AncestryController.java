@@ -339,11 +339,13 @@ public class AncestryController {
         types.add("Central Asian");
         types.add("East Asian");
         types.add("Asian unspecified");
-        types.add("African American/Afro-Caribbean");
-        types.add("Middle Eastern/North African");
+        types.add("African American or Afro-Caribbean");
+        types.add("Greater Middle Eastern (Middle Eastern, North African or Persian)");
         types.add("Oceanian");
         types.add("Native American");
-        types.add("Hispanic/Latin American");
+        types.add("Hispanic or Latin American");
+        types.add("Aboriginal Australian");
+        types.add("Circumpolar peoples");
         types.add("Other");
         types.add("NR");
         return types;

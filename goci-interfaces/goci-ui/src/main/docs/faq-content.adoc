@@ -74,6 +74,9 @@
 9. <<faq-B9,How do I search for ancestry data in the GWAS Catalog?>>
 
 
+10. <<faq-B10,Can I search by genomic region?>>
+
+
 === C. Filters
 
 1. <<faq-C1,How do I filter my results by p-value?>>
@@ -224,6 +227,11 @@ Our search functionality is currently unable to allow for typos or term variatio
 ==== [[faq-B9]]9. How do I search for ancestry data in the GWAS Catalog?
 
 Ancestry data can be searched by entering relevant text in the search bar, including ancestry category, country or ancestry identifier (e.g. “European”, “South Africa”, “Ashkenazi Jewish”). Any exact string match to the entered text will be returned. Ancestry data can be found in the expanded information in the “Studies” table, accessible by clicking the little "+" icon at the end of each row.
+
+
+==== [[faq-B10]]10.,Can I search by genomic region?
+
+You can search by genomic region using the format chromNumber:bpLocation-bpLocation, for example 6:16000000-25000000. Please note that this search returns only results of type "Association".
 
 
 == C. Filters
