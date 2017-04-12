@@ -73,6 +73,12 @@ public class AssociationService {
         return allAssociations;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Association> findAllByStudyId(Long studyId) {
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+        associations.forEach(this::loadAssociatedData);
+        return associations;
+    }
 
     /**
      * Get in one transaction the list of all Association with : the attached study and its publish date the attached
@@ -167,11 +173,13 @@ public class AssociationService {
         association.getStudy().getHousekeeping().getCatalogPublishDate();
     }
 
+    @Transactional(readOnly = true)
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
         Study study = studyService.fetchOne(association.getStudy());
         AtomicInteger reportedGeneCount = new AtomicInteger();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
+        Collection<SingleNucleotidePolymorphism> proxySnps = new HashSet<>();
         Collection<Region> regions = new HashSet<>();
         Collection<Gene> mappedGenes = new HashSet<>();
         Map<String, Set<String>> mappedGeneEntrezIds = new HashMap<>();
@@ -237,6 +245,15 @@ public class AssociationService {
                                         .stream()
                                         .map(RiskAllele::getSnp)
                                         .collect(Collectors.toList()));
+
+                    locus.getStrongestRiskAlleles().forEach(
+                            riskAllele -> {
+                                if(riskAllele.getProxySnps() != null) {
+                                    proxySnps.addAll(riskAllele.getProxySnps());
+                                }
+                            }
+                    ) ;
+
                     reportedGeneCount.addAndGet(locus.getAuthorReportedGenes().size());
                     locus.getAuthorReportedGenes().forEach(
                             authorReportedGene -> {
