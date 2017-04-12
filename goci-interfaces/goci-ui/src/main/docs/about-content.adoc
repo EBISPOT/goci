@@ -25,9 +25,10 @@ _version number only applies to the download spreadsheet - v1.0 for the traditio
 
 === How to cite the NHGRI-EBI GWAS Catalog:
 
-_Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._ +
-The NHGRI GWAS Catalog, a curated resource of SNP-trait associations. +
-Nucleic Acids Research, 2014, Vol. 42 (Database issue): D1001-D1006. +
+_MacArthur J, Bowler E, Cerezo M, Gil L, Hall P, Hastings E, Junkins H, McMahon A, Milano  A, Morales J, Pendlington Z, Welter D, Burdett T, Hindorff L, Flicek P, Cunningham F, and Parkinson H._ +
+The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog). +
+Nucleic Acids Research, 2017, Vol. 45 (Database issue): D896-D901. +
+
 
 
 == Licensing information
@@ -38,6 +39,10 @@ All code for the GWAS Catalog infrastructure can be found in https://github.com/
 
 
 == Publications
+
+_MacArthur J, Bowler E, Cerezo M, Gil L, Hall P, Hastings E, Junkins H, McMahon A, Milano  A, Morales J, Pendlington Z, Welter D, Burdett T, Hindorff L, Flicek P, Cunningham F, and Parkinson H._ +
+https://academic.oup.com/nar/article/45/D1/D896/2605751/The-new-NHGRI-EBI-Catalog-of-published-genome-wide[The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog).] +
+Nucleic Acids Research, 2017, Vol. 45 (Database issue): D896-D901. +
 
 _Welter D, MacArthur J, Morales J, Burdett T, Hall P, Junkins H, Klemm A, Flicek P, Manolio T, Hindorff L, and Parkinson H._ +
 http://nar.oxfordjournals.org/content/42/D1/D1001.full[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations.] +
