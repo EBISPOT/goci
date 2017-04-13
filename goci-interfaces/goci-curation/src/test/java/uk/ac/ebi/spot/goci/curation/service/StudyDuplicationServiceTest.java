@@ -61,6 +61,9 @@ public class StudyDuplicationServiceTest {
     @Mock
     private StudyNoteService studyNoteService;
 
+    @Mock
+    private StudyNoteOperationsService studyNoteOperationsService;
+
     private StudyDuplicationService studyDuplicationService;
 
     private static final DiseaseTrait DISEASE_TRAIT =
@@ -132,6 +135,7 @@ public class StudyDuplicationServiceTest {
                                                               housekeepingOperationsService,
                                                               studyTrackingOperationService,
                                                               studyRepository,
+                                                              studyNoteOperationsService,
                                                               studyNoteService);
     }
 

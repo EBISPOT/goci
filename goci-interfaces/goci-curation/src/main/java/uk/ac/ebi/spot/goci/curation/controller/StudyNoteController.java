@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationsService;
 import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
@@ -37,12 +37,10 @@ import java.util.Collection;
 public class StudyNoteController {
 
     private StudyRepository studyRepository;
-
-    private StudyNoteService studyNoteService;
     private NoteSubjectService noteSubjectService;
     private CurrentUserDetailsService currentUserDetailsService;
 
-    private StudyNoteOperationService studyNoteOperationService;
+    private StudyNoteOperationsService studyNoteOperationsService;
     private StudyOperationsService studyOperationsService;
     private StudyService studyService;
 
@@ -52,17 +50,15 @@ public class StudyNoteController {
     }
 
     public StudyNoteController(StudyRepository studyRepository,
-                               StudyNoteService studyNoteService,
                                NoteSubjectService noteSubjectService,
                                CurrentUserDetailsService currentUserDetailsService,
-                               StudyNoteOperationService studyNoteOperationService,
+                               StudyNoteOperationsService studyNoteOperationsService,
                                StudyOperationsService studyOperationsService,
                                StudyService studyService) {
         this.studyRepository = studyRepository;
-        this.studyNoteService = studyNoteService;
         this.noteSubjectService = noteSubjectService;
         this.currentUserDetailsService = currentUserDetailsService;
-        this.studyNoteOperationService = studyNoteOperationService;
+        this.studyNoteOperationsService = studyNoteOperationsService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
     }
@@ -79,7 +75,7 @@ public class StudyNoteController {
         Collection<StudyNote> studyNotes = study.getNotes();
 
         // an form object mapped from the studyNote object, it contains a list of notes
-        MultiStudyNoteForm msnf = studyNoteOperationService.generateMultiStudyNoteForm(study.getNotes(), study);
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
 
         model.addAttribute("multiStudyNoteForm", msnf);
 
@@ -107,16 +103,22 @@ public class StudyNoteController {
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
 
         //create a default study note with detaul setting
-        StudyNote emptyNote = studyNoteService.createGeneralNote(study,user);
-        StudyNoteForm emptyNoteForm = studyNoteOperationService.convertToStudyNoteForm(emptyNote);
+        StudyNote emptyNote = studyNoteOperationsService.createGeneralNote(study,user);
+        StudyNoteForm emptyNoteForm = studyNoteOperationsService.convertToStudyNoteForm(emptyNote);
 
         //attach the empty form
-        multiStudyNoteForm.getNoteForms().add(emptyNoteForm);
+        multiStudyNoteForm.getNomalNoteForms().add(emptyNoteForm);
         //Index of value to add
-        final Integer rowId = multiStudyNoteForm.getNoteForms().size()-1;
+        final Integer rowId = multiStudyNoteForm.getNomalNoteForms().size()-1;
+
+
 
         //enable the edit for the new note and disable all edit for other notes
         multiStudyNoteForm.startEdit(rowId);
+
+        //reload system notes because they are not part of the input
+        multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
+
 
         model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
 
@@ -136,17 +138,8 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
-        StudyNote noteToRemove = studyNoteOperationService.convertToStudyNote(snf, study);
-
-
-        //user cannot touch system notes
-        if (studyNoteService.isSystemNote(noteToRemove)){
-            model.addAttribute("errors", "Update FAIL! Ststem note cannot be removed.");
-            model.addAttribute("availableNoteSubject",noteToRemove);
-            model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
-            return "study_notes";
-        }
+        StudyNoteForm snf = multiStudyNoteForm.getNomalNoteForms().get(rowId.intValue());
+        StudyNote noteToRemove = studyNoteOperationsService.convertToStudyNote(snf, study);
 
 
         //if not removing empty row
@@ -201,8 +194,8 @@ public class StudyNoteController {
         }
 
         //convert studynoteform to studynote domain object and save
-        StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
-        StudyNote noteToEdit = studyNoteOperationService.convertToStudyNote(snf, study);
+        StudyNoteForm snf = multiStudyNoteForm.getNomalNoteForms().get(rowId.intValue());
+        StudyNote noteToEdit = studyNoteOperationsService.convertToStudyNote(snf, study);
 
 
         ErrorNotification notification = studyOperationsService.addStudyNote(study, noteToEdit);
@@ -237,6 +230,9 @@ public class StudyNoteController {
         //remove subjects including 'Imported from previous system' 'SystemNote'
         Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
+
+        //reload system notes because they are not part of the input
+        multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
 
         //enable the edit for the note and disable all edit for other notes
         multiStudyNoteForm.startEdit(rowId);

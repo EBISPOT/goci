@@ -12,6 +12,9 @@ public class MultiStudyNoteForm  {
 
     @Valid
     private List<StudyNoteForm> noteForms = new ArrayList<StudyNoteForm>();
+    @Valid
+    private List<StudyNoteForm> nomalNoteForms = new ArrayList<StudyNoteForm>();
+    private List<StudyNoteForm> systemNoteForms = new ArrayList<StudyNoteForm>();
 
     private Boolean canEdit = true;
     private Boolean editingMode = false;
@@ -64,18 +67,35 @@ public class MultiStudyNoteForm  {
         this.canEdit = canEdit;
     }
 
+    public List<StudyNoteForm> getNomalNoteForms() {
+        return nomalNoteForms;
+    }
+
+    public void setNomalNoteForms(List<StudyNoteForm> nomalNoteForms) {
+        this.nomalNoteForms = nomalNoteForms;
+    }
+
+    public List<StudyNoteForm> getSystemNoteForms() {
+        return systemNoteForms;
+    }
+
+    public void setSystemNoteForms(List<StudyNoteForm> systemNoteForms) {
+        this.systemNoteForms = systemNoteForms;
+    }
+
+
     public void startEdit(Integer index){
         setEditingMode(Boolean.TRUE);
         setEditIndex(index);
-        this.getNoteForms().forEach(studyNoteForm -> {
+        nomalNoteForms.forEach(studyNoteForm -> {
             studyNoteForm.makeNotEditable();
         });
-        this.getNoteForms().get(index).startEdit();
+        this.getNomalNoteForms().get(index).startEdit();
     }
 
     public void finishEdit(){
         setEditingMode(Boolean.FALSE);
-        this.getNoteForms().forEach(studyNoteForm -> {
+        nomalNoteForms.forEach(studyNoteForm -> {
             studyNoteForm.makeEditable();
         });
     }
@@ -83,7 +103,7 @@ public class MultiStudyNoteForm  {
     public void makeNotEditable(){
         setCanEdit(Boolean.FALSE);
         //disable edit for all study note
-        noteForms.forEach(noteForm->{
+        nomalNoteForms.forEach(noteForm->{
             noteForm.makeNotEditable();
         });
     }

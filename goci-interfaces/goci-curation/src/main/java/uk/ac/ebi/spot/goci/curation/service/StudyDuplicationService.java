@@ -26,6 +26,7 @@ public class StudyDuplicationService {
     private HousekeepingOperationsService housekeepingOperationsService;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
+    private StudyNoteOperationsService studyNoteOperationsService;
     private StudyNoteService studyNoteService;
 
     @Autowired
@@ -33,11 +34,13 @@ public class StudyDuplicationService {
                                    HousekeepingOperationsService housekeepingOperationsService,
                                    @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                    StudyRepository studyRepository,
+                                   StudyNoteOperationsService studyNoteOperationsService,
                                    StudyNoteService studyNoteService) {
         this.ancestryRepository = ancestryRepository;
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
+        this.studyNoteOperationsService = studyNoteOperationsService;
         this.studyNoteService = studyNoteService;
     }
 
@@ -66,7 +69,7 @@ public class StudyDuplicationService {
 
         studyRepository.save(duplicateStudy);
 
-        StudyNote note = studyNoteService.createAutomaticNote("Duplicate of study: "
+        StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
         //#xintodo this need to be refactor to studyService.addStudyNote()

@@ -52,6 +52,7 @@ public class StudyOperationsService {
     private EventTypeService eventTypeService;
     private HousekeepingOperationsService housekeepingOperationsService;
     private StudyNoteService studyNoteService;
+    private StudyNoteOperationsService studyNoteOperationsService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -64,7 +65,9 @@ public class StudyOperationsService {
                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                   EventTypeService eventTypeService,
                                   HousekeepingOperationsService housekeepingOperationsService,
-                                  StudyNoteService studyNoteService) {
+                                  StudyNoteService studyNoteService,
+                                  StudyNoteOperationsService studyNoteOperationsService
+    ) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -76,6 +79,7 @@ public class StudyOperationsService {
         this.eventTypeService = eventTypeService;
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.studyNoteService = studyNoteService;
+        this.studyNoteOperationsService=studyNoteOperationsService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -341,12 +345,12 @@ public class StudyOperationsService {
         ErrorNotification notification = new ErrorNotification();
 
         //user cannot touch system notes
-        if (studyNoteService.isSystemNote(studyNote)){
+        if (studyNoteOperationsService.isSystemNote(studyNote)){
             notification.addError(new NoteIsLockedError());
         }
 
         //check if study is published
-        if(study.getHousekeeping().getIsPublished()){
+        if(isPublished(study)){
             notification.addError(new StudyIsLockedError());
         }
 
@@ -361,12 +365,12 @@ public class StudyOperationsService {
         ErrorNotification notification = new ErrorNotification();
 
         //user cannot touch system notes
-        if (studyNoteService.isSystemNote(studyNote)){
+        if (studyNoteOperationsService.isSystemNote(studyNote)){
             notification.addError(new NoteIsLockedError());
         }
 
         //check if study is published
-        if(study.getHousekeeping().getIsPublished()){
+        if(isPublished(study)){
             notification.addError(new StudyIsLockedError());
         }
 
@@ -377,4 +381,9 @@ public class StudyOperationsService {
         return notification;
     }
 
+
+    //#xintodo refactor needed
+    public Boolean isPublished(Study study){
+        return study.getHousekeeping().getIsPublished();
+    }
 }

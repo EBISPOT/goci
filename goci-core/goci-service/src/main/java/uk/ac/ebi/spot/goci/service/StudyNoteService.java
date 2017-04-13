@@ -60,45 +60,12 @@ public class StudyNoteService {
         studyNoteRepository.delete(studyNote);
     }
 
-    public StudyNote createEmptyStudyNote(Study study, SecureUser user){
-        StudyNote note = new StudyNote();
-        note.setStudy(study);
 
-        //defult curator will be the one who is currently adding the note
-        //#xintodo this needs to be change when a forgin key is added the curator table from the user table
-        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
-        note.setCurator(curator);
-
-        note.setStatus(false);
-        note.setGenericId(study.getId());
-        return note;
-    }
-
-    public StudyNote createAutomaticNote(String textNote, Study study, SecureUser user) {
-        StudyNote note = createEmptyStudyNote(study, user);
-        // System note subject
-        note.setTextNote(textNote);
-        NoteSubject subject = noteSubjectService.findAutomaticNote();
-        note.setNoteSubject(subject);
-        return note;
-    }
-
-    public StudyNote createGeneralNote( Study study, SecureUser user) {
-        StudyNote note = createEmptyStudyNote(study, user);
-        // general note subject
-        NoteSubject subject = noteSubjectService.findGeneralNote();
-        note.setNoteSubject(subject);
-        return note;
-    }
 
     // This method delete ALL the notes with study_id = Study (Eg. Study, Association)
     public void deleteAllNoteByStudy(Study study) {
         //only called from study, thus no need to check if study is published
         noteService.deleteAllNote(study);
-    }
-
-    public Boolean isSystemNote(StudyNote note){
-        return noteSubjectService.isSystemNoteSubject(note.getNoteSubject());
     }
 
 }
