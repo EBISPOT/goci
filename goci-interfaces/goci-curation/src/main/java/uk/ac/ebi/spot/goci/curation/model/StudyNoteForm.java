@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 
@@ -28,6 +29,7 @@ public class StudyNoteForm  {
 
     private Long genericId;
 
+    private Boolean isSystemNote = Boolean.FALSE;
     private Boolean canEdit = Boolean.TRUE;
     private Boolean canRemove = Boolean.TRUE;
     private Boolean canSave = Boolean.FALSE;
@@ -138,6 +140,14 @@ public class StudyNoteForm  {
 
     public void setEditing(Boolean editing) {
         this.editing = editing;
+    }
+
+    public void setSystemNote(Boolean systemNote) {
+        isSystemNote = systemNote;
+    }
+
+    public Boolean isSystemNoteFrom(){
+        return isSystemNote;
     }
 
     public void startEdit() {

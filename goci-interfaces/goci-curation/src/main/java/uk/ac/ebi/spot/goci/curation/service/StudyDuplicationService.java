@@ -69,7 +69,9 @@ public class StudyDuplicationService {
         StudyNote note = studyNoteService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
+        //#xintodo this need to be refactor to studyService.addStudyNote()
         studyNoteService.saveStudyNote(note);
+
         duplicateStudy.addNote(note);
 
         // Copy existing ancestry

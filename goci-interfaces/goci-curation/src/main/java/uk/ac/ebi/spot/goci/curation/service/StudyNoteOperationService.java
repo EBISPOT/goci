@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.service.CuratorService;
 import uk.ac.ebi.spot.goci.service.NoteSubjectService;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 
 import java.util.Collection;
 
@@ -21,16 +22,20 @@ public class StudyNoteOperationService {
 
     CuratorService curatorService;
     NoteSubjectService noteSubjectService;
+    StudyNoteService studyNoteService;
 
     public StudyNoteOperationService() {
     }
 
     @Autowired
     public StudyNoteOperationService(CuratorService curatorService,
-                                     NoteSubjectService noteSubjectService) {
+                                     NoteSubjectService noteSubjectService,
+                                     StudyNoteService studyNoteService) {
         this.curatorService = curatorService;
         this.noteSubjectService = noteSubjectService;
+        this.studyNoteService = studyNoteService;
     }
+
 
     public StudyNote convertToStudyNote(StudyNoteForm studyNoteForm, Study study){
         StudyNote studyNote = new StudyNote(study);
@@ -45,11 +50,20 @@ public class StudyNoteOperationService {
 
     public StudyNoteForm convertToStudyNoteForm(StudyNote note){
         // #xintodo Should factory be use to create these instance?
-        StudyNoteForm row = new StudyNoteForm(note.getId(),note.getTextNote(),
-                                              noteSubjectService.findOne(note.getNoteSubject().getId()),
-                                              note.getStatus(),curatorService.findOne(note.getCurator().getId()),
-                                              note.getGenericId());
-        return row;
+        StudyNoteForm noteFrom = new StudyNoteForm(note.getId(),note.getTextNote(),
+                                                   noteSubjectService.findOne(note.getNoteSubject().getId()),
+                                                   note.getStatus(),curatorService.findOne(note.getCurator().getId()),
+                                                   note.getGenericId());
+        if(studyNoteService.isSystemNote(note)){
+            noteFrom.setSystemNote(Boolean.TRUE);
+            noteFrom.makeNotEditable();
+        }else{
+            noteFrom.setSystemNote(Boolean.FALSE);
+            noteFrom.makeEditable();
+        }
+
+
+        return noteFrom;
     }
 
 

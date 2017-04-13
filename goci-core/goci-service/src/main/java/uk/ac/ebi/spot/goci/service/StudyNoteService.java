@@ -26,21 +26,21 @@ public class StudyNoteService {
     private NoteSubjectService noteSubjectService;
     private CuratorService curatorService;
     private NoteService noteService;
-
-    private static String DEFAULT = "General";
-    private static String SYSTEM_NOTE = "System note";
-
+    private StudyService studyService;
 
     @Autowired
     public StudyNoteService(StudyNoteRepository studyNoteRepository,
-                            NoteSubjectService subjectService,
+                            NoteSubjectService noteSubjectService,
                             CuratorService curatorService,
                             NoteService noteService) {
         this.studyNoteRepository = studyNoteRepository;
-        this.noteSubjectService = subjectService;
+        this.noteSubjectService = noteSubjectService;
         this.curatorService = curatorService;
         this.noteService = noteService;
+        this.studyService = studyService;
     }
+
+
 
 
     public Collection<StudyNote> findByStudyId(Long studyId){
@@ -53,12 +53,10 @@ public class StudyNoteService {
     }
 
     public void saveStudyNote(StudyNote studyNote){
-//        #todo exception
         studyNoteRepository.save(studyNote);
     }
 
-    public void deleteStudyNote(StudyNote studyNote){
-        //        #todo exception
+    public void deleteStudyNote(StudyNote studyNote) {
         studyNoteRepository.delete(studyNote);
     }
 
@@ -80,7 +78,7 @@ public class StudyNoteService {
         StudyNote note = createEmptyStudyNote(study, user);
         // System note subject
         note.setTextNote(textNote);
-        NoteSubject subject = noteSubjectService.findBySubject(SYSTEM_NOTE);
+        NoteSubject subject = noteSubjectService.findAutomaticNote();
         note.setNoteSubject(subject);
         return note;
     }
@@ -88,14 +86,19 @@ public class StudyNoteService {
     public StudyNote createGeneralNote( Study study, SecureUser user) {
         StudyNote note = createEmptyStudyNote(study, user);
         // general note subject
-        NoteSubject subject = noteSubjectService.findBySubject(DEFAULT);
+        NoteSubject subject = noteSubjectService.findGeneralNote();
         note.setNoteSubject(subject);
         return note;
     }
 
     // This method delete ALL the notes with study_id = Study (Eg. Study, Association)
-    public void deleteAllNoteByStudy(Study study){
+    public void deleteAllNoteByStudy(Study study) {
+        //only called from study, thus no need to check if study is published
         noteService.deleteAllNote(study);
+    }
+
+    public Boolean isSystemNote(StudyNote note){
+        return noteSubjectService.isSystemNoteSubject(note.getNoteSubject());
     }
 
 }

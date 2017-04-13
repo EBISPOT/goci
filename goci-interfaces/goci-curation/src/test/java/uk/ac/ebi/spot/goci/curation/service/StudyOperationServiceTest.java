@@ -7,6 +7,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import uk.ac.ebi.spot.goci.service.EventTypeService;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
@@ -87,6 +88,9 @@ public class StudyOperationServiceTest {
 
     @Mock
     private HousekeepingOperationsService housekeepingOperationsService;
+
+    @Mock
+    private StudyNoteService studyNoteService;
 
     // Class under test
     private StudyOperationsService studyOperationsService;
@@ -196,7 +200,8 @@ public class StudyOperationServiceTest {
                                                             curationStatusRepository,
                                                             trackingOperationService,
                                                             eventTypeService,
-                                                            housekeepingOperationsService);
+                                                            housekeepingOperationsService,
+                                                            studyNoteService);
         // Create these objects before each test
         Housekeeping CURRENT_HOUSEKEEPING = new HousekeepingBuilder().setId(799L)
                 .setCurationStatus(AWAITING_CURATION)

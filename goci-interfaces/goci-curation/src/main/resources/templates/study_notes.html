@@ -99,16 +99,20 @@
         <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
     </div>
 
+<!--<div class="container-fluid">-->
+    <!--&lt;!&ndash;Include errors&ndash;&gt;-->
+    <!--<div class="col-md-10" style="margin-top:10px">-->
+        <!--<div th:include="fragments/studynote_error :: studynote_update_error"></div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<br/>-->
 
 
-<div class="container-fluid">
-    <!--Include errors-->
-    <div class="col-md-10" style="margin-top:10px">
-        <div th:include="fragments/studynote_error :: studynote_update_error"></div>
-    </div>
+<div class="container">
+<div class="alert alert-danger" th:if="${errors}">
+    <strong>Error!</strong> <span th:text="${errors}"></span>
 </div>
-<br/>
-
+</div>
 
 <div class="container-fluid">
 <form class="form-horizontal" method="post" name="study-note-form" th:object="${multiStudyNoteForm}">
@@ -203,7 +207,6 @@
                         </select>
                     </div>
                 </td>
-
 
 
 

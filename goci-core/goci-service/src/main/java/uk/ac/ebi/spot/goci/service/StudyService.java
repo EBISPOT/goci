@@ -308,4 +308,10 @@ public class StudyService {
     public void deleteByStudyId(Long studyId){
         studyRepository.delete(studyId);
     }
+
+    public Study findOne(Long id){
+        //#xintodo this could be the place to add exception if a study is null
+        return studyRepository.findOne(id);
+    }
+
 }

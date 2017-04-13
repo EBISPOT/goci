@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
+import uk.ac.ebi.spot.goci.curation.model.errors.StudyIsLockedError;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
@@ -21,6 +25,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.EventTypeService;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.Collection;
@@ -46,6 +51,7 @@ public class StudyOperationsService {
     private TrackingOperationService trackingOperationService;
     private EventTypeService eventTypeService;
     private HousekeepingOperationsService housekeepingOperationsService;
+    private StudyNoteService studyNoteService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -57,7 +63,8 @@ public class StudyOperationsService {
                                   CurationStatusRepository curationStatusRepository,
                                   @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                   EventTypeService eventTypeService,
-                                  HousekeepingOperationsService housekeepingOperationsService) {
+                                  HousekeepingOperationsService housekeepingOperationsService,
+                                  StudyNoteService studyNoteService) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
         this.housekeepingRepository = housekeepingRepository;
@@ -68,6 +75,7 @@ public class StudyOperationsService {
         this.trackingOperationService = trackingOperationService;
         this.eventTypeService = eventTypeService;
         this.housekeepingOperationsService = housekeepingOperationsService;
+        this.studyNoteService = studyNoteService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -326,4 +334,47 @@ public class StudyOperationsService {
                 break;
         }
     }
+
+
+    public ErrorNotification addStudyNote(Study study, StudyNote studyNote)  {
+
+        ErrorNotification notification = new ErrorNotification();
+
+        //user cannot touch system notes
+        if (studyNoteService.isSystemNote(studyNote)){
+            notification.addError(new NoteIsLockedError());
+        }
+
+        //check if study is published
+        if(study.getHousekeeping().getIsPublished()){
+            notification.addError(new StudyIsLockedError());
+        }
+
+        if(!notification.hasErrors()){
+            studyNoteService.saveStudyNote(studyNote);
+        }
+        return notification;
+    }
+
+    public ErrorNotification deleteStudyNote(Study study, StudyNote studyNote) {
+
+        ErrorNotification notification = new ErrorNotification();
+
+        //user cannot touch system notes
+        if (studyNoteService.isSystemNote(studyNote)){
+            notification.addError(new NoteIsLockedError());
+        }
+
+        //check if study is published
+        if(study.getHousekeeping().getIsPublished()){
+            notification.addError(new StudyIsLockedError());
+        }
+
+        if(!notification.hasErrors()){
+            studyNoteService.deleteStudyNote(studyNote);
+        }
+
+        return notification;
+    }
+
 }

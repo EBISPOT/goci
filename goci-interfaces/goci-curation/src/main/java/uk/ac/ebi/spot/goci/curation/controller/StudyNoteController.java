@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,8 @@ import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationService;
+import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
+import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -19,6 +23,7 @@ import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.NoteSubjectService;
 import uk.ac.ebi.spot.goci.service.StudyNoteService;
+import uk.ac.ebi.spot.goci.service.StudyService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,18 +43,28 @@ public class StudyNoteController {
     private CurrentUserDetailsService currentUserDetailsService;
 
     private StudyNoteOperationService studyNoteOperationService;
+    private StudyOperationsService studyOperationsService;
+    private StudyService studyService;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+    protected Logger getLog() {
+        return log;
+    }
 
     public StudyNoteController(StudyRepository studyRepository,
                                StudyNoteService studyNoteService,
                                NoteSubjectService noteSubjectService,
                                CurrentUserDetailsService currentUserDetailsService,
-                               StudyNoteOperationService studyNoteOperationService) {
+                               StudyNoteOperationService studyNoteOperationService,
+                               StudyOperationsService studyOperationsService,
+                               StudyService studyService) {
         this.studyRepository = studyRepository;
         this.studyNoteService = studyNoteService;
         this.noteSubjectService = noteSubjectService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.studyNoteOperationService = studyNoteOperationService;
+        this.studyOperationsService = studyOperationsService;
+        this.studyService = studyService;
     }
 
     @RequestMapping(value = "/studies/{studyId}/notes",
@@ -59,10 +74,6 @@ public class StudyNoteController {
         //get the study
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
-
-        //get All note subjects for dropdown
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
-        model.addAttribute("availableNoteSubject",noteSubjects);
 
         // Get study notes
         Collection<StudyNote> studyNotes = study.getNotes();
@@ -84,8 +95,13 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        //get All note subjects for dropdown
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
+
+        if(study.getHousekeeping().getIsPublished()){
+            return "redirect:/studies/" + studyId + "/notes";
+        }
+
+        //the nearly added note can only be assigned one of the availlable subject, not including system note subjects.
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
@@ -120,30 +136,40 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        //get All note subjects for dropdown
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
-        model.addAttribute("availableNoteSubject",noteSubjects);
-
-
         StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
         StudyNote noteToRemove = studyNoteOperationService.convertToStudyNote(snf, study);
 
+
+        //user cannot touch system notes
+        if (studyNoteService.isSystemNote(noteToRemove)){
+            model.addAttribute("errors", "Update FAIL! Ststem note cannot be removed.");
+            model.addAttribute("availableNoteSubject",noteToRemove);
+            model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+            return "study_notes";
+        }
+
+
         //if not removing empty row
         if (noteToRemove.getId() != null){
-            try{
-                //#xintodo better exception hande needed
-                studyNoteService.deleteStudyNote(noteToRemove);
-            }
-            catch (Exception e){
-                model.addAttribute("updateError", e.toString());
+
+            ErrorNotification notification = studyOperationsService.deleteStudyNote(study, noteToRemove);
+
+            if(notification.hasErrors()){
+                //we want to display the error to the user simply on top of the form
+                getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
+                model.addAttribute("errors", "Delete FAIL! " + notification.errorMessage());
+
+                Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
+                model.addAttribute("availableNoteSubject",noteSubjects);
                 model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
                 return "study_notes";
+            }else{
+                return "redirect:/studies/" + studyId + "/notes";
             }
         }
 
-        multiStudyNoteForm.getNoteForms().remove(rowId.intValue());
+        return "redirect:/studies/" + studyId + "/notes";
 
-        return "study_notes";
     }
 
 
@@ -163,11 +189,13 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        //get All note subjects for dropdown
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
+        //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
+        //form validation
         if (bindingResult.hasErrors()) {
+            model.addAttribute("availableNoteSubject",noteSubjects);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
             return "study_notes";
         }
@@ -176,22 +204,19 @@ public class StudyNoteController {
         StudyNoteForm snf = multiStudyNoteForm.getNoteForms().get(rowId.intValue());
         StudyNote noteToEdit = studyNoteOperationService.convertToStudyNote(snf, study);
 
-        try{
-            studyNoteService.saveStudyNote(noteToEdit);
-            multiStudyNoteForm.getNoteForms().set(rowId,studyNoteOperationService.convertToStudyNoteForm(noteToEdit));
-            multiStudyNoteForm.finishEdit();
+
+        ErrorNotification notification = studyOperationsService.addStudyNote(study, noteToEdit);
+        if(!notification.hasErrors()){
+            return "redirect:/studies/" + studyId + "/notes";
+        }else{
+            //deal with error
+            // we want to display the error to the user simply on top of the form
+            getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
+            model.addAttribute("errors", "Update FAIL! " + notification.errorMessage());
+            model.addAttribute("availableNoteSubject",noteSubjects);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
-            return "study_notes";
         }
-        catch (Exception e){
-            //#xintodo better exception hande needed
-            model.addAttribute("updateError", e.toString());
-            model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
-            return "study_notes";
-        }
-
-
-
+        return "study_notes";
     }
 
 
@@ -209,7 +234,8 @@ public class StudyNoteController {
         model.addAttribute("study", study);
 
         //get All note subjects for dropdown
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findAll();
+        //remove subjects including 'Imported from previous system' 'SystemNote'
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         //enable the edit for the note and disable all edit for other notes
@@ -219,7 +245,7 @@ public class StudyNoteController {
         return "study_notes";
     }
 
-    //This will enable save/remove button for a study note
+    //This will discard unsave note and refresh the page
     @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"discardsEditNote"})
     public String discardEditNote(@ModelAttribute("multiStudyNoteForm") MultiStudyNoteForm multiStudyNoteForm,
                                  Model model, @PathVariable Long studyId,
@@ -228,5 +254,20 @@ public class StudyNoteController {
         return "redirect:/studies/" + studyId + "/notes";
     }
 
+
+
+
+
+//      controller base exception handler
+//        @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+//        @ExceptionHandler(StudyIsPublishedException.class)
+//        public @ResponseBody String handleNoRenderableDataException(StudyIsPublishedException e) {
+//            String responseMsg = "This study is published!!!!!!!!!!!" + e.getMessage();
+//            getLog().error(responseMsg, e);
+//            return responseMsg;
+//        }
+
 }
+
+
 
