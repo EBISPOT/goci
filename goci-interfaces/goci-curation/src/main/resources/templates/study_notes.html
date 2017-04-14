@@ -124,11 +124,13 @@
         <tr>
             <!--<th style="font-size: small">Index</th>-->
             <th class="col-md-5">System Note(s)</th>
-            <th class="col-md-2">NoteSubject</th>
+            <th class="col-md-3">NoteSubject</th>
             <th class="col-md-1">Status</th>
             <th class="col-md-1">Curator</th>
             <th class="col-md-1">Published</th>
-            <th class="col-md-2">Action</th>
+            <th class="col-md-1">createDate</th>
+            <th class="col-md-1">updateDate</th>
+            <!--<th class="col-md-2">Action</th>-->
         </tr>
         </thead>
 
@@ -165,9 +167,17 @@
                     <span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                 </div>
             </td>
+            <!--created date-->
             <td>
-                -
+                <label th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'dd-MM-yyyy ')} :'-'"></label>
             </td>
+            <!--update date-->
+            <td>
+                <label th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'dd-MM-yyyy ')} :'-'"></label>
+            </td>
+            <!--<td>-->
+                <!-- - -->
+            <!--</td>-->
         </tr>
         </tbody>
     </table>
@@ -198,10 +208,12 @@
                 <th class="col-md-1">Status</th>
                 <th class="col-md-1">Curator</th>
                 <th class="col-md-1">Published</th>
+                <th class="col-md-1">createDate</th>
+                <th class="col-md-1">updateDate</th>
                 <th class="col-md-2">
 
                     <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>
-                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>
+                    <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
                 </th>
 
             </tr>
@@ -318,6 +330,14 @@
                         <span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
                         <span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
                     </div>
+                </td>
+
+                <td>
+                     <label th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'dd-MM-yyyy ')} :'-'"></label>
+                </td>
+                <!--update date-->
+                <td>
+                    <label th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'dd-MM-yyyy ')} :'-'"></label>
                 </td>
 
                 <td>

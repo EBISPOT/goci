@@ -57,7 +57,7 @@ public class StudyNoteOperationsService {
         StudyNoteForm noteFrom = new StudyNoteForm(note.getId(),note.getTextNote(),
                                                    noteSubjectService.findOne(note.getNoteSubject().getId()),
                                                    note.getStatus(),curatorService.findOne(note.getCurator().getId()),
-                                                   note.getGenericId());
+                                                   note.getGenericId(),note.getCreatedAt(),note.getUpdatedAt());
         if(isSystemNote(note)){
             noteFrom.setSystemNote(Boolean.TRUE);
             noteFrom.makeNotEditable();

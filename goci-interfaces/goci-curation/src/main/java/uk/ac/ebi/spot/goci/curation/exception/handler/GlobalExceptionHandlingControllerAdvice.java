@@ -33,12 +33,12 @@ public class GlobalExceptionHandlingControllerAdvice {
         return log;
     }
 
-    //xintodo more
-    @ResponseStatus(value=HttpStatus.CONFLICT, reason="Data integrity violation")  // 409
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public void conflict() {
-        // Nothing to do
-    }
+//    //xintodo more
+//    @ResponseStatus(value=HttpStatus.CONFLICT, reason="Data integrity violation")  // 409
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public void conflict() {
+//        // Nothing to do
+//    }
 
     /**
      * Created by xinhe on 11/04/2017.

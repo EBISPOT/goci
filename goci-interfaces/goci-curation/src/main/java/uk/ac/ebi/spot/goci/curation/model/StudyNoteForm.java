@@ -8,16 +8,17 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * Created by xinhe on 03/04/2017.
  */
-public class StudyNoteForm  {
+public class StudyNoteForm {
 
     private Long id;
 
     @NotNull
-    @Size(min=1)
+    @Size(min = 1)
     //Thymeleaf will not return null for an text input, instead it returns an empty string of size 0.
     private String textNote;
     @NotNull
@@ -29,13 +30,16 @@ public class StudyNoteForm  {
 
     private Long genericId;
 
+    private Date createdAt;
+    private Date updatedAt;
+
+
     private Boolean isSystemNote = Boolean.FALSE;
     private Boolean canEdit = Boolean.TRUE;
     private Boolean canRemove = Boolean.TRUE;
     private Boolean canSave = Boolean.FALSE;
     private Boolean canDiscard = Boolean.FALSE;
     private Boolean editing = Boolean.FALSE;
-
 
 
     public StudyNoteForm() {
@@ -45,13 +49,38 @@ public class StudyNoteForm  {
                          String textNote,
                          NoteSubject noteSubject,
                          Boolean status,
-                         Curator curator, Long genericId) {
+                         Curator curator,
+                         Long genericId,
+                         Date createdAt,
+                         Date updatedAt) {
         this.id = id;
         this.textNote = textNote;
         this.noteSubject = noteSubject;
         this.status = status;
         this.curator = curator;
         this.genericId = genericId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Boolean getSystemNote() {
+        return isSystemNote;
     }
 
     public Long getId() {
@@ -146,7 +175,7 @@ public class StudyNoteForm  {
         isSystemNote = systemNote;
     }
 
-    public Boolean isSystemNoteFrom(){
+    public Boolean isSystemNoteFrom() {
         return isSystemNote;
     }
 
@@ -158,12 +187,12 @@ public class StudyNoteForm  {
         this.setCanRemove(Boolean.FALSE);
     }
 
-    public void finishEdit(){
+    public void finishEdit() {
         makeEditable();
     }
 
 
-    public void makeNotEditable(){
+    public void makeNotEditable() {
         this.setCanEdit(Boolean.FALSE);
         this.setCanRemove(Boolean.FALSE);
         this.setCanSave(Boolean.FALSE);
@@ -171,7 +200,7 @@ public class StudyNoteForm  {
         this.setEditing(Boolean.FALSE);
     }
 
-    public void makeEditable(){
+    public void makeEditable() {
         this.setCanEdit(Boolean.TRUE);
         this.setCanRemove(Boolean.TRUE);
         this.setCanSave(Boolean.FALSE);

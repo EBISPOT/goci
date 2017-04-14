@@ -108,4 +108,12 @@ public abstract class Note {
     public void setGenericId(Long genericId) {
         this.genericId = genericId;
     }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
 }

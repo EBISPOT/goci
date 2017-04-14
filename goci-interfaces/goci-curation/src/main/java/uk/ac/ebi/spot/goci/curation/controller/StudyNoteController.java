@@ -6,10 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
@@ -84,7 +86,7 @@ public class StudyNoteController {
 
 
     @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"addNote"})
-    public String addNoteToTable(MultiStudyNoteForm multiStudyNoteForm, Model model, @PathVariable Long studyId,
+    public String addNoteToTable(Model model, @PathVariable Long studyId,
                                  HttpServletRequest request) {
 
         //get the study
@@ -96,31 +98,33 @@ public class StudyNoteController {
             return "redirect:/studies/" + studyId + "/notes";
         }
 
-        //the nearly added note can only be assigned one of the availlable subject, not including system note subjects.
+        //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
         Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
+        // an form object mapped from the studyNote object, it contains a list of notes
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
+
+
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
 
-        //create a default study note with detaul setting
+        //create a default study note with default setting
         StudyNote emptyNote = studyNoteOperationsService.createGeneralNote(study,user);
         StudyNoteForm emptyNoteForm = studyNoteOperationsService.convertToStudyNoteForm(emptyNote);
 
         //attach the empty form
-        multiStudyNoteForm.getNomalNoteForms().add(emptyNoteForm);
+        msnf.getNomalNoteForms().add(emptyNoteForm);
         //Index of value to add
-        final Integer rowId = multiStudyNoteForm.getNomalNoteForms().size()-1;
-
-
+        final Integer rowId = msnf.getNomalNoteForms().size()-1;
 
         //enable the edit for the new note and disable all edit for other notes
-        multiStudyNoteForm.startEdit(rowId);
+        msnf.startEdit(rowId);
 
         //reload system notes because they are not part of the input
-        multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
+        msnf.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
 
 
-        model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+        model.addAttribute("multiStudyNoteForm", msnf);
 
         return "study_notes";
     }
@@ -207,6 +211,9 @@ public class StudyNoteController {
             getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
             model.addAttribute("errors", "Update FAIL! " + notification.errorMessage());
             model.addAttribute("availableNoteSubject",noteSubjects);
+            // an form object mapped from the studyNote object, it contains a list of notes
+            multiStudyNoteForm = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
+            multiStudyNoteForm.getNomalNoteForms().set(rowId.intValue(),snf);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
         }
         return "study_notes";
@@ -215,8 +222,7 @@ public class StudyNoteController {
 
     //This will enable save/remove button for a study note and disable all other action for other notes
     @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"editNote"})
-    public String EnableEditNote(@ModelAttribute("multiStudyNoteForm") MultiStudyNoteForm multiStudyNoteForm,
-                             Model model, @PathVariable Long studyId,
+    public String EnableEditNote( Model model, @PathVariable Long studyId,
                              HttpServletRequest req) {
 
         //Index of value to remove
@@ -231,13 +237,13 @@ public class StudyNoteController {
         Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
-        //reload system notes because they are not part of the input
-        multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
+        // an form object mapped from the studyNote object, it contains a list of notes
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
 
         //enable the edit for the note and disable all edit for other notes
-        multiStudyNoteForm.startEdit(rowId);
+        msnf.startEdit(rowId);
 
-        model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
+        model.addAttribute("multiStudyNoteForm", msnf);
         return "study_notes";
     }
 
@@ -252,16 +258,15 @@ public class StudyNoteController {
 
 
 
-
-
 //      controller base exception handler
 //        @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-//        @ExceptionHandler(StudyIsPublishedException.class)
-//        public @ResponseBody String handleNoRenderableDataException(StudyIsPublishedException e) {
-//            String responseMsg = "This study is published!!!!!!!!!!!" + e.getMessage();
-//            getLog().error(responseMsg, e);
-//            return responseMsg;
-//        }
+    //#xintodo how we handle exception
+        @ExceptionHandler(Exception.class)
+        public @ResponseBody String handleNoRenderableDataException(Exception e) {
+            String responseMsg = "Exxception!!!!!!!!!!" + e.getMessage();
+            getLog().error(responseMsg, e);
+            return responseMsg;
+        }
 
 }
 
