@@ -117,8 +117,10 @@
 
 
 
+
 <!--system notes-->
 <div class="container-fluid">
+    <div th:if="not ${#lists.isEmpty(multiStudyNoteForm.systemNoteForms)}">
     <table  class="table table-hover table-bordered">
         <thead>
         <tr>
@@ -137,28 +139,15 @@
         <tbody>
         <tr th:each="note,rowStat: ${multiStudyNoteForm.systemNoteForms}">
             <!--Note(s)-->
-            <td>
-                <label th:text="${note.textNote}" class="small"></label>
-            </td>
+            <td th:text="${note.textNote}"></td>
             <!--NoteSubject-->
-            <td>
-                <label th:text="${note.noteSubject.subject}"></label>
-            </td>
+            <td th:text="${note.noteSubject.subject}"></td>
 
             <!--Status-->
-            <td>
-                <div th:switch="${note.status}" th:remove="tag">
-                    <p th:case="true" th:remove="tag">
-                        <label>Public</label> </p>
-                    <p th:case="false">
-                        <label>Private</label> </p>
-                </div>
-            </td>
+            <td th:text="${note.status}? Public : Private"></td>
 
             <!--Curator-->
-            <td>
-                <label th:text="${note.curator.lastName}"></label>
-            </td>
+            <td th:text="${note.curator.lastName}"></td>
 
             <!--Published-->
             <td>
@@ -168,23 +157,16 @@
                 </div>
             </td>
             <!--created date-->
-            <td>
-                <label th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'dd-MM-yyyy ')} :'-'"></label>
-            </td>
+            <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd')} :'-'"></td>
             <!--update date-->
-            <td>
-                <label th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'dd-MM-yyyy ')} :'-'"></label>
-            </td>
+            <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd')} :'-'"></td>
             <!--<td>-->
                 <!-- - -->
             <!--</td>-->
         </tr>
         </tbody>
     </table>
-
-
-
-
+    </div>
 </div>
 
 
@@ -333,18 +315,18 @@
                 </td>
 
                 <td>
-                     <label th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'dd-MM-yyyy ')} :'-'"></label>
+                     <label th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd ')} :'-'"></label>
                 </td>
                 <!--update date-->
                 <td>
-                    <label th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'dd-MM-yyyy ')} :'-'"></label>
+                    <label th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd ')} :'-'"></label>
                 </td>
 
                 <td>
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
                                     <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
                                              type="submit" name="editNote" th:value="${rowStat.index}"
-                                             class="btn btn-danger btn-sm">
+                                             class="btn btn-primary btn-sm">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"
                                           title="Edit note"></span>
                                 </button>
@@ -354,7 +336,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canSave}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canSave}"
                                          type="submit" name="saveNote" th:value="${rowStat.index}"
-                                         class="btn btn-danger btn-sm">
+                                         class="btn btn-primary btn-sm">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true"
                                           title="Save note"></span>
                                 </button>
@@ -363,7 +345,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canDiscard}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canDiscard}"
                                          type="submit" name="discardsEditNote" th:value="${rowStat.index}"
-                                         class="btn btn-danger btn-sm">
+                                         class="btn btn-primary btn-sm">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"
                                           title="Discard change"></span>
                                 </button>
@@ -372,7 +354,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canRemove}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canRemove}"
                                          type="submit" name="removeNote" th:value="${rowStat.index}"
-                                         class="btn btn-danger btn-sm">
+                                         class="btn btn-primary btn-sm">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"
                                           title="Delete note"></span>
                                 </button>
