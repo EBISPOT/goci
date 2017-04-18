@@ -21,7 +21,7 @@ public class AncestralGroup {
     private Long id;
 
     @NotBlank
-    private String ancestal_group;
+    private String ancestralGroup;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "ancestralGroups")
@@ -31,9 +31,9 @@ public class AncestralGroup {
     public AncestralGroup() {
     }
 
-    public AncestralGroup(String ancestal_group,
+    public AncestralGroup(String ancestralGroup,
                     Collection<Ancestry> ancestries) {
-        this.ancestal_group = ancestal_group;
+        this.ancestralGroup = ancestralGroup;
         this.ancestries = ancestries;
     }
 
@@ -46,12 +46,12 @@ public class AncestralGroup {
         this.id = id;
     }
 
-    public String getAncestal_group() {
-        return ancestal_group;
+    public String getAncestralGroup() {
+        return ancestralGroup;
     }
 
-    public void setAncestal_group(String ancestal_group) {
-        this.ancestal_group = ancestal_group;
+    public void setAncestralGroup(String ancestralGroup) {
+        this.ancestralGroup = ancestralGroup;
     }
 
     public Collection<Ancestry> getAncestries() {

@@ -48,7 +48,7 @@ public class V2_2_0_027__Migrate_ancestral_groups implements SpringJdbcMigration
             ancestral_groups.put(ag, id);
         }
 
-        SimpleJdbcInsert insertStudyPlatform =
+        SimpleJdbcInsert insertStudyAncestry =
                 new SimpleJdbcInsert(jdbcTemplate)
                         .withTableName("ANCESTRY_ANCESTRAL_GROUP")
                         .usingColumns("ANCESTRY_ID", "ANCESTRAL_GROUP_ID");
@@ -73,7 +73,7 @@ public class V2_2_0_027__Migrate_ancestral_groups implements SpringJdbcMigration
                     Map<String, Object> ancestryAncestralGroupArgs = new HashMap<>();
                     ancestryAncestralGroupArgs.put("ANCESTRY_ID", ancestryId);
                     ancestryAncestralGroupArgs.put("ANCESTRAL_GROUP_ID", aId);
-                    insertStudyPlatform.execute(ancestryAncestralGroupArgs);
+                    insertStudyAncestry.execute(ancestryAncestralGroupArgs);
                 }
             }
         }
