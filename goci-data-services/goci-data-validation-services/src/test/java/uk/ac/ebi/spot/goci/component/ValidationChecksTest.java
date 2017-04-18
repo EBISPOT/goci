@@ -115,62 +115,62 @@ public class ValidationChecksTest {
     public void checkGene() throws Exception {
 
         // Stubbing
-        when(geneCheckingRestService.checkGeneSymbolIsValid("MADEUPGENE")).thenReturn(
+        when(geneCheckingRestService.checkGeneSymbolIsValid("MADEUPGENE","")).thenReturn(
                 "Gene symbol MADEUPGENE is not valid");
-        when(geneCheckingRestService.checkGeneSymbolIsValid("HBS1L")).thenReturn(null);
+        when(geneCheckingRestService.checkGeneSymbolIsValid("HBS1L","")).thenReturn(null);
 
-        assertThat(validationChecks.checkGene("")).isEqualTo("Gene name is empty");
-        assertThat(validationChecks.checkGene(null)).isEqualTo("Gene name is empty");
-        assertThat(validationChecks.checkGene("MADEUPGENE")).isEqualTo("Gene symbol MADEUPGENE is not valid");
-        assertThat(validationChecks.checkGene("HBS1L")).isNull();
-        assertThat(validationChecks.checkGene("intergenic")).isNull();
+        assertThat(validationChecks.checkGene("","")).isEqualTo("Gene name is empty");
+        assertThat(validationChecks.checkGene(null,"")).isEqualTo("Gene name is empty");
+        assertThat(validationChecks.checkGene("MADEUPGENE","")).isEqualTo("Gene symbol MADEUPGENE is not valid");
+        assertThat(validationChecks.checkGene("HBS1L","")).isNull();
+        assertThat(validationChecks.checkGene("intergenic","")).isNull();
     }
 
     @Test
     public void checkSnp() throws Exception {
 
         // Stubbing
-        when(snpCheckingRestService.checkSnpIdentifierIsValid("MADEUPSNP")).thenReturn(
+        when(snpCheckingRestService.checkSnpIdentifierIsValid("MADEUPSNP","")).thenReturn(
                 "SNP identifier MADEUPSNP is not valid");
-        when(snpCheckingRestService.checkSnpIdentifierIsValid("rs7329174")).thenReturn(null);
+        when(snpCheckingRestService.checkSnpIdentifierIsValid("rs7329174","")).thenReturn(null);
 
-        assertThat(validationChecks.checkSnp("")).isEqualTo("SNP identifier is empty");
-        assertThat(validationChecks.checkSnp(null)).isEqualTo("SNP identifier is empty");
-        assertThat(validationChecks.checkSnp("MADEUPSNP")).isEqualTo("SNP identifier MADEUPSNP is not valid");
-        assertThat(validationChecks.checkSnp("rs7329174")).isNull();
+        assertThat(validationChecks.checkSnp("","")).isEqualTo("SNP identifier is empty");
+        assertThat(validationChecks.checkSnp(null,"")).isEqualTo("SNP identifier is empty");
+        assertThat(validationChecks.checkSnp("MADEUPSNP","")).isEqualTo("SNP identifier MADEUPSNP is not valid");
+        assertThat(validationChecks.checkSnp("rs7329174","")).isNull();
     }
 
     @Test
     public void checkSnpGeneLocation() throws Exception {
 
         // Stubbing
-        when(snpCheckingRestService.getSnpLocations("rs7329174")).thenReturn(Collections.singleton("13"));
-        when(snpCheckingRestService.getSnpLocations("rs1234")).thenReturn(Collections.EMPTY_SET);
-        when(snpCheckingRestService.getSnpLocations("rs11894081")).thenReturn(Collections.singleton("X"));
-        when(geneCheckingRestService.getGeneLocation("ELF1")).thenReturn("13");
+        when(snpCheckingRestService.getSnpLocations("rs7329174","")).thenReturn(Collections.singleton("13"));
+        when(snpCheckingRestService.getSnpLocations("rs1234","")).thenReturn(Collections.EMPTY_SET);
+        when(snpCheckingRestService.getSnpLocations("rs11894081","")).thenReturn(Collections.singleton("X"));
+        when(geneCheckingRestService.getGeneLocation("ELF1","")).thenReturn("13");
 
-        when(snpCheckingRestService.checkSnpIdentifierIsValid("rs7329174")).thenReturn(null);
-        when(geneCheckingRestService.checkGeneSymbolIsValid("ELF1")).thenReturn(null);
-        when(snpCheckingRestService.checkSnpIdentifierIsValid("MADEUPSNP")).thenReturn(
+        when(snpCheckingRestService.checkSnpIdentifierIsValid("rs7329174","")).thenReturn(null);
+        when(geneCheckingRestService.checkGeneSymbolIsValid("ELF1","")).thenReturn(null);
+        when(snpCheckingRestService.checkSnpIdentifierIsValid("MADEUPSNP","")).thenReturn(
                 "SNP identifier MADEUPSNP is not valid");
 
         // Test pass condition
-        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "ELF1")).isNull();
+        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "ELF1","")).isNull();
 
         // Test invalid SNP condition
-        assertThat(validationChecks.checkSnpGeneLocation("MADEUPSNP", "ELF1")).isEqualTo(
+        assertThat(validationChecks.checkSnpGeneLocation("MADEUPSNP", "ELF1","")).isEqualTo(
                 "SNP identifier MADEUPSNP is not valid");
 
         // Test SNP with no locations
-        assertThat(validationChecks.checkSnpGeneLocation("rs1234", "SFRP1")).isEqualTo(
+        assertThat(validationChecks.checkSnpGeneLocation("rs1234", "SFRP1","")).isEqualTo(
                 "SNP rs1234 has no location details, cannot check if gene is on same chromosome as SNP");
 
         // Test SNP with different location to gene
-        assertThat(validationChecks.checkSnpGeneLocation("rs11894081", "ELF1")).isEqualTo(
+        assertThat(validationChecks.checkSnpGeneLocation("rs11894081", "ELF1","")).isEqualTo(
                 "Gene ELF1 and SNP rs11894081 are not on same chromosome");
 
         // Test "intergenic"
-        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "intergenic")).isNull();
+        assertThat(validationChecks.checkSnpGeneLocation("rs7329174", "intergenic","")).isNull();
     }
 
     @Test

@@ -1,12 +1,18 @@
 package uk.ac.ebi.spot.goci.service.rest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Location;
+import uk.ac.ebi.spot.goci.model.Region;
+import uk.ac.ebi.spot.goci.model.RestResponseResult;
 import uk.ac.ebi.spot.goci.model.SnpLookupJson;
-import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.EnsemblRestcallHistoryService;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -22,7 +28,8 @@ import java.util.Set;
 @Service
 public class SnpCheckingRestService {
 
-    @NotNull @Value("${mapping.snp_lookup_endpoint}")
+    @NotNull
+    @Value("${mapping.snp_lookup_endpoint}")
     private String endpoint;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -31,11 +38,15 @@ public class SnpCheckingRestService {
         return log;
     }
 
-    private RestUrlBuilder restUrlBuilder;
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
+    private EnsemblRestcallHistoryService ensemblRestcallHistoryService;
 
     @Autowired
-    public SnpCheckingRestService(RestUrlBuilder restUrlBuilder) {
-        this.restUrlBuilder = restUrlBuilder;
+    public SnpCheckingRestService(EnsemblRestTemplateService ensemblRestTemplateService,
+                                  EnsemblRestcallHistoryService ensemblRestcallHistoryService) {
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
+        this.ensemblRestcallHistoryService = ensemblRestcallHistoryService;
     }
 
     /**
@@ -44,23 +55,31 @@ public class SnpCheckingRestService {
      * @param snp Snp identifier to check
      * @return Error message
      */
-    public String checkSnpIdentifierIsValid(String snp) {
-
+    public String checkSnpIdentifierIsValid(String snp, String eRelease) {
         String error = null;
-        String response = null;
         try {
-            String url = restUrlBuilder.createUrl(getEndpoint(), snp);
-            getLog().info("Querying: " + url);
-            response = restUrlBuilder.getRestTemplate()
-                    .getForObject(url, String.class);
 
-            if (response.contains("error")) {
-                error = "SNP identifier ".concat(snp).concat(" is not valid");
+            RestResponseResult snpDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
+                    "snp", snp, eRelease);
+
+            if (snpDataApiResult == null) {
+                snpDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), snp, "");
+                ensemblRestcallHistoryService.create(snpDataApiResult, "snp", snp, eRelease);
             }
+
+            if ((snpDataApiResult.hasErorr())) {
+                error = snpDataApiResult.getError();
+            } else {
+                if (snpDataApiResult.getRestResult().getObject().has("error")) {
+                    error = "SNP identifier ".concat(snp).concat(" is not valid");
+                }
+            }
+
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            getLog().error("Checking SNP identifier failed", e);
+            error = "SNP error!";
+            getLog().error("The SNP impossible to retrieve: : ".concat(snp), e);
         }
 
         return error;
@@ -72,24 +91,43 @@ public class SnpCheckingRestService {
      * @param snp Snp identifier to check
      * @return Set of all SNP chromosome names
      */
-    public Set<String> getSnpLocations(String snp) {
+    public Set<String> getSnpLocations(String snp, String eRelease) {
 
         Set<String> snpChromosomeNames = new HashSet<>();
         SnpLookupJson snpLookupJson = new SnpLookupJson();
         try {
-            String url = restUrlBuilder.createUrl(getEndpoint(), snp);
-            getLog().info("Querying: " + url);
-            snpLookupJson =
-                    restUrlBuilder.getRestTemplate()
-                            .getForObject(url, SnpLookupJson.class);
-            snpLookupJson.getMappings().forEach(snpMappingsJson -> {
-                snpChromosomeNames.add(snpMappingsJson.getSeq_region_name());
-            });
+
+            RestResponseResult snpDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
+                    "snp", snp, eRelease);
+
+            if (snpDataApiResult == null) {
+                snpDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), snp, "");
+                ensemblRestcallHistoryService.create(snpDataApiResult, "snp", snp, eRelease);
+            }
+
+            if (!(snpDataApiResult.hasErorr())) {
+                JSONObject snpResult = snpDataApiResult.getRestResult().getObject();
+                JSONArray mappings = snpResult.getJSONArray("mappings");
+
+                for (int i = 0; i < mappings.length(); ++i) {
+                    JSONObject mapping = mappings.getJSONObject(i);
+                    if (!mapping.has("seq_region_name")) {
+                        continue;
+                    }
+                    String chromosome = mapping.getString("seq_region_name");
+                    //Integer position = Integer.valueOf(mapping.getInt("start"));
+                    snpChromosomeNames.add(chromosome);
+                    //System.out.println("Snp chromosome: ".concat(chromosome));
+                }
+            }
+
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
+            //error = "Imnpossible retrieve SNP Mapping info."
             getLog().error("Getting locations for SNP ".concat(snp).concat(" failed"), e);
         }
+
         return snpChromosomeNames;
     }
 

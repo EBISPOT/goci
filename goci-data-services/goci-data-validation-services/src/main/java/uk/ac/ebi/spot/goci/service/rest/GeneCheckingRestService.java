@@ -1,12 +1,17 @@
 package uk.ac.ebi.spot.goci.service.rest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.GeneLookupJson;
-import uk.ac.ebi.spot.goci.utils.RestUrlBuilder;
+import uk.ac.ebi.spot.goci.model.RestResponseResult;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.EnsemblRestcallHistoryService;
+
 
 import javax.validation.constraints.NotNull;
 
@@ -20,10 +25,13 @@ import javax.validation.constraints.NotNull;
 @Service
 public class GeneCheckingRestService {
 
-    @NotNull @Value("${mapping.gene_lookup_endpoint}")
+    @NotNull
+    @Value("${mapping.gene_lookup_endpoint}")
     private String endpoint;
 
-    private RestUrlBuilder restUrlBuilder;
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
+    private EnsemblRestcallHistoryService ensemblRestcallHistoryService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -32,8 +40,10 @@ public class GeneCheckingRestService {
     }
 
     @Autowired
-    public GeneCheckingRestService(RestUrlBuilder restUrlBuilder) {
-        this.restUrlBuilder = restUrlBuilder;
+    public GeneCheckingRestService(EnsemblRestTemplateService ensemblRestTemplateService,
+                                   EnsemblRestcallHistoryService ensemblRestcallHistoryService) {
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
+        this.ensemblRestcallHistoryService = ensemblRestcallHistoryService;
     }
 
     /**
@@ -42,26 +52,35 @@ public class GeneCheckingRestService {
      * @param gene Gene name to check
      * @return Error message
      */
-    public String checkGeneSymbolIsValid(String gene) {
+    public String checkGeneSymbolIsValid(String gene, String eRelease) {
 
         String error = null;
-        GeneLookupJson geneLookupJson = new GeneLookupJson();
+        // TODO: collpase with the below method 12-04-2017
+        //GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
-            String url = restUrlBuilder.createUrl(getEndpoint(), gene);
-            getLog().info("Querying: " + url);
-            geneLookupJson =
-                    restUrlBuilder.getRestTemplate()
-                            .getForObject(url, GeneLookupJson.class);
+            RestResponseResult geneDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
+                    "lookup", gene, eRelease);
 
-            if (!geneLookupJson.getObject_type().equalsIgnoreCase("gene")) {
-                error = "Gene symbol ".concat(gene).concat(" is not valid");
+            if (geneDataApiResult == null ) {
+                geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
+                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup", gene, eRelease);
+            }
+            if (geneDataApiResult.hasErorr()) {
+                error = geneDataApiResult.getError();
+            } else {
+                if (geneDataApiResult.getRestResult().getObject().has("object_type")) {
+                    String objectType = geneDataApiResult.getRestResult().getObject().get("object_type").toString();
+                    if (!(objectType.compareToIgnoreCase("gene") == 0)) {
+                        error = "Gene symbol ".concat(gene).concat(" is not valid");
+                    }
+                }
             }
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            error = "Gene symbol ".concat(gene).concat(" is not valid");
-            getLog().error("Checking gene symbol failed", e);
+            error = "Gene symbol ".concat(gene).concat(" was not retrieved by Ensembl Mapping. Contact Admin.");
+            getLog().error("Gene Symbol".concat(gene).concat(" : was not retrieved. (exception)"), e);
         }
         return error;
     }
@@ -72,23 +91,35 @@ public class GeneCheckingRestService {
      * @param gene Gene name/symbol
      * @return The name of the chromosome the gene is located on
      */
-    public String getGeneLocation(String gene) {
+    public String getGeneLocation(String gene, String eRelease) {
 
         String geneChromosome = null;
-        GeneLookupJson geneLookupJson = new GeneLookupJson();
+        // TODO: collpase with the above method 12-04-2017
+        //GeneLookupJson geneLookupJson = new GeneLookupJson();
 
         try {
-            String url = restUrlBuilder.createUrl(getEndpoint(), gene);
-            getLog().info("Querying: " + url);
-            geneLookupJson =
-                    restUrlBuilder.getRestTemplate()
-                            .getForObject(url, GeneLookupJson.class);
-            geneChromosome = geneLookupJson.getSeq_region_name();
+            RestResponseResult geneDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
+                    "lookup", gene, eRelease);
+
+            if (geneDataApiResult == null ) {
+                geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
+                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup", gene, eRelease);
+            }
+
+            if (!(geneDataApiResult.hasErorr())) {
+                if (geneDataApiResult.getRestResult().getObject().has("seq_region_name")) {
+                    geneChromosome = geneDataApiResult.getRestResult().getObject().getString("seq_region_name");
+                }
+            }
+            if (geneChromosome == null) {
+                getLog().error("Getting locations for gene ".concat(gene).concat("failed"));
+            }
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
             getLog().error("Getting locations for gene ".concat(gene).concat("failed"), e);
         }
+
         return geneChromosome;
     }
 
