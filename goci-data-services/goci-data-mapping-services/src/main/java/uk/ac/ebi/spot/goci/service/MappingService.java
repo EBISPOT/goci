@@ -135,8 +135,10 @@ public class MappingService {
         // Default mapping user
         SecureUser user = secureUserRepository.findByEmail("automatic_mapping_process");
         String eRelease = this.getEnsemblRelease();
+        int totalAssociationDone=1;
         try {
             for (Association association : associations) {
+                getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
                 doMapping(association, eRelease);
 
                 // Update mapping event
@@ -145,6 +147,7 @@ public class MappingService {
                 // Once mapping is complete, update mapping record
                 getLog().debug("Update mapping record");
                 mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+                totalAssociationDone = totalAssociationDone + 1;
             }
         }
         catch (EnsemblMappingException e) {

@@ -53,6 +53,15 @@ public class AssociationQueryService {
 
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Association> findLSFAssociations(Integer numJob, Integer lenghtInterval) {
+        Integer min = (lenghtInterval*(numJob-1))+1;
+        Integer max = (lenghtInterval*numJob);
+        System.out.println("Association rows: " + min + " - " + max );
+        Collection<Association> allAssociations = associationRepository.findAllLSF(min,max);
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
     // Sort options
     private Sort sortByIdDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "id"));

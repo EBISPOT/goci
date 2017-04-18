@@ -37,6 +37,10 @@ public class MappingApplication {
 
     private OperationMode opMode;
 
+    private int job;
+
+    private int length;
+
     private static int exitCode;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -46,6 +50,11 @@ public class MappingApplication {
     }
 
     public static void main(String... args) {
+        String filename = "gwas_mapper_lsf.";
+        if ((args != null) && (args.length > 2)) {
+            filename = filename.concat(args[2].toString());
+        }
+        System.setProperty("logfilename", filename);
         System.out.println("Starting mapping service...");
         ApplicationContext ctx = SpringApplication.run(MappingApplication.class, args);
         int code = SpringApplication.exit(ctx, () -> exitCode);
@@ -64,6 +73,16 @@ public class MappingApplication {
                     case MAPPING:
                         try {
                             doMapping();
+                        }
+                        catch (Exception e) {
+                            System.err.println("Mapping failed(" + e.getMessage() + ")");
+                            getLog().error("Mapping failed", e);
+                            exitCode += 2;
+                        }
+                        break;
+                    case LSF:
+                        try {
+                            doMappingLSF();
                         }
                         catch (Exception e) {
                             System.err.println("Mapping failed(" + e.getMessage() + ")");
@@ -91,6 +110,18 @@ public class MappingApplication {
 
     }
 
+    private void doMappingLSF() {
+        getLog().info("Starting mapping of all associations with performer: " + this.performer);
+        try {
+            mapCatalogService.mapCatalogContentsLSF(this.performer,this.job,this.length);
+            getLog().info("Finished mapping by performer:  " + this.performer);
+        }
+        catch (EnsemblMappingException e) {
+            getLog().error("Mapping failed due to Ensembl API communication issue");
+        }
+
+    }
+
     private Options bindOptions() {
         Options options = new Options();
 
@@ -101,7 +132,7 @@ public class MappingApplication {
         // options are...
         // -m do mapping
         OptionGroup modeGroup = new OptionGroup();
-        modeGroup.setRequired(true);
+        modeGroup.setRequired(false);
 
         Option mappingOption = new Option(
                 "m",
@@ -113,6 +144,19 @@ public class MappingApplication {
         mappingOption.setRequired(true);
         modeGroup.addOption(mappingOption);
         options.addOptionGroup(modeGroup);
+
+
+        Option mappingOptionLSF = new Option(
+                "l",
+                "LSF",
+                false,
+                "Maps all associations in the GWAS database. Mapping pipeline will map SNPs " +
+                        "in database and also validate the author reported gene linked to that SNP via the associations");
+        mappingOptionLSF.setArgName("performer");
+        mappingOptionLSF.setRequired(true);
+        modeGroup.addOption(mappingOptionLSF);
+        options.addOptionGroup(modeGroup);
+
 
         return options;
     }
@@ -140,10 +184,22 @@ public class MappingApplication {
                                                " (" + opt.getArgName() + ")");
                 }
 
+
+
                 // options: -m do mapping
                 if (cl.hasOption("m")) {
                     this.opMode = OperationMode.MAPPING;
                     this.performer = cl.getArgList().get(0).toString();
+                    System.out.println("-m automatic_mapping_process");
+                }
+
+                if(cl.hasOption("l")){
+                    this.opMode = OperationMode.LSF;
+                    this.performer = cl.getArgList().get(0).toString();
+                    this.job = Integer.valueOf(cl.getArgList().get(1).toString());
+                    this.length = Integer.valueOf(cl.getArgList().get(2).toString());
+
+
                 }
 
             }
@@ -157,7 +213,8 @@ public class MappingApplication {
     }
 
     private enum OperationMode {
-        MAPPING
+        MAPPING,
+        LSF
     }
 
 }
