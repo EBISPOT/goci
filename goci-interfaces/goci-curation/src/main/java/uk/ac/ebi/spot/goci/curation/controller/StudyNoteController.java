@@ -190,9 +190,6 @@ public class StudyNoteController {
         if (bindingResult.hasErrors()) {
             //reload system notes because they are not part of the input
             multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
-
-//            multiStudyNoteForm.getNomalNoteForms().get(rowId.intValue());
-//            multiStudyNoteForm.setnote
             model.addAttribute("availableNoteSubject",noteSubjects);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
             return "study_notes";
@@ -213,10 +210,8 @@ public class StudyNoteController {
             // we want to display the error to the user simply on top of the form
             getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
             model.addAttribute("errors", "Update FAIL! " + notification.errorMessage());
+            multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
             model.addAttribute("availableNoteSubject",noteSubjects);
-            // an form object mapped from the studyNote object, it contains a list of notes
-            multiStudyNoteForm = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
-            multiStudyNoteForm.getNomalNoteForms().set(rowId.intValue(),snf);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
         }
         return "study_notes";

@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.springframework.format.annotation.DateTimeFormat;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 
@@ -30,7 +31,9 @@ public class StudyNoteForm {
 
     private Long genericId;
 
+    @DateTimeFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private Date createdAt;
+    @DateTimeFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private Date updatedAt;
 
 

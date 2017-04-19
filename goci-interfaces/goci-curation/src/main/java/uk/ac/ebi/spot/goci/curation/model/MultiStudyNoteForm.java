@@ -10,10 +10,11 @@ import java.util.List;
 public class MultiStudyNoteForm  {
 
 
-    @Valid
-    private List<StudyNoteForm> noteForms = new ArrayList<StudyNoteForm>();
+
     @Valid
     private List<StudyNoteForm> nomalNoteForms = new ArrayList<StudyNoteForm>();
+
+    @Valid
     private List<StudyNoteForm> systemNoteForms = new ArrayList<StudyNoteForm>();
 
     private Boolean canEdit = true;
@@ -24,22 +25,16 @@ public class MultiStudyNoteForm  {
 
     }
 
-    public MultiStudyNoteForm(List<StudyNoteForm> noteForms,
+    public MultiStudyNoteForm(List<StudyNoteForm> nomalNoteForms,
+                              List<StudyNoteForm> systemNoteForms,
                               Boolean canEdit,
                               Boolean editingMode,
                               Integer editIndex) {
-        this.noteForms = noteForms;
+        this.nomalNoteForms = nomalNoteForms;
+        this.systemNoteForms = systemNoteForms;
         this.canEdit = canEdit;
         this.editingMode = editingMode;
         this.editIndex = editIndex;
-    }
-
-    public List<StudyNoteForm> getNoteForms() {
-        return noteForms;
-    }
-
-    public void setNoteForms(List<StudyNoteForm> noteForms) {
-        this.noteForms = noteForms;
     }
 
     public Boolean getEditingMode() {

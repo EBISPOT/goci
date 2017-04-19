@@ -286,10 +286,12 @@
 
                 <td>
                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
+                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].createdAt}"/>
                 </td>
                 <!--update date-->
                 <td>
                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
+                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].updatedAt}"/>
                 </td>
 
                 <td>

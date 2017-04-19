@@ -99,6 +99,17 @@ public class StudyNoteOperationsService {
         return sysNoteForms;
     }
 
+    public List<StudyNoteForm> generateNonSystemNoteForms(Collection<StudyNote> notes){
+        List<StudyNoteForm> sysNoteForms=new ArrayList<StudyNoteForm>();
+        if(!notes.isEmpty()){
+            filterNomalNote(notes).forEach(sysNote->{
+                StudyNoteForm row = convertToStudyNoteForm(sysNote);
+                sysNoteForms.add(row);
+            });
+        }
+        return sysNoteForms;
+    }
+
 
     public StudyNote createEmptyStudyNote(Study study, SecureUser user){
         StudyNote note = new StudyNote();
