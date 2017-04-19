@@ -127,8 +127,8 @@ public class ErrorCreationService {
     }
 
     // Loci attributes checks
-    public ValidationError checkGene(String gene) {
-        String errorMessage = validationChecks.checkGene(gene);
+    public ValidationError checkGene(String gene, String eRelease) {
+        String errorMessage = validationChecks.checkGene(gene, eRelease);
         return ErrorProcessingService.createError(errorMessage, "Gene", true);
     }
 
@@ -142,8 +142,8 @@ public class ErrorCreationService {
         }
     }
 
-    public ValidationError checkSnp(String snp) {
-        String errorMessage = validationChecks.checkSnp(snp);
+    public ValidationError checkSnp(String snp, String eRelease) {
+        String errorMessage = validationChecks.checkSnp(snp, eRelease);
         if (errorMessage != null && errorMessage.equals("SNP identifier is empty")) {
             return ErrorProcessingService.createError(errorMessage, "SNP", false);
         }
@@ -179,8 +179,8 @@ public class ErrorCreationService {
     }
 
     // Check Gene and SNP are on same chromosome
-    public ValidationError checkSnpGeneLocation(String snp, String gene) {
-        String errorMessage = validationChecks.checkSnpGeneLocation(snp, gene);
+    public ValidationError checkSnpGeneLocation(String snp, String gene, String eRelease) {
+        String errorMessage = validationChecks.checkSnpGeneLocation(snp, gene, eRelease);
 
         // Based on error message figure out the most appropriate field name
         String field = "Gene";

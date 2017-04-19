@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class CustomErrorController implements ErrorController {
+
     private static final String PATH = "/error";
 
     @Autowired

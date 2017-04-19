@@ -174,7 +174,7 @@ public class EnsemblRestService {
 
                 if (response.getStatus() == 200) { // Success
                     success = true;
-                    restResponseResult.setRestResult(response.getBody());
+                    //restResponseResult.setRestResult(response.getBody());
                 }
                 else if (response.getStatus() == 429 && retryHeader != null) { // Too Many Requests
                     Long waitSeconds = Long.valueOf(retryHeader);

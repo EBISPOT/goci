@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="LOG_FILE" value="gwas_mapper.log" />
+    <property name="LOG_PATH" value="${catalina.base}/logs/gwas_mapper" />
+    <property name="LOG_FILE" value="${logfilename}.log" />
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
@@ -34,6 +35,14 @@
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.service.SnpGenomicContextMappingService" level="WARN" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.exception.EnsemblRestClientException" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 

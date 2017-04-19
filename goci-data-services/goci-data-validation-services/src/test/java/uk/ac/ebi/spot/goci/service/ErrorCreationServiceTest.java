@@ -327,17 +327,17 @@ public class ErrorCreationServiceTest {
 
     @Test
     public void testCheckGene() throws Exception {
-        when(validationChecks.checkGene("testX")).thenReturn("Gene synbol testX is not valid");
-        ValidationError error1 = errorCreationService.checkGene("testX");
+        when(validationChecks.checkGene("testX","")).thenReturn("Gene synbol testX is not valid");
+        ValidationError error1 = errorCreationService.checkGene("testX","");
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("Gene", "Gene synbol testX is not valid", true);
 
-        when(validationChecks.checkGene("SFRP1")).thenReturn(null);
-        ValidationError error2 = errorCreationService.checkGene("SFRP1");
+        when(validationChecks.checkGene("SFRP1","")).thenReturn(null);
+        ValidationError error2 = errorCreationService.checkGene("SFRP1","");
         assertThat(error2).extracting("field", "error", "warning").contains(null, null, false);
 
-        when(validationChecks.checkGene("")).thenReturn("Gene name is empty");
-        ValidationError error3 = errorCreationService.checkGene("");
+        when(validationChecks.checkGene("","")).thenReturn("Gene name is empty");
+        ValidationError error3 = errorCreationService.checkGene("","");
         assertThat(error3).extracting("field", "error", "warning").contains("Gene", "Gene name is empty", true);
     }
 
@@ -363,21 +363,21 @@ public class ErrorCreationServiceTest {
 
     @Test
     public void testCheckSnp() throws Exception {
-        when(validationChecks.checkSnp("kgp4567")).thenReturn("SNP identifier kgp4567 is not valid");
+        when(validationChecks.checkSnp("kgp4567","")).thenReturn("SNP identifier kgp4567 is not valid");
         ValidationError error1 =
-                errorCreationService.checkSnp("kgp4567");
+                errorCreationService.checkSnp("kgp4567","");
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("SNP", "SNP identifier kgp4567 is not valid", true);
 
-        when(validationChecks.checkSnp("")).thenReturn("SNP identifier is empty");
+        when(validationChecks.checkSnp("","")).thenReturn("SNP identifier is empty");
         ValidationError error2 =
-                errorCreationService.checkSnp("");
+                errorCreationService.checkSnp("","");
         assertThat(error2).extracting("field", "error", "warning")
                 .contains("SNP", "SNP identifier is empty", false);
 
-        when(validationChecks.checkSnp("rs1234")).thenReturn(null);
+        when(validationChecks.checkSnp("rs1234","")).thenReturn(null);
         ValidationError error3 =
-                errorCreationService.checkSnp("rs1234");
+                errorCreationService.checkSnp("rs1234","");
         assertThat(error3).extracting("field", "error", "warning").contains(null, null, false);
     }
 
@@ -475,27 +475,27 @@ public class ErrorCreationServiceTest {
 
     @Test
     public void testCheckSnpGeneLocation() throws Exception {
-        when(validationChecks.checkSnpGeneLocation("rsTEST", "TEST")).thenReturn(
+        when(validationChecks.checkSnpGeneLocation("rsTEST", "TEST","")).thenReturn(
                 "Gene TEST and SNP rsTEST are not on the same chromosome");
         ValidationError error1 =
-                errorCreationService.checkSnpGeneLocation("rsTEST", "TEST");
+                errorCreationService.checkSnpGeneLocation("rsTEST", "TEST","");
         assertThat(error1).extracting("field", "error", "warning")
                 .contains("Gene",
                           "Gene TEST and SNP rsTEST are not on the same chromosome",
                           true);
 
-        when(validationChecks.checkSnpGeneLocation("rs2981579", "FGFR2")).thenReturn(null);
+        when(validationChecks.checkSnpGeneLocation("rs2981579", "FGFR2","")).thenReturn(null);
         ValidationError error2 =
-                errorCreationService.checkSnpGeneLocation("rs2981579", "FGFR2");
+                errorCreationService.checkSnpGeneLocation("rs2981579", "FGFR2","");
         assertThat(error2).extracting("field", "error", "warning")
                 .contains(null,
                           null,
                           false);
 
-        when(validationChecks.checkSnpGeneLocation("rs99", "FGFR2")).thenReturn(
+        when(validationChecks.checkSnpGeneLocation("rs99", "FGFR2","")).thenReturn(
                 "SNP rs99 has no location details, cannot check if gene is on same chromosome as SNP");
         ValidationError error3 =
-                errorCreationService.checkSnpGeneLocation("rs99", "FGFR2");
+                errorCreationService.checkSnpGeneLocation("rs99", "FGFR2","");
         assertThat(error3).extracting("field", "error", "warning")
                 .contains("SNP",
                           "SNP rs99 has no location details, cannot check if gene is on same chromosome as SNP",

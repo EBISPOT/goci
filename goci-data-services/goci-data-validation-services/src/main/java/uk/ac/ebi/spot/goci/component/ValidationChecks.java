@@ -248,7 +248,7 @@ public class ValidationChecks {
      *
      * @param geneName Gene name to be checked
      */
-    public String checkGene(String geneName) {
+    public String checkGene(String geneName, String eRelease) {
         String error = null;
         if (geneName == null) {
             error = "Gene name is empty";
@@ -260,7 +260,7 @@ public class ValidationChecks {
             // Check gene name in Ensembl
             else {
                 if (!geneName.equalsIgnoreCase("intergenic") && !geneName.equalsIgnoreCase("NR")) {
-                    error = geneCheckingRestService.checkGeneSymbolIsValid(geneName);
+                    error = geneCheckingRestService.checkGeneSymbolIsValid(geneName, eRelease);
                 }
             }
         }
@@ -272,7 +272,7 @@ public class ValidationChecks {
      *
      * @param snp Snp identifier to be checked
      */
-    public String checkSnp(String snp) {
+    public String checkSnp(String snp, String eRelease) {
         String error = null;
         if (snp == null) {
             error = "SNP identifier is empty";
@@ -283,7 +283,7 @@ public class ValidationChecks {
             }
             // Check SNP in Ensembl
             else {
-                error = snpCheckingRestService.checkSnpIdentifierIsValid(snp);
+                error = snpCheckingRestService.checkSnpIdentifierIsValid(snp, eRelease);
             }
         }
         return error;
@@ -295,21 +295,21 @@ public class ValidationChecks {
      * @param snp  Snp identifier to be checked
      * @param gene Gene name to be checked
      */
-    public String checkSnpGeneLocation(String snp, String gene) {
+    public String checkSnpGeneLocation(String snp, String gene, String eRelease) {
         String error = null;
 
         // Ensure valid snp
-        String snpError = checkSnp(snp);
+        String snpError = checkSnp(snp, eRelease);
 
         if (snpError != null) {
             error = snpError;
         }
         else {
             // Get all SNP locations and check gene location is one of them
-            Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp);
+            Set<String> snpChromosomeNames = snpCheckingRestService.getSnpLocations(snp, eRelease);
             if (!snpChromosomeNames.isEmpty()) {
                 if (!gene.equalsIgnoreCase("intergenic") && !gene.equalsIgnoreCase("NR")) {
-                    String geneChromosome = geneCheckingRestService.getGeneLocation(gene);
+                    String geneChromosome = geneCheckingRestService.getGeneLocation(gene, eRelease);
                     if (!snpChromosomeNames.contains(geneChromosome)) {
                         error = "Gene ".concat(gene)
                                 .concat(" and SNP ")

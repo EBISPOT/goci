@@ -49,6 +49,14 @@
         <appender-ref ref="FILE" />
     </logger>
 
+    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="uk.ac.ebi.spot.goci.exception.EnsemblRestClientException" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
     <root level="WARN">
         <appender-ref ref="FILE" />
     </root>
