@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.Note;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
 import uk.ac.ebi.spot.goci.repository.NoteSubjectRepository;
 
@@ -36,17 +35,17 @@ public class NoteSubjectService {
     }
 
 
-    protected NoteSubject findDefaultSubject() {
+    protected NoteSubject findOneExistingSubject() {
         NoteSubject subject = noteSubjectRepository.findAll().get(0);
         return subject;
     }
 
     public NoteSubject findBySubject(String subject) {
         NoteSubject subjectSelected= noteSubjectRepository.findBySubjectIgnoreCase(subject);
-        if (subjectSelected==null) {
-            //xintodo add log
-            subjectSelected = findDefaultSubject();
-        }
+//        if (subjectSelected==null) {
+//            //xintodo add log
+//            subjectSelected = findOneExistingSubject();
+//        }
         return subjectSelected;
     }
 
