@@ -56,11 +56,16 @@
             charset="utf8"
             src="//cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
 
+
+
     <script th:src="@{/js/goci-editing.js}"></script>
     <script th:src="@{/js/goci-show-text.js}"></script>
+    <script th:src="@{/js/bootstrap-confirmation.min.js}"></script>
+    <script th:src="@{/js/goci-study-note.js}"></script>
 
 </head>
 <body>
+
 
 <!--Include header-->
 <div th:include="fragments/header :: navbar"></div>
@@ -76,7 +81,6 @@
 <!--Include study navigation tabs-->
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
-
 <!--Top level buttons and modals-->
 <div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"
      th:if="*{#bools.isTrue(study.housekeeping.isPublished)}"></div>
@@ -84,14 +88,6 @@
 <div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"
      th:if="*{#bools.isFalse(study.housekeeping.isPublished)}"></div>
 
-<!--<div th:switch="${study.housekeeping.isPublished}">-->
-<!--<div th:case="false">-->
-<!--<div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"></div>-->
-<!--</div>-->
-<!--<div th:case="true">-->
-<!--<div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"></div>-->
-<!--</div>-->
-<!--</div>-->
 <br/>
 
 <!--<div class="form-group"  style="display: none">-->
@@ -99,14 +95,6 @@
     <div class="col-md-6">
         <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
     </div>
-
-<!--<div class="container-fluid">-->
-    <!--&lt;!&ndash;Include errors&ndash;&gt;-->
-    <!--<div class="col-md-10" style="margin-top:10px">-->
-        <!--<div th:include="fragments/studynote_error :: studynote_update_error"></div>-->
-    <!--</div>-->
-<!--</div>-->
-<!--<br/>-->
 
 
 <div class="container">
@@ -116,23 +104,21 @@
 </div>
 
 
-
-
 <!--system notes-->
 <div class="container-fluid">
     <div th:if="not ${#lists.isEmpty(multiStudyNoteForm.systemNoteForms)}">
-    <table  class="table table-hover table-bordered">
+    <table  id="sysTable"  class="table table-hover table-bordered">
         <thead>
         <tr>
             <!--<th style="font-size: small">Index</th>-->
             <th class="col-md-5">System Note(s)</th>
-            <th class="col-md-3">NoteSubject</th>
+            <th class="col-md-1">NoteSubject</th>
             <th class="col-md-1">Status</th>
             <th class="col-md-1">Curator</th>
             <th class="col-md-1">Published</th>
             <th class="col-md-1">createDate</th>
             <th class="col-md-1">updateDate</th>
-            <!--<th class="col-md-2">Action</th>-->
+            <th class="col-md-2">Action</th>
         </tr>
         </thead>
 
@@ -157,20 +143,17 @@
                 </div>
             </td>
             <!--created date-->
-            <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd')} :'-'"></td>
+            <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd h:m:s')} :'-'"></td>
             <!--update date-->
-            <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd')} :'-'"></td>
-            <!--<td>-->
-                <!-- - -->
-            <!--</td>-->
+            <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd h:m:s')} :'-'"></td>
+            <td>-</td>
         </tr>
         </tbody>
     </table>
     </div>
 </div>
 
-
-
+<br/><br/><br/>
 
 
 
@@ -181,19 +164,19 @@
     <!--</div>-->
 
     <!--<div class="col-md-12 dataForm">-->
-        <table  class="table table-hover table-bordered">
+        <!--<table  class="table-striped table table-hover table-bordered">-->
+        <table  id="mainTable" class="table table-hover table-bordered">
             <thead>
             <tr>
                 <!--<th style="font-size: small">Index</th>-->
                 <th class="col-md-5">Note(s)</th>
-                <th class="col-md-2">NoteSubject</th>
+                <th class="col-md-1">NoteSubject</th>
                 <th class="col-md-1">Status</th>
                 <th class="col-md-1">Curator</th>
                 <th class="col-md-1">Published</th>
                 <th class="col-md-1">createDate</th>
                 <th class="col-md-1">updateDate</th>
                 <th class="col-md-2">
-
                     <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>
                     <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
                 </th>
@@ -207,13 +190,19 @@
                 <td class="form-group" th:classappend="${#fields.hasErrors('*{nomalNoteForms[__${rowStat.index}__].textNote}')} ? 'has-error'">
 
                     <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <label th:text="*{nomalNoteForms[__${rowStat.index}__].textNote}" class="small"></label>
+                        <p th:text="*{nomalNoteForms[__${rowStat.index}__].textNote}"></p>
                         <input th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}" type="hidden"
                                th:value="*{nomalNoteForms[__${rowStat.index}__].textNote}"/>
                     </div>
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <input type="text" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
-                               th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"/>
+                        <!--<input type="text" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"-->
+                               <!--th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"/>-->
+
+                        <!--<div class="form-group">-->
+                            <textarea rows="5" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
+                                      th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"
+                                      placeholder="Please enter note here"></textarea>
+                        <!--</div>-->
                     </div>
 
                     <span th:if="${#fields.hasErrors('*{nomalNoteForms[__${rowStat.index}__].textNote}')}"
@@ -231,31 +220,8 @@
                 </td>
                 <!--NoteSubject-->
                 <td>
-                    <!--if not editig, we show the field as label and store the value in hidden input-->
-                    <!--<div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">-->
-                        <!--<label th:text="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"></label>-->
-                        <!--<input th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}" type="hidden"-->
-                               <!--th:value="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>-->
-                    <!--</div>-->
-                    <!--<div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">-->
-
-
-                    <!--<select th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"-->
-                            <!--th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">-->
-                        <!--<option th:each="noteSubject : ${availableNoteSubject}" th:value="${noteSubject.id}"-->
-                                <!--th:text="${noteSubject.subject}"-->
-                            <!--th:selected="${noteSubject.id}==*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}">-->
-                        <!--</option>-->
-                    <!--</select>-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}">-->
-                        <!--<input th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}" type="hidden"-->
-                               <!--th:value="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>-->
-                    <!--</div>-->
-
-
                     <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <label th:text="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"></label>
+                        <p th:text="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"></p>
                         <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>
                         <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"/>
                     </div>
@@ -277,10 +243,12 @@
                 <td>
                     <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
                         <div th:switch="*{nomalNoteForms[__${rowStat.index}__].status}" th:remove="tag">
-                            <p th:case="true" th:remove="tag">
-                                <label>Public</label> </p>
-                            <p th:case="false">
-                                <label>Private</label> </p>
+                            <div th:case="true" th:remove="tag">
+                                <p>Public</p>
+                            </div>
+                            <div th:case="false">
+                                <p>Private</p>
+                            </div>
                         </div>
                         <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].status}"/>
                     </div>
@@ -302,7 +270,7 @@
 
                 <!--Curator-->
                 <td>
-                    <label th:text="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"></label>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"></p>
                     <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"/>
                     <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.id}"/>
                 </td>
@@ -315,11 +283,11 @@
                 </td>
 
                 <td>
-                     <label th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd ')} :'-'"></label>
+                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd h:m:s')} :'-'"></p>
                 </td>
                 <!--update date-->
                 <td>
-                    <label th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd ')} :'-'"></label>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd h:m:s')} :'-'"></p>
                 </td>
 
                 <td>
@@ -354,9 +322,9 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canRemove}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canRemove}"
                                          type="submit" name="removeNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"
-                                          title="Delete note"></span>
+                                         class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true">
+                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"
+                                           title="Delete note"></span>
                                 </button>
                     </div>
 
@@ -384,42 +352,28 @@
 
 
 
-
-
-
-<!--Bottom level buttons and modals-->
-<!--<div th:if="(${study.housekeeping.isPublished} == false)">-->
-<!--<div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>-->
-<!--</div>-->
-<!--<div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"-->
-     <!--th:if="*{#bools.isFalse(study.housekeeping.isPublished)}"></div>-->
-
 <div th:include="fragments/footer :: page_footer"></div>
 
 
-<script>
-//    <!--$(document).ready(function() {-->
-//        <!--var table = $('#mainTable').DataTable({-->
-//                                                  <!--lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],-->
-//                                                  <!--ordering: false,-->
-//                                                  info: true,
-//                                                  paging: true
-//                                                  dom: 'Bfrtip',
-////
-//                                                  buttons: [
-//                                                      {
-//                                                          extend: 'colvis',
-//                                                          columns: ':gt(0)',
-//                                                          postfixButtons: ['colvisRestore']
-//                                                      }
-//                                                  ]
-                                              });
+<!--<script>-->
+    <!--$(document).ready(function() {-->
+        <!--var table = $('#mainTable').DataTable({-->
+                                                  <!--lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],-->
+                                                  <!--ordering: false,-->
+                                                  <!--info: true,-->
+                                                  <!--paging: true-->
+                                                  <!--dom: 'Bfrtip',-->
+                                                  <!--buttons: [-->
+                                                      <!--{-->
+                                                          <!--extend: 'colvis',-->
+                                                          <!--columns: ':gt(0)',-->
+                                                          <!--postfixButtons: ['colvisRestore']-->
+                                                      <!--}-->
+                                                  <!--]-->
+                                              <!--});-->
     <!--});-->
+<!--</script>-->
 
-//    div.container {
-//        width: 80%;
-//    }
-</script>
 
 </body>
 </html>

@@ -35,7 +35,7 @@ public abstract class Note {
     private Long genericId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="CREATED")
+    @Column(name="CREATED", updatable=false)
     private Date createdAt;
 
 

@@ -57,7 +57,7 @@ public class NoteSubjectService {
         return findBySubject(DEFAULT);
     }
 
-    public Collection<NoteSubject> findUsableNoteSubject(){
+    public Collection<NoteSubject> findNonSystemNoteSubject(){
         List<NoteSubject> allNoteSubject = noteSubjectRepository.findAll();
         SYSTEM_NOTES.forEach(s->{
             NoteSubject noteSubject = noteSubjectRepository.findBySubjectIgnoreCase(s);

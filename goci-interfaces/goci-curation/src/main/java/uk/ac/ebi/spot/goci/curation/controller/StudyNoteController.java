@@ -24,7 +24,6 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.NoteSubjectService;
-import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,9 +72,6 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-        // Get study notes
-        Collection<StudyNote> studyNotes = study.getNotes();
-
         // an form object mapped from the studyNote object, it contains a list of notes
         MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
 
@@ -99,7 +95,7 @@ public class StudyNoteController {
         }
 
         //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         // an form object mapped from the studyNote object, it contains a list of notes
@@ -156,7 +152,7 @@ public class StudyNoteController {
                 getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
                 model.addAttribute("errors", "Delete FAIL! " + notification.errorMessage());
 
-                Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
+                Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
                 model.addAttribute("availableNoteSubject",noteSubjects);
                 model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
                 return "study_notes";
@@ -187,11 +183,13 @@ public class StudyNoteController {
         model.addAttribute("study", study);
 
         //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         //form validation
         if (bindingResult.hasErrors()) {
+            //reload system notes because they are not part of the input
+            multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
             model.addAttribute("availableNoteSubject",noteSubjects);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
             return "study_notes";
@@ -234,7 +232,7 @@ public class StudyNoteController {
 
         //get All note subjects for dropdown
         //remove subjects including 'Imported from previous system' 'SystemNote'
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findUsableNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         // an form object mapped from the studyNote object, it contains a list of notes
