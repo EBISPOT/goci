@@ -97,16 +97,16 @@
     </div>
 
 
-<div class="container">
-<div class="alert alert-danger" th:if="${errors}">
+<div class="container" th:if="${errors}">
+<div class="alert alert-danger">
     <strong>Error!</strong> <span th:text="${errors}"></span>
 </div>
 </div>
 
 
 <!--system notes-->
-<div class="container-fluid">
-    <div th:if="not ${#lists.isEmpty(multiStudyNoteForm.systemNoteForms)}">
+<div class="container-fluid" th:if="not ${#lists.isEmpty(multiStudyNoteForm.systemNoteForms)}">
+    <div>
     <table  id="sysTable"  class="table table-hover table-bordered">
         <thead>
         <tr>
@@ -151,9 +151,10 @@
         </tbody>
     </table>
     </div>
+    <br/><br/><br/>
 </div>
 
-<br/><br/><br/>
+
 
 
 
