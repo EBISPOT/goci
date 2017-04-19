@@ -72,7 +72,7 @@ public class StudyDuplicationService {
         StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
-        //#xintodo this need to be refactor to studyService.addStudyNote()
+        // The note is properly created. We don't need to check any business logic. Just link to the study.
         studyNoteService.saveStudyNote(note);
 
         duplicateStudy.addNote(note);
