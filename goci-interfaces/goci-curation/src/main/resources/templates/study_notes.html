@@ -143,9 +143,9 @@
                 </div>
             </td>
             <!--created date-->
-            <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd h:m:s')} :'-'"></td>
+            <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></td>
             <!--update date-->
-            <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd h:m:s')} :'-'"></td>
+            <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></td>
             <td>-</td>
         </tr>
         </tbody>
@@ -283,11 +283,11 @@
                 </td>
 
                 <td>
-                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd h:m:s')} :'-'"></p>
+                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
                 </td>
                 <!--update date-->
                 <td>
-                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd h:m:s')} :'-'"></p>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
                 </td>
 
                 <td>

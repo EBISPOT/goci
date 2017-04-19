@@ -24,6 +24,7 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.CuratorService;
 import uk.ac.ebi.spot.goci.service.EventTypeService;
 import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
@@ -53,6 +54,7 @@ public class StudyOperationsService {
     private HousekeepingOperationsService housekeepingOperationsService;
     private StudyNoteService studyNoteService;
     private StudyNoteOperationsService studyNoteOperationsService;
+    private CuratorService curatorService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -66,7 +68,8 @@ public class StudyOperationsService {
                                   EventTypeService eventTypeService,
                                   HousekeepingOperationsService housekeepingOperationsService,
                                   StudyNoteService studyNoteService,
-                                  StudyNoteOperationsService studyNoteOperationsService
+                                  StudyNoteOperationsService studyNoteOperationsService,
+                                  CuratorService curatorService
     ) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
@@ -80,6 +83,7 @@ public class StudyOperationsService {
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.studyNoteService = studyNoteService;
         this.studyNoteOperationsService=studyNoteOperationsService;
+        this.curatorService=curatorService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -340,9 +344,13 @@ public class StudyOperationsService {
     }
 
 
-    public ErrorNotification addStudyNote(Study study, StudyNote studyNote)  {
+    public ErrorNotification addStudyNote(Study study, StudyNote studyNote, SecureUser user)  {
 
         ErrorNotification notification = new ErrorNotification();
+
+        //xintodo need to refactor after removing curator table
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
+        studyNote.setCurator(curator);
 
         //user cannot touch system notes
         if (studyNoteOperationsService.isSystemNote(studyNote)){

@@ -200,7 +200,9 @@ public class StudyNoteController {
         StudyNote noteToEdit = studyNoteOperationsService.convertToStudyNote(snf, study);
 
 
-        ErrorNotification notification = studyOperationsService.addStudyNote(study, noteToEdit);
+        SecureUser user = currentUserDetailsService.getUserFromRequest(req);
+
+        ErrorNotification notification = studyOperationsService.addStudyNote(study, noteToEdit, user);
         if(!notification.hasErrors()){
             return "redirect:/studies/" + studyId + "/notes";
         }else{
