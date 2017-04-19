@@ -64,7 +64,7 @@ public class GeneCheckingRestService {
 
             if (geneDataApiResult == null ) {
                 geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
-                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup", gene, eRelease);
+                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup_symbol", gene, eRelease);
             }
             if (geneDataApiResult.hasErorr()) {
                 error = geneDataApiResult.getError();
@@ -103,7 +103,7 @@ public class GeneCheckingRestService {
 
             if (geneDataApiResult == null ) {
                 geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
-                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup", gene, eRelease);
+                ensemblRestcallHistoryService.create(geneDataApiResult, "lookup_symbol", gene, eRelease);
             }
 
             if (!(geneDataApiResult.hasErorr())) {
