@@ -47,7 +47,7 @@ public class EnsemblRestClientException extends RestClientException {
                     JsonNode jsonNode = mapper.convertValue(rawText, JsonNode.class);
                     if (jsonNode.getObject()!= null) {
                          for (String key :jsonNode.getObject().keySet()) {
-                            message = message.concat(jsonNode.getObject().get(key).toString().concat(";"));
+                            message = message.concat(jsonNode.getObject().get(key).toString());
                         }
                     }
                     break;
