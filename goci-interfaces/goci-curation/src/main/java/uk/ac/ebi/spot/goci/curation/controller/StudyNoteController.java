@@ -190,6 +190,9 @@ public class StudyNoteController {
         if (bindingResult.hasErrors()) {
             //reload system notes because they are not part of the input
             multiStudyNoteForm.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
+
+//            multiStudyNoteForm.getNomalNoteForms().get(rowId.intValue());
+//            multiStudyNoteForm.setnote
             model.addAttribute("availableNoteSubject",noteSubjects);
             model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
             return "study_notes";

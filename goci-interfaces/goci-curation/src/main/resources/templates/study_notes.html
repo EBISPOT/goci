@@ -190,21 +190,22 @@
                 <!--Note(s)-->
                 <td class="form-group" th:classappend="${#fields.hasErrors('*{nomalNoteForms[__${rowStat.index}__].textNote}')} ? 'has-error'">
 
-                    <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <p th:text="*{nomalNoteForms[__${rowStat.index}__].textNote}"></p>
-                        <input th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}" type="hidden"
-                               th:value="*{nomalNoteForms[__${rowStat.index}__].textNote}"/>
-                    </div>
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
+                    <!--<div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">-->
+                        <!--<p th:text="*{nomalNoteForms[__${rowStat.index}__].textNote}"></p>-->
+                        <!--<input th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}" type="hidden"-->
+                               <!--th:value="*{nomalNoteForms[__${rowStat.index}__].textNote}"/>-->
+                    <!--</div>-->
+                    <!--<div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">-->
                         <!--<input type="text" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"-->
                                <!--th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"/>-->
 
                         <!--<div class="form-group">-->
-                            <textarea rows="5" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
+                            <textarea style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
+                                    rows="5" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
                                       th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"
-                                      placeholder="Please enter note here"></textarea>
+                                      placeholder="Please enter note here" ></textarea>
                         <!--</div>-->
-                    </div>
+                    <!--</div>-->
 
                     <span th:if="${#fields.hasErrors('*{nomalNoteForms[__${rowStat.index}__].textNote}')}"
                           th:errors="*{nomalNoteForms[__${rowStat.index}__].textNote}"
@@ -284,7 +285,7 @@
                 </td>
 
                 <td>
-                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
                 </td>
                 <!--update date-->
                 <td>
