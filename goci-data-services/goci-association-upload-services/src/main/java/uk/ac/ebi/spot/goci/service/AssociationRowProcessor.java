@@ -267,20 +267,26 @@ public class AssociationRowProcessor {
         List<String> snps = new ArrayList<>();
         String[] separatedSnps = snp.split(delimiter);
         for (String separatedSnp : separatedSnps) {
-            snps.add(separatedSnp.trim());
+            if(separatedSnp != null) {
+                snps.add(separatedSnp.trim());
+            }
         }
 
         List<String> riskAlleles = new ArrayList<>();
         String[] separatedRiskAlleles = strongestAllele.split(delimiter);
         for (String separatedRiskAllele : separatedRiskAlleles) {
-            riskAlleles.add(separatedRiskAllele.trim());
+            if(separatedRiskAllele != null) {
+                riskAlleles.add(separatedRiskAllele.trim());
+            }
         }
 
         List<String> proxies = new ArrayList<>();
         if (proxy != null) {
             String[] separatedProxies = proxy.split(delimiter);
             for (String separatedProxy : separatedProxies) {
-                proxies.add(separatedProxy.trim());
+                if(separatedProxy != null) {
+                    proxies.add(separatedProxy.trim());
+                }
             }
         }
 

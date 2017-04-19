@@ -39,7 +39,9 @@ public class AssociationAttributeService {
             Collection<String> genesToCreate = new ArrayList<>();
 
             for (String gene : genes) {
-                genesToCreate.add(gene.trim());
+                if(gene != null) {
+                    genesToCreate.add(gene.trim());
+                }
             }
             locusGene = createGene(genesToCreate);
         }
