@@ -90,11 +90,13 @@
 
 <br/>
 
+
 <!--<div class="form-group"  style="display: none">-->
     <label for="publish_flag" class="control-label col-md-2"></label>
     <div class="col-md-6">
         <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
     </div>
+
 
 
 <div class="container" th:if="${errors}">
@@ -103,6 +105,55 @@
 </div>
 </div>
 
+<!--instructions-->
+<div class="container-fluid" >
+<h4  class="glyphicon glyphicon-question-sign col-md-10" data-toggle="collapse" data-target="#demo" >readme</h4>
+<div id="demo" class="collapse">
+    <p>This readme button will be removed in production unless required otherwise.</p>
+    <p>The new note system is designed to replace/extend the old note the the housekeeping table,
+       which was accessed perviously from the curation information tab.
+       The old note box in the curation information tab is deprecated, thus can be savely removed in the future.
+       All old notes are migrated to the new note system, with a notesubject of 'Imported from previous system' described below.
+       The study was implemented base on the following rules:</p>
+    <ul>
+        <li>All notes will be locked once a study is published.</li>
+        <li>Two tables are visiable in the page. A system note table, and a general note table, both are searchable and sortable. The default sorting column is createdDate for system note table and, updatedDate in general note table.</li>
+        <li>Systen notes are not editable by curators. If any system note is available for the study,
+            they will be listed in the system note table(top table in the page). Otherwise, the table is hidden.</li>
+        <li>
+            At the moment, there are two type of system notes.
+            <ul>
+                <li>System note: these are auto created note when a study is duplicated.</li>
+                <li>Imported from previous system: these are the old notes from the housekeeping tab.</li>
+            </ul>
+        </li>
+
+        <li>Curator can add one note at a time, with the <button class="btn btn-default btn-sm">Add note</button>
+            button in the study note table. The fields are explained below:</li>
+        <ul>
+            <b>Fields fill by curator:</b>
+            <li>Note: text notes</li>
+            <li>NoteSubject: Currently two options are available: General / Other. More options can be added is required.</li>
+            <li>Status: Can be either Private or Public. This indicates whether the note is visiable to public user in the future.</li>
+            <b>Auto filled:</b>
+            <li>Curator: the logged in curator</li>
+            <li>Published: idicates if the corresponding study is published</li>
+            <li>createdDate: Note creation date, won't change once created.</li>
+            <li>udatedDate: Note last updated date. Changed ever time the note is edited.</li>
+        </ul>
+        <li>
+            Note can be edited by clicking <span class="glyphicon glyphicon-pencil btn btn-primary btn-sm" title="Edit note"></span>.
+            <ul>
+                <li>Click <span class="glyphicon glyphicon-ok btn btn-primary btn-sm" title="Save note"></span> to save the changes.</li>
+                <li>Click <span class="glyphicon glyphicon-remove btn btn-primary btn-sm" title="Discard change"></span> to discard the changes.</li>
+            </ul>
+        </li>
+        <li>Note can be deleted by clicking <span class="glyphicon glyphicon-trash btn btn-primary btn-sm" aria-hidden="true" title="Delete note" data-toggle="confirmation" data-popout="true"></span>
+            followed by a popup box to comfirm the deletion. Click no or anywhere on the screen to cancel the deletion.
+        </li>
+    </ul>
+</div>
+</div>
 
 <!--system notes-->
 <div class="container-fluid" th:if="not ${#lists.isEmpty(multiStudyNoteForm.systemNoteForms)}">
@@ -116,8 +167,8 @@
             <th class="col-md-1">Status</th>
             <th class="col-md-1">Curator</th>
             <th class="col-md-1">Published</th>
-            <th class="col-md-1">createDate</th>
-            <th class="col-md-1">updateDate</th>
+            <th class="col-md-1">createdDate</th>
+            <th class="col-md-1">updatedDate</th>
             <th class="col-md-2">Action</th>
         </tr>
         </thead>
@@ -156,8 +207,6 @@
 
 
 
-
-
 <div class="container-fluid">
 <form class="form-horizontal" method="post" name="study-note-form" th:object="${multiStudyNoteForm}">
     <!--<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">-->
@@ -175,8 +224,8 @@
                 <th class="col-md-1">Status</th>
                 <th class="col-md-1">Curator</th>
                 <th class="col-md-1">Published</th>
-                <th class="col-md-1">createDate</th>
-                <th class="col-md-1">updateDate</th>
+                <th class="col-md-1">createdDate</th>
+                <th class="col-md-1">updatedDate</th>
                 <th class="col-md-2">
                     <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>
                     <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
