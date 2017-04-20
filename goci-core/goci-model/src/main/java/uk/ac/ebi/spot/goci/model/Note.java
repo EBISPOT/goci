@@ -35,16 +35,19 @@ public abstract class Note {
     private Long genericId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="CREATED", updatable=false)
+    @Column(name = "CREATED", updatable = false)
     private Date createdAt;
 
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="UPDATED")
+    @Column(name = "UPDATED")
     private Date updatedAt;
 
     @PrePersist
-    protected void onCreate() { createdAt= new Date(); }
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = createdAt;
+    }
 
     @PreUpdate
     protected void onUpdate() {
@@ -58,7 +61,6 @@ public abstract class Note {
     public Note(Study study) {
         this.study = study;
     }
-
 
 
     public Long getId() {

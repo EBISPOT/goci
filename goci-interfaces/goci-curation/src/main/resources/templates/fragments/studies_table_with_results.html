@@ -226,7 +226,7 @@
 
         <td><span class="more">
             <p th:inline="text" th:each="note: ${study.notes}" th:remove="tag">
-            [[${note.textNote}]]
+            [[${note.textNote}]] [[${note.curator.lastName}]] [[${note.updatedAt}]]
              <br/>
              </p>
             </span>
