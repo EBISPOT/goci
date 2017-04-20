@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
@@ -49,6 +50,13 @@ public class Ancestry implements Trackable {
     @OneToOne
     private Study study;
 
+    @ManyToMany
+    @JoinTable(name = "ANCESTRY_ANCESTRAL_GROUP",
+               joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ANCESTRAL_GROUP_ID"))
+    private Collection<AncestralGroup> ancestralGroups;
+
+
     @JsonIgnore
     @OneToMany
     @JoinTable(name = "ANCESTRY_EVENT",
@@ -67,7 +75,8 @@ public class Ancestry implements Trackable {
                     Collection<Event> events,
                     String notes,
                     Integer numberOfIndividuals,
-                    String previouslyReported, String sampleSizesMatch, Study study, String type) {
+                    String previouslyReported, String sampleSizesMatch, Study study, String type,
+                    Collection<AncestralGroup> ancestralGroups) {
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
@@ -79,6 +88,7 @@ public class Ancestry implements Trackable {
         this.sampleSizesMatch = sampleSizesMatch;
         this.study = study;
         this.type = type;
+        this.ancestralGroups = ancestralGroups;
     }
 
     public Long getId() {
@@ -181,5 +191,13 @@ public class Ancestry implements Trackable {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
+    }
+
+    public Collection<AncestralGroup> getAncestralGroups() {
+        return ancestralGroups;
+    }
+
+    public void setAncestralGroups(Collection<AncestralGroup> ancestralGroups) {
+        this.ancestralGroups = ancestralGroups;
     }
 }
