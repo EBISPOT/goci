@@ -39,7 +39,7 @@ public class AssociationAttributeService {
             Collection<String> genesToCreate = new ArrayList<>();
 
             for (String gene : genes) {
-                if(gene != null) {
+                if(gene != null && !gene.trim().equals("")) {
                     genesToCreate.add(gene.trim());
                 }
             }
