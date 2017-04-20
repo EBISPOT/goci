@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
 import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
@@ -32,6 +33,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +57,12 @@ public class StudyDuplicationServiceTest {
 
     @Mock
     private StudyRepository studyRepository;
+
+    @Mock
+    private StudyNoteService studyNoteService;
+
+    @Mock
+    private StudyNoteOperationsService studyNoteOperationsService;
 
     private StudyDuplicationService studyDuplicationService;
 
@@ -118,6 +126,7 @@ public class StudyDuplicationServiceTest {
                     .setCurationStatus(STATUS)
                     .setCurator(CURATOR)
                     .setStudyAddedDate(new Date())
+                    .setNotes("")
                     .build();
 
     @Before
@@ -125,7 +134,9 @@ public class StudyDuplicationServiceTest {
         studyDuplicationService = new StudyDuplicationService(ancestryRepository,
                                                               housekeepingOperationsService,
                                                               studyTrackingOperationService,
-                                                              studyRepository);
+                                                              studyRepository,
+                                                              studyNoteOperationsService,
+                                                              studyNoteService);
     }
 
     @Test
@@ -155,9 +166,9 @@ public class StudyDuplicationServiceTest {
                                                                 "housekeeping",
                                                                 "ancestries",
                                                                 "id",
-                                                                "author");
-        assertThat(duplicateStudy.getHousekeeping().getNotes()).isEqualToIgnoringCase(
-                "Duplicate of study: MacTest T, PMID: 1234569");
+                                                                "author",
+                                                                "notes");
+        assertEquals(duplicateStudy.getNotes().size(), 1);
         assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
         assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
         assertThat(duplicateStudy.getHousekeeping().getStudyAddedDate()).isToday();
