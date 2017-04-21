@@ -277,6 +277,11 @@ public class SnpAssociationTableViewService {
             snpAssociationTableView.setLastMappingPerformedBy(association.getLastMappingPerformedBy());
         }
 
+        snpAssociationTableView.setMappingStatus("TO DO");
+        if (association.getAssociationReport() != null) {
+            snpAssociationTableView.setMappingStatus("DONE!");
+        }
+
         if (association.getLastMappingDate() != null) {
             DateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
             String dateOfLastMapping = df.format(association.getLastMappingDate());

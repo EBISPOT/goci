@@ -17,7 +17,8 @@ import java.util.Collection;
 public interface ValidationService {
 
     Collection<ValidationError> runAssociationValidation(Association association,
-                                                         String validationLevel);
+                                                         String validationLevel,
+                                                         String eRelease);
 
-    Collection<ValidationError> runRowValidation(AssociationUploadRow row);
+    Collection<ValidationError> runRowValidation(AssociationUploadRow row, String eRelease);
 }

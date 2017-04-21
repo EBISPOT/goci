@@ -149,12 +149,13 @@ public class AssociationOperationsService {
      */
     public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study,
                                                                                 Association association,
-                                                                                SecureUser user)
+                                                                                SecureUser user,
+                                                                                String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -170,7 +171,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
         }
         return associationValidationViews;
     }
@@ -186,12 +187,13 @@ public class AssociationOperationsService {
     public Collection<AssociationValidationView> saveEditedAssociationFromForm(Study study,
                                                                                Association association,
                                                                                Long associationId,
-                                                                               SecureUser user)
+                                                                               SecureUser user,
+                                                                               String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -220,7 +222,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
 
         }
         return associationValidationViews;
@@ -236,12 +238,13 @@ public class AssociationOperationsService {
      */
     public Collection<AssociationValidationView> validateAndSaveAssociation(Study study,
                                                                                Association association,
-                                                                               SecureUser user)
+                                                                               SecureUser user,
+                                                                               String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -270,7 +273,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
 
         }
         return associationValidationViews;

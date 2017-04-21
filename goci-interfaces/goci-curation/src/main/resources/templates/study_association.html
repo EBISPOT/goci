@@ -139,6 +139,7 @@
                 <thead>
                 <tr>
                     <th style="font-size: small">Edit</th>
+                    <th style="font-size: small">Mapping</th>
                     <th style="font-size: small">Gene(s)</th>
                     <th style="font-size: small">Strongest SNP-Risk Allele</th>
                     <th style="font-size: small">SNP</th>
@@ -179,7 +180,9 @@
                                        class="btn btn-default">Unapprove</a>
                                 </div>
                             </td>
-
+                            <!--Mapping-->
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
                             <!--Gene-->
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -285,6 +288,9 @@
                                     </div>
                                 </td>
 
+                                <!--Mapping-->
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
                                 <!--Gene-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -391,6 +397,8 @@
                                     </div>
                                 </td>
 
+                                <!--Mapping-->
+                                <td th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
                                 <!--Gene-->
                                 <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
 

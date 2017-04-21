@@ -36,14 +36,15 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Override public Collection<ValidationError> runAssociationValidation(Association association,
-                                                                             String validationLevel) {
+                                                                          String validationLevel,
+                                                                          String eRelease) {
 
         // Determine validation type
         AssociationCheckingService associationCheckingService = validationBuilder.buildValidator(validationLevel);
-        return associationCheckingService.runChecks(association, validationChecksBuilder);
+        return associationCheckingService.runChecks(association, validationChecksBuilder, eRelease);
     }
 
-    @Override public Collection<ValidationError> runRowValidation(AssociationUploadRow row) {
-        return rowCheckingService.runChecks(row);
+    @Override public Collection<ValidationError> runRowValidation(AssociationUploadRow row, String eRelease) {
+        return rowCheckingService.runChecks(row, eRelease);
     }
 }

@@ -25,7 +25,7 @@ public class RowCheckingService {
         this.rowChecksBuilder = rowChecksBuilder;
     }
 
-    public Collection<ValidationError> runChecks(AssociationUploadRow row) {
+    public Collection<ValidationError> runChecks(AssociationUploadRow row, String eRelease) {
         // Create collection to store all newly created associations
         Collection<ValidationError> errors = new ArrayList<>();
 
