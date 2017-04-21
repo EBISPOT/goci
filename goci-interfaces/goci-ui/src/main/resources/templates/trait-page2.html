@@ -73,13 +73,13 @@
     </ol>
 
 
-    <!--<div style="display: none">-->
-        <!--<ul th:object="${result}" id="variables">-->
-            <!--<li id="query" th:text="*{query}">User query</li>-->
-            <!--<li id="facet" th:text="*{facet}">Facet</li>-->
-            <!--<li id="filter" th:text="*{filter}">Disease trait</li>-->
-        <!--</ul>-->
-    <!--</div>-->
+    <div style="display: none">
+        <ul th:object="${result}" id="variables">
+            <li id="query" th:text="*{query}">User query</li>
+            <li id="facet" th:text="*{facet}">Facet</li>
+            <li id="filter" th:text="*{filter}">Disease trait</li>
+        </ul>
+    </div>
 
     <div class="container-fluid" id="lower_container">
         <!-- Summary panel -->
@@ -174,5 +174,68 @@
     </div>
 </div>
 
+
+
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+
+<div id="json"></div>
+<script>
+    $(document).ready(function() {
+        if(window.location.pathname.indexOf("beta") != -1){
+            $('#beta-icon').show();
+        }
+        var searchTerm = $('#query').text();
+        console.log("Loading search module!");
+        console.log("efoTrait: "+searchTerm);
+        if (searchTerm != '') {
+            console.log("Start search for the efotrait "+searchTerm);
+            getEfoTraitData(searchTerm);
+        }
+        // getVariantInfoFromEnsembl(searchTerm);
+    });
+
+    function getEfoTraitData(efotraitId) {
+        console.log("Solr research request received for " + efotraitId);
+//        setState(SearchState.LOADING);
+        $.getJSON('/gwas/api/search/efotrait',
+                  {
+                      'q': efotraitId,
+                      'max': 1000
+                  })
+                .done(function(data) {
+                    console.log(data);
+//                    document.write(data);
+//                     document.getElementById("json").innerHTML = JSON.stringify(data, undefined, 2);
+//                    window.open("data:text/json," + encodeURIComponent(JSON.stringify(data, undefined, 2)),
+//                                "_blank");
+                    // processVariantData(data.response,rsId);
+                });
+        console.log("Solr research done for " + efotraitId);
+    }
+</script>
+
+<!-- GOCI JavaScript
+================================================== -->
+<!--<script src="../static/js/goci-ui.js" th:src="@{../../js/goci-ui.js}"></script>-->
+<!--<script src="../static/js/efotraitresult.js" th:src="@{../../js/efotraitresult.js}"></script>-->
+<!--<script src="../static/js/efotraitresult.js"></script>-->
+
+
 </body>
 </html>
+

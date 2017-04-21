@@ -24,27 +24,29 @@ $(document).ready(function() {
     }
     var searchTerm = $('#query').text();
     console.log("Loading search module!");
-    console.log("rsID: "+searchTerm);
+    console.log("efoTrait: "+searchTerm);
     if (searchTerm != '') {
-        console.log("Start search for the variant "+searchTerm);
-        getVariantData(searchTerm);
+        console.log("Start search for the efotrait "+searchTerm);
+        getEfoTraitData(searchTerm);
     }
-    getVariantInfoFromEnsembl(searchTerm);
+    // getVariantInfoFromEnsembl(searchTerm);
 });
 
-function getVariantData(rsId) {
-    console.log("Solr research request received for " + rsId);
+function getEfoTraitData(efotraitId) {
+    console.log("Solr research request received for " + efotraitId);
     setState(SearchState.LOADING);
-    $.getJSON('/gwas/api/search/association',
+    $.getJSON('/gwas/api/search/efotrait',
               {
-                  'q': "rsId:"+rsId,
+                  'q': efotraitId,
                   'max': 1000
               })
-              .done(function(data) {
-                  console.log(data.response);
-                  processVariantData(data.response,rsId);
-              });
-    console.log("Solr research done for " + rsId);
+            .done(function(data) {
+                console.log(data);
+                document.write(data);
+                // document.getElementById("json").innerHTML = JSON.stringify(data, undefined, 2);
+                // processVariantData(data.response,rsId);
+            });
+    console.log("Solr research done for " + efotraitId);
 }
 
 // Parse the Solr results and display the data on the HTML page

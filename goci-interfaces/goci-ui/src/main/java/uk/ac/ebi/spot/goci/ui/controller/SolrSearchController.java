@@ -92,6 +92,29 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
+    @RequestMapping(value = "api/search/efotrait", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void doEfoSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            HttpServletResponse response) throws IOException {
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+//        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
+        addQuery(solrSearchBuilder, query);
+        addGrouping(solrSearchBuilder,"resourcename",1);
+        addFacet(solrSearchBuilder,"resourcename");
+
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+    }
+
     @RequestMapping(value = "/api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     public void select(
             @RequestParam("q") String query,
@@ -235,6 +258,8 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
+
 
     @RequestMapping(value = "api/search/traitcount", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitCountSolrSearch(
@@ -830,7 +855,7 @@ public class SolrSearchController {
 
     private void dispatchSearch(String searchString, OutputStream out) throws IOException {
         getLog().trace(searchString);
-
+        System.out.print(searchString+"\n");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {
@@ -849,6 +874,7 @@ public class SolrSearchController {
             getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             entity.writeTo(out);
+//            entity.writeTo(System.out);
             EntityUtils.consume(entity);
         }
     }
