@@ -60,7 +60,7 @@ public class GeneCheckingRestService {
 
         try {
             RestResponseResult geneDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
-                    "lookup", gene, eRelease);
+                    "lookup_symbol", gene, eRelease);
 
             if (geneDataApiResult == null ) {
                 geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
@@ -99,7 +99,7 @@ public class GeneCheckingRestService {
 
         try {
             RestResponseResult geneDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
-                    "lookup", gene, eRelease);
+                    "lookup_symbol", gene, eRelease);
 
             if (geneDataApiResult == null ) {
                 geneDataApiResult = ensemblRestTemplateService.getRestCall(getEndpoint(), gene, "");
