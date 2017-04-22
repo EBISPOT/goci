@@ -108,9 +108,10 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 //        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
         addQuery(solrSearchBuilder, query);
-        addGrouping(solrSearchBuilder,"resourcename",1);
+        addGrouping(solrSearchBuilder,"resourcename",10);
         addFacet(solrSearchBuilder,"resourcename");
-
+        //xintodo commend out when live
+        System.out.print(solrSearchBuilder.toString()+"\n");
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
@@ -855,7 +856,8 @@ public class SolrSearchController {
 
     private void dispatchSearch(String searchString, OutputStream out) throws IOException {
         getLog().trace(searchString);
-        System.out.print(searchString+"\n");
+        //xintodo commend out when live
+        System.out.print(searchString.toString()+"\n");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {

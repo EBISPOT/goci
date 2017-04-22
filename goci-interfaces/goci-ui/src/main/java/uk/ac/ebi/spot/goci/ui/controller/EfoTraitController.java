@@ -33,7 +33,7 @@ public class EfoTraitController {
 
     @RequestMapping(path = "/trait", method = RequestMethod.GET)
     public String traitPage() {
-        return "trait-page2";
+        return "efotrait-page";
     }
 
     @RequestMapping(value = "/efotrait/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
@@ -45,7 +45,7 @@ public class EfoTraitController {
         efoTraitResult.setFilter(filter);
         efoTraitResult.setEfoId(efoId);
         model.addAttribute("result", efoTraitResult);
-        return "trait-page2";
+        return "efotrait-page";
     }
 
     @RequestMapping(value = "/trait/test", method = RequestMethod.GET)
