@@ -108,7 +108,7 @@ public class SolrSearchController {
         addRowsAndPage(solrSearchBuilder, maxResults, page);
 //        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
         addQuery(solrSearchBuilder, query);
-        addGrouping(solrSearchBuilder,"resourcename",10);
+        addGrouping(solrSearchBuilder,"resourcename",9999999);
         addFacet(solrSearchBuilder,"resourcename");
         //xintodo commend out when live
         System.out.print(solrSearchBuilder.toString()+"\n");

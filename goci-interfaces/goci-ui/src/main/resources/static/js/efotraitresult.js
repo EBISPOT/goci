@@ -17,90 +17,97 @@ var ENS_SHARE_LINK = 'Variant_specific_location_link/97NKbgkp09vPRy1xXwnqG1x6KGg
 var CONTEXT_RANGE = 500;
 
 var list_min = 2;
-$(document).ready(function() {
-    if (window.location.pathname.indexOf("beta") != -1) {
-        $('#beta-icon').show();
-    }
-    var searchTerm = $('#query').text();
-    console.log("Loading search module!");
-    console.log("efoTrait: " + searchTerm);
-    if (searchTerm != '') {
-        console.log("Start search for the efotrait " + searchTerm);
-        getEfoTraitData(searchTerm);
-    }
-    // getVariantInfoFromEnsembl(searchTerm);
-});
+// $(document).ready(function() {
+//     if (window.location.pathname.indexOf("beta") != -1) {
+//         $('#beta-icon').show();
+//     }
+//     var searchTerm = $('#query').text();
+//     console.log("Loading search module!");
+//     console.log("efoTrait: " + searchTerm);
+//     if (searchTerm != '') {
+//         console.log("Start search for the efotrait " + searchTerm);
+//         getEfoTraitData(searchTerm);
+//     }
+//     //load the data from html tag and render
+//     // getVariantInfoFromEnsembl(searchTerm);
+// });
 
-function getEfoTraitData(efotraitId) {
-    console.log("Solr research request received for " + efotraitId);
-//        setState(SearchState.LOADING);
-    $.getJSON('/gwas/api/search/efotrait',
-              {
-                  'q': efotraitId,
-                  'max': 1000
-              })
-            .done(function(data) {
-                console.log(data);
-//                    document.write(data);
-//                     document.getElementById("json").innerHTML = JSON.stringify(data, undefined, 2);
-//                    window.open("data:text/json," + encodeURIComponent(JSON.stringify(data, undefined, 2)),
-//                                "_blank");
-                processEfotraitData(data, efotraitId);
-            });
-    console.log("Solr research done for " + efotraitId);
-}
-
-// Parse the Solr results and display the data on the HTML page
-function processEfotraitData(data, efotraitId) {
-    // Check if Solr returns some results
-    if (data.grouped.resourcename.matches == 0) {
-        $('#lower_container').html("<h2>The efotrait <em>" + efotraitId +
-                                   "</em> cannot be found in the GWAS Catalog database</h2>");
-    }
-    else {
-        //split the solr search by groups
-        var data_efo;
-        var data_study;
-        var data_association;
-        var data_diseasetrait;
-        var data_facet = data.facet_counts.facet_fields.resourcename;
-
-        $.each(data.grouped.resourcename.groups, function(index, group) {
-            if (group.groupValue == "efotrait") {
-                data_efo = group.doclist;
-                console.log(data_efo);
-            }
-            if (group.groupValue == "study") {
-                data_study = group.doclist;
-                console.log(data_study);
-            }
-            if (group.groupValue == "association") {
-                data_association = group.doclist;
-                console.log(data_association);
-            }
-            if (group.groupValue == "diseasetrait") {
-                data_diseasetrait = group.doclist;
-                console.log(data_diseasetrait);
-            }
-        })
-
-        //processing solr search data
-        // Variant summary panel
-        getEfoTraitInfo(data_efo.docs, efotraitId);
-        getSummary(data_study);
-        // External links panel
-//            getLinkButtons(data_facet,efotraitId);
-//            // Associations table
-        getEfotraitAssociations(data_association.docs);
-//            // Studies table
-        getEfotraitStudies(data_study.docs);
-//            // Traits table
-//            getEfotraitDiseasetrait(data_diseasetrait.docs);
+// function getEfoTraitData(efotraitId) {
+//     console.log("Solr research request received for " + efotraitId);
+// //        setState(SearchState.LOADING);
+//     $.getJSON('/gwas/api/search/efotrait',
+//               {
+//                   'q': efotraitId,
+//                   'max': 1000
+//               })
+//             .done(function(data) {
+//                 console.log(data);
+// $("#hiddenresult").append(newItem(aaaa))
+//                 // $("#header ul").append('<li><a href="/user/messages"><span class="tab">Message Center</span></a></li>');
+//                 //
+//                 // $("#queryresultJsonString").html=JSON.stringify(data, null, 0)
 //
-//            //downloads link
-//            setDownloadLink(rsId);
-    }
-}
+// //                    document.write(data);
+// //                     document.getElementById("json").innerHTML = JSON.stringify(data, undefined, 2);
+// //                    window.open("data:text/json," + encodeURIComponent(JSON.stringify(data, undefined, 2)),
+// //                                "_blank");
+//                 processEfotraitData(data, efotraitId);
+//             });
+//     //serilize the data in html tag and save it in a tag for visulization
+//     console.log("Solr research done for " + efotraitId);
+// }
+
+// // Parse the Solr results and display the data on the HTML page
+// function processEfotraitData(data, efotraitId) {
+//     // Check if Solr returns some results
+//     if (data.grouped.resourcename.matches == 0) {
+//         $('#lower_container').html("<h2>The efotrait <em>" + efotraitId +
+//                                    "</em> cannot be found in the GWAS Catalog database</h2>");
+//     }
+//     else {
+//         //split the solr search by groups
+//         var data_efo;
+//         var data_study;
+//         var data_association;
+//         var data_diseasetrait;
+//         var data_facet = data.facet_counts.facet_fields.resourcename;
+//
+//         $.each(data.grouped.resourcename.groups, function(index, group) {
+//             if (group.groupValue == "efotrait") {
+//                 data_efo = group.doclist;
+//                 console.log(data_efo);
+//             }
+//             if (group.groupValue == "study") {
+//                 data_study = group.doclist;
+//                 console.log(data_study);
+//             }
+//             if (group.groupValue == "association") {
+//                 data_association = group.doclist;
+//                 console.log(data_association);
+//             }
+//             if (group.groupValue == "diseasetrait") {
+//                 data_diseasetrait = group.doclist;
+//                 console.log(data_diseasetrait);
+//             }
+//         })
+//
+//         //processing solr search data
+//         // Variant summary panel
+//         getEfoTraitInfo(data_efo.docs, efotraitId);
+//         getSummary(data_study);
+//         // External links panel
+// //            getLinkButtons(data_facet,efotraitId);
+// //            // Associations table
+//         getEfotraitAssociations(data_association.docs);
+// //            // Studies table
+//         getEfotraitStudies(data_study.docs);
+// //            // Traits table
+// //            getEfotraitDiseasetrait(data_diseasetrait.docs);
+// //
+// //            //downloads link
+// //            setDownloadLink(rsId);
+//     }
+// }
 
 function getEfoTraitInfo(data, efotraitId) {
     var data_sample = data[0];
@@ -119,18 +126,25 @@ function getEfoTraitInfo(data, efotraitId) {
             $("#efotrait-synonym").html(synonym.join(", "));
         }
     }
-
-
 }
 
 //xintodo done
-function getEfotraitAssociations(data) {
+function getEfotraitAssociations(data,cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
     var asso_count = data.length;
 
     $(".association_count").html(asso_count);
 
     if (asso_count == 1) {
         $(".association_label").html("Association");
+    }
+
+    if(cleanBeforeInsert){
+        $("#association-table-body tr").remove();
     }
 
     $.each(data, function(index,asso) {
@@ -243,8 +257,17 @@ function getEfotraitAssociations(data) {
 
 
 //xintodo done
-function getEfotraitStudies(data) {
+function getEfotraitStudies(data,cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
+
     var study_ids = [];
+    if(cleanBeforeInsert){
+        $("#study-table-body tr").remove();
+    }
     $.each(data, function(index, asso) {
         var study_id = asso.id;
         if (jQuery.inArray(study_id, study_ids) == -1) {
@@ -542,6 +565,7 @@ function newCell(content) {
 function newItem(content) {
     return $("<li></li>").html(content);
 }
+
 
 // Create a hidden list of items - Used when we have to display a more or less long list of information
 function longContentList (content_id, list, type) {
