@@ -277,6 +277,7 @@
         </div>
 
 
+        <!-- plot -->
         <div class="two columns">
             <h4>Top Hits</h4>
             <style>ul.top_hits li { margin-bottom: 0rem; }</style>
@@ -343,7 +344,7 @@
             .add("gene", ["GeneLZ", { url: apiBase + "annotation/genes/", params: {source: 2} }])
             .add("recomb", ["RecombLZ", { url: apiBase + "annotation/recomb/results/", params: {source: 15} }])
             .add("constraint", ["GeneConstraintLZ", { url: "http://exac.broadinstitute.org/api/constraint" }]);
-
+console.log(data_sources)
     // Get the standard assocation plot layout from LocusZoom's built-in layouts
     layout = LocusZoom.Layouts.get("plot", "standard_association");
     layout.dashboard = LocusZoom.Layouts.get("dashboard", "region_nav_plot");
