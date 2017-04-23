@@ -328,7 +328,7 @@
         </div>
 
 
-        <!-- plot -->
+        <!-- locus plot -->
         <div class="two columns">
             <h4>Top Hits</h4>
             <style>ul.top_hits li {
@@ -340,6 +340,14 @@
             <div id="plot" data-region="10:114550452-115067678"></div>
         </div>
 
+
+        <div><h2>Welcome to the OLS tree example!</h2></div>
+        <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;" ></div>
+
+
+        <div>selected:
+            <div id="selectednodes"></div>
+        </div>
 
     </div>
 
@@ -373,18 +381,26 @@
 
 <!-- Necessary includes for LocusZoom.js -->
 <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
-<script src="../static/js/plugins/locuszoom.vendor.min.js"
-        th:src="@{../../js//plugins/locuszoom.vendor.min.js}"></script>
+<script src="../static/js/plugins/locuszoom.vendor.min.js" th:src="@{../../js/plugins/locuszoom.vendor.min.js}"></script>
 <script src="../static/js/plugins/locuszoom.app.js" th:src="@{../../js/plugins/locuszoom.app.js}"></script>
 <link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
 
+<!--script for OLS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
+<!--<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>-->
+<link rel="stylesheet" href="../static/css/proton/style.min.css" th:href="@{../../css/proton/style.min.css}" media="screen" />
 
+
+
+
+<!--local data-->
 <script>
     $('.addEfoButton').click(function() {
         getEfoTraitData($(this).attr('value'));
         console.log( 'clicked' + $(this).attr('value') );
     });
-    
+
 
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
@@ -407,7 +423,7 @@
         }
 
         console.log("Solr research request received for " + efotraitId);
-//        setState(SearchState.LOADING);
+        setState(SearchState.LOADING);
         $.getJSON('/gwas/api/search/efotrait',
                   {
                       'q': efotraitId,
@@ -416,7 +432,7 @@
                 .done(function(data) {
                     console.log(data);
                     //xintodo consider if you want to do it this way, or just change the seach and update the tables
-//                    saveData(data.responseHeader.params.q, data);
+                    //saveData(data.responseHeader.params.q, data);
                     //we only process data here if it is the init load of the page, since we need to add new data to the page dynamically
                     processEfotraitData(data, efotraitId,initLoad);
                 });
@@ -492,6 +508,7 @@
 </script>
 
 
+<!--locus zoom-->
 <script>
     var apiBase, data_sources;
     apiBase = "https://portaldev.sph.umich.edu/api/v1/";
@@ -547,6 +564,70 @@
     //    ];
     //
 </script>
+
+<script>
+
+//    var treeDiv = $("#term-tree");
+//        treeDiv.jstree({
+//                    'checkbox': {
+//                        three_state: false,
+//                        cascade: 'up'
+//                    },
+//                    plugins: ["checkbox","changed"]
+//                });
+
+
+
+        options={
+            onclick: function(params, node, relativePath, termIRI, type){
+//                alert("This onclick event is overwritten! Please check console.log to see further information about this event!");
+//                console.log("params")
+//                console.log(params);
+//                console.log(node)
+//                console.log(relativePath)
+                console.log(termIRI)
+                var efotraitid = 'EFO_' + termIRI.split('EFO_')[1]
+//                getEfoTraitData(efotraitid);
+//                console.log(type)
+            }
+        }
+
+        var app = require("ols-treeview");
+        var instance = new app();
+        instance.draw($("#term-tree"), false, "efo", "terms", "http://www.ebi.ac.uk/efo/EFO_0000400", "http://www.ebi.ac.uk/ols/", options);
+        // initialise the tree
+
+        $('#selectednodes').bind("DOMSubtreeModified",function(){
+
+            var efos = $(this).html().split(',').splice(1);
+            if(efos.length > 1){
+                efos = efos.join(" OR ");
+            }else{
+                efos = efos[0];
+            }
+            console.log(efos);
+
+            getEfoTraitData(efos);
+
+        });
+        $('.addEfoButton').click(function() {
+            getEfoTraitData($(this).attr('value'));
+            console.log( 'clicked' + $(this).attr('value') );
+        });
+//        var div=$("#term-tree");
+//        var ontologyName = $("#term-tree").data("olsontology");
+//        var termType = $("#term-tree").data("ols-termtype");
+//        var termIri = $("#term-tree").data("ols-iri");
+//        var relativePath = $("#term-tree").data("selectpath") ? $("#term-tree").data("selectpath") : '';
+
+//        var app = require("ols-treeview");
+//        var termInstance = new app();
+//        termInstance.draw(div, false, ontologyName, termType, termIri, relativePath, {save_state: true});
+
+//    });
+</script>
+
+
 
 </body>
 </html>
