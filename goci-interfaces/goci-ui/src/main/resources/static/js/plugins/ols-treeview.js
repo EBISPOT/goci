@@ -1877,13 +1877,23 @@ function showTree(siblings) {
                         console.log("The selected nodes are:");
                         console.log(data.selected);
                         console.log(data.instance.get_selected(true));
-                        var selected_ids;
-                        $.each(data.instance.get_selected(true),function(index, term) {
-                            console.log('EFO_' + term.original.iri.split('EFO_')[1])
-                            selected_ids = selected_ids + ',' + 'EFO_' + term.original.iri.split('EFO_')[1]
-                        });
-                        $("#selectednodes").html(selected_ids);
-                        console.log(data.instance.get_node(data.selected));
+                        var selected_ids='',selected_text='';
+                        if(data.instance.get_selected(true).length > 0) {
+                            $.each(data.instance.get_selected(true), function(index, term) {
+                                // console.log('EFO_' + term.original.iri.split('EFO_')[1])
+                                if (term.original.iri) {
+                                    selected_ids = selected_ids + ',' + 'EFO_' + term.original.iri.split('EFO_')[1];
+                                    selected_text = selected_text + ',' + term.original.text;
+                                }
+                            });
+
+                            $("#selectednodes").html(selected_ids.substring(1, selected_ids.length));
+                            $("#selectednodestext").html(selected_text.substring(1, selected_text.length));
+                            console.log(data.instance.get_node(data.selected));
+                        }else{
+                            $("#selectednodes").html('');
+                            $("#selectednodestext").html('');
+                        }
                     });
         //origin
         // var treeDiv = $('<div></div>')

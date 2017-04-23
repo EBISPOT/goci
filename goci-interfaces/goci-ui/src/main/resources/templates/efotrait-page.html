@@ -327,7 +327,16 @@
             </div>
         </div>
 
+        <!--ols tree-->
+        <div><h2>Welcome to the OLS tree example!</h2></div>
+        <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;" ></div>
 
+
+        <div>selected:
+            <div id="selectednodes"></div>
+            <div id="selectednodestext"></div>
+        </div>
+        
         <!-- locus plot -->
         <div class="two columns">
             <h4>Top Hits</h4>
@@ -341,13 +350,6 @@
         </div>
 
 
-        <div><h2>Welcome to the OLS tree example!</h2></div>
-        <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;" ></div>
-
-
-        <div>selected:
-            <div id="selectednodes"></div>
-        </div>
 
     </div>
 
@@ -599,15 +601,17 @@
 
         $('#selectednodes').bind("DOMSubtreeModified",function(){
 
-            var efos = $(this).html().split(',').splice(1);
+            var efos = $(this).html().split(',');
             if(efos.length > 1){
                 efos = efos.join(" OR ");
             }else{
                 efos = efos[0];
             }
             console.log(efos);
+            if(efos){
+                getEfoTraitData(efos);
 
-            getEfoTraitData(efos);
+            }
 
         });
         $('.addEfoButton').click(function() {
