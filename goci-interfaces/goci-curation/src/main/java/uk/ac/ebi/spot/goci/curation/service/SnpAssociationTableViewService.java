@@ -277,9 +277,9 @@ public class SnpAssociationTableViewService {
             snpAssociationTableView.setLastMappingPerformedBy(association.getLastMappingPerformedBy());
         }
 
-        snpAssociationTableView.setMappingStatus("TO DO");
-        if (association.getAssociationReport() != null) {
-            snpAssociationTableView.setMappingStatus("DONE!");
+        snpAssociationTableView.setMappingStatus("false");
+        if (association.getLastMappingDate()!= null) {
+            snpAssociationTableView.setMappingStatus("true");
         }
 
         if (association.getLastMappingDate() != null) {

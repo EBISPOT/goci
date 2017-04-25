@@ -180,9 +180,13 @@
                                        class="btn btn-default">Unapprove</a>
                                 </div>
                             </td>
-                            <!--Mapping-->
-                            <td style="background-color: darkgrey"
-                                th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
+                            <!-- Mapping -->
+                            <td style="background-color: darkgrey;vertical-align:top">
+                                <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                    <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                    <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                </div>
+                            </td>
                             <!--Gene-->
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -289,8 +293,12 @@
                                 </td>
 
                                 <!--Mapping-->
-                                <td style="background-color: lightyellow"
-                                    th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
+                                <td style="background-color: lightyellow;vertical-align:top">
+                                    <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                        <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                        <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                    </div>
+                                </td>
                                 <!--Gene-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -398,7 +406,12 @@
                                 </td>
 
                                 <!--Mapping-->
-                                <td th:text="${snpAssociationTableView.mappingStatus}?: '' "></td>
+                                <td style="vertical-align:top">
+                                    <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                        <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                        <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                    </div>
+                                </td>
                                 <!--Gene-->
                                 <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
 

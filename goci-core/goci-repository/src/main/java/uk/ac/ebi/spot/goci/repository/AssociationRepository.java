@@ -87,4 +87,6 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
             nativeQuery = true)
     Collection<Association> findAllLSF(@Param("minRow") Integer minRow, @Param("maxRow") Integer maxRow);
 
+
+    Collection<Association> findBylastMappingDateIsNull();
 }

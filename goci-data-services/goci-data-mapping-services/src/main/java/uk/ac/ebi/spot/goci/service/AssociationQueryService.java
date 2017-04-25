@@ -62,6 +62,15 @@ public class AssociationQueryService {
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findAssociationToMap() {
+        Collection<Association> allAssociations = associationRepository.findBylastMappingDateIsNull();
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+
     // Sort options
     private Sort sortByIdDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "id"));
