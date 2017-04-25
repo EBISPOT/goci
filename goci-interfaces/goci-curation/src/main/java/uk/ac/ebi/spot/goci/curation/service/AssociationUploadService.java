@@ -176,7 +176,7 @@ public class AssociationUploadService {
                                                         study,
                                                         associationSummary.getErrors());
 
-            associationOperationsService.runMapping(study.getHousekeeping().getCurator(), newAssociation, user);
+            // associationOperationsService.runMapping(study.getHousekeeping().getCurator(), newAssociation, user);
         }
     }
 

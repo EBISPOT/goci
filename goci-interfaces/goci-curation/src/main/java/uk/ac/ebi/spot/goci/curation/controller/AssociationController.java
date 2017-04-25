@@ -47,6 +47,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,6 +94,7 @@ public class AssociationController {
     private AssociationDeletionService associationDeletionService;
     private EventsViewService eventsViewService;
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+    private EnsemblRestTemplateService ensemblRestTemplateService;
 
     @Value("${collection.sizelimit}")
     private int collectionLimit;
@@ -124,7 +126,8 @@ public class AssociationController {
                                  AssociationValidationReportService associationValidationReportService,
                                  AssociationDeletionService associationDeletionService,
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
-                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService) {
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
+                                 EnsemblRestTemplateService ensemblRestTemplateService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -140,6 +143,7 @@ public class AssociationController {
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
     }
 
     /*  Study SNP/Associations */
@@ -450,12 +454,13 @@ public class AssociationController {
                     singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
 
             // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
             Collection<AssociationValidationView> errors = null;
             try {
                 errors = associationOperationsService.saveAssociationCreatedFromForm(study,
                                                                                      newAssociation,
                                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                                             request));
+                                                                                             request), eRelease);
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -518,11 +523,12 @@ public class AssociationController {
                     singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
 
             // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
             Collection<AssociationValidationView> errors = null;
             try {
                 errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
                                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                                             request));
+                                                                                             request), eRelease);
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -584,10 +590,11 @@ public class AssociationController {
 
             // Save and validate form
             Collection<AssociationValidationView> errors = null;
+            String eRelease = ensemblRestTemplateService.getRelease();
             try {
                 errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
                                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                                             request));
+                                                                                             request), eRelease);
             }
             catch (EnsemblMappingException e) {
                 return "ensembl_mapping_failure";
@@ -733,12 +740,13 @@ public class AssociationController {
             }
 
             // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
             Collection<AssociationValidationView> errors =
                     associationOperationsService.saveEditedAssociationFromForm(study,
                                                                                editedAssociation,
                                                                                associationId,
                                                                                currentUserDetailsService.getUserFromRequest(
-                                                                                       request));
+                                                                                       request), eRelease);
 
             // Determine if we have any errors rather than warnings
             long errorCount = errors.stream()
@@ -1165,11 +1173,12 @@ public class AssociationController {
                 //     if there are no criticial errors, save the validation and go to the next association
                 else{
                     // Save and validate form
+                    String eRelease = ensemblRestTemplateService.getRelease();
                     Collection<AssociationValidationView> errors =
                             associationOperationsService.validateAndSaveAssociation(study,
                                                                                     associationToValidate,
                                                                                     currentUserDetailsService.getUserFromRequest(
-                                                                                            request));
+                                                                                            request), eRelease);
 
                     // Determine if we have any errors rather than warnings
                     long errorCount = errors.stream()

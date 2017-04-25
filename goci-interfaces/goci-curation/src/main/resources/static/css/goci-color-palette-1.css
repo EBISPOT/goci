@@ -225,3 +225,9 @@ a > .toplevel-view {
     100% { transform: rotate(360deg); }
 }
 
+.morecontent span {
+    display: none;
+}
+.morelink {
+    display: block;
+}

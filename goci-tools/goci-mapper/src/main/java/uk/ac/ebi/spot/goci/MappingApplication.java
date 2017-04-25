@@ -41,6 +41,8 @@ public class MappingApplication {
 
     private int length;
 
+    private Long studyId;
+
     private static int exitCode;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -50,10 +52,7 @@ public class MappingApplication {
     }
 
     public static void main(String... args) {
-        String filename = "gwas_mapper_lsf.";
-        if ((args != null) && (args.length > 2)) {
-            filename = filename.concat(args[2].toString());
-        }
+        String filename = "gwas_mapper.night.";
         System.setProperty("logfilename", filename);
         System.out.println("Starting mapping service...");
         ApplicationContext ctx = SpringApplication.run(MappingApplication.class, args);
@@ -80,9 +79,9 @@ public class MappingApplication {
                             exitCode += 2;
                         }
                         break;
-                    case LSF:
+                    case NIGHT:
                         try {
-                            doMappingLSF();
+                            doMappingNight();
                         }
                         catch (Exception e) {
                             System.err.println("Mapping failed(" + e.getMessage() + ")");
@@ -110,10 +109,10 @@ public class MappingApplication {
 
     }
 
-    private void doMappingLSF() {
+    private void doMappingNight() {
         getLog().info("Starting mapping of all associations with performer: " + this.performer);
         try {
-            mapCatalogService.mapCatalogContentsLSF(this.performer,this.job,this.length);
+            mapCatalogService.mapCatalogContentsNight(this.performer);
             getLog().info("Finished mapping by performer:  " + this.performer);
         }
         catch (EnsemblMappingException e) {
@@ -147,8 +146,8 @@ public class MappingApplication {
 
 
         Option mappingOptionLSF = new Option(
-                "l",
-                "LSF",
+                "n",
+                "NIGHT",
                 false,
                 "Maps all associations in the GWAS database. Mapping pipeline will map SNPs " +
                         "in database and also validate the author reported gene linked to that SNP via the associations");
@@ -193,13 +192,9 @@ public class MappingApplication {
                     System.out.println("-m automatic_mapping_process");
                 }
 
-                if(cl.hasOption("l")){
-                    this.opMode = OperationMode.LSF;
+                if(cl.hasOption("n")){
+                    this.opMode = OperationMode.NIGHT;
                     this.performer = cl.getArgList().get(0).toString();
-                    this.job = Integer.valueOf(cl.getArgList().get(1).toString());
-                    this.length = Integer.valueOf(cl.getArgList().get(2).toString());
-
-
                 }
 
             }
@@ -214,7 +209,7 @@ public class MappingApplication {
 
     private enum OperationMode {
         MAPPING,
-        LSF
+        NIGHT
     }
 
 }

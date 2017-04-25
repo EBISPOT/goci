@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.service.StudyService;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
@@ -48,10 +49,7 @@ public class StudyDeletionServiceTest {
     private DeletedStudyRepository deletedStudyRepository;
 
     @Mock
-    private CuratorTrackingService curatorTrackingService;
-
-    @Mock
-    private WeeklyTrackingService weeklyTrackingService;
+    private StudyService studyService;
 
 
     private StudyDeletionService studyDeletionService;
@@ -96,13 +94,14 @@ public class StudyDeletionServiceTest {
                                                         trackingOperationService,
                                                         studyRepository,
                                                         deletedStudyRepository,
-                                                        curatorTrackingService,
-                                                        weeklyTrackingService);
+                                                        studyService
+                                                        );
     }
 
     @Test
     public void deleteStudy() throws Exception {
         when(ancestryRepository.findByStudyId(STUDY.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
+        studyService.deleteRelatedInfoByStudy(STUDY);
         studyDeletionService.deleteStudy(STUDY, SECURE_USER);
         verify(ancestryRepository, times(1)).delete(ETH1);
         verify(ancestryRepository, times(1)).delete(ETH2);

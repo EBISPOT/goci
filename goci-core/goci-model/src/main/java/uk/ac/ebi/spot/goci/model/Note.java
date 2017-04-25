@@ -35,16 +35,19 @@ public abstract class Note {
     private Long genericId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="CREATED")
+    @Column(name = "CREATED", updatable = false)
     private Date createdAt;
 
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="UPDATED")
+    @Column(name = "UPDATED")
     private Date updatedAt;
 
     @PrePersist
-    protected void onCreate() { createdAt= new Date(); }
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = createdAt;
+    }
 
     @PreUpdate
     protected void onUpdate() {
@@ -54,6 +57,11 @@ public abstract class Note {
     // JPA no-args constructor
     public Note() {
     }
+
+    public Note(Study study) {
+        this.study = study;
+    }
+
 
     public Long getId() {
         return id;
@@ -101,5 +109,13 @@ public abstract class Note {
 
     public void setGenericId(Long genericId) {
         this.genericId = genericId;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 }

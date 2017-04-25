@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -41,6 +42,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -121,6 +123,9 @@ public class AssociationControllerTest {
     @Mock
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
 
+    @Mock
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -139,23 +144,27 @@ public class AssociationControllerTest {
     @Before
     public void setUp() throws Exception {
         AssociationController associationController = new AssociationController(associationRepository,
-                                                                                studyRepository,
-                                                                                efoTraitRepository,
-                                                                                associationDownloadService,
-                                                                                snpAssociationTableViewService,
-                                                                                singleSnpMultiSnpAssociationService,
-                                                                                snpInteractionAssociationService,
-                                                                                checkEfoTermAssignmentService,
-                                                                                associationOperationsService,
-                                                                                associationUploadService,
-                                                                                currentUserDetailsService,
-                                                                                associationValidationReportService,
-                                                                                associationDeletionService,
-                                                                                associationsEventsViewService,
-                                                                                studyAssociationBatchDeletionEventService);
+                studyRepository,
+                efoTraitRepository,
+                associationDownloadService,
+                snpAssociationTableViewService,
+                singleSnpMultiSnpAssociationService,
+                snpInteractionAssociationService,
+                checkEfoTermAssignmentService,
+                associationOperationsService,
+                associationUploadService,
+                currentUserDetailsService,
+                associationValidationReportService,
+                associationDeletionService,
+                associationsEventsViewService,
+                studyAssociationBatchDeletionEventService,
+                ensemblRestTemplateService);
+
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
+        //System.setProperty("ensembl.server", "http://rest.ensembl.org");
     }
 
+/*
     @Test
     public void viewStudySnps() throws Exception {
 
@@ -277,7 +286,7 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
@@ -293,12 +302,13 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verifyZeroInteractions(singleSnpMultiSnpAssociationService);
         verify(associationOperationsService, never()).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                     Matchers.any(Association.class),
-                                                                                     Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
         verifyZeroInteractions(currentUserDetailsService);
     }
 
@@ -314,13 +324,14 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER, "")).thenReturn(
                 errors);
 
+        when(ensemblRestTemplateService.getRelease()).thenReturn("88");
         mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", instanceOf(SnpAssociationStandardMultiForm.class)))
@@ -334,13 +345,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -355,11 +367,11 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER, "88")).thenReturn(
                 errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_standard").param("measurementType", "or"))
@@ -372,13 +384,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -390,7 +403,7 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_multi").param("measurementType", "or"))
@@ -406,13 +419,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verifyZeroInteractions(singleSnpMultiSnpAssociationService);
         verifyZeroInteractions(currentUserDetailsService);
         verify(associationOperationsService, never()).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                     Matchers.any(Association.class),
-                                                                                     Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -426,11 +440,11 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER, "")).thenReturn(
                 errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_multi").param("measurementType", "or"))
@@ -446,13 +460,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -466,11 +481,11 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER,"")).thenReturn(
                 errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_multi").param("measurementType", "or"))
@@ -483,13 +498,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -517,7 +533,7 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                                                                                      Matchers.anyString());
+                Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verifyZeroInteractions(snpInteractionAssociationService);
         verifyZeroInteractions(currentUserDetailsService);
@@ -538,7 +554,7 @@ public class AssociationControllerTest {
                 .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER,"")).thenReturn(
                 errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_interaction").param("measurementType", "or"))
@@ -554,13 +570,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                                                                                      Matchers.anyString());
+                Matchers.anyString());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -578,7 +595,7 @@ public class AssociationControllerTest {
                 .thenReturn(Collections.EMPTY_LIST);
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(ASSOCIATION);
-        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER)).thenReturn(
+        when(associationOperationsService.saveAssociationCreatedFromForm(STUDY, ASSOCIATION, SECURE_USER,"")).thenReturn(
                 errors);
 
         mockMvc.perform(post("/studies/1234/associations/add_interaction").param("measurementType", "or"))
@@ -591,13 +608,14 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                                                                                      Matchers.anyString());
+                Matchers.anyString());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveAssociationCreatedFromForm(Matchers.any(Study.class),
-                                                                                      Matchers.any(Association.class),
-                                                                                      Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -619,14 +637,14 @@ public class AssociationControllerTest {
         when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
         when(associationOperationsService.checkSnpAssociationFormErrors(Matchers.any(SnpAssociationStandardMultiForm.class),
-                                                                        Matchers.anyString()))
+                Matchers.anyString()))
                 .thenReturn(Collections.EMPTY_LIST);
         when(singleSnpMultiSnpAssociationService.createAssociation(Matchers.any(SnpAssociationStandardMultiForm.class)))
                 .thenReturn(EDITED_ASSOCIATION);
         when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
-                                                                        EDITED_ASSOCIATION,
-                                                                        ASSOCIATION.getId(),
-                                                                        SECURE_USER)).thenReturn(errors);
+                EDITED_ASSOCIATION,
+                ASSOCIATION.getId(),
+                SECURE_USER,"")).thenReturn(errors);
 
         mockMvc.perform(post("/associations/100").param("associationtype", "multi"))
                 .andExpect(status().is3xxRedirection())
@@ -637,15 +655,16 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationStandardMultiForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationStandardMultiForm.class);
         verify(associationOperationsService).checkSnpAssociationFormErrors(formArgumentCaptor.capture(),
-                                                                           Matchers.anyString());
+                Matchers.anyString());
         verify(singleSnpMultiSnpAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveEditedAssociationFromForm(Matchers.any(Study.class),
-                                                                                     Matchers.any(Association.class),
-                                                                                     Matchers.anyLong(),
-                                                                                     Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.anyLong(),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
     }
 
     @Test
@@ -669,9 +688,9 @@ public class AssociationControllerTest {
         when(snpInteractionAssociationService.createAssociation(Matchers.any(SnpAssociationInteractionForm.class)))
                 .thenReturn(EDITED_ASSOCIATION);
         when(associationOperationsService.saveEditedAssociationFromForm(STUDY,
-                                                                        EDITED_ASSOCIATION,
-                                                                        ASSOCIATION.getId(),
-                                                                        SECURE_USER)).thenReturn(errors);
+                EDITED_ASSOCIATION,
+                ASSOCIATION.getId(),
+                SECURE_USER,"")).thenReturn(errors);
         when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn(
                 "or");
         when(associationOperationsService.createMappingDetails(Matchers.any(Association.class))).thenReturn(
@@ -692,19 +711,20 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                                                                                      Matchers.anyString());
+                Matchers.anyString());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(associationOperationsService, times(1)).saveEditedAssociationFromForm(Matchers.any(Study.class),
-                                                                                     Matchers.any(Association.class),
-                                                                                     Matchers.anyLong(),
-                                                                                     Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.anyLong(),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
         verify(associationOperationsService, times(1)).determineIfAssociationIsOrType(Matchers.any(Association.class));
         verify(associationOperationsService, times(1)).createMappingDetails(Matchers.any(Association.class));
         verify(snpInteractionAssociationService,
-               times(1)).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
+                times(1)).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
         verifyZeroInteractions(singleSnpMultiSnpAssociationService);
     }
 
@@ -741,19 +761,20 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                                                                                      Matchers.anyString());
+                Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationOperationsService, times(1)).checkSnpAssociationInteractionFormErrors(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString());
         verify(associationOperationsService, never()).saveEditedAssociationFromForm(Matchers.any(Study.class),
-                                                                                    Matchers.any(Association.class),
-                                                                                    Matchers.anyLong(),
-                                                                                    Matchers.any(SecureUser.class));
+                Matchers.any(Association.class),
+                Matchers.anyLong(),
+                Matchers.any(SecureUser.class),
+                Matchers.anyString());
         verify(associationOperationsService, times(1)).determineIfAssociationIsOrType(Matchers.any(Association.class));
         verify(associationOperationsService, times(1)).createMappingDetails(Matchers.any(Association.class));
         verify(snpInteractionAssociationService,
-               never()).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
+                never()).createAssociation(Matchers.any(SnpAssociationInteractionForm.class));
         verifyZeroInteractions(singleSnpMultiSnpAssociationService);
     }
 
@@ -770,8 +791,8 @@ public class AssociationControllerTest {
         verify(associationRepository, times(1)).findByStudyId(STUDY.getId());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
         verify(studyAssociationBatchDeletionEventService, times(1)).createBatchUploadEvent(STUDY.getId(),
-                                                                                           1,
-                                                                                           SECURE_USER);
+                1,
+                SECURE_USER);
         verify(associationDeletionService, times(1)).deleteAssociation(ASSOCIATION, SECURE_USER);
     }
 
@@ -791,6 +812,7 @@ public class AssociationControllerTest {
         verifyZeroInteractions(studyAssociationBatchDeletionEventService);
         verifyZeroInteractions(associationDeletionService);
     }
+*/
 
     @Test
     public void deleteChecked() throws Exception {
