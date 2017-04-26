@@ -621,12 +621,13 @@
     }
 
 
+    var searchTerm = $('#query').text();
 
     instance.draw($("#term-tree"),
                   false,
                   "efo",
                   "terms",
-                  "http://www.ebi.ac.uk/efo/EFO_0000400",
+                  "http://www.ebi.ac.uk/efo/"+searchTerm,
                   "http://www.ebi.ac.uk/ols/",
                   options);
     // initialise the tree
