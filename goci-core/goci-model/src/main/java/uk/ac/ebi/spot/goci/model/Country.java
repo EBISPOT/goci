@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 19/12/14.
@@ -23,14 +25,25 @@ public class Country {
 
     private String name;
 
+    @ManyToMany(mappedBy = "countryOfOrigin")
+    private Collection<Ancestry> ancestriesOrigin;
+
+    @ManyToMany(mappedBy = "countryOfRecruitment")
+    private Collection<Ancestry> ancestriesRecruitment;
+
+
     // JPA no-args constructor
     public Country() {
     }
 
-    public Country(String majorArea, String region, String name) {
+    public Country(String majorArea, String region, String name,
+                   Collection<Ancestry> ancestriesOrigin,
+                   Collection<Ancestry> ancestriesRecruitment) {
         this.majorArea = majorArea;
         this.region = region;
         this.name = name;
+        this.ancestriesOrigin = ancestriesOrigin;
+        this.ancestriesRecruitment = ancestriesRecruitment;
     }
 
     public Long getId() {
@@ -73,6 +86,22 @@ public class Country {
                 ", region='" + region + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public Collection<Ancestry> getAncestriesOrigin() {
+        return ancestriesOrigin;
+    }
+
+    public void setAncestriesOrigin(Collection<Ancestry> ancestriesOrigin) {
+        this.ancestriesOrigin = ancestriesOrigin;
+    }
+
+    public Collection<Ancestry> getAncestriesRecruitment() {
+        return ancestriesRecruitment;
+    }
+
+    public void setAncestriesRecruitment(Collection<Ancestry> ancestriesRecruitment) {
+        this.ancestriesRecruitment = ancestriesRecruitment;
     }
 }
 
