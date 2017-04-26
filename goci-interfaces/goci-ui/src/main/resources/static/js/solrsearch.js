@@ -57,6 +57,18 @@ function loadResults() {
             $('#search-term').text('selected traits from list');
         }
     }
+
+    //add the link to the specific page, for example, for snp, to variant-page
+    if(/^rs[0-9]/.test(searchTerm)){
+        $('#search-term').attr("href", "beta/variants/"+searchTerm);
+        $("#search-term-popup").attr("data-original-title","Go to the variant page.");
+    }else{
+        //we currently only ave variant page, so for other search, we disable the link and hide the popup
+        $('#search-term').replaceWith('<span id=search-term th:text="*{query}">' + searchTerm +'</span>')
+        $("#search-term-popup").attr("style","display: none");
+    }
+
+
     $('#welcome-container').hide();
     $('#search-results-container').show();
     $('#loadingResults').show();
