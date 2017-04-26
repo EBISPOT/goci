@@ -3,12 +3,5 @@
  */
 
 $(document).ready(function() {
-    $("#saveBottom").click( function() {
-        alert("Fired");
-    });
-
-    $("#saveTop").click( function() {
-        alert("Fired");
-    });
 
 });
