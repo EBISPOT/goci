@@ -327,37 +327,11 @@
             </div>
         </div>
 
-        <!--ols tree-->
-        <div>
-            <div><h2>Welcome to the OLS tree example!</h2></div>
-            <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
 
-            <div>selected:
-                <div id="selectednodes"></div>
-                <div id="selectednodestext"></div>
-            </div>
-        </div>
-
-
-        <!-- locus plot -->
-        <div>
-            <div class="two columns">
-                <h4>Top Hits</h4>
-                <style>ul.top_hits li {
-                    margin-bottom: 0rem;
-                }</style>
-                <ul class="top_hits" style="padding-left: 0.2rem; min-width: 110px;"></ul>
-            </div>
-            <div class="ten columns">
-                <div id="plot" data-region="10:114550452-115067678"></div>
-            </div>
-        </div>
+        <!--Include footer-->
+        <div th:include="fragments/footer :: page_footer"></div>
 
     </div>
-
-    <!--Include footer-->
-    <div th:include="fragments/footer :: page_footer"></div>
-
 </div>
 
 
@@ -366,7 +340,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
         th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
@@ -391,280 +365,63 @@
 
 <!--script for OLS-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
-<!--<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>-->
+<!--<script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>-->
+<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>
 <link rel="stylesheet"
       href="../static/css/proton/style.min.css"
       th:href="@{../../css/proton/style.min.css}"
       media="screen"/>
 
 
-<!--local data-->
 <script>
-    $('.addEfoButton').click(function() {
-        getEfoTraitData($(this).attr('value'));
-        console.log('clicked' + $(this).attr('value'));
-    });
-
+    var GWAS_REST = "https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/";
+    var GAS_REST_EFO_SEARCH_ENDPOINT = GWAS_REST + "efoTraits/search/findByUri?uri=http://www.ebi.ac.uk/efo/"
 
     $(document).ready(function() {
-        if (window.location.pathname.indexOf("beta") != -1) {
-            $('#beta-icon').show();
-        }
-        var searchTerm = $('#query').text();
-        console.log("Loading search module!");
-        console.log("efoTrait: " + searchTerm);
-        if (searchTerm != '') {
-            console.log("Start search for the efotrait " + searchTerm);
-            getEfoTraitData(searchTerm, true);
-        }
-    });
-
-    function getEfoTraitData(efotraitId, initLoad) {
-        // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(init load)
-        // or just reload the tables(adding another efo term)
-        if (initLoad === undefined) {
-            initLoad = false;
-        }
-
+        var efotraitId = $('#query').text();
         console.log("Solr research request received for " + efotraitId);
-        setState(SearchState.LOADING);
-        $.getJSON('/gwas/api/search/efotrait',
-                  {
-                      'q': efotraitId,
-                      'max': 1000
-                  })
-                .done(function(data) {
-                    console.log(data);
-                    //xintodo consider if you want to do it this way, or just change the seach and update the tables
-                    //saveData(data.responseHeader.params.q, data);
-                    //we only process data here if it is the init load of the page, since we need to add new data to the page dynamically
-                    processEfotraitData(data, efotraitId, initLoad);
-                });
-        //serilize the data in html tag and save it in a tag for visulization
-        console.log("Solr research done for " + efotraitId);
-    }
-    //     Parse the Solr results and display the data on the HTML page
-    function processEfotraitData(data, efotraitId, initLoad) {
-        // Check if Solr returns some results
-        if (data.grouped.resourcename.matches == 0) {
-            $('#lower_container').html("<h2>The efotrait <em>" + efotraitId +
-                                       "</em> cannot be found in the GWAS Catalog database</h2>");
-        }
-        else {
-            //split the solr search by groups
-            var data_efo, data_study, data_association, data_diseasetrait;
-            var data_facet = data.facet_counts.facet_fields.resourcename;
-            $.each(data.grouped.resourcename.groups, function(index, group) {
-                switch (group.groupValue) {
-                    case "efotrait":
-                        data_efo = group.doclist;
-                        break;
-                    case "study":
-                        data_study = group.doclist;
-                        break;
-                    case "association":
-                        data_association = group.doclist;
-                        break;
-                        //not sure we need this!
-                    case "diseasetrait":
-                        data_diseasetrait = group.doclist;
-                        break;
-                    default:
-                        ;
-                }
-            })
-            if (initLoad) {
-                getEfoTraitInfo(data_efo.docs, efotraitId);
-                getSummary(data_study);
-
-            }
-            getEfotraitAssociations(data_association.docs);
-            getEfotraitStudies(data_study.docs);
-
-        }
-    }
-
-    function newItemWithIdAndData(id, content) {
-        var newli = $("<li></li>").attr('id', id).text(content);
-        console.log(newli);
-        return newli;
-    }
-
-    function saveData(id, data) {
-        var jsonid = '#json-' + id;
-        var $jsondatali = $(jsonid);
-
-        //if the data exists, update
-        if ($jsondatali.length) {
-            $jsondatali.text = JSON.stringify(data, null, 0);
-        }
-        else {
-            $("#searchdata").append(newItemWithIdAndData('json-' + id, JSON.stringify(data, null, 0)));
-        }
-
-    }
-
-    function loadData(id) {
-        var jsontext = $('#json-' + id).text();
-        return jsontext;
-    }
-
-</script>
-
-
-<!--locus zoom-->
-<script>
-    var apiBase, data_sources;
-    apiBase = "https://portaldev.sph.umich.edu/api/v1/";
-    data_sources = new LocusZoom.DataSources()
-            .add("assoc",
-                 ["AssociationLZ", {url: apiBase + "statistic/single/", params: {analysis: 3, id_field: "variant"}}])
-            .add("ld", ["LDLZ", apiBase + "pair/LD/"])
-            .add("gene", ["GeneLZ", {url: apiBase + "annotation/genes/", params: {source: 2}}])
-            .add("recomb", ["RecombLZ", {url: apiBase + "annotation/recomb/results/", params: {source: 15}}])
-            .add("constraint", ["GeneConstraintLZ", {url: "http://exac.broadinstitute.org/api/constraint"}]);
-    console.log(data_sources)
-    // Get the standard assocation plot layout from LocusZoom's built-in layouts
-    layout = LocusZoom.Layouts.get("plot", "standard_association");
-    layout.dashboard = LocusZoom.Layouts.get("dashboard", "region_nav_plot");
-
-    //    // Generate the LocusZoom plot
-    var plot = LocusZoom.populate("#plot", data_sources, layout);
-    //
-    //    // Add a basic loader to each panel (one that shows when data is requested and hides when one rendering)
-    //    plot.layout.panels.forEach(function(panel){
-    //        plot.panels[panel.id].addBasicLoader();
-    //    });
-    //
-    //    // Create a method to parse a region string into a 600Kb genome range and load it
-    //    function jumpTo(region) {
-    //        var target = region.split(":");
-    //        var chr = target[0];
-    //        var pos = target[1];
-    //        var start = 0;
-    //        var end = 0;
-    //        if (!pos.match(/[-+]/)) {
-    //            start = +pos - 300000
-    //            end = +pos + 300000
-    //        }
-    //        plot.applyState({ chr: chr, start: start, end: end, ldrefvar: "" });
-    //        return false;
-    //    }
-    //
-    //    // Populate a list of top hits links for the plot
-    //    var top_hits = [
-    //        ["16:53819169", "FTO"],
-    //        ["9:22051670", "CDKN2A/B"],
-    //        ["7:28196413", "JAZF1"],
-    //        ["12:71433293", "TSPAN8"],
-    //        ["10:114758349", "TCF7L2"],
-    //        ["8:95937502", "TP53INP1"],
-    //        ["6:20679709", "CDKAL1"],
-    //        ["2:161346447", "RBMS1"],
-    //        ["16:75247245", "BCAR1"],
-    //        ["15:77832762", "HMG20A"],
-    //        ["7:15052860", "DGKB"],
-    //        ["5:76427311", "ZBED3"]
-    //    ];
-    //
-</script>
-
-<!--ols-->
-<script>
-
-    //    var treeDiv = $("#term-tree");
-    //        treeDiv.jstree({
-    //                    'checkbox': {
-    //                        three_state: false,
-    //                        cascade: 'up'
-    //                    },
-    //                    plugins: ["checkbox","changed"]
-    //                });
-
-
-    var app = require("ols-treeview");
-    var instance = new app();
-
-    options={
-        checkbox : true,
-        checkbox_cascade : '',
-        checkbox_three_state : false,
-        onchange : function(e,data){
-            console.log("newly selected:")
-            console.log(data.changed.selected); // newly selected
-            console.log("newly deselected:")
-            console.log(data.changed.deselected); // newly deselected
-            console.log("event passed to onChange:")
-            console.log(e); // newly selected
-            console.log("data passed to onChange:")
-            console.log(data); // newly deselected
-
-            console.log(data.instance.get_selected(true));
-            var selected_ids='',selected_text='';
-            if(data.instance.get_selected(true).length > 0) {
-                $.each(data.instance.get_selected(true), function(index, term) {
-                    // console.log('EFO_' + term.original.iri.split('EFO_')[1])
-                    if (term.original.iri) {
-                        selected_ids = selected_ids + ',' + 'EFO_' + term.original.iri.split('EFO_')[1];
-                        selected_text = selected_text + ',' + term.original.text;
-                    }
-                });
-
-                $("#selectednodes").html(selected_ids.substring(1, selected_ids.length));
-                $("#selectednodestext").html(selected_text.substring(1, selected_text.length));
-                console.log(data.instance.get_node(data.selected));
-            }else{
-                $("#selectednodes").html('');
-                $("#selectednodestext").html('');
-            }},
-    }
-
-
-
-    instance.draw($("#term-tree"),
-                  false,
-                  "efo",
-                  "terms",
-                  "http://www.ebi.ac.uk/efo/EFO_0000400",
-                  "http://www.ebi.ac.uk/ols/",
-                  options);
-    // initialise the tree
-
-    $('#selectednodes').bind("DOMSubtreeModified", function() {
-
-        var efos = $(this).html().split(',');
-        if (efos.length > 1) {
-            efos = efos.join(" OR ");
-        }
-        else {
-            efos = efos[0];
-        }
-        console.log(efos);
-        if (efos) {
-            getEfoTraitData(efos);
-
-        }
-
+        console.log(GAS_REST_EFO_SEARCH_ENDPOINT+efotraitId);
+        $.getJSON(GAS_REST_EFO_SEARCH_ENDPOINT+efotraitId).done(function(data){
+            console.log(data);
+        })
+//        setState(SearchState.LOADING);
+//        $.getJSON('/gwas/api/search/efotrait',
+//                  {
+//                      'q': efotraitId,
+//                      'max': 1000
+//                  })
+//                .done(function(data) {
+//                    console.log(data);
+//                    //xintodo consider if you want to do it this way, or just change the seach and update the tables
+//                    //saveData(data.responseHeader.params.q, data);
+//                    //we only process data here if it is the init load of the page, since we need to add new data to the page dynamically
+//                    processEfotraitData(data, efotraitId, initLoad);
+//                });
+//        //serilize the data in html tag and save it in a tag for visulization
+//        console.log("Solr research done for " + efotraitId);
     });
-    $('.addEfoButton').click(function() {
-        getEfoTraitData($(this).attr('value'));
-        console.log('clicked' + $(this).attr('value'));
-    });
-    //        var div=$("#term-tree");
-    //        var ontologyName = $("#term-tree").data("olsontology");
-    //        var termType = $("#term-tree").data("ols-termtype");
-    //        var termIri = $("#term-tree").data("ols-iri");
-    //        var relativePath = $("#term-tree").data("selectpath") ? $("#term-tree").data("selectpath") : '';
 
-    //        var app = require("ols-treeview");
-    //        var termInstance = new app();
-    //        termInstance.draw(div, false, ontologyName, termType, termIri, relativePath, {save_state: true});
+    function ajaxQueue(id,step) {
+        switch(step) {
+            case 0: $.ajax({
+                               type: "GET",
+                               url: GAS_REST_EFO_SEARCH_ENDPOINT + id,
+                               complete: function() { ajaxQueue(1); }
+                           }); break;
+            case 1: $.ajax({
+                               type: "GET",
+                               url: "/some/service",
+                               complete: function() { ajaxQueue(2); }
+                           }); break;
+            case 2: $.ajax({
+                               type: "GET",
+                               url: "/some/service",
+                               complete: function() { alert('Done!'); }
+                           }); break;
+        }
+    }
 
-    //    });
 </script>
-
-
 </body>
 </html>
 //    <!--//EFO:0000400-->
@@ -675,3 +432,4 @@
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api-->
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/efoTraits/71-->
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/efoTraits/search/findByUri?uri=http://www.ebi.ac.uk/efo/EFO_0000400-->
+<!--https://github.com/jmarquis/angular-hateoas-->

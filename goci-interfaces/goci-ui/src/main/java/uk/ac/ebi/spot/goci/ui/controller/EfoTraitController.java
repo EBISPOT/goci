@@ -31,9 +31,16 @@ public class EfoTraitController {
     }
 
 
-    @RequestMapping(path = "/trait", method = RequestMethod.GET)
-    public String traitPage() {
-        return "efotrait-page";
+    @RequestMapping(value = "/efotrait2/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String search2(Model model,
+                         @PathVariable(required = false) String efoId,
+                         @RequestParam(required = false) String filter) {
+        EfoTraitResult efoTraitResult = new EfoTraitResult();
+        efoTraitResult.setQuery(efoId);
+        efoTraitResult.setFilter(filter);
+        efoTraitResult.setEfoId(efoId);
+        model.addAttribute("result", efoTraitResult);
+        return "efotrait-page-rest";
     }
 
     @RequestMapping(value = "/efotrait/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
@@ -51,9 +58,9 @@ public class EfoTraitController {
     @RequestMapping(value = "/trait/test", method = RequestMethod.GET)
     public @ResponseBody String searchSolr(@RequestParam(required = false) String filter) {
         EfoTraitResult efoTraitResult = new EfoTraitResult();
-        efoTraitResult.setQuery("efo_0001645");
+        efoTraitResult.setQuery("EFO_0000400");
         efoTraitResult.setFilter(filter);
-        efoTraitResult.setEfoId("efo_0001645");
+        efoTraitResult.setEfoId("EFO_0000400");
 
         RestTemplate restTemplate = new RestTemplate();
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8280/gwas/api/search/efotrait")

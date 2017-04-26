@@ -1689,11 +1689,7 @@ module.exports = olstree = function(){
 
   var local_options={
     onclick : onClick,
-    save_state : false,
-      checkbox : true,
-      checkbox_cascade : 'down',
-      checkbox_three_state : false,
-      onchange: onChange
+    save_state : false
   }
 
   var global_div
@@ -1798,101 +1794,188 @@ function showTree(siblings) {
             url += '?siblings=true';
         }
 
-        var plugins = ["sort"];
+            var treeDiv = $('<div></div>')
+                    .jstree({
+                                'core' : {
+                                    'data': function (node, cb) {
+                                        //console.log("node id: " + node.id + " term " + termIri);
 
-        if(local_options.checkbox){
-            plugins.push("checkbox","changed");
-            //confilt with checkbox click, so disable onclick
-            local_options.onclick = function(node, event, relativePath, currentTermIri, termType, selectedIri, ontology_name){}
-        }
+                                        if (node.id === '#' && termIri != '') {
+                                            // render a single terms
+                                            if (local_options.save_state && $.jStorage.get(termIri)) {
+                                                cb($.jStorage.get(termIri))
+                                            } else {
+                                                $.getJSON(url, function (data) {
+                                                    cb(data)
+                                                })
+                                                        .fail(function(){
+                                                            console.log("Could not connect to "+url)
+                                                        });
+                                            }
+                                        }
+                                        else if (node.id === '#' && termIri === '') {
 
-        console.log("ciao");
+                                            // show roots
+                                            $.getJSON(rootUrl, function (data) {
+                                                var data = _processOlsData(data, '#', termType);
+                                                cb(data)
+                                            })
+                                                    .fail(function(){
+                                                        console.log("Could not connect to "+url)
+                                                    });
+                                        }
+                                        else {
+                                            var requestIri = node.original.iri ? node.original.iri : node.original.a_attr.iri;
+                                            // get all children
+                                            var childUrl = baseUrl + encodeURIComponent(encodeURIComponent(requestIri)) + '/jstree/children/'+ node.id;
+                                            //console.log('child url: '+childUrl)
 
-        var treeDiv = $('<div></div>')
-            .jstree({
-                'core' : {
-                    'data': function (node, cb) {
-                        //console.log("node id: " + node.id + " term " + termIri);
+                                            $.getJSON(childUrl, function (data) {
+                                                //console.log("termIri "+termIri+" leads to"+data)
+                                                //console.log("With the childUrl "+childUrl)
+                                                cb(data)
 
-                        if (node.id === '#' && termIri != '') {
-                            // render a single terms
-                            if (local_options.save_state && $.jStorage.get(termIri)) {
-                                cb($.jStorage.get(termIri))
-                            } else {
-                                $.getJSON(url, function (data) {
-                                        cb(data)
-                                    })
-                                    .fail(function(){
-                                        console.log("Could not connect to "+url)
-                                    });
-                            }
-                        }
-                        else if (node.id === '#' && termIri === '') {
+                                            })
+                                                    .fail(function(){
+                                                        console.log("Could not connect to "+url)
+                                                    });
+                                        }
 
-                            // show roots
-                            $.getJSON(rootUrl, function (data) {
-                                var data = _processOlsData(data, '#', termType);
-                                cb(data)
-                            })
-                            .fail(function(){
-                            console.log("Could not connect to "+url)
-                          });
-                        }
-                        else {
-                            var requestIri = node.original.iri ? node.original.iri : node.original.a_attr.iri;
-                            // get all children
-                            var childUrl = baseUrl + encodeURIComponent(encodeURIComponent(requestIri)) + '/jstree/children/'+ node.id;
-                            //console.log('child url: '+childUrl)
+                                        // clear local storage for this term
+                                        if (local_options.save_state) {
+                                            if (termIri != '' && $.jStorage.get(termIri)) {
+                                                $.jStorage.deleteKey(termIri)
+                                            }
+                                        }
 
-                            $.getJSON(childUrl, function (data) {
-                                //console.log("termIri "+termIri+" leads to"+data)
-                                //console.log("With the childUrl "+childUrl)
-                                cb(data)
-
-                            })
-                            .fail(function(){
-                              console.log("Could not connect to "+url)
-                            });
-                        }
-
-                        // clear local storage for this term
+                                    },
+                                    "themes": {
+                                        "dots": true
+                                        , "icons": false,
+                                        "name" : "proton"
+                                        //"responsive" : true
+                                    }
+                                },
+                                'checkbox': {
+                                    three_state: false,
+                                    cascade: 'down'
+                                },
+                                plugins: ["sort","checkbox","changed"]
+                            }).bind("select_node.jstree", function(node, selected, event) {
+                        var  data = $(this).jstree(true).get_json();
+                        var iri  = selected.node.original.iri ? selected.node.original.iri : selected.node.original.a_attr.iri
+                        var ontology =  selected.node.original.ontology_name ? selected.node.original.ontology_name : selected.node.original.a_attr.ontology_name
                         if (local_options.save_state) {
-                            if (termIri != '' && $.jStorage.get(termIri)) {
-                                $.jStorage.deleteKey(termIri)
-                            }
+                            $.jStorage.set(iri, data);
                         }
+                        local_options.onclick.call(this, event, selected, relativePath, termIri, termType, iri, ontology)
+                    }).bind('after_close.jstree', function (e, data) {
+                        var tree = $(this).jstree(true);
+                        tree.delete_node(data.node.children);
+                        tree._model.data[data.node.id].state.loaded = false;
+                    }).on("changed.jstree", function (e, data) {
+                        console.log("The selected nodes are:");
+                        console.log(data.selected);
+                        console.log(data.instance.get_selected(true));
+                        var selected_ids='',selected_text='';
+                        if(data.instance.get_selected(true).length > 0) {
+                            $.each(data.instance.get_selected(true), function(index, term) {
+                                // console.log('EFO_' + term.original.iri.split('EFO_')[1])
+                                if (term.original.iri) {
+                                    selected_ids = selected_ids + ',' + 'EFO_' + term.original.iri.split('EFO_')[1];
+                                    selected_text = selected_text + ',' + term.original.text;
+                                }
+                            });
 
-                    },
-                    "themes": {
-                        "dots": true
-                        , "icons": false,
-                        "name" : "proton"
-                        //"responsive" : true
-                    }
-                },
-                'checkbox': {
-                    //https://www.jstree.com/api/#/?q=$.jstree.defaults.checkbox&f=$.jstree.defaults.checkbox.three_state
-                    three_state: local_options.checkbox_three_state,
-                    cascade: local_options.checkbox_cascade
-                },
-                plugins: plugins
-            }).bind("select_node.jstree", function(node, selected, event) {
-                var  data = $(this).jstree(true).get_json();
-                var iri  = selected.node.original.iri ? selected.node.original.iri : selected.node.original.a_attr.iri
-                var ontology =  selected.node.original.ontology_name ? selected.node.original.ontology_name : selected.node.original.a_attr.ontology_name
-                if (local_options.save_state) {
-                    $.jStorage.set(iri, data);
-                }
-                local_options.onclick.call(this, event, selected, relativePath, termIri, termType, iri, ontology)
-            }).bind('after_close.jstree', function (e, data) {
-                var tree = $(this).jstree(true);
-                tree.delete_node(data.node.children);
-                tree._model.data[data.node.id].state.loaded = false;
-            }).on("changed.jstree", function (e, data) {
-                local_options.onchange.call(this,e,data);
-            });
+                            $("#selectednodes").html(selected_ids.substring(1, selected_ids.length));
+                            $("#selectednodestext").html(selected_text.substring(1, selected_text.length));
+                            console.log(data.instance.get_node(data.selected));
+                        }else{
+                            $("#selectednodes").html('');
+                            $("#selectednodestext").html('');
+                        }
+                    });
 
-            $(this).append(treeDiv);
+            $('<div></div>')
+                    .jstree().
+        //origin
+        // var treeDiv = $('<div></div>')
+        //     .jstree({
+        //         'core' : {
+        //             'data': function (node, cb) {
+        //                 //console.log("node id: " + node.id + " term " + termIri);
+        //
+        //                 if (node.id === '#' && termIri != '') {
+        //                     // render a single terms
+        //                     if (local_options.save_state && $.jStorage.get(termIri)) {
+        //                         cb($.jStorage.get(termIri))
+        //                     } else {
+        //                         $.getJSON(url, function (data) {
+        //                                 cb(data)
+        //                             })
+        //                             .fail(function(){
+        //                                 console.log("Could not connect to "+url)
+        //                             });
+        //                     }
+        //                 }
+        //                 else if (node.id === '#' && termIri === '') {
+        //
+        //                     // show roots
+        //                     $.getJSON(rootUrl, function (data) {
+        //                         var data = _processOlsData(data, '#', termType);
+        //                         cb(data)
+        //                     })
+        //                     .fail(function(){
+        //                     console.log("Could not connect to "+url)
+        //                   });
+        //                 }
+        //                 else {
+        //                     var requestIri = node.original.iri ? node.original.iri : node.original.a_attr.iri;
+        //                     // get all children
+        //                     var childUrl = baseUrl + encodeURIComponent(encodeURIComponent(requestIri)) + '/jstree/children/'+ node.id;
+        //                     //console.log('child url: '+childUrl)
+        //
+        //                     $.getJSON(childUrl, function (data) {
+        //                         //console.log("termIri "+termIri+" leads to"+data)
+        //                         //console.log("With the childUrl "+childUrl)
+        //                         cb(data)
+        //
+        //                     })
+        //                     .fail(function(){
+        //                       console.log("Could not connect to "+url)
+        //                     });
+        //                 }
+        //
+        //                 // clear local storage for this term
+        //                 if (local_options.save_state) {
+        //                     if (termIri != '' && $.jStorage.get(termIri)) {
+        //                         $.jStorage.deleteKey(termIri)
+        //                     }
+        //                 }
+        //
+        //             },
+        //             "themes": {
+        //                 "dots": true
+        //                 , "icons": false,
+        //                 "name" : "proton"
+        //                 //"responsive" : true
+        //             }
+        //         },
+        //         plugins: ["sort"]
+        //     }).bind("select_node.jstree", function(node, selected, event) {
+        //         var  data = $(this).jstree(true).get_json();
+        //         var iri  = selected.node.original.iri ? selected.node.original.iri : selected.node.original.a_attr.iri
+        //         var ontology =  selected.node.original.ontology_name ? selected.node.original.ontology_name : selected.node.original.a_attr.ontology_name
+        //         if (local_options.save_state) {
+        //             $.jStorage.set(iri, data);
+        //         }
+        //         local_options.onclick.call(this, event, selected, relativePath, termIri, termType, iri, ontology)
+        //     }).bind('after_close.jstree', function (e, data) {
+        //         var tree = $(this).jstree(true);
+        //         tree.delete_node(data.node.children);
+        //         tree._model.data[data.node.id].state.loaded = false;
+        //     });
+        $(this).append(treeDiv);
 
     });
 }
@@ -1908,17 +1991,6 @@ function onClick(node, event, relativePath, currentTermIri, termType, selectedIr
   goTo(newpath)
 }
 
-//Default onchange behavior
-    function onChange(e, data){
-        console.log("newly selected:")
-        console.log(data.changed.selected); // newly selected
-        console.log("newly deselected:")
-        console.log(data.changed.deselected); // newly deselected
-        console.log("event passed to onChange:")
-        console.log(e); // newly selected
-        console.log("data passed to onChange:")
-        console.log(data); // newly deselected
-    }
 
 function _processOlsData (data, parentId, termType) {
     var newData = [];
