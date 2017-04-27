@@ -228,9 +228,30 @@
                         th:if="${initialStudyAncestryDescriptions}">
                         <td th:text="${initialStudyAncestryDescription.type} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.numberOfIndividuals} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>
+                        <!--<td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>-->
+                        <!--<td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>-->
+                        <!--<td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>-->
+                        <td><span th:each="ancestralGroup: ${initialStudyAncestryDescription.ancestralGroups}"
+                                  th:if="${#arrays.length(initialStudyAncestryDescription.ancestralGroups) &gt; 1}"
+                                  th:text="${ancestralGroup.ancestralGroup}+', ' ?: ''"></span>
+                        <span th:each="ancestralGroup: ${initialStudyAncestryDescription.ancestralGroups}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.ancestralGroups) == 1}"
+                              th:text="${ancestralGroup.ancestralGroup} ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfOrigin: ${initialStudyAncestryDescription.countryOfOrigin}"
+                                  th:if="${#arrays.length(initialStudyAncestryDescription.countryOfOrigin) &gt; 1}"
+                                  th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfOrigin: ${initialStudyAncestryDescription.countryOfOrigin}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfOrigin) == 1}"
+                              th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfRecruitment: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                                  th:if="${#arrays.length(initialStudyAncestryDescription.countryOfRecruitment) &gt; 1}"
+                                  th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfRecruitment: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfRecruitment) == 1}"
+                              th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                        </td>
                         <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.description} ?: ''"></td>
@@ -366,8 +387,8 @@
                                             th:field="*{countryOfOrigin}"
                                             id="countryOfOrigin">
                                         <option th:each="country : ${countries}"
-                                                th:value="${country.name}"
-                                                th:text="${country.name}"></option>
+                                                th:value="${country.countryName}"
+                                                th:text="${country.countryName}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -382,8 +403,8 @@
                                             th:field="*{countryOfRecruitment}"
                                             id="countryOfRecruitment">
                                         <option th:each="country : ${countries}"
-                                                th:value="${country.name}"
-                                                th:text="${country.name}"></option>
+                                                th:value="${country.countryName}"
+                                                th:text="${country.countryName}"></option>
                                     </select>
                                 </div>
                             </div>

@@ -1,7 +1,11 @@
 package uk.ac.ebi.spot.goci.builder;
 
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Study;
+
+import java.util.Collection;
 
 /**
  * Created by emma on 26/05/2016.
@@ -29,17 +33,17 @@ public class AncestryBuilder {
         return this;
     }
 
-    public AncestryBuilder setAncestralGroup(String ancestralGroup) {
-        ancestry.setAncestralGroup(ancestralGroup);
+    public AncestryBuilder setAncestralGroups(Collection<AncestralGroup> ancestralGroups) {
+        ancestry.setAncestralGroups(ancestralGroups);
         return this;
     }
 
-    public AncestryBuilder setCountryOfOrigin(String countryOfOrigin) {
+    public AncestryBuilder setCountryOfOrigin(Collection<Country> countryOfOrigin) {
         ancestry.setCountryOfOrigin(countryOfOrigin);
         return this;
     }
 
-    public AncestryBuilder setCountryOfRecruitment(String countryOfRecruitment) {
+    public AncestryBuilder setCountryOfRecruitment(Collection<Country> countryOfRecruitment) {
         ancestry.setCountryOfRecruitment(countryOfRecruitment);
         return this;
     }

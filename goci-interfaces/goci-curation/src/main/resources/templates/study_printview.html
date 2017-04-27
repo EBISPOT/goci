@@ -4,7 +4,7 @@
     <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="" ame="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -208,9 +208,30 @@
                 <tr th:each="initialStudyAncestryDescription: ${initialStudyAncestryDescriptions}">
                     <td th:text="${initialStudyAncestryDescription.type} ?: ''"></td>
                     <td th:text="${initialStudyAncestryDescription.numberOfIndividuals} ?: ''"></td>
-                    <td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>
-                    <td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>
-                    <td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>
+                    <!--<td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>-->
+                    <!--<td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>-->
+                    <!--<td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>-->
+                    <td><span th:each="ancestralGroup: ${initialStudyAncestryDescription.ancestralGroups}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.ancestralGroups) &gt; 1}"
+                              th:text="${ancestralGroup.ancestralGroup}+', ' ?: ''"></span>
+                        <span th:each="ancestralGroup: ${initialStudyAncestryDescription.ancestralGroups}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.ancestralGroups) == 1}"
+                              th:text="${ancestralGroup.ancestralGroup} ?: ''"></span>
+                    </td>
+                    <td><span th:each="countryOfOrigin: ${initialStudyAncestryDescription.countryOfOrigin}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfOrigin) &gt; 1}"
+                              th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfOrigin: ${initialStudyAncestryDescription.countryOfOrigin}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfOrigin) == 1}"
+                              th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                    </td>
+                    <td><span th:each="countryOfRecruitment: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfRecruitment) &gt; 1}"
+                              th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfRecruitment: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                              th:if="${#arrays.length(initialStudyAncestryDescription.countryOfRecruitment) == 1}"
+                              th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                    </td>
                     <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
                     <td th:text="${initialStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
                     <td th:text="${initialStudyAncestryDescription.description} ?: ''"></td>
@@ -239,9 +260,30 @@
                 <tr th:each="replicationStudyAncestryDescription: ${replicationStudyAncestryDescriptions}">
                     <td th:text="${replicationStudyAncestryDescription.type}  ?: ''"></td>
                     <td th:text="${replicationStudyAncestryDescription.numberOfIndividuals}  ?: ''"></td>
-                    <td th:text="${replicationStudyAncestryDescription.ancestralGroup}  ?: ''"></td>
-                    <td th:text="${replicationStudyAncestryDescription.countryOfOrigin}  ?: ''"></td>
-                    <td th:text="${replicationStudyAncestryDescription.countryOfRecruitment}  ?: ''"></td>
+                    <!--<td th:text="${replicationStudyAncestryDescription.ancestralGroup}  ?: ''"></td>-->
+                    <!--<td th:text="${replicationStudyAncestryDescription.countryOfOrigin}  ?: ''"></td>-->
+                    <!--<td th:text="${replicationStudyAncestryDescription.countryOfRecruitment}  ?: ''"></td>-->
+                    <td><span th:each="ancestralGroup: ${replicationStudyAncestryDescription.ancestralGroups}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.ancestralGroups) &gt; 1}"
+                              th:text="${ancestralGroup.ancestralGroup}+', ' ?: ''"></span>
+                        <span th:each="ancestralGroup: ${replicationStudyAncestryDescription.ancestralGroups}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.ancestralGroups) == 1}"
+                              th:text="${ancestralGroup.ancestralGroup} ?: ''"></span>
+                    </td>
+                    <td><span th:each="countryOfOrigin: ${replicationStudyAncestryDescription.countryOfOrigin}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.countryOfOrigin) &gt; 1}"
+                              th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfOrigin: ${replicationStudyAncestryDescription.countryOfOrigin}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.countryOfOrigin) == 1}"
+                              th:text="${countryOfOrigin.countryName}+', ' ?: ''"></span>
+                    </td>
+                    <td><span th:each="countryOfRecruitment: ${replicationStudyAncestryDescription.countryOfRecruitment}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.countryOfRecruitment) &gt; 1}"
+                              th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                        <span th:each="countryOfRecruitment: ${replicationStudyAncestryDescription.countryOfRecruitment}"
+                              th:if="${#arrays.length(replicationStudyAncestryDescription.countryOfRecruitment) == 1}"
+                              th:text="${countryOfRecruitment.countryName}+', ' ?: ''"></span>
+                    </td>
                     <td th:text="${replicationStudyAncestryDescription.previouslyReported}  ?: ''"></td>
                     <td th:text="${replicationStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
                     <td th:text="${replicationStudyAncestryDescription.description} ?: ''"></td>

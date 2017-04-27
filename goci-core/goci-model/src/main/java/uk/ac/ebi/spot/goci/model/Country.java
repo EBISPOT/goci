@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author emma
  *         <p>
- *         Model object representing a country
+ *         Model object representing a countryName
  */
 @Entity
 public class Country {
@@ -23,7 +23,7 @@ public class Country {
 
     private String region;
 
-    private String name;
+    private String countryName;
 
     @ManyToMany(mappedBy = "countryOfOrigin")
     private Collection<Ancestry> ancestriesOrigin;
@@ -36,12 +36,12 @@ public class Country {
     public Country() {
     }
 
-    public Country(String majorArea, String region, String name,
+    public Country(String majorArea, String region, String countryName,
                    Collection<Ancestry> ancestriesOrigin,
                    Collection<Ancestry> ancestriesRecruitment) {
         this.majorArea = majorArea;
         this.region = region;
-        this.name = name;
+        this.countryName = countryName;
         this.ancestriesOrigin = ancestriesOrigin;
         this.ancestriesRecruitment = ancestriesRecruitment;
     }
@@ -70,12 +70,12 @@ public class Country {
         this.region = region;
     }
 
-    public String getName() {
-        return name;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Country {
                 "id=" + id +
                 ", majorArea='" + majorArea + '\'' +
                 ", region='" + region + '\'' +
-                ", name='" + name + '\'' +
+                ", countryName='" + countryName + '\'' +
                 '}';
     }
 

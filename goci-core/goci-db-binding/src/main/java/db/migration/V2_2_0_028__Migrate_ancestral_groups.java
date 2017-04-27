@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by Dani on 13/04/2017.
  */
-public class V2_2_0_027__Migrate_ancestral_groups implements SpringJdbcMigration {
+public class V2_2_0_028__Migrate_ancestral_groups implements SpringJdbcMigration {
 
     private static final String SELECT_ANCESTRAL_GROUP =
             "SELECT DISTINCT ID, ANCESTRAL_GROUP FROM ANCESTRY WHERE ANCESTRAL_GROUP IS NOT NULL";

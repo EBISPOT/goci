@@ -156,7 +156,7 @@ public class StudyDuplicationService {
         Ancestry duplicateAncestry = new Ancestry();
         duplicateAncestry.setType(studyToDuplicateAncestry.getType());
         duplicateAncestry.setNumberOfIndividuals(studyToDuplicateAncestry.getNumberOfIndividuals());
-        duplicateAncestry.setAncestralGroup(studyToDuplicateAncestry.getAncestralGroup());
+        duplicateAncestry.setAncestralGroups(studyToDuplicateAncestry.getAncestralGroups());
         duplicateAncestry.setCountryOfOrigin(studyToDuplicateAncestry.getCountryOfOrigin());
         duplicateAncestry.setCountryOfRecruitment(studyToDuplicateAncestry.getCountryOfRecruitment());
         duplicateAncestry.setDescription(studyToDuplicateAncestry.getDescription());

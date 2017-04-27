@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
 import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
@@ -360,14 +358,16 @@ public class AncestryController {
         return ancestralGroupRepository.findAll();
     }
 
-    // Countries
+
     @ModelAttribute("countries")
     public List<Country> populateCountries(Model model) {
+        //        List<Country> countries = countryRepository.findAll();
+        //        Country countryNR = new Country();
+        //        // Added NR as an option for curators
+        //        countryNR.setCountryName("NR");
+        //        countries.add(countryNR);
+        //        return countries;
         List<Country> countries = countryRepository.findAll();
-        Country countryNR = new Country();
-        // Added NR as an option for curators
-        countryNR.setName("NR");
-        countries.add(countryNR);
         return countries;
     }
 
