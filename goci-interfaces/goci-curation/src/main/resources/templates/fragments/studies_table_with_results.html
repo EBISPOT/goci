@@ -146,12 +146,8 @@
 
         <!--If study has associated disease trait or EFO trait return traits name-->
         <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
-        <td><span th:each="efoTrait: ${study.efoTraits}"
-                  th:if="${#arrays.length(study.efoTraits) &gt; 1}"
-                  th:text="${efoTrait.trait}+', ' ?: ''"></span>
-                            <span th:each="efoTrait: ${study.efoTraits}"
-                                  th:if="${#arrays.length(study.efoTraits) == 1}"
-                                  th:text="${efoTrait.trait} ?: ''"></span>
+        <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
+                  th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait} ) ?: ''"></span>
         </td>
 
         <!--If study has associated housekeeping object then get the following attributes -->

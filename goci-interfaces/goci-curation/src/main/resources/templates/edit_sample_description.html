@@ -137,24 +137,19 @@
 
 
                     <div class="form-group">
-                        <!--<label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>-->
+                        <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
 
-                        <!--<div class="col-md-10">-->
-                            <!--<select name="countryOfOrigin" class="form-control select2-select"-->
-                                    <!--multiple="multiple" th:field="*{ancestry.countryOfOrigin}"-->
-                                    <!--id="countryOfOrigin">-->
-                                <!--<option th:each="country : ${countries}"-->
-                                        <!--th:value="${country.id}"-->
-                                        <!--th:text="${country.countryName}"></option>-->
-                            <!--</select>-->
-                        <!--</div>-->
-
-                        <div>
-                            <p>
-                                <span th:each="country : ${countries}"
-                                        th:text="${country.id}"></span>
-                            </p>
+                        <div class="col-md-10">
+                            <select name="countryOfOrigin" class="form-control select2-select"
+                                    multiple="multiple" th:field="*{ancestry.countryOfOrigin}"
+                                    id="countryOfOrigin">
+                                <option th:each="country : ${countries}"
+                                        th:value="${country.id}"
+                                        th:text="${country.countryName}"></option>
+                            </select>
                         </div>
+
+
                     </div>
 
                     <div class="form-group">

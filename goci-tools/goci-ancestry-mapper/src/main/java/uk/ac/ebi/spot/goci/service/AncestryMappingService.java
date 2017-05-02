@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.model.AncestralGroupAnnotation;
 import uk.ac.ebi.spot.goci.model.CoOAnnotation;
 import uk.ac.ebi.spot.goci.model.CoRAnnotation;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
@@ -93,9 +95,53 @@ public class AncestryMappingService {
         for (Ancestry ancestry : allAncestries) {
 
             Long id = ancestry.getId();
-            String ancestralGroup = ancestry.getAncestralGroup();
-            String coo = ancestry.getCountryOfOrigin();
-            String cor = ancestry.getCountryOfRecruitment();
+
+            String coo = null;
+
+            if(ancestry.getCountryOfOrigin() != null) {
+                for(Country c : ancestry.getCountryOfOrigin()){
+                    if (coo == null){
+                        coo = c.getCountryName();
+                    }
+                    else {
+                        coo = coo.concat(", ").concat(c.getCountryName());
+                    }
+                }
+            }
+            else {
+                coo = "NR";
+            }
+
+
+            String cor = null;
+
+            if (ancestry.getCountryOfRecruitment() != null) {
+                for(Country c : ancestry.getCountryOfRecruitment()){
+                    if (cor == null){
+                        cor = c.getCountryName();
+                    }
+                    else {
+                        cor = cor.concat(", ").concat(c.getCountryName());
+                    }
+                }                    }
+            else {
+                cor = "NR";
+            }
+
+            String ancestralGroup = null;
+
+            if (ancestry.getAncestralGroups() != null) {
+                for(AncestralGroup a : ancestry.getAncestralGroups()){
+                    if (ancestralGroup == null){
+                        ancestralGroup = a.getAncestralGroup();
+                    }
+                    else {
+                        ancestralGroup = ancestralGroup.concat(", ").concat(a.getAncestralGroup());
+                    }
+                }                    }
+            else{
+                ancestralGroup = "NR";
+            }
 
             if (ancestralGroup != null) {
                 if (ancestralGroup.contains(",")) {
