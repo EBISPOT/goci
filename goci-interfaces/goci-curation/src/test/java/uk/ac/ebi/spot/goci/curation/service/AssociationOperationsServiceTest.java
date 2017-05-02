@@ -169,6 +169,9 @@ public class AssociationOperationsServiceTest {
     private static final ValidationError WARNING =
             new ValidationErrorBuilder().setField("SNP").setWarning(true).setError("WARNING").build();
 
+    private static final AssociationReport ASSOCIATION_REPORT = new AssociationReportBuilder()
+            .build();
+
     private static final Association ASS_MULTI = new AssociationBuilder().setMultiSnpHaplotype(true).build();
 
     private static final Association ASS_INTER =
@@ -176,6 +179,7 @@ public class AssociationOperationsServiceTest {
                     .setSnpInteraction(true)
                     .setLastMappingPerformedBy("test")
                     .setLastMappingDate(new Date())
+                    .setAssociationReport(ASSOCIATION_REPORT)
                     .build();
 
     private static final Association ASS_INTER_EDITED =
@@ -185,7 +189,7 @@ public class AssociationOperationsServiceTest {
                     .setLastMappingDate(new Date())
                     .build();
 
-    private static final AssociationReport ASSOCIATION_REPORT = new AssociationReportBuilder().build();
+
 
     private static final Association ASS_APPROVE_UNAPPROVE =
             new AssociationBuilder().setAssociationReport(ASSOCIATION_REPORT).build();

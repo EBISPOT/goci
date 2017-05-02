@@ -3,7 +3,25 @@
       xmlns="http://www.w3.org/1999/xhtml">
 
 <body th:fragment="mapping_details">
+
 <div class="col-md-2 pull-right">
+
+    <div th:if="${!#strings.isEmpty(isToRemapping)}">
+          <div th:switch="${isToRemapping}">
+            <p align="center" th:case="'yes'">
+              <div class="alert alert-danger">
+              <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>Remapping Needed</strong>
+              </div>
+            </p>
+            <p align="center" th:case="*">
+              <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>No Remapping Needed (up to date)</strong>
+              </div>
+            </p>
+          </div>
+    </div>
     <div class="well" th:object="${mappingDetails}">
 
         <p style="font-style: italic; word-wrap: break-word;"
