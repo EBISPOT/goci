@@ -156,13 +156,35 @@ public class StudyDuplicationService {
         Ancestry duplicateAncestry = new Ancestry();
         duplicateAncestry.setType(studyToDuplicateAncestry.getType());
         duplicateAncestry.setNumberOfIndividuals(studyToDuplicateAncestry.getNumberOfIndividuals());
-        duplicateAncestry.setAncestralGroups(studyToDuplicateAncestry.getAncestralGroups());
-        duplicateAncestry.setCountryOfOrigin(studyToDuplicateAncestry.getCountryOfOrigin());
-        duplicateAncestry.setCountryOfRecruitment(studyToDuplicateAncestry.getCountryOfRecruitment());
         duplicateAncestry.setDescription(studyToDuplicateAncestry.getDescription());
         duplicateAncestry.setPreviouslyReported(studyToDuplicateAncestry.getPreviouslyReported());
         duplicateAncestry.setSampleSizesMatch(studyToDuplicateAncestry.getSampleSizesMatch());
         duplicateAncestry.setNotes(studyToDuplicateAncestry.getNotes());
+
+        Collection<AncestralGroup> ancestralGroups = studyToDuplicateAncestry.getAncestralGroups();
+        Collection<AncestralGroup> ancestralGroupsDuplicateStudy = new ArrayList<>();
+
+        if(ancestralGroups != null && !ancestralGroups.isEmpty()){
+            ancestralGroupsDuplicateStudy.addAll(ancestralGroups);
+            duplicateAncestry.setAncestralGroups(ancestralGroupsDuplicateStudy);
+        }
+
+        Collection<Country> coos = studyToDuplicateAncestry.getCountryOfOrigin();
+        Collection<Country> coosDuplicateStudy = new ArrayList<>();
+
+        if(coos != null && !coos.isEmpty()){
+            coosDuplicateStudy.addAll(coos);
+            duplicateAncestry.setCountryOfOrigin(coosDuplicateStudy);
+        }
+
+        Collection<Country> cors = studyToDuplicateAncestry.getCountryOfRecruitment();
+        Collection<Country> corsDuplicateStudy = new ArrayList<>();
+
+        if(cors != null && !cors.isEmpty()){
+            corsDuplicateStudy.addAll(cors);
+            duplicateAncestry.setCountryOfRecruitment(corsDuplicateStudy);
+        }
+
         return duplicateAncestry;
     }
 }
