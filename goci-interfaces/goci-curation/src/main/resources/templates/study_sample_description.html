@@ -233,10 +233,10 @@
                                   th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
                         </td>
                         <td><span th:each="countryOfOrigin, iterStat: ${initialStudyAncestryDescription.countryOfOrigin}"
-                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countrOfOrigin.countryName}) ?: ''"></span>
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
                         </td>
                         <td><span th:each="countryOfRecruitment, iterStat: ${initialStudyAncestryDescription.countryOfRecruitment}"
-                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countrOfRecruitment.countryName}) ?: ''"></span>
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
                         </td>
 
                         <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
@@ -295,10 +295,10 @@
                                   th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
                         </td>
                         <td><span th:each="countryOfOrigin, iterStat: ${replicationStudyAncestryDescription.countryOfOrigin}"
-                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countrOfOrigin.countryName}) ?: ''"></span>
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
                         </td>
                         <td><span th:each="countryOfRecruitment, iterStat: ${replicationStudyAncestryDescription.countryOfRecruitment}"
-                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countrOfRecruitment.countryName}) ?: ''"></span>
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
                         </td>
                         <td th:text="${replicationStudyAncestryDescription.previouslyReported}  ?: ''"></td>
                         <td th:text="${replicationStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
