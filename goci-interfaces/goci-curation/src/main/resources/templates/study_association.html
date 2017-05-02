@@ -98,6 +98,16 @@
         </div>
     </div>
 </div>
+<div class="container-fluid" th:if="${!#strings.isEmpty(mappingMessage)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${mappingMessage}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--Top level buttons and modals-->
 <div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"

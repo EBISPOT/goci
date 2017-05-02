@@ -68,7 +68,7 @@ public class SnpCheckingRestService {
             }
 
             if ((snpDataApiResult.hasErorr())) {
-                error = snpDataApiResult.getError();
+                error = "SNP identifier ".concat(snpDataApiResult.getError());
             } else {
                 if (snpDataApiResult.getRestResult().getObject().has("error")) {
                     error = "SNP identifier ".concat(snp).concat(" is not valid");
@@ -78,7 +78,7 @@ public class SnpCheckingRestService {
         }
         // The query returns a 400 error if response returns an error
         catch (Exception e) {
-            error = "SNP error!";
+            error = "SNP identifier impossible to retrieve";
             getLog().error("The SNP impossible to retrieve: : ".concat(snp), e);
         }
 
