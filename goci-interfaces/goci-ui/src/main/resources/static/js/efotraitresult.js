@@ -1,5 +1,6 @@
 /**
  * Created by xin on 19/04/2017.
+ * From an EFOtrait, query solr, parse solr search result and display in page
  */
 
 var SearchState = {

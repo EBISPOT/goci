@@ -383,6 +383,24 @@
         console.log(GAS_REST_EFO_SEARCH_ENDPOINT+efotraitId);
         $.getJSON(GAS_REST_EFO_SEARCH_ENDPOINT+efotraitId).done(function(data){
             console.log(data);
+            var efotrait = data._embedded.efoTraits[0];
+            var association_links = efotrait._links.associations.href;
+            var study_links = efotrait._links.studies.href;
+
+            $.getJSON(association_links).done(function(data){
+                console.log(data);
+                $.each(data._embedded.associations,function( index, element ) {
+                    console.log(element);
+                })
+            })
+
+            $.getJSON(study_links).done(function(data){
+                console.log(data);
+                $.each(data._embedded.studies,function( index, element ) {
+                    console.log(element);
+                })
+            })
+
         })
 //        setState(SearchState.LOADING);
 //        $.getJSON('/gwas/api/search/efotrait',

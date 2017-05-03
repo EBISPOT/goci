@@ -1690,9 +1690,12 @@ module.exports = olstree = function(){
   var local_options={
     onclick : onClick,
     save_state : false,
+      //checkbox related parameters, if checkbox is on, the default onclick will be overwrite
       checkbox : true,
       checkbox_cascade : 'down',
       checkbox_three_state : false,
+      checkbox_keep_selected_style : false,
+      //if checkbox is on, the 'changed' plugin is also turned on, to record node selection/deselection
       onchange: onChange
   }
 
@@ -1798,15 +1801,16 @@ function showTree(siblings) {
             url += '?siblings=true';
         }
 
+        //default pulg in
         var plugins = ["sort"];
 
+        //is checkbox is enable, add checkbox and changed to plugins
         if(local_options.checkbox){
             plugins.push("checkbox","changed");
             //confilt with checkbox click, so disable onclick
             local_options.onclick = function(node, event, relativePath, currentTermIri, termType, selectedIri, ontology_name){}
         }
 
-        console.log("ciao");
 
         var treeDiv = $('<div></div>')
             .jstree({
@@ -1872,8 +1876,10 @@ function showTree(siblings) {
                 },
                 'checkbox': {
                     //https://www.jstree.com/api/#/?q=$.jstree.defaults.checkbox&f=$.jstree.defaults.checkbox.three_state
+                    //The checkbox configuration can be here even when the checkbox is not enabled
                     three_state: local_options.checkbox_three_state,
-                    cascade: local_options.checkbox_cascade
+                    cascade: local_options.checkbox_cascade,
+                    keep_selected_style : local_options.checkbox_keep_selected_style
                 },
                 plugins: plugins
             }).bind("select_node.jstree", function(node, selected, event) {
@@ -1889,6 +1895,7 @@ function showTree(siblings) {
                 tree.delete_node(data.node.children);
                 tree._model.data[data.node.id].state.loaded = false;
             }).on("changed.jstree", function (e, data) {
+                //handel on change event when select/deselect node(s)
                 local_options.onchange.call(this,e,data);
             });
 
@@ -1908,17 +1915,17 @@ function onClick(node, event, relativePath, currentTermIri, termType, selectedIr
   goTo(newpath)
 }
 
-//Default onchange behavior
-    function onChange(e, data){
-        console.log("newly selected:")
-        console.log(data.changed.selected); // newly selected
-        console.log("newly deselected:")
-        console.log(data.changed.deselected); // newly deselected
-        console.log("event passed to onChange:")
-        console.log(e); // newly selected
-        console.log("data passed to onChange:")
-        console.log(data); // newly deselected
-    }
+//Default onchange behavior, printing some data
+function onChange(e, data){
+    console.log("newly selected:")
+    console.log(data.changed.selected); // newly selected
+    console.log("newly deselected:")
+    console.log(data.changed.deselected); // newly deselected
+    console.log("event passed to onChange:")
+    console.log(e); // newly selected
+    console.log("data passed to onChange:")
+    console.log(data); // newly deselected
+}
 
 function _processOlsData (data, parentId, termType) {
     var newData = [];

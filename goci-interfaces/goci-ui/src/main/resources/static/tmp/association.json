@@ -1,0 +1,2072 @@
+[
+  {
+    "riskFrequency": "NR",
+    "qualifier": [
+      " "
+    ],
+    "pValueMantissa": 7,
+    "pValueExponent": -7,
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs10497721"
+    ],
+    "strongestAllele": [
+      "rs10497721-?"
+    ],
+    "context": [
+      "intron_variant"
+    ],
+    "region": [
+      "2q32.3"
+    ],
+    "entrezMappedGenes": [
+      "TMEFF2",
+      "LOC101927366"
+    ],
+    "entrezMappedGeneLinks": [
+      "LOC105373813|105373813|3464|2",
+      "TMEFF2|23671|0|2",
+      "LOC105376754|105376754|-8087|2",
+      "LOC101927366|101927366|0|2"
+    ],
+    "reportedGene": [
+      "TMEFF2"
+    ],
+    "reportedGeneLinks": [
+      "TMEFF2|23671|ENSG00000144339"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs10497721"
+    ],
+    "studyId": "179",
+    "chromosomeName": [
+      "2"
+    ],
+    "chromosomePosition": [
+      192049636
+    ],
+    "chromLocation": [
+      "2:192049636"
+    ],
+    "positionLinks": [
+      "2|192049636|2q32.3"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "17903298",
+    "title": "Genome-wide association with diabetes-related traits in the Framingham Heart Study.",
+    "author": [
+      "Meigs JB"
+    ],
+    "author_s": "Meigs JB",
+    "publication": "BMC Med Genet",
+    "publicationDate": "2007-09-19T00:00:00Z",
+    "catalogPublishDate": "2009-09-15T10:46:22Z",
+    "publicationLink": [
+      "Meigs JB|2007|17903298"
+    ],
+    "platform": "Affymetrix [70897]",
+    "accessionId": "GCST000108",
+    "initialSampleDescription": "91 cases, 1,083 controls",
+    "replicateSampleDescription": "NA",
+    "ancestralGroups": [
+      "NR"
+    ],
+    "countriesOfRecruitment": [
+      "NR"
+    ],
+    "numberOfIndividuals": [
+      1174
+    ],
+    "ancestryLinks": [
+      "initial|NR|NR|NR|1174|NA"
+    ],
+    "traitName": [
+      "Diabetes (incident)"
+    ],
+    "traitName_s": "Diabetes (incident)",
+    "mappedLabel": [
+      "diabetes mellitus"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400"
+    ],
+    "shortForm": [
+      "EFO_0000400"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400"
+    ],
+    "label": [
+      "diabetes mellitus"
+    ],
+    "label_autosuggest": [
+      "diabetes mellitus"
+    ],
+    "label_autosuggest_ws": [
+      "diabetes mellitus"
+    ],
+    "label_autosuggest_e": [
+      "diabetes mellitus"
+    ],
+    "synonym": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400"
+    ],
+    "parent": [
+      "disposition",
+      "disease",
+      "diabetes mellitus",
+      "metabolic disease"
+    ],
+    "id": "association:5993",
+    "resourcename": "association",
+    "_version_": 1564908580774084600
+  },
+  {
+    "riskFrequency": "NR",
+    "pValueMantissa": 2,
+    "pValueExponent": -8,
+    "betaNum": 0.0266,
+    "betaUnit": "unit",
+    "betaDirection": "increase",
+    "range": "[NR]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs12917707"
+    ],
+    "strongestAllele": [
+      "rs12917707-T"
+    ],
+    "context": [
+      "upstream_gene_variant"
+    ],
+    "region": [
+      "16p12.3"
+    ],
+    "entrezMappedGenes": [
+      "PDILT",
+      "UMOD"
+    ],
+    "entrezMappedGeneLinks": [
+      "PDILT|204474|-2802|16",
+      "UMOD|7369|67|16",
+      "LOC105371119|105371119|-84682|16",
+      "GP2|2813|28563|16",
+      "ACSM5|54988|-53140|16",
+      "ACSM2A|123876|-95093|16"
+    ],
+    "reportedGene": [
+      "UMOD"
+    ],
+    "reportedGeneLinks": [
+      "UMOD|7369|ENSG00000169344"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs12917707"
+    ],
+    "studyId": "14899077",
+    "chromosomeName": [
+      "16"
+    ],
+    "chromosomePosition": [
+      20356368
+    ],
+    "chromLocation": [
+      "16:20356368"
+    ],
+    "positionLinks": [
+      "16|20356368|16p12.3"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "26831199",
+    "title": "Genetic associations at 53 loci highlight cell types and biological pathways relevant for kidney function.",
+    "author": [
+      "Pattaro C"
+    ],
+    "author_s": "Pattaro C",
+    "publication": "Nat Commun",
+    "publicationDate": "2016-01-21T00:00:00Z",
+    "catalogPublishDate": "2016-11-25T14:38:30Z",
+    "publicationLink": [
+      "Pattaro C|2016|26831199"
+    ],
+    "platform": "Affymetrix, Illumina [~ 2500000] (imputed)",
+    "accessionId": "GCST003373",
+    "initialSampleDescription": "11,522 European ancestry individuals",
+    "replicateSampleDescription": "4,955 European ancestry individuals",
+    "ancestralGroups": [
+      "European"
+    ],
+    "countriesOfRecruitment": [
+      "NR"
+    ],
+    "numberOfIndividuals": [
+      11522,
+      4955
+    ],
+    "ancestryLinks": [
+      "initial|NR|NR|European|11522|NA",
+      "replication|NR|NR|European|4955|NA"
+    ],
+    "traitName": [
+      "Glomerular filtration rate in diabetics (creatinine)"
+    ],
+    "traitName_s": "Glomerular filtration rate in diabetics (creatinine)",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "glomerular filtration rate",
+      "serum creatinine measurement"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0005208",
+      "http://www.ebi.ac.uk/efo/EFO_0004518"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0004518",
+      "http://www.ebi.ac.uk/efo/EFO_0005208"
+    ],
+    "shortForm": [
+      "EFO_0004518",
+      "EFO_0000400",
+      "EFO_0005208"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0004518",
+      "EFO_0000400",
+      "EFO_0005208"
+    ],
+    "label": [
+      "glomerular filtration rate",
+      "serum creatinine measurement",
+      "diabetes mellitus"
+    ],
+    "label_autosuggest": [
+      "glomerular filtration rate",
+      "serum creatinine measurement",
+      "diabetes mellitus"
+    ],
+    "label_autosuggest_ws": [
+      "glomerular filtration rate",
+      "serum creatinine measurement",
+      "diabetes mellitus"
+    ],
+    "label_autosuggest_e": [
+      "glomerular filtration rate",
+      "serum creatinine measurement",
+      "diabetes mellitus"
+    ],
+    "synonym": [
+      "Diabetes mellitus (disorder)",
+      "GFR",
+      "creatinine levels",
+      "Diabetes",
+      "serum creatinine levels",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "Diabetes mellitus (disorder)",
+      "GFR",
+      "creatinine levels",
+      "Diabetes",
+      "serum creatinine levels",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "Diabetes mellitus (disorder)",
+      "GFR",
+      "creatinine levels",
+      "Diabetes",
+      "serum creatinine levels",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "Diabetes mellitus (disorder)",
+      "GFR",
+      "creatinine levels",
+      "Diabetes",
+      "serum creatinine levels",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "glomerular filtration rate|EFO_0005208|http://www.ebi.ac.uk/efo/EFO_0005208",
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "serum creatinine measurement|EFO_0004518|http://www.ebi.ac.uk/efo/EFO_0004518"
+    ],
+    "parent": [
+      "metabolite measurement",
+      "disposition",
+      "disease",
+      "glomerular filtration rate",
+      "serum creatinine measurement",
+      "diabetes mellitus",
+      "metabolic disease",
+      "renal system measurement",
+      "measurement"
+    ],
+    "id": "association:16513018",
+    "resourcename": "association",
+    "_version_": 1564932242750308400
+  },
+  {
+    "riskFrequency": "0.15",
+    "pValueMantissa": 6,
+    "pValueExponent": -7,
+    "betaNum": 0.19,
+    "betaUnit": "unit",
+    "betaDirection": "increase",
+    "range": "[0.11-0.27]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs13427836"
+    ],
+    "strongestAllele": [
+      "rs13427836-T"
+    ],
+    "context": [
+      "intron_variant"
+    ],
+    "region": [
+      "2q14.3"
+    ],
+    "entrezMappedGenes": [
+      "HS6ST1"
+    ],
+    "entrezMappedGeneLinks": [
+      "DYNLT3P2|100381215|68973|2",
+      "UGGT1|56886|74710|2",
+      "HS6ST1|9394|0|2",
+      "LOC100288533|100288533|66656|2",
+      "RPL21P34|100270954|52278|2",
+      "LOC105373610|105373610|-105025|2"
+    ],
+    "reportedGene": [
+      "HS6ST1"
+    ],
+    "reportedGeneLinks": [
+      "HS6ST1|9394|ENSG00000136720"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs13427836"
+    ],
+    "studyId": "13543897",
+    "chromosomeName": [
+      "2"
+    ],
+    "chromosomePosition": [
+      128270387
+    ],
+    "chromLocation": [
+      "2:128270387"
+    ],
+    "positionLinks": [
+      "2|128270387|2q14.3"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "26631737",
+    "title": "Genome-wide Association Studies Identify Genetic Loci Associated with Albuminuria in Diabetes.",
+    "author": [
+      "Teumer A"
+    ],
+    "author_s": "Teumer A",
+    "publication": "Diabetes",
+    "publicationDate": "2015-12-02T00:00:00Z",
+    "catalogPublishDate": "2016-10-13T15:14:09Z",
+    "publicationLink": [
+      "Teumer A|2015|26631737"
+    ],
+    "platform": "Affymetrix, Illumina [2191945] (imputed)",
+    "accessionId": "GCST003250",
+    "initialSampleDescription": "up to 5,825 European ancestry cases\r\n",
+    "replicateSampleDescription": "up to 1,962 European ancestry cases",
+    "ancestralGroups": [
+      "European"
+    ],
+    "countriesOfRecruitment": [
+      "NR"
+    ],
+    "numberOfIndividuals": [
+      5825,
+      1962
+    ],
+    "ancestryLinks": [
+      "initial|NR|NR|European|5825|NA",
+      "replication|NR|NR|European|1962|NA"
+    ],
+    "traitName": [
+      "Urinary albumin-to-creatinine ratio in diabetes"
+    ],
+    "traitName_s": "Urinary albumin-to-creatinine ratio in diabetes",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "shortForm": [
+      "EFO_0000400",
+      "EFO_0007778"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400",
+      "EFO_0007778"
+    ],
+    "label": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest_ws": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest_e": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "synonym": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "urinary albumin to creatinine ratio|EFO_0007778|http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "parent": [
+      "urinary metabolite measurement",
+      "metabolite measurement",
+      "disposition",
+      "disease",
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio",
+      "metabolic disease",
+      "measurement"
+    ],
+    "id": "association:14215553",
+    "resourcename": "association",
+    "_version_": 1564917584272294000
+  },
+  {
+    "riskFrequency": "0.43",
+    "pValueMantissa": 6,
+    "pValueExponent": -7,
+    "betaNum": 0.14,
+    "betaUnit": "unit",
+    "betaDirection": "decrease",
+    "range": "[0.081-0.199]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs649529"
+    ],
+    "strongestAllele": [
+      "rs649529-T"
+    ],
+    "context": [
+      "intergenic_variant"
+    ],
+    "region": [
+      "11q14.2"
+    ],
+    "entrezMappedGenes": [
+      "CTSC",
+      "MIR3166"
+    ],
+    "entrezMappedGeneLinks": [
+      "CTSC|1075|-18509|11",
+      "LOC101929174|101929174|-62792|11",
+      "MIR3166|100423040|98490|11",
+      "RAB38|23682|99578|11"
+    ],
+    "reportedGene": [
+      "RAB38"
+    ],
+    "reportedGeneLinks": [
+      "RAB38|23682|ENSG00000123892"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs649529"
+    ],
+    "studyId": "13543897",
+    "chromosomeName": [
+      "11"
+    ],
+    "chromosomePosition": [
+      88275083
+    ],
+    "chromLocation": [
+      "11:88275083"
+    ],
+    "positionLinks": [
+      "11|88275083|11q14.2"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "26631737",
+    "title": "Genome-wide Association Studies Identify Genetic Loci Associated with Albuminuria in Diabetes.",
+    "author": [
+      "Teumer A"
+    ],
+    "author_s": "Teumer A",
+    "publication": "Diabetes",
+    "publicationDate": "2015-12-02T00:00:00Z",
+    "catalogPublishDate": "2016-10-13T15:14:09Z",
+    "publicationLink": [
+      "Teumer A|2015|26631737"
+    ],
+    "platform": "Affymetrix, Illumina [2191945] (imputed)",
+    "accessionId": "GCST003250",
+    "initialSampleDescription": "up to 5,825 European ancestry cases\r\n",
+    "replicateSampleDescription": "up to 1,962 European ancestry cases",
+    "ancestralGroups": [
+      "European"
+    ],
+    "countriesOfRecruitment": [
+      "NR"
+    ],
+    "numberOfIndividuals": [
+      5825,
+      1962
+    ],
+    "ancestryLinks": [
+      "initial|NR|NR|European|5825|NA",
+      "replication|NR|NR|European|1962|NA"
+    ],
+    "traitName": [
+      "Urinary albumin-to-creatinine ratio in diabetes"
+    ],
+    "traitName_s": "Urinary albumin-to-creatinine ratio in diabetes",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "shortForm": [
+      "EFO_0000400",
+      "EFO_0007778"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400",
+      "EFO_0007778"
+    ],
+    "label": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest_ws": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "label_autosuggest_e": [
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio"
+    ],
+    "synonym": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "Diabetes mellitus (disorder)",
+      "Diabetes",
+      "DM - Diabetes mellitus",
+      "Diabetes mellitus, NOS",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "urinary albumin to creatinine ratio|EFO_0007778|http://www.ebi.ac.uk/efo/EFO_0007778"
+    ],
+    "parent": [
+      "urinary metabolite measurement",
+      "metabolite measurement",
+      "disposition",
+      "disease",
+      "diabetes mellitus",
+      "urinary albumin to creatinine ratio",
+      "metabolic disease",
+      "measurement"
+    ],
+    "id": "association:14215554",
+    "resourcename": "association",
+    "_version_": 1564917584273342500
+  },
+  {
+    "riskFrequency": "0.175",
+    "pValueMantissa": 5,
+    "pValueExponent": -7,
+    "orPerCopyNum": 2.02,
+    "range": "[1.53-2.68]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs6978712"
+    ],
+    "strongestAllele": [
+      "rs6978712-A"
+    ],
+    "context": [
+      "intergenic_variant"
+    ],
+    "region": [
+      "7q32.1"
+    ],
+    "entrezMappedGenes": [
+      "LOC105375490"
+    ],
+    "entrezMappedGeneLinks": [
+      "LOC105375489|105375489|-83744|7",
+      "LOC105375490|105375490|0|7",
+      "FSCN3|29999|-85926|7",
+      "GCC1|79571|-72919|7",
+      "ARF5|381|-80643|7",
+      "LOC100506682|100506682|21905|7"
+    ],
+    "reportedGene": [
+      "GCC1"
+    ],
+    "reportedGeneLinks": [
+      "GCC1|79571|ENSG00000179562"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs6978712"
+    ],
+    "studyId": "8072",
+    "chromosomeName": [
+      "7"
+    ],
+    "chromosomePosition": [
+      127507709
+    ],
+    "chromLocation": [
+      "7:127507709"
+    ],
+    "positionLinks": [
+      "7|127507709|7q32.1"
+    ],
+    "pubmedId": "25317111",
+    "title": "Genome-wide association study of medication adherence in chronic diseases in the korean population.",
+    "author": [
+      "Seo I"
+    ],
+    "author_s": "Seo I",
+    "publication": "Genomics Inform",
+    "publicationDate": "2014-09-30T00:00:00Z",
+    "catalogPublishDate": "2015-05-29T02:04:58Z",
+    "publicationLink": [
+      "Seo I|2014|25317111"
+    ],
+    "platform": "NR [349184]",
+    "accessionId": "GCST002637",
+    "initialSampleDescription": "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases",
+    "replicateSampleDescription": "NA",
+    "ancestralGroups": [
+      "East Asian"
+    ],
+    "countriesOfRecruitment": [
+      "Republic of Korea"
+    ],
+    "numberOfIndividuals": [
+      1302
+    ],
+    "ancestryLinks": [
+      "initial|NR|Republic of Korea|East Asian|1302|NA"
+    ],
+    "traitName": [
+      "Medication adherence in chronic diseases"
+    ],
+    "traitName_s": "Medication adherence in chronic diseases",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "hypertension",
+      "medication adherence behavior"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0006344"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0006344"
+    ],
+    "shortForm": [
+      "EFO_0006344",
+      "EFO_0000400",
+      "EFO_0000537"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0006344",
+      "EFO_0000400",
+      "EFO_0000537"
+    ],
+    "label": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest_ws": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest_e": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "synonym": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest_ws": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest_e": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "efoLink": [
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "hypertension|EFO_0000537|http://www.ebi.ac.uk/efo/EFO_0000537",
+      "medication adherence behavior|EFO_0006344|http://www.ebi.ac.uk/efo/EFO_0006344"
+    ],
+    "parent": [
+      "cardiovascular disease",
+      "disposition",
+      "disease",
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "biological process",
+      "metabolic disease",
+      "behavior",
+      "hypertension"
+    ],
+    "id": "association:10058034",
+    "resourcename": "association",
+    "_version_": 1564915070185504800
+  },
+  {
+    "riskFrequency": "0.521",
+    "pValueMantissa": 1,
+    "pValueExponent": -6,
+    "orPerCopyNum": 1.63,
+    "range": "[1.34-2.00]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs7690819"
+    ],
+    "strongestAllele": [
+      "rs7690819-G"
+    ],
+    "context": [
+      "intergenic_variant"
+    ],
+    "region": [
+      "4q25"
+    ],
+    "entrezMappedGenes": [
+      "RNU6-289P",
+      "LOC105377364"
+    ],
+    "entrezMappedGeneLinks": [
+      "RNU6-289P|106479695|-131910|4",
+      "LOC105377364|105377364|189044|4"
+    ],
+    "reportedGene": [
+      "LYPLA1P2"
+    ],
+    "reportedGeneLinks": [
+      "LYPLA1P2|391686"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs7690819"
+    ],
+    "studyId": "8072",
+    "chromosomeName": [
+      "4"
+    ],
+    "chromosomePosition": [
+      111199502
+    ],
+    "chromLocation": [
+      "4:111199502"
+    ],
+    "positionLinks": [
+      "4|111199502|4q25"
+    ],
+    "pubmedId": "25317111",
+    "title": "Genome-wide association study of medication adherence in chronic diseases in the korean population.",
+    "author": [
+      "Seo I"
+    ],
+    "author_s": "Seo I",
+    "publication": "Genomics Inform",
+    "publicationDate": "2014-09-30T00:00:00Z",
+    "catalogPublishDate": "2015-05-29T02:04:58Z",
+    "publicationLink": [
+      "Seo I|2014|25317111"
+    ],
+    "platform": "NR [349184]",
+    "accessionId": "GCST002637",
+    "initialSampleDescription": "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases",
+    "replicateSampleDescription": "NA",
+    "ancestralGroups": [
+      "East Asian"
+    ],
+    "countriesOfRecruitment": [
+      "Republic of Korea"
+    ],
+    "numberOfIndividuals": [
+      1302
+    ],
+    "ancestryLinks": [
+      "initial|NR|Republic of Korea|East Asian|1302|NA"
+    ],
+    "traitName": [
+      "Medication adherence in chronic diseases"
+    ],
+    "traitName_s": "Medication adherence in chronic diseases",
+    "mappedLabel": [
+      "medication adherence behavior",
+      "hypertension",
+      "diabetes mellitus"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0006344",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0000400"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0006344"
+    ],
+    "shortForm": [
+      "EFO_0006344",
+      "EFO_0000400",
+      "EFO_0000537"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0006344",
+      "EFO_0000400",
+      "EFO_0000537"
+    ],
+    "label": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest_ws": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "label_autosuggest_e": [
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "hypertension"
+    ],
+    "synonym": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest_ws": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "synonym_autosuggest_e": [
+      "(hypertensive disease) or (hypertension)",
+      "HTN",
+      "medication compliance behaviour",
+      "HTN - hypertension",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "Blood Pressure, High",
+      "Diabetes NOS",
+      "High blood pressure (& [essential hypertension])",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "hypertensive disease NOS",
+      "Diabetes mellitus (disorder)",
+      "Medication Adherence",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus"
+    ],
+    "efoLink": [
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "hypertension|EFO_0000537|http://www.ebi.ac.uk/efo/EFO_0000537",
+      "medication adherence behavior|EFO_0006344|http://www.ebi.ac.uk/efo/EFO_0006344"
+    ],
+    "parent": [
+      "cardiovascular disease",
+      "disposition",
+      "disease",
+      "medication adherence behavior",
+      "diabetes mellitus",
+      "biological process",
+      "metabolic disease",
+      "behavior",
+      "hypertension"
+    ],
+    "id": "association:10058039",
+    "resourcename": "association",
+    "_version_": 1564915070186553300
+  },
+  {
+    "riskFrequency": "0.19",
+    "pValueMantissa": 5,
+    "pValueExponent": -8,
+    "orPerCopyNum": 7.61,
+    "orDescription": "(European)",
+    "range": "[3.39-17.09]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs11124945"
+    ],
+    "strongestAllele": [
+      "rs11124945-G"
+    ],
+    "context": [
+      "intron_variant"
+    ],
+    "region": [
+      "2p21"
+    ],
+    "entrezMappedGenes": [
+      "PLEKHH2"
+    ],
+    "entrezMappedGeneLinks": [
+      "THADA|63892|53971|2",
+      "PLEKHH2|130271|0|2",
+      "LOC728819|728819|-25136|2",
+      "LOC100421122|100421122|-30541|2"
+    ],
+    "reportedGene": [
+      "PLEKHH2",
+      "THADA"
+    ],
+    "reportedGeneLinks": [
+      "PLEKHH2|130271|ENSG00000152527",
+      "THADA|63892|ENSG00000115970"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs11124945"
+    ],
+    "studyId": "16510173",
+    "chromosomeName": [
+      "2"
+    ],
+    "chromosomePosition": [
+      43650017
+    ],
+    "chromLocation": [
+      "2:43650017"
+    ],
+    "positionLinks": [
+      "2|43650017|2p21"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "27670767",
+    "title": "Genome-wide association study identifies pharmacogenomic loci linked with specific antihypertensive drug treatment and new-onset diabetes.",
+    "author": [
+      "Chang SW"
+    ],
+    "author_s": "Chang SW",
+    "publication": "Pharmacogenomics J",
+    "publicationDate": "2016-09-27T00:00:00Z",
+    "catalogPublishDate": "2017-03-24T10:44:13Z",
+    "publicationLink": [
+      "Chang SW|2016|27670767"
+    ],
+    "platform": "Illumina [NR] (imputed)",
+    "accessionId": "GCST003797",
+    "initialSampleDescription": "138 European American hypertensive cases with diabetes, 414 European American hypertensive cases without diabetes",
+    "replicateSampleDescription": "157 Hispanic hypertensive cases with diabetes, 314 Hispanic hypertensive cases without diabetes, 39 African American hypertensive cases with diabetes, 78 African American hypertensive cases without diabetes",
+    "ancestralGroups": [
+      "European",
+      "Hispanic or Latin American",
+      "African American or Afro-Caribbean"
+    ],
+    "countriesOfRecruitment": [
+      "U.S.,Puerto Rico"
+    ],
+    "numberOfIndividuals": [
+      552,
+      471,
+      117
+    ],
+    "ancestryLinks": [
+      "initial|NR|U.S.,Puerto Rico|European|552|NA",
+      "replication|NR|U.S.,Puerto Rico|Hispanic or Latin American|471|NA",
+      "replication|NR|U.S.,Puerto Rico|African American or Afro-Caribbean|117|NA"
+    ],
+    "traitName": [
+      "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)"
+    ],
+    "traitName_s": "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "hypertension",
+      "response to antihypertensive drug",
+      "response to beta blocker",
+      "response to calcium channel blocker"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007766",
+      "http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007767",
+      "http://www.ebi.ac.uk/efo/EFO_0007766"
+    ],
+    "shortForm": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "label": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_ws": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_e": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "synonym": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "response to antihypertensive drug|EFO_0005405|http://www.ebi.ac.uk/efo/EFO_0005405",
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "hypertension|EFO_0000537|http://www.ebi.ac.uk/efo/EFO_0000537",
+      "response to beta blocker|EFO_0007766|http://www.ebi.ac.uk/efo/EFO_0007766",
+      "response to calcium channel blocker|EFO_0007767|http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "parent": [
+      "cardiovascular disease",
+      "response to drug",
+      "disposition",
+      "disease",
+      "response to beta blocker",
+      "response to stimulus",
+      "diabetes mellitus",
+      "biological process",
+      "metabolic disease",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "id": "association:17395464",
+    "resourcename": "association",
+    "_version_": 1564932809615736800
+  },
+  {
+    "riskFrequency": "0.19",
+    "qualifier": [
+      "(European)"
+    ],
+    "pValueMantissa": 2,
+    "pValueExponent": -7,
+    "orPerCopyNum": 8.83,
+    "range": "[8.01-9.65]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs113296370"
+    ],
+    "strongestAllele": [
+      "rs113296370-C"
+    ],
+    "context": [
+      "upstream_gene_variant"
+    ],
+    "region": [
+      "2p21"
+    ],
+    "entrezMappedGenes": [
+      "PLEKHH2",
+      "THADA"
+    ],
+    "entrezMappedGeneLinks": [
+      "LOC100421122|100421122|-44243|2",
+      "PLEKHH2|130271|-985|2",
+      "LOC728819|728819|-38838|2",
+      "THADA|63892|40269|2"
+    ],
+    "reportedGene": [
+      "THADA",
+      "PLEKHH2"
+    ],
+    "reportedGeneLinks": [
+      "THADA|63892|ENSG00000115970",
+      "PLEKHH2|130271|ENSG00000152527"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs113296370"
+    ],
+    "studyId": "16510173",
+    "chromosomeName": [
+      "2"
+    ],
+    "chromosomePosition": [
+      43636315
+    ],
+    "chromLocation": [
+      "2:43636315"
+    ],
+    "positionLinks": [
+      "2|43636315|2p21"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "27670767",
+    "title": "Genome-wide association study identifies pharmacogenomic loci linked with specific antihypertensive drug treatment and new-onset diabetes.",
+    "author": [
+      "Chang SW"
+    ],
+    "author_s": "Chang SW",
+    "publication": "Pharmacogenomics J",
+    "publicationDate": "2016-09-27T00:00:00Z",
+    "catalogPublishDate": "2017-03-24T10:44:13Z",
+    "publicationLink": [
+      "Chang SW|2016|27670767"
+    ],
+    "platform": "Illumina [NR] (imputed)",
+    "accessionId": "GCST003797",
+    "initialSampleDescription": "138 European American hypertensive cases with diabetes, 414 European American hypertensive cases without diabetes",
+    "replicateSampleDescription": "157 Hispanic hypertensive cases with diabetes, 314 Hispanic hypertensive cases without diabetes, 39 African American hypertensive cases with diabetes, 78 African American hypertensive cases without diabetes",
+    "ancestralGroups": [
+      "European",
+      "Hispanic or Latin American",
+      "African American or Afro-Caribbean"
+    ],
+    "countriesOfRecruitment": [
+      "U.S.,Puerto Rico"
+    ],
+    "numberOfIndividuals": [
+      552,
+      471,
+      117
+    ],
+    "ancestryLinks": [
+      "initial|NR|U.S.,Puerto Rico|European|552|NA",
+      "replication|NR|U.S.,Puerto Rico|Hispanic or Latin American|471|NA",
+      "replication|NR|U.S.,Puerto Rico|African American or Afro-Caribbean|117|NA"
+    ],
+    "traitName": [
+      "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)"
+    ],
+    "traitName_s": "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "hypertension",
+      "response to antihypertensive drug",
+      "response to beta blocker",
+      "response to calcium channel blocker"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007766",
+      "http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007767",
+      "http://www.ebi.ac.uk/efo/EFO_0007766"
+    ],
+    "shortForm": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "label": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_ws": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_e": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "synonym": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "response to antihypertensive drug|EFO_0005405|http://www.ebi.ac.uk/efo/EFO_0005405",
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "hypertension|EFO_0000537|http://www.ebi.ac.uk/efo/EFO_0000537",
+      "response to beta blocker|EFO_0007766|http://www.ebi.ac.uk/efo/EFO_0007766",
+      "response to calcium channel blocker|EFO_0007767|http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "parent": [
+      "cardiovascular disease",
+      "response to drug",
+      "disposition",
+      "disease",
+      "response to beta blocker",
+      "response to stimulus",
+      "diabetes mellitus",
+      "biological process",
+      "metabolic disease",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "id": "association:17614656",
+    "resourcename": "association",
+    "_version_": 1564933287778975700
+  },
+  {
+    "riskFrequency": "0.50",
+    "qualifier": [
+      "(European)"
+    ],
+    "pValueMantissa": 1,
+    "pValueExponent": -7,
+    "orPerCopyNum": 5.26,
+    "range": "[4.63-5.89]",
+    "snpInteraction": false,
+    "multiSnpHaplotype": false,
+    "rsId": [
+      "rs4833103"
+    ],
+    "strongestAllele": [
+      "rs4833103-?"
+    ],
+    "context": [
+      "intron_variant"
+    ],
+    "region": [
+      "4p14"
+    ],
+    "entrezMappedGenes": [
+      "TLR1",
+      "TLR6"
+    ],
+    "entrezMappedGeneLinks": [
+      "LOC105374412|105374412|60413|4",
+      "LOC105374413|105374413|65144|4",
+      "FAM114A1|92689|-53852|4",
+      "TLR10|81793|30891|4",
+      "MIR574|693159|-54151|4",
+      "TLR1|7096|8081|4",
+      "TLR6|10333|-9016|4",
+      "RNA5SP158|100873424|54989|4"
+    ],
+    "reportedGene": [
+      "TLR10",
+      "TLR6",
+      "TLR1"
+    ],
+    "reportedGeneLinks": [
+      "TLR10|81793|ENSG00000174123",
+      "TLR6|10333|ENSG00000174130",
+      "TLR1|7096|ENSG00000174125"
+    ],
+    "merged": 0,
+    "currentSnp": [
+      "rs4833103"
+    ],
+    "studyId": "16510173",
+    "chromosomeName": [
+      "4"
+    ],
+    "chromosomePosition": [
+      38813881
+    ],
+    "chromLocation": [
+      "4:38813881"
+    ],
+    "positionLinks": [
+      "4|38813881|4p14"
+    ],
+    "locusDescription": "Single variant",
+    "pubmedId": "27670767",
+    "title": "Genome-wide association study identifies pharmacogenomic loci linked with specific antihypertensive drug treatment and new-onset diabetes.",
+    "author": [
+      "Chang SW"
+    ],
+    "author_s": "Chang SW",
+    "publication": "Pharmacogenomics J",
+    "publicationDate": "2016-09-27T00:00:00Z",
+    "catalogPublishDate": "2017-03-24T10:44:13Z",
+    "publicationLink": [
+      "Chang SW|2016|27670767"
+    ],
+    "platform": "Illumina [NR] (imputed)",
+    "accessionId": "GCST003797",
+    "initialSampleDescription": "138 European American hypertensive cases with diabetes, 414 European American hypertensive cases without diabetes",
+    "replicateSampleDescription": "157 Hispanic hypertensive cases with diabetes, 314 Hispanic hypertensive cases without diabetes, 39 African American hypertensive cases with diabetes, 78 African American hypertensive cases without diabetes",
+    "ancestralGroups": [
+      "European",
+      "Hispanic or Latin American",
+      "African American or Afro-Caribbean"
+    ],
+    "countriesOfRecruitment": [
+      "U.S.,Puerto Rico"
+    ],
+    "numberOfIndividuals": [
+      552,
+      471,
+      117
+    ],
+    "ancestryLinks": [
+      "initial|NR|U.S.,Puerto Rico|European|552|NA",
+      "replication|NR|U.S.,Puerto Rico|Hispanic or Latin American|471|NA",
+      "replication|NR|U.S.,Puerto Rico|African American or Afro-Caribbean|117|NA"
+    ],
+    "traitName": [
+      "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)"
+    ],
+    "traitName_s": "Diabetes in response to antihypertensive drug treatment (treatment strategy interaction)",
+    "mappedLabel": [
+      "diabetes mellitus",
+      "hypertension",
+      "response to antihypertensive drug",
+      "response to beta blocker",
+      "response to calcium channel blocker"
+    ],
+    "mappedUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007766",
+      "http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "traitUri": [
+      "http://www.ebi.ac.uk/efo/EFO_0000400",
+      "http://www.ebi.ac.uk/efo/EFO_0000537",
+      "http://www.ebi.ac.uk/efo/EFO_0005405",
+      "http://www.ebi.ac.uk/efo/EFO_0007767",
+      "http://www.ebi.ac.uk/efo/EFO_0007766"
+    ],
+    "shortForm": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "shortform_autosuggest": [
+      "EFO_0000400",
+      "EFO_0007766",
+      "EFO_0007767",
+      "EFO_0005405",
+      "EFO_0000537"
+    ],
+    "label": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_ws": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "label_autosuggest_e": [
+      "response to beta blocker",
+      "diabetes mellitus",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "synonym": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_ws": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "synonym_autosuggest_e": [
+      "(hypertensive disease) or (hypertension)",
+      "High blood pressure (& [essential hypertension])",
+      "HTN",
+      "SURG COMP - HYPERTENSION",
+      "[X]Hypertensive diseases (disorder)",
+      "hyperpiesia",
+      "vascular hypertensive disorder",
+      "Hypertensive disease (disorder)",
+      "HTN - hypertension",
+      "hypertensive disease NOS",
+      "Diabetes mellitus, NOS",
+      "[X]Hypertensive diseases",
+      "Diabetes mellitus (disorder)",
+      "High Blood Pressures",
+      "hypertension NOS",
+      "Diabetes",
+      "HYPERTENSIVE DISEASE",
+      "Hypertensive disease NOS (disorder)",
+      "Blood Pressures, High",
+      "High Blood Pressure",
+      "DM - Diabetes mellitus",
+      "Blood Pressure, High",
+      "Diabetes NOS"
+    ],
+    "efoLink": [
+      "response to antihypertensive drug|EFO_0005405|http://www.ebi.ac.uk/efo/EFO_0005405",
+      "diabetes mellitus|EFO_0000400|http://www.ebi.ac.uk/efo/EFO_0000400",
+      "hypertension|EFO_0000537|http://www.ebi.ac.uk/efo/EFO_0000537",
+      "response to beta blocker|EFO_0007766|http://www.ebi.ac.uk/efo/EFO_0007766",
+      "response to calcium channel blocker|EFO_0007767|http://www.ebi.ac.uk/efo/EFO_0007767"
+    ],
+    "parent": [
+      "cardiovascular disease",
+      "response to drug",
+      "disposition",
+      "disease",
+      "response to beta blocker",
+      "response to stimulus",
+      "diabetes mellitus",
+      "biological process",
+      "metabolic disease",
+      "response to antihypertensive drug",
+      "hypertension",
+      "response to calcium channel blocker"
+    ],
+    "id": "association:17614682",
+    "resourcename": "association",
+    "_version_": 1564933287780024300
+  }
+]
