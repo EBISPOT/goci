@@ -111,7 +111,7 @@ public class AssociationFileUploadService {
         if (rowValidationSummaries.isEmpty()) {
             //Proceed to carry out full checks of values
             fileRows.forEach(row -> {
-                associationSummaries.add(createAssociationSummary(row, validationLevel));
+                associationSummaries.add(createAssociationSummary(row, validationLevel, eRelease));
             });
         }
 
