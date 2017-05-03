@@ -163,7 +163,6 @@
             </div>
         </div>
 
-
         <!-- Associations table -->
         <div class="row" style="margin-top:20px">
             <div id="association_panel" class="panel panel-default">
@@ -327,33 +326,34 @@
             </div>
         </div>
 
-        <!--ols tree-->
-        <div>
-            <div><h2>Welcome to the OLS tree example!</h2></div>
-            <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
 
-            <div>selected:
-                <div id="selectednodes"></div>
-                <div id="selectednodestext"></div>
+        <div class="row">
+            <div class="col-xs-5"><!--ols tree-->
+                <div>
+                    <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
+
+                    <div>selected:
+                        <div id="selectednodes"></div>
+                        <div id="selectednodestext"></div>
+                    </div>
+                </div>
+                <div id="expension">
+                    <h2>Other EFO terms:</h2>
+                </div>
+                <div>selected:
+                    <div id="cbselectednodes"></div>
+                    <div id="cbselectednodestext"></div>
+                </div>
+
             </div>
-        </div>
-
-
-        <!-- locus plot -->
-        <div>
-            <div class="two columns">
-                <h4>Top Hits</h4>
-                <style>ul.top_hits li {
-                    margin-bottom: 0rem;
-                }</style>
-                <ul class="top_hits" style="padding-left: 0.2rem; min-width: 110px;"></ul>
-            </div>
-            <div class="ten columns">
-                <div id="plot" data-region="10:114550452-115067678"></div>
+            <div class="col-xs-6">
+                <!-- locus plot -->
+                <div id="plot"></div>
             </div>
         </div>
 
     </div>
+
 
     <!--Include footer-->
     <div th:include="fragments/footer :: page_footer"></div>
@@ -399,7 +399,7 @@
       media="screen"/>
 
 
-§<!--locus zoom2-->
+<!--locus zoom-->
 <script>
 
 
@@ -464,9 +464,9 @@
 
 
     //we are not using api to fetch data, when
-        LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
-            return "http://localhost:8280/gwas/tmp/association.json";
-        };
+    LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
+        return "http://localhost:8280/gwas/tmp/association.json";
+    };
 
     //any post process after getting the JSON
     //we are not using api to fetch data, during init, blank data will be pass to the plot
@@ -882,18 +882,86 @@
     });
 
 
-//    // Define data sources object
-//    var data_sources = new LocusZoom.DataSources()
-//            .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
-//
-//
-//    var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-//    layout.panels[0].margin.top = 32;
-//    layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-//
-//    // Generate the plot
-//    var plot = LocusZoom.populate("#plot", data_sources, layout);
-//    plot.panels.efowas.setTitle("Test efo page locus zoom plot");
+    //    // Define data sources object
+    //    var data_sources = new LocusZoom.DataSources()
+    //            .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
+    //
+    //
+    //    var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
+    //    layout.panels[0].margin.top = 32;
+    //    layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
+    //
+    //    // Generate the plot
+    //    var plot = LocusZoom.populate("#plot", data_sources, layout);
+    //    plot.panels.efowas.setTitle("Test efo page locus zoom plot");
+
+    readlodLocusZoom = function(plot_id, data_association) {
+        //adding information to association doc
+        LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
+            var data = JSON.parse(JSON.stringify(data_association.docs));
+            console.log("Parsing association doc to locus zoom.");
+            console.log(data_association.docs);
+            data.forEach(function(d, i, object) {
+                data[i].chr = d.chromLocation[0].split(":")[0];
+                if (data[i].chr == 'X') {
+                    data[i].chr = 23;
+                }
+                if (data[i].chr == 'Y') {
+                    data[i].chr = 24;
+                }
+                data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
+                data[i].pval = Math.pow(10, d.pValueExponent);
+                data[i].phewas_string = d.rsId[0];
+                data[i].x = transferLocation(data[i].chr, data[i].bp);
+                data[i].category_name = d.mappedUri[0];
+
+
+            });
+            return {header: chain.header, body: data};
+        };
+
+        var data_sources = new LocusZoom.DataSources()
+                .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
+
+
+        var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
+        layout.panels[0].margin.top = 32;
+        layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
+
+        //find all efos for plotting color
+        var allEFO = [];
+        var allColor = [];
+        var legend = [];
+
+        data_association.docs.forEach(function(d, i) {
+            allEFO.push(d.mappedUri[0]);
+        })
+        //unique only
+        allEFO = allEFO.filter(function(value, index, self) {
+            return self.indexOf(value) === index;
+        })
+        //random rgb color at, legend does not work atm
+        allEFO.forEach(function(d, i) {
+            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
+                    ',' + (Math.floor(Math.random() * 256)) + ')';
+            allColor.push(col);
+            legend.push({
+                            shape: "rect",
+                            color: col,
+                            width: 9,
+                            label: d
+                        }
+            )
+        })
+        layout.panels[0].data_layers[1].color.parameters.categories = allEFO;
+        layout.panels[0].data_layers[1].color.parameters.values = allColor;
+        layout.panels[0].data_layers[1].legend = legend;
+
+
+        // Generate the plot
+        var plot = LocusZoom.populate(plot_id, data_sources, layout);
+
+    }
 
 </script>
 
@@ -939,8 +1007,6 @@
                     //saveData(data.responseHeader.params.q, data);
                     //we only process data here if it is the init load of the page, since we need to add new data to the page dynamically
                     processEfotraitData(data, efotraitId, initLoad);
-
-
                 });
         //serilize the data in html tag and save it in a tag for visulization
         console.log("Solr research done for " + efotraitId);
@@ -983,71 +1049,7 @@
             getEfotraitAssociations(data_association.docs);
             getEfotraitStudies(data_study.docs);
             //xintodo reload locus plot here
-
-            //adding information to association doc
-            LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-                var data = JSON.parse(JSON.stringify(data_association.docs));
-                console.log("Parsing association doc to locus zoom.");
-                console.log(data_association.docs);
-                data.forEach(function(d, i, object) {
-                    data[i].chr = d.chromLocation[0].split(":")[0];
-                    if (data[i].chr == 'X') {
-                        data[i].chr = 23;
-                    }
-                    if (data[i].chr == 'Y') {
-                        data[i].chr = 24;
-                    }
-                    data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
-                    data[i].pval = Math.pow(10, d.pValueExponent);
-                    data[i].phewas_string = d.rsId[0];
-                    data[i].x = transferLocation(data[i].chr, data[i].bp);
-                    data[i].category_name = d.mappedUri[0];
-
-
-                });
-                return {header: chain.header, body: data};
-            };
-
-            var data_sources = new LocusZoom.DataSources()
-                    .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
-
-
-            var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-            layout.panels[0].margin.top = 32;
-            layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-
-            //find all efos for plotting color
-            var allEFO = [];
-            var allColor = [];
-            var legend = [];
-
-            data_association.docs.forEach(function(d, i) {
-                allEFO.push(d.mappedUri[0]);
-            })
-            //unique only
-            allEFO = allEFO.filter(function(value, index, self) {
-                return self.indexOf(value) === index;
-            })
-            //random rgb color at, legend does not work atm
-            allEFO.forEach(function(d, i) {
-                col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
-                        ',' + (Math.floor(Math.random() * 256)) + ')';
-                allColor.push(col);
-                legend.push({
-                                shape: "rect",
-                                color: col,
-                                width: 9,
-                                label: d
-                            }
-                )
-            })
-            layout.panels[0].data_layers[1].color.parameters.categories = allEFO;
-            layout.panels[0].data_layers[1].color.parameters.values = allColor;
-            layout.panels[0].data_layers[1].legend = legend;
-
-
-            // Generate the plot
-            var plot = LocusZoom.populate("#plot", data_sources, layout);
+            readlodLocusZoom('#plot', data_association);
 
 
         }
@@ -1082,15 +1084,6 @@
 
 <!--ols-->
 <script>
-
-    //    var treeDiv = $("#term-tree");
-    //        treeDiv.jstree({
-    //                    'checkbox': {
-    //                        three_state: false,
-    //                        cascade: 'up'
-    //                    },
-    //                    plugins: ["checkbox","changed"]
-    //                });
 
 
     var app = require("ols-treeview");
@@ -1135,7 +1128,7 @@
 
 
     var searchTerm = $('#query').text();
-
+    // initialise the tree
     instance.draw($("#term-tree"),
                   false,
                   "efo",
@@ -1144,7 +1137,6 @@
                   "http://www.ebi.ac.uk/ols/",
                   options);
 
-    // initialise the tree
     $('#selectednodes').bind("DOMSubtreeModified", function() {
         var efos = $(this).html().split(',');
         if (efos.length > 1) {
@@ -1159,24 +1151,73 @@
         }
     });
 
-    //        var div=$("#term-tree");
-    //        var ontologyName = $("#term-tree").data("olsontology");
-    //        var termType = $("#term-tree").data("ols-termtype");
-    //        var termIri = $("#term-tree").data("ols-iri");
-    //        var relativePath = $("#term-tree").data("selectpath") ? $("#term-tree").data("selectpath") : '';
 
-    //        var app = require("ols-treeview");
-    //        var termInstance = new app();
-    //        termInstance.draw(div, false, ontologyName, termType, termIri, relativePath, {save_state: true});
+    //ols search
+    var cbselected_ids = '', cbselected_text = '';
 
-    //    });
+
+    $.getJSON('http://www.ebi.ac.uk/ols/api/search',
+              {
+                  'q': $('#query').text(),
+                  'ontology': 'efo'
+              })
+            .done(function(data) {
+                console.log(data);
+                data.response.docs.forEach(function(d, i) {
+                    d.obo_id = d.obo_id.replace(":", "_")
+                    addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
+                    if (d.obo_id == $('#query').text()) {
+                        $("#cb" + d.obo_id).attr("checked", true);
+                        $("#cbselectednodes").html(d.obo_id);
+                        $("#cbselectednodestext").html(d.label);
+                    }
+                })
+
+
+                console.log($('.efocheckbox input:checked'));
+
+                $(".efocheckbox").change(function() {
+                    console.log($('input:checked'));
+                    cbselected_ids = '', cbselected_text = ''
+                    $('input:checked').each(function() {
+                        cbselected_ids = cbselected_ids + ',' + $(this).attr('value').split(" : ")[0];
+                        cbselected_text = cbselected_text + ',' + $(this).attr('value').split(" : ")[1];
+                    });
+                    $("#cbselectednodes").html(cbselected_ids.substring(1, cbselected_ids.length));
+                    $("#cbselectednodestext").html(cbselected_text.substring(1, cbselected_text.length));
+                });
+
+
+            });
+
+    $('#cbselectednodes').bind("DOMSubtreeModified", function() {
+        var efos = $(this).html().split(',');
+        if (efos.length > 1) {
+            efos = efos.join(" OR ");
+        }
+        else {
+            efos = efos[0];
+        }
+        console.log(efos);
+        if (efos) {
+            getEfoTraitData(efos);
+        }
+    });
+
+    function addCheckbox(id, name, cbclass) {
+        var container = $('#expension');
+        $('<input />', {type: 'checkbox', id: id, class: cbclass, value: name}).appendTo(container);
+        $('<label />', {'for': id, text: name}).appendTo(container);
+        $('<br />').appendTo(container);
+
+    }
 </script>
 
 
 </body>
 </html>
-//    <!--//EFO:0000400-->
-//    <!--//    http://localhost:8280/gwas/beta/efotrait/EFO_0000400-->
+<!--//EFO:0000400-->
+<!--//    http://localhost:8280/gwas/beta/efotrait/EFO_0000400-->
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/docs/index-->
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/efoTraits/search-->
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/efoTraits-->
@@ -1185,3 +1226,4 @@
 <!--https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/efoTraits/search/findByUri?uri=http://www.ebi.ac.uk/efo/EFO_0000400-->
 <!--https://michigangenomics.org/genetic_data.html-->
 <!--https://github.com/statgen/locuszoom/wiki/Data-Sources-->
+<!--http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400-->
