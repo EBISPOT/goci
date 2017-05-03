@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -118,6 +119,9 @@ public class AssociationControllerTest {
     @Mock
     private CheckMappingService checkMappingService;
 
+    @Mock
+    private MapCatalogService mapCatalogService;
+
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -151,7 +155,8 @@ public class AssociationControllerTest {
                 associationsEventsViewService,
                 studyAssociationBatchDeletionEventService,
                 ensemblRestTemplateService,
-                checkMappingService);
+                checkMappingService,
+                mapCatalogService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
         //System.setProperty("ensembl.server", "http://rest.ensembl.org");

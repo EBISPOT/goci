@@ -26,7 +26,8 @@
 
         <p style="font-style: italic; word-wrap: break-word;"
            th:if="${mappingDetails.mappingDate == null and mappingDetails.performer == null}"
-           th:utext="'&lt;br /&gt;' +'No mapping details available '"></p>
+           th:utext="'&lt;br /&gt;' +'No mapping details available '">
+        </p>
 
         <p style="font-style: italic; word-wrap: break-word;"
            th:if="${mappingDetails.mappingDate != null}"
@@ -42,6 +43,12 @@
                th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
                th:if="${not #maps.isEmpty(mappingDetails.associationErrorMap)}"></span>
     </div>
+    <div th:if="${mappingDetails.mappingDate == null and mappingDetails.performer == null}">
+        <a th:href="@{/associations/{associationId}/force_mapping(associationId=${form.associationId})}"
+           class="btn btn-primary"  role="button">Force Mapping</a>
+
+    </div>
+
 </div>
 </body>
 </html>

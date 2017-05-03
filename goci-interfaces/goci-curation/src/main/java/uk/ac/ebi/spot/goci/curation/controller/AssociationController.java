@@ -35,6 +35,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,6 +79,7 @@ public class AssociationController {
     private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
     private EnsemblRestTemplateService ensemblRestTemplateService;
     private CheckMappingService checkMappingService;
+    private MapCatalogService mapCatalogService;
 
     @Value("${collection.sizelimit}")
     private int collectionLimit;
@@ -111,7 +113,8 @@ public class AssociationController {
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
                                  StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
                                  EnsemblRestTemplateService ensemblRestTemplateService,
-                                 CheckMappingService checkMappingService) {
+                                 CheckMappingService checkMappingService,
+                                 MapCatalogService mapCatalogService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -129,6 +132,7 @@ public class AssociationController {
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
         this.ensemblRestTemplateService = ensemblRestTemplateService;
         this.checkMappingService = checkMappingService;
+        this.mapCatalogService = mapCatalogService;
     }
 
     /*  Study SNP/Associations */
@@ -1368,6 +1372,28 @@ public class AssociationController {
 
             return "redirect:/studies/" + studyId + "/associations";
         }
+    }
+
+
+
+    // Approve all SNPs
+    @RequestMapping(value = "/associations/{associationId}/force_mapping",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String forceMapping(@PathVariable Long associationId, RedirectAttributes redirectAttributes,
+                               HttpServletRequest request) {
+        Collection<Association> allAssociations = new ArrayList<>();
+
+        Association association = associationRepository.findOne(associationId);
+        allAssociations.add(association);
+        try {
+            SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+            mapCatalogService.mapCatalogContentsByAssociations(user.getEmail(), allAssociations);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("isToRemapping", "failed");
+        }
+
+        return "redirect:/associations/" + associationId;
     }
 
     /* Exception handling */

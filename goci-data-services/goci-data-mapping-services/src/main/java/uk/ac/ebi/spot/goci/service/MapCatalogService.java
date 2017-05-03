@@ -80,6 +80,20 @@ public class MapCatalogService {
 
     }
 
+    // This method should be refactor with mapCatalogContentsNight
+    public void mapCatalogContentsByAssociations(String performer, Collection<Association> associations)
+            throws EnsemblMappingException {
+        Collection<Association> associationsToMap = associationService.findAssociationAssociationData(associations);
+        getLog().info("Mapping all associations in database, total number: " + associationsToMap.size());
+
+        try {
+            mappingService.validateAndMapAllAssociations(associationsToMap, performer);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+        }
+
+    }
 
 
 }
