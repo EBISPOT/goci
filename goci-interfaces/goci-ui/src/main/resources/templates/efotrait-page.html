@@ -13,7 +13,6 @@
     <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
 
     <title>GWAS Catalog</title>
-
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" th:href="@{../../css/bootstrap.min.css}" rel="stylesheet"/>
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
@@ -104,6 +103,7 @@
     <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400 OR EFO_0004211 OR EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
     <div class="container-fluid" id="lower_container">
         <!-- Summary panel -->
+
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default" style="padding-left:0px">
                 <div class="panel-heading background-color-primary-accent">
@@ -333,15 +333,15 @@
                     <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
 
                     <div>selected:
-                        <div id="selectednodes"></div>
+                        <div id="selectednodes" class="selected_nodes"></div>
                         <div id="selectednodestext"></div>
                     </div>
                 </div>
                 <div id="expension">
-                    <h2>Other EFO terms:</h2>
+                    <h2>Related EFO terms:</h2>
                 </div>
                 <div>selected:
-                    <div id="cbselectednodes"></div>
+                    <div id="cbselectednodes" class="selected_nodes"></div>
                     <div id="cbselectednodestext"></div>
                 </div>
 
@@ -349,17 +349,42 @@
             <div class="col-xs-6">
                 <!-- locus plot -->
                 <div id="plot"></div>
+
+                <!--auto suggest-->
+                <div class="left">
+                    <label>
+                        <input style="font-weight: normal"
+                               size="35"
+                               type="text"
+                               name="q"
+                               data-olswidget="select"
+                               data-olsontology="efo"
+                               data-selectpath="http://www.ebi.ac.uk/ols/"
+                               olstype=""
+                               id="local-searchbox"
+                               placeholder="Enter the term you are looking for"
+                               class="ac_input">
+                        </input>
+                    </label>
+                </div>
+
+                <div>selected:
+                    <div id="autocomplete_selectednodes" class="selected_nodes"></div>
+                    <div id="autocomplete_selectednodestext"></div>
+                </div>
+
             </div>
+
+
         </div>
 
-    </div>
 
+    </div>
 
     <!--Include footer-->
     <div th:include="fragments/footer :: page_footer"></div>
 
 </div>
-
 
 <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -398,7 +423,28 @@
       th:href="@{../../css/proton/style.min.css}"
       media="screen"/>
 
+<!--ols auto suggest-->
+<link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../../css/ols_auto_complete/ols.css}"/>
+<link rel="stylesheet"
+      href="../static/css/ols_auto_complete/ols-colors.css"
+      th:href="@{../../css/ols_auto_complete/ols-colors.css}"/>
+<link rel="stylesheet"
+      href="../static/css/ols_auto_complete/typeaheadjs.css"
+      th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
+<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
 
+
+<div id="loadingResults" class="col-md-offset-4" style="display: none">
+    <button class="btn btn-lg">
+        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+              style="margin-right: 1em;"></span>Loading...
+    </button>
+</div>
+<script>
+    $('#loadingResults').show();
+</script>
 <!--locus zoom-->
 <script>
 
@@ -902,19 +948,25 @@
             console.log("Parsing association doc to locus zoom.");
             console.log(data_association.docs);
             data.forEach(function(d, i, object) {
-                data[i].chr = d.chromLocation[0].split(":")[0];
-                if (data[i].chr == 'X') {
-                    data[i].chr = 23;
+                console.log(d);
+                if(d.chromLocation){
+                    //we only plot those association which have chromosome information
+                    data[i].chr = d.chromLocation[0].split(":")[0];
+                    if (data[i].chr == 'X') {
+                        data[i].chr = 23;
+                    }
+                    if (data[i].chr == 'Y') {
+                        data[i].chr = 24;
+                    }
+                    data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
+                    data[i].pval = Math.pow(10, d.pValueExponent);
+                    data[i].phewas_string = d.rsId[0];
+                    data[i].x = transferLocation(data[i].chr, data[i].bp);
+                    data[i].category_name = d.mappedUri[0];
+                }else{
+                    //some association don't have chromosome information
+                    object.splice(i , 1);
                 }
-                if (data[i].chr == 'Y') {
-                    data[i].chr = 24;
-                }
-                data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
-                data[i].pval = Math.pow(10, d.pValueExponent);
-                data[i].phewas_string = d.rsId[0];
-                data[i].x = transferLocation(data[i].chr, data[i].bp);
-                data[i].category_name = d.mappedUri[0];
-
 
             });
             return {header: chain.header, body: data};
@@ -960,7 +1012,28 @@
 
         // Generate the plot
         var plot = LocusZoom.populate(plot_id, data_sources, layout);
+    }
 
+    $('.selected_nodes').bind("DOMSubtreeModified", function() {
+        var efos = $(this).html().split(',');
+        if (efos.length > 1) {
+            efos = efos.join(" OR ");
+        }
+        else {
+            efos = efos[0];
+        }
+        console.log(efos);
+        if (efos) {
+            getEfoTraitData(efos);
+        }
+    });
+
+    //xintodo add/remove terms when select/disselect terms
+    addToSelect = function(divId, terms) {
+        var current = $("#" + divId).html().split(',');
+        current = $.merge(current,terms)
+        current=$.unique(current).filter(function(v){return v!==''})
+        $("#" + divId).html(current.join(','));
     }
 
 </script>
@@ -994,6 +1067,7 @@
             initLoad = false;
         }
 
+
         console.log("Solr research request received for " + efotraitId);
         setState(SearchState.LOADING);
         $.getJSON('/gwas/api/search/efotrait',
@@ -1010,6 +1084,7 @@
                 });
         //serilize the data in html tag and save it in a tag for visulization
         console.log("Solr research done for " + efotraitId);
+
     }
     //     Parse the Solr results and display the data on the HTML page
     function processEfotraitData(data, efotraitId, initLoad) {
@@ -1085,7 +1160,6 @@
 <!--ols-->
 <script>
 
-
     var app = require("ols-treeview");
     var instance = new app();
 
@@ -1105,18 +1179,18 @@
             console.log(data); // newly deselected
 
             console.log(data.instance.get_selected(true));
-            var selected_ids = '', selected_text = '';
+            var selected_ids = [], selected_text = [];
             if (data.instance.get_selected(true).length > 0) {
                 $.each(data.instance.get_selected(true), function(index, term) {
                     // console.log('EFO_' + term.original.iri.split('EFO_')[1])
                     if (term.original.iri) {
-                        selected_ids = selected_ids + ',' + 'EFO_' + term.original.iri.split('EFO_')[1];
-                        selected_text = selected_text + ',' + term.original.text;
+                        selected_ids.push('EFO_' + term.original.iri.split('EFO_')[1]);
+                        selected_text.push(term.original.text);
                     }
                 });
 
-                $("#selectednodes").html(selected_ids.substring(1, selected_ids.length));
-                $("#selectednodestext").html(selected_text.substring(1, selected_text.length));
+                $("#selectednodes").html(selected_ids.join(','));
+                $("#selectednodestext").html(selected_text.join(','));
                 console.log(data.instance.get_node(data.selected));
             }
             else {
@@ -1137,35 +1211,25 @@
                   "http://www.ebi.ac.uk/ols/",
                   options);
 
-    $('#selectednodes').bind("DOMSubtreeModified", function() {
-        var efos = $(this).html().split(',');
-        if (efos.length > 1) {
-            efos = efos.join(" OR ");
-        }
-        else {
-            efos = efos[0];
-        }
-        console.log(efos);
-        if (efos) {
-            getEfoTraitData(efos);
-        }
-    });
 
+</script>
 
+<script>
     //ols search
-    var cbselected_ids = '', cbselected_text = '';
-
-
+    var cbselected_ids = [], cbselected_text = [];
     $.getJSON('http://www.ebi.ac.uk/ols/api/search',
               {
                   'q': $('#query').text(),
-                  'ontology': 'efo'
+                  'ontology': 'efo',
+                  'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
               })
             .done(function(data) {
                 console.log(data);
                 data.response.docs.forEach(function(d, i) {
                     d.obo_id = d.obo_id.replace(":", "_")
                     addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
+                    $("#" + 'whycb' + d.obo_id).html(d.logical_description);
+//                    $("#"+'whycb'+d.obo_id).html(longContentList("#"+'whycbhiddent'+d.obo_id, ['a','b'], 'why'))
                     if (d.obo_id == $('#query').text()) {
                         $("#cb" + d.obo_id).attr("checked", true);
                         $("#cbselectednodes").html(d.obo_id);
@@ -1174,43 +1238,56 @@
                 })
 
 
-                console.log($('.efocheckbox input:checked'));
-
                 $(".efocheckbox").change(function() {
                     console.log($('input:checked'));
-                    cbselected_ids = '', cbselected_text = ''
+                    cbselected_ids = [], cbselected_text = []
                     $('input:checked').each(function() {
-                        cbselected_ids = cbselected_ids + ',' + $(this).attr('value').split(" : ")[0];
-                        cbselected_text = cbselected_text + ',' + $(this).attr('value').split(" : ")[1];
+                        cbselected_ids.push($(this).attr('value').split(" : ")[0]);
+                        cbselected_text.push($(this).attr('value').split(" : ")[1]);
                     });
-                    $("#cbselectednodes").html(cbselected_ids.substring(1, cbselected_ids.length));
-                    $("#cbselectednodestext").html(cbselected_text.substring(1, cbselected_text.length));
+                    $("#cbselectednodes").html(cbselected_ids.join(','));
+                    $("#cbselectednodestext").html(cbselected_text.join(','));
                 });
-
-
             });
 
-    $('#cbselectednodes').bind("DOMSubtreeModified", function() {
-        var efos = $(this).html().split(',');
-        if (efos.length > 1) {
-            efos = efos.join(" OR ");
-        }
-        else {
-            efos = efos[0];
-        }
-        console.log(efos);
-        if (efos) {
-            getEfoTraitData(efos);
-        }
-    });
+
 
     function addCheckbox(id, name, cbclass) {
         var container = $('#expension');
         $('<input />', {type: 'checkbox', id: id, class: cbclass, value: name}).appendTo(container);
         $('<label />', {'for': id, text: name}).appendTo(container);
+        $('<div />', {'id': 'why' + id}).appendTo(container);
+
         $('<br />').appendTo(container);
 
     }
+</script>
+
+<script>
+    function onSubmitClick() {
+        console.log("aaa");
+    }
+
+    $(document).ready(function() {
+        var app = require("ols-autocomplete");
+        var instance = new app();
+        options = {
+            action: function(relativePath, suggestion_ontology, type, iri) {
+                console.log("aaa");
+                console.log("In overwritten function")
+                console.log("Relative Path: " + relativePath)
+                console.log("Suggested Ontology: " + suggestion_ontology)
+                console.log("Type (optional): " + type)
+                console.log("iri (optional): " + iri)
+
+//                $("#autocomplete_selectednodes").html('EFO_' + iri.split("EFO_")[1]);
+                addToSelect('autocomplete_selectednodes',['EFO_' + iri.split("EFO_")[1]]);
+            }
+        }
+        instance.start(options)
+    });
+
+
 </script>
 
 
