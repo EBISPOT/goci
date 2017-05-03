@@ -64,6 +64,36 @@ public class MapCatalogService {
         catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
         }
-        mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports);
+        mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports, false,0,0);
     }
+
+    public void mapCatalogContentsNight(String performer) throws EnsemblMappingException {
+        Collection<Association> associations = associationService.findAssociationToMap();
+        getLog().info("Mapping all associations in database, total number: " + associations.size());
+
+        try {
+            mappingService.validateAndMapAllAssociations(associations, performer);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+        }
+
+    }
+
+    // This method should be refactor with mapCatalogContentsNight
+    public void mapCatalogContentsByAssociations(String performer, Collection<Association> associations)
+            throws EnsemblMappingException {
+        Collection<Association> associationsToMap = associationService.findAssociationAssociationData(associations);
+        getLog().info("Mapping all associations in database, total number: " + associationsToMap.size());
+
+        try {
+            mappingService.validateAndMapAllAssociations(associationsToMap, performer);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+        }
+
+    }
+
+
 }

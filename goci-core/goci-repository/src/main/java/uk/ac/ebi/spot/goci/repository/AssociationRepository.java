@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -78,4 +80,13 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     Page<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long efoTraitId);
+
+    @Query(value = "select * from "+
+            "(select a.*, rownum rnum from (select * from association order by id) a where rownum <= :maxRow) "+
+            " where rnum >= :minRow ",
+            nativeQuery = true)
+    Collection<Association> findAllLSF(@Param("minRow") Integer minRow, @Param("maxRow") Integer maxRow);
+
+
+    Collection<Association> findBylastMappingDateIsNull();
 }

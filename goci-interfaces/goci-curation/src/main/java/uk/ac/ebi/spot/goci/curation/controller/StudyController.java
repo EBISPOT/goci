@@ -296,9 +296,10 @@ public class StudyController {
 
         // Search by notes for entered string
         if (notesQuery != null && !notesQuery.isEmpty()) {
-            studyPage = studyRepository.findByHousekeepingNotesContainingIgnoreCase(notesQuery,
-                                                                                    constructPageSpecification(page - 1,
-                                                                                                               sort));
+            studyPage = studyRepository.findDistinctByNotesTextNoteContainingIgnoreCase(notesQuery,
+                    constructPageSpecification(page - 1,
+                            sort));
+
             studySearchFilter.setNotesQuery(notesQuery);
             filters = filters + "&notesquery=" + notesQuery;
         }
@@ -595,6 +596,7 @@ public class StudyController {
     // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long studyId) {
+
         Study studyToView = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToView);
         return "study";

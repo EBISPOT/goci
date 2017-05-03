@@ -39,6 +39,8 @@ public class AssociationFileUploadService {
 
     private SheetCreationService sheetCreationService;
 
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -49,11 +51,13 @@ public class AssociationFileUploadService {
     public AssociationFileUploadService(UploadSheetProcessorBuilder uploadSheetProcessorBuilder,
                                         AssociationRowProcessor associationRowProcessor,
                                         ValidationService validationService,
-                                        SheetCreationService sheetCreationService) {
+                                        SheetCreationService sheetCreationService,
+                                        EnsemblRestTemplateService ensemblRestTemplateService) {
         this.uploadSheetProcessorBuilder = uploadSheetProcessorBuilder;
         this.associationRowProcessor = associationRowProcessor;
         this.validationService = validationService;
         this.sheetCreationService = sheetCreationService;
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
     }
 
     /**
@@ -76,7 +80,6 @@ public class AssociationFileUploadService {
                 // Create a sheet for reading
                 sheet = sheetCreationService.createSheet(file.getAbsolutePath());
 
-
                 // Process file, depending on validation level, into a generic row object
                 UploadSheetProcessor uploadSheetProcessor = uploadSheetProcessorBuilder.buildProcessor(validationLevel);
                 fileRows = uploadSheetProcessor.readSheetRows(sheet);
@@ -92,11 +95,12 @@ public class AssociationFileUploadService {
             throw new FileNotFoundException("File does not exist");
         }
 
+        String eRelease = ensemblRestTemplateService.getRelease();
         // Error check each row
             // Check for missing values and syntax errors that would prevent code creating an association
-        for (AssociationUploadRow row : fileRows) {
-            getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
-            RowValidationSummary rowValidationSummary = createRowValidationSummary(row);
+            for (AssociationUploadRow row : fileRows) {
+                getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
+                RowValidationSummary rowValidationSummary = createRowValidationSummary(row, eRelease);
 
             // Only store summary if there is an error
             if (!rowValidationSummary.getErrors().isEmpty()) {
@@ -123,9 +127,9 @@ public class AssociationFileUploadService {
      *
      * @param row Row to validate
      */
-    private RowValidationSummary createRowValidationSummary(AssociationUploadRow row) {
+    private RowValidationSummary createRowValidationSummary(AssociationUploadRow row, String eRelease) {
         getLog().info("Creating row summary for row " + row.getRowNumber());
-        Collection<ValidationError> errors = validationService.runRowValidation(row);
+        Collection<ValidationError> errors = validationService.runRowValidation(row,eRelease);
         RowValidationSummary rowValidationSummary = new RowValidationSummary();
         rowValidationSummary.setRow(row);
         rowValidationSummary.setErrors(errors);
@@ -138,11 +142,11 @@ public class AssociationFileUploadService {
      * @param row             Row to validate and convert into an association
      * @param validationLevel level of validation to run
      */
-    private AssociationSummary createAssociationSummary(AssociationUploadRow row, String validationLevel) {
+    private AssociationSummary createAssociationSummary(AssociationUploadRow row, String validationLevel, String eRelease) {
         getLog().info("Creating association summary for row " + row.getRowNumber());
         Association association = associationRowProcessor.createAssociationFromUploadRow(row);
         Collection<ValidationError> errors =
-                validationService.runAssociationValidation(association, validationLevel);
+                validationService.runAssociationValidation(association, validationLevel, eRelease);
         AssociationSummary associationSummary = new AssociationSummary();
         associationSummary.setRowNumber(row.getRowNumber());
         associationSummary.setAssociation(association);

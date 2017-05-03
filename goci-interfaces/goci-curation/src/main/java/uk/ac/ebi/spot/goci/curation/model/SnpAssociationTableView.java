@@ -74,6 +74,8 @@ public class SnpAssociationTableView {
 
     private String lastMappingDate;
 
+    private String mappingStatus;
+
     // Constructors
     public SnpAssociationTableView() {
     }
@@ -358,4 +360,8 @@ public class SnpAssociationTableView {
     public void setValidationWarnings(Set<String> validationWarnings) {
         this.validationWarnings = validationWarnings;
     }
+
+    public String getMappingStatus() { return mappingStatus; }
+
+    public void setMappingStatus(String mappingStatus) { this.mappingStatus = mappingStatus; }
 }

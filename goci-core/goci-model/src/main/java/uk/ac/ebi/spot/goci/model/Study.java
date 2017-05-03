@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -134,9 +135,18 @@ public class Study implements Trackable {
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     //If you want just the notes linked with the study please check Association.java
-    @OneToMany(mappedBy = "study")
+    /**
+     * @OneToMany(mappedBy = "study")
+     * @JsonIgnore
+     * Write the annotation this way will caused the study object contains ALL the notes, including studyNotes and
+     * associationNote.However, we decide that the study onject should only include studyNotes, thus the blow
+     * annotation was used instead.
+     */
+    @OneToMany
+    @JoinColumn(name="genericId", referencedColumnName="id",insertable=false,updatable=false)
+    @Where(clause="content_type='Study'")
     @JsonIgnore
-    private Collection<Note> notes;
+    private Collection<StudyNote> notes = new ArrayList<>();
 
     // JPA no-args constructor
     public Study() {
@@ -436,7 +446,13 @@ public class Study implements Trackable {
         this.snps = snps;
     }
 
-    public Collection<Note> getNotes() { return notes; }
+    public Collection<StudyNote> getNotes() { return notes; }
 
-    public void setNotes(Collection<Note> notes) { this.notes = notes; }
+    public void setNotes(Collection<StudyNote> notes) { this.notes = notes; }
+
+    public void addNote(StudyNote note) {
+        Collection<StudyNote> currentNotes = getNotes();
+        currentNotes.add(note);
+        setNotes((currentNotes));
+    }
 }

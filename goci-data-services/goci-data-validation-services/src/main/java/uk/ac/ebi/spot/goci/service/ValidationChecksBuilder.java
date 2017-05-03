@@ -29,6 +29,8 @@ public class ValidationChecksBuilder {
 
     private ErrorCreationService errorCreationService;
 
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -36,8 +38,10 @@ public class ValidationChecksBuilder {
     }
 
     @Autowired
-    public ValidationChecksBuilder(ErrorCreationService errorCreationService) {
+    public ValidationChecksBuilder(ErrorCreationService errorCreationService,
+                                   EnsemblRestTemplateService ensemblRestTemplateService) {
         this.errorCreationService = errorCreationService;
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
     }
 
     /**
@@ -279,9 +283,10 @@ public class ValidationChecksBuilder {
      *
      * @param association association to be checked
      */
-    public Collection<ValidationError> runLociAttributeChecks(Association association) {
+    public Collection<ValidationError> runLociAttributeChecks(Association association, String eRelease) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
+
         if (association.getLoci() != null) {
 
             Set<String> associationGenes = new HashSet<>();
@@ -300,7 +305,7 @@ public class ValidationChecksBuilder {
             // Check genes
             associationGenes.forEach(geneName -> {
                 getLog().info("Checking gene: ".concat(geneName));
-                ValidationError geneError = errorCreationService.checkGene(geneName);
+                ValidationError geneError = errorCreationService.checkGene(geneName, eRelease);
                 if (geneError.getError() != null) {
                     geneErrors.add(geneError);
                 }
@@ -334,13 +339,14 @@ public class ValidationChecksBuilder {
                                                   .concat(" ")
                                                   .concat(riskAllele.getSnp().getRsId()));
                             ValidationError snpGeneLocationError =
-                                    errorCreationService.checkSnpGeneLocation(riskAllele.getSnp().getRsId(), geneName);
+                                    errorCreationService.checkSnpGeneLocation(riskAllele.getSnp().getRsId(), geneName,
+                                            eRelease);
                             validationErrors.add(snpGeneLocationError);
                         });
                     }
                     else {
                         // Check snp is valid
-                        ValidationError snpError = errorCreationService.checkSnp(riskAllele.getSnp().getRsId());
+                        ValidationError snpError = errorCreationService.checkSnp(riskAllele.getSnp().getRsId(),eRelease);
                         validationErrors.add(snpError);
                     }
                 });

@@ -3,13 +3,9 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.Platform;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -30,16 +26,22 @@ public class StudyDuplicationService {
     private HousekeepingOperationsService housekeepingOperationsService;
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
+    private StudyNoteOperationsService studyNoteOperationsService;
+    private StudyNoteService studyNoteService;
 
     @Autowired
     public StudyDuplicationService(AncestryRepository ancestryRepository,
                                    HousekeepingOperationsService housekeepingOperationsService,
                                    @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
-                                   StudyRepository studyRepository) {
+                                   StudyRepository studyRepository,
+                                   StudyNoteOperationsService studyNoteOperationsService,
+                                   StudyNoteService studyNoteService) {
         this.ancestryRepository = ancestryRepository;
         this.housekeepingOperationsService = housekeepingOperationsService;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
+        this.studyNoteOperationsService = studyNoteOperationsService;
+        this.studyNoteService = studyNoteService;
     }
 
     /**
@@ -63,11 +65,17 @@ public class StudyDuplicationService {
 
         // Create housekeeping object and add duplicate message
         Housekeeping duplicateStudyHousekeeping = housekeepingOperationsService.createHousekeeping();
-        duplicateStudyHousekeeping.setNotes(
-                "Duplicate of study: " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
         studyRepository.save(duplicateStudy);
+
+        StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
+                + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
+
+        // The note is properly created. We don't need to check any business logic. Just link to the study.
+        studyNoteService.saveStudyNote(note);
+
+        duplicateStudy.addNote(note);
 
         // Copy existing ancestry
         Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());
@@ -148,13 +156,35 @@ public class StudyDuplicationService {
         Ancestry duplicateAncestry = new Ancestry();
         duplicateAncestry.setType(studyToDuplicateAncestry.getType());
         duplicateAncestry.setNumberOfIndividuals(studyToDuplicateAncestry.getNumberOfIndividuals());
-        duplicateAncestry.setAncestralGroup(studyToDuplicateAncestry.getAncestralGroup());
-        duplicateAncestry.setCountryOfOrigin(studyToDuplicateAncestry.getCountryOfOrigin());
-        duplicateAncestry.setCountryOfRecruitment(studyToDuplicateAncestry.getCountryOfRecruitment());
         duplicateAncestry.setDescription(studyToDuplicateAncestry.getDescription());
         duplicateAncestry.setPreviouslyReported(studyToDuplicateAncestry.getPreviouslyReported());
         duplicateAncestry.setSampleSizesMatch(studyToDuplicateAncestry.getSampleSizesMatch());
         duplicateAncestry.setNotes(studyToDuplicateAncestry.getNotes());
+
+        Collection<AncestralGroup> ancestralGroups = studyToDuplicateAncestry.getAncestralGroups();
+        Collection<AncestralGroup> ancestralGroupsDuplicateStudy = new ArrayList<>();
+
+        if(ancestralGroups != null && !ancestralGroups.isEmpty()){
+            ancestralGroupsDuplicateStudy.addAll(ancestralGroups);
+            duplicateAncestry.setAncestralGroups(ancestralGroupsDuplicateStudy);
+        }
+
+        Collection<Country> coos = studyToDuplicateAncestry.getCountryOfOrigin();
+        Collection<Country> coosDuplicateStudy = new ArrayList<>();
+
+        if(coos != null && !coos.isEmpty()){
+            coosDuplicateStudy.addAll(coos);
+            duplicateAncestry.setCountryOfOrigin(coosDuplicateStudy);
+        }
+
+        Collection<Country> cors = studyToDuplicateAncestry.getCountryOfRecruitment();
+        Collection<Country> corsDuplicateStudy = new ArrayList<>();
+
+        if(cors != null && !cors.isEmpty()){
+            corsDuplicateStudy.addAll(cors);
+            duplicateAncestry.setCountryOfRecruitment(corsDuplicateStudy);
+        }
+
         return duplicateAncestry;
     }
 }

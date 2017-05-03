@@ -33,7 +33,7 @@
 
 
     <script th:src="@{/js/goci-editing.js}"></script>
-
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
@@ -183,9 +183,9 @@
 
 
                 <div class="form-group">
-                    <label for="notes" class="control-label col-md-2">Notes</label>
+                    <label for="notes" class="control-label col-md-2"><del>Notes</del><br/>(Deprecated! Note should be entered under the Notes tab)</label>
                     <div class="col-md-8">
-                        <textarea id="notes" th:field="*{notes}" class="col-md-8 form-control"></textarea>
+                        <textarea id="notes" th:field="*{notes}" class="col-md-8 form-control" readonly="readonly" th:title="aaa"></textarea>
                     </div>
                 </div>
 

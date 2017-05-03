@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.StudySampleDescription;
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
@@ -69,9 +71,9 @@ public class StudySampleDescriptionsDownloadService {
                 // Ancestry attributes
                 String type = ancestry.getType();
                 Integer numberOfIndividuals = ancestry.getNumberOfIndividuals();
-                String ancestralGroup = ancestry.getAncestralGroup();
-                String countryOfOrigin = ancestry.getCountryOfOrigin();
-                String countryOfRecruitment = ancestry.getCountryOfRecruitment();
+                Collection<AncestralGroup> ancestralGroup = ancestry.getAncestralGroups();
+                Collection<Country> countryOfOrigin = ancestry.getCountryOfOrigin();
+                Collection<Country> countryOfRecruitment = ancestry.getCountryOfRecruitment();
                 String sampleSizesMatch = ancestry.getSampleSizesMatch();
                 String description = ancestry.getDescription();
                 String notes = ancestry.getNotes();
@@ -204,32 +206,32 @@ public class StudySampleDescriptionsDownloadService {
             line.append("\t");
 
             // Ancestral group
-            String ancestralGroup = studySampleDescription.getAncestralGroup();
-            if (ancestralGroup == null) {
+            Collection<AncestralGroup> ancestralGroups = studySampleDescription.getAncestralGroups();
+            if (ancestralGroups == null) {
                 line.append("");
             }
             else {
-                line.append(tidyStringForOutput(ancestralGroup));
+                line.append(createAncestralGroupString(ancestralGroups));
             }
             line.append("\t");
 
             // Origin
-            String countryOfOrigin = studySampleDescription.getCountryOfOrigin();
+            Collection<Country> countryOfOrigin = studySampleDescription.getCountryOfOrigin();
             if (countryOfOrigin == null) {
                 line.append("");
             }
             else {
-                line.append(tidyStringForOutput(countryOfOrigin));
+                line.append(createCountryString(countryOfOrigin));
             }
             line.append("\t");
 
             // Recruitment
-            String countryOfRecruitment = studySampleDescription.getCountryOfRecruitment();
+            Collection<Country> countryOfRecruitment = studySampleDescription.getCountryOfRecruitment();
             if (countryOfRecruitment == null) {
                 line.append("");
             }
             else {
-                line.append(tidyStringForOutput(countryOfRecruitment));
+                line.append(createCountryString(countryOfRecruitment));
             }
             line.append("\t");
 
@@ -302,6 +304,34 @@ public class StudySampleDescriptionsDownloadService {
         }
 
         return output.toString();
+    }
+
+    private String createCountryString(Collection<Country> countries) {
+        String c = null;
+        for(Country country : countries){
+            if(c == null){
+                c = country.getCountryName();
+            }
+            else {
+                c = c.concat(", ").concat(country.getCountryName());
+            }
+        }
+
+        return c;
+    }
+
+    private String createAncestralGroupString(Collection<AncestralGroup> ancestralGroups) {
+        String ag = null;
+        for(AncestralGroup ancestralGroup : ancestralGroups){
+            if(ag == null){
+                ag = ancestralGroup.getAncestralGroup();
+            }
+            else {
+                ag = ag.concat(", ").concat(ancestralGroup.getAncestralGroup());
+            }
+        }
+
+        return ag;
     }
 
     private String tidyStringForOutput(String output) {

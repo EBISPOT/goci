@@ -285,10 +285,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     ancestryLink = type;
 
-                    String coo;
+                    String coo = null;
 
                     if(ancestry.getCountryOfOrigin() != null) {
-                        coo = ancestry.getCountryOfOrigin();
+                        for(Country c : ancestry.getCountryOfOrigin()){
+                            if (coo == null){
+                                coo = c.getCountryName();
+                            }
+                            else {
+                                coo = coo.concat(", ").concat(c.getCountryName());
+                            }
+                        }
                     }
                     else {
                         coo = "NR";
@@ -297,22 +304,34 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     ancestryLink = ancestryLink.concat("|").concat(coo);
 
 
-                    String cor;
+                    String cor = null;
 
                     if (ancestry.getCountryOfRecruitment() != null) {
-                        cor = ancestry.getCountryOfRecruitment();
-                    }
+                        for(Country c : ancestry.getCountryOfRecruitment()){
+                            if (cor == null){
+                                cor = c.getCountryName();
+                            }
+                            else {
+                                cor = cor.concat(", ").concat(c.getCountryName());
+                            }
+                        }                    }
                     else {
                         cor = "NR";
                     }
                     countriesOfRecruitment.add(cor);
                     ancestryLink = ancestryLink.concat("|").concat(cor);
 
-                    String ances = "";
+                    String ances = null;
 
-                    if (ancestry.getAncestralGroup() != null) {
-                        ances = ancestry.getAncestralGroup();
-                    }
+                    if (ancestry.getAncestralGroups() != null) {
+                        for(AncestralGroup a : ancestry.getAncestralGroups()){
+                            if (ances == null){
+                                ances = a.getAncestralGroup();
+                            }
+                            else {
+                                ances = ances.concat(", ").concat(a.getAncestralGroup());
+                            }
+                        }                    }
                     else{
                         ances = "NR";
                     }

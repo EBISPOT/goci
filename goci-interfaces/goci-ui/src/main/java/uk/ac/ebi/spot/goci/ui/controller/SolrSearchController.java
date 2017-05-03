@@ -265,7 +265,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "resourcename", "study");
         }
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
@@ -353,7 +353,7 @@ public class SolrSearchController {
 
         }
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
@@ -392,7 +392,7 @@ public class SolrSearchController {
         }
 
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
@@ -487,7 +487,7 @@ public class SolrSearchController {
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
@@ -635,7 +635,7 @@ public class SolrSearchController {
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
@@ -763,7 +763,7 @@ public class SolrSearchController {
                 counter++;
             }
         }
-        System.out.println(filterString);
+        getLog().trace(filterString);
         solrSearchBuilder.append("&fq=").append(filterString);
 
     }
@@ -829,7 +829,7 @@ public class SolrSearchController {
     }
 
     private void dispatchSearch(String searchString, OutputStream out) throws IOException {
-        System.out.println(searchString);
+        getLog().trace(searchString);
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
@@ -919,7 +919,7 @@ public class SolrSearchController {
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
         if (traits != null && traits.length != 0) {
-            System.out.println(String.valueOf(traits));
+            getLog().trace(String.valueOf(traits));
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
@@ -981,7 +981,7 @@ public class SolrSearchController {
 
 
     private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
-        System.out.println(searchString);
+        getLog().trace(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {

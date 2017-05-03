@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RestResponseResult;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.EnsemblRestcallHistoryService;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class EnsemblMappingPipeline {
 
     private final List<String> reportedGenesToIgnore = Arrays.asList("NR", "intergenic", "genic");
 
-    private EnsemblRestService ensemblRestService;
+    private EnsemblRestTemplateService ensemblRestTemplateService;
 
     private EnsemblMappingResult ensemblMappingResult;
 
@@ -72,11 +73,11 @@ public class EnsemblMappingPipeline {
     protected Logger getLog() {
         return log;
     }
-
+    
     @Autowired
-    public EnsemblMappingPipeline(EnsemblRestService ensemblRestService,
+    public EnsemblMappingPipeline(EnsemblRestTemplateService ensemblRestTemplateService,
                                   EnsemblRestcallHistoryService ensemblRestcallHistoryService) {
-        this.ensemblRestService = ensemblRestService;
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
         this.ensemblRestcallHistoryService = ensemblRestcallHistoryService;
     }
 
@@ -91,7 +92,7 @@ public class EnsemblMappingPipeline {
         // Variation call
         RestResponseResult variationDataApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion("snp",rsId, eRelease);
         if (variationDataApiResult  == null) {
-            variationDataApiResult = ensemblRestService.getRestCall("variation", rsId, "");
+            variationDataApiResult = ensemblRestTemplateService.getRestCall("variation", rsId, "");
             ensemblRestcallHistoryService.create(variationDataApiResult, "snp", rsId, eRelease);
         }
 
@@ -179,7 +180,7 @@ public class EnsemblMappingPipeline {
                         "lookup_symbol", reportedGene, eRelease);
 
                 if (reportedGeneApiResult == null) {
-                    reportedGeneApiResult = ensemblRestService.getRestCall(webservice, reportedGene, "");
+                    reportedGeneApiResult = ensemblRestTemplateService.getRestCall(webservice, reportedGene, "");
                     ensemblRestcallHistoryService.create(reportedGeneApiResult, "lookup_symbol", reportedGene, eRelease);
                 }
                 // Check for errors
@@ -704,9 +705,10 @@ public class EnsemblMappingPipeline {
 
         RestResponseResult restResponseResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion("overlap_region", param, eRelease);
         if (restResponseResult == null) {
-            restResponseResult = ensemblRestService.getRestCall("overlap_region", data, rest_opt);
+            restResponseResult = ensemblRestTemplateService.getRestCall("overlap_region", data, rest_opt);
             ensemblRestcallHistoryService.create(restResponseResult, "overlap_region", param, eRelease);
         }
+
         JsonNode result = restResponseResult.getRestResult();
         JSONArray overlap_result = new JSONArray();
 
@@ -738,7 +740,7 @@ public class EnsemblMappingPipeline {
                 "info_assembly", chromosome, eRelease);
 
         if (restResponseResult == null) {
-            restResponseResult = ensemblRestService.getRestCall(webservice, chromosome, "");
+            restResponseResult = ensemblRestTemplateService.getRestCall(webservice, chromosome, "");
             ensemblRestcallHistoryService.create(restResponseResult, "info_assembly", chromosome, eRelease);
         }
         JSONObject info_result = restResponseResult.getRestResult().getObject();

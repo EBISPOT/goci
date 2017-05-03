@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import com.sun.javafx.binding.SelectBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,31 @@ public class AssociationQueryService {
         association.getEvents();
 
     }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findLSFAssociations(Integer numJob, Integer lenghtInterval) {
+        Integer min = (lenghtInterval*(numJob-1))+1;
+        Integer max = (lenghtInterval*numJob);
+        System.out.println("Association rows: " + min + " - " + max );
+        Collection<Association> allAssociations = associationRepository.findAllLSF(min,max);
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findAssociationToMap() {
+        Collection<Association> allAssociations = associationRepository.findBylastMappingDateIsNull();
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findAssociationAssociationData(Collection<Association> allAssociations) {
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
 
     // Sort options
     private Sort sortByIdDesc() {

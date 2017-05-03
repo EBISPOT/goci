@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
+import uk.ac.ebi.spot.goci.service.*;
 import uk.ac.ebi.spot.goci.model.DeletedStudy;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Event;
@@ -14,8 +14,6 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.WeeklyTrackingService;
-import uk.ac.ebi.spot.goci.service.CuratorTrackingService;
 
 import java.util.Collection;
 
@@ -34,8 +32,7 @@ public class StudyDeletionService {
     private TrackingOperationService trackingOperationService;
     private StudyRepository studyRepository;
     private DeletedStudyRepository deletedStudyRepository;
-    private CuratorTrackingService curatorTrackingService;
-    private WeeklyTrackingService weeklyTrackingService;
+    private StudyService studyService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -48,15 +45,12 @@ public class StudyDeletionService {
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
                                 DeletedStudyRepository deletedStudyRepository,
-                                CuratorTrackingService curatorTrackingService,
-                                WeeklyTrackingService weeklyTrackingService) {
+                                StudyService studyService) {
         this.ancestryRepository = ancestryRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
-        this.curatorTrackingService = curatorTrackingService;
-        this.weeklyTrackingService = weeklyTrackingService;
-
+        this.studyService = studyService;
     }
     /**
      * Delete a study
@@ -76,11 +70,9 @@ public class StudyDeletionService {
             ancestryRepository.delete(ancestry);
         }
 
-        // Delete the curatorTracking rows related
-        curatorTrackingService.deleteByStudy(study);
-
-        // Delete the weeklyTracking rows related
-        weeklyTrackingService.deleteByStudy(study);
+        // WeeklyTracking, CuratorTracking and Note. Please use this method!
+        // Shared with === DataDeletionService ===
+        studyService.deleteRelatedInfoByStudy(study);
 
         // Add deletion event
         trackingOperationService.delete(study, user);

@@ -54,20 +54,30 @@ public class MappingErrorComparisonService {
         this.studyRepository = studyRepository;
     }
 
+    public Collection<AssociationReport> getnewAssociationReports(boolean isLSF, Integer min, Integer max) {
+        Collection<AssociationReport> associationReports = new ArrayList<AssociationReport>();
+        if (isLSF){associationReports=associationReportRepository.findAllLSF(min,max); }
+        else { associationReports=associationReportRepository.findAll();}
+        return associationReports;
+    }
+
     /**
      * Method used to compare errors from a previous mapping run. Looking for SNPs with new errors, or SNPs with a
      * different type of error.
      *
      * @param oldErrors collection of all association reports in database before mapping to latest Ensembl release
      */
-    public void compareOldVersusNewErrors(Collection<AssociationReport> oldErrors) {
+    public void compareOldVersusNewErrors(Collection<AssociationReport> oldErrors, boolean isLSF, Integer min,
+                                          Integer max) {
 
         // Find all the latest association reports containing mapping errors
-        Collection<AssociationReport> newAssociationReports = associationReportRepository.findAll();
+        getLog().debug("Method used to compare errors from a previous mapping run");
+        Collection<AssociationReport> newAssociationReports = getnewAssociationReports(isLSF,min,max);
+        getLog().debug("1");
         Map<Long, AssociationReport> associationIdToNewAssociationReportMap =
                 createNewReportsMap(newAssociationReports);
         Collection<MappingErrorComparisonReport> comparisonReports = new ArrayList<>();
-
+        getLog().debug("2");
         // Create report
         for (AssociationReport oldErrorReport : oldErrors) {
             MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();
@@ -140,7 +150,7 @@ public class MappingErrorComparisonService {
                 comparisonReports.add(mappingErrorComparisonReport);
             }
         }
-
+        getLog().debug("create file");
         createFile(comparisonReports);
     }
 

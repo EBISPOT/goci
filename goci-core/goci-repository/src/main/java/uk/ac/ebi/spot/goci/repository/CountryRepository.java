@@ -13,4 +13,6 @@ import uk.ac.ebi.spot.goci.model.Country;
  */
 @RepositoryRestResource
 public interface CountryRepository extends JpaRepository<Country, Long> {
+
+    Country findByCountryName(String countryName);
 }

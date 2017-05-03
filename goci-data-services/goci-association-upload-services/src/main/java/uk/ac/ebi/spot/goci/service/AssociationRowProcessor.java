@@ -267,20 +267,26 @@ public class AssociationRowProcessor {
         List<String> snps = new ArrayList<>();
         String[] separatedSnps = snp.split(delimiter);
         for (String separatedSnp : separatedSnps) {
-            snps.add(separatedSnp.trim());
+//            if(separatedSnp != null & separatedSnp.trim().equals("")) {
+                snps.add(separatedSnp.trim());
+//            }
         }
 
         List<String> riskAlleles = new ArrayList<>();
         String[] separatedRiskAlleles = strongestAllele.split(delimiter);
         for (String separatedRiskAllele : separatedRiskAlleles) {
-            riskAlleles.add(separatedRiskAllele.trim());
+//            if(separatedRiskAllele != null & separatedRiskAllele.trim().equals("")) {
+                riskAlleles.add(separatedRiskAllele.trim());
+//            }
         }
 
         List<String> proxies = new ArrayList<>();
         if (proxy != null) {
             String[] separatedProxies = proxy.split(delimiter);
             for (String separatedProxy : separatedProxies) {
-                proxies.add(separatedProxy.trim());
+//                if(separatedProxy != null & separatedProxy.trim().equals("")) {
+                    proxies.add(separatedProxy.trim());
+//                }
             }
         }
 
@@ -330,17 +336,18 @@ public class AssociationRowProcessor {
                         String proxyValue = proxyIterator.next().trim();
 
                         Collection<SingleNucleotidePolymorphism> newRiskAlleleProxies = new ArrayList<>();
-                        if (proxyValue.contains(":")) {
-                            String[] splitProxyValues = proxyValue.split(":");
-
-                            for (String splitProxyValue : splitProxyValues) {
-                                SingleNucleotidePolymorphism proxySnp =
-                                        associationAttributeService.createSnp(splitProxyValue.trim());
-                                newRiskAlleleProxies.add(proxySnp);
-                            }
-                        }
-
-                        else if (proxyValue.contains(",")) {
+//                        if (proxyValue.contains(":")) {
+//                            String[] splitProxyValues = proxyValue.split(":");
+//
+//                            for (String splitProxyValue : splitProxyValues) {
+//                                SingleNucleotidePolymorphism proxySnp =
+//                                        associationAttributeService.createSnp(splitProxyValue.trim());
+//                                newRiskAlleleProxies.add(proxySnp);
+//                            }
+//                        }
+//
+//                        else
+                        if (proxyValue.contains(",")) {
                             String[] splitProxyValues = proxyValue.split(",");
 
                             for (String splitProxyValue : splitProxyValues) {

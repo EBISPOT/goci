@@ -21,13 +21,7 @@ import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by emma on 13/08/2015.
@@ -135,21 +129,29 @@ public class MappingService {
         // Default mapping user
         SecureUser user = secureUserRepository.findByEmail("automatic_mapping_process");
         String eRelease = this.getEnsemblRelease();
-        try {
+        int totalAssociationDone=1;
+        List<Long> associationsFailed = new ArrayList<Long>();
             for (Association association : associations) {
-                doMapping(association, eRelease);
+                try {
 
-                // Update mapping event
-                trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
+                    getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
+                    doMapping(association, eRelease);
 
-                // Once mapping is complete, update mapping record
-                getLog().debug("Update mapping record");
-                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+                    // Update mapping event
+                    trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
+
+                    // Once mapping is complete, update mapping record
+                    getLog().debug("Update mapping record");
+                    mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+                    totalAssociationDone = totalAssociationDone + 1;
+                } catch (EnsemblMappingException e) {
+                    //throw new EnsemblMappingException("Attempt to map all associations failed", e);
+                    associationsFailed.add(association.getId());
+
+                }
             }
-        }
-        catch (EnsemblMappingException e) {
-            throw new EnsemblMappingException("Attempt to map all associations failed", e);
-        }
+        getLog().debug("Number of associations FAILED");
+        getLog().debug(String.valueOf(associationsFailed.size()));
     }
 
     private void doMapping(Association association, String eRelease) throws EnsemblMappingException {

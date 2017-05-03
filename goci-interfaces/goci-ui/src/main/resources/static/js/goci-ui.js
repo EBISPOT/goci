@@ -48,7 +48,7 @@ function doSearch() {
 
     // redirect to search page
 
-    if ((path.indexOf("docs") != -1 && pagename != "docs") || path.indexOf("variant") != -1 || (path.indexOf("downloads") != -1 && pagename != "downloads")) {
+    if ((path.indexOf("docs") != -1 && pagename != "docs") || path.indexOf("variant") != -1 || (path.indexOf("downloads") != -1 && pagename != "downloads") || path.indexOf("traits") != -1) {
         window.location = "../search?query=" + searchTerm;
     }
     else {

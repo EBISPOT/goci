@@ -8,11 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.ArrayList;
@@ -30,11 +26,23 @@ import java.util.List;
 public class StudyService {
     private StudyRepository studyRepository;
 
+    private CuratorTrackingService curatorTrackingService;
+
+    private WeeklyTrackingService weeklyTrackingService;
+
+    private StudyNoteService studyNoteService;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public StudyService(StudyRepository studyRepository) {
+    public StudyService(StudyRepository studyRepository,
+                        CuratorTrackingService curatorTrackingService,
+                        WeeklyTrackingService weeklyTrackingService,
+                        StudyNoteService studyNoteService) {
         this.studyRepository = studyRepository;
+        this.curatorTrackingService = curatorTrackingService;
+        this.weeklyTrackingService = weeklyTrackingService;
+        this.studyNoteService = studyNoteService;
     }
 
     protected Logger getLog() {
@@ -284,8 +292,26 @@ public class StudyService {
         }
     }
 
+    // Shared with === DataDeletionService and StudyDeletionService ===
+    public void deleteRelatedInfoByStudy(Study study) {
+        // Delete the curatorTracking rows related
+        curatorTrackingService.deleteByStudy(study);
+
+        // Delete the weeklyTracking rows related
+        weeklyTrackingService.deleteByStudy(study);
+
+        // Delete the note rows related
+        studyNoteService.deleteAllNoteByStudy(study);
+    }
+
 //convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time
     public void deleteByStudyId(Long studyId){
         studyRepository.delete(studyId);
     }
+
+    public Study findOne(Long id){
+        //#xintodo this could be the place to add exception if a study is null
+        return studyRepository.findOne(id);
+    }
+
 }

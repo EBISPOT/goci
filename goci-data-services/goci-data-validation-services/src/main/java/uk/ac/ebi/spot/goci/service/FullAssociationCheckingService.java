@@ -21,13 +21,15 @@ public class FullAssociationCheckingService implements AssociationCheckingServic
 
     @Override
     public Collection<ValidationError> runChecks(Association association,
-                                                 ValidationChecksBuilder validationChecksBuilder) {
+                                                 ValidationChecksBuilder validationChecksBuilder,
+                                                 String eRelease) {
 
         // Create collection to store all newly created associations
         Collection<ValidationError> associationValidationErrors = new ArrayList<>();
 
         // Run loci attribute checks i.e. risk allele, snp amd author reported genes
-        Collection<ValidationError> lociAttributeErrors = validationChecksBuilder.runLociAttributeChecks(association);
+        Collection<ValidationError> lociAttributeErrors = validationChecksBuilder.runLociAttributeChecks(association,
+                eRelease);
         if (!lociAttributeErrors.isEmpty()) {
             associationValidationErrors.addAll(lociAttributeErrors);
         }
