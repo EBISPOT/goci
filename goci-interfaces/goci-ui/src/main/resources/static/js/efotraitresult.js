@@ -493,7 +493,7 @@ function getFirstReportYear(data) {
         }
     });
     if (study_date != '') {
-        study_date = "Variant first reported in GWAS Catalog in <b>" + study_date + "</b>";
+        study_date = "EFO trait first reported in GWAS Catalog in <b>" + study_date + "</b>";
     }
     return study_date;
 }

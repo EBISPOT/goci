@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -99,6 +100,11 @@ public class SolrSearchController {
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "max", required = false, defaultValue = "10000") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "group.limit", required = false, defaultValue = "100") int groupLimit,
+            @RequestParam(value = "group.field", required = false, defaultValue = "resourcename") String groupField,
+            @RequestParam(value = "facet.field", required = false, defaultValue = "resourcename") String facetField,
+            @RequestParam(value = "hl.fl", required = false, defaultValue = "shortForm,efoLink") String hlFl,
+            @RequestParam(value = "hl.snippets", required = false, defaultValue = "1") int hlSnippets,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -106,12 +112,17 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-//        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
+        //        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
         addQuery(solrSearchBuilder, query);
-        addGrouping(solrSearchBuilder,"resourcename",9999999);
-        addFacet(solrSearchBuilder,"resourcename");
+        addGrouping(solrSearchBuilder, groupField, groupLimit);
+        addFacet(solrSearchBuilder, facetField);
+
+        Collection<String> highlights = new HashSet<String>(Arrays.asList(hlFl.split(",")));
+
+        addHighlights(solrSearchBuilder,highlights,hlSnippets);
+
         //xintodo commend out when live
-        System.out.print(solrSearchBuilder.toString()+"\n");
+        System.out.print(solrSearchBuilder.toString() + "\n");
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
@@ -261,7 +272,6 @@ public class SolrSearchController {
     }
 
 
-
     @RequestMapping(value = "api/search/traitcount", produces = MediaType.APPLICATION_JSON_VALUE)
     public void doTraitCountSolrSearch(
             @RequestParam("q") String query,
@@ -284,10 +294,10 @@ public class SolrSearchController {
         addFacetMincount(solrSearchBuilder, mincount);
         addFacetLimit(solrSearchBuilder, limit);
 
-        if(query.contains("chromosomeName") && query.contains("chromosomePosition")){
+        if (query.contains("chromosomeName") && query.contains("chromosomePosition")) {
             addFilterQuery(solrSearchBuilder, "resourcename", "association");
         }
-        else{
+        else {
             addFilterQuery(solrSearchBuilder, "resourcename", "study");
         }
         if (traits != null && traits.length != 0) {
@@ -354,13 +364,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "true");
+            //            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "false");
+            //            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -368,7 +378,7 @@ public class SolrSearchController {
             addFilterQuery(solrSearchBuilder, "publicationDate", "study_publicationDate", dateRange);
 
         }
-        if(genomicRange != "") {
+        if (genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -495,20 +505,20 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "true");
+            //            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "false");
+            //            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if(genomicRange != "") {
+        if (genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -633,13 +643,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "true");
+            //            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "false");
+            //            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -656,7 +666,7 @@ public class SolrSearchController {
                 addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
             }
         }
-        if(genomicRange != "") {
+        if (genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -670,7 +680,7 @@ public class SolrSearchController {
             addSortQuery(solrSearchBuilder, sort);
         }
 
-        if(facet.equals("association")){
+        if (facet.equals("association")) {
             addDefaultSort(solrSearchBuilder);
         }
         addQuery(solrSearchBuilder, query);
@@ -681,7 +691,7 @@ public class SolrSearchController {
 
     private void addSortQuery(StringBuilder solrSearchBuilder, String sort) {
         if (sort.contains("pValue")) {
-//            String dir = sort.substring(sort.length() - 4);
+            //            String dir = sort.substring(sort.length() - 4);
             String dir = sort.substring(6);
 
 
@@ -694,7 +704,7 @@ public class SolrSearchController {
         }
     }
 
-    private void addDefaultSort(StringBuilder solrSearchBuilder){
+    private void addDefaultSort(StringBuilder solrSearchBuilder) {
         String pvalsort = "pValueExponent+asc%2C+pValueMantissa+asc";
 
         solrSearchBuilder.append("&sort=").append(pvalsort);
@@ -734,18 +744,17 @@ public class SolrSearchController {
     }
 
     private void addHighlights(StringBuilder solrSearchBuilder, Collection<String> highlights) {
+        addHighlights(solrSearchBuilder,highlights,1);
+    }
+
+    private void addHighlights(StringBuilder solrSearchBuilder, Collection<String> highlights, Integer hlSnippets) {
         solrSearchBuilder.append("&hl=true")
                 .append("&hl.simple.pre=%3Cb%3E")
                 .append("&hl.simple.post=%3C%2Fb%3E")
+                .append("hk.snippets="+hlSnippets.toString())
                 .append("&hl.fl=");
 
-        String hlfs = "";
-
-        for (String highlight : highlights) {
-            hlfs.concat(highlight).concat("+");
-        }
-
-        solrSearchBuilder.append(hlfs);
+        solrSearchBuilder.append(String.join(",", highlights));
     }
 
 
@@ -811,19 +820,19 @@ public class SolrSearchController {
         solrSearchBuilder.append("&fq=").append(filterString);
     }
 
-    private void addGenomicRangeFilterQuery(StringBuilder solrSearchBuilder, String genomicRange){
+    private void addGenomicRangeFilterQuery(StringBuilder solrSearchBuilder, String genomicRange) {
         String chrom = null;
         String bp = null;
-        if(genomicRange.contains("-")){
+        if (genomicRange.contains("-")) {
             chrom = genomicRange.split("-")[0];
             bp = genomicRange.split("-")[1];
         }
-        else{
+        else {
             bp = genomicRange;
         }
         String filterString = "";
 
-        if(chrom != null){
+        if (chrom != null) {
             filterString = "chromosomeName:".concat(chrom).concat("+AND+");
         }
 
@@ -857,7 +866,7 @@ public class SolrSearchController {
     private void dispatchSearch(String searchString, OutputStream out) throws IOException {
         getLog().trace(searchString);
         //xintodo commend out when live
-        System.out.print(searchString.toString()+"\n");
+        System.out.print(searchString.toString() + "\n");
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {
@@ -876,7 +885,7 @@ public class SolrSearchController {
             getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
             HttpEntity entity = response.getEntity();
             entity.writeTo(out);
-//            entity.writeTo(System.out);
+            //            entity.writeTo(System.out);
             EntityUtils.consume(entity);
         }
     }
@@ -898,7 +907,7 @@ public class SolrSearchController {
 
     //    @RequestMapping(value = "api/search/downloads", produces = MediaType.TEXT_PLAIN_VALUE)
     @RequestMapping(value = "api/search/downloads")
-//    @CrossOrigin
+    //    @CrossOrigin
     public void getSearchResults(
             @RequestParam("q") String query,
             @RequestParam(value = "pvalfilter", required = false) String pval,
@@ -930,19 +939,19 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "true");
+            //            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-//            addFilterQuery(solrSearchBuilder, "orType", "false");
+            //            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if(genomicRange != "") {
+        if (genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -977,11 +986,11 @@ public class SolrSearchController {
             if (addedDateRange != "") {
                 fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
             }
-            else if (traits != null && traits.length != 0){
+            else if (traits != null && traits.length != 0) {
                 fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
             }
-            else{
-                if(efo){
+            else {
+                if (efo) {
                     fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
                 else {
@@ -989,7 +998,7 @@ public class SolrSearchController {
                 }
             }
         }
-        else if (ancestry){
+        else if (ancestry) {
             fileName = "gwas_catalog-ancestry-downloaded_".concat(now).concat(".tsv");
 
         }
@@ -1008,7 +1017,11 @@ public class SolrSearchController {
     }
 
 
-    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
+    private void dispatchDownloadSearch(String searchString,
+                                        OutputStream outputStream,
+                                        boolean efo,
+                                        String facet,
+                                        boolean ancestry) throws IOException {
         getLog().trace(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
