@@ -32,12 +32,13 @@ public class GlobalExceptionHandlingControllerAdvice {
     public static final String DEFAULT_ERROR_VIEW = "error";
 
     private org.slf4j.Logger log = LoggerFactory.getLogger(getClass());
+
     protected org.slf4j.Logger getLog() {
         return log;
     }
 
     //    //xintodo more
-    //    @ResponseStatus(value=HttpStatus.CONFLICT, reason="Data integrity violation")  // 409
+    //    @ResponseStatus(value=HttpStatus.CONFLICT, reason=“Data integrity violation”)  // 409
     //    @ExceptionHandler(DataIntegrityViolationException.class)
     //    public void conflict() {
     //        // Nothing to do
@@ -53,26 +54,29 @@ public class GlobalExceptionHandlingControllerAdvice {
         // the framework handle it - like the OrderNotFoundException example
         // at the start of this post.
         // AnnotationUtils is a Spring Framework utility class.
-        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null)
-            throw e;
+        if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) { throw e; }
 
-        getLog().warn("Unhandled exception caught GlobalExceptionHandlingControllerAdvice when User <" + req.getRemoteUser().toString() + "> requesting " + req.getRequestURL().toString() + " with HTTP-" + req.getMethod());
+        getLog().warn("Unhandled exception caught GlobalExceptionHandlingControllerAdvice when User <"
+                + req.getRemoteUser().toString() + "> requesting " + req.getRequestURL().toString()
+                + " with HTTP- " + req.getMethod());
         getLog().warn("Exception: " + e);
+        getLog().warn("Cause: " + e.getCause().getCause().toString());
 
 
-        //        getLog().warn("Request Details:");
+        //print all request header/parameters
+        //        getLog().warn(“Request Details:“);
 
         //        Enumeration<String> headerNames = req.getHeaderNames();
         //        while(headerNames.hasMoreElements()) {
         //            String headerName = (String)headerNames.nextElement();
-        //            getLog().warn("Header Name - " + headerName + ", Value - " + req.getHeader(headerName));
+        //            getLog().warn(“Header Name - ” + headerName + “, Value - ” + req.getHeader(headerName));
         //        }
         //
         //
         //        Enumeration<String> params = req.getParameterNames();
         //        while(params.hasMoreElements()){
         //            String paramName = (String)params.nextElement();
-        //            getLog().warn("Parameter Name - "+paramName+", Value - "+req.getParameter(paramName));
+        //            getLog().warn(“Parameter Name - “+paramName+“, Value - “+req.getParameter(paramName));
         //        }
 
 
@@ -84,28 +88,18 @@ public class GlobalExceptionHandlingControllerAdvice {
         getLog().warn(sw.toString());
 
 
-
         // Otherwise setup and send the user to a default error-view.
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
+        mav.addObject("message", e.getCause().getCause().toString());
         mav.addObject("url", req.getRequestURL());
-        mav.addObject("trace",e.getStackTrace());
+        mav.addObject("trace", sw.toString());
         mav.addObject("path", req.getRequestURL());
         mav.setViewName(DEFAULT_ERROR_VIEW);
         return mav;
+
+
     }
-
-
-
-    /**
-     * add mode attribute for all controller returned model
-     * @param model
-     */
-    //    @ModelAttribute
-    //    public void globalAttributes(Model model) {
-    //        model.addAttribute("msg", "Welcome to My World!");
-    //    }
-
 
 
 }

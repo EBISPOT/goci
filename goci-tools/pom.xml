@@ -32,5 +32,6 @@
         <module>goci-data-release-qc</module>
         <module>goci-association-file-validator</module>
         <module>goci-public-data-export</module>
+        <module>goci-email-service</module>
     </modules>
 </project>

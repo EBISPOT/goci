@@ -107,6 +107,10 @@
             <artifactId>tomcat-embed-el</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-email-service</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>

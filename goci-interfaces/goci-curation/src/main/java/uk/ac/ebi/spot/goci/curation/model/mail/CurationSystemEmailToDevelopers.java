@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model.mail;
 
+import uk.ac.ebi.spot.goci.model.GenericEmail;
+
 /**
  * Created by emma on 08/03/2016.
  *
@@ -7,7 +9,7 @@ package uk.ac.ebi.spot.goci.curation.model.mail;
  *         <p>
  *         Concrete implementation of emails sent to developers
  */
-public class CurationSystemEmailToDevelopers extends CurationSystemEmail {
+public class CurationSystemEmailToDevelopers extends GenericEmail {
 
     public void createReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase,
                                          int latestEnsemblReleaseNumber) {

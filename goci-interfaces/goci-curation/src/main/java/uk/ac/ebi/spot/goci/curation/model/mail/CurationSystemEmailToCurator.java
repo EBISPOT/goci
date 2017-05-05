@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model.mail;
 
+import uk.ac.ebi.spot.goci.model.GenericEmail;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.text.SimpleDateFormat;
@@ -12,7 +13,7 @@ import java.util.Date;
  *         <p>
  *         Concrete implementation of emails sent to curators
  */
-public class CurationSystemEmailToCurator extends CurationSystemEmail {
+public class CurationSystemEmailToCurator extends GenericEmail {
 
     public void createBody(Study study, String status) {
         // Set up some of the values used in mail body
