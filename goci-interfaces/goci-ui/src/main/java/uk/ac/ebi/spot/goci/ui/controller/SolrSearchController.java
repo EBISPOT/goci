@@ -751,7 +751,7 @@ public class SolrSearchController {
         solrSearchBuilder.append("&hl=true")
                 .append("&hl.simple.pre=%3Cb%3E")
                 .append("&hl.simple.post=%3C%2Fb%3E")
-                .append("hk.snippets="+hlSnippets.toString())
+                .append("&hl.snippets="+hlSnippets.toString())
                 .append("&hl.fl=");
 
         solrSearchBuilder.append(String.join(",", highlights));

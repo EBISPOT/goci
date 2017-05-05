@@ -394,10 +394,10 @@
 <!-- Bootstrap core JavaScript
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
 <script src="../static/tmp/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
 <script src="../static/tmp/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
 
 <script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
@@ -424,7 +424,7 @@
 <link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
 
 <!--script for OLS-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>-->
 <script src="../static/tmp/jstree.min.js" th:src="@{../../tmp/jstree.min.js}"></script>
 
 <script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
@@ -442,10 +442,10 @@
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/typeaheadjs.css"
       th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>-->
 <script src="../static/tmp/handlebars.min.js" th:src="@{../../tmp/handlebars.min.js}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>-->
 <script src="../static/tmp/typeahead.bundle.min.js" th:src="@{../../tmp/typeahead.bundle.min.js}"></script>
 
 <script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
@@ -1021,6 +1021,7 @@
         var legend = [];
 
         data_association.docs.forEach(function(d, i) {
+            //algorithm for select efo for association
             allEFO.push(d.mappedUri[0]);
         })
         //unique only
@@ -1049,15 +1050,8 @@
         var plot = LocusZoom.populate(plot_id, data_sources, layout);
     }
 
-    //function to pick acolor for a give efo term
-    findColor = function(term){
-        var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + term;
 
-    }
 
-    getColorFromDiagram(){
-
-    }
 
     //add event to refreash the plot when the selected node changed
     $('.selected_nodes').bind("DOMSubtreeModified", function() {
@@ -1159,6 +1153,8 @@
             //split the solr search by groups
             var data_efo, data_study, data_association, data_diseasetrait;
             var data_facet = data.facet_counts.facet_fields.resourcename;
+            var data_highlighting = data.highlighting;
+
             $.each(data.grouped.resourcename.groups, function(index, group) {
                 switch (group.groupValue) {
                     case "efotrait":
@@ -1178,6 +1174,31 @@
                         ;
                 }
             })
+
+            //add prefered efo term
+            data_association.docs.forEach(function(d,i){
+                d.preferedEFO = findHightlightedEFOforAssociation(d.accessionId);
+                if(d.preferedEFO.length > 1){
+                    d.preferedColor = 'aaaaa'
+                }else{
+                    d.preferedColor = findColorForEFO(d.preferedEFO)
+                }
+            })
+
+            findHightlightedEFOsforAssociation = function(association_id){
+                var terms = data.highlighting[association_id].shortForm;
+                return terms;
+            }
+
+            //function to pick a color for a give efo term
+            findColorForEFO = function(efo){
+                //xintodo query api for color, may use batch query
+                var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + efo
+                return 'red';
+            }
+
+
+
             if (initLoad) {
                 getEfoTraitInfo(data_efo.docs, efotraitId);
                 getSummary(data_study);
