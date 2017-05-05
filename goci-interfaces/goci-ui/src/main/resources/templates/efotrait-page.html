@@ -326,9 +326,14 @@
             </div>
         </div>
 
+        <div>Current terms:
+            <div id="efoterms" class="selected_nodes1">[]</div>
+            <div id="efoterms_text"></div>
+        </div>
 
         <div class="row">
-            <div class="col-xs-5"><!--ols tree-->
+            <div class="col-xs-5">
+                <!--ols tree-->
                 <div>
                     <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
 
@@ -390,8 +395,12 @@
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="../static/tmp/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
+<script src="../static/tmp/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
+
+<script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
         th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
@@ -416,6 +425,8 @@
 
 <!--script for OLS-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script src="../static/tmp/jstree.min.js" th:src="@{../../tmp/jstree.min.js}"></script>
+
 <script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
 <!--<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>-->
 <link rel="stylesheet"
@@ -432,7 +443,11 @@
       href="../static/css/ols_auto_complete/typeaheadjs.css"
       th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="../static/tmp/handlebars.min.js" th:src="@{../../tmp/handlebars.min.js}"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
+<script src="../static/tmp/typeahead.bundle.min.js" th:src="@{../../tmp/typeahead.bundle.min.js}"></script>
+
 <script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
 
 
@@ -507,7 +522,6 @@
     LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
         this.parseInit(init);
     }, "EfoWASLZ");
-
 
     //we are not using api to fetch data, when
     LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
@@ -1035,6 +1049,17 @@
         var plot = LocusZoom.populate(plot_id, data_sources, layout);
     }
 
+    //function to pick acolor for a give efo term
+    findColor = function(term){
+        var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + term;
+
+    }
+
+    getColorFromDiagram(){
+
+    }
+
+    //add event to refreash the plot when the selected node changed
     $('.selected_nodes').bind("DOMSubtreeModified", function() {
         var efos = $(this).html().split(',');
         if (efos.length > 1) {
@@ -1050,13 +1075,22 @@
     });
 
     //xintodo add/remove terms when select/disselect terms
-    addToSelect = function(divId, terms) {
-        var current = $("#" + divId).html().split(',');
-        current = $.merge(current, terms)
+    addToSelect = function(divId, terms_ids) {
+
+        var current = JSON.parse($("#" + divId).html())
+
+        current = $.merge(current, terms_ids)
         current = $.unique(current).filter(function(v) {
             return v !== ''
         })
-        $("#" + divId).html(current.join(','));
+        $("#" + divId).html(JSON.stringify(current));
+
+//        var current_text = JSON.parse($("#" + divId + '_text').html());
+//        current_text = $.merge(current_text, term_label)
+//        current_text = $.unique(current_text).filter(function(v) {
+//            return v !== ''
+//        })
+//        $("#" + divId + '_text').html(JSON.stringify(current_text));
     }
 
 </script>
@@ -1096,8 +1130,8 @@
         $.getJSON('/gwas/api/search/efotrait',
                   {
                       'q': efotraitId,
-                      'max': 1000,
-                      'group.limit': 9999999,
+                      'max': 9999,
+                      'group.limit': 9999,
                       'group.field': 'resourcename',
                       'facet.field': 'resourcename',
                       'hl.fl': 'shortForm,efoLink',
@@ -1232,7 +1266,7 @@
     var searchTerm = $('#query').text();
     // initialise the tree
     instance.draw($("#term-tree"),
-                  false,
+                  true,
                   "efo",
                   "terms",
                   "http://www.ebi.ac.uk/efo/" + searchTerm,
@@ -1242,6 +1276,7 @@
 
 </script>
 
+<!--ols search-->
 <script>
     //ols search
     var cbselected_ids = [], cbselected_text = [];
@@ -1306,7 +1341,8 @@
                 console.log("iri (optional): " + iri)
 
 //                $("#autocomplete_selectednodes").html('EFO_' + iri.split("EFO_")[1]);
-                addToSelect('autocomplete_selectednodes', ['EFO_' + iri.split("EFO_")[1]]);
+//                addToSelect('autocomplete_selectednodes', ['EFO_' + iri.split("EFO_")[1]]);
+                addToSelect('efoterms', ['EFO_' + iri.split("EFO_")[1]]);
             }
         }
         instance.start(options)
