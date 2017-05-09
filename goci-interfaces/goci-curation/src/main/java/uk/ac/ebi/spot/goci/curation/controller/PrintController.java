@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.service.StudyPrintService;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -60,6 +61,7 @@ public class PrintController {
 
         // Get housekeeping and ancestry information
         Housekeeping housekeeping = studyToPrint.getHousekeeping();
+        Collection<StudyNote> studyNotes = studyToPrint.getNotes();
         String initialSampleDescription = studyToPrint.getInitialSampleSize();
         String replicateSampleDescription = studyToPrint.getReplicateSampleSize();
 
@@ -73,6 +75,8 @@ public class PrintController {
         infoToPrint.add(ancestryRepository.findByStudyIdAndType(studyId, "initial"));
         infoToPrint.add(ancestryRepository.findByStudyIdAndType(studyId, "replication"));
         infoToPrint.add(snpAssociationTableViews);
+        infoToPrint.add(studyNotes);
+
 
         return infoToPrint;
 
@@ -98,16 +102,16 @@ public class PrintController {
 
     // View a pubmed by study_id (list of studies related)
     @RequestMapping(value = "/pubmed/{pubmedId}/printview",
-            produces = MediaType.TEXT_HTML_VALUE,
-            method = RequestMethod.GET)
+                    produces = MediaType.TEXT_HTML_VALUE,
+                    method = RequestMethod.GET)
     public Callable<String> viewPrintableDetailsOfPubmed(Model model, @PathVariable String pubmedId) {
         return () -> {
             Hashtable<String, ArrayList<Object>> listStudies = new Hashtable<String, ArrayList<Object>>();
 
             Collection<Study> allStudiesByPubmedId = studyRepository.findByPubmedId(pubmedId);
-            for(Study studyToPrint : allStudiesByPubmedId){
+            for (Study studyToPrint : allStudiesByPubmedId) {
                 ArrayList<Object> infoToPrint = getStudyInfoToPrint(studyToPrint);
-                listStudies.put(studyToPrint.getId().toString(),infoToPrint);
+                listStudies.put(studyToPrint.getId().toString(), infoToPrint);
             }
 
             model.addAttribute("studiesToPrint", listStudies);

@@ -4,8 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmail;
+
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
+import uk.ac.ebi.spot.goci.model.GenericEmail;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,12 +15,13 @@ import static org.junit.Assert.assertEquals;
  *
  * @author emma
  *         <p>
- *         Test for uk/ac/ebi/spot/goci/curation/model/mail/CurationSystemEmail.java
+ *         Test for CurationSystemEmailToCurator
  */
+
 @RunWith(MockitoJUnitRunner.class)
 public class TestCurationSystemEmail {
 
-    private CurationSystemEmail email;
+    private GenericEmail email;
 
     @Before
     public void setUp() throws Exception {
