@@ -122,7 +122,7 @@ public class SolrSearchController {
         addHighlights(solrSearchBuilder,highlights,hlSnippets);
 
         //xintodo commend out when live
-        System.out.print(solrSearchBuilder.toString() + "\n");
+//        System.out.print(solrSearchBuilder.toString() + "\n");
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }

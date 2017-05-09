@@ -15,8 +15,9 @@
     <title>GWAS Catalog</title>
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" th:href="@{../../css/bootstrap.min.css}" rel="stylesheet"/>
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
-          rel="stylesheet"/>
+    <!--xintodo disable for offline debug-->
+    <!--<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"-->
+    <!--rel="stylesheet"/>-->
     <link href="../static/css/bootstrap-table.css" th:href="@{../../css/bootstrap-table.css}" rel="stylesheet"/>
     <link href="../static/css/bootstrap-theme.css" th:href="@{../../css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
@@ -97,13 +98,8 @@
     <!--</div>-->
 
 
-    <button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>
-    <button id="addEfoButton1" class="addEfoButton" value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>
-    <button id="addEfoButton2" class="addEfoButton" value="EFO_0001060">celiac disease EFO_0001060</button>
-    <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400 OR EFO_0004211 OR EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
     <div class="container-fluid" id="lower_container">
         <!-- Summary panel -->
-
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default" style="padding-left:0px">
                 <div class="panel-heading background-color-primary-accent">
@@ -139,10 +135,69 @@
             </div>
         </div>
 
+        <!--Expendsion panel-->
+        <div class="row" style="margin-top:20px">
+            <div id= "expension_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span class="locus_label">Expend your search</span>
+                    </h3>
+                    <span class="pull-right">
+                        <span class="clickable panel-collapsed"
+                              style="margin-left:25px"
+                              onclick="toggleSidebar('#expension_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="panel-body" style="display:initial">
+                    <div class="col-xs-12 jumbotron">Current terms:
+                        <div id="selected_efos"></div>
+                        <div id="selected_efos_text"></div>
+                    </div>
+                    <div class="col-xs-4">
+                        <!--ols tree-->
+                        <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div id="expension">
+                            <h2>Additional related terms eg. measurements and biomarkers:</h2>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <!--auto suggest-->
+                        <div class="left">
+                            <label>
+                                <input style="font-weight: normal"
+                                       size="35"
+                                       type="text"
+                                       name="q"
+                                       data-olswidget="select"
+                                       data-olsontology="efo"
+                                       data-selectpath="http://www.ebi.ac.uk/ols/"
+                                       olstype=""
+                                       id="local-searchbox"
+                                       placeholder="Enter the term you are looking for"
+                                       class="ac_input">
+                                </input>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- List the available tables -->
         <div class="row" style="margin-top:0px">
             <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
                 <span style="margin-right:10px;font-weight:bold">Available data:</span>
+                <button type="button"
+                        class="btn btn-default"
+                        style="margin-right:10px;font-weight:bold"
+                        onclick="toggle_and_scroll('#locus_panel')">
+                    <span class="locus_label">Manhattan plot</span>
+                </button>
                 <button type="button"
                         class="btn btn-default"
                         style="margin-right:10px;font-weight:bold"
@@ -161,6 +216,30 @@
                 <!--<span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>-->
                 <!--</button>-->
             </div>
+        </div>
+
+        <!-- locus plot -->
+        <div class="row" style="margin-top:20px">
+            <div id= "locus_panel" class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">
+                        <span class="locus_label">Manhattan plot (plot of has catalog association for selected trait)</span>
+                    </h3>
+                    <span class="pull-right">
+                        <span class="clickable panel-collapsed"
+                              style="margin-left:25px"
+                              onclick="toggleSidebar('#locus_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="panel-body" style="display:none">
+                    <!-- locus plot -->
+                    <div id="plot"></div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Associations table -->
@@ -326,63 +405,31 @@
             </div>
         </div>
 
-        <div>Current terms:
-            <div id="efoterms" class="selected_nodes1">[]</div>
-            <div id="efoterms_text"></div>
-        </div>
 
-        <div class="row">
-            <div class="col-xs-5">
-                <!--ols tree-->
-                <div>
-                    <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
 
-                    <div>selected:
-                        <div id="selectednodes" class="selected_nodes"></div>
-                        <div id="selectednodestext"></div>
-                    </div>
+
+        <!--debug information-->
+        <div class="row" style="margin-top:10px">
+            <div class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">debug information</h3>
                 </div>
-                <div id="expension">
-                    <h2>Related EFO terms:</h2>
-                </div>
-                <div>selected:
-                    <div id="cbselectednodes" class="selected_nodes"></div>
-                    <div id="cbselectednodestext"></div>
+                <div class="col-lg-12">
+                    <button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>
+                    <button id="addEfoButton1"
+                            class="addEfoButton"
+                            value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>
+                    <button id="addEfoButton2"
+                            class="addEfoButton"
+                            value="EFO_0001060">celiac disease EFO_0001060</button>
+                    <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
                 </div>
 
+                <div class="col-lg-12">
+                    <div id="debug">debug information</div>
+                </div>
             </div>
-            <div class="col-xs-6">
-                <!-- locus plot -->
-                <div id="plot"></div>
-
-                <!--auto suggest-->
-                <div class="left">
-                    <label>
-                        <input style="font-weight: normal"
-                               size="35"
-                               type="text"
-                               name="q"
-                               data-olswidget="select"
-                               data-olsontology="efo"
-                               data-selectpath="http://www.ebi.ac.uk/ols/"
-                               olstype=""
-                               id="local-searchbox"
-                               placeholder="Enter the term you are looking for"
-                               class="ac_input">
-                        </input>
-                    </label>
-                </div>
-
-                <div>selected:
-                    <div id="autocomplete_selectednodes" class="selected_nodes"></div>
-                    <div id="autocomplete_selectednodestext"></div>
-                </div>
-
-            </div>
-
-
         </div>
-
 
     </div>
 
@@ -461,7 +508,12 @@
     $('#loadingResults').show();
 </script>
 <!--locus zoom-->
+
+<!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
 <script>
+    /*
+     This is the EFOWAS locus zoom plot
+     */
 
 
     // Genome base pairs static data
@@ -572,8 +624,9 @@
             floor: 0,
             upper_buffer: 0.1
         },
+        //xintodo Set defaul color for categories
         color: {
-            field: "{{namespace}}category_name",
+            field: "{{namespace}}preferedEFO",
             scale_function: "categorical_bin",
             parameters: {
                 categories: ["infectious diseases", "neoplasms", "endocrine/metabolic", "hematopoietic",
@@ -589,12 +642,14 @@
         },
         legend: [],
         fill_opacity: 0.7,
+        //xintodo datapoint tooltips
         tooltip: {
             closable: true,
             show: {or: ["highlighted", "selected"]},
             hide: {and: ["unhighlighted", "unselected"]},
             html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
-            "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>"
+            "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
+            "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>"
         },
         behaviors: {
             onmouseover: [
@@ -959,19 +1014,6 @@
     });
 
 
-    //    // Define data sources object
-    //    var data_sources = new LocusZoom.DataSources()
-    //            .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
-    //
-    //
-    //    var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-    //    layout.panels[0].margin.top = 32;
-    //    layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-    //
-    //    // Generate the plot
-    //    var plot = LocusZoom.populate("#plot", data_sources, layout);
-    //    plot.panels.efowas.setTitle("Test efo page locus zoom plot");
-
     readlodLocusZoom = function(plot_id, data_association) {
         //adding information to association doc
         LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
@@ -979,9 +1021,9 @@
             console.log("Parsing association doc to locus zoom.");
             console.log(data_association.docs);
             data.forEach(function(d, i, object) {
-                if (d.shortForm.length > 1) {
-                    console.log(d);
-                }
+//                if (d.shortForm.length > 1) {
+//                    console.log(d);
+//                }
 
                 if (d.chromLocation) {
                     //we only plot those association which have chromosome information
@@ -996,7 +1038,6 @@
                     data[i].pval = Math.pow(10, d.pValueExponent);
                     data[i].phewas_string = d.rsId[0];
                     data[i].x = transferLocation(data[i].chr, data[i].bp);
-                    data[i].category_name = d.mappedUri[0];
                 }
                 else {
                     //some association don't have chromosome information
@@ -1015,76 +1056,100 @@
         layout.panels[0].margin.top = 32;
         layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
 
+        //xintodo create the color palate here
         //find all efos for plotting color
-        var allEFO = [];
-        var allColor = [];
         var legend = [];
+        var colorMap = {};
+
+//
+//        data_association.docs.forEach(function(d, i) {
+//            //algorithm for select efo for association
+////            allEFO.push(d.mappedUri[0]);
+//            allEFO.push( d.preferedEFO);
+//        })
+//        //unique only
+//        allEFO = allEFO.filter(function(value, index, self) {
+//            return self.indexOf(value) === index;
+//        })
+//        //random rgb color at, legend does not work atm
+//        allEFO.forEach(function(d, i) {
+//            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
+//                    ',' + (Math.floor(Math.random() * 256)) + ')';
+//            allColor.push(col);
+//            legend.push({
+//                            shape: "rect",
+//                            color: col,
+//                            width: 9,
+//                            label: d
+//                        }
+//            )
+//        })
+
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+//            return result ? {
+//                        r: parseInt(result[1], 16),
+//                        g: parseInt(result[2], 16),
+//                        b: parseInt(result[3], 16)
+//                    } : null;
+            return result ? 'rgb(' + parseInt(result[1], 16) + ','
+                    + parseInt(result[2], 16) + ','
+                    + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
+        }
 
         data_association.docs.forEach(function(d, i) {
             //algorithm for select efo for association
-            allEFO.push(d.mappedUri[0]);
+            colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
+
         })
-        //unique only
-        allEFO = allEFO.filter(function(value, index, self) {
-            return self.indexOf(value) === index;
-        })
-        //random rgb color at, legend does not work atm
-        allEFO.forEach(function(d, i) {
-            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
-                    ',' + (Math.floor(Math.random() * 256)) + ')';
-            allColor.push(col);
+        legend_catgories = [];
+        legend_color = [];
+        for (var key in colorMap) {
+            legend_catgories.push(key);
+            legend_color.push(colorMap[key]);
             legend.push({
                             shape: "rect",
-                            color: col,
+                            color: colorMap[key],
                             width: 9,
-                            label: d
+                            label: key
                         }
             )
-        })
-        layout.panels[0].data_layers[1].color.parameters.categories = allEFO;
-        layout.panels[0].data_layers[1].color.parameters.values = allColor;
+        }
+        layout.panels[0].data_layers[1].color.parameters.categories = legend_catgories;
+        layout.panels[0].data_layers[1].color.parameters.values = legend_color;
         layout.panels[0].data_layers[1].legend = legend;
 
 
         // Generate the plot
         var plot = LocusZoom.populate(plot_id, data_sources, layout);
     }
-
-
-
-
-    //add event to refreash the plot when the selected node changed
-    $('.selected_nodes').bind("DOMSubtreeModified", function() {
-        var efos = $(this).html().split(',');
-        if (efos.length > 1) {
-            efos = efos.join(" OR ");
-        }
-        else {
-            efos = efos[0];
-        }
-        console.log(efos);
-        if (efos) {
-            getEfoTraitData(efos);
-        }
-    });
+</script>
+<script>
 
     //xintodo add/remove terms when select/disselect terms
-    addToSelect = function(divId, terms_ids) {
+    addEFO = function(data, initLoad, key) {
 
-        var current = JSON.parse($("#" + divId).html())
+        if (initLoad === undefined) {
+            initLoad = false;
+        }
+        key = key || 'efoids';
+        current = $("#selected_efos").data(key) || {};
+        newselect = $.extend({}, current, data);
+        $("#selected_efos").data(key, newselect).trigger('addToSelect', [newselect, initLoad]);
+    }
 
-        current = $.merge(current, terms_ids)
-        current = $.unique(current).filter(function(v) {
-            return v !== ''
-        })
-        $("#" + divId).html(JSON.stringify(current));
+    $('#selected_efos').on('addToSelect', function(e, newselect, initLoad) {
+        //print out terms:
+        text = '';
+        $.each(newselect, function(index, value) {
+            text = text + index + ':' + value + '<br/>';
+        });
+        $("#selected_efos_text").html(text);
+        getEfoTraitData(Object.keys(newselect).join(','), initLoad);
+    });
 
-//        var current_text = JSON.parse($("#" + divId + '_text').html());
-//        current_text = $.merge(current_text, term_label)
-//        current_text = $.unique(current_text).filter(function(v) {
-//            return v !== ''
-//        })
-//        $("#" + divId + '_text').html(JSON.stringify(current_text));
+    removeEFO = function(data, key) {
+
     }
 
 </script>
@@ -1093,8 +1158,14 @@
 <!--local data-->
 <script>
     $('.addEfoButton').click(function() {
-        getEfoTraitData($(this).attr('value'));
-        console.log('clicked' + $(this).attr('value'));
+        elements = {};
+        $(this).attr('value').split(',').forEach(function(index, value) {
+            elements[index] = index;
+        });
+        //xintodo first load
+        addEFO(elements, true);
+//        getEfoTraitData($(this).attr('value'));
+//        console.log('clicked' + $(this).attr('value'));
     });
 
 
@@ -1107,7 +1178,12 @@
         console.log("efoTrait: " + searchTerm);
         if (searchTerm != '') {
             console.log("Start search for the efotrait " + searchTerm);
-            getEfoTraitData(searchTerm, true);
+
+            elements = {};
+            elements[searchTerm] = searchTerm;
+            //xintodo first load
+            addEFO(elements, true);
+//            getEfoTraitData(searchTerm, true);
         }
     });
 
@@ -1132,7 +1208,7 @@
                       'hl.snippets': 100
                   })
                 .done(function(data) {
-                    console.log(data);
+//                    console.log(data);
                     //xintodo consider if you want to do it this way, or just change the seach and update the tables
                     //saveData(data.responseHeader.params.q, data);
                     //we only process data here if it is the init load of the page, since we need to add new data to the page dynamically
@@ -1171,32 +1247,45 @@
                         data_diseasetrait = group.doclist;
                         break;
                     default:
-                        ;
                 }
-            })
+            });
 
-            //add prefered efo term
-            data_association.docs.forEach(function(d,i){
-                d.preferedEFO = findHightlightedEFOforAssociation(d.accessionId);
-                if(d.preferedEFO.length > 1){
-                    d.preferedColor = 'aaaaa'
-                }else{
-                    d.preferedColor = findColorForEFO(d.preferedEFO)
-                }
-            })
-
-            findHightlightedEFOsforAssociation = function(association_id){
+            findHightlightedEFOsforAssociation = function(association_id) {
                 var terms = data.highlighting[association_id].shortForm;
                 return terms;
             }
 
-            //function to pick a color for a give efo term
-            findColorForEFO = function(efo){
-                //xintodo query api for color, may use batch query
-                var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + efo
-                return 'red';
+            findMostSignificantTraitForAssociation = function(traits, association) {
+                return traits[0];
             }
 
+            //function to pick a color for a give efo term
+            findColorForEFO = function(efo) {
+                //xintodo query api for color, may use batch query for efo color
+                var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + efo;
+                var data = {
+                    uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
+                    trait: "diabetes mellitus",
+                    parentUri: "http://www.ebi.ac.uk/efo/EFO_0000589",
+                    parent: "metabolic disease",
+                    colour: "#FDB462"
+                }
+                return data.colour;
+            }
+
+
+            //xintodo add prefered efo term
+            data_association.docs.forEach(function(d, i) {
+                traits = findHightlightedEFOsforAssociation(d.id);
+                if (traits.length > 1) {
+                    d.preferedEFO = findMostSignificantTraitForAssociation(traits, d.id);
+                }
+                else {
+                    d.preferedEFO = traits[0];
+
+                }
+                d.preferedColor = findColorForEFO(d.preferedEFO)
+            })
 
 
             if (initLoad) {
@@ -1208,7 +1297,6 @@
             getEfotraitStudies(data_study.docs);
             //xintodo reload locus plot here
             readlodLocusZoom('#plot', data_association);
-
 
         }
     }
@@ -1252,33 +1340,25 @@
         checkbox_three_state: false,
         checkbox_keep_selected_style: false,
         onchange: function(e, data) {
-            console.log("newly selected:")
-            console.log(data.changed.selected); // newly selected
-            console.log("newly deselected:")
-            console.log(data.changed.deselected); // newly deselected
-            console.log("event passed to onChange:")
-            console.log(e); // newly selected
-            console.log("data passed to onChange:")
-            console.log(data); // newly deselected
-
-            console.log(data.instance.get_selected(true));
-            var selected_ids = [], selected_text = [];
+//            console.log("newly selected:")
+//            console.log(data.changed.selected);
+//            console.log("newly deselected:")
+//            console.log(data.changed.deselected);
+//            console.log("event passed to onChange:")
+//            console.log(e); // newly selected
+//            console.log("data passed to onChange:")
+//            console.log(data); // newly deselected
+//            console.log(data.instance.get_selected(true));
+            elements = {};
             if (data.instance.get_selected(true).length > 0) {
                 $.each(data.instance.get_selected(true), function(index, term) {
-                    // console.log('EFO_' + term.original.iri.split('EFO_')[1])
                     if (term.original.iri) {
-                        selected_ids.push('EFO_' + term.original.iri.split('EFO_')[1]);
-                        selected_text.push(term.original.text);
+                        elements['EFO_' + term.original.iri.split('EFO_')[1]] = term.original.text;
                     }
                 });
-
-                $("#selectednodes").html(selected_ids.join(','));
-                $("#selectednodestext").html(selected_text.join(','));
-                console.log(data.instance.get_node(data.selected));
-            }
-            else {
-                $("#selectednodes").html('');
-                $("#selectednodestext").html('');
+                //xintodo tree load
+                addEFO(elements);
+//                console.log(data.instance.get_node(data.selected));
             }
         },
     }
@@ -1286,6 +1366,7 @@
 
     var searchTerm = $('#query').text();
     // initialise the tree
+    //xintodo tempral disable for offline debug
     instance.draw($("#term-tree"),
                   true,
                   "efo",
@@ -1300,7 +1381,7 @@
 <!--ols search-->
 <script>
     //ols search
-    var cbselected_ids = [], cbselected_text = [];
+    //xintodo tempral disable for offline debug
     $.getJSON('http://www.ebi.ac.uk/ols/api/search',
               {
                   'q': $('#query').text(),
@@ -1316,21 +1397,18 @@
 //                    $("#"+'whycb'+d.obo_id).html(longContentList("#"+'whycbhiddent'+d.obo_id, ['a','b'], 'why'))
                     if (d.obo_id == $('#query').text()) {
                         $("#cb" + d.obo_id).attr("checked", true);
-                        $("#cbselectednodes").html(d.obo_id);
-                        $("#cbselectednodestext").html(d.label);
                     }
                 })
 
 
                 $(".efocheckbox").change(function() {
-                    console.log($('input:checked'));
-                    cbselected_ids = [], cbselected_text = []
+//                    console.log($('input:checked'));
+                    elements = {};
                     $('input:checked').each(function() {
-                        cbselected_ids.push($(this).attr('value').split(" : ")[0]);
-                        cbselected_text.push($(this).attr('value').split(" : ")[1]);
+                        elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
                     });
-                    $("#cbselectednodes").html(cbselected_ids.join(','));
-                    $("#cbselectednodestext").html(cbselected_text.join(','));
+//                    xintodo checkbox load
+                    addEFO(elements);
                 });
             });
 
@@ -1348,22 +1426,21 @@
 
 <!--ols auto complete-->
 <script>
-
+    //xintodo tempral disable for offline debug
     $(document).ready(function() {
         var app = require("ols-autocomplete");
         var instance = new app();
         options = {
             action: function(relativePath, suggestion_ontology, type, iri) {
-                console.log("aaa");
-                console.log("In overwritten function")
-                console.log("Relative Path: " + relativePath)
-                console.log("Suggested Ontology: " + suggestion_ontology)
-                console.log("Type (optional): " + type)
-                console.log("iri (optional): " + iri)
-
-//                $("#autocomplete_selectednodes").html('EFO_' + iri.split("EFO_")[1]);
-//                addToSelect('autocomplete_selectednodes', ['EFO_' + iri.split("EFO_")[1]]);
-                addToSelect('efoterms', ['EFO_' + iri.split("EFO_")[1]]);
+//                console.log("In overwritten function")
+//                console.log("Relative Path: " + relativePath)
+//                console.log("Suggested Ontology: " + suggestion_ontology)
+//                console.log("Type (optional): " + type)
+//                console.log("iri (optional): " + iri)
+                elements = {};
+                elements['EFO_' + iri.split("EFO_")[1]] = 'EFO_' + iri.split("EFO_")[1];
+                //xintodo auto load
+                addEFO(elements);
             }
         }
         instance.start(options)

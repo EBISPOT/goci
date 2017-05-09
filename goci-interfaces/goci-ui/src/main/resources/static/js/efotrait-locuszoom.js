@@ -1,3 +1,6 @@
+/*
+This is the EFOWAS locus zoom plot
+ */
 
 
 // Genome base pairs static data
@@ -59,7 +62,6 @@ LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
     this.parseInit(init);
 }, "EfoWASLZ");
 
-
 //we are not using api to fetch data, when
 LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
     return "http://localhost:8280/gwas/tmp/association.json";
@@ -109,6 +111,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         floor: 0,
         upper_buffer: 0.1
     },
+    //xintodo Set defaul color for categories
     color: {
         field: "{{namespace}}category_name",
         scale_function: "categorical_bin",
@@ -126,6 +129,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     },
     legend: [],
     fill_opacity: 0.7,
+    //xintodo datapoint tooltips
     tooltip: {
         closable: true,
         show: {or: ["highlighted", "selected"]},
@@ -182,6 +186,18 @@ LocusZoom.Layouts.add("panel", "efowas", {
     proportional_width: 1,
     margin: {top: 20, right: 50, bottom: 120, left: 50},
     inner_border: "rgb(210, 210, 210)",
+    dashboard: (function() {
+        var l = LocusZoom.Layouts.get("dashboard", "standard_panel", {unnamespaced: true});
+        l.components.push({
+                              type: "toggle_legend",
+                              position: "right"
+                          });
+//            l.components.push({
+//                                  type: "resize_to_data",
+//                                  position: "right"
+//                              });
+        return l;
+    })(),
     axes: {
         x: {
             label: "Genomic Position (number denotes chromosome)",
@@ -196,7 +212,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 370850307,
@@ -207,7 +223,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 591461209,
@@ -218,7 +234,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 786049562,
@@ -229,7 +245,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 972084330,
@@ -240,7 +256,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1148099493,
@@ -251,7 +267,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1313226358,
@@ -262,7 +278,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1465977701,
@@ -273,7 +289,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1609766427,
@@ -284,7 +300,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1748140516,
@@ -295,7 +311,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 1883411148,
@@ -306,7 +322,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2017840353,
@@ -317,7 +333,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2142351240,
@@ -328,7 +344,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2253610949,
@@ -339,7 +355,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2358551415,
@@ -350,7 +366,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2454994487,
@@ -361,7 +377,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2540769469,
@@ -372,7 +388,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2620405698,
@@ -383,7 +399,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2689008813,
@@ -394,7 +410,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2750086065,
@@ -405,7 +421,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2805663772,
@@ -416,7 +432,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: 2855381003,
@@ -427,7 +443,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: genome_data_merged[22].tickpoint,
@@ -438,7 +454,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
                 {
                     x: genome_data_merged[23].tickpoint,
@@ -449,7 +465,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
                         "font-size": "13px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(0, 2)"
+                    transform: "translate(10, 5)  rotate(35)"
                 },
             ]
         },
@@ -457,6 +473,11 @@ LocusZoom.Layouts.add("panel", "efowas", {
             label: "-log10 p-value",
             label_offset: 28
         }
+    },
+    legend: {
+        orientation: "vertical",
+        origin: {x: 55, y: 40},
+        hidden: true
     },
     data_layers: [
         LocusZoom.Layouts.get("data_layer", "significance", {unnamespaced: true}),
@@ -479,16 +500,114 @@ LocusZoom.Layouts.add("plot", "standard_efowas", {
 });
 
 
-//We are not ploting here, we plot everytime user change the query, adding an efo term for example on the traitpage.
-//    // Define data sources object
-//    var data_sources = new LocusZoom.DataSources()
-//            .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
+readlodLocusZoom = function(plot_id, data_association) {
+    //adding information to association doc
+    LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
+        var data = JSON.parse(JSON.stringify(data_association.docs));
+        console.log("Parsing association doc to locus zoom.");
+        console.log(data_association.docs);
+        data.forEach(function(d, i, object) {
+//                if (d.shortForm.length > 1) {
+//                    console.log(d);
+//                }
+
+            if (d.chromLocation) {
+                //we only plot those association which have chromosome information
+                data[i].chr = d.chromLocation[0].split(":")[0];
+                if (data[i].chr == 'X') {
+                    data[i].chr = 23;
+                }
+                if (data[i].chr == 'Y') {
+                    data[i].chr = 24;
+                }
+                data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
+                data[i].pval = Math.pow(10, d.pValueExponent);
+                data[i].phewas_string = d.rsId[0];
+                data[i].x = transferLocation(data[i].chr, data[i].bp);
+                data[i].category_name = d.preferedEFO;
+            }
+            else {
+                //some association don't have chromosome information
+                object.splice(i, 1);
+            }
+
+        });
+        return {header: chain.header, body: data};
+    };
+
+    var data_sources = new LocusZoom.DataSources()
+            .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
+
+
+    var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
+    layout.panels[0].margin.top = 32;
+    layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
+
+    //xintodo create the color palate here
+    //find all efos for plotting color
+    var legend = [];
+    var colorMap = {};
+
 //
-//
-//    var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-//    layout.panels[0].margin.top = 32;
-//    layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-//
-//    // Generate the plot
-//    var plot = LocusZoom.populate("#plot", data_sources, layout);
-//    plot.panels.efowas.setTitle("Test efo page locus zoom plot");
+//        data_association.docs.forEach(function(d, i) {
+//            //algorithm for select efo for association
+////            allEFO.push(d.mappedUri[0]);
+//            allEFO.push( d.preferedEFO);
+//        })
+//        //unique only
+//        allEFO = allEFO.filter(function(value, index, self) {
+//            return self.indexOf(value) === index;
+//        })
+//        //random rgb color at, legend does not work atm
+//        allEFO.forEach(function(d, i) {
+//            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
+//                    ',' + (Math.floor(Math.random() * 256)) + ')';
+//            allColor.push(col);
+//            legend.push({
+//                            shape: "rect",
+//                            color: col,
+//                            width: 9,
+//                            label: d
+//                        }
+//            )
+//        })
+
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+//            return result ? {
+//                        r: parseInt(result[1], 16),
+//                        g: parseInt(result[2], 16),
+//                        b: parseInt(result[3], 16)
+//                    } : null;
+        return result ? 'rgb(' + parseInt(result[1], 16) + ','
+                + parseInt(result[2], 16) + ','
+                + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
+    }
+
+    data_association.docs.forEach(function(d, i) {
+        //algorithm for select efo for association
+        colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
+
+    })
+    legend_catgories = [];
+    legend_color = [];
+    for (var key in colorMap) {
+        legend_catgories.push(key);
+        legend_color.push(colorMap[key]);
+        legend.push({
+                        shape: "rect",
+                        color: colorMap[key],
+                        width: 9,
+                        label: key
+                    }
+        )
+    }
+    layout.panels[0].data_layers[1].color.parameters.categories = legend_catgories;
+    layout.panels[0].data_layers[1].color.parameters.values = legend_color;
+    layout.panels[0].data_layers[1].legend = legend;
+
+
+    // Generate the plot
+    var plot = LocusZoom.populate(plot_id, data_sources, layout);
+}
+
