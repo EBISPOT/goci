@@ -14,7 +14,13 @@ function approveSelectedAssociations() {
                 associationIds.push($(this).attr("value"))
             }
     );
-    updateAssociations(associationIds);
+
+    if (associationIds.length > 0) {
+        updateAssociations(associationIds);
+    }
+    else {
+        alert("Please select at least an association.");
+    }
 }
 
 function updateAssociations(associationIds) {
@@ -45,7 +51,13 @@ function unapproveSelectedAssociations() {
                 associationIds.push($(this).attr("value"))
             }
     );
-    unapproveAssociations(associationIds);
+    if (associationIds.length > 0) {
+        unapproveAssociations(associationIds);
+    }
+    else {
+        alert("Please select at least an association.");
+    }
+
 }
 
 function unapproveAssociations(associationIds) {
@@ -77,7 +89,10 @@ function deleteSelectedAssociations() {
                 associationIds.push($(this).attr("value"))
             }
     );
-    deleteAssociations(associationIds);
+    if (associationIds.length > 0) {
+        deleteAssociations(associationIds);
+    }
+    else { alert("Please select at least an association."); }
 }
 
 function deleteAssociations(associationIds) {

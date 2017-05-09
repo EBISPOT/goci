@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
@@ -30,11 +31,11 @@ public class Ancestry implements Trackable {
 
     private Integer numberOfIndividuals;
 
-    private String ancestralGroup;
+//    private String ancestralGroup;
 
-    private String countryOfOrigin;
+//    private String countryOfOrigin;
 
-    private String countryOfRecruitment;
+//    private String countryOfRecruitment;
 
     private String description;
 
@@ -49,6 +50,25 @@ public class Ancestry implements Trackable {
     @OneToOne
     private Study study;
 
+    @ManyToMany
+    @JoinTable(name = "ANCESTRY_ANCESTRAL_GROUP",
+               joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ANCESTRAL_GROUP_ID"))
+    private Collection<AncestralGroup> ancestralGroups;
+
+    @ManyToMany
+    @JoinTable(name = "ANCESTRY_COUNTRY_OF_ORIGIN",
+               joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "COUNTRY_ID"))
+    private Collection<Country> countryOfOrigin;
+
+    @ManyToMany
+    @JoinTable(name = "ANCESTRY_COUNTRY_RECRUITMENT",
+               joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "COUNTRY_ID"))
+    private Collection<Country> countryOfRecruitment;
+
+
     @JsonIgnore
     @OneToMany
     @JoinTable(name = "ANCESTRY_EVENT",
@@ -60,18 +80,19 @@ public class Ancestry implements Trackable {
     public Ancestry() {
     }
 
-    public Ancestry(String countryOfOrigin,
-                    String countryOfRecruitment,
+    public Ancestry(Collection<Country> countryOfOrigin,
+                    Collection<Country> countryOfRecruitment,
                     String description,
-                    String ancestralGroup,
+//                    String ancestralGroup,
                     Collection<Event> events,
                     String notes,
                     Integer numberOfIndividuals,
-                    String previouslyReported, String sampleSizesMatch, Study study, String type) {
+                    String previouslyReported, String sampleSizesMatch, Study study, String type,
+                    Collection<AncestralGroup> ancestralGroups) {
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
-        this.ancestralGroup = ancestralGroup;
+//        this.ancestralGroup = ancestralGroup;
         this.events = events;
         this.notes = notes;
         this.numberOfIndividuals = numberOfIndividuals;
@@ -79,6 +100,7 @@ public class Ancestry implements Trackable {
         this.sampleSizesMatch = sampleSizesMatch;
         this.study = study;
         this.type = type;
+        this.ancestralGroups = ancestralGroups;
     }
 
     public Long getId() {
@@ -105,27 +127,27 @@ public class Ancestry implements Trackable {
         this.numberOfIndividuals = numberOfIndividuals;
     }
 
-    public String getAncestralGroup() {
-        return ancestralGroup;
-    }
+//    public String getAncestralGroup() {
+//        return ancestralGroup;
+//    }
+//
+//    public void setAncestralGroup(String ancestralGroup) {
+//        this.ancestralGroup = ancestralGroup;
+//    }
 
-    public void setAncestralGroup(String ancestralGroup) {
-        this.ancestralGroup = ancestralGroup;
-    }
-
-    public String getCountryOfOrigin() {
+    public Collection<Country> getCountryOfOrigin() {
         return countryOfOrigin;
     }
 
-    public void setCountryOfOrigin(String countryOfOrigin) {
+    public void setCountryOfOrigin(Collection<Country> countryOfOrigin) {
         this.countryOfOrigin = countryOfOrigin;
     }
 
-    public String getCountryOfRecruitment() {
+    public Collection<Country> getCountryOfRecruitment() {
         return countryOfRecruitment;
     }
 
-    public void setCountryOfRecruitment(String countryOfRecruitment) {
+    public void setCountryOfRecruitment(Collection<Country> countryOfRecruitment) {
         this.countryOfRecruitment = countryOfRecruitment;
     }
 
@@ -181,5 +203,13 @@ public class Ancestry implements Trackable {
         Collection<Event> currentEvents = getEvents();
         currentEvents.add(event);
         setEvents((currentEvents));
+    }
+
+    public Collection<AncestralGroup> getAncestralGroups() {
+        return ancestralGroups;
+    }
+
+    public void setAncestralGroups(Collection<AncestralGroup> ancestralGroups) {
+        this.ancestralGroups = ancestralGroups;
     }
 }

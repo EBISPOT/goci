@@ -5,22 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfOrigin;
-import uk.ac.ebi.spot.goci.curation.model.CountryOfRecruitment;
-import uk.ac.ebi.spot.goci.curation.model.AncestralGroup;
-import uk.ac.ebi.spot.goci.model.DeletedAncestry;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.DeletedAncestry;
 import uk.ac.ebi.spot.goci.model.Event;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.DeletedAncestryRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.DeletedAncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by emma on 05/08/2016.
@@ -58,21 +53,21 @@ public class StudyAncestryService {
         Study study = studyRepository.findOne(studyId);
 
         // Set default values when no country of origin or recruitment supplied
-        if (ancestry.getCountryOfOrigin() == null) {
-            ancestry.setCountryOfOrigin("NR");
-        }
-
-        if (ancestry.getCountryOfOrigin() != null && ancestry.getCountryOfOrigin().isEmpty()) {
-            ancestry.setCountryOfOrigin("NR");
-        }
-
-        if (ancestry.getCountryOfRecruitment() == null) {
-            ancestry.setCountryOfRecruitment("NR");
-        }
-
-        if (ancestry.getCountryOfRecruitment() != null && ancestry.getCountryOfRecruitment().isEmpty()) {
-            ancestry.setCountryOfRecruitment("NR");
-        }
+//        if (ancestry.getCountryOfOrigin() == null) {
+//            ancestry.setCountryOfOrigin("NR");
+//        }
+//
+//        if (ancestry.getCountryOfOrigin() != null && ancestry.getCountryOfOrigin().isEmpty()) {
+//            ancestry.setCountryOfOrigin("NR");
+//        }
+//
+//        if (ancestry.getCountryOfRecruitment() == null) {
+//            ancestry.setCountryOfRecruitment("NR");
+//        }
+//
+//        if (ancestry.getCountryOfRecruitment() != null && ancestry.getCountryOfRecruitment().isEmpty()) {
+//            ancestry.setCountryOfRecruitment("NR");
+//        }
 
         // Set the study for our ancestry and save
         ancestry.setStudy(study);
@@ -83,37 +78,37 @@ public class StudyAncestryService {
 
 
     public void updateAncestry(Ancestry ancestry,
-                                CountryOfOrigin countryOfOrigin,
-                                CountryOfRecruitment countryOfRecruitment,
-                                AncestralGroup ancestralGroup,
+//                                CountryOfOrigin countryOfOrigin,
+//                                CountryOfRecruitment countryOfRecruitment,
+//                                Collection<AncestralGroup> ancestralGroups,
                                 SecureUser user) {
 
         // Set country of origin based on values returned
-        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
-
-        if (listOfOriginCountries.size() > 0) {
-            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
-            ancestry.setCountryOfOrigin(countryOfOriginJoined);
-        }
-        else {
-            ancestry.setCountryOfOrigin("NR");
-        }
-
-        // Set country of recruitment based on values returned
-        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
-
-        if (listOfRecruitmentCountries.size() > 0) {
-            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
-            ancestry.setCountryOfRecruitment(countryOfRecruitmentJoined);
-        }
-        else {
-            ancestry.setCountryOfRecruitment("NR");
-        }
+//        List<String> listOfOriginCountries = Arrays.asList(countryOfOrigin.getOriginCountryValues());
+//
+//        if (listOfOriginCountries.size() > 0) {
+//            String countryOfOriginJoined = String.join(",", listOfOriginCountries);
+//            ancestry.setCountryOfOrigin(countryOfOriginJoined);
+//        }
+//        else {
+//            ancestry.setCountryOfOrigin("NR");
+//        }
+//
+//        // Set country of recruitment based on values returned
+//        List<String> listOfRecruitmentCountries = Arrays.asList(countryOfRecruitment.getRecruitmentCountryValues());
+//
+//        if (listOfRecruitmentCountries.size() > 0) {
+//            String countryOfRecruitmentJoined = String.join(",", listOfRecruitmentCountries);
+//            ancestry.setCountryOfRecruitment(countryOfRecruitmentJoined);
+//        }
+//        else {
+//            ancestry.setCountryOfRecruitment("NR");
+//        }
 
         // Set ancestral group
-        List<String> listOfAncestralGroups = Arrays.asList(ancestralGroup.getAncestralGroupValues());
-        String ancestralGroupJoined = String.join(",", listOfAncestralGroups);
-        ancestry.setAncestralGroup(ancestralGroupJoined);
+//        List<String> listOfAncestralGroups = Arrays.asList(ancestralGroup.getAncestralGroupValues());
+//        String ancestralGroupJoined = String.join(",", listOfAncestralGroups);
+//        ancestry.setAncestralGroup(ancestralGroupJoined);
 
         // Saves the new information returned from form
         trackingOperationService.update(ancestry, user, "ANCESTRY_UPDATED");

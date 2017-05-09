@@ -23,18 +23,7 @@ import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
-import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationEventsViewService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
-import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
-import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
-import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
-import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
-import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
+import uk.ac.ebi.spot.goci.curation.service.*;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -43,6 +32,7 @@ import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,6 +116,12 @@ public class AssociationControllerTest {
     @Mock
     private EnsemblRestTemplateService ensemblRestTemplateService;
 
+    @Mock
+    private CheckMappingService checkMappingService;
+
+    @Mock
+    private MapCatalogService mapCatalogService;
+
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
@@ -158,7 +154,9 @@ public class AssociationControllerTest {
                 associationDeletionService,
                 associationsEventsViewService,
                 studyAssociationBatchDeletionEventService,
-                ensemblRestTemplateService);
+                ensemblRestTemplateService,
+                checkMappingService,
+                mapCatalogService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
         //System.setProperty("ensembl.server", "http://rest.ensembl.org");

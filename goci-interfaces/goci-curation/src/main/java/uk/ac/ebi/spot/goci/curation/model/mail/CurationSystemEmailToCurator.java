@@ -1,8 +1,11 @@
 package uk.ac.ebi.spot.goci.curation.model.mail;
 
+import uk.ac.ebi.spot.goci.model.GenericEmail;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.StudyNote;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -12,7 +15,7 @@ import java.util.Date;
  *         <p>
  *         Concrete implementation of emails sent to curators
  */
-public class CurationSystemEmailToCurator extends CurationSystemEmail {
+public class CurationSystemEmailToCurator extends GenericEmail {
 
     public void createBody(Study study, String status) {
         // Set up some of the values used in mail body
@@ -26,9 +29,12 @@ public class CurationSystemEmailToCurator extends CurationSystemEmail {
             studyTrait = study.getDiseaseTrait().getTrait();
         }
 
-        String notes = null;
-        if (study.getHousekeeping().getNotes() != null && !study.getHousekeeping().getNotes().isEmpty()) {
-            notes = study.getHousekeeping().getNotes();
+        StringBuilder notes = new StringBuilder();
+        Collection<StudyNote> studyNotes = study.getNotes();
+        if (!studyNotes.isEmpty()) {
+            studyNotes.forEach(studyNote -> {
+                notes.append(studyNote.toString()).append("\n");
+            });
         }
 
         // Format dates
@@ -53,7 +59,7 @@ public class CurationSystemEmailToCurator extends CurationSystemEmail {
                         + "\n" + "Edit link: " + editStudyLink
                         + "\n" + "Current curator: " + currentCurator
                         + "\n" + "Publish Date: " + bodyPublishDate
-                        + "\n" + "Notes: " + notes
+                        + "\n" + "Notes: \n" + notes
                         + "\n\n");
     }
 }

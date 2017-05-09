@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 05/08/2016.
@@ -90,9 +91,15 @@ public class AncestryEventsViewService implements EventsViewService {
         String ancestrySummary = null;
         StringJoiner joiner = new StringJoiner("; ");
         joiner.add("Type: ".concat(ancestry.getType()));
-        joiner.add("Ancestry: ".concat(ancestry.getAncestralGroup()));
-        joiner.add("Country of recruitment: ".concat(ancestry.getCountryOfRecruitment()));
-        joiner.add("Country of origin: ".concat(ancestry.getCountryOfOrigin()));
+        joiner.add("Ancestry: ".concat(ancestry.getAncestralGroups().stream()
+                                        .map(i -> i.getAncestralGroup())
+                                        .collect(Collectors.joining(", "))));
+        joiner.add("Country of recruitment: ".concat(ancestry.getCountryOfOrigin().stream()
+                                                             .map(i -> i.getCountryName())
+                                                             .collect(Collectors.joining(", "))));
+        joiner.add("Country of origin: ".concat(ancestry.getCountryOfRecruitment().stream()
+                                                        .map(i -> i.getCountryName())
+                                                        .collect(Collectors.joining(", "))));
         ancestrySummary = joiner.toString();
         return ancestrySummary;
     }

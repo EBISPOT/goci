@@ -1,13 +1,12 @@
-package uk.ac.ebi.spot.goci.curation.model.mail;
+package uk.ac.ebi.spot.goci.model;
 
 /**
- * Created by emma on 08/03/2016.
- *
- * @author emma
- *         <p>
- *         Class to represent emails sent from the curation system
+ * Created by cinzia on 03/05/2017.
+ * Abstract class to use for the specific email. (Curation/DataRelease)
+ * Refactoring Email GOCI
  */
-public abstract class CurationSystemEmail {
+
+public abstract class GenericEmail{
 
     private String to;
 
@@ -19,7 +18,7 @@ public abstract class CurationSystemEmail {
 
     private String body;
 
-    public CurationSystemEmail() {
+    public GenericEmail() {
     }
 
     public String getSubject() {
@@ -67,3 +66,4 @@ public abstract class CurationSystemEmail {
         setBody(newBody);
     }
 }
+
