@@ -71,8 +71,17 @@
     </div>
 </div>
 
+<!--init search parameter-->
+<div style="display: none">
+    <ul th:object="${result}" id="variables">
+        <li id="query" th:text="*{query}">User query</li>
+        <li id="facet" th:text="*{facet}">Facet</li>
+        <li id="filter" th:text="*{filter}">Disease trait</li>
+    </ul>
+</div>
 
 <div class="container-fluid" style="padding-top: 30px">
+
 
     <!--search meta data-->
     <ol class="breadcrumb background-color-complementary-accent">
@@ -80,22 +89,6 @@
         <li><a href="#">Traits</a></li>
         <li class="active" th:text="${result.query}"></li>
     </ol>
-
-
-    <div style="display: none">
-        <ul th:object="${result}" id="variables">
-            <li id="query" th:text="*{query}">User query</li>
-            <li id="facet" th:text="*{facet}">Facet</li>
-            <li id="filter" th:text="*{filter}">Disease trait</li>
-        </ul>
-    </div>
-
-
-    <!--search result stored here to allow add/remove other efo terms, not using!-->
-    <!--<div style="display: none">-->
-    <!--<ul id="searchdata">-->
-    <!--</ul>-->
-    <!--</div>-->
 
 
     <div class="container-fluid" id="lower_container">
@@ -152,7 +145,7 @@
                 </div>
 
                 <div class="panel-body" style="display:initial">
-                    <div class="col-xs-12 jumbotron">Current terms:
+                    <div class="col-xs-12 jumbotron background-color-primary-accent">Current terms:
                         <div id="selected_efos"></div>
                         <div id="selected_efos_text"></div>
                     </div>
@@ -196,7 +189,7 @@
                         class="btn btn-default"
                         style="margin-right:10px;font-weight:bold"
                         onclick="toggle_and_scroll('#locus_panel')">
-                    <span class="locus_label">Manhattan plot</span>
+                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
                 </button>
                 <button type="button"
                         class="btn btn-default"
@@ -224,6 +217,7 @@
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
                         <span class="locus_label">Manhattan plot (plot of has catalog association for selected trait)</span>
+                        <span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
                     </h3>
                     <span class="pull-right">
                         <span class="clickable panel-collapsed"
@@ -405,9 +399,6 @@
             </div>
         </div>
 
-
-
-
         <!--debug information-->
         <div class="row" style="margin-top:10px">
             <div class="panel panel-default">
@@ -430,7 +421,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <!--Include footer-->
@@ -507,14 +497,17 @@
 <script>
     $('#loadingResults').show();
 </script>
-<!--locus zoom-->
 
 <!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
+
+
+
+
+
 <script>
     /*
      This is the EFOWAS locus zoom plot
      */
-
 
     // Genome base pairs static data
     var genome_data = [
@@ -545,7 +538,6 @@
 
     ];
 
-
     //use to work out where the variant is on the plot when the whole x axis was used to represent all chromosomes
     //       [{"chr": 1, "base_pairs": 249250621, "genome_start": 0, "genome_end": 249250621, "tickpoint": 124625311},
     //        {"chr": 2, "base_pairs": 243199373, "genome_start": 249250621, "genome_end": 492449994, "tickpoint": 370850308}]
@@ -564,12 +556,6 @@
         genome_data_merged[i].tickpoint = genome_data_merged[i].genome_start + Math.round(d.base_pairs / 2);
 
     });
-
-    //given a location, map it to the plot xais
-    transferLocation = function(chr, position) {
-        return genome_data_merged[chr - 1].genome_start + position;
-    }
-
 
     LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
         this.parseInit(init);
@@ -601,7 +587,6 @@
         });
         return {header: chain.header, body: data};
     };
-
 
     //control  x,y,and points
     LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
@@ -1013,7 +998,12 @@
         mouse_guide: false
     });
 
+    //given a location, map it to the plot xais
+    transferLocation = function(chr, position) {
+        return genome_data_merged[chr - 1].genome_start + position;
+    }
 
+    //replot receive a list of association_docs from solr search
     readlodLocusZoom = function(plot_id, data_association) {
         //adding information to association doc
         LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
@@ -1124,6 +1114,7 @@
         var plot = LocusZoom.populate(plot_id, data_sources, layout);
     }
 </script>
+
 <script>
 
     //xintodo add/remove terms when select/disselect terms
