@@ -77,19 +77,18 @@
         <li id="query" th:text="*{query}">User query</li>
         <li id="facet" th:text="*{facet}">Facet</li>
         <li id="filter" th:text="*{filter}">Disease trait</li>
+        <li id="included" th:text="*{included}">Included</li>
     </ul>
 </div>
 
+
 <div class="container-fluid" style="padding-top: 30px">
-
-
     <!--search meta data-->
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a href="index.html" th:href="@{/home}">GWAS</a></li>
         <li><a href="#">Traits</a></li>
         <li class="active" th:text="${result.query}"></li>
     </ol>
-
 
     <div class="container-fluid" id="lower_container">
 
@@ -174,10 +173,20 @@
                         <div id="selected_efos"></div>
                         <div id="selected_efos_text"></div>
                     </div>
+                    <div class="col-xs-12 jumbotron background-color-primary-accent">
+                        <div id="sharable_link" class="col-xs-6 background-color-primary-accent"></div>
+                        <div class="col-xs-6">
+                            <button id="sharable_link_btn" type="button" class="btn btn-default" data-clipboard-target="#sharable_link">
+                              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" title="copy to clipboard"></span>
+                            </button>
+                        </div>
+                    </div>
+
+
                     <div class="col-xs-4">
                         <!--ols tree-->
                         <div id="term-tree"
-                        style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
+                             style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
                     </div>
                     <div class="col-xs-4">
                         <div id="expension">
@@ -466,6 +475,10 @@
 <!--visjs-->
 <script src="../static/js/plugins/vis.min.js" th:src="@{../../js/plugins/vis.min.js}"></script>
 <link href="../static/css/vis.min.css" rel="stylesheet" type="text/css" th:href="@{../../css/vis.min.css}"/>
+
+<!--clipboardjs-->
+<script src="../static/js/plugins/clipboard.min.js" th:src="@{../../js/plugins/clipboard.min.js}"></script>
+
 
 <!--script for OLS-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>-->
@@ -1140,6 +1153,10 @@
             text = text + index + ':' + value + '<br/>';
         });
         $("#selected_efos_text").html(text);
+
+        $("#sharable_link").html(window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(newselect).join(','))
+
         getEfoTraitData(Object.keys(newselect).join(','), initLoad);
     });
 
@@ -1166,18 +1183,29 @@
 //        console.log('clicked' + $(this).attr('value'));
     });
 
+    //for sharable link copy function
+    new Clipboard('#sharable_link_btn');
+
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
             $('#beta-icon').show();
         }
         var searchTerm = $('#query').text();
+        var included = $('#included').text();
+        if (included != '') {
+            searchTerm = searchTerm + ',' + included;
+        }
         console.log("Loading search module!");
         console.log("efoTrait: " + searchTerm);
         if (searchTerm != '') {
             console.log("Start search for the efotrait " + searchTerm);
 
             elements = {};
-            elements[searchTerm] = searchTerm;
+            searchTerm.split(',').forEach(function(term) {
+                                              elements[term] = term;
+                                          }
+            )
+
             //xintodo first load
             addEFO(elements, true);
 //            getEfoTraitData(searchTerm, true);
@@ -1451,32 +1479,32 @@
     var instance = new app();
 
     options = {
-        checkbox: true,
+        checkbox: false,
         checkbox_cascade: '',
         checkbox_three_state: false,
         checkbox_keep_selected_style: false,
-        onchange: function(e, data) {
-//            console.log("newly selected:")
-//            console.log(data.changed.selected);
-//            console.log("newly deselected:")
-//            console.log(data.changed.deselected);
-//            console.log("event passed to onChange:")
-//            console.log(e); // newly selected
-//            console.log("data passed to onChange:")
-//            console.log(data); // newly deselected
-//            console.log(data.instance.get_selected(true));
-            elements = {};
-            if (data.instance.get_selected(true).length > 0) {
-                $.each(data.instance.get_selected(true), function(index, term) {
-                    if (term.original.iri) {
-                        elements['EFO_' + term.original.iri.split('EFO_')[1]] = term.original.text;
-                    }
-                });
-                //xintodo tree load
-                addEFO(elements);
-//                console.log(data.instance.get_node(data.selected));
-            }
-        },
+//        onchange: function(e, data) {
+////            console.log("newly selected:")
+////            console.log(data.changed.selected);
+////            console.log("newly deselected:")
+////            console.log(data.changed.deselected);
+////            console.log("event passed to onChange:")
+////            console.log(e); // newly selected
+////            console.log("data passed to onChange:")
+////            console.log(data); // newly deselected
+////            console.log(data.instance.get_selected(true));
+//            elements = {};
+//            if (data.instance.get_selected(true).length > 0) {
+//                $.each(data.instance.get_selected(true), function(index, term) {
+//                    if (term.original.iri) {
+//                        elements['EFO_' + term.original.iri.split('EFO_')[1]] = term.original.text;
+//                    }
+//                });
+//                //xintodo tree load
+//                addEFO(elements);
+////                console.log(data.instance.get_node(data.selected));
+//            }
+//        },
     }
 
 

@@ -46,11 +46,13 @@ public class EfoTraitController {
     @RequestMapping(value = "/efotrait/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
     public String search(Model model,
                          @PathVariable(required = false) String efoId,
-                         @RequestParam(required = false) String filter) {
+                         @RequestParam(required = false) String filter,
+                         @RequestParam(required = false, defaultValue = "") String included) {
         EfoTraitResult efoTraitResult = new EfoTraitResult();
         efoTraitResult.setQuery(efoId);
         efoTraitResult.setFilter(filter);
         efoTraitResult.setEfoId(efoId);
+        efoTraitResult.setIncluded(included);
         model.addAttribute("result", efoTraitResult);
         return "efotrait-page";
     }

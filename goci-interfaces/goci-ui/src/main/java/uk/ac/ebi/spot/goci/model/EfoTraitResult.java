@@ -8,7 +8,15 @@ public class EfoTraitResult extends SearchResult{
 //    private String facet = "trait";
 
     private String efoId;
+    private String included;
 
+    public String getIncluded() {
+        return included;
+    }
+
+    public void setIncluded(String included) {
+        this.included = included;
+    }
 
     public String getEfoId() {
         return efoId;

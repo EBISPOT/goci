@@ -1691,7 +1691,7 @@ module.exports = olstree = function(){
     onclick : onClick,
     save_state : false,
       //checkbox related parameters, if checkbox is on, the default onclick will be overwrite
-      checkbox : true,
+      checkbox : false,
       checkbox_cascade : 'down',
       checkbox_three_state : false,
       checkbox_keep_selected_style : false,
@@ -1917,14 +1917,16 @@ function onClick(node, event, relativePath, currentTermIri, termType, selectedIr
 
 //Default onchange behavior, printing some data
 function onChange(e, data){
-    console.log("newly selected:")
-    console.log(data.changed.selected); // newly selected
-    console.log("newly deselected:")
-    console.log(data.changed.deselected); // newly deselected
-    console.log("event passed to onChange:")
-    console.log(e); // newly selected
-    console.log("data passed to onChange:")
-    console.log(data); // newly deselected
+    // console.log(e);
+    // console.log(data);
+    // console.log("newly selected:")
+    // console.log(data.changed.selected); // newly selected
+    // console.log("newly deselected:")
+    // console.log(data.changed.deselected); // newly deselected
+    // console.log("event passed to onChange:")
+    // console.log(e); // newly selected
+    // console.log("data passed to onChange:")
+    // console.log(data); // newly deselected
 }
 
 function _processOlsData (data, parentId, termType) {
