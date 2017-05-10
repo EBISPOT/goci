@@ -92,6 +92,31 @@
 
 
     <div class="container-fluid" id="lower_container">
+
+        <!--debug information-->
+        <div class="row" style="margin-top:10px">
+            <div class="panel panel-default">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">debug information</h3>
+                </div>
+                <div class="col-lg-12">
+                    <button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>
+                    <button id="addEfoButton1"
+                            class="addEfoButton"
+                            value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>
+                    <button id="addEfoButton2"
+                            class="addEfoButton"
+                            value="EFO_0001060">celiac disease EFO_0001060</button>
+                    <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
+                </div>
+
+                <div class="col-lg-12">
+                    <div id="debug">debug information</div>
+                </div>
+            </div>
+            <div id="mynetwork"></div>
+        </div>
+
         <!-- Summary panel -->
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default" style="padding-left:0px">
@@ -130,7 +155,7 @@
 
         <!--Expendsion panel-->
         <div class="row" style="margin-top:20px">
-            <div id= "expension_panel" class="panel panel-default">
+            <div id="expension_panel" class="panel panel-default">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
                         <span class="locus_label">Expend your search</span>
@@ -151,7 +176,8 @@
                     </div>
                     <div class="col-xs-4">
                         <!--ols tree-->
-                        <div id="term-tree" style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
+                        <div id="term-tree"
+                        style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
                     </div>
                     <div class="col-xs-4">
                         <div id="expension">
@@ -189,7 +215,8 @@
                         class="btn btn-default"
                         style="margin-right:10px;font-weight:bold"
                         onclick="toggle_and_scroll('#locus_panel')">
-                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats"
+                                                                         style="color:#398A96;margin-left:10px"></span>
                 </button>
                 <button type="button"
                         class="btn btn-default"
@@ -213,7 +240,7 @@
 
         <!-- locus plot -->
         <div class="row" style="margin-top:20px">
-            <div id= "locus_panel" class="panel panel-default">
+            <div id="locus_panel" class="panel panel-default col-xs-8">
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">
                         <span class="locus_label">Manhattan plot (plot of has catalog association for selected trait)</span>
@@ -233,7 +260,6 @@
                     <div id="plot"></div>
                 </div>
             </div>
-
         </div>
 
         <!-- Associations table -->
@@ -399,28 +425,7 @@
             </div>
         </div>
 
-        <!--debug information-->
-        <div class="row" style="margin-top:10px">
-            <div class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">debug information</h3>
-                </div>
-                <div class="col-lg-12">
-                    <button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>
-                    <button id="addEfoButton1"
-                            class="addEfoButton"
-                            value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>
-                    <button id="addEfoButton2"
-                            class="addEfoButton"
-                            value="EFO_0001060">celiac disease EFO_0001060</button>
-                    <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
-                </div>
 
-                <div class="col-lg-12">
-                    <div id="debug">debug information</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!--Include footer-->
@@ -433,7 +438,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
 <script src="../static/tmp/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
-
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
 <script src="../static/tmp/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
 
@@ -441,7 +445,6 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
         th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
-
 <script>
     $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
@@ -459,6 +462,10 @@
         th:src="@{../../js/plugins/locuszoom.vendor.min.js}"></script>
 <script src="../static/js/plugins/locuszoom.app.js" th:src="@{../../js/plugins/locuszoom.app.js}"></script>
 <link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
+
+<!--visjs-->
+<script src="../static/js/plugins/vis.min.js" th:src="@{../../js/plugins/vis.min.js}"></script>
+<link href="../static/css/vis.min.css" rel="stylesheet" type="text/css" th:href="@{../../css/vis.min.css}"/>
 
 <!--script for OLS-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>-->
@@ -499,9 +506,6 @@
 </script>
 
 <!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
-
-
-
 
 
 <script>
@@ -611,7 +615,7 @@
         },
         //xintodo Set defaul color for categories
         color: {
-            field: "{{namespace}}preferedEFO",
+            field: "{{namespace}}category",
             scale_function: "categorical_bin",
             parameters: {
                 categories: ["infectious diseases", "neoplasms", "endocrine/metabolic", "hematopoietic",
@@ -634,7 +638,8 @@
             hide: {and: ["unhighlighted", "unselected"]},
             html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
             "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
-            "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>"
+            "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
+            "<div>Parent EFO: <strong>{{{{namespace}}category}}</strong></div>"
         },
         behaviors: {
             onmouseover: [
@@ -1088,9 +1093,8 @@
         }
 
         data_association.docs.forEach(function(d, i) {
-            //algorithm for select efo for association
-            colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
-
+//            colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
+            colorMap[d.category] = hexToRgb(d.preferedColor);
         })
         legend_catgories = [];
         legend_color = [];
@@ -1148,6 +1152,9 @@
 
 <!--local data-->
 <script>
+
+    var color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/'
+
     $('.addEfoButton').click(function() {
         elements = {};
         $(this).attr('value').split(',').forEach(function(index, value) {
@@ -1158,7 +1165,6 @@
 //        getEfoTraitData($(this).attr('value'));
 //        console.log('clicked' + $(this).attr('value'));
     });
-
 
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
@@ -1209,7 +1215,7 @@
         console.log("Solr research done for " + efotraitId);
 
     }
-    //     Parse the Solr results and display the data on the HTML page
+    //Parse the Solr results and display the data on the HTML page
     function processEfotraitData(data, efotraitId, initLoad) {
         // Check if Solr returns some results
         if (data.grouped.resourcename.matches == 0) {
@@ -1243,6 +1249,9 @@
 
             findHightlightedEFOsforAssociation = function(association_id) {
                 var terms = data.highlighting[association_id].shortForm;
+                terms.forEach(function(d, i) {
+                    terms[i] = d.match(/(EFO_\d*)/)[1];
+                })
                 return terms;
             }
 
@@ -1251,21 +1260,95 @@
             }
 
             //function to pick a color for a give efo term
-            findColorForEFO = function(efo) {
+            findColourForEFO = function(efo) {
                 //xintodo query api for color, may use batch query for efo color
-                var url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/' + efo;
-                var data = {
-                    uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
-                    trait: "diabetes mellitus",
-                    parentUri: "http://www.ebi.ac.uk/efo/EFO_0000589",
-                    parent: "metabolic disease",
-                    colour: "#FDB462"
-                }
-                return data.colour;
+                var url = color_url + efo;
+                return promiseGet(url).then(JSON.parse).then(function(response) {
+                    return response;
+                }).catch(function(err) {
+                    console.log('error loading color from' + color_url);
+                    console.log('error meg:' + err);
+                    return err;
+                });
+            }
+
+            function promiseGet(url) {
+                // Return a new promise.
+                return new Promise(function(resolve, reject) {
+                    // Do the usual XHR stuff
+                    var req = new XMLHttpRequest();
+                    req.open('GET', url);
+                    req.onload = function() {
+                        // This is called even on 404 etc
+                        // so check the status
+                        if (req.status == 200) {
+                            // Resolve the promise with the response text
+                            resolve(req.response);
+                        }
+                        else {
+                            // Otherwise reject with the status text
+                            // which will hopefully be a meaningful error
+                            reject(Error(req.statusText));
+                        }
+                    };
+
+                    // Handle network errors
+                    req.onerror = function() {
+                        reject(Error("Network Error"));
+                    };
+
+                    // Make the request
+                    req.send();
+                });
             }
 
 
             //xintodo add prefered efo term
+//            query for each association. This will generate a large number of query
+//            allEFO = {}
+//            var allColorLoaded = []
+//            data_association.docs.forEach(function(d, i) {
+//                traits = findHightlightedEFOsforAssociation(d.id);
+//                if (traits.length > 1) {
+//                    d.preferedEFO = findMostSignificantTraitForAssociation(traits, d.id);
+//                }
+//                else {
+//                    d.preferedEFO = traits[0];
+//                    d.preferedColor = ''
+//
+//                }
+//                allEFO[d.preferedEFO] = '';
+//                allColorLoaded.push(findColourForEFO(d.preferedEFO).then(function(response){
+//                    console.log('here')
+//                    allEFO[d.preferedEFO] = response;
+//                    d.preferedColor = response.colour;
+//                    d.preferedParentUri = response.parentUri;
+//                    d.preferedParentLabel = response.parent;
+//                    return response;
+//                }));
+//            })
+//
+//            Promise.all(allColorLoaded).then(function() {
+//                                                 console.log('Finish loading color from ' + color_url);
+//                                                 console.log(allEFO);
+//                                                    if (initLoad) {
+//                                                        getEfoTraitInfo(data_efo.docs, efotraitId);
+//                                                        getSummary(data_study);
+//                                                    }
+//                                                    getEfotraitAssociations(data_association.docs);
+//                                                    getEfotraitStudies(data_study.docs);
+//                                                    //xintodo reload locus plot here
+//
+//
+//                                                    readlodLocusZoom('#plot', data_association);
+//                                             }
+//            ).catch(function(error) {
+//                console.log('error when load color from ' + color_url + ' ' + error);
+//            })
+
+            //query for distinct efo terms. This will reduce the query number so work faster
+            allEFO = {}
+            var allColorLoaded = []
             data_association.docs.forEach(function(d, i) {
                 traits = findHightlightedEFOsforAssociation(d.id);
                 if (traits.length > 1) {
@@ -1273,22 +1356,64 @@
                 }
                 else {
                     d.preferedEFO = traits[0];
+                    d.preferedColor = ''
 
                 }
-                d.preferedColor = findColorForEFO(d.preferedEFO)
+                allEFO[d.preferedEFO] = '';
             })
 
 
-            if (initLoad) {
-                getEfoTraitInfo(data_efo.docs, efotraitId);
-                getSummary(data_study);
+//            {
+//                uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
+//                        trait: "diabetes mellitus",
+//                    parentUri: "http://www.ebi.ac.uk/efo/EFO_0000589",
+//                    parent: "metabolic disease",
+//                    colour: "#FDB462"
+//            }
+            Object.keys(allEFO).forEach(function(efo) {
+                allColorLoaded.push(findColourForEFO(efo).then(function(response) {
+                    allEFO[efo] = response;
+                    return response;
+                }));
+            })
 
-            }
-            getEfotraitAssociations(data_association.docs);
-            getEfotraitStudies(data_study.docs);
-            //xintodo reload locus plot here
-            readlodLocusZoom('#plot', data_association);
+            //When all colour are received, replot
+            Promise.all(allColorLoaded).then(function() {
+                                                 console.log('Finish loading color from ' + color_url);
+                                                 console.log(allEFO);
+                                                 data_association.docs.forEach(function(d, i) {
+                                                     d.preferedColor = allEFO[d.preferedEFO].colour;
+                                                     d.preferedParentUri = allEFO[d.preferedEFO].parentUri;
+                                                     d.preferedParentLabel = allEFO[d.preferedEFO].parent;
+                                                     d.category = allEFO[d.preferedEFO].parent;
 
+                                                 })
+                                                 if (initLoad) {
+                                                     getEfoTraitInfo(data_efo.docs, efotraitId);
+                                                     getSummary(data_study);
+                                                 }
+                                                 getEfotraitAssociations(data_association.docs);
+                                                 getEfotraitStudies(data_study.docs);
+                                                 //xintodo reload locus plot here
+
+
+                                                 readlodLocusZoom('#plot', data_association);
+                                             }
+            ).catch(function(error) {
+                console.log('error when load color from ' + color_url + ' ' + error);
+            })
+
+
+//            if (initLoad) {
+//                getEfoTraitInfo(data_efo.docs, efotraitId);
+//                getSummary(data_study);
+//            }
+//            getEfotraitAssociations(data_association.docs);
+//            getEfotraitStudies(data_study.docs);
+//            //xintodo reload locus plot here
+//
+//
+//            readlodLocusZoom('#plot', data_association);
         }
     }
 
@@ -1359,7 +1484,7 @@
     // initialise the tree
     //xintodo tempral disable for offline debug
     instance.draw($("#term-tree"),
-                  true,
+                  false,
                   "efo",
                   "terms",
                   "http://www.ebi.ac.uk/efo/" + searchTerm,
@@ -1380,7 +1505,9 @@
                   'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
               })
             .done(function(data) {
+                console.log("data returned by ols search:");
                 console.log(data);
+
                 data.response.docs.forEach(function(d, i) {
                     d.obo_id = d.obo_id.replace(":", "_")
                     addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
@@ -1440,6 +1567,74 @@
 
 </script>
 
+<!--visjs-->
+<style type="text/css">
+    #mynetwork {
+        width: 600px;
+        height: 400px;
+        border: 1px solid lightgray;
+    }
+</style>
+<script>
+    //http://visjs.org/docs/network/
+    // create an array with nodes
+    var nodes = new vis.DataSet([
+        {id: 1, label: 'Node 1'},
+        {id: 2, label: 'Node 2'},
+        {id: 3, label: 'Node 3'},
+        {id: 4, label: 'Node 4'},
+        {id: 5, label: 'Node 5'}
+    ]);
+
+    // create an array with edges
+    var edges = new vis.DataSet([
+        {from: 1, to: 3},
+        {from: 1, to: 2},
+        {from: 2, to: 4},
+        {from: 2, to: 5}
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    var options = {
+//        //this can be used to find a good style for the plot.
+//        configure: {
+//            enabled: true,
+//            filter: 'nodes,edges',
+//            container: undefined,
+//            showButton: true
+//        }
+        interaction: {
+            dragNodes: true,
+            dragView: true,
+            hideEdgesOnDrag: false,
+            hideNodesOnDrag: false,
+            hover: false,
+            hoverConnectedEdges: true,
+            keyboard: {
+                enabled: false,
+                speed: {x: 10, y: 10, zoom: 0.02},
+                bindToWindow: true
+            },
+            multiselect: false,
+            navigationButtons: false,
+            selectable: true,
+            selectConnectedEdges: true,
+            tooltipDelay: 300,
+            zoomView: true
+        }
+    }
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+</script>
 
 </body>
 </html>
