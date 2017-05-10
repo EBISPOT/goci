@@ -48,7 +48,7 @@ public class DailyNcbiExportTask {
     }
 
     // Scheduled for 00:15
-    @Scheduled(cron = "0 15 0 * * *")
+    @Scheduled(cron = "0 15 0 * * SUN")
     public void dailyNcbiExport() throws IOException {
 
         // Create date stamped file
