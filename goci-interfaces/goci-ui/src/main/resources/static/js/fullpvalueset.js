@@ -27,7 +27,7 @@ function loadStudiesList() {
 
     var searchTerm = 'fullPvalueSet:true';
 
-    $.getJSON('../api/search/alltraits', {
+    $.getJSON('../api/search/summaryStatistics', {
                 'q': searchTerm,
                 'max': 100,
             })
@@ -61,6 +61,8 @@ function displayStudies(data) {
 
     $('#loadingStudies').hide();
     $('#pvalueSetDisplay').show();
+
+    $('#query').text('fullPvalueSet:true');
 
 
 };
@@ -126,5 +128,56 @@ function renderResources(data, table){
 
 
     $('#otherSumStatsDisplay').show();
+
+}
+
+function doSummaryStatsSort(field, id) {
+
+    var queryTerm = $('#query').text();
+    if (queryTerm == 'fullPvalueSet:true'){
+        var searchTerm = queryTerm;
+    }
+    else {
+        console.log("Something went wrong, the summary stats sort should not have been called");
+    }
+
+
+    $.getJSON('../api/search/summaryStatistics', {
+        'q': searchTerm,
+        'max': 100,
+        'sort': field
+    })
+            .done(function(data) {
+                processSortedSummaryStats(data, id);
+            });
+};
+
+
+function processSortedSummaryStats(data, id){
+    if (data.error != null) {
+        var sorter = $('#' + id).find('span.sorted');
+        sorter.removeClass('asc desc glyphicon-arrow-up glyphicon-arrow-down').addClass("glyphicon-sort unsorted");
+    }
+    else {
+        var documents = data.response.docs;
+        console.log("Got a bunch of docs" + documents.length);
+
+
+        if (data.responseHeader.params.fq == "resourcename:study" ||
+                $.inArray("resourcename:study", data.responseHeader.params.fq) != -1) {
+            console.log("Processing studies");
+            var table = $('#pvalue-sets-table-body').empty();
+
+            for (var j = 0; j < documents.length; j++) {
+                try {
+                    var doc = documents[j];
+                    processStudyDoc(doc, table);
+                }
+                catch (ex) {
+                    console.log("Failure to process document " + ex);
+                }
+            }
+        }
+    }
 
 }
