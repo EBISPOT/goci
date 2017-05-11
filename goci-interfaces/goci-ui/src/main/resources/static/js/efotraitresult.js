@@ -110,24 +110,7 @@ var list_min = 2;
 //     }
 // }
 
-function getEfoTraitInfo(data, efotraitId) {
-    var data_sample = data[0];
-    var efotrait_id = efotraitId;
-    var efotrait_link = data_sample.traitUri;
-    var synonym = data_sample.synonym;
-    var efotrait_label = data_sample.label;
 
-    $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-    $("#efotrait-label").html(efotrait_label);
-    if(synonym){
-        if (synonym.length > list_min) {
-            $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div", synonym, 'synonyms'));
-        }
-        else {
-            $("#efotrait-synonym").html(synonym.join(", "));
-        }
-    }
-}
 
 //xintodo done
 function getEfotraitAssociations(data,cleanBeforeInsert) {
@@ -482,7 +465,7 @@ function getLinkButtons (data,rsId) {
 }
 
 // Pick up the most recent publication year
-// xintodo done
+// xintodo This should be the mainEFO, not including the additional efos
 function getFirstReportYear(data) {
     var study_date = '';
     $.each(data, function(index,asso) {
