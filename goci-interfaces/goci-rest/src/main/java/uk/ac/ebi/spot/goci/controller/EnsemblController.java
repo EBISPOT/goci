@@ -52,6 +52,8 @@ public class EnsemblController {
     @Value("${ols.shortForm}")
     private String olsShortForm;
 
+    @Value("${ols.fullIri}")
+    private String olsFullIri;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -138,13 +140,12 @@ public class EnsemblController {
 
 
         if(efoTerm.contains("http")){
-            uri = uri.concat("?").concat(efoTerm);
+            uri = uri.concat(olsFullIri).concat(efoTerm);
         }
         else {
            uri = uri.concat(olsShortForm).concat(efoTerm);
         }
-
-
+        
         RestTemplate restTemplate = new RestTemplate();
         String efoObject = null;
         try{
@@ -161,13 +162,18 @@ public class EnsemblController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(efoObject);
             JsonNode responseNode = node.get("_embedded").get("terms").get(0);
-            String ancestors_link = responseNode.get("_links").get("hierarchicalAncestors").get("href").asText().trim();
-            ancestors_link = java.net.URLDecoder.decode(ancestors_link, "UTF-8");
 
+            String ancestorsObject = null;
+
+            if(responseNode.get("is_root").asText().trim().equals("false")){
+                String ancestors_link = responseNode.get("_links").get("hierarchicalAncestors").get("href").asText().trim();
+                ancestors_link = java.net.URLDecoder.decode(ancestors_link, "UTF-8");
+                ancestorsObject = restTemplate.getForObject(ancestors_link, String.class);
+
+            }
             String label = responseNode.get("label").asText().trim();
             String iri = responseNode.get("iri").asText().trim();
 
-            String ancestorsObject = restTemplate.getForObject(ancestors_link, String.class);
 
             result.put("iri", iri);
             result.put("label", label);
@@ -177,15 +183,23 @@ public class EnsemblController {
     }
 
     protected EfoColourMap getTraitColour(String ancestors, String uri, String trait) throws IOException {
-        Map<String, String> allTypes = processAncestors(ancestors);
-
-        Set<String> available = ColourMapper.COLOUR_MAP.keySet();
-
         List<String> multiple = new ArrayList<>();
-        for (String type : allTypes.keySet()) {
-            if (type != null) {
-                if (available.contains(type)) {
-                    multiple.add(type);
+        Map<String, String> allTypes = new HashMap<>();
+
+        if(ancestors != null) {
+            allTypes = processAncestors(ancestors);
+
+            Set<String> available = ColourMapper.COLOUR_MAP.keySet();
+
+            if(available.contains(uri)){
+                multiple.add(uri);
+            }
+
+            for (String type : allTypes.keySet()) {
+                if (type != null) {
+                    if (available.contains(type)) {
+                        multiple.add(type);
+                    }
                 }
             }
         }
@@ -211,24 +225,39 @@ public class EnsemblController {
                     current = term;
                 }
             }
-            return new EfoColourMap(uri, trait, current, allTypes.get(current), ColourMapper.COLOUR_MAP.get(current));
+            if(uri.equals(current)){
+                return new EfoColourMap(uri,
+                                        trait,
+                                        current,
+                                        trait,
+                                        ColourMapper.COLOUR_MAP.get(current));
+            }
+            else {
+                return new EfoColourMap(uri,
+                                        trait,
+                                        current,
+                                        allTypes.get(current),
+                                        ColourMapper.COLOUR_MAP.get(current));
+            }
         }
     }
 
     private Map<String, String> processAncestors(String ancestors) throws IOException {
         Map<String, String> allAncestors = new HashMap();
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(ancestors);
+        if(ancestors != null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(ancestors);
 
-        JsonNode terms = node.get("_embedded").get("terms");
+            JsonNode terms = node.get("_embedded").get("terms");
 
-        for(JsonNode term : terms){
-            String iri = term.get("iri").asText().trim();
-            String name = term.get("label").asText().trim();
+            for(JsonNode term : terms){
+                String iri = term.get("iri").asText().trim();
+                String name = term.get("label").asText().trim();
 
-            if(allAncestors.get(iri) == null) {
-                allAncestors.put(iri, name);
+                if(allAncestors.get(iri) == null) {
+                    allAncestors.put(iri, name);
+                }
             }
         }
 
