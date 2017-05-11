@@ -1217,7 +1217,8 @@
 
 
 <!--local data-->
-<script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
 
     var color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
     var ols_api = 'http://www.ebi.ac.uk/ols/api/';
@@ -1454,7 +1455,7 @@
                 var terms = data.highlighting[association_id].shortForm;
                 terms.forEach(function(d, i) {
                     //xintodo only efo?
-                    terms[i] = d.match(/(EFO_\d*)/)[1];
+                    terms[i] = d.match(/<b>(\w*_\d*)<\/b>/)[1];
                 })
                 return terms;
             }
@@ -1533,7 +1534,7 @@
             });
         }
     }
-
+    /*]]>*/
 </script>
 
 
