@@ -1171,6 +1171,7 @@
         current = $("#selected_efos").data(key) || {};
         newselect = $.extend({}, current, data);
 
+
         $("#selected_efos").data(key, newselect).trigger('addToSelect', [newselect, include_descendants, initLoad]);
     }
 
@@ -1198,7 +1199,7 @@
                 getEfoTraitData(searchTerm, Object.keys(newselect), Object.keys(all_descendants), initLoad);
 
             }).catch(function(err){
-                console.log('error getting descendant for term with error: ' + err);
+                console.log('error when trying to find all descendants with error messgae ' + err);
             }).then(function(){
                 //colse spinner or something
             })
@@ -1220,6 +1221,7 @@
 
     var color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
     var ols_api = 'http://www.ebi.ac.uk/ols/api/';
+    var ols_api_all_descendant_limit=100;
 
     $('.addEfoButton').click(function() {
         elements = {};
@@ -1304,19 +1306,16 @@
         http://www.ebi.ac.uk/ols/api/
                 return promiseGet(url).then(JSON.parse).then(function(response) {
                     return response;
-                }).catch(function(err) {
-                    console.log('error loading efo from' + url);
-                    console.log('error meg:' + err);
-                    return err;
-                });
+                })
     }
+
 
     findAllHierarchicalDescendants = function(efoid){
         return findEFOInfo(efoid).then(function(response){
             console.log('looking for descendants for ' + efoid);
             console.log(response);
             if(response.has_children){
-                return promiseGet(response._links.hierarchicalDescendants.href).then(JSON.parse).then(function(response){
+                return promiseGet(response._links.hierarchicalDescendants.href + '?size='+ols_api_all_descendant_limit).then(JSON.parse).then(function(response){
                     console.log('all descendants: ');
                     console.log(response);
                     return response._embedded.terms;
@@ -1454,6 +1453,7 @@
             findHightlightedEFOsforAssociation = function(association_id) {
                 var terms = data.highlighting[association_id].shortForm;
                 terms.forEach(function(d, i) {
+                    //xintodo only efo?
                     terms[i] = d.match(/(EFO_\d*)/)[1];
                 })
                 return terms;
@@ -1469,13 +1469,8 @@
                 var url = color_url + efo;
                 return promiseGet(url).then(JSON.parse).then(function(response) {
                     return response;
-                }).catch(function(err) {
-                    console.log('error loading color from' + color_url);
-                    console.log('error meg:' + err);
-                    return err;
-                });
+                })
             }
-
 
             //query for distinct efo terms. This will reduce the query number so work faster
             allEFO = {}
@@ -1493,7 +1488,6 @@
                 allEFO[d.preferedEFO] = '';
             })
 
-
 //            {
 //                uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
 //                        trait: "diabetes mellitus",
@@ -1508,8 +1502,6 @@
                 }));
             })
 
-
-
             //When all colour are received, replot
             Promise.all(allColorLoaded).then(function() {
                                                  console.log('Finish loading color from ' + color_url);
@@ -1519,7 +1511,6 @@
                                                      d.preferedParentUri = allEFO[d.preferedEFO].parentUri;
                                                      d.preferedParentLabel = allEFO[d.preferedEFO].parent;
                                                      d.category = allEFO[d.preferedEFO].parent;
-
                                                  })
                                                  if (initLoad) {
                                                      getEfoTraitInfo(data_efo.docs, efotraitId);
@@ -1527,51 +1518,20 @@
                                                  }
                                                  getEfotraitAssociations(data_association.docs);
                                                  getEfotraitStudies(data_study.docs);
-                                                 //xintodo reload locus plot here
-
-
                                                  readlodLocusZoom('#plot', data_association);
                                              }
-            ).catch(function(error) {
-                console.log('error when load color from ' + color_url + ' ' + error);
-            })
-
-
-//            if (initLoad) {
-//                getEfoTraitInfo(data_efo.docs, efotraitId);
-//                getSummary(data_study);
-//            }
-//            getEfotraitAssociations(data_association.docs);
-//            getEfotraitStudies(data_study.docs);
-//            //xintodo reload locus plot here
-//
-//
-//            readlodLocusZoom('#plot', data_association);
+            ).catch(function(err) {
+                console.log('error loading color from ' + color_url + ' with error: ' + err);
+                //xintodo create a default colour to plot, if the colour query fail
+                if (initLoad) {
+                    getEfoTraitInfo(data_efo.docs, efotraitId);
+                    getSummary(data_study);
+                }
+                getEfotraitAssociations(data_association.docs);
+                getEfotraitStudies(data_study.docs);
+                readlodLocusZoom('#plot', data_association);
+            });
         }
-    }
-
-    function newItemWithIdAndData(id, content) {
-        var newli = $("<li></li>").attr('id', id).text(content);
-        return newli;
-    }
-
-    function saveData(id, data) {
-        var jsonid = '#json-' + id;
-        var $jsondatali = $(jsonid);
-
-        //if the data exists, update
-        if ($jsondatali.length) {
-            $jsondatali.text = JSON.stringify(data, null, 0);
-        }
-        else {
-            $("#searchdata").append(newItemWithIdAndData('json-' + id, JSON.stringify(data, null, 0)));
-        }
-
-    }
-
-    function loadData(id) {
-        var jsontext = $('#json-' + id).text();
-        return jsontext;
     }
 
 </script>
