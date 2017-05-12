@@ -52,23 +52,6 @@ public class StudyAncestryService {
     public void addAncestry(Long studyId, Ancestry ancestry, SecureUser user) {
         Study study = studyRepository.findOne(studyId);
 
-        // Set default values when no country of origin or recruitment supplied
-//        if (ancestry.getCountryOfOrigin() == null) {
-//            ancestry.setCountryOfOrigin("NR");
-//        }
-//
-//        if (ancestry.getCountryOfOrigin() != null && ancestry.getCountryOfOrigin().isEmpty()) {
-//            ancestry.setCountryOfOrigin("NR");
-//        }
-//
-//        if (ancestry.getCountryOfRecruitment() == null) {
-//            ancestry.setCountryOfRecruitment("NR");
-//        }
-//
-//        if (ancestry.getCountryOfRecruitment() != null && ancestry.getCountryOfRecruitment().isEmpty()) {
-//            ancestry.setCountryOfRecruitment("NR");
-//        }
-
         // Set the study for our ancestry and save
         ancestry.setStudy(study);
         trackingOperationService.create(ancestry, user);
