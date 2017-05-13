@@ -187,9 +187,10 @@
                 <div class="panel-body" style="display:initial">
                     <div class="col-xs-12 jumbotron background-color-primary-accent">
                         <div class="col-xs-6">Current terms:
-                            <div id="selected_efos"></div>
-                            <div id="selected_efos_text"></div>
+                            <div id="selected-efos"></div>
+                            <div id="selected-efos_text"></div>
                         </div>
+                        <div style="display:none" id="efo-info"></div>
                         <div class="col-xs-6">
                             <input type="text" id="sharable_link" class="col-xs-6"></input>
                             <div class="col-xs-1">
@@ -545,7 +546,17 @@
 
 <!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
 
-
+<script>
+    var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
+    var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
+    var global_ols_api_all_descendant_limit = 99999;
+    var global_efo_info_tag_id = '#efo-info';
+    var global_efo_selected_tag_id = '#selected-efos';
+    _peak = function(){
+        console.log($(global_efo_info_tag_id).data());
+        console.log($(global_efo_selected_tag_id).data());
+    }
+</script>
 <script>
     /*
      This is the EFOWAS locus zoom plot
@@ -1160,58 +1171,69 @@
 <script>
 
     //xintodo add/remove terms when select/disselect terms
-    addEFO = function(data, initLoad, include_descendants, key) {
-
-        if (initLoad === undefined) {
-            initLoad = false;
-        }
-        key = key || 'efoids';
+    addEFO = function(data, initLoad, include_descendants) {
         include_descendants = include_descendants || false;
+        initLoad = initLoad || false;
 
-        current = $("#selected_efos").data(key) || {};
-        newselect = $.extend({}, current, data);
+        selected = addDataToTag(global_efo_selected_tag_id, data, 'selectedEfos')
+        Promise.all(Object.keys(data).map(findAllHierarchicalDescendants)).then(function(){console.log('finish loading descendants!')});
 
-
-        $("#selected_efos").data(key, newselect).trigger('addToSelect', [newselect, include_descendants, initLoad]);
+        $(global_efo_selected_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
+//        $("#selected-efos").data(key, newselect).trigger('addToSelect', [newselect, include_descendants, initLoad]);
     }
 
-    $('#selected_efos').on('addToSelect', function(e, newselect, include_descendants, initLoad) {
+    updatePage=function(){
+        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
+
+        //update sharable link
+        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(current_select).join(','))
+        //update select box
+
+    }
+
+
+    $(global_efo_selected_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
+        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
         //print out terms:
         text = '';
-        $.each(newselect, function(index, value) {
+        $.each(current_select, function(index, value) {
             text = text + index + ':' + value + '<br/>';
         });
-        $("#selected_efos_text").html(text);
+        $("#selected-efos_text").html(text);
 
         $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(newselect).join(','))
+                                 Object.keys(current_select).join(','))
 
-        if(include_descendants){
+        if (include_descendants) {
             all_descendants = {}
-            Promise.all(Object.keys(newselect).map(findAllHierarchicalDescendants)).then(function(descendants){
-                descendants.forEach(function(terms){
+            Promise.all(Object.keys(newselect).map(findAllHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
                     terms.forEach(function(term) {
                         all_descendants[term.short_form] = term;
                     })
                 })
 
                 var searchTerm = $('#query').text();
-                getEfoTraitData(searchTerm, Object.keys(newselect), Object.keys(all_descendants), initLoad);
+                getEfoTraitData(searchTerm, Object.keys(current_select), Object.keys(all_descendants), initLoad);
 
-            }).catch(function(err){
+            }).catch(function(err) {
                 console.log('error when trying to find all descendants with error messgae ' + err);
-            }).then(function(){
+            }).then(function() {
                 //colse spinner or something
             })
-        }else{
+        }
+        else {
             var searchTerm = $('#query').text();
-            getEfoTraitData(searchTerm, Object.keys(newselect), [], initLoad);
+            getEfoTraitData(searchTerm, Object.keys(current_select), [], initLoad);
         }
     });
 
     removeEFO = function(data, key) {
 
     }
+
+
 
 </script>
 
@@ -1220,9 +1242,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    var color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
-    var ols_api = 'http://www.ebi.ac.uk/ols/api/';
-    var ols_api_all_descendant_limit=100;
+
 
     $('.addEfoButton').click(function() {
         elements = {};
@@ -1302,32 +1322,97 @@
         });
     }
 
-    findEFOInfo = function(efoid) {
-        url = ols_api + 'ontologies/efo/terms/' + 'http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252F' + efoid;
-        http://www.ebi.ac.uk/ols/api/
-                return promiseGet(url).then(JSON.parse).then(function(response) {
-                    return response;
-                })
+    findEFOInfoLocal = function(efoid) {
+        if($(global_efo_info_tag_id).data('efoInfo')==undefined)
+            return undefined;
+        return $(global_efo_info_tag_id).data('efoInfo')[efoid];
     }
 
+    findEFOInfo = function(efoid) {
+        localefoinfo = findEFOInfoLocal(efoid)
+        if (localefoinfo) {
+            return new Promise(function(resolve, reject) {
+                resolve(localefoinfo);
+            })
+        }
+        url = global_ols_api + 'ontologies/efo/terms/' + 'http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252F' + efoid;
+        return promiseGet(url).then(JSON.parse).then(function(response) {
+            tmp = {};
+            tmp[efoid] = response;
+            addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
+            return response;
+        })
+    }
 
-    findAllHierarchicalDescendants = function(efoid){
-        return findEFOInfo(efoid).then(function(response){
+    findAllHierarchicalDescendantsLocal = function(efoid){
+        decendants = $(global_efo_info_tag_id).data('efoDecendants');
+        if(decendants == undefined)
+            return decendants
+        return decendants[efoid];
+    }
+
+    findAllHierarchicalDescendants = function(efoid) {
+        return findEFOInfo(efoid).then(function(response) {
             console.log('looking for descendants for ' + efoid);
             console.log(response);
-            if(response.has_children){
-                return promiseGet(response._links.hierarchicalDescendants.href + '?size='+ols_api_all_descendant_limit).then(JSON.parse).then(function(response){
+            if (response.has_children) {
+                localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
+                if (localDescentandInfo) {
+                    return new Promise(function(resolve, reject) {
+                        resolve(localDescentandInfo);
+                    })
+                }
+                //xintodo size >=1000 is set to 1000 by ols, ask?
+                return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
+                                  global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
                     console.log('all descendants: ');
                     console.log(response);
+                    terms = {};
+                    response._embedded.terms.forEach(function(d, i) {
+                        terms[d.short_form] = d;
+                    })
+                    tmp={}
+                    tmp[efoid] = Object.keys(terms);
+                    addDataToTag(global_efo_info_tag_id, terms, 'efoInfo');
+                    addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
                     return response._embedded.terms;
                 })
-            }else{
+            }
+            else {
                 console.log('no descendant.');
-                return new Promise(function(resolve,reject){
+                return new Promise(function(resolve, reject) {
                     resolve(JSON.parse("[]"));
+                }).then(function(){
+                    tmp={}
+                    tmp[efoid]=[]
+                    addDataToTag(global_efo_info_tag_id,tmp, 'efoDecendants')
                 })
             }
         })
+    }
+
+    addDataToTag = function(tagID, hash, key, overwriteWarning) {
+        old = $(tagID).data(key) || {};
+        overwriteWarning = overwriteWarning || false;
+        if (overwriteWarning) {
+            var result = Object.keys(old).filter(function(n) {
+                return Object.keys(hash).indexOf(n) > -1;
+            });
+            if (result.length > 0) {
+                result.forEach(function(d) {
+                    console.log(d + 'will be overwritten.')
+                })
+            }
+        }
+        result = $.extend({}, old, hash)
+        if (key) {
+            $(tagID).data(key, result)
+        }
+        else {
+            $(tagID).data(result)
+        }
+
+        return result;
     }
 
     //make solr query
@@ -1380,7 +1465,7 @@
             var efotrait_id = efotraitId;
             var synonym = response.synonyms;
             var efotrait_label = response.label;
-            $("#efotrait-id").data('efoterm', response);
+            addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
             $("#efotrait-description").html(response.description);
             $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
             $("#efotrait-label").html(efotrait_label);
@@ -1467,7 +1552,7 @@
             //function to pick a color for a give efo term
             findColourForEFO = function(efo) {
                 //xintodo query api for color, may use batch query for efo color
-                var url = color_url + efo;
+                var url = global_color_url + efo;
                 return promiseGet(url).then(JSON.parse).then(function(response) {
                     return response;
                 })
@@ -1505,7 +1590,7 @@
 
             //When all colour are received, replot
             Promise.all(allColorLoaded).then(function() {
-                                                 console.log('Finish loading color from ' + color_url);
+                                                 console.log('Finish loading color from ' + global_color_url);
                                                  console.log(allEFO);
                                                  data_association.docs.forEach(function(d, i) {
                                                      d.preferedColor = allEFO[d.preferedEFO].colour;
@@ -1522,7 +1607,7 @@
                                                  readlodLocusZoom('#plot', data_association);
                                              }
             ).catch(function(err) {
-                console.log('error loading color from ' + color_url + ' with error: ' + err);
+                console.log('error loading color from ' + global_color_url + ' with error: ' + err);
                 //xintodo create a default colour to plot, if the colour query fail
                 if (initLoad) {
                     getEfoTraitInfo(data_efo.docs, efotraitId);
