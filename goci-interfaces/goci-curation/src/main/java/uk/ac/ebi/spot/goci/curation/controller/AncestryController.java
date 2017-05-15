@@ -158,7 +158,7 @@ public class AncestryController {
                     method = RequestMethod.POST)
     public String addStudySampleDescription(@ModelAttribute Ancestry ancestry,
                                             @PathVariable Long studyId,
-                                            Model model,
+//                                            Model model,
                                             RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         // Set default values when no country of origin or recruitment supplied
@@ -169,8 +169,10 @@ public class AncestryController {
         }
 
         if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
-            model.addAttribute("study", studyRepository.findOne(studyId));
-            return "no_country_recruitment_warning";
+//            model.addAttribute("study", studyRepository.findOne(studyId));
+//            return "no_country_recruitment_warning";
+            String message = "No country of recruitment recorded!";
+            redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }
 
         ancestryService.addAncestry(studyId, ancestry, currentUserDetailsService.getUserFromRequest(request));
@@ -202,7 +204,7 @@ public class AncestryController {
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String updateSampleDescription(@ModelAttribute Ancestry ancestry,
-                                          Model model,
+//                                          Model model,
                                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
         // Set default values when no country of origin or recruitment supplied
         if (ancestry.getCountryOfOrigin() == null || ancestry.getCountryOfOrigin().isEmpty()) {
@@ -212,8 +214,10 @@ public class AncestryController {
         }
 
         if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
-            model.addAttribute("study", studyRepository.findOne(ancestry.getStudy().getId()));
-            return "no_country_recruitment_warning";
+//            model.addAttribute("study", studyRepository.findOne(ancestry.getStudy().getId()));
+//            return "no_country_recruitment_warning";
+            String message = "No country of recruitment recorded!";
+            redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }
 
 

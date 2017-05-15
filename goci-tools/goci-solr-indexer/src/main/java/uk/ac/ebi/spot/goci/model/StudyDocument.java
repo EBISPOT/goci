@@ -337,7 +337,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     }
 
                     ancestralGroups.add(ances);
-                    System.out.println(study.getId() + "\t" + coo + "\t" + cor + "\t" + ances);
                     ancestryLink = ancestryLink.concat("|").concat(ances);
 
                     String noInds = "";
