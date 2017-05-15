@@ -99,6 +99,7 @@ public class SolrSearchController {
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "max", required = false, defaultValue = "10000") int maxResults,
+            @RequestParam(value = "fq", required = false, defaultValue = "") String fq,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "group.limit", required = false, defaultValue = "100") int groupLimit,
             @RequestParam(value = "group.field", required = false, defaultValue = "resourcename") String groupField,
@@ -110,6 +111,10 @@ public class SolrSearchController {
 
         if (useJsonp) {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+
+        if(!fq.isEmpty()){
+            addFilterQuery(solrSearchBuilder,searchConfiguration.getDefaultFacet(),fq.split(":")[1]);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
         //        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "efotrait");
