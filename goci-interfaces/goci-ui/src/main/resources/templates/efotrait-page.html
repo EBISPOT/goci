@@ -1511,14 +1511,69 @@
     }
 
     findIriByShortForm = function(shortForm){
-        ontology = shortForm.split('_')[0].toLowerCase();
+        prefix = shortForm.split('_')[0];
         id = shortForm.split('_')[1];
-        return findOntologyInfo(ontology).then(function(o){
-            return {'ontology':ontology,'iri' : o.config.baseUris[0] + id};
+        p = findOntologyIdByPrefix(prefix)
+
+        return p.then(function(ontology){
+            return findOntologyInfo(ontology).then(function(o){
+                return {'ontology':ontology,'iri' : o.config.baseUris[0] + id};
+            })
         }).catch(function(err){
             console.log('Error finding iri for term ' + shortForm + '. ' + err);
         })
     }
+
+    fetchOntologyInfo=function(){
+        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
+            ontologyInfo = {};
+            prefix2ontid = {}
+            response._embedded.ontologies.forEach(function(d){
+                ontologyInfo[d.ontologyId] = d;
+                prefix2ontid[d.config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = d.ontologyId;
+            })
+            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
+            addDataToTag(global_efo_info_tag_id,prefix2ontid,'prefix2ontid')
+            return response;
+        }).catch(function(err){
+            console.error('Error when querying ontology info. ' + err);
+            return err;
+        })
+    }
+
+    findOntologyIdByPrefix = function(prefix) {
+        if(getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')==undefined || getDataFromTag(global_efo_info_tag_id, 'prefix2ontid') == undefined){
+            return fetchOntologyInfo().then(function(){
+                return getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]
+            });
+        }else{
+            return new Promise(function(resolve, reject) {
+                resolve(getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]);
+            })
+        }
+    }
+
+//    findOntologyIdbyPrefix = function(prefix){
+//        localefoinfo = findOntologyIdbyPrefixLocal(prefix)
+//        if (localefoinfo) {
+//            return new Promise(function(resolve, reject) {
+//                resolve(localefoinfo);
+//            })
+//        }
+//
+//        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
+//            ontologyInfo = {};
+//            response._embedded.ontologies.forEach(function(d){
+//                ontologyInfo[d.ontologyId] = d;
+//            })
+//            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
+//            return findOntologyIdbyPrefixLocal(prefix);
+//        }).catch(function(err){
+//            console.error('Error when querying ontology info. ' + err);
+//            return err;
+//        })
+//
+//    }
 
 
 //    findEFOInfo = function(efoid) {
