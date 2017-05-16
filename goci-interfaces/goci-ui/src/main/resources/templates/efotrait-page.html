@@ -1338,14 +1338,14 @@
 
     //show/hide spinner
     toggleSpinner = function(tagID) {
-        spinnerID = tagID + '_load';
+        var spinnerID = tagID + '_load';
         $(spinnerID).toggle();
         $(tagID).toggle();
 
     }
 
     $('.addEfoButton').click(function() {
-        elements = {};
+        var elements = {};
         $(this).attr('value').split(',').forEach(function(index, value) {
             elements[index] = index;
         });
@@ -1378,7 +1378,7 @@
         if (searchTerm != '') {
             console.log("Start search for the efotrait " + searchTerm);
 
-            elements = {};
+            var elements = {};
             searchTerm.split(',').forEach(function(term) {
                                               elements[term] = term;
                                           }
@@ -1403,7 +1403,7 @@
 
             params = params || {}
             if (Object.keys(params).length > 0) {
-                params_str = '';
+                var params_str = '';
                 Object.keys(params).forEach(function(key, index) {
                     params_str = params_str + '&' + key + '=' + this[key];
                 }, params);
@@ -1444,7 +1444,7 @@
         return new Promise(function(resolve, reject) {
             // Do the usual XHR stuff
             var req = new XMLHttpRequest();
-            params = url.split('?')[1]
+            var params = url.split('?')[1]
             url = url.split('?')[0]
 
             req.open('POST', url, true)
@@ -1475,14 +1475,14 @@
     }
 
     findEFOInfoLocal = function(efoid) {
-        data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
+        var data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
         if(data==undefined)
             return undefined;
         return data[efoid]
     }
 
     findOntologyInfoLocal = function(ontologyId) {
-        data = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')
+        var data = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')
         if(data==undefined)
             return undefined;
         return data[ontologyId]
@@ -1490,7 +1490,7 @@
 
     findOntologyInfo = function(ontologyId){
         ontologyId = ontologyId.toLowerCase();
-        localefoinfo = findOntologyInfoLocal(ontologyId)
+        var localefoinfo = findOntologyInfoLocal(ontologyId)
         if (localefoinfo) {
             return new Promise(function(resolve, reject) {
                 resolve(localefoinfo);
@@ -1498,7 +1498,7 @@
         }
 
         return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-            ontologyInfo = {};
+            var ontologyInfo = {};
             response._embedded.ontologies.forEach(function(d){
                 ontologyInfo[d.ontologyId] = d;
             })
@@ -1511,9 +1511,9 @@
     }
 
     findIriByShortForm = function(shortForm){
-        prefix = shortForm.split('_')[0];
-        id = shortForm.split('_')[1];
-        p = findOntologyIdByPrefix(prefix)
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        var p = findOntologyIdByPrefix(prefix)
 
         return p.then(function(ontology){
             return findOntologyInfo(ontology).then(function(o){
@@ -1526,8 +1526,8 @@
 
     fetchOntologyInfo=function(){
         return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-            ontologyInfo = {};
-            prefix2ontid = {}
+            var ontologyInfo = {};
+            var prefix2ontid = {}
             response._embedded.ontologies.forEach(function(d){
                 ontologyInfo[d.ontologyId] = d;
                 prefix2ontid[d.config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = d.ontologyId;
@@ -1602,19 +1602,19 @@
         //need to due with terms such as 'CHEBI_17234'
         console.debug(shortForm);
         return findIriByShortForm(shortForm).then(function(response) {
-            ont = response.ontology;
-            iri = response.iri;
+            var ont = response.ontology;
+            var iri = response.iri;
 
-            localefoinfo = findEFOInfoLocal(shortForm)
+            var localefoinfo = findEFOInfoLocal(shortForm)
             if (localefoinfo) {
                 return new Promise(function(resolve, reject) {
                     resolve(localefoinfo);
                 })
             }
 
-            url = global_ols_api + 'ontologies/' + ont + '/terms/' + encodeURIComponent(encodeURIComponent(iri));
+            var url = global_ols_api + 'ontologies/' + ont + '/terms/' + encodeURIComponent(encodeURIComponent(iri));
             return promiseGet(url).then(JSON.parse).then(function(response) {
-                tmp = {};
+                var tmp = {};
                 tmp[shortForm] = response;
                 addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
                 return response;
@@ -1627,7 +1627,7 @@
     }
 
     findAllHierarchicalDescendantsLocal = function(efoid) {
-        decendants =getDataFromTag(global_efo_info_tag_id,'efoDecendants');
+        var decendants =getDataFromTag(global_efo_info_tag_id,'efoDecendants');
         if (decendants == undefined)
             return decendants
         return decendants[efoid];
@@ -1638,7 +1638,7 @@
             console.log('looking for descendants for ' + efoid);
             console.log(response);
             if (response.has_children) {
-                localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
+                var localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
                 if (localDescentandInfo) {
                     return new Promise(function(resolve, reject) {
                         resolve(localDescentandInfo);
@@ -1649,11 +1649,11 @@
                                   global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
                     console.log('all descendants: ');
                     console.log(response);
-                    terms = {};
+                    var terms = {};
                     response._embedded.terms.forEach(function(d, i) {
                         terms[d.short_form] = d;
                     })
-                    tmp = {}
+                    var tmp = {}
                     tmp[efoid] = Object.keys(terms);
                     addDataToTag(global_efo_info_tag_id, terms, 'efoInfo');
                     addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
@@ -1674,7 +1674,7 @@
     }
 
     addDataToTag = function(tagID, hash, key, overwriteWarning) {
-        old = $(tagID).data(key) || {};
+        var old = $(tagID).data(key) || {};
         overwriteWarning = overwriteWarning || false;
         if (overwriteWarning) {
             var result = Object.keys(old).filter(function(n) {
@@ -1699,7 +1699,7 @@
 
     getDataFromTag = function(tagID, key) {
         key = key || ''
-        data = $(tagID).data();
+        var data = $(tagID).data();
         if (key == '')
             return data
         if (Object.keys(data).valueOf(key) == -1){
@@ -1717,16 +1717,16 @@
             initLoad = false;
         }
 
-        searchQuery = mainEFO;
+        var searchQuery = mainEFO;
 
         if (additionalEFO.length > 0) {
-            additionalEFO_filtered = filterAvailableEFOs(additionalEFO);
+            var additionalEFO_filtered = filterAvailableEFOs(additionalEFO);
             if (additionalEFO_filtered.length > 0)
                 searchQuery = searchQuery + ',' + additionalEFO_filtered.join(',');
         }
 
         if (descendants.length > 0) {
-            descendants_filtered = filterAvailableEFOs(descendants);
+            var descendants_filtered = filterAvailableEFOs(descendants);
             if (descendants_filtered.length > 0)
                 searchQuery = searchQuery + ',' + descendants_filtered.join(',');
         }
@@ -1857,10 +1857,10 @@
             }
 
             //query for distinct efo terms. This will reduce the query number so work faster
-            allEFO = {}
+            var allEFO = {}
             var allColorLoaded = []
             data_association.docs.forEach(function(d, i) {
-                traits = findHightlightedEFOsforAssociation(d.id);
+                var traits = findHightlightedEFOsforAssociation(d.id);
                 if (traits.length > 1) {
                     d.preferedEFO = findMostSignificantTraitForAssociation(traits, d.id);
                 }
@@ -1986,14 +1986,14 @@
 
 
     findRelatedTermsoLocal = function(efoid) {
-        data = getDataFromTag(global_efo_info_tag_id, 'relatedEFOs')
+        var data = getDataFromTag(global_efo_info_tag_id, 'relatedEFOs')
         if(data==undefined)
             return undefined;
         return data[efoid]
     }
 
     findRelatedTerms = function(efoid){
-        relatedTermsLocal = findRelatedTermsoLocal(efoid)
+        var relatedTermsLocal = findRelatedTermsoLocal(efoid)
         if (relatedTermsLocal) {
             return new Promise(function(resolve, reject) {
                 resolve(relatedTermsLocal);
@@ -2004,7 +2004,7 @@
             'ontology': 'efo',
             'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
         }).then(function(data){
-            terms = {};
+            var terms = {};
             data.response.docs.forEach(function(d) {
                 d.obo_id = d.obo_id.replace(":", "_")
                 terms[d.obo_id] = d
@@ -2024,7 +2024,7 @@
     findRelatedTerms($('#query').text()).then(function(terms){
         //make checkbox
         Object.keys(terms).forEach(function(relatedTerm){
-            d = terms[relatedTerm];
+            var d = terms[relatedTerm];
             addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
             $("#" + 'whycb' + d.obo_id).html(d.logical_description);
             if (d.obo_id == $('#query').text()) {
@@ -2034,7 +2034,7 @@
 
         //add check event.
         $(".efocheckbox").change(function() {
-            elements = {};
+            var elements = {};
             $('.efocheckbox:input:checked').each(function(cb) {
                 elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
             });
@@ -2096,26 +2096,6 @@
     var instance = new app();
 
     instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
-
-    findRelatedTerms($('#query').text()).then(function(terms){
-
-        Object.keys(terms).forEach(function(relatedTerm){
-            info = terms[relatedTerm]
-            link = global_ols_api + '/ontologies/' + info.ontology_name + '/terms/' + encodeURIComponent(encodeURIComponent(info.iri)) + '/graph'
-            instance.fetchNewGraphData(link);
-
-        })
-
-        //add check event.
-        $(".efocheckbox").change(function() {
-            elements = {};
-            $('input:checked').each(function() {
-                elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
-            });
-            addEFO(elements);
-        });
-    })
-
 
 
 
