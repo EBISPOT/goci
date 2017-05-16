@@ -205,6 +205,19 @@ public class StudyService {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
         int ancestryCount = study.getAncestries().size();
+
+        study.getAncestries().forEach(
+                ancestry -> {
+                    int groupCount = ancestry.getAncestralGroups().size();
+                    int coo = ancestry.getCountryOfOrigin().size();
+                    int cor = ancestry.getCountryOfRecruitment().size();
+                    getLog().trace("Ancestry " + ancestry.getId() + " has "
+                                           + groupCount + " ancestral groups, "
+                                           + coo + " countries of origin and "
+                                           + cor + " countries of recruitment");
+                }
+        );
+        
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
@@ -230,6 +243,19 @@ public class StudyService {
         int platformCount = study.getPlatforms().size();
 
         int ancestryCount = study.getAncestries().size();
+
+        study.getAncestries().forEach(
+                ancestry -> {
+                    int groupCount = ancestry.getAncestralGroups().size();
+                    int coo = ancestry.getCountryOfOrigin().size();
+                    int cor = ancestry.getCountryOfRecruitment().size();
+                    getLog().trace("Ancestry " + ancestry.getId() + " has "
+                        + groupCount + " ancestral groups, "
+                        + coo + " countries of origin and "
+                        + cor + " countries of recruitment");
+                }
+        );
+
 
         Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
         study.getAssociations().forEach(

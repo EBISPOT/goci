@@ -58,12 +58,24 @@
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
-<div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
+<div class="container" th:if="${!#strings.isEmpty(changesSaved) and #strings.isEmpty(noCountryRecruitment)}">
     <div class="row">
         <div class="col-md-8">
             <div class="alert alert-success">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid" th:if="${!#strings.isEmpty(noCountryRecruitment)}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${noCountryRecruitment}">Error: </strong>
             </div>
         </div>
     </div>
