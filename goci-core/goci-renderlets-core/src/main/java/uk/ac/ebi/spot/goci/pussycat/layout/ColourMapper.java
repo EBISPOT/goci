@@ -31,6 +31,8 @@ public class ColourMapper {
 
     public static final HashMap<String, String> COLOUR_MAP = new HashMap<String, String>();
 
+    public static final HashMap<String, String> LABEL_MAP = new HashMap<>();
+
     static {
         COLOUR_MAP.put(CARDIO_VASCULAR, "#B33232");
         COLOUR_MAP.put(HEMATOLOGICAL_MSR, "#8DD3C7");
@@ -49,5 +51,24 @@ public class ColourMapper {
         COLOUR_MAP.put(LIVER_ENZYME, "#669900");
         COLOUR_MAP.put(DISEASE, "#FF3399");
         COLOUR_MAP.put(DIGESTIVE, "#B7704C");
+
+
+        LABEL_MAP.put(CARDIO_VASCULAR, "Cardiovascular disease");
+        LABEL_MAP.put(HEMATOLOGICAL_MSR, "Hematological measurement");
+        LABEL_MAP.put(NEURO, "Neurological disorder");
+        LABEL_MAP.put(BIO_PROCESS, "Biological process");
+        LABEL_MAP.put(CARDIO_MSR, "Cardiovascular measurement");
+        LABEL_MAP.put(OTHER, "Other trait");
+        LABEL_MAP.put(METABOLIC, "Metabolic disorder");
+        LABEL_MAP.put(DRUG_RESP, "Response to drug");
+        LABEL_MAP.put(LIPID_MSR, "Lipid or lipoprotein measurement");
+        LABEL_MAP.put(BODY_MSR, "Body measurement");
+        LABEL_MAP.put(NEOPLASM, "Cancer");
+        LABEL_MAP.put(INFLAMMATORY_MSR, "Inflammatory measurement");
+        LABEL_MAP.put(IMMUNE, "Immune system disorder");
+        LABEL_MAP.put(MEASUREMENT, "Other measurement");
+        LABEL_MAP.put(LIVER_ENZYME, "Liver enzyme measurement");
+        LABEL_MAP.put(DISEASE, "Other disease");
+        LABEL_MAP.put(DIGESTIVE, "Digestive system disorder");
     }
 }

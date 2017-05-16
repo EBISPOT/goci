@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EfoColourMap {
 
-    private String uri, trait, parentUri, parent, colour;
+    private String uri, trait, parentUri, parent, colour, colourLabel, message;
 
 
     @JsonCreator
@@ -17,12 +17,16 @@ public class EfoColourMap {
                         @JsonProperty("trait") String trait,
                         @JsonProperty("parentUri") String parentUri,
                         @JsonProperty("parent") String parent,
-                        @JsonProperty("colour") String colour){
+                        @JsonProperty("colour") String colour,
+                        @JsonProperty("colourLabel") String colourLabel,
+                        @JsonProperty("message") String message){
         this.uri = uri;
         this.trait = trait;
         this.parentUri = parentUri;
         this.parent = parent;
         this.colour = colour;
+        this.colourLabel = colourLabel;
+        this.message = message;
     }
 
     public String getUri() {
@@ -63,5 +67,21 @@ public class EfoColourMap {
 
     public void setColour(String colour) {
         this.colour = colour;
+    }
+
+    public String getColourLabel() {
+        return colourLabel;
+    }
+
+    public void setColourLabel(String colourLabel) {
+        this.colourLabel = colourLabel;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

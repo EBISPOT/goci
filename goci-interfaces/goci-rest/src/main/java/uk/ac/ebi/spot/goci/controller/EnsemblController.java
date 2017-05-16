@@ -103,7 +103,7 @@ public class EnsemblController {
 
         Map<String, String> ancestors = getAncestors(efoTerm);
 
-        if(ancestors.get("error") == null) {
+        if(ancestors.get("message") == null) {
 
             EfoColourMap colour =
                     getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label"));
@@ -111,8 +111,7 @@ public class EnsemblController {
 
         }
         else {
-            throw new NullPointerException("Term " + efoTerm + " not found in EFO");
-
+            return new ResponseEntity<EfoColourMap>(new EfoColourMap(ancestors.get("iri"),  null, null, null, null, null, ancestors.get("message")), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -126,8 +125,11 @@ public class EnsemblController {
 
         for(String efoTerm : efoTerms) {
             Map<String, String> ancestors = getAncestors(efoTerm);
-            if(ancestors.get("error") == null) {
+            if(ancestors.get("message") == null) {
                 colours.add(getTraitColour(ancestors.get("ancestors"), ancestors.get("iri"), ancestors.get("label")));
+            }
+            else {
+                colours.add(new EfoColourMap(ancestors.get("iri"),  null, null, null, null, null, ancestors.get("message")));
             }
         }
 
@@ -153,7 +155,8 @@ public class EnsemblController {
 
         }
         catch (HttpClientErrorException ex){
-                result.put("error", "Term ".concat(efoTerm).concat(" not found in EFO"));
+             result.put("message", "Term ".concat(efoTerm).concat(" not found in EFO"));
+            result.put("iri", efoTerm);
         }
 
 
@@ -207,13 +210,13 @@ public class EnsemblController {
         if(multiple.size() == 0){
             // if we got to here, no color available
             getLog().error("Could not identify a suitable colour category for trait " + trait);
-            return new EfoColourMap(uri, trait, ColourMapper.OTHER, "experimental factor", ColourMapper.COLOUR_MAP.get(ColourMapper.OTHER));
+            return new EfoColourMap(uri, trait, ColourMapper.OTHER, "experimental factor", ColourMapper.COLOUR_MAP.get(ColourMapper.OTHER), ColourMapper.LABEL_MAP.get(ColourMapper.OTHER), null);
         }
         else if (multiple.size() == 1){
-            return new EfoColourMap(uri, trait, multiple.get(0), allTypes.get(multiple.get(0)), ColourMapper.COLOUR_MAP.get(multiple.get(0)));
+            return new EfoColourMap(uri, trait, multiple.get(0), allTypes.get(multiple.get(0)), ColourMapper.COLOUR_MAP.get(multiple.get(0)), ColourMapper.LABEL_MAP.get(multiple.get(0)), null);
         }
         else{
-            getLog().info("More than one parent for trait " + trait);
+            getLog().debug("More than one parent for trait " + trait);
             int size = 0;
             String current = null;
             for(String term : multiple){
@@ -225,19 +228,25 @@ public class EnsemblController {
                     current = term;
                 }
             }
+            //allow for cases where the queried term is a parent class - we don't want to return the next highest parent
+            // (eg for neoplasm, return neoplasm rather than disease)
             if(uri.equals(current)){
                 return new EfoColourMap(uri,
                                         trait,
                                         current,
                                         trait,
-                                        ColourMapper.COLOUR_MAP.get(current));
+                                        ColourMapper.COLOUR_MAP.get(current),
+                                        ColourMapper.LABEL_MAP.get(current),
+                                        null);
             }
             else {
                 return new EfoColourMap(uri,
                                         trait,
                                         current,
                                         allTypes.get(current),
-                                        ColourMapper.COLOUR_MAP.get(current));
+                                        ColourMapper.COLOUR_MAP.get(current),
+                                        ColourMapper.LABEL_MAP.get(current),
+                                        null);
             }
         }
     }
