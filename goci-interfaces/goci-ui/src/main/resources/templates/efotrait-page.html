@@ -587,749 +587,14 @@
 
 <!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
 
-<script>
-    var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
-    var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
-    var global_ols_seach_api =  global_ols_api + 'search';
-    var global_ols_api_all_descendant_limit = 99999;
-    var global_efo_info_tag_id = '#efo-info';
-    var global_efo_selected_tag_id = '#selected-efos';
-    _peak = function() {
-        console.log($(global_efo_info_tag_id).data());
-        console.log($(global_efo_selected_tag_id).data());
-    }
-    //    $('[data-toggle=confirmation]').confirmation({
-    //                                                     rootSelector: '[data-toggle=confirmation]',
-    //                                                     // other options
-    //                                                 });
-</script>
-<script>
-    /*
-     This is the EFOWAS locus zoom plot
-     */
-
-    // Genome base pairs static data
-    var genome_data = [
-        {chr: 1, base_pairs: 249250621},
-        {chr: 2, base_pairs: 243199373},
-        {chr: 3, base_pairs: 198022430},
-        {chr: 4, base_pairs: 191154276},
-        {chr: 5, base_pairs: 180915260},
-        {chr: 6, base_pairs: 171115067},
-        {chr: 7, base_pairs: 159138663},
-        {chr: 8, base_pairs: 146364022},
-        {chr: 9, base_pairs: 141213431},
-        {chr: 10, base_pairs: 135534747},
-        {chr: 11, base_pairs: 135006516},
-        {chr: 12, base_pairs: 133851895},
-        {chr: 13, base_pairs: 115169878},
-        {chr: 14, base_pairs: 107349540},
-        {chr: 15, base_pairs: 102531392},
-        {chr: 16, base_pairs: 90354753},
-        {chr: 17, base_pairs: 81195210},
-        {chr: 18, base_pairs: 78077248},
-        {chr: 19, base_pairs: 59128983},
-        {chr: 20, base_pairs: 63025520},
-        {chr: 21, base_pairs: 48129895},
-        {chr: 22, base_pairs: 51304566},
-        {chr: 23, base_pairs: 156040895},
-        {chr: 24, base_pairs: 57227415},
-
-    ];
-
-    //use to work out where the variant is on the plot when the whole x axis was used to represent all chromosomes
-    //       [{"chr": 1, "base_pairs": 249250621, "genome_start": 0, "genome_end": 249250621, "tickpoint": 124625311},
-    //        {"chr": 2, "base_pairs": 243199373, "genome_start": 249250621, "genome_end": 492449994, "tickpoint": 370850308}]
-    var genome_data_merged = [];
-    var genome_end = 0;
-    genome_data.forEach(function(d, i) {
-        genome_data_merged.push({});
-        genome_data_merged[i].chr = d.chr;
-        genome_data_merged[i].base_pairs = d.base_pairs;
-
-        genome_data_merged[i].genome_start = genome_end;
-
-        genome_end += d.base_pairs;
-        genome_data_merged[i].genome_end = genome_end
-
-        genome_data_merged[i].tickpoint = genome_data_merged[i].genome_start + Math.round(d.base_pairs / 2);
-
-    });
-
-    LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
-        this.parseInit(init);
-    }, "EfoWASLZ");
-
-    //we are not using api to fetch data, when
-    LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
-        return "http://localhost:8280/gwas/tmp/association.json";
-    };
-
-    //any post process after getting the JSON
-    //we are not using api to fetch data, during init, blank data will be pass to the plot
-    //when efo term(s) being selected, these will be replaced with the efo-assoication data
-    LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-        var data = JSON.parse([]);
-        return {header: chain.header, body: data};
-    };
-
-    //adding extra information for plotting for the efo association (association doc in this case)
-    LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-        var data = JSON.parse(resp);
-        data.forEach(function(d, i) {
-            data[i].chr = data[i].chromosomeName[0];
-            data[i].bp = data[i].chromosomePosition[0];
-            data[i].pval = Math.pow(10, data[i].pValueExponent);
-            data[i].phewas_string = data[i].accessionId;
-            data[i].x = transferLocation(data[i].chr, data[i].bp);
-
-        });
-        return {header: chain.header, body: data};
-    };
-
-    //control  x,y,and points
-    LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
-        id: "efowaspvalues",
-        type: "scatter",
-        point_shape: "circle",
-        point_size: 30,
-        tooltip_positioning: "vertical",
-        id_field: "{{namespace}}id",
-        fields: ["{{namespace}}phewas"],
-        always_hide_legend: false,
-        x_axis: {
-            field: "{{namespace}}x",
-            floor: 0,
-            ceiling: 3094301596
-        },
-        y_axis: {
-            axis: 1,
-            field: "{{namespace}}pval|neglog10",
-            floor: 0,
-            upper_buffer: 0.1
-        },
-        //xintodo Set defaul color for categories
-        color: {
-            field: "{{namespace}}category",
-            scale_function: "categorical_bin",
-            parameters: {
-                categories: ["infectious diseases", "neoplasms", "endocrine/metabolic", "hematopoietic",
-                    "mental disorders", "neurological", "sense organs", "circulatory system", "respiratory",
-                    "digestive", "genitourinary", "pregnancy complications", "dermatologic", "musculoskeletal",
-                    "congenital anomalies", "symptoms", "injuries  poisonings"],
-                values: ["rgb(57,59,121)", "rgb(82,84,163)", "rgb(107,110,207)", "rgb(156,158,222)", "rgb(99,121,57)",
-                    "rgb(140,162,82)", "rgb(181,207,107)", "rgb(140,109,49)", "rgb(189,158,57)", "rgb(231,186,82)",
-                    "rgb(132,60,57)", "rgb(173,73,74)", "rgb(214,97,107)", "rgb(231,150,156)", "rgb(123,65,115)",
-                    "rgb(165,81,148)", "rgb(206,109,189)", "rgb(222,158,214)"],
-                null_value: "#B8B8B8"
-            }
-        },
-        legend: [],
-        fill_opacity: 0.7,
-        //xintodo datapoint tooltips
-        tooltip: {
-            closable: true,
-            show: {or: ["highlighted", "selected"]},
-            hide: {and: ["unhighlighted", "unselected"]},
-            html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
-            "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
-            "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
-            "<div>Parent EFO: <strong>{{{{namespace}}category}}</strong></div>"
-        },
-        behaviors: {
-            onmouseover: [
-                {action: "set", status: "highlighted"}
-            ],
-            onmouseout: [
-                {action: "unset", status: "highlighted"}
-            ],
-            onclick: [
-                {action: "toggle", status: "selected", exclusive: true}
-            ],
-            onshiftclick: [
-                {action: "toggle", status: "selected"}
-            ]
-        },
-//        label: {
-//            text: "{{{{namespace}}phewas_string}}",
-//            spacing: 8,
-//            lines: {
-//                style: {
-//                    "stroke-width": "2px",
-//                    "stroke": "#333333",
-//                    "stroke-dasharray": "2px 2px"
-//                }
-//            },
-//            filters: [
-//                {
-//                    field: "{{namespace}}pval|neglog10",
-//                    operator: ">=",
-//                    value: 5
-//                }
-//            ],
-//            style: {
-//                "font-size": "10px",
-//                "font-weight": "bold",
-//                "fill": "#333333"
-//            }
-//        }
-    });
-
-    //init x,y ticks, adding data layer
-    LocusZoom.Layouts.add("panel", "efowas", {
-        id: "efowas",
-        width: 800,
-        height: 300,
-        min_width: 800,
-        min_height: 300,
-        proportional_width: 1,
-        margin: {top: 20, right: 50, bottom: 120, left: 50},
-        inner_border: "rgb(210, 210, 210)",
-        dashboard: (function() {
-            var l = LocusZoom.Layouts.get("dashboard", "standard_panel", {unnamespaced: true});
-            l.components.push({
-                                  type: "toggle_legend",
-                                  position: "right"
-                              });
-//            l.components.push({
-//                                  type: "resize_to_data",
-//                                  position: "right"
-//                              });
-            return l;
-        })(),
-        axes: {
-            x: {
-                label: "Genomic Position (number denotes chromosome)",
-                label_offset: 35,
-                ticks: [
-                    {
-                        x: 124625310,
-                        text: "1",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 370850307,
-                        text: "2",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 591461209,
-                        text: "3",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 786049562,
-                        text: "4",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 972084330,
-                        text: "5",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1148099493,
-                        text: "6",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1313226358,
-                        text: "7",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1465977701,
-                        text: "8",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1609766427,
-                        text: "9",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1748140516,
-                        text: "10",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 1883411148,
-                        text: "11",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2017840353,
-                        text: "12",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2142351240,
-                        text: "13",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2253610949,
-                        text: "14",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2358551415,
-                        text: "15",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2454994487,
-                        text: "16",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2540769469,
-                        text: "17",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2620405698,
-                        text: "18",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2689008813,
-                        text: "19",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2750086065,
-                        text: "20",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2805663772,
-                        text: "21",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: 2855381003,
-                        text: "22",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: genome_data_merged[22].tickpoint,
-                        text: "X",
-                        style: {
-                            "fill": "rgb(120, 120, 186)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                    {
-                        x: genome_data_merged[23].tickpoint,
-                        text: "Y",
-                        style: {
-                            "fill": "rgb(0, 0, 66)",
-                            "text-anchor": "center",
-                            "font-size": "13px",
-                            "font-weight": "bold"
-                        },
-                        transform: "translate(10, 5)  rotate(35)"
-                    },
-                ]
-            },
-            y1: {
-                label: "-log10 p-value",
-                label_offset: 28
-            }
-        },
-        legend: {
-            orientation: "vertical",
-            origin: {x: 55, y: 40},
-            hidden: true
-        },
-        data_layers: [
-            LocusZoom.Layouts.get("data_layer", "significance", {unnamespaced: true}),
-            LocusZoom.Layouts.get("data_layer", "efowas_pvalues", {unnamespaced: true})
-        ]
-    });
-
-    //the plot, adding efowas panel
-    LocusZoom.Layouts.add("plot", "standard_efowas", {
-        width: 800,
-        height: 600,
-        min_width: 800,
-        min_height: 600,
-        responsive_resize: true,
-        dashboard: LocusZoom.Layouts.get("dashboard", "standard_plot", {unnamespaced: true}),
-        panels: [
-            LocusZoom.Layouts.get("panel", "efowas", {unnamespaced: true, proportional_height: 0.45})
-        ],
-        mouse_guide: false
-    });
-
-    //given a location, map it to the plot xais
-    transferLocation = function(chr, position) {
-        return genome_data_merged[chr - 1].genome_start + position;
-    }
-
-    //replot receive a list of association_docs from solr search
-    readlodLocusZoom = function(plot_id, data_association) {
-        //adding information to association doc
-        LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-            var data = JSON.parse(JSON.stringify(data_association.docs));
-            console.log("Parsing association doc to locus zoom.");
-            console.log(data_association.docs);
-            data.forEach(function(d, i, object) {
-//                if (d.shortForm.length > 1) {
-//                    console.log(d);
-//                }
-
-                if (d.chromLocation) {
-                    //we only plot those association which have chromosome information
-                    data[i].chr = d.chromLocation[0].split(":")[0];
-                    if (data[i].chr == 'X') {
-                        data[i].chr = 23;
-                    }
-                    if (data[i].chr == 'Y') {
-                        data[i].chr = 24;
-                    }
-                    data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
-                    data[i].pval = Math.pow(10, d.pValueExponent);
-                    data[i].phewas_string = d.rsId[0];
-                    data[i].x = transferLocation(data[i].chr, data[i].bp);
-                }
-                else {
-                    //some association don't have chromosome information
-                    object.splice(i, 1);
-                }
-
-            });
-            return {header: chain.header, body: data};
-        };
-
-        var data_sources = new LocusZoom.DataSources()
-                .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
 
 
-        var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-        layout.panels[0].margin.top = 32;
-        layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-
-        //xintodo create the color palate here
-        //find all efos for plotting color
-        var legend = [];
-        var colorMap = {};
-
-//
-//        data_association.docs.forEach(function(d, i) {
-//            //algorithm for select efo for association
-////            allEFO.push(d.mappedUri[0]);
-//            allEFO.push( d.preferedEFO);
-//        })
-//        //unique only
-//        allEFO = allEFO.filter(function(value, index, self) {
-//            return self.indexOf(value) === index;
-//        })
-//        //random rgb color at, legend does not work atm
-//        allEFO.forEach(function(d, i) {
-//            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
-//                    ',' + (Math.floor(Math.random() * 256)) + ')';
-//            allColor.push(col);
-//            legend.push({
-//                            shape: "rect",
-//                            color: col,
-//                            width: 9,
-//                            label: d
-//                        }
-//            )
-//        })
-
-        function hexToRgb(hex) {
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-//            return result ? {
-//                        r: parseInt(result[1], 16),
-//                        g: parseInt(result[2], 16),
-//                        b: parseInt(result[3], 16)
-//                    } : null;
-            return result ? 'rgb(' + parseInt(result[1], 16) + ','
-                    + parseInt(result[2], 16) + ','
-                    + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
-        }
-
-        data_association.docs.forEach(function(d, i) {
-//            colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
-            colorMap[d.category] = hexToRgb(d.preferedColor);
-        })
-        legend_catgories = [];
-        legend_color = [];
-        for (var key in colorMap) {
-            legend_catgories.push(key);
-            legend_color.push(colorMap[key]);
-            legend.push({
-                            shape: "rect",
-                            color: colorMap[key],
-                            width: 9,
-                            label: key
-                        }
-            )
-        }
-        layout.panels[0].data_layers[1].color.parameters.categories = legend_catgories;
-        layout.panels[0].data_layers[1].color.parameters.values = legend_color;
-        layout.panels[0].data_layers[1].legend = legend;
 
 
-        // Generate the plot
-        var plot = LocusZoom.populate(plot_id, data_sources, layout);
-    }
-</script>
+<!--gwas Locus plot-->
+<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
+<script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
-<script>
-
-    //When ploting with descendants, the number of efos increase drmatically.
-    //This is to remove the efos that have no annotation in GWAS catalog,
-    //Thus querying/ploting only those have at lease one annotation
-    filterAvailableEFOs = function(toBeFilter) {
-        availableEFOs = getDataFromTag(global_efo_info_tag_id, 'availableEFOs')
-        if(availableEFOs)
-            return toBeFilter.filter(function(n) {
-                return Object.keys(availableEFOs).indexOf(n) !== -1;
-            });
-    }
-
-    //xintodo add/remove terms when select/disselect terms
-    addEFO = function(data, initLoad, include_descendants) {
-        include_descendants = include_descendants || false;
-        initLoad = initLoad || false;
-
-        //load all available efo terms in the GWAS Catalog(has at least one annotation)
-        //save in the global_efo_info_tag_id tag with key 'availableEFOs'
-        p = new Promise(function(resolve, reject) {
-            resolve('');
-        })
-        if (initLoad) {
-            p = promiseGet('/gwas/api/search/efotrait', {
-                'q': '*:*',
-                'max': 9999,
-                'fq': 'resourcename:efotrait',
-                'group.limit': 9999
-            }).then(JSON.parse).then(function(data) {
-                tmp = {};
-                $.each(data.grouped.resourcename.groups, function(index, group) {
-                    switch (group.groupValue) {
-                        case "efotrait":
-                            available_efos_docs = group.doclist.docs;
-                            break;
-                        default:
-                    }
-                });
-                available_efos_docs.forEach(function(doc) {
-                    if (doc.shortForm) {
-                        tmp[doc.shortForm[0]] = doc;
-                    }
-                });
-                addDataToTag(global_efo_info_tag_id, tmp, 'availableEFOs');
-                return data;
-            })
-        }
-
-        selected = addDataToTag(global_efo_selected_tag_id, data, 'selectedEfos')
-        Promise.all(Object.keys(data).map(findAllHierarchicalDescendants)).then(function() {
-            console.log('finish loading descendants!'
-            )
-        });
-
-        //p is the promise for loading all available efo from GWAS Catalog
-        //This needs to be fullfill first before trigger any add event.
-        p.then(function() {
-            $(global_efo_selected_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
-        }).catch(function(err) {
-            console.error('Error when loading all available EFOs ' + err)
-        });
-    }
-
-    updatePage = function() {
-        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
-
-        //update sharable link
-        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(current_select).join(','))
-        //update select box
-
-    }
-
-
-    $(global_efo_selected_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
-        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
-        //print out terms:
-        text = '';
-        $.each(current_select, function(index, value) {
-            text = text + index + ':' + value + '<br/>';
-        });
-        $("#selected-efos_text").html(text);
-
-        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(current_select).join(','))
-        if (include_descendants) {
-            all_descendants = {}
-            Promise.all(Object.keys(current_select).map(findAllHierarchicalDescendants)).then(function(descendants) {
-                descendants.forEach(function(terms) {
-                    terms.forEach(function(term) {
-                        all_descendants[term] = terms[term];
-                    })
-                })
-
-                var searchTerm = $('#query').text();
-                getEfoTraitData(searchTerm, Object.keys(current_select), Object.keys(all_descendants), initLoad);
-
-            }).catch(function(err) {
-                console.log('error when trying to find all descendants with error messgae ' + err);
-            }).then(function() {
-                //close spinner or something
-            })
-        }
-        else {
-            var searchTerm = $('#query').text();
-            getEfoTraitData(searchTerm, Object.keys(current_select), [], initLoad);
-        }
-    });
-
-    removeEFO = function(data, key) {
-
-    }
-
-
-</script>
 
 
 <!--local data-->
@@ -1362,8 +627,6 @@
 //        console.log('clicked' + $(this).attr('value'));
     });
 
-    //for sharable link copy function
-    new Clipboard('#sharable_link_btn');
 
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
@@ -1377,337 +640,17 @@
         console.log("Loading search module!");
         if (searchTerm != '') {
             console.log("Start search for the efotrait " + searchTerm);
-
             var elements = {};
             searchTerm.split(',').forEach(function(term) {
                                               elements[term] = term;
                                           }
             )
-
             //xintodo first load
             addEFO(elements, true);
-//            getEfoTraitData(searchTerm, true);
         }
     });
 
-    //get data asyn with promise
-    function promiseGet(url, params) {
-        if (!url.startsWith("http")) {
-            url = window.location.origin + url
-        }
 
-        // Return a new promise.
-        return new Promise(function(resolve, reject) {
-            // Do the usual XHR stuff
-            var req = new XMLHttpRequest();
-
-            params = params || {}
-            if (Object.keys(params).length > 0) {
-                var params_str = '';
-                Object.keys(params).forEach(function(key, index) {
-                    params_str = params_str + '&' + key + '=' + this[key];
-                }, params);
-                url = url + '?' + params_str;
-            }
-
-//            url = url.split('?')[0]
-//            params = url.split('?')[1]
-            req.open('GET', url);
-
-            req.onload = function() {
-                // This is called even on 404 etc
-                // so check the status
-                if (req.status == 200) {
-                    // Resolve the promise with the response text
-                    resolve(req.response);
-                }
-                else {
-                    // Otherwise reject with the status text
-                    // which will hopefully be a meaningful error
-                    reject(Error(req.statusText));
-                }
-            };
-
-            // Handle network errors
-            req.onerror = function() {
-                reject(Error("Network Error"));
-            };
-
-            // Make the request
-            req.send();
-        });
-    }
-
-    //get data asyn with promise
-    function promisePOST(url) {
-        // Return a new promise.
-        return new Promise(function(resolve, reject) {
-            // Do the usual XHR stuff
-            var req = new XMLHttpRequest();
-            var params = url.split('?')[1]
-            url = url.split('?')[0]
-
-            req.open('POST', url, true)
-            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.onload = function() {
-                // This is called even on 404 etc
-                // so check the status
-                if (req.status == 200) {
-                    // Resolve the promise with the response text
-                    resolve(req.response);
-                }
-                else {
-                    // Otherwise reject with the status text
-                    // which will hopefully be a meaningful error
-                    reject(Error(req.statusText));
-                }
-            };
-
-            // Handle network errors
-            req.onerror = function() {
-                reject(Error("Network Error"));
-            };
-
-            // Make the request
-            console.debug('making post request!!!')
-            req.send(params);
-        });
-    }
-
-    findEFOInfoLocal = function(efoid) {
-        var data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
-        if(data==undefined)
-            return undefined;
-        return data[efoid]
-    }
-
-    findOntologyInfoLocal = function(ontologyId) {
-        var data = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')
-        if(data==undefined)
-            return undefined;
-        return data[ontologyId]
-    }
-
-    findOntologyInfo = function(ontologyId){
-        ontologyId = ontologyId.toLowerCase();
-        var localefoinfo = findOntologyInfoLocal(ontologyId)
-        if (localefoinfo) {
-            return new Promise(function(resolve, reject) {
-                resolve(localefoinfo);
-            })
-        }
-
-        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-            var ontologyInfo = {};
-            response._embedded.ontologies.forEach(function(d){
-                ontologyInfo[d.ontologyId] = d;
-            })
-            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
-            return ontologyInfo[ontologyId];
-        }).catch(function(err){
-            console.error('Error when querying ontology info. ' + err);
-            return err;
-        })
-    }
-
-    findIriByShortForm = function(shortForm){
-        var prefix = shortForm.split('_')[0];
-        var id = shortForm.split('_')[1];
-        var p = findOntologyIdByPrefix(prefix)
-
-        return p.then(function(ontology){
-            return findOntologyInfo(ontology).then(function(o){
-                return {'ontology':ontology,'iri' : o.config.baseUris[0] + id};
-            })
-        }).catch(function(err){
-            console.log('Error finding iri for term ' + shortForm + '. ' + err);
-        })
-    }
-
-    fetchOntologyInfo=function(){
-        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-            var ontologyInfo = {};
-            var prefix2ontid = {}
-            response._embedded.ontologies.forEach(function(d){
-                ontologyInfo[d.ontologyId] = d;
-                prefix2ontid[d.config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = d.ontologyId;
-            })
-            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
-            addDataToTag(global_efo_info_tag_id,prefix2ontid,'prefix2ontid')
-            return response;
-        }).catch(function(err){
-            console.error('Error when querying ontology info. ' + err);
-            return err;
-        })
-    }
-
-    findOntologyIdByPrefix = function(prefix) {
-        if(getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')==undefined || getDataFromTag(global_efo_info_tag_id, 'prefix2ontid') == undefined){
-            return fetchOntologyInfo().then(function(){
-                return getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]
-            });
-        }else{
-            return new Promise(function(resolve, reject) {
-                resolve(getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]);
-            })
-        }
-    }
-
-//    findOntologyIdbyPrefix = function(prefix){
-//        localefoinfo = findOntologyIdbyPrefixLocal(prefix)
-//        if (localefoinfo) {
-//            return new Promise(function(resolve, reject) {
-//                resolve(localefoinfo);
-//            })
-//        }
-//
-//        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-//            ontologyInfo = {};
-//            response._embedded.ontologies.forEach(function(d){
-//                ontologyInfo[d.ontologyId] = d;
-//            })
-//            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
-//            return findOntologyIdbyPrefixLocal(prefix);
-//        }).catch(function(err){
-//            console.error('Error when querying ontology info. ' + err);
-//            return err;
-//        })
-//
-//    }
-
-
-//    findEFOInfo = function(efoid) {
-//        localefoinfo = findEFOInfoLocal(efoid)
-//        if (localefoinfo) {
-//            return new Promise(function(resolve, reject) {
-//                resolve(localefoinfo);
-//            })
-//        }
-//
-//        //EFO does not follow the same naming convension
-//        //need to due with terms such as 'CHEBI_17234'
-//
-//
-//        url = global_ols_api + 'ontologies/efo/terms/' + 'http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252F' + efoid;
-//        return promiseGet(url).then(JSON.parse).then(function(response) {
-//            tmp = {};
-//            tmp[efoid] = response;
-//            addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
-//            return response;
-//        })
-//    }
-
-    findEFOInfo = function(shortForm) {
-        //EFO does not follow the same naming convension
-        //need to due with terms such as 'CHEBI_17234'
-        console.debug(shortForm);
-        return findIriByShortForm(shortForm).then(function(response) {
-            var ont = response.ontology;
-            var iri = response.iri;
-
-            var localefoinfo = findEFOInfoLocal(shortForm)
-            if (localefoinfo) {
-                return new Promise(function(resolve, reject) {
-                    resolve(localefoinfo);
-                })
-            }
-
-            var url = global_ols_api + 'ontologies/' + ont + '/terms/' + encodeURIComponent(encodeURIComponent(iri));
-            return promiseGet(url).then(JSON.parse).then(function(response) {
-                var tmp = {};
-                tmp[shortForm] = response;
-                addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
-                return response;
-            }).catch(function(err){
-                console.debug('error when loading efo info for ' + shortForm + '. ' + err);
-                return err;
-            })
-
-        });
-    }
-
-    findAllHierarchicalDescendantsLocal = function(efoid) {
-        var decendants =getDataFromTag(global_efo_info_tag_id,'efoDecendants');
-        if (decendants == undefined)
-            return decendants
-        return decendants[efoid];
-    }
-
-    findAllHierarchicalDescendants = function(efoid) {
-        return findEFOInfo(efoid).then(function(response) {
-            console.log('looking for descendants for ' + efoid);
-            console.log(response);
-            if (response.has_children) {
-                var localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
-                if (localDescentandInfo) {
-                    return new Promise(function(resolve, reject) {
-                        resolve(localDescentandInfo);
-                    })
-                }
-                //xintodo size >=1000 is set to 1000 by ols, ask?
-                return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
-                                  global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
-                    console.log('all descendants: ');
-                    console.log(response);
-                    var terms = {};
-                    response._embedded.terms.forEach(function(d, i) {
-                        terms[d.short_form] = d;
-                    })
-                    var tmp = {}
-                    tmp[efoid] = Object.keys(terms);
-                    addDataToTag(global_efo_info_tag_id, terms, 'efoInfo');
-                    addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
-                    return response._embedded.terms;
-                })
-            }
-            else {
-                console.log('no descendant.');
-                return new Promise(function(resolve, reject) {
-                    resolve(JSON.parse("[]"));
-                }).then(function() {
-                    tmp = {}
-                    tmp[efoid] = []
-                    addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
-                })
-            }
-        })
-    }
-
-    addDataToTag = function(tagID, hash, key, overwriteWarning) {
-        var old = $(tagID).data(key) || {};
-        overwriteWarning = overwriteWarning || false;
-        if (overwriteWarning) {
-            var result = Object.keys(old).filter(function(n) {
-                return Object.keys(hash).indexOf(n) > -1;
-            });
-            if (result.length > 0) {
-                result.forEach(function(d) {
-                    console.log(d + 'will be overwritten.')
-                })
-            }
-        }
-        result = $.extend({}, old, hash)
-        if (key) {
-            $(tagID).data(key, result)
-        }
-        else {
-            $(tagID).data(result)
-        }
-
-        return result;
-    }
-
-    getDataFromTag = function(tagID, key) {
-        key = key || ''
-        var data = $(tagID).data();
-        if (key == '')
-            return data
-        if (Object.keys(data).valueOf(key) == -1){
-            console.warn('The requested data with key ' + key + ' to ' + tagID + ' does not exist!');
-            return undefined;
-        }
-        return data[key]
-    }
 
     //make solr query
     function getEfoTraitData(mainEFO, additionalEFO, descendants, initLoad) {
@@ -1917,6 +860,687 @@
             });
         }
     }
+
+
+    findEFOInfoLocal = function(efoid) {
+        var data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
+        if(data==undefined)
+            return undefined;
+        return data[efoid]
+    }
+
+    findOntologyInfoLocal = function(ontologyId) {
+        var data = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')
+        if(data==undefined)
+            return undefined;
+        return data[ontologyId]
+    }
+
+    findOntologyInfo = function(ontologyId){
+        ontologyId = ontologyId.toLowerCase();
+        var localefoinfo = findOntologyInfoLocal(ontologyId)
+        if (localefoinfo) {
+            return new Promise(function(resolve, reject) {
+                resolve(localefoinfo);
+            })
+        }
+
+        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
+            var ontologyInfo = {};
+            response._embedded.ontologies.forEach(function(d){
+                ontologyInfo[d.ontologyId] = d;
+            })
+            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
+            return ontologyInfo[ontologyId];
+        }).catch(function(err){
+            console.error('Error when querying ontology info. ' + err);
+            return err;
+        })
+    }
+
+    findIriByShortForm = function(shortForm){
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        var p = findOntologyIdByPrefix(prefix)
+
+        return p.then(function(ontology){
+            return findOntologyInfo(ontology).then(function(o){
+                return {'ontology':ontology,'iri' : o.config.baseUris[0] + id};
+            })
+        }).catch(function(err){
+            console.log('Error finding iri for term ' + shortForm + '. ' + err);
+        })
+    }
+
+    fetchOntologyInfo=function(){
+        return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
+            var ontologyInfo = {};
+            var prefix2ontid = {}
+            response._embedded.ontologies.forEach(function(d){
+                ontologyInfo[d.ontologyId] = d;
+                prefix2ontid[d.config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = d.ontologyId;
+            })
+            addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
+            addDataToTag(global_efo_info_tag_id,prefix2ontid,'prefix2ontid')
+            return response;
+        }).catch(function(err){
+            console.error('Error when querying ontology info. ' + err);
+            return err;
+        })
+    }
+
+    findOntologyIdByPrefix = function(prefix) {
+        if(getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')==undefined || getDataFromTag(global_efo_info_tag_id, 'prefix2ontid') == undefined){
+            return fetchOntologyInfo().then(function(){
+                return getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]
+            });
+        }else{
+            return new Promise(function(resolve, reject) {
+                resolve(getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]);
+            })
+        }
+    }
+
+
+    findEFOInfo = function(shortForm) {
+        //EFO does not follow the same naming convension
+        //need to due with terms such as 'CHEBI_17234'
+        console.debug(shortForm);
+        return findIriByShortForm(shortForm).then(function(response) {
+            var ont = response.ontology;
+            var iri = response.iri;
+
+            var localefoinfo = findEFOInfoLocal(shortForm)
+            if (localefoinfo) {
+                return new Promise(function(resolve, reject) {
+                    resolve(localefoinfo);
+                })
+            }
+
+            var url = global_ols_api + 'ontologies/' + ont + '/terms/' + encodeURIComponent(encodeURIComponent(iri));
+            return promiseGet(url).then(JSON.parse).then(function(response) {
+                var tmp = {};
+                tmp[shortForm] = response;
+                addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
+                return response;
+            }).catch(function(err){
+                console.debug('error when loading efo info for ' + shortForm + '. ' + err);
+                return err;
+            })
+
+        });
+    }
+
+    findAllHierarchicalDescendantsLocal = function(efoid) {
+        var decendants =getDataFromTag(global_efo_info_tag_id,'efoDecendants');
+        if (decendants == undefined)
+            return decendants
+        return decendants[efoid];
+    }
+
+    findAllHierarchicalDescendants = function(efoid) {
+        return findEFOInfo(efoid).then(function(response) {
+            console.log('looking for descendants for ' + efoid);
+            console.log(response);
+            if (response.has_children) {
+                var localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
+                if (localDescentandInfo) {
+                    return new Promise(function(resolve, reject) {
+                        resolve(localDescentandInfo);
+                    })
+                }
+                //xintodo size >=1000 is set to 1000 by ols, ask?
+                return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
+                                  global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
+                    console.log('all descendants: ');
+                    console.log(response);
+                    var terms = {};
+                    response._embedded.terms.forEach(function(d, i) {
+                        terms[d.short_form] = d;
+                    })
+                    var tmp = {}
+                    tmp[efoid] = Object.keys(terms);
+                    addDataToTag(global_efo_info_tag_id, terms, 'efoInfo');
+                    addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
+                    return response._embedded.terms;
+                })
+            }
+            else {
+                console.log('no descendant.');
+                return new Promise(function(resolve, reject) {
+                    resolve(JSON.parse("[]"));
+                }).then(function() {
+                    tmp = {}
+                    tmp[efoid] = []
+                    addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
+                })
+            }
+        })
+    }
+
+    addDataToTag = function(tagID, hash, key, overwriteWarning) {
+        var old = $(tagID).data(key) || {};
+        overwriteWarning = overwriteWarning || false;
+        if (overwriteWarning) {
+            var result = Object.keys(old).filter(function(n) {
+                return Object.keys(hash).indexOf(n) > -1;
+            });
+            if (result.length > 0) {
+                result.forEach(function(d) {
+                    console.log(d + 'will be overwritten.')
+                })
+            }
+        }
+        result = $.extend({}, old, hash)
+        if (key) {
+            $(tagID).data(key, result)
+        }
+        else {
+            $(tagID).data(result)
+        }
+
+        return result;
+    }
+
+    getDataFromTag = function(tagID, key) {
+        key = key || ''
+        var data = $(tagID).data();
+        if (key == '')
+            return data
+        if (Object.keys(data).valueOf(key) == -1){
+            console.warn('The requested data with key ' + key + ' to ' + tagID + ' does not exist!');
+            return undefined;
+        }
+        return data[key]
+    }
+
+    //*****new
+
+
+
+    //return a data promise containing all available efos. lazy load.
+    getAvailableEFOs=function(){
+        var dataPromise = getDataFromTag(global_efo_info_tag_id,'availableEFOs');
+        if(dataPromise == undefined){
+            //lazy load
+            console.log('Loading all available EFOs in Gwas Catalog...')
+            dataPromise =  promiseGet('/gwas/api/search/efotrait', {
+                'q': '*:*',
+                'max': 9999,
+                'fq': 'resourcename:efotrait',
+                'group.limit': 9999
+            }).then(JSON.parse).then(function(data) {
+                $.each(data.grouped.resourcename.groups, function(index, group) {
+                    switch (group.groupValue) {
+                        case "efotrait":
+                            available_efos_docs = group.doclist.docs;
+                            break;
+                        default:
+                    }
+                });
+                var tmp = {};
+                available_efos_docs.forEach(function(doc) {
+                    if (doc.shortForm) {
+                        tmp[doc.shortForm[0]] = doc;
+                    }
+                });
+
+                return tmp;
+            }).catch(function(err){
+                console.error('Error when loading all available EFOs! ' + err);
+            })
+
+            //add to tag
+            $(global_efo_info_tag_id).data('availableEFOs',dataPromise);
+
+        }else{
+            console.debug('Loading all available EFOs from cache.')
+        }
+        return dataPromise;
+    }
+
+    //load ontology info
+    getOntologyInfo=function() {
+        var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
+        if (dataPromise == undefined) {
+            //lazy load
+            console.log('Loading Ontology Info...')
+            dataPromise = promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',
+                              {'size': 99999}).then(JSON.parse).then(function(response) {
+                var ontologyInfo = {};
+                response._embedded.ontologies.forEach(function(d) {
+                    ontologyInfo[d.ontologyId] = d;
+                })
+
+                return ontologyInfo;
+            }).catch(function(err) {
+                console.error('Error when loading ontology info! ' + err);
+            })
+
+            //add to tag
+            $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
+        }else{
+            console.debug('Loading Ontology Info from cache.')
+        }
+        return dataPromise;
+    }
+
+    getPrefix2OntologyId=function(){
+        var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
+        if (dataPromise == undefined) {
+            //lazy load
+            console.log('Loading prefix2ontId...')
+            dataPromise = getOntologyInfo().then(function(ontoInfo){
+                var prefix2ontid = {}
+                Object.keys(ontoInfo).forEach(function(ontId){
+                    prefix2ontid[ontoInfo[ontId].config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = ontId;
+                })
+                return prefix2ontid;
+            }).catch(function(err){
+                console.error('Error when loading prefix2ontId! ' + err);
+            })
+            //add to tag
+            $(global_efo_info_tag_id).data('prefix2ontId',dataPromise);
+        }else{
+            console.debug('Loading prefix2ontId from cache.')
+        }
+        return dataPromise;
+    }
+
+    getOntologyIdByPrefix = function(prefix) {
+         return getPrefix2OntologyId().then(function(p2o){
+             return p2o[prefix]
+         })
+    }
+
+    getIriByShortForm = function(shortForm){
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        var ont = getOntologyByShortForm(shortForm);
+
+        return ont.then(function(ontName){
+            return getOntologyInfo().then(function(ontologies){
+                return ontologies[ontName].config.baseUris[0] + id;
+            })
+        }).catch(function(err){
+            console.log('Error finding iri for term ' + shortForm + '. ' + err);
+        })
+    }
+
+    getOntologyByShortForm = function(shortForm){
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        p = getOntologyIdByPrefix(prefix);
+
+        return p.then(function(ontology){
+            return ontology;
+        }).catch(function(err){
+            console.log('Error finding iri for term ' + shortForm + '. ' + err);
+        })
+    }
+
+    getRelatedTerms = function(efoid){
+        queryRelatedTerms = function(efoid){
+            console.log('Loading related terms...')
+            return searchOLS(efoid,{
+                'ontology': 'efo',
+                'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
+            }).then(function(data){
+                var terms = {};
+                data.response.docs.forEach(function(d) {
+                    d.obo_id = d.obo_id.replace(":", "_")
+                    terms[d.obo_id] = d
+                })
+                var tmp={};
+                tmp[efoid] = terms;
+                return tmp;
+            }).catch(function(err){
+                console.error('Error when loading related terms! ' + err);
+            })
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'relatedEFOs');
+
+        return dataPromise.then(function(data){
+            //query if data not exist
+            if($.inArray(efoid,Object.keys(data)) == -1){
+                dataPromise = queryRelatedTerms(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'relatedEFOs');
+                    return data[efoid];
+                })
+            }else{
+                console.debug('Loading related terms from cache.')
+                return data[efoid]
+            }
+        })
+    }
+
+    getColourForEFO = function(efoid) {
+        queryColour = function(efoid){
+            console.log('Loading Colour...')
+            return promiseGet(global_color_url + efoid).then(JSON.parse).then(function(response) {
+                var tmp = {};
+                tmp[efoid] = response;
+                return tmp;
+            }).catch(function(err) {
+                console.error('Error when loading Colour! ' + err);
+            })
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efo2colour');
+
+        return dataPromise.then(function(data) {
+            if ($.inArray(efoid, Object.keys(data)) == -1) {
+                //efo colour is not currently loaded
+                console.log('Loading Colour...')
+                dataPromise = queryColour(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'efo2colour');
+                    return data[efoid];
+                })
+            }else {
+                //efo colour is has been loaded perviously
+                console.debug('Loading Colour from cache.')
+                return data[efoid]
+            }
+        })
+    }
+
+    getEFOInfo = function(efoid){
+        queryEFOInfo = function(efoid){
+            var ont = getOntologyByShortForm(efoid);
+            var iri = getIriByShortForm(efoid);
+            return Promise.all([ont,iri]).then(function(arrayPromise){
+                var url = global_ols_api + 'ontologies/' + arrayPromise[0] + '/terms/' + encodeURIComponent(encodeURIComponent(arrayPromise[1]));
+                return promiseGet(url).then(JSON.parse).then(function(response) {
+                    var tmp = {};
+                    tmp[efoid] = response;
+                    return tmp;
+                }).catch(function(err){
+                    console.debug('error when loading efo info for ' + efoid + '. ' + err);
+                })
+            })
+
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoInfo');
+        return dataPromise.then(function(data) {
+            if ($.inArray(efoid, Object.keys(data)) == -1) {
+                //efo info is not currently loaded
+                console.log('Loading efoInfo for ' + efoid)
+                dataPromise = queryEFOInfo(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoInfo');
+                    return data[efoid];
+                })
+            }else {
+                //efo colour is has been loaded perviously
+                console.debug('Loading efoInfo from cache for ' + efoid);
+                return data[efoid]
+            }
+        })
+    }
+
+    getHierarchicalDescendants = function(efoid){
+        queryDescendant = function(efoid){
+            var efoinfo = getEFOInfo(efoid)
+            return efoinfo.then(function(response){
+                if (response.has_children) {
+                    //xintodo size >=1000 is set to 1000 by ols, ask?
+                    return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
+                                      global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
+                        var terms = {};
+                        response._embedded.terms.forEach(function(d, i) {
+                            terms[d.short_form] = d;
+                        })
+                        var tmp = {}
+                        tmp[efoid] = terms;
+                        return tmp;
+                    })
+                }
+                else {
+                    console.log('no descendant found for ' + efoid);
+                    return new Promise(function(resolve, reject) {
+                        resolve({});
+                    })
+                }
+            })
+        }
+
+
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
+
+        return dataPromise.then(function(data) {
+            if ($.inArray(efoid, Object.keys(data)) == -1) {
+                //efo descendant not currently loaded
+                console.log('Loading descendant for ' + efoid)
+                dataPromise = queryDescendant(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoDecendants');
+                    return data[efoid];
+                })
+            }else {
+                //efo colour is has been loaded perviously
+                console.debug('Loading descendant from cache for ' + efoid);
+                return data[efoid]
+            }
+        })
+    }
+
+
+    addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
+        overwriteWarning = overwriteWarning || false;
+
+        var oldPromise = $(tagID).data(key) || new Promise(function(resolve){
+                    resolve({})
+                });
+
+
+        var result;
+        var p = Promise.all([oldPromise,promise]).then(function(arrayPromise){
+                oldData = arrayPromise[0]
+                newData = arrayPromise[1]
+
+                if(overwriteWarning){
+                    var overlap = Object.keys(oldData).filter(function(n) {
+                        return Object.keys(newData).indexOf(n) > -1;
+                    });
+                    if (overlap.length > 0) {
+                        overlap.forEach(function(d) {
+                            console.log(d + 'will be overwritten.')
+                        })
+                    }
+                }
+                result = $.extend({}, oldData, newData)
+                return result;
+            });
+
+
+        p.then(function(){
+            $(global_efo_info_tag_id).data(key,p);
+            console.debug('adding promise to ' + key + ' tag ' + tagID);
+        })
+    }
+    getPromiseFromTag = function(tagID,key){
+        var dataPromise =  getDataFromTag(tagID,key)
+        if (dataPromise == undefined) {
+            dataPromise = new Promise(function(resolve){
+                resolve({});
+            })
+        }
+        return dataPromise;
+    }
+
+    //When ploting with descendants, the number of efos increase drmatically.
+    //This is to remove the efos that have no annotation in GWAS catalog,
+    //Thus querying/ploting only those have at lease one annotation
+    filterAvailableEFOs = function(toBeFilter) {
+        availableEFOs = getDataFromTag(global_efo_info_tag_id, 'availableEFOs')
+        if(availableEFOs)
+            return toBeFilter.filter(function(n) {
+                return Object.keys(availableEFOs).indexOf(n) !== -1;
+            });
+    }
+
+    addEFO = function(data, initLoad, include_descendants) {
+        include_descendants = include_descendants || false;
+        initLoad = initLoad || false;
+
+        //load all available efo terms in the GWAS Catalog(has at least one annotation)
+        //save in the global_efo_info_tag_id tag with key 'availableEFOs'
+        p = getAvailableEFOs();
+
+        selected = addDataToTag(global_efo_selected_tag_id, data, 'selectedEfos')
+        Promise.all(Object.keys(data).map(getHierarchicalDescendants)).then(function() {
+            console.log('finish loading descendants!'
+            )
+        });
+
+        //p is the promise for loading all available efo from GWAS Catalog
+        //This needs to be fullfill first before trigger any add event.
+        p.then(function() {
+            $(global_efo_selected_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
+        }).catch(function(err) {
+            console.error('Error when loading all available EFOs ' + err)
+        });
+    }
+
+    $(global_efo_selected_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
+        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
+        //print out terms:
+        text = '';
+        $.each(current_select, function(index, value) {
+            text = text + index + ':' + value + '<br/>';
+        });
+        $("#selected-efos_text").html(text);
+
+        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(current_select).join(','))
+        if (include_descendants) {
+            all_descendants = {}
+            Promise.all(Object.keys(current_select).map(getHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
+                    terms.forEach(function(term) {
+                        all_descendants[term] = terms[term];
+                    })
+                })
+
+                var searchTerm = $('#query').text();
+                getEfoTraitData(searchTerm, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+
+            }).catch(function(err) {
+                console.log('error when trying to find all descendants with error messgae ' + err);
+            }).then(function() {
+                //close spinner or something
+            })
+        }
+        else {
+            var searchTerm = $('#query').text();
+            getEfoTraitbData(searchTerm, Object.keys(current_select), [], initLoad);
+        }
+    });
+
+
+
+
+
+    //xintodo add/remove terms when select/disselect terms
+    addEFO_bk = function(data, initLoad, include_descendants) {
+        include_descendants = include_descendants || false;
+        initLoad = initLoad || false;
+
+        //load all available efo terms in the GWAS Catalog(has at least one annotation)
+        //save in the global_efo_info_tag_id tag with key 'availableEFOs'
+        p = new Promise(function(resolve, reject) {
+            resolve('');
+        })
+
+
+        if (initLoad) {
+            p = promiseGet('/gwas/api/search/efotrait', {
+                'q': '*:*',
+                'max': 9999,
+                'fq': 'resourcename:efotrait',
+                'group.limit': 9999
+            }).then(JSON.parse).then(function(data) {
+                tmp = {};
+                $.each(data.grouped.resourcename.groups, function(index, group) {
+                    switch (group.groupValue) {
+                        case "efotrait":
+                            available_efos_docs = group.doclist.docs;
+                            break;
+                        default:
+                    }
+                });
+                available_efos_docs.forEach(function(doc) {
+                    if (doc.shortForm) {
+                        tmp[doc.shortForm[0]] = doc;
+                    }
+                });
+                addDataToTag(global_efo_info_tag_id, tmp, 'availableEFOs');
+                return data;
+            })
+        }
+
+        selected = addDataToTag(global_efo_selected_tag_id, data, 'selectedEfos')
+        Promise.all(Object.keys(data).map(findAllHierarchicalDescendants)).then(function() {
+            console.log('finish loading descendants!'
+            )
+        });
+
+        //p is the promise for loading all available efo from GWAS Catalog
+        //This needs to be fullfill first before trigger any add event.
+        p.then(function() {
+            $(global_efo_selected_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
+        }).catch(function(err) {
+            console.error('Error when loading all available EFOs ' + err)
+        });
+    }
+
+
+    $(global_efo_selected_tag_id).on('addToSelectbk', function(e, include_descendants, initLoad) {
+        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
+        //print out terms:
+        text = '';
+        $.each(current_select, function(index, value) {
+            text = text + index + ':' + value + '<br/>';
+        });
+        $("#selected-efos_text").html(text);
+
+        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(current_select).join(','))
+        if (include_descendants) {
+            all_descendants = {}
+            Promise.all(Object.keys(current_select).map(findAllHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
+                    terms.forEach(function(term) {
+                        all_descendants[term] = terms[term];
+                    })
+                })
+
+                var searchTerm = $('#query').text();
+                getEfoTraitData(searchTerm, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+
+            }).catch(function(err) {
+                console.log('error when trying to find all descendants with error messgae ' + err);
+            }).then(function() {
+                //close spinner or something
+            })
+        }
+        else {
+            var searchTerm = $('#query').text();
+            getEfoTraitData(searchTerm, Object.keys(current_select), [], initLoad);
+        }
+    });
+
+
+
     /*]]>*/
 </script>
 

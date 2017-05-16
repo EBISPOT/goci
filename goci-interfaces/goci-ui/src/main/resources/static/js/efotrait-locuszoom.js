@@ -1,7 +1,6 @@
 /*
-This is the EFOWAS locus zoom plot
+ This is the EFOWAS locus zoom plot
  */
-
 
 // Genome base pairs static data
 var genome_data = [
@@ -32,7 +31,6 @@ var genome_data = [
 
 ];
 
-
 //use to work out where the variant is on the plot when the whole x axis was used to represent all chromosomes
 //       [{"chr": 1, "base_pairs": 249250621, "genome_start": 0, "genome_end": 249250621, "tickpoint": 124625311},
 //        {"chr": 2, "base_pairs": 243199373, "genome_start": 249250621, "genome_end": 492449994, "tickpoint": 370850308}]
@@ -51,12 +49,6 @@ genome_data.forEach(function(d, i) {
     genome_data_merged[i].tickpoint = genome_data_merged[i].genome_start + Math.round(d.base_pairs / 2);
 
 });
-
-//given a location, map it to the plot xais
-transferLocation = function(chr, position) {
-    return genome_data_merged[chr - 1].genome_start + position;
-}
-
 
 LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
     this.parseInit(init);
@@ -89,7 +81,6 @@ LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fiel
     return {header: chain.header, body: data};
 };
 
-
 //control  x,y,and points
 LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     id: "efowaspvalues",
@@ -113,7 +104,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     },
     //xintodo Set defaul color for categories
     color: {
-        field: "{{namespace}}category_name",
+        field: "{{namespace}}category",
         scale_function: "categorical_bin",
         parameters: {
             categories: ["infectious diseases", "neoplasms", "endocrine/metabolic", "hematopoietic",
@@ -135,7 +126,9 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         show: {or: ["highlighted", "selected"]},
         hide: {and: ["unhighlighted", "unselected"]},
         html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
-        "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>"
+        "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
+        "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
+        "<div>Parent EFO: <strong>{{{{namespace}}category}}</strong></div>"
     },
     behaviors: {
         onmouseover: [
@@ -499,7 +492,12 @@ LocusZoom.Layouts.add("plot", "standard_efowas", {
     mouse_guide: false
 });
 
+//given a location, map it to the plot xais
+transferLocation = function(chr, position) {
+    return genome_data_merged[chr - 1].genome_start + position;
+}
 
+//replot receive a list of association_docs from solr search
 readlodLocusZoom = function(plot_id, data_association) {
     //adding information to association doc
     LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
@@ -524,7 +522,6 @@ readlodLocusZoom = function(plot_id, data_association) {
                 data[i].pval = Math.pow(10, d.pValueExponent);
                 data[i].phewas_string = d.rsId[0];
                 data[i].x = transferLocation(data[i].chr, data[i].bp);
-                data[i].category_name = d.preferedEFO;
             }
             else {
                 //some association don't have chromosome information
@@ -585,9 +582,8 @@ readlodLocusZoom = function(plot_id, data_association) {
     }
 
     data_association.docs.forEach(function(d, i) {
-        //algorithm for select efo for association
-        colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
-
+//            colorMap[d.preferedEFO] = hexToRgb(d.preferedColor);
+        colorMap[d.category] = hexToRgb(d.preferedColor);
     })
     legend_catgories = [];
     legend_color = [];
@@ -610,4 +606,3 @@ readlodLocusZoom = function(plot_id, data_association) {
     // Generate the plot
     var plot = LocusZoom.populate(plot_id, data_sources, layout);
 }
-
