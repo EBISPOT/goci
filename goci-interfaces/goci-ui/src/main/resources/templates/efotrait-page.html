@@ -93,40 +93,40 @@
     <div class="container-fluid" id="lower_container">
 
         <!--debug information-->
-        <div class="row" style="margin-top:10px">
-            <div class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">debug information</h3>
-                </div>
-                <div class="col-lg-12">
-                    <button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>
-                    <button id="addEfoButton1"
-                            class="addEfoButton"
-                            value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>
-                    <button id="addEfoButton2"
-                            class="addEfoButton"
-                            value="EFO_0001060">celiac disease EFO_0001060</button>
-                    <button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>
-                </div>
+        <!--<div class="row" style="margin-top:10px">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading background-color-primary-accent">-->
+                    <!--<h3 class="panel-title">debug information</h3>-->
+                <!--</div>-->
+                <!--<div class="col-lg-12">-->
+                    <!--<button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>-->
+                    <!--<button id="addEfoButton1"-->
+                            <!--class="addEfoButton"-->
+                            <!--value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>-->
+                    <!--<button id="addEfoButton2"-->
+                            <!--class="addEfoButton"-->
+                            <!--value="EFO_0001060">celiac disease EFO_0001060</button>-->
+                    <!--<button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>-->
+                <!--</div>-->
 
-                <div class="col-lg-12">
-                    <div id="debug">debug information</div>
-                </div>
-                <input type="checkbox" id="query-include-descendants"/>include descendants
+                <!--<div class="col-lg-12">-->
+                    <!--<div id="debug">debug information</div>-->
+                <!--</div>-->
+                <!--<input type="checkbox" id="query-include-descendants"/>include descendants-->
 
 
-                <button class="btn btn-large btn-primary" data-toggle="confirmation"
-                        data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"
-                        data-btn-ok-class="btn-success"
-                        data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"
-                        data-btn-cancel-class="btn-danger"
-                        data-title="Is it ok?" data-content="This might be dangerous">
-                  Confirmation
-                </button>
+                <!--<button class="btn btn-large btn-primary" data-toggle="confirmation"-->
+                        <!--data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"-->
+                        <!--data-btn-ok-class="btn-success"-->
+                        <!--data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"-->
+                        <!--data-btn-cancel-class="btn-danger"-->
+                        <!--data-title="Is it ok?" data-content="This might be dangerous">-->
+                  <!--Confirmation-->
+                <!--</button>-->
 
-            </div>
-            <div id="mynetwork"></div>
-        </div>
+            <!--</div>-->
+            <!--<div id="mynetwork"></div>-->
+        <!--</div>-->
 
         <!-- Summary panel -->
         <div class="row" style="margin-top:10px">
