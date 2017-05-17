@@ -56,7 +56,7 @@ LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
 
 //we are not using api to fetch data, when
 LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
-    return "http://localhost:8280/gwas/tmp/association.json";
+    return "";
 };
 
 //any post process after getting the JSON

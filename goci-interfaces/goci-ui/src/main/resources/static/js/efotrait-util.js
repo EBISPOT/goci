@@ -484,6 +484,37 @@ $(document).ready(function() {
 });
 
 
+//ols-tree
+var app = require("ols-treeview");
+var instance = new app();
+
+options = {
+    checkbox: false,
+    checkbox_cascade: '',
+    checkbox_three_state: false,
+    checkbox_keep_selected_style: false,
+    onclick: function(params, node, relativePath, termIRI, type){
+        var clicked = node.node.original.iri;
+        var efoid = clicked.split('/').slice(-1)[0];
+        var tmp = {}
+        tmp[efoid] = clicked;
+        addEFO(tmp);
+    },
+}
+
+
+var searchTerm = $('#query').text();
+// initialise the tree
+instance.draw($("#term-tree"),
+              false,
+              "efo",
+              "terms",
+              "http://www.ebi.ac.uk/efo/" + searchTerm,
+              "http://www.ebi.ac.uk/ols/",
+              options);
+
+
+
 
 //
 // findEFOInfoLocal = function(efoid) {

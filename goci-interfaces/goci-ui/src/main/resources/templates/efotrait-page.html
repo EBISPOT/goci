@@ -136,7 +136,7 @@
                 </div>
                 <div class="clearfix">
                     <!--trait summary-->
-                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    <div class="panel-body col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <!--label-->
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
@@ -167,46 +167,46 @@
                         </div>
                     </div>
                     <!--highlighted study-->
-                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <h3>highlighted study</h3>
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">pubmedId
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-pubmedId">-</div>
-                        </div>
+                    <div class="panel-body col-lg-6 col-md-6 col-sm-6 col-xs-6">
 
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">title
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Highlighted study
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-title">-</div>
                         </div>
 
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">author
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Pubmed id
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-pubmedId">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Author
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-author">-</div>
                         </div>
 
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">catalogPublishDate
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">CatalogPublishDate
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>
                         </div>
 
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">initialSampleDescription
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">InitialSampleDescription
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-initialSampleDescription">-</div>
                         </div>
 
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">replicateSampleDescription
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">ReplicateSampleDescription
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>
                         </div>
@@ -221,37 +221,40 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!--Expendsion panel-->
-        <div class="row" style="margin-top:20px">
-            <div id="expension_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span class="locus_label">Expend your search</span>
-                    </h3>
-                    <span class="pull-right">
+
+    <!--Expendsion panel-->
+    <div class="row" style="margin-top:20px">
+        <div id="expension_panel" class="panel panel-default">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">
+                    <span class="locus_label">Expend your search</span>
+                </h3>
+                <span class="pull-right">
                         <span class="clickable panel-collapsed"
                               style="margin-left:25px"
                               onclick="toggleSidebar('#expension_panel span.clickable')">
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </span>
                     </span>
-                </div>
+            </div>
 
-                <div class="panel-body" style="display:initial">
+            <div class="panel-body" style="display:none">
+                <!--<div class="panel-body" style="display:initial">-->
 
-                    <!--current selected-->
-                    <div class="col-xs-12 background-color-primary-accent">
-                        <div class="col-xs-6">Selected EFO:
-                            <div id="selected-efos_text"></div>
-                        </div>
-                        <div class="col-xs-12" id="selected-efos_btn">
+                <!--current selected-->
+                <div class="col-xs-12 background-color-primary-accent">
+                    <div class="col-xs-6">Selected EFO:
+                        <div id="selected-efos_text"></div>
+                    </div>
+                    <div class="col-xs-12" id="selected-efos_btn">
 
-                        </div>
-                        <div style="display:none" id="efo-info"></div>
-                        <div class="col-xs-12">
-                            <input type="text" id="sharable_link" class="col-xs-6"></input>
-                            <div class="col-xs-1">
+                    </div>
+                    <div style="display:none" id="efo-info"></div>
+                    <div class="col-xs-12">
+                        <input type="text" id="sharable_link" class="col-xs-6"></input>
+                        <div class="col-xs-1">
                             <button id="sharable_link_btn"
                                     type="button"
                                     class="btn btn-default"
@@ -260,68 +263,67 @@
                                     aria-hidden="true"
                                     title="copy to clipboard"></span>
                             </button>
-                            </div>
                         </div>
+                    </div>
 
-                        <div class="col-xs-12">
+                    <div class="col-xs-12">
                             <button id="btn-query-include-descendants"
                                     type="button"
                                     class="btn btn-default">replot with descendants
                             </button>
-                        </div>
-
                     </div>
 
-                    <!--ols tree-->
-                    <div class="col-xs-4">
-                        <!--auto-suggestion-->
-                        <div class="col-xs-12">
-                            <!--auto suggest-->
-                            <h4>Search for additional terms:</h4>
-                            <div class="left">
-                                <label>
-                                    <input style="font-weight: normal"
-                                           size="35"
-                                           type="text"
-                                           name="q"
-                                           data-olswidget="select"
-                                           data-olsontology="efo"
-                                           data-selectpath="http://www.ebi.ac.uk/ols/"
-                                           olstype=""
-                                           id="local-searchbox"
-                                           placeholder="Enter the term you are looking for"
-                                           class="ac_input">
-                                    </input>
-                                </label>
-                            </div>
+                </div>
+
+                <!--ols tree-->
+                <div class="col-xs-4">
+                    <!--auto-suggestion-->
+                    <div class="col-xs-12">
+                        <!--auto suggest-->
+                        <h4>Search for additional terms:</h4>
+                        <div class="left">
+                            <label>
+                                <input style="font-weight: normal"
+                                       size="35"
+                                       type="text"
+                                       name="q"
+                                       data-olswidget="select"
+                                       data-olsontology="efo"
+                                       data-selectpath="http://www.ebi.ac.uk/ols/"
+                                       olstype=""
+                                       id="local-searchbox"
+                                       placeholder="Enter the term you are looking for"
+                                       class="ac_input">
+                                </input>
+                            </label>
                         </div>
-
-
-                        <div class="col-xs-12">
-                            <h4>Related in EFO hierarchy:</h4>
-                            <div id="term-tree"
-                                 style="height:500px; width:500px; border:1px solid black;overflow: auto;">
-
-                            </div>
-                        </div>
-
-
                     </div>
 
 
+                    <div class="col-xs-12">
+                        <h4>Related in EFO hierarchy:</h4>
+                        <div id="term-tree"
+                             style="height:500px; width:500px; border:1px solid black;overflow: auto;">
 
-                    <div class="col-xs-8">
-                        <div id="expension">
-                            <h4>Additional related terms eg. measurements and biomarkers:</h4>
-                        </div>
-                        <div>
-                            <div id="ontology_vis"></div>
                         </div>
                     </div>
-
 
 
                 </div>
+
+
+
+                <div class="col-xs-8">
+                    <div id="expension">
+                        <h4>Additional related terms eg. measurements and biomarkers:</h4>
+                    </div>
+                    <div>
+                        <div id="ontology_vis"></div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>
@@ -373,8 +375,8 @@
                         </span>
                     </span>
             </div>
-            <!--<div class="panel-body" style="display:none">-->
-            <div class="panel-body" style="display:initial">
+            <div class="panel-body" style="display:none">
+            <!--<div class="panel-body" style="display:initial">-->
                 <!-- locus plot -->
                 <div id="plot" style=" width: 600px; height: 400px;"></div>
             </div>
@@ -555,10 +557,8 @@
 <!-- Bootstrap core JavaScript
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
-<script src="../static/tmp2/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
-<script src="../static/tmp2/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
 
 <script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
@@ -576,33 +576,28 @@
 <script src="../static/js/goci-ui.js" th:src="@{../../js/goci-ui.js}"></script>
 <script src="../static/js/efotraitresult.js" th:src="@{../../js/efotraitresult.js}"></script>
 
-<!-- Necessary includes for LocusZoom.js -->
-<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+<!-- LocusZoom
+================================================== -->
 <script src="../static/js/plugins/locuszoom.vendor.min.js"
         th:src="@{../../js/plugins/locuszoom.vendor.min.js}"></script>
 <script src="../static/js/plugins/locuszoom.app.js" th:src="@{../../js/plugins/locuszoom.app.js}"></script>
 <link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
 
-<!--visjs-->
-<!--<script src="../static/js/plugins/vis.min.js" th:src="@{../../js/plugins/vis.min.js}"></script>-->
-<!--<link href="../static/css/vis.min.css" rel="stylesheet" type="text/css" th:href="@{../../css/vis.min.css}"/>-->
-
-<!--clipboardjs-->
+<!-- clipboardjs
+================================================== -->
 <script src="../static/js/plugins/clipboard.min.js" th:src="@{../../js/plugins/clipboard.min.js}"></script>
 
-
-<!--script for OLS-->
+<!-- OLS-tree
+================================================== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<!--<script src="../static/tmp/jstree.min.js" th:src="@{../../tmp/jstree.min.js}"></script>-->
-
 <script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
-<!--<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>-->
 <link rel="stylesheet"
       href="../static/css/proton/style.min.css"
       th:href="@{../../css/proton/style.min.css}"
       media="screen"/>
 
-<!--ols auto suggest-->
+<!-- OLS auto-suggest
+================================================== -->
 <link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../../css/ols_auto_complete/ols.css}"/>
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/ols-colors.css"
@@ -610,8 +605,12 @@
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/typeaheadjs.css"
       th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
+<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
 
-<!--ols_graph-->
+<!-- OLS-graph
+================================================== -->
 <link rel="stylesheet"
       href="../static/css/ols_graph/awesomplete.css"
       th:href="@{../../css/ols_graph/awesomplete.css}"
@@ -628,24 +627,19 @@
 <script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-<!--<script src="../static/tmp/handlebars.min.js" th:src="@{../../tmp/handlebars.min.js}"></script>-->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
-<!--<script src="../static/tmp/typeahead.bundle.min.js" th:src="@{../../tmp/typeahead.bundle.min.js}"></script>-->
 
-<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
 
-<!--<script src="../static/js/bootstrap-confirmation.min.js" th:src="@{../../js/bootstrap-confirmation.min.js}"></script>-->
+<!-- loading overlay
+================================================== -->
 
-<!--loading overlay-->
 <script src="../static/js/plugins/loading-overlay.min.js" th:src="@{../../js/plugins/loading-overlay.min.js}"></script>
 
 <!--<div id="loadingResults" class="col-md-offset-4" style="display: none">-->
-    <!--<button class="btn btn-lg">-->
-        <!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"-->
-              <!--style="margin-right: 1em;"></span>Loading...-->
-    <!--</button>-->
+<!--<button class="btn btn-lg">-->
+<!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"-->
+<!--style="margin-right: 1em;"></span>Loading...-->
+<!--</button>-->
 <!--</div>-->
 <script>
     $('#loadingResults').show();
@@ -653,11 +647,13 @@
 
 <!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
 
+<!--visjs-->
+<!--<script src="../static/js/plugins/vis.min.js" th:src="@{../../js/plugins/vis.min.js}"></script>-->
+<!--<link href="../static/css/vis.min.css" rel="stylesheet" type="text/css" th:href="@{../../css/vis.min.css}"/>-->
 
 
-
-
-<!--gwas Locus plot-->
+<!-- trait page
+================================================== -->
 <script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
 <script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
@@ -689,8 +685,6 @@
     $('#btn-query-include-descendants').click(function() {
         //replot with all children, from the currently selected efos
         addEFO({}, false, true);
-//        getEfoTraitData($(this).attr('value'));
-//        console.log('clicked' + $(this).attr('value'));
     });
 
 
@@ -1202,138 +1196,9 @@
     }
 
 
-
-
     /*]]>*/
 </script>
 
-
-<!--ols-->
-<script>
-
-    var app = require("ols-treeview");
-    var instance = new app();
-
-    options = {
-        checkbox: false,
-        checkbox_cascade: '',
-        checkbox_three_state: false,
-        checkbox_keep_selected_style: false,
-        onclick: function(params, node, relativePath, termIRI, type){
-            var clicked = node.node.original.iri;
-            var efoid = clicked.split('/').slice(-1)[0];
-            var tmp = {}
-            tmp[efoid] = clicked;
-            addEFO(tmp);
-        },
-
-//        onchange: function(e, data) {
-////            console.log("newly selected:")
-////            console.log(data.changed.selected);
-////            console.log("newly deselected:")
-////            console.log(data.changed.deselected);
-////            console.log("event passed to onChange:")
-////            console.log(e); // newly selected
-////            console.log("data passed to onChange:")
-////            console.log(data); // newly deselected
-////            console.log(data.instance.get_selected(true));
-//            elements = {};
-//            if (data.instance.get_selected(true).length > 0) {
-//                $.each(data.instance.get_selected(true), function(index, term) {
-//                    if (term.original.iri) {
-//                        elements['EFO_' + term.original.iri.split('EFO_')[1]] = term.original.text;
-//                    }
-//                });
-//                //xintodo tree load
-//                addEFO(elements);
-////                console.log(data.instance.get_node(data.selected));
-//            }
-//        },
-    }
-
-
-    var searchTerm = $('#query').text();
-    // initialise the tree
-    //xintodo tempral disable for offline debug
-    instance.draw($("#term-tree"),
-                  false,
-                  "efo",
-                  "terms",
-                  "http://www.ebi.ac.uk/efo/" + searchTerm,
-                  "http://www.ebi.ac.uk/ols/",
-                  options);
-
-</script>
-
-
-<!--visjs-->
-<style type="text/css">
-    /*#mynetwork {*/
-    /*width: 600px;*/
-    /*height: 400px;*/
-    /*border: 1px solid lightgray;*/
-    /*}*/
-</style>
-<!--<script>-->
-<!--//http://visjs.org/docs/network/-->
-<!--// create an array with nodes-->
-<!--var nodes = new vis.DataSet([-->
-<!--{id: 1, label: 'Node 1'},-->
-<!--{id: 2, label: 'Node 2'},-->
-<!--{id: 3, label: 'Node 3'},-->
-<!--{id: 4, label: 'Node 4'},-->
-<!--{id: 5, label: 'Node 5'}-->
-<!--]);-->
-
-<!--// create an array with edges-->
-<!--var edges = new vis.DataSet([-->
-<!--{from: 1, to: 3},-->
-<!--{from: 1, to: 2},-->
-<!--{from: 2, to: 4},-->
-<!--{from: 2, to: 5}-->
-<!--]);-->
-
-<!--// create a network-->
-<!--var container = document.getElementById('mynetwork');-->
-
-<!--// provide the data in the vis format-->
-<!--var data = {-->
-<!--nodes: nodes,-->
-<!--edges: edges-->
-<!--};-->
-
-<!--var options = {-->
-<!--//        //this can be used to find a good style for the plot.-->
-<!--//        configure: {-->
-<!--//            enabled: true,-->
-<!--//            filter: 'nodes,edges',-->
-<!--//            container: undefined,-->
-<!--//            showButton: true-->
-<!--//        }-->
-<!--interaction: {-->
-<!--dragNodes: true,-->
-<!--dragView: true,-->
-<!--hideEdgesOnDrag: false,-->
-<!--hideNodesOnDrag: false,-->
-<!--hover: false,-->
-<!--hoverConnectedEdges: true,-->
-<!--keyboard: {-->
-<!--enabled: false,-->
-<!--speed: {x: 10, y: 10, zoom: 0.02},-->
-<!--bindToWindow: true-->
-<!--},-->
-<!--multiselect: false,-->
-<!--navigationButtons: false,-->
-<!--selectable: true,-->
-<!--selectConnectedEdges: true,-->
-<!--tooltipDelay: 300,-->
-<!--zoomView: true-->
-<!--}-->
-<!--}-->
-
-<!--// initialize your network!-->
-<!--//    var network = new vis.Network(container, data, options);-->
-<!--</script>-->
 
 
 
