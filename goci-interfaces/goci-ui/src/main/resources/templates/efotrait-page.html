@@ -171,7 +171,7 @@
                     </div>
                     <!--highlighted study-->
                     <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <!--label-->
+                        <h3>highlighted study</h3>
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
                                  style="font-weight: bold; margin-bottom: 1em;padding-left:0px">pubmedId
@@ -1181,16 +1181,18 @@
                     //http://visjs.org/docs/data/dataset.html
                     var defaultAttribute =x["nodes"].get(iri)
                     defaultAttribute.color.border = 'blue';
-                    x["nodes"].update(defaultAttribute)
-                })
-                //add why to the title of node
-                $.each(reasonForRelatedEFO, function(efoid, reason) {
-                    getIriByShortForm(efoid).then(function(iri){
-                        x["nodes"].update({id: iri, title: reason});
+                    x["nodes"].update(defaultAttribute);
+
+                    //add why to the title of node
+                    $.each(reasonForRelatedEFO, function(efoid, reason) {
+                        getIriByShortForm(efoid).then(function(iri){
+                            x["nodes"].update({id: iri, title: reason});
+                        })
                     })
                 })
 
-            },1000)
+
+            },4000)
         }).catch(function(err){
             console.error('Error when plotting related terms.' + err);
         })
