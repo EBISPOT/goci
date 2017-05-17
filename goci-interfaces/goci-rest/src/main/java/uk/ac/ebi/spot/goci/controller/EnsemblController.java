@@ -111,7 +111,7 @@ public class EnsemblController {
 
         }
         else {
-            return new ResponseEntity<EfoColourMap>(new EfoColourMap(ancestors.get("iri"),  null, null, null, null, null, ancestors.get("message")), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<EfoColourMap>(new EfoColourMap(ancestors.get("iri"),  null, null, null, null, null, ancestors.get("message")), HttpStatus.OK);
         }
     }
 
