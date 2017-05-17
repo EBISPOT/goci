@@ -113,10 +113,7 @@
                     <div id="debug">debug information</div>
                 </div>
                 <input type="checkbox" id="query-include-descendants"/>include descendants
-                <button id="btn-query-include-descendants"
-                        type="button"
-                        class="btn btn-default">replot with descendants
-                            </button>
+
 
                 <button class="btn btn-large btn-primary" data-toggle="confirmation"
                         data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"
@@ -245,7 +242,7 @@
 
                     <!--current selected-->
                     <div class="col-xs-12 background-color-primary-accent">
-                        <div class="col-xs-6">Current terms:
+                        <div class="col-xs-6">Selected EFO:
                             <div id="selected-efos_text"></div>
                         </div>
                         <div class="col-xs-12" id="selected-efos_btn">
@@ -265,6 +262,14 @@
                             </button>
                             </div>
                         </div>
+
+                        <div class="col-xs-12">
+                            <button id="btn-query-include-descendants"
+                                    type="button"
+                                    class="btn btn-default">replot with descendants
+                            </button>
+                        </div>
+
                     </div>
 
                     <!--ols tree-->
@@ -290,6 +295,8 @@
                                 </label>
                             </div>
                         </div>
+
+
                         <div class="col-xs-12">
                             <h4>Related in EFO hierarchy:</h4>
                             <div id="term-tree"
@@ -297,7 +304,6 @@
 
                             </div>
                         </div>
-
 
 
                     </div>
