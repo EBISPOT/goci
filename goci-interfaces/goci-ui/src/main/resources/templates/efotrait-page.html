@@ -16,7 +16,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" th:href="@{../../css/bootstrap.min.css}" rel="stylesheet"/>
     <!--xintodo disable for offline debug-->
-    <!--<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"-->
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"/>
     <!--rel="stylesheet"/>-->
     <link href="../static/css/bootstrap-table.css" th:href="@{../../css/bootstrap-table.css}" rel="stylesheet"/>
     <link href="../static/css/bootstrap-theme.css" th:href="@{../../css/bootstrap-theme.min.css}" rel="stylesheet"/>
@@ -370,12 +370,6 @@
             <!--<div class="panel-body" style="display:none">-->
             <div class="panel-body" style="display:initial">
                 <!-- locus plot -->
-
-                <div id="plot_load" class="col-md-offset-4" style="display: none">
-                    <button class="btn btn-lg">
-                        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-                    </button>
-                </div>
                 <div id="plot" style=" width: 600px; height: 400px;"></div>
             </div>
         </div>
@@ -556,9 +550,9 @@
     ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
-<script src="../static/tmp/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
+<script src="../static/tmp2/jquery.min.js" th:src="@{../../tmp/jquery.min.js}"></script>
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>-->
-<script src="../static/tmp/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
+<script src="../static/tmp2/jquery-ui.min.js" th:src="@{../../tmp/jquery-ui.min.js}"></script>
 
 
 <script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
@@ -592,8 +586,8 @@
 
 
 <!--script for OLS-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>-->
-<script src="../static/tmp/jstree.min.js" th:src="@{../../tmp/jstree.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<!--<script src="../static/tmp/jstree.min.js" th:src="@{../../tmp/jstree.min.js}"></script>-->
 
 <script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
 <!--<script src="../static/js/plugins/ols-treeview.min.js" th:src="@{../../js/plugins/ols-treeview.min.js}"></script>-->
@@ -628,23 +622,25 @@
 <script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
 
 
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>-->
-<script src="../static/tmp/handlebars.min.js" th:src="@{../../tmp/handlebars.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<!--<script src="../static/tmp/handlebars.min.js" th:src="@{../../tmp/handlebars.min.js}"></script>-->
 
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>-->
-<script src="../static/tmp/typeahead.bundle.min.js" th:src="@{../../tmp/typeahead.bundle.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
+<!--<script src="../static/tmp/typeahead.bundle.min.js" th:src="@{../../tmp/typeahead.bundle.min.js}"></script>-->
 
 <script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
 
 <!--<script src="../static/js/bootstrap-confirmation.min.js" th:src="@{../../js/bootstrap-confirmation.min.js}"></script>-->
 
+<!--loading overlay-->
+<script src="../static/js/plugins/loading-overlay.min.js" th:src="@{../../js/plugins/loading-overlay.min.js}"></script>
 
-<div id="loadingResults" class="col-md-offset-4" style="display: none">
-    <button class="btn btn-lg">
-        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
-              style="margin-right: 1em;"></span>Loading...
-    </button>
-</div>
+<!--<div id="loadingResults" class="col-md-offset-4" style="display: none">-->
+    <!--<button class="btn btn-lg">-->
+        <!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"-->
+              <!--style="margin-right: 1em;"></span>Loading...-->
+    <!--</button>-->
+<!--</div>-->
 <script>
     $('#loadingResults').show();
 </script>
@@ -663,6 +659,7 @@
 <!--local data-->
 <script th:inline="javascript">
     /*<![CDATA[*/
+
 
     //show/hide spinner
     toggleSpinner = function(tagID) {
@@ -773,7 +770,6 @@
                     updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label,false)
                 else
                     updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label)
-
             });
         },Promise.resolve()).catch(function(err){
             console.error('Error when updating selected efo box! ' + err);
