@@ -77,11 +77,11 @@ public class SnpAssociationTableViewService {
             }
             else { allLociGenes.add("NR"); }
 
+            //This sort ensures that haplotype SNPs are displayed in the correct order
             Collection<RiskAllele> ra = locus.getStrongestRiskAlleles().stream()
                     .sorted((v1, v2) -> Long.compare(v1.getId(), v2.getId()))
                     .collect(Collectors.toList());
 
-//            for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
             for (RiskAllele riskAllele : ra) {
 
                 allLociRiskAlleles.add(riskAllele.getRiskAlleleName());
@@ -275,6 +275,11 @@ public class SnpAssociationTableViewService {
         // Get mapping details
         if (association.getLastMappingPerformedBy() != null) {
             snpAssociationTableView.setLastMappingPerformedBy(association.getLastMappingPerformedBy());
+        }
+
+        snpAssociationTableView.setMappingStatus("false");
+        if (association.getLastMappingDate()!= null) {
+            snpAssociationTableView.setMappingStatus("true");
         }
 
         if (association.getLastMappingDate() != null) {

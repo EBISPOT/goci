@@ -1,5 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
+import uk.ac.ebi.spot.goci.model.Country;
+
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -33,11 +37,11 @@ public class StudySampleDescription {
 
     private Integer numberOfIndividuals;
 
-    private String ancestralGroup;
+    private Collection<AncestralGroup> ancestralGroups;
 
-    private String countryOfOrigin;
+    private Collection<Country> countryOfOrigin;
 
-    private String countryOfRecruitment;
+    private Collection<Country> countryOfRecruitment;
 
     private String description;
 
@@ -55,9 +59,9 @@ public class StudySampleDescription {
                                   Boolean ancestryCheckedLevelTwo,
                                   String type,
                                   Integer numberOfIndividuals,
-                                  String ancestralGroup,
-                                  String countryOfOrigin,
-                                  String countryOfRecruitment,
+                                  Collection<AncestralGroup> ancestralGroups,
+                                  Collection<Country> countryOfOrigin,
+                                  Collection<Country> countryOfRecruitment,
                                   String description,
                                   String sampleSizesMatch,
                                   String notes) {
@@ -71,7 +75,7 @@ public class StudySampleDescription {
         this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
         this.type = type;
         this.numberOfIndividuals = numberOfIndividuals;
-        this.ancestralGroup = ancestralGroup;
+        this.ancestralGroups = ancestralGroups;
         this.countryOfOrigin = countryOfOrigin;
         this.countryOfRecruitment = countryOfRecruitment;
         this.description = description;
@@ -168,29 +172,29 @@ public class StudySampleDescription {
         return this;
     }
 
-    public String getAncestralGroup() {
-        return ancestralGroup;
+    public Collection<AncestralGroup> getAncestralGroups() {
+        return ancestralGroups;
     }
 
-    public StudySampleDescription setAncestralGroup(String ancestralGroup) {
-        this.ancestralGroup = ancestralGroup;
+    public StudySampleDescription setAncestralGroups(Collection<AncestralGroup> ancestralGroups) {
+        this.ancestralGroups = ancestralGroups;
         return this;
     }
 
-    public String getCountryOfOrigin() {
+    public Collection<Country> getCountryOfOrigin() {
         return countryOfOrigin;
     }
 
-    public StudySampleDescription setCountryOfOrigin(String countryOfOrigin) {
+    public StudySampleDescription setCountryOfOrigin(Collection<Country> countryOfOrigin) {
         this.countryOfOrigin = countryOfOrigin;
         return this;
     }
 
-    public String getCountryOfRecruitment() {
+    public Collection<Country> getCountryOfRecruitment() {
         return countryOfRecruitment;
     }
 
-    public StudySampleDescription setCountryOfRecruitment(String countryOfRecruitment) {
+    public StudySampleDescription setCountryOfRecruitment(Collection<Country> countryOfRecruitment) {
         this.countryOfRecruitment = countryOfRecruitment;
         return this;
     }

@@ -283,10 +283,10 @@ public class ValidationChecksBuilder {
      *
      * @param association association to be checked
      */
-    public Collection<ValidationError> runLociAttributeChecks(Association association) {
+    public Collection<ValidationError> runLociAttributeChecks(Association association, String eRelease) {
 
         Collection<ValidationError> validationErrors = new ArrayList<>();
-        String eRelease = ensemblRestTemplateService.getRelease();
+
         if (association.getLoci() != null) {
 
             Set<String> associationGenes = new HashSet<>();

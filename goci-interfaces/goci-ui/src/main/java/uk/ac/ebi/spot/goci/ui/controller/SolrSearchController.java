@@ -203,7 +203,7 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Study");
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "study");
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -452,6 +452,7 @@ public class SolrSearchController {
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -459,8 +460,12 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         addRowsAndPage(solrSearchBuilder, maxResults, page);
-        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "Study");
+        addFilterQuery(solrSearchBuilder, searchConfiguration.getDefaultFacet(), "study");
         addQuery(solrSearchBuilder, query);
+
+        if (sort != null) {
+            addSortQuery(solrSearchBuilder, sort);
+        }
 
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());

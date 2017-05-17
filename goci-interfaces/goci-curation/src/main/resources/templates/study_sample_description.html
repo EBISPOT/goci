@@ -37,7 +37,7 @@
     <script th:src="@{/js/goci-study-sample-description.js}"></script>
 
     <script th:src="@{/js/goci-editing.js}"></script>
-
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
@@ -58,12 +58,24 @@
 <div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
-<div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
+<div class="container" th:if="${!#strings.isEmpty(changesSaved) and #strings.isEmpty(noCountryRecruitment)}">
     <div class="row">
         <div class="col-md-8">
             <div class="alert alert-success">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid" th:if="${!#strings.isEmpty(noCountryRecruitment)}">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${noCountryRecruitment}">Error: </strong>
             </div>
         </div>
     </div>
@@ -228,9 +240,17 @@
                         th:if="${initialStudyAncestryDescriptions}">
                         <td th:text="${initialStudyAncestryDescription.type} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.numberOfIndividuals} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.ancestralGroup} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.countryOfOrigin} ?: ''"></td>
-                        <td th:text="${initialStudyAncestryDescription.countryOfRecruitment} ?: ''"></td>
+
+                        <td><span th:each="ancestralGroup, iterStat: ${initialStudyAncestryDescription.ancestralGroups}"
+                                  th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfOrigin, iterStat: ${initialStudyAncestryDescription.countryOfOrigin}"
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfRecruitment, iterStat: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
+                        </td>
+
                         <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
                         <td th:text="${initialStudyAncestryDescription.description} ?: ''"></td>
@@ -282,9 +302,16 @@
                     <tr th:each="replicationStudyAncestryDescription: ${replicationStudyAncestryDescriptions}">
                         <td th:text="${replicationStudyAncestryDescription.type}  ?: ''"></td>
                         <td th:text="${replicationStudyAncestryDescription.numberOfIndividuals}  ?: ''"></td>
-                        <td th:text="${replicationStudyAncestryDescription.ancestralGroup}  ?: ''"></td>
-                        <td th:text="${replicationStudyAncestryDescription.countryOfOrigin}  ?: ''"></td>
-                        <td th:text="${replicationStudyAncestryDescription.countryOfRecruitment}  ?: ''"></td>
+
+                        <td><span th:each="ancestralGroup, iterStat: ${replicationStudyAncestryDescription.ancestralGroups}"
+                                  th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfOrigin, iterStat: ${replicationStudyAncestryDescription.countryOfOrigin}"
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfRecruitment, iterStat: ${replicationStudyAncestryDescription.countryOfRecruitment}"
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
+                        </td>
                         <td th:text="${replicationStudyAncestryDescription.previouslyReported}  ?: ''"></td>
                         <td th:text="${replicationStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
                         <td th:text="${replicationStudyAncestryDescription.description} ?: ''"></td>
@@ -338,18 +365,16 @@
 
                             <!--Dropdowns-->
                             <div class="form-group">
-                                <label for="ancestralGroup" class="control-label col-md-2">Inferred Ancestry:</label>
+                                <label for="ancestralGroups" class="control-label col-md-2">Inferred Ancestry:</label>
 
                                 <div class="col-md-10">
-                                    <select name="ancestralGroup"
-                                            class="form-control select2-select"
-                                            multiple="multiple"
-                                            data-placeholder="Choose ancestry"
-                                            th:field="*{ancestralGroup}"
-                                            id="ancestralGroup">
+                                    <select name="ancestralGroups" class="form-control select2-select"
+                                            multiple="multiple" data-placeholder="Choose ancestral group"
+                                            th:field="*{ancestralGroups}"
+                                            id="ancestralGroups">
                                         <option th:each="ancestralGroup : ${ancestralGroups}"
-                                                th:value="${ancestralGroup}"
-                                                th:text="${ancestralGroup}"></option>
+                                                th:value="${ancestralGroup.id}"
+                                                th:text="${ancestralGroup.ancestralGroup}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -360,28 +385,27 @@
 
                                 <div class="col-md-10">
                                     <select name="countryOfOrigin" class="form-control select2-select"
-                                            multiple="multiple" data-placeholder="Country of Origin"
-                                            th:field="*{countryOfOrigin}"
-                                            id="countryOfOrigin">
+                                        multiple="multiple" th:field="*{countryOfOrigin}"
+                                        id="countryOfOrigin">
                                         <option th:each="country : ${countries}"
-                                                th:value="${country.name}"
-                                                th:text="${country.name}"></option>
+                                            th:value="${country.id}"
+                                            th:text="${country.countryName}"></option>
                                     </select>
                                 </div>
+
                             </div>
 
                             <div class="form-group">
-                                <label for="countryOfRecruitment" class="control-label col-md-2">Country of
-                                                                                                 Recruitment:</label>
+                                <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
 
                                 <div class="col-md-10">
                                     <select name="countryOfRecruitment" class="form-control select2-select"
-                                            multiple="multiple" data-placeholder="Country of Recruitment"
+                                            multiple="multiple"
                                             th:field="*{countryOfRecruitment}"
                                             id="countryOfRecruitment">
                                         <option th:each="country : ${countries}"
-                                                th:value="${country.name}"
-                                                th:text="${country.name}"></option>
+                                                th:value="${country.id}"
+                                                th:text="${country.countryName}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -432,7 +456,7 @@
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#ancestralGroup').select2();
+        $('#ancestralGroups').select2();
     });
 </script>
 

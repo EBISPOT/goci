@@ -12,15 +12,7 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.RiskAllele;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.ValidationError;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.LocusRepository;
@@ -31,10 +23,7 @@ import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 import uk.ac.ebi.spot.goci.utils.ErrorProcessingService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by emma on 03/03/2016.
@@ -149,12 +138,13 @@ public class AssociationOperationsService {
      */
     public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study,
                                                                                 Association association,
-                                                                                SecureUser user)
+                                                                                SecureUser user,
+                                                                                String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -170,7 +160,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
         }
         return associationValidationViews;
     }
@@ -186,12 +176,13 @@ public class AssociationOperationsService {
     public Collection<AssociationValidationView> saveEditedAssociationFromForm(Study study,
                                                                                Association association,
                                                                                Long associationId,
-                                                                               SecureUser user)
+                                                                               SecureUser user,
+                                                                               String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -220,7 +211,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
 
         }
         return associationValidationViews;
@@ -236,12 +227,13 @@ public class AssociationOperationsService {
      */
     public Collection<AssociationValidationView> validateAndSaveAssociation(Study study,
                                                                                Association association,
-                                                                               SecureUser user)
+                                                                               SecureUser user,
+                                                                               String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
-                validationService.runAssociationValidation(association, "full");
+                validationService.runAssociationValidation(association, "full", eRelease);
 
         // Create errors view that will be returned via controller
         Collection<AssociationValidationView> associationValidationViews =
@@ -270,7 +262,7 @@ public class AssociationOperationsService {
             saveAssociation(association, study, associationValidationErrors);
 
             // Run mapping on association
-            runMapping(study.getHousekeeping().getCurator(), association, user);
+            // runMapping(study.getHousekeeping().getCurator(), association, user);
 
         }
         return associationValidationViews;
@@ -350,9 +342,11 @@ public class AssociationOperationsService {
      */
     public MappingDetails createMappingDetails(Association association) {
         MappingDetails mappingDetails = new MappingDetails();
-        mappingDetails.setPerformer(association.getLastMappingPerformedBy());
-        mappingDetails.setMappingDate(association.getLastMappingDate());
-        mappingDetails.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(association.getAssociationReport()));
+        if (association.getAssociationReport() != null) {
+            mappingDetails.setPerformer(association.getLastMappingPerformedBy());
+            mappingDetails.setMappingDate(association.getLastMappingDate());
+            mappingDetails.setAssociationErrorMap(associationMappingErrorService.createAssociationErrorMap(association.getAssociationReport()));
+        }
         return mappingDetails;
     }
 
@@ -472,6 +466,11 @@ public class AssociationOperationsService {
         associationReportRepository.save(associationReport);
     }
 
+    // TODO : Try and catch
+    public void deleteAssocationReport(Long associationReportId) {
+        associationReportRepository.delete(associationReportId);
+    }
+
     /**
      * Save transient objects on association before saving association
      *
@@ -515,5 +514,29 @@ public class AssociationOperationsService {
                                                                          validationError.getWarning()));
         });
         return associationValidationViews;
+    }
+
+
+    public Collection<String> getGenesIds(Collection<Locus> loci) {
+        Collection<String> genes = new HashSet<>();
+        if (loci != null && !loci.isEmpty()) {
+            for (Locus locus : loci) {
+                for (Gene gene : locus.getAuthorReportedGenes()) {
+                    genes.add(gene.getGeneName());
+                }
+            }
+        }
+
+        return genes;
+    }
+
+    public Collection<String> getSpnsName(Collection<SingleNucleotidePolymorphism> snpsList) {
+        Collection<String> snpsName = new HashSet<>();
+        if (snpsList != null && !snpsList.isEmpty()) {
+            for (SingleNucleotidePolymorphism snp : snpsList) {
+                snpsName.add(snp.getRsId());
+            }
+        }
+        return snpsName;
     }
 }

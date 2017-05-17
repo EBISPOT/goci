@@ -4,16 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import org.hibernate.engine.internal.JoinSequence;
 import org.springframework.format.annotation.DateTimeFormat;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -133,6 +125,13 @@ public class Association implements Trackable {
 //               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     @ManyToMany(mappedBy = "associations")
     private Collection<Gene> genes = new ArrayList<>();
+
+
+    @PrePersist
+    protected void onCreate() { lastUpdateDate = new Date(); }
+
+    @PreUpdate
+    protected void onUpdate() { lastUpdateDate = new Date(); }
 
     // JPA no-args constructor
     public Association() {

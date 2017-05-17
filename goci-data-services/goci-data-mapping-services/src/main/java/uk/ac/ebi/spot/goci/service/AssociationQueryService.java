@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import com.sun.javafx.binding.SelectBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,22 @@ public class AssociationQueryService {
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findAssociationToMap() {
+        Collection<Association> allAssociations = associationRepository.findBylastMappingDateIsNull();
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Collection<Association> findAssociationAssociationData(Collection<Association> allAssociations) {
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+
     // Sort options
     private Sort sortByIdDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "id"));

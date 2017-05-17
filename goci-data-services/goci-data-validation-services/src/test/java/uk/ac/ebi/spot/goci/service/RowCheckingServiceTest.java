@@ -68,7 +68,7 @@ public class RowCheckingServiceTest {
         when(rowChecksBuilder.runEmptyValueChecks(ROW_ERROR)).thenReturn(Arrays.asList(VALIDATION_ERROR1,
                                                                                        VALIDATION_ERROR2));
 
-        assertThat(rowCheckingService.runChecks(ROW_ERROR)).isNotEmpty().hasSize(2);
+        assertThat(rowCheckingService.runChecks(ROW_ERROR,"")).isNotEmpty().hasSize(2);
         verify(rowChecksBuilder, never()).runSynthaxChecks(ROW_ERROR);
         verify(rowChecksBuilder, times(1)).runEmptyValueChecks(ROW_ERROR);
     }
@@ -79,7 +79,7 @@ public class RowCheckingServiceTest {
         when(rowChecksBuilder.runEmptyValueChecks(ROW_ERROR)).thenReturn(Collections.EMPTY_LIST);
         when(rowChecksBuilder.runSynthaxChecks(ROW_ERROR)).thenReturn(Arrays.asList(VALIDATION_ERROR3,VALIDATION_ERROR4));
 
-        assertThat(rowCheckingService.runChecks(ROW_ERROR)).isNotEmpty().hasSize(2);
+        assertThat(rowCheckingService.runChecks(ROW_ERROR,"")).isNotEmpty().hasSize(2);
         verify(rowChecksBuilder, times(1)).runSynthaxChecks(ROW_ERROR);
         verify(rowChecksBuilder, times(1)).runEmptyValueChecks(ROW_ERROR);
     }
@@ -90,7 +90,7 @@ public class RowCheckingServiceTest {
         when(rowChecksBuilder.runEmptyValueChecks(ROW_NO_ERROR)).thenReturn(Collections.EMPTY_LIST);
         when(rowChecksBuilder.runSynthaxChecks(ROW_NO_ERROR)).thenReturn(Collections.EMPTY_LIST);
 
-        assertThat(rowCheckingService.runChecks(ROW_NO_ERROR).isEmpty());
+        assertThat(rowCheckingService.runChecks(ROW_NO_ERROR,"").isEmpty());
         verify(rowChecksBuilder, times(1)).runSynthaxChecks(ROW_NO_ERROR);
         verify(rowChecksBuilder, times(1)).runEmptyValueChecks(ROW_NO_ERROR);
     }

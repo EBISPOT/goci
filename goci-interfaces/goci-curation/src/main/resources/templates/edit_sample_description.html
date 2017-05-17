@@ -121,16 +121,16 @@
 
                     <!--Dropdowns-->
                     <div class="form-group">
-                        <label for="ancestralGroup" class="control-label col-md-2">Inferred Ancestry:</label>
+                        <label for="ancestralGroups" class="control-label col-md-2">Inferred Ancestry:</label>
 
                         <div class="col-md-10">
-                            <select name="ancestralGroup" class="form-control select2-select"
+                            <select name="ancestralGroups" class="form-control select2-select"
                                     multiple="multiple" data-placeholder="Choose Ancestry"
-                                    th:field="${ancestralGroup.ancestralGroupValues}"
-                                    id="ancestralGroup">
+                                    th:field="*{ancestry.ancestralGroups}"
+                                    id="ancestralGroups">
                                 <option th:each="ancestralGroup : ${ancestralGroups}"
-                                        th:value="${ancestralGroup}"
-                                        th:text="${ancestralGroup}"></option>
+                                        th:value="${ancestralGroup.id}"
+                                        th:text="${ancestralGroup.ancestralGroup}"></option>
                             </select>
                         </div>
                     </div>
@@ -141,13 +141,15 @@
 
                         <div class="col-md-10">
                             <select name="countryOfOrigin" class="form-control select2-select"
-                                    multiple="multiple" th:field="${countryOfOrigin.originCountryValues}"
+                                    multiple="multiple" th:field="*{ancestry.countryOfOrigin}"
                                     id="countryOfOrigin">
                                 <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
+                                        th:value="${country.id}"
+                                        th:text="${country.countryName}"></option>
                             </select>
                         </div>
+
+
                     </div>
 
                     <div class="form-group">
@@ -156,11 +158,11 @@
                         <div class="col-md-10">
                             <select name="countryOfRecruitment" class="form-control select2-select"
                                     multiple="multiple"
-                                    th:field="${countryOfRecruitment.recruitmentCountryValues}"
+                                    th:field="*{ancestry.countryOfRecruitment}"
                                     id="countryOfRecruitment">
                                 <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
+                                        th:value="${country.id}"
+                                        th:text="${country.countryName}"></option>
                             </select>
                         </div>
                     </div>
@@ -214,7 +216,7 @@
 <script>
     $(function() {
         // turn the element to select2 select style
-        $('#ancestralGroup').select2();
+        $('#ancestralGroups').select2();
 
 
     });

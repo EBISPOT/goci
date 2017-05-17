@@ -42,6 +42,9 @@ public class AssociationFileUploadServiceTest {
     @Mock
     private UploadSheetProcessor uploadSheetProcessor;
 
+    @Mock
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
@@ -50,9 +53,10 @@ public class AssociationFileUploadServiceTest {
     @Before
     public void setUp() throws Exception {
         associationFileUploadService = new AssociationFileUploadService(uploadSheetProcessorBuilder,
-                                                                        associationRowProcessor,
-                                                                        validationService,
-                                                                        sheetCreationService);
+                associationRowProcessor,
+                validationService,
+                sheetCreationService,
+                ensemblRestTemplateService);
     }
 
     @Test

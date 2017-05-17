@@ -57,6 +57,7 @@
             src="//cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
 
     <script th:src="@{/js/goci-editing.js}"></script>
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
@@ -94,6 +95,16 @@
             <div class="alert alert-danger">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <strong th:text="${efoMessage}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" th:if="${!#strings.isEmpty(mappingMessage)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${mappingMessage}">Warning!</strong>
             </div>
         </div>
     </div>
@@ -139,6 +150,7 @@
                 <thead>
                 <tr>
                     <th style="font-size: small">Edit</th>
+                    <th style="font-size: small">Mapping</th>
                     <th style="font-size: small">Gene(s)</th>
                     <th style="font-size: small">Strongest SNP-Risk Allele</th>
                     <th style="font-size: small">SNP</th>
@@ -179,7 +191,13 @@
                                        class="btn btn-default">Unapprove</a>
                                 </div>
                             </td>
-
+                            <!-- Mapping -->
+                            <td style="background-color: darkgrey;vertical-align:top">
+                                <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                    <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                    <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                </div>
+                            </td>
                             <!--Gene-->
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -285,6 +303,13 @@
                                     </div>
                                 </td>
 
+                                <!--Mapping-->
+                                <td style="background-color: lightyellow;vertical-align:top">
+                                    <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                        <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                        <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                    </div>
+                                </td>
                                 <!--Gene-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
@@ -391,6 +416,13 @@
                                     </div>
                                 </td>
 
+                                <!--Mapping-->
+                                <td style="vertical-align:top">
+                                    <div th:switch="${snpAssociationTableView.mappingStatus}">
+                                        <p align="center" th:case="'true'"><span style="font-size:2.0em;" class="glyphicon glyphicon-ok color-primary-bold"></span></p>
+                                        <p align="center" th:case="*"><span style="font-size:2.0em;color:red" class="glyphicon glyphicon-remove red"></span></p>
+                                    </div>
+                                </td>
                                 <!--Gene-->
                                 <td th:text="${snpAssociationTableView.authorReportedGenes}?: '' "></td>
 

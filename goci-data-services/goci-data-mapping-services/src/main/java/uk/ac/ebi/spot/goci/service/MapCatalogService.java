@@ -67,13 +67,8 @@ public class MapCatalogService {
         mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports, false,0,0);
     }
 
-    public void mapCatalogContentsLSF(String performer, Integer numJob, Integer lenghtInterval) throws EnsemblMappingException {
-
-        Integer min = (lenghtInterval*(numJob-1))+1;
-        Integer max = (lenghtInterval*numJob);
-        Collection<AssociationReport> oldAssociationReports = associationReportRepository.findAllLSF(min, max);
-
-        Collection<Association> associations = associationService.findLSFAssociations(numJob,lenghtInterval);
+    public void mapCatalogContentsNight(String performer) throws EnsemblMappingException {
+        Collection<Association> associations = associationService.findAssociationToMap();
         getLog().info("Mapping all associations in database, total number: " + associations.size());
 
         try {
@@ -83,6 +78,22 @@ public class MapCatalogService {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
         }
 
-        mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports, true, min, max);
     }
+
+    // This method should be refactor with mapCatalogContentsNight
+    public void mapCatalogContentsByAssociations(String performer, Collection<Association> associations)
+            throws EnsemblMappingException {
+        Collection<Association> associationsToMap = associationService.findAssociationAssociationData(associations);
+        getLog().info("Mapping all associations in database, total number: " + associationsToMap.size());
+
+        try {
+            mappingService.validateAndMapAllAssociations(associationsToMap, performer);
+        }
+        catch (EnsemblMappingException e) {
+            throw new EnsemblMappingException("Attempt to map all associations failed", e);
+        }
+
+    }
+
+
 }

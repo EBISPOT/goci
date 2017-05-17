@@ -73,11 +73,9 @@ public class MappingErrorComparisonService {
         // Find all the latest association reports containing mapping errors
         getLog().debug("Method used to compare errors from a previous mapping run");
         Collection<AssociationReport> newAssociationReports = getnewAssociationReports(isLSF,min,max);
-        getLog().debug("1");
         Map<Long, AssociationReport> associationIdToNewAssociationReportMap =
                 createNewReportsMap(newAssociationReports);
         Collection<MappingErrorComparisonReport> comparisonReports = new ArrayList<>();
-        getLog().debug("2");
         // Create report
         for (AssociationReport oldErrorReport : oldErrors) {
             MappingErrorComparisonReport mappingErrorComparisonReport = new MappingErrorComparisonReport();

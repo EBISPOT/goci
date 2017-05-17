@@ -25,30 +25,44 @@ $(document).ready(function() {
 
         var facet = $(this).parents('thead').attr('id').split("-")[0];
 
-        if ($('#' + facet + '-summaries').hasClass('more-results')) {
+        if(facet != 'pvalue'){
+            if ($('#' + facet + '-summaries').hasClass('more-results')) {
+                var id = $(this).parent('th').attr('id');
+                var field = id;
+
+                if (id.indexOf('-') != -1) {
+                    field = id.split('-')[0];
+                }
+
+                if ($(this).hasClass('asc')) {
+                    field = field.concat('+asc');
+                }
+                else {
+                    field = field.concat('+desc');
+                }
+                console.log(facet);
+                console.log(field);
+
+                doSortingSearch(facet, field, id);
+            }
+            else if ($('#expand-table').hasClass('table-expanded')) {
+                loadAdditionalResults(facet, true);
+            }
+            else {
+                loadAdditionalResults(facet, false);
+            }
+        }
+
+        else{
             var id = $(this).parent('th').attr('id');
             var field = id;
-
-            if (id.indexOf('-') != -1) {
-                field = id.split('-')[0];
-            }
-
             if ($(this).hasClass('asc')) {
                 field = field.concat('+asc');
             }
             else {
                 field = field.concat('+desc');
             }
-            console.log(facet);
-            console.log(field);
-
-            doSortingSearch(facet, field, id);
-        }
-        else if ($('#expand-table').hasClass('table-expanded')) {
-            loadAdditionalResults(facet, true);
-        }
-        else {
-            loadAdditionalResults(facet, false);
+            doSummaryStatsSort(field, id);
         }
 
     });
@@ -61,6 +75,9 @@ function doSortingSearch(facet, field, id) {
     var queryTerm = $('#query').text();
     if (queryTerm == '*') {
         var searchTerm = 'text:'.concat(queryTerm);
+    }
+    else if(queryTerm == 'fullPvalueSet:true'){
+        var searchTerm = queryTerm;
     }
     else if(queryTerm.indexOf(':') != -1 && queryTerm.indexOf('-') != -1){
         var elements = queryTerm.split(':');
@@ -77,6 +94,7 @@ function doSortingSearch(facet, field, id) {
     var or = processOR();
     var beta = processBeta();
     var date = processDate();
+    var region = processGenomicRegion();
     var traits = processTraitDropdown();
 
     if ($('#filter').text() != '') {
@@ -102,11 +120,17 @@ function doSortingSearch(facet, field, id) {
                 'orfilter': or,
                 'betafilter': beta,
                 'datefilter': date,
+                'genomicfilter': region,
                 'traitfilter[]': traits,
                 'sort': field
             })
             .done(function(data) {
-                processSortedData(data, id);
+                if(searchTerm == 'fullPvalueSet:true') {
+                    processSortedSummaryStats(data, id);
+                }
+                else{
+                    processSortedData(data, id);
+                }
             });
 };
 

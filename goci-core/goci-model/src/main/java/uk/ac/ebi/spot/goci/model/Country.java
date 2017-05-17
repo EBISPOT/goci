@@ -3,13 +3,15 @@ package uk.ac.ebi.spot.goci.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * Created by emma on 19/12/14.
  *
  * @author emma
  *         <p>
- *         Model object representing a country
+ *         Model object representing a countryName
  */
 @Entity
 public class Country {
@@ -21,16 +23,27 @@ public class Country {
 
     private String region;
 
-    private String name;
+    private String countryName;
+
+    @ManyToMany(mappedBy = "countryOfOrigin")
+    private Collection<Ancestry> ancestriesOrigin;
+
+    @ManyToMany(mappedBy = "countryOfRecruitment")
+    private Collection<Ancestry> ancestriesRecruitment;
+
 
     // JPA no-args constructor
     public Country() {
     }
 
-    public Country(String majorArea, String region, String name) {
+    public Country(String majorArea, String region, String countryName,
+                   Collection<Ancestry> ancestriesOrigin,
+                   Collection<Ancestry> ancestriesRecruitment) {
         this.majorArea = majorArea;
         this.region = region;
-        this.name = name;
+        this.countryName = countryName;
+        this.ancestriesOrigin = ancestriesOrigin;
+        this.ancestriesRecruitment = ancestriesRecruitment;
     }
 
     public Long getId() {
@@ -57,12 +70,12 @@ public class Country {
         this.region = region;
     }
 
-    public String getName() {
-        return name;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 
     @Override
@@ -71,8 +84,24 @@ public class Country {
                 "id=" + id +
                 ", majorArea='" + majorArea + '\'' +
                 ", region='" + region + '\'' +
-                ", name='" + name + '\'' +
+                ", countryName='" + countryName + '\'' +
                 '}';
+    }
+
+    public Collection<Ancestry> getAncestriesOrigin() {
+        return ancestriesOrigin;
+    }
+
+    public void setAncestriesOrigin(Collection<Ancestry> ancestriesOrigin) {
+        this.ancestriesOrigin = ancestriesOrigin;
+    }
+
+    public Collection<Ancestry> getAncestriesRecruitment() {
+        return ancestriesRecruitment;
+    }
+
+    public void setAncestriesRecruitment(Collection<Ancestry> ancestriesRecruitment) {
+        this.ancestriesRecruitment = ancestriesRecruitment;
     }
 }
 

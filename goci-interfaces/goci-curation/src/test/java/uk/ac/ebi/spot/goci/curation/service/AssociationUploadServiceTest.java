@@ -196,9 +196,9 @@ public class AssociationUploadServiceTest {
                                                                       STUDY,
                                                                       ASSOCIATION_SUMMARY_NO_ERROR.getErrors());
         verify(associationOperationsService, times(1)).createAssociationCreationEvent(ASSOCIATION, SECURE_USER);
-        verify(associationOperationsService, times(1)).runMapping(STUDY.getHousekeeping().getCurator(),
-                                                                  ASSOCIATION,
-                                                                  SECURE_USER);
+        //verify(associationOperationsService, times(1)).runMapping(STUDY.getHousekeeping().getCurator(),
+        //                                                          ASSOCIATION,
+        //                                                          SECURE_USER);
 
     }
 
