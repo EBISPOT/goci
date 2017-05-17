@@ -138,6 +138,7 @@
                     <h3 class="panel-title">Trait information</h3>
                 </div>
                 <div class="clearfix">
+                    <!--trait summary-->
                     <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
                         <!--label-->
                         <div class="clearfix">
@@ -168,6 +169,53 @@
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-synonym">-</div>
                         </div>
                     </div>
+                    <!--highlighted study-->
+                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <!--label-->
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">pubmedId
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-pubmedId">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">title
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-title">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">author
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-author">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">catalogPublishDate
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">initialSampleDescription
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-initialSampleDescription">-</div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
+                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">replicateSampleDescription
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>
+                        </div>
+
+
+                    </div>
 
                 </div>
                 <div id="efotrait-summary">
@@ -194,13 +242,17 @@
                 </div>
 
                 <div class="panel-body" style="display:initial">
-                    <div class="col-xs-12 jumbotron background-color-primary-accent">
+
+                    <!--current selected-->
+                    <div class="col-xs-12 background-color-primary-accent">
                         <div class="col-xs-6">Current terms:
-                            <div id="selected-efos"></div>
                             <div id="selected-efos_text"></div>
                         </div>
+                        <div class="col-xs-12" id="selected-efos_btn">
+
+                        </div>
                         <div style="display:none" id="efo-info"></div>
-                        <div class="col-xs-6">
+                        <div class="col-xs-12">
                             <input type="text" id="sharable_link" class="col-xs-6"></input>
                             <div class="col-xs-1">
                             <button id="sharable_link_btn"
@@ -215,42 +267,54 @@
                         </div>
                     </div>
 
+                    <!--ols tree-->
+                    <div class="col-xs-4">
+                        <!--auto-suggestion-->
+                        <div class="col-xs-12">
+                            <!--auto suggest-->
+                            <h4>Search for additional terms:</h4>
+                            <div class="left">
+                                <label>
+                                    <input style="font-weight: normal"
+                                           size="35"
+                                           type="text"
+                                           name="q"
+                                           data-olswidget="select"
+                                           data-olsontology="efo"
+                                           data-selectpath="http://www.ebi.ac.uk/ols/"
+                                           olstype=""
+                                           id="local-searchbox"
+                                           placeholder="Enter the term you are looking for"
+                                           class="ac_input">
+                                    </input>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <h4>Related in EFO hierarchy:</h4>
+                            <div id="term-tree"
+                                 style="height:500px; width:500px; border:1px solid black;overflow: auto;">
 
-                    <div class="col-xs-4">
-                        <!--ols tree-->
-                        <h4>Related in EFO hierarchy:</h4>
-                        <div id="term-tree"
-                             style="height:300px; width:500px; border:1px solid black;overflow: auto;"></div>
+                            </div>
+                        </div>
+
+
+
                     </div>
-                    <div class="col-xs-4">
+
+
+
+                    <div class="col-xs-8">
                         <div id="expension">
                             <h4>Additional related terms eg. measurements and biomarkers:</h4>
                         </div>
-                    </div>
-                    <div class="col-xs-4">
-                        <!--auto suggest-->
-                        <h4>Search for additional terms:</h4>
-                        <div class="left">
-                            <label>
-                                <input style="font-weight: normal"
-                                       size="35"
-                                       type="text"
-                                       name="q"
-                                       data-olswidget="select"
-                                       data-olsontology="efo"
-                                       data-selectpath="http://www.ebi.ac.uk/ols/"
-                                       olstype=""
-                                       id="local-searchbox"
-                                       placeholder="Enter the term you are looking for"
-                                       class="ac_input">
-                                </input>
-                            </label>
+                        <div>
+                            <div id="ontology_vis"></div>
                         </div>
                     </div>
 
-                    <div class="col-xs-12">
-                        <div id="ontology_vis"></div>
-                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -596,7 +660,6 @@
 <script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
 
-
 <!--local data-->
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -656,42 +719,86 @@
 
         //load all available efo terms in the GWAS Catalog(has at least one annotation)
         //save in the global_efo_info_tag_id tag with key 'availableEFOs'
-        p = getAvailableEFOs();
+        var p = getAvailableEFOs();
 
-        selected = addDataToTag(global_efo_selected_tag_id, data, 'selectedEfos')
-        Promise.all(Object.keys(data).map(getHierarchicalDescendants)).then(function() {
-            console.log('finish loading descendants!'
-            )
+        var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
+
+        Promise.all(Object.keys(data).map(getHierarchicalDescendants)).then(function(data) {
+            console.log('finish loading descendants!')
         });
 
         //p is the promise for loading all available efo from GWAS Catalog
         //This needs to be fullfill first before trigger any add event.
         p.then(function(data) {
-            $(global_efo_selected_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
+            $(global_efo_info_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
         }).catch(function(err) {
             console.error('Error when loading all available EFOs ' + err)
         });
     }
 
-    $(global_efo_selected_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
-        current_select = $(global_efo_selected_tag_id).data('selectedEfos')
-        //print out terms:
-        text = '';
-        $.each(current_select, function(index, value) {
-            text = text + index + ':' + value + '<br/>';
-        });
-        $("#selected-efos_text").html(text);
+    removeEFO = function(efoid){
+        var selected = getDataFromTag(global_efo_info_tag_id,'selectedEfos')
+        delete selected[efoid];
+        $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
+    }
+
+    updateSelectedItem = function(tagID,efoid,additionalLabel,removeable){
+        if(removeable == undefined)
+            removeable = true;
+        var container = $(tagID);
+        var btn = $('<button />', {type: 'button', class: 'btn  btn-default', text:efoid+additionalLabel+'   '}).appendTo(container);
+        if(removeable) {
+            var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(btn);
+            span.on("click", function(e) {
+                removeEFO(efoid);
+            });
+        }
+    }
+
+    updatePage=function(mainEFO,current_select,all_descendants,initLoad){
+        var current_select = $(global_efo_info_tag_id).data('selectedEfos')
+
+        var current_selected_text='';
+
+        var container = $('#selected-efos_btn');
+        container.empty()
+
+        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo){
+            return sequence.then(function() {
+                return efoInfo;
+            }).then(function(efoInfo) {
+//                current_selected_text = current_selected_text + efoInfo.short_form + ':' + efoInfo.label + '<br/>';
+//                $("#selected-efos_text").html(current_selected_text);
+                if(efoInfo.short_form == mainEFO)
+                    updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label,false)
+                else
+                    updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label)
+
+            });
+        },Promise.resolve()).catch(function(err){
+            console.error('Error when updating selected efo box! ' + err);
+        })
 
         $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
                                  Object.keys(current_select).join(','))
 
+
         if(initLoad){
-            addRelatedTermCheckBox();
-            addRelatedTermGraph($('#query').text());
+//            addRelatedTermCheckBox();
+            addRelatedTermGraph(mainEFO);
         }
 
+        getEfoTraitData(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+
+
+    }
+
+    $(global_efo_info_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
+        var current_select = $(global_efo_info_tag_id).data('selectedEfos')
+        var mainEFO = $('#query').text();
+
         if (include_descendants) {
-            all_descendants = {}
+            var all_descendants = {}
             Promise.all(Object.keys(current_select).map(getHierarchicalDescendants)).then(function(descendants) {
                 descendants.forEach(function(terms) {
                     Object.keys(terms).forEach(function(term) {
@@ -699,18 +806,14 @@
                     })
                 })
 
-                var searchTerm = $('#query').text();
-                getEfoTraitData(searchTerm, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+                updatePage(mainEFO, Object.keys(current_select), all_descendants, initLoad);
 
             }).catch(function(err) {
                 console.log('error when trying to find all descendants with error messgae ' + err);
-            }).then(function() {
-                //close spinner or something
             })
         }
         else {
-            var searchTerm = $('#query').text();
-            getEfoTraitData(searchTerm, Object.keys(current_select), [], initLoad);
+            updatePage(mainEFO, Object.keys(current_select), [], initLoad);
         }
     });
 
@@ -812,6 +915,40 @@
                 return traits[0];
             }
 
+            findHighlightedStudiesForEFO = function(efoid){
+                var studies={};
+                var publishDate = {};
+
+                Object.keys(data.highlighting).forEach(function(key){
+                    if(/^study/.test(key)) {
+                        data_highlighting[key].shortForm.forEach(function(highlightedefo){
+                            if(highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid){
+                                studies[key] = efoid;
+                            }
+                        });
+                    }
+                })
+
+                $.each(data_study.docs,function(index,value){
+                    if($.inArray(value.id, Object.keys(studies))!=-1){
+                        studies[value.id] = value;
+                        publishDate[value.id] = value.publicationDate;
+                    }
+                })
+
+
+                var keysSorted = Object.keys(publishDate).sort(function(a,b){return Date.parse(publishDate[b])-Date.parse(publishDate[a])})
+                return studies[keysSorted[0]];
+//                return studies;
+            }
+
+            var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
+            $('#efotrait-highlighted-study-pubmedId').html(highlightedStudy.pubmedId);
+            $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
+            $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s);
+            $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
+            $('#efotrait-highlighted-study-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
+            $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
 
             //query for distinct efo terms. This will reduce the query number so work faster
             var allEFO = {}
@@ -964,6 +1101,8 @@
             return termFullLink + '/graph';
         })
 
+        var mainEFOIri = getIriByShortForm(mainEFO)
+
         var tmpnetworkOptions = {
             webservice: {
 //            URL: "http://www.ebi.ac.uk/ols/api/ontologies/cmpo/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_33839/graph",
@@ -971,16 +1110,16 @@
             },
             displayOptions: {showButtonBox: true, showInfoWindow: false, showLegend: true},
             callbacks: {
-                onSelectNode:function(params){console.log(params); alert("This is callback replacing the inital functionality - onSelectNode")},
-                onDoubleClick: function(params) {
-                    console.log(params.nodes[0]);
-                    alert(params)
+                onSelectNode:function(params){console.log(params);},
+                onDoubleClick:function(params){console.log(params);
+                    var node = params.nodes[0];
+                    var efoid = node.split('/').slice(-1)[0];
+                    var tmp = {}
+                    tmp[efoid] = node;
+                    addEFO(tmp);
                 },
-                //onSelectEdge:function(params){console.log(params); alert("Now you selected on an Edge - event:onSelectEdge")},
-//            onClick: function(params) {
-//                console.log(params);
-//                alert("You clicked somewhere in the graph! - onClick event (single)")
-//            }
+                onSelectEdge:function(params){console.log(params);},
+                onClick:function(params){console.log(params);}
             }
         }
         var visoptions = {
@@ -998,7 +1137,7 @@
                 hierarchical: false
             },
             nodes: {
-                borderWidth: 5,
+                borderWidth: 4,
                 shape: 'ellipse'
             },
             edges: {
@@ -1011,23 +1150,53 @@
         var app = require("ols-graphview");
         var instance = new app();
 
+        var reasonForRelatedEFO={};
+
         mainEFOLink.then(function(mainLink){
             tmpnetworkOptions['webservice']['URL'] = mainLink;
 
             instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
 
             getRelatedTerms($('#query').text()).then(function(terms) {
+
                 Object.keys(terms).forEach(function(relatedTerm) {
-                    getOLSLink(relatedTerm).then(function(termFullLink){
-                        instance.fetchNewGraphData(termFullLink + '/graph');
+                    var d = terms[relatedTerm];
+                    reasonForRelatedEFO[d.obo_id] = d.logical_description;
+                })
+
+                return Object.keys(terms).map(getOLSLink).reduce(function(sequence,termOLSLinkPromise){
+                    return sequence.then(function() {
+                        return termOLSLinkPromise;
+                    }).then(function(termOLSLink){
+                        //for each related term, add it to the graph
+                        instance.fetchNewGraphData(termOLSLink + '/graph');
+                    })
+                },Promise.resolve())
+            })
+        }).then(function() {
+            var x=instance.getGraphDataset()
+            window.setTimeout(function(){
+                //change mainEFO node shape
+                mainEFOIri.then(function(iri){
+                    //http://visjs.org/docs/data/dataset.html
+                    var defaultAttribute =x["nodes"].get(iri)
+                    defaultAttribute.color.border = 'blue';
+                    x["nodes"].update(defaultAttribute)
+                })
+                //add why to the title of node
+                $.each(reasonForRelatedEFO, function(efoid, reason) {
+                    getIriByShortForm(efoid).then(function(iri){
+                        x["nodes"].update({id: iri, title: reason});
                     })
                 })
-            })
+
+            },1000)
         }).catch(function(err){
             console.error('Error when plotting related terms.' + err);
         })
 
     }
+
 
 
 
@@ -1046,6 +1215,14 @@
         checkbox_cascade: '',
         checkbox_three_state: false,
         checkbox_keep_selected_style: false,
+        onclick: function(params, node, relativePath, termIRI, type){
+            var clicked = node.node.original.iri;
+            var efoid = clicked.split('/').slice(-1)[0];
+            var tmp = {}
+            tmp[efoid] = clicked;
+            addEFO(tmp);
+        },
+
 //        onchange: function(e, data) {
 ////            console.log("newly selected:")
 ////            console.log(data.changed.selected);
@@ -1082,80 +1259,8 @@
                   "http://www.ebi.ac.uk/ols/",
                   options);
 
-
 </script>
 
-<!--ols search-->
-<script>
-
-
-
-
-
-
-
-    //ols search
-    //xintodo tempral disable for offline debug
-//    $.getJSON('http://www.ebi.ac.uk/ols/api/search',
-//              {
-//                  'q': $('#query').text(),
-//                  'ontology': 'efo',
-//                  'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
-//              })
-//            .done(function(data) {
-//                console.log("data returned by ols search:");
-//                console.log(data);
-//
-//                data.response.docs.forEach(function(d, i) {
-//                    d.obo_id = d.obo_id.replace(":", "_")
-//                    addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
-//                    $("#" + 'whycb' + d.obo_id).html(d.logical_description);
-////                    $("#"+'whycb'+d.obo_id).html(longContentList("#"+'whycbhiddent'+d.obo_id, ['a','b'], 'why'))
-//                    if (d.obo_id == $('#query').text()) {
-//                        $("#cb" + d.obo_id).attr("checked", true);
-//                    }
-//                })
-//
-//
-//                $(".efocheckbox").change(function() {
-////                    console.log($('input:checked'));
-//                    elements = {};
-//                    $('input:checked').each(function() {
-//                        elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
-//                    });
-////                    xintodo checkbox load
-//                    addEFO(elements);
-//                });
-//            });
-
-
-
-</script>
-
-<!--ols auto complete-->
-<script>
-    //xintodo tempral disable for offline debug
-    $(document).ready(function() {
-        var app = require("ols-autocomplete");
-        var instance = new app();
-        options = {
-            action: function(relativePath, suggestion_ontology, type, iri) {
-//                console.log("In overwritten function")
-//                console.log("Relative Path: " + relativePath)
-//                console.log("Suggested Ontology: " + suggestion_ontology)
-//                console.log("Type (optional): " + type)
-//                console.log("iri (optional): " + iri)
-                elements = {};
-                elements['EFO_' + iri.split("EFO_")[1]] = 'EFO_' + iri.split("EFO_")[1];
-                //xintodo auto load
-                addEFO(elements);
-            }
-        }
-        instance.start(options)
-    });
-
-
-</script>
 
 <!--visjs-->
 <style type="text/css">
@@ -1227,75 +1332,7 @@
 <!--</script>-->
 
 
-<!--ols_graph-->
-<script>
-//    var tmpnetworkOptions = {
-//        webservice: {
-//            URL: "http://www.ebi.ac.uk/ols/api/ontologies/cmpo/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_33839/graph",
-//            OLSschema: false
-//        },
-//        displayOptions: {showButtonBox: true, showInfoWindow: false, showLegend: true},
-//        callbacks: {
-//            //onSelectNode:function(params){console.log(params); alert("This is callback replacing the inital functionality - onSelectNode")},
-//            onDoubleClick: function(params) {
-//                console.log(params);
-//                alert("WE did overwrite the DOUBLE click event as well")
-//            },
-//            //onSelectEdge:function(params){console.log(params); alert("Now you selected on an Edge - event:onSelectEdge")},
-//            onClick: function(params) {
-//                console.log(params);
-//                alert("You clicked somewhere in the graph! - onClick event (single)")
-//            }
-//        }
-//    }
-//
-//    var visoptions = {
-//        physics: {
-//            forceAtlas2Based: {
-//                gravitationalConstant: -50,
-//                centralGravity: 0.01,
-//                springConstant: 0.08,
-//                springLength: 100,
-//                damping: 0.4,
-//                avoidOverlap: 0
-//            },
-//        },
-//        layout: {
-//            hierarchical: false
-//        },
-//        nodes: {
-//            borderWidth: 5,
-//            shape: 'ellipse'
-//        },
-//        edges: {
-//            arrows: {middle: {enabled: true}},
-//            dashes: true,
-//        },
-//
-//    }
-//
-//    var term = "Can be whatever at the moment - if you chose OLSschema false"
-//
-//    var app = require("ols-graphview");
-//    var instance = new app();
-//
-//    instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
-//
-//
-//    /* Demonstration of public functions somebody might want to use*/
-//    instance.printMsg("Message from outside should demonstrate how to use the print function");
-//    instance.fetchNewGraphData(
-//            "http://www.ebi.ac.uk/ols/api/ontologies/cmpo/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_15841/graph");
-//    instance.fetchNewGraphData(
-//            "http://www.ebi.ac.uk/ols/api/ontologies/cmpo/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_23367/graph");
-//
-//    console.log(
-//            "These are empty during loading, but you could use them later on in the process to get this information:")
-//    console.log(instance.getExtendedNodes());
-//    console.log(instance.getRelationships());
 
-
-</script>
 
 </body>
 </html>

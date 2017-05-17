@@ -460,6 +460,31 @@ searchOLS = function(keyword,params){
 
 }
 
+/*
+ols component
+ */
+//auto-complete/search box in the expension panel
+$(document).ready(function() {
+    var app = require("ols-autocomplete");
+    var instance = new app();
+    options = {
+        action: function(relativePath, suggestion_ontology, type, iri) {
+//                console.log("In overwritten function")
+//                console.log("Relative Path: " + relativePath)
+//                console.log("Suggested Ontology: " + suggestion_ontology)
+//                console.log("Type (optional): " + type)
+//                console.log("iri (optional): " + iri)
+            elements = {};
+            elements['EFO_' + iri.split("EFO_")[1]] = 'EFO_' + iri.split("EFO_")[1];
+            //xintodo auto load
+            addEFO(elements);
+        }
+    }
+    instance.start(options)
+});
+
+
+
 //
 // findEFOInfoLocal = function(efoid) {
 //     var data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
