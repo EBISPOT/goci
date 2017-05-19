@@ -54,7 +54,7 @@ LocusZoom.Data.EfoWASSource = LocusZoom.Data.Source.extend(function(init) {
     this.parseInit(init);
 }, "EfoWASLZ");
 
-//we are not using api to fetch data, when
+//we are not using api to fetch data
 LocusZoom.Data.EfoWASSource.prototype.getURL = function(state, chain, fields) {
     return "";
 };
