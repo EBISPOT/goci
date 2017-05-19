@@ -41,6 +41,8 @@ public class EnsemblRestcallHistory {
     @Column(name="LAST_UPDATE_TIME")
     private Date lastUpdateTime;
 
+    // This field is used during the remapping.
+    private String ensemblSwapRelease;
 
     @PrePersist
     protected void onCreate() {
@@ -89,4 +91,6 @@ public class EnsemblRestcallHistory {
     public Date getLastUpdateTime() { return lastUpdateTime; }
 
     public void setLastUpdateTime(Date lastUpdateTime) { this.lastUpdateTime = lastUpdateTime; }
+
+    public String getEnsemblSwapRelease() { return ensemblSwapRelease; }
 }
