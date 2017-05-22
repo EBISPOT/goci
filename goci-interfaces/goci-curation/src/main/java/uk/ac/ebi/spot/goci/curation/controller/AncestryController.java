@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAncestryService;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
-import uk.ac.ebi.spot.goci.model.Country;
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestralGroupRepository;
-import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,6 +94,17 @@ public class AncestryController {
         initialStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId, initialType));
         replicationStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId,
                                                                                             replicationType));
+        Collection<Ancestry> allAncestry = new ArrayList<>();
+        allAncestry.addAll(initialStudyAncestryDescriptions);
+        allAncestry.addAll(replicationStudyAncestryDescriptions);
+        for(Ancestry ancestry : allAncestry){
+            if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
+                String message = "No country of recruitment recorded for at least one ancestry entry!";
+                model.addAttribute("noCountryRecruitment",message);
+                break;
+            }
+        }
+
 
         // Add all ancestry/sample information for the study to our model
         model.addAttribute("initialStudyAncestryDescriptions", initialStudyAncestryDescriptions);
@@ -169,8 +180,6 @@ public class AncestryController {
         }
 
         if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
-//            model.addAttribute("study", studyRepository.findOne(studyId));
-//            return "no_country_recruitment_warning";
             String message = "No country of recruitment recorded!";
             redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }
@@ -192,6 +201,14 @@ public class AncestryController {
                     method = RequestMethod.GET)
     public String viewSampleDescription(Model model, @PathVariable Long ancestryId) {
         Ancestry ancestryToView = ancestryRepository.findOne(ancestryId);
+
+//
+//        if(ancestryToView.getCountryOfRecruitment() == null || ancestryToView.getCountryOfRecruitment().isEmpty()){
+//            String message = "No country of recruitment recorded for at least one ancestry entry!";
+//            model.addAttribute("noCountryRecruitment",message);
+//        }
+//    
+
         model.addAttribute("ancestry", ancestryToView);
 
         model.addAttribute("study", studyRepository.findOne(ancestryToView.getStudy().getId()));
@@ -214,8 +231,6 @@ public class AncestryController {
         }
 
         if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
-//            model.addAttribute("study", studyRepository.findOne(ancestry.getStudy().getId()));
-//            return "no_country_recruitment_warning";
             String message = "No country of recruitment recorded!";
             redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -39,6 +40,8 @@ public class PublishStudyCheckService {
         // Check all associations approved
         int snpNotApproved = studyAssociationCheck(associations);
 
+        boolean missingCoR = countryOfRecruitmentCheck(study);
+
         Boolean targetedArrayStudy = study.getTargetedArray();
 
         if (targetedArrayStudy) {
@@ -48,13 +51,38 @@ public class PublishStudyCheckService {
                     + ", is a targeted array study and should not be published.";
         }
 
+        else if (snpNotApproved == 1 && !efoTermsAssigned && missingCoR) {
+            message = "No EFO trait assigned and some SNP associations have not been approved and "
+                    + "at least one ancestry description with no country of recruitment for study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", please review before changing the status.";
+        }
         else if (snpNotApproved == 1 && !efoTermsAssigned) {
             message = "No EFO trait assigned and some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
                     + ", please review before changing the status.";
         }
+        else if (snpNotApproved == 1 && missingCoR) {
+            message = "Some SNP associations have not been approved and at least one ancestry description with no country of recruitment for study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", please review before changing the status.";
+        }
+        else if (!efoTermsAssigned && missingCoR) {
+            message = "No EFO trait assigned and at least one ancestry description with no country of recruitment for study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", please review before changing the status.";
+        }
 
+        else if (missingCoR) {
+            message = "At least one ancestry description with no country of recruitment for study: "
+                    + study.getAuthor() + ", "
+                    + " pubmed = " + study.getPubmedId()
+                    + ", please review before changing the status.";
+        }
         else if (snpNotApproved == 1) {
             message = "Some SNP associations have not been approved for study: "
                     + study.getAuthor() + ", "
@@ -72,6 +100,23 @@ public class PublishStudyCheckService {
         }
 
         return message;
+    }
+
+    /**
+     * Check all ancestry entries have a country of recruitment recorded
+     *
+     * @param study
+     */
+    private boolean countryOfRecruitmentCheck(Study study) {
+
+        boolean missingcor = false;
+        for(Ancestry ancestry : study.getAncestries()){
+            if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
+               missingcor = true;
+               break;
+            }
+        }
+        return missingcor;
     }
 
     /**
