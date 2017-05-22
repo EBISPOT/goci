@@ -14,8 +14,8 @@ new Clipboard('#sharable_link_btn');
 
 
 _peak = function() {
-    console.debug($(global_efo_info_tag_id).data());
-    console.debug($(global_efo_selected_tag_id).data());
+    console.log($(global_efo_info_tag_id).data());
+    console.log($(global_efo_selected_tag_id).data());
 }
 
 _cleanDataTag = function(tagID){
@@ -435,6 +435,10 @@ getDataFromTag = function(tagID, key) {
         return undefined;
     }
     return data[key]
+}
+
+getMainEFO = function(){
+    return getDataFromTag(global_efo_info_tag_id,'mainEFOInfo')
 }
 
 

@@ -82,6 +82,7 @@
 </div>
 
 
+
 <div class="container-fluid" style="padding-top: 30px">
     <!--search meta data-->
     <ol class="breadcrumb background-color-complementary-accent">
@@ -271,6 +272,13 @@
                                     type="button"
                                     class="btn btn-default">replot with descendants
                             </button>
+
+                        <button id="btn-query-include-related-terms"
+                                type="button"
+                                class="btn btn-default">replot with related terms
+                            </button>
+
+
                     </div>
 
                 </div>
@@ -378,7 +386,7 @@
             <div class="panel-body" style="display:none">
             <!--<div class="panel-body" style="display:initial">-->
                 <!-- locus plot -->
-                <div id="plot" style=" width: 600px; height: 400px;"></div>
+                <div id="plot" style=" width: 1000px; height: 900px;"></div>
             </div>
         </div>
     </div>
@@ -687,6 +695,12 @@
         addEFO({}, false, true);
     });
 
+    $('#btn-query-include-related-terms').click(function() {
+        //replot with all related terms, from the currently selected efos
+        getRelatedTerms(getMainEFO().short_form).then(function(data){
+            addEFO(data, false, false);
+        });
+    });
 
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
@@ -992,7 +1006,7 @@
                                                  }
                                                  getEfotraitAssociations(data_association.docs);
                                                  getEfotraitStudies(data_study.docs);
-                                                 readlodLocusZoom('#plot', data_association);
+                                                 reloadLocusZoom('#plot', data_association);
                                              }
             ).catch(function(err) {
                 console.error('Error loading colour from ' + global_color_url + ' with ' + err);
@@ -1003,7 +1017,7 @@
                 }
                 getEfotraitAssociations(data_association.docs);
                 getEfotraitStudies(data_study.docs);
-                readlodLocusZoom('#plot', data_association);
+                reloadLocusZoom('#plot', data_association);
             });
         }
     }

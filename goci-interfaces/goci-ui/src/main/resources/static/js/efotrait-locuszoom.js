@@ -202,10 +202,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 370850307,
@@ -213,10 +213,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 591461209,
@@ -224,10 +224,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 786049562,
@@ -235,10 +235,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 972084330,
@@ -246,10 +246,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1148099493,
@@ -257,10 +257,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1313226358,
@@ -268,10 +268,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1465977701,
@@ -279,10 +279,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1609766427,
@@ -290,10 +290,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1748140516,
@@ -301,10 +301,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 1883411148,
@@ -312,10 +312,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2017840353,
@@ -323,10 +323,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2142351240,
@@ -334,10 +334,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2253610949,
@@ -345,10 +345,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2358551415,
@@ -356,10 +356,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2454994487,
@@ -367,10 +367,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2540769469,
@@ -378,10 +378,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2620405698,
@@ -389,10 +389,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2689008813,
@@ -400,10 +400,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2750086065,
@@ -411,10 +411,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2805663772,
@@ -422,10 +422,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: 2855381003,
@@ -433,10 +433,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: genome_data_merged[22].tickpoint,
@@ -444,10 +444,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(120, 120, 186)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
                 {
                     x: genome_data_merged[23].tickpoint,
@@ -455,10 +455,10 @@ LocusZoom.Layouts.add("panel", "efowas", {
                     style: {
                         "fill": "rgb(0, 0, 66)",
                         "text-anchor": "center",
-                        "font-size": "13px",
+                        "font-size": "10px",
                         "font-weight": "bold"
                     },
-                    transform: "translate(10, 5)  rotate(35)"
+                    transform: "translate(0, 5)  rotate(0)"
                 },
             ]
         },
@@ -498,7 +498,7 @@ transferLocation = function(chr, position) {
 }
 
 //replot receive a list of association_docs from solr search
-readlodLocusZoom = function(plot_id, data_association) {
+reloadLocusZoom = function(plot_id, data_association) {
     //adding information to association doc
     LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
         var data = JSON.parse(JSON.stringify(data_association.docs));
