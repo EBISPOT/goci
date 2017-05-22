@@ -81,8 +81,68 @@
     </ul>
 </div>
 
+<!--readme-->
+<div class="container-fluid" >
+    <h4  class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo" >readme</h4>
+    <div id="demo" class="collapse">
+        <p>This readme button will be removed in production unless required by curator.</p>
+        <p>The trait page is designed to integrate/visulize all information about a specific triat(termed <b>mainEFO</b>). It
+           provedes methods to add/remove other interesting EFOs on top of the mainEFO. It consists of 5 panel boxs:</p>
+        <ul>
+            <li><b>Trait information:</b>
+                This shows a summary of the mainEFO. It also contains a highlighted paper that we selected for this triat.
+                Currently, the most recent paper is selected as the highlighted paper for the mainEFO.
+            </li>
+            <li><b>Expend your search:</b> This panel displays the currently selected EFOs and gives user three approaches to add interesting EFOs to the page.
+                <ul>
+                    <li>Currently selected EFOs are displayed like this: <button type="button" class="btn  btn-default">EFO_0004467:insulin measurement
+                        <span class="badge">  X  </span></button> which can be removed by clicking the 'X'. The mainEFO cannot be removed.</li>
+                    <li>A shareable link that can be use to recreate the page with the current selection of EFOs. Copy the link by clicking
+                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" title="copy to clipboard"></span></button>.</li>
+                    <li>
+                        <b>Search for additional terms:</b> User can search addition EFOs of interests by typing EFO_id or keywords.
+                    </li>
+                    <li>
+                        <b>Related in EFO hierarchy:</b> User can browse efo terms that are closly located to the mainEFO in
+                        the EFO ontology hierarchy. EFO can be expanded by <b>clicking the '+'</b> and can be selected by
+                        clicking the EFO name.
+                    </li>
+                    <li>
+                        <b>Additional related terms eg. measurements and biomarkers:</b> This network displays the related EFOs
+                        of the mainEFO. This comes from an OLS search with the field 'logical_description'. User can <b>DOUBLE click</b>
+                        a node in the network to add it to the currently selection of EFOs.
+                    </li>
+
+                </ul>
+            </li>
+            <li><b>Manhattan plot (plot of catalog associations for selected trait):</b>
+                Manhattan plot implemented using Locus Zoom. This plot will be updated as new EFOs are added to the page.
+                <ul>
+                    <li>Legend can be toggle by clicking the 'Show legend' button on the topright of the plot(the button is hidden until mouse over).
+                    </li>
+                    <li>Associations are coloured base on its highlighted EFO term when multiple EFOs have been annotated to the association using
+                        'wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400'.
+                    </li>
+                    <li>Highlighted EFO is currently either the selected-term, or a random EFO from the annotated EFOs when multiple selected EFO are annotated to the association.
+                    </li>
+                    <li>Click 'download image' to download an svg of the current plot.
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <b>Association table:</b> All association found in the GWAS catalog for the selected triat(s).
+            </li>
 
 
+            <li>
+                <b>studies table:</b> All studies found in the GWAS catalog for the selected triat(s).
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--main container-->
 <div class="container-fluid" style="padding-top: 30px">
     <!--search meta data-->
     <ol class="breadcrumb background-color-complementary-accent">
