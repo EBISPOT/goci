@@ -769,9 +769,13 @@ public class StudyController {
         // Add save message
         if (message == null) {
             message = "Changes saved successfully";
+            redirectAttributes.addFlashAttribute("changesSaved", message);
+        }
+        else{
+            redirectAttributes.addFlashAttribute("publishError", message);
         }
 
-        redirectAttributes.addFlashAttribute("changesSaved", message);
+//        redirectAttributes.addFlashAttribute("changesSaved", message);
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
