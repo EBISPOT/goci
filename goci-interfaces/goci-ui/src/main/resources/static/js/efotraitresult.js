@@ -313,7 +313,6 @@ function getEfotraitStudies(data,cleanBeforeInsert) {
     }
 }
 
-
 // Generate the summary sentence, at the bottom of the summary panel
 // xintodo done
 function getSummary(data) {
@@ -448,7 +447,6 @@ function newCell(content) {
 function newItem(content) {
     return $("<li></li>").html(content);
 }
-
 
 // Create a hidden list of items - Used when we have to display a more or less long list of information
 function longContentList (content_id, list, type) {
