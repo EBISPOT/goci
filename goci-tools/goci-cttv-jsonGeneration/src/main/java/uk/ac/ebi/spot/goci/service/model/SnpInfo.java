@@ -19,18 +19,25 @@ public class SnpInfo {
     private List<String> ensemblId;
     private List<String> ensemblName;
     private String distance;
+    private boolean isTargetArray;
+    private String pubMedId;
+    private String efoTrait;
+    private String pval;
+    private int sampleSize;
+    private long snpCount;
 
     public SnpInfo(){
         
     }
 
-    public SnpInfo(String rsId,String isInEnsmbl, String soTerm, List<String> ensemblId, List<String> ensemblName, String distance) {
+    public SnpInfo(String rsId,String isInEnsmbl, String soTerm, List<String> ensemblId, List<String> ensemblName, String distance, boolean isTargetArray) {
         this.rsId = rsId;
         this.soTerm = soTerm;
         this.ensemblId = ensemblId;
         this.ensemblName = ensemblName;
         this.distance = distance;
         this.isInEnsmbl = isInEnsmbl;
+        this.isTargetArray = isTargetArray;
     }
 
     public String getRsId() {
@@ -79,5 +86,53 @@ public class SnpInfo {
 
     public void setIsInEnsmbl(String isInEnsmbl) {
         this.isInEnsmbl = isInEnsmbl;
+    }
+
+    public boolean isTargetArray() {
+        return isTargetArray;
+    }
+
+    public void setTargetArray(boolean targetArray) {
+        isTargetArray = targetArray;
+    }
+
+    public String getPubMedId() {
+        return pubMedId;
+    }
+
+    public void setPubMedId(String pubMedId) {
+        this.pubMedId = pubMedId;
+    }
+
+    public String getEfoTrait() {
+        return efoTrait;
+    }
+
+    public void setEfoTrait(String efoTrait) {
+        this.efoTrait = efoTrait;
+    }
+
+    public String getPval() {
+        return pval;
+    }
+
+    public void setPval(String pval) {
+        this.pval = pval;
+    }
+
+    public int getSampleSize() {
+        return sampleSize;
+    }
+
+    public void setSampleSize(int sampleSize) {
+        this.sampleSize = sampleSize;
+    }
+
+    public long getSnpCount() {
+        return snpCount;
+    }
+
+    public void setSnpCount(long snpCount) {
+        this.snpCount = snpCount;
     }
 }

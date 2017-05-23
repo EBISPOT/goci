@@ -20,7 +20,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by catherineleroy on 16/02/2016.
@@ -122,10 +125,9 @@ public class SnpListBuilderApp {
 
 
     public void getAndSave(String outputFilePath) throws IOException {
-        Collection<String> rsIds = snpGetter.getSnpRsIdList();
+        Map<String, Map<String, String>> snps = snpGetter.getSnpRsIdList();
         String content = "This is the content to write into file";
 
-//        File file = new File("/Users/catherineleroy/Documents/github_project/goci/goci-tools/goci-cttv-export/target/snp.txt");
         File file = new File(outputFilePath);
 
         // if file doesnt exists, then create it
@@ -135,8 +137,19 @@ public class SnpListBuilderApp {
 
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
-        for (String rsId : rsIds){
-            bw.write(rsId + "\n");
+        for(String snp : snps.keySet()){
+            if(snp.startsWith("rs")) {
+
+                Map<String, String> snpInfo = snps.get(snp);
+                Object[] keySet = snpInfo.keySet().toArray();
+                for (int i = 0; i < snpInfo.keySet().size(); i++){
+                    bw.write(snpInfo.get((String)keySet[i]));
+                    if(i != (snpInfo.keySet().size() - 1)){
+                        bw.write("\t");
+                    }
+                }
+                bw.write("\n");
+            }
         }
 
         bw.close();

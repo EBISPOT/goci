@@ -14,6 +14,8 @@ import uk.ac.ebi.spot.goci.service.model.SnpInfo;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -56,42 +58,59 @@ public class JsonBuilder {
 
         SnpToGeneMapper snpToGeneMapper = new SnpToGeneMapper(snp2geneMappingFilePath);
 
-
-
-
         Sort sort = new Sort(new Sort.Order("id"));
         int setNumber = 0;
         Pageable pager = new PageRequest(setNumber, 200, sort);
-        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
-
+        Page<Association> associationPage = associationService.findAll(pager);
+        int count = 0;
         Iterator<Association> assoIterator = associationPage.iterator();
         while (assoIterator.hasNext()) {
             jsons.addAll(processAssociation(assoIterator.next(), snpToGeneMapper));
+            count++;
         }
+        System.out.println("Count: " + count);
         while (associationPage.hasNext()) {
 
             pager = associationPage.nextPageable();
-            associationPage = associationService.findPublishedAssociations(pager);
+            associationPage = associationService.findAll(pager);
 
             assoIterator = associationPage.iterator();
             while (assoIterator.hasNext()) {
 
                 jsons.addAll(processAssociation(assoIterator.next(), snpToGeneMapper));
+                count++;
+            }
+            System.out.println("Count: " + count);
+        }
 
+        //build the targeted array json evidence strings
+        String line;
+        BufferedReader
+                br = new BufferedReader(new FileReader(snp2geneMappingFilePath));
+
+        while ((line = br.readLine()) != null) {
+
+            String[] array = line.split("\t");
+            SnpInfo snpInfo = snpToGeneMapper.get(array[0]);
+            if (snpInfo.isTargetArray()) {
+                if (snpInfo != null) {
+                    List<String> ensemblIds = snpInfo.getEnsemblIds();
+                    for (String ensemblId : ensemblIds) {
+                        jsons.add(buildJson(snpInfo.getPval(),
+                                            snpInfo.getEfoTrait(),
+                                            snpInfo.getRsId(),
+                                            snpInfo.getPubMedId(),
+                                            snpInfo.getSampleSize(),
+                                            snpInfo.getSnpCount(),
+                                            ensemblId,
+                                            snpInfo.getSoTerm())
+                        );
+                    }
+                }
             }
         }
 
-
-
-
-
-////        18193044, gwas_sample_size
-//        Collection<Association> assos = associationService.findPublishedAssociationsByStudyId(Long.parseLong("5320"));
-//        for(Association asso : assos){
-//            jsons.addAll(processAssociation(asso, snpToGeneMapper));
-//        }
-
-
+        System.exit(0);
         return jsons;
     }
 
@@ -130,57 +149,60 @@ public class JsonBuilder {
                         if (snpInfo != null) {
 
                             List<String> ensemblIds = snpInfo.getEnsemblIds();
-
+                            String soTerm = snpInfo.getSoTerm();
                             //If the study is in gwas then it means, the author looked at at least 100 000 snps.
                             //If the number exact of snp is not specified then we put 100000.
                             long snpCount = 100000;
                             if (association.getStudy().getSnpCount() != null) {
                                 snpCount = association.getStudy().getSnpCount();
                             }
-                            if (association.getPvalueMantissa() != null && association.getPvalueExponent()<0) {
+                            if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
 
                                 for (String ensemblId : ensemblIds) {
                                     jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
-                                                    efoTrait.getUri(),
-                                                    riskAllele.getSnp().getRsId(),
-                                                    association.getStudy().getPubmedId(),
-                                                    sampleSize,
-                                                    snpCount,
-                                                    ensemblId)
+                                            efoTrait.getUri(),
+                                            riskAllele.getSnp().getRsId(),
+                                            association.getStudy().getPubmedId(),
+                                            sampleSize,
+                                            snpCount,
+                                            ensemblId,
+                                            soTerm)
                                     );
                                 }
                             }
                         }
-
                     }
-
                 }
             }
         }
         return jsons;
-
-
     }
 
-    public String buildJson(String pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize, long gwasPanelResolution, String ensemblId) {
+    public String buildJson(String pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize, long gwasPanelResolution, String ensemblId, String soTerm) {
+
+        if (!pvalue.contains("e")) {
+            double pvalD = Double.valueOf(pvalue);
+            pvalue = String.valueOf(pvalD);
+            pvalue = pvalue.replace("E", "e");
+        }
 
         String dbVersion = getDate();
         String gwasDbId = "http://identifiers.org/gwascatalog";
-        String jsonSchemaVersion = "1.2.2";
-        String soTerm = "http://purl.obolibrary.org/obo/SO_0001627";
+        String jsonSchemaVersion = "1.2.6";
+//        String soTerm = "http://purl.obolibrary.org/obo/SO_0001627";
 
         JsonObject target = Json.createObjectBuilder()
                 .add("activity", "http://identifiers.org/cttv.activity/predicted_damaging")
-                .add("id", Json.createArrayBuilder().add("http://identifiers.org/ensembl/" + ensemblId))
+                .add("id", "http://identifiers.org/ensembl/" + ensemblId)
                 .add("target_type", "http://identifiers.org/cttv.target/gene_evidence").build();
 
         JsonObject variant = Json.createObjectBuilder()
                 .add("type", "snp single")
-                .add("id", Json.createArrayBuilder().add("http://identifiers.org/dbsnp/" + rsId))
+                .add("id", "http://identifiers.org/dbsnp/" + rsId)
                 .build();
 
         JsonObject disease = Json.createObjectBuilder()
-                .add("id", Json.createArrayBuilder().add(efoTrait))
+                .add("id", efoTrait)
                 .build();
 
         JsonObject uniqueAssociationFields = Json.createObjectBuilder()
@@ -234,7 +256,7 @@ public class JsonBuilder {
         JsonObject resourceScore = Json.createObjectBuilder()
                 .add("type", "pvalue")
                 .add("method", method)
-                .add("value", pvalue)
+                .add("value", pvalue) //0.000000003
                 .build();
 
         JsonArray evidenceCodes = Json.createArrayBuilder()
@@ -317,11 +339,6 @@ public class JsonBuilder {
 
     }
 
-//    public static void main(String[] args) {
-//        Double monDouble = Double.valueOf("4e-8");
-//        System.out.println(monDouble);
-//        getDate();
-//    }
 
 
     public static String getDate() {
@@ -407,37 +424,6 @@ public class JsonBuilder {
         return json;
     }
 
-//    public static void main(String[] args) {
-//        String jsonToReturn = "{\"target\":{\"activity\":\"http://identifiers.org/cttv.activity/predicted_damaging\",\"id\":[\"http://identifiers.org/ensembl/ENSG00000133048\"],\"target_type\":\"http://identifiers.org/cttv.target/gene_evidence\"},\"access_level\":\"public\",\"sourceID\":\"gwascatalog\",\"variant\":{\"type\":\"snp single\",\"id\":[\"http://identifiers.org/dbsnp/rs4950928\"]},\"disease\":{\"id\":[\"http://www.ebi.ac.uk/efo/EFO_0004869\"]},\"unique_association_fields\":{\"sample_size\":\"1772\",\"gwas_panel_resolution\":\"290325\",\"pubmed_refs\":\"http://europepmc.org/abstract/MED/18403759\",\"target\":\"http://identifiers.org/ensembl/ENSG00000133048\",\"object\":\"http://www.ebi.ac.uk/efo/EFO_0004869\",\"variant\":\"http://identifiers.org/dbsnp/rs4950928\",\"study_name\":\"cttv009_gwas_catalog\",\"pvalue\":\"1.0E-13\"},\"evidence\":{\"variant2disease\":{\"gwas_sample_size\":1772,\"unique_experiment_reference\":\"http://europepmc.org/abstract/MED/18403759\",\"gwas_panel_resolution\":290325,\"provenance_type\":{\"literature\":{\"references\":[{\"lit_id\":\"http://europepmc.org/abstract/MED/18403759\"}]},\"expert\":{\"status\":true,\"statement\":\"Primary submitter of data\"},\"database\":{\"version\":\"2016-01-24T09:42:05+00:00\",\"id\":\"GWAS Catalog\",\"dbxref\":{\"version\":\"2016-01-24T09:42:05+00:00\",\"id\":\"http://identifiers.org/gwascatalog\"}}},\"is_associated\":true,\"resource_score\":{\"type\":\"pvalue\",\"method\":{\"description\":\"pvalue for the snp to disease association.\"},\"value\":\"1.0E-13\"},\"evidence_codes\":[\"http://identifiers.org/eco/GWAS\",\"http://purl.obolibrary.org/obo/ECO_0000205\"],\"date_asserted\":\"2016-01-24T09:42:05+00:00\"},\"gene2variant\":{\"provenance_type\":{\"expert\":{\"status\":true,\"statement\":\"Primary submitter of data\"},\"database\":{\"version\":\"2016-01-24T09:42:05+00:00\",\"id\":\"GWAS Catalog\",\"dbxref\":{\"version\":\"2016-01-24T09:42:05+00:00\",\"id\":\"http://identifiers.org/gwascatalog\"}}},\"is_associated\":true,\"date_asserted\":\"2016-01-24T09:42:05+00:00\",\"evidence_codes\":[\"http://purl.obolibrary.org/obo/ECO_0000205\",\"http://identifiers.org/eco/cttv_mapping_pipeline\"],\"functional_consequence\":\"http://purl.obolibrary.org/obo/SO_0001627\"}},\"validated_against_schema_version\":\"1.2.2\",\"type\":\"genetic_association\",\"literature\":{\"references\":[{\"lit_id\":\"http://europepmc.org/abstract/MED/18403759\"}]}}";
-//        jsonToReturn = removeQuoteAroundPvalue(jsonToReturn);
-//
-//        System.out.println(jsonToReturn);
-//
-//
-//
-//
-//
-//        Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+\\d{2}:\\d{2}");
-//        Matcher matcher = pattern.matcher("2016-01-24T09:42:05+00:00");
-//
-//        boolean found = false;
-//        int count = 0;
-//        while (matcher.find()) {
-//            count++;
-//            System.out.println("I found the text " +
-//                    matcher.group() + " starting at " +
-//                    "index " + matcher.start() + " and ending at index " +  matcher.end() );
-//            found = true;
-//
-//
-//
-//
-//
-//
-//        }
-
-
-//    }
 
 
 }

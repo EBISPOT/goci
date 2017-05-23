@@ -32,8 +32,28 @@ public class SnpToGeneMapper {
 
 //        rs8050187       1       ENSG00000186153 WWOX    intron_variant  0
 
-        String line;
+        Map<String, String> soTermToSoTerm = new HashMap<>();
+        soTermToSoTerm.put("3_prime_UTR_variant","http://purl.obolibrary.org/obo/SO_0001624");
+        soTermToSoTerm.put("5_prime_UTR_variant","http://purl.obolibrary.org/obo/SO_0001623");
+        soTermToSoTerm.put("coding_sequence_variant","http://purl.obolibrary.org/obo/SO_0001580");
+        soTermToSoTerm.put("downstream_gene_variant","http://purl.obolibrary.org/obo/SO_0001632");
+        soTermToSoTerm.put("frameshift_variant","http://purl.obolibrary.org/obo/SO_0001589");
+        soTermToSoTerm.put("intron_variant","http://purl.obolibrary.org/obo/SO_0001627");
+        soTermToSoTerm.put("missense_variant","http://purl.obolibrary.org/obo/SO_0001583");
+        soTermToSoTerm.put("nearest_gene_five_prime_end","http://targetvalidation.org/sequence/nearest_gene_five_prime_end");
+        soTermToSoTerm.put("nearest_gene_five_prime_end_reg","http://targetvalidation.org/sequence/regulatory_nearest_gene_five_prime_end");
+        soTermToSoTerm.put("splice_acceptor_variant","http://purl.obolibrary.org/obo/SO_0001574");
+        soTermToSoTerm.put("splice_donor_variant","http://purl.obolibrary.org/obo/SO_0001575");
+        soTermToSoTerm.put("splice_region_variant","http://purl.obolibrary.org/obo/SO_0001630");
+        soTermToSoTerm.put("stop_gained","http://purl.obolibrary.org/obo/SO_0001587");
+        soTermToSoTerm.put("stop_lost","http://purl.obolibrary.org/obo/SO_0001578");
+        soTermToSoTerm.put("synonymous_variant","http://purl.obolibrary.org/obo/SO_0001819");
+        soTermToSoTerm.put("upstream_gene_variant","http://purl.obolibrary.org/obo/SO_0001631");
+        soTermToSoTerm.put("start_lost","http://purl.obolibrary.org/obo/SO_0002012");
+        soTermToSoTerm.put("non_coding_transcript_exon_variant","http://purl.obolibrary.org/obo/SO_0001792");
 
+
+        String line;
         BufferedReader br = new BufferedReader(new FileReader(snp2geneFilePath));
 
         while ((line = br.readLine()) != null) {
@@ -47,7 +67,7 @@ public class SnpToGeneMapper {
 
                 snpInfo.setIsInEnsmbl(array[1]);
 
-                snpInfo.setSoTerm(array[4]);
+                snpInfo.setSoTerm(soTermToSoTerm.get(array[4]));
 
                 if (array[2].contains(",")) {
                     String[] ensemblIds = array[2].split(",");
@@ -79,6 +99,20 @@ public class SnpToGeneMapper {
                 }
 
                 snpInfo.setDistance(array[5]);
+
+                if(array[6].equals("0")) {
+                    snpInfo.setTargetArray(false);
+                } else {
+                    snpInfo.setTargetArray(true);
+                }
+
+                if (snpInfo.isTargetArray()){
+                    snpInfo.setPubMedId(array[7]);
+                    snpInfo.setEfoTrait(array[8]);
+                    snpInfo.setPval(array[9]);
+                    snpInfo.setSampleSize(Integer.valueOf(array[10]));
+                    snpInfo.setSnpCount(Long.valueOf(array[11]));
+                }
 
                 snp2snpInfo.put(snpInfo.getRsId(),snpInfo );
 

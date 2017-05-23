@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
@@ -49,6 +50,20 @@ public class SingleNucleotidePolymorphismService {
     public List<SingleNucleotidePolymorphism> findAll() {
         List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll();
         allSnps.forEach(this::loadAssociatedData);
+        return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SingleNucleotidePolymorphism> deepFindAll(){
+        List<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll();
+        allSnps.forEach(this::deepLoadAssociatedData);
+        return allSnps;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SingleNucleotidePolymorphism> deepFindAll(Pageable pageable){
+        Page<SingleNucleotidePolymorphism> allSnps = snpRepository.findAll(pageable);
+        allSnps.forEach(this::deepLoadAssociatedData);
         return allSnps;
     }
 
@@ -105,6 +120,16 @@ public class SingleNucleotidePolymorphismService {
         int geneCount = snp.getGenomicContexts().size();
         getLog().trace("SNP '" + snp.getRsId() + "' is mapped to " + locationCount + " locations " +
                                "and " + geneCount + " genes");
+    }
+
+    public void deepLoadAssociatedData(SingleNucleotidePolymorphism snp){
+        int locationCount = snp.getLocations().size();
+        int geneCount = snp.getGenomicContexts().size();
+        int riskAllelesCount = snp.getRiskAlleles().size();
+        Collection<RiskAllele> riskAlleles = snp.getRiskAlleles();
+        for (RiskAllele riskAllele : riskAlleles){
+            int proxySnps = riskAllele.getProxySnps().size();
+        }
     }
 
     @Transactional(readOnly = true)
