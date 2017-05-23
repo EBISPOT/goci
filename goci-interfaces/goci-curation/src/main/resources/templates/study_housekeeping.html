@@ -2,63 +2,64 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+
+    <script th:src="@{/js/goci-editing.js}"></script>
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
 
-<nav role="navigation" class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
-    </div>
-
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
-        </ul>
-        <!--<ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>-->
-    </div>
-</nav>
-
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li class="active"><a href="#">Curator Information</a></li>
-
-        </ul>
-    </div>
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Curator Information</li>
+    </ol>
 </div>
 
-<br/>
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
+
+
+<div class="form-group" style="display: none">
+    <label for="publish_flag" class="control-label col-md-2"></label>
+
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">
@@ -66,21 +67,53 @@
             <table id="dateTable" class="table table-hover table-bordered">
                 <thead>
                 <tr>
-                    <th>Publish Date</th>
-                    <th>Send to NCBI Date</th>
                     <th>Study Added Date</th>
                     <th>Last Update Date</th>
+                    <th>Last Automated Mapping Date</th>
+                    <th>Catalog Publish Date</th>
+                    <th>Catalog Unpublish Date</th>
+                    <th>Send to NCBI Date</th>
+                    <th>Is currently published?</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.publishDate !=null } ? ${study.housekeeping.publishDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${study.housekeeping.sendToNCBIDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${study.housekeeping.studyAddedDate} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${study.housekeeping.lastUpdateDate} : 'null'"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.studyAddedDate !=null } ? ${#calendars.format(study.housekeeping.studyAddedDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.lastUpdateDate !=null } ? ${#calendars.format(study.housekeeping.lastUpdateDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${mappingDetails.mappingDate != null} ? ${#calendars.format(mappingDetails.mappingDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogPublishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.catalogUnpublishDate !=null } ? ${#calendars.format(study.housekeeping.catalogUnpublishDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:text="${study.housekeeping != null and study.housekeeping.sendToNCBIDate !=null } ? ${#calendars.format(study.housekeeping.sendToNCBIDate, 'dd MMMM yyyy')} : ''"></td>
+                    <td th:switch="${study.housekeeping.isPublished}">
+                        <span th:case="'null'"></span>
+
+                        <span th:case="false">No</span>
+
+                        <span th:case="true">Yes</span>
+                    </td>
+                    <!--<td th:if="${study.housekeeping != null and study.housekeeping.isPublished !=null}">-->
+                        <!--<span th:switch="${study.housekeeping.isPublished}">-->
+                             <!--<span th:case="true">No</span>-->
+                            <!--<span th:case="false">Yes</span>-->
+                        <!--</span>-->
+                    <!--</td>-->
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10"
+             th:object="${study}"
+             th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate == null}">
+            <!--<div class="col-md-10" th:object="${study}">-->
+            <a th:href="@{/studies/{studyId}/unpublish(studyId=${study.Id})}"
+               class="btn btn-primary pull-right"
+               role="button"
+               th:value="${study.Id}">Unpublish this study</a>
         </div>
     </div>
 </div>
@@ -97,93 +130,124 @@
     </div>
 </div>
 
+<!--Alert if snps not checked-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(snpsNotChecked)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-warning">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${snpsNotChecked}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 dataForm">
             <form id="studyHousekeeping" class="form-horizontal" method="post" th:object="${studyHousekeeping}"
                   name="studyHousekeeping">
 
                 <!--Form has to send all entity attributes back, even if we do not want users to edit
-                Thus some fields are hidden and spaced throoughout the form to improve view -->
+                Thus some fields are hidden and spaced throughout the form to improve view -->
 
                 <!--Hidden-->
+
                 <div class="form-group">
                     <label for="id" class="control-label col-md-2"></label>
                     <input id="id" type="hidden" th:field="*{id}"/>
                 </div>
-                <!--End hidden-->
 
-                <!--Hidden-->
                 <div class="form-group">
-                    <label for="publishDate" class="control-label col-md-2"></label>
-                    <input id="publishDate" type="hidden" th:field="*{publishDate}"/>
+                    <label for="catalogPublishDate" class="control-label col-md-2"></label>
+                    <input id="catalogPublishDate" type="hidden" th:field="*{catalogPublishDate}"/>
                 </div>
 
                 <div class="form-group">
                     <label for="sendToNCBIDate" class="control-label col-md-2"></label>
                     <input id="sendToNCBIDate" type="hidden" th:field="*{sendToNCBIDate}"/>
                 </div>
+                <div class="form-group">
+                    <label for="isPublished" class="control-label col-md-2"></label>
+                    <input id="isPublished" type="hidden" th:field="*{isPublished}"/>
+                </div>
                 <!--End hidden-->
 
                 <div class="form-group">
                     <label for="fileName" class="control-label col-md-2">File name</label>
-                    <textarea id="fileName" type="text" th:field="*{fileName}"/>
+                    <div class="col-md-8">
+                        <textarea id="fileName" th:field="*{fileName}" class="form-control"></textarea>
+                    </div>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="notes" class="control-label col-md-2">Notes</label>
-                    <textarea id="notes" type="text" th:field="*{notes}" cols="180" rows="5"/>
+                    <label for="notes" class="control-label col-md-2"><del>Notes</del><br/>(Deprecated! Note should be entered under the Notes tab)</label>
+                    <div class="col-md-8">
+                        <textarea id="notes" th:field="*{notes}" class="col-md-8 form-control" readonly="readonly" th:title="aaa"></textarea>
+                    </div>
                 </div>
 
                 <!--Checkboxes-->
 
                 <div class="form-group">
-                    <label for="ethnicityCheckedLevelOne" th:for="${#ids.next('ethnicityCheckedLevelOne')}"
-                           class="control-label col-md-2">Ethnicity checked, first
-                        level:</label>
-                    <input id="ethnicityCheckedLevelOne" type="checkbox" th:field="*{ethnicityCheckedLevelOne}"
-                          />
+                    <label for="ancestryCheckedLevelOne" th:for="${#ids.next('ancestryCheckedLevelOne')}"
+                           class="control-label col-md-2">Ancestry checked, first
+                                                          level:</label>
+                    <input id="ancestryCheckedLevelOne" type="checkbox" th:field="*{ancestryCheckedLevelOne}"
+                    />
                 </div>
 
                 <div class="form-group">
-                    <label for="ethnicityCheckedLevelTwo" th:for="${#ids.next('ethnicityCheckedLevelTwo')}"
-                           class="control-label col-md-2">Ethnicity checked, second
-                        level:</label>
-                    <input id="ethnicityCheckedLevelTwo" type="checkbox" th:field="*{ethnicityCheckedLevelTwo}"
-                          />
+                    <label for="ancestryCheckedLevelTwo" th:for="${#ids.next('ancestryCheckedLevelTwo')}"
+                           class="control-label col-md-2">Ancestry checked, second
+                                                          level:</label>
+                    <input id="ancestryCheckedLevelTwo" type="checkbox" th:field="*{ancestryCheckedLevelTwo}"
+                    />
                 </div>
 
                 <div class="form-group">
-                    <label for="ethnicityBackFilled" th:for="${#ids.next('ethnicityBackFilled')}"
-                           class="control-label col-md-2">Ethnicity backfilled:</label>
-                    <input id="ethnicityBackFilled" type="checkbox" th:field="*{ethnicityBackFilled}"
-                           />
+                    <label for="ancestryBackFilled" th:for="${#ids.next('ancestryBackFilled')}"
+                           class="control-label col-md-2">Ancestry backfilled:</label>
+                    <input id="ancestryBackFilled" type="checkbox" th:field="*{ancestryBackFilled}"
+                    />
                 </div>
 
 
                 <div class="form-group">
                     <label for="studySnpCheckedLevelOne" th:for="${#ids.next('studySnpCheckedLevelOne')}"
                            class="control-label col-md-2">Study/SNP checked, first
-                        level:</label>
+                                                          level:</label>
                     <input id="studySnpCheckedLevelOne" type="checkbox" th:field="*{studySnpCheckedLevelOne}"
-                          />
+                    />
                 </div>
 
                 <div class="form-group">
                     <label for="studySnpCheckedLevelTwo" th:for="${#ids.next('studySnpCheckedLevelTwo')}"
                            class="control-label col-md-2">Study/SNP checked, second
-                        level:</label>
+                                                          level:</label>
                     <input id="studySnpCheckedLevelTwo" type="checkbox" th:field="*{studySnpCheckedLevelTwo}"
-                          />
+                    />
+                </div>
+
+                <!--This tags are uneditable but viewable in form-->
+                <div class="form-group">
+                    <label for="checkedMappingError" th:for="${#ids.next('checkedMappingError')}"
+                           class="control-label col-md-2">Checked Mapping Error:</label>
+                    <input id="checkedMappingError"
+                           type="checkbox"
+                           th:field="*{checkedMappingError}"
+                           disabled="disabled"/>
+                    <input id="checkedMappingError" type="hidden" th:field="*{checkedMappingError}"/>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="checkedNCBIError" th:for="${#ids.next('checkedNCBIError')}"
-                           class="control-label col-md-2">Checked NCBI Error:</label>
-                    <input id="checkedNCBIError" type="checkbox" th:field="*{checkedNCBIError}" />
+                    <label for="snpsRechecked" th:for="${#ids.next('snpsRechecked')}"
+                           class="control-label col-md-2">SNPs rechecked:</label>
+                    <input id="snpsRechecked" type="checkbox" th:field="*{snpsRechecked}" disabled="disabled"/>
+                    <input id="snpsRechecked" type="hidden" th:field="*{snpsRechecked}"/>
                 </div>
 
 
@@ -192,10 +256,8 @@
                 <div class="form-group">
                     <label for="curator" class="control-label col-md-2">Curator:</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-4">
                         <select th:field="*{curator}" id="curator" class="form-control select2-select">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
                             <option th:each="curator : ${curators}"
                                     th:value="${curator.id}"
                                     th:text="${curator.lastName}"></option>
@@ -204,12 +266,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="curationStatus" class="control-label col-md-2">Curator Status:</label>
+                    <label for="curationStatus" class="control-label col-md-2">Curation Status:</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-4">
                         <select th:field="*{curationStatus}" id="curationStatus" class="form-control select2-select">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
                             <option th:each="curationStatus : ${curationstatuses}"
                                     th:value="${curationStatus.id}"
                                     th:text="${curationStatus.status}"></option>
@@ -217,7 +277,20 @@
                     </div>
                 </div>
 
+                <div class="form-group"
+                     th:if="${study.housekeeping != null and study.housekeeping.catalogPublishDate !=null and study.housekeeping.catalogUnpublishDate != null}">
+                    <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
 
+                    <div class="col-md-4">
+                        <select th:field="*{unpublishReason}" id="unpublishReason" class="form-control select2-select">
+                            <!-- Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="unpublishReason : ${unpublishreasons}"
+                                    th:value="${unpublishReason.id}"
+                                    th:text="${unpublishReason.reason}"></option>
+                        </select>
+                    </div>
+                </div>
 
                 <!--Hidden-->
                 <div class="form-group">
@@ -229,8 +302,12 @@
                     <label for="lastUpdateDate" class="control-label col-md-2"></label>
                     <input id="lastUpdateDate" type="hidden" th:field="*{lastUpdateDate}"/>
                 </div>
-                <!--End hidden-->
 
+                <div class="form-group">
+                    <label for="catalogUnpublishDate" class="control-label col-md-2"></label>
+                    <input id="catalogUnpublishDate" type="hidden" th:field="*{catalogUnpublishDate}"/>
+                </div>
+                <!--End hidden-->
 
                 <!--Button -->
                 <div class="form-group">
@@ -244,19 +321,25 @@
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
+
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-            allowClear: true});
+        $('#curator').select2({
+                                  placeholder: "Select a curator",
+                                  allowClear: true
+                              });
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-            allowClear: true});
+        $('#curationStatus').select2({
+                                         placeholder: "Select a status",
+                                         allowClear: true
+                                     });
     });
 </script>
 

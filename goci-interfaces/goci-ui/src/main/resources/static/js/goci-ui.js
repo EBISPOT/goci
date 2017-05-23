@@ -13,34 +13,95 @@ $(document).ready(function() {
         $(this).removeClass("background-color-complementary-accent", 300, "easeOutExpo");
     });
 
-    //$('.collapse').on('show.bs.collapse', function() {
-    //    $('.collapse.in').collapse('hide');
-    //});
+    var shiftWindow = function() {
+        scrollBy(0, -100)
+    };
+    window.addEventListener("hashchange", shiftWindow);
+    function load() {
+        if (window.location.hash) {
+            shiftWindow();
+        }
+    }
+
+    if($("#homepageStats")){
+        $.getJSON('api/search/stats')
+                .done(function(stats) {
+                          setStats(stats);
+                      });
+    }
+
+    $('body').tooltip({
+                          selector: '[data-toggle="tooltip"]'
+                      });
+    $('[data-toggle="tooltip"]').tooltip({
+                                             container: 'body'
+                                         });
+
 });
 
-function doSearch(){
+
+function doSearch() {
     var searchTerm = $("#search-box").val();
+
+    var path = window.location.pathname;
+    var pagename = path.substr(path.lastIndexOf('/') + 1);
+
     // redirect to search page
-    window.location = "search?query=" + searchTerm;
+
+    if ((path.indexOf("docs") != -1 && pagename != "docs") || path.indexOf("variant") != -1 || (path.indexOf("downloads") != -1 && pagename != "downloads") || path.indexOf("traits") != -1) {
+        window.location = "../search?query=" + searchTerm;
+    }
+    else {
+        window.location = "search?query=" + searchTerm;
+    }
 }
 
-function toggleSidebar(ts){
-        if ($(ts).hasClass('panel-collapsed')) {
-            // expand the panel
-            $(ts).parents('.panel').find('.panel-body').slideDown();
-            $(ts).removeClass('panel-collapsed');
-            $(ts).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-            $(ts).parents('#filter-bar').removeClass('col-md-1').addClass('col-md-3');
-            $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-11').addClass('col-md-9');
+function toggleSidebar(ts) {
+    if ($(ts).hasClass('panel-collapsed')) {
+        // expand the panel
+        $(ts).parents('.panel').find('.panel-body').slideDown();
+        $(ts).removeClass('panel-collapsed');
+        $(ts).find('span').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+        $(ts).parents('#filter-bar').removeClass('col-md-1').addClass('col-md-3');
+        $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-11').addClass('col-md-9');
 
-        }
-        else {
-            // collapse the panel
-            $(ts).parents('.panel').find('.panel-body').slideUp();
-            $(ts).addClass('panel-collapsed');
-            $(ts).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-            $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
-            $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
-        }
+    }
+    else {
+        // collapse the panel
+        $(ts).parents('.panel').find('.panel-body').slideUp();
+        $(ts).addClass('panel-collapsed');
+        $(ts).find('span').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+        $(ts).parents('#filter-bar').removeClass('col-md-3').addClass('col-md-1');
+        $(ts).parents('#filter-bar').siblings('#results-area').removeClass('col-md-9').addClass('col-md-11');
+    }
+}
+
+function toggleDiv(ts) {
+    var divId = '#'+ts;
+    var buttonId = '#button-'+ts;
+    if ($(divId).hasClass('collapse')) {
+        $(divId).removeClass('collapse').addClass('expanded');
+        $(divId).show();
+        $(buttonId).find('span').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+    }
+    else {
+        // collapse the panel
+        $(divId).removeClass('expanded').addClass('collapse');
+        $(divId).hide();
+        $(buttonId).find('span').removeClass('glyphicon-minus').addClass('glyphicon-plus');
+    }
+}
+
+function setStats(data) {
+    try {
+        $('#lastUpdateDate').text(data.date);
+        $('#studyCount').text(data.studies);
+        $('#associationCount').text(data.associations);
+        $('#genomeAssembly').text(data.genebuild);
+        $('#dbSNP').text(data.dbsnpbuild);
+    }
+    catch (ex) {
+        console.log("Failure to process build variables " + ex);
+    }
 }
 

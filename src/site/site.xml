@@ -5,21 +5,21 @@
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
     <body>
         <menu name="Overview">
-            <item name="Introduction" href="index.html"/>
+            <item name="Introduction" href="index.html" />
         </menu>
 
         <menu name="Developers">
-            <item name="Downloads" href="downloads.html"/>
-            <item name="Release Notes" href="release-notes.html"/>
-            <item name="Project Site" href="project-site.html"/>
-            <item name="Maven Configuration" href="maven.html"/>
-            <item name="Maven Repository" href="maven/repo"/>
+            <item name="Downloads" href="downloads.html" />
+            <item name="Release Notes" href="release-notes.html" />
+            <item name="Project Site" href="project-site.html" />
+            <item name="Maven Configuration" href="maven.html" />
+            <item name="Maven Repository" href="maven/repo" />
         </menu>
 
-        <menu ref="parent"/>
+        <menu ref="parent" />
 
-        <menu ref="modules"/>
+        <menu ref="modules" />
 
-        <menu ref="reports"/>
+        <menu ref="reports" />
     </body>
 </project>

@@ -45,6 +45,7 @@ public abstract class ObjectDocumentMapper<O, D extends Document<O>> {
         if (objects.size() > 0) {
             List<D> documents = new ArrayList<>();
             objects.stream()
+                    .peek(object -> getLog().debug("Mapping " + object.toString() + ""))
                     .map(object -> objectConverter.convert(object, documentType))
                     .filter(doc -> doc != null)
                     .forEach(documents::add);

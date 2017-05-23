@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="mapping_details">
+
+<div class="col-md-2 pull-right">
+
+    <div th:if="${!#strings.isEmpty(isToRemapping)}">
+          <div th:switch="${isToRemapping}">
+            <p align="center" th:case="'yes'">
+              <div class="alert alert-danger">
+              <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>Remapping Needed</strong>
+              </div>
+            </p>
+            <p align="center" th:case="*">
+              <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>No Remapping Needed (up to date)</strong>
+              </div>
+            </p>
+          </div>
+    </div>
+    <div class="well" th:object="${mappingDetails}">
+
+        <p style="font-style: italic; word-wrap: break-word;"
+           th:if="${mappingDetails.mappingDate == null and mappingDetails.performer == null}"
+           th:utext="'&lt;br /&gt;' +'No mapping details available '">
+        </p>
+
+        <p style="font-style: italic; word-wrap: break-word;"
+           th:if="${mappingDetails.mappingDate != null}"
+           th:utext="'Mapping date: '+  ${#dates.format(mappingDetails.mappingDate, 'dd-MMM-yyyy HH:mm')} ?: ''"></p>
+
+        <p style="font-style: italic; word-wrap: break-word;"
+           th:if="${mappingDetails.performer != null}"
+           th:utext="'&lt;br /&gt;' +'Performer: '+ ${mappingDetails.performer} ?: ''"></p>
+
+        <p th:if="${not #maps.isEmpty(mappingDetails.associationErrorMap)}">Mapping errors:</p>
+         <span style="font-style: italic; word-wrap: break-word;"
+               th:each="error: ${mappingDetails.associationErrorMap}"
+               th:utext="${error.value} + '&lt;br /&gt;' ?: ''"
+               th:if="${not #maps.isEmpty(mappingDetails.associationErrorMap)}"></span>
+    </div>
+    <div th:if="${mappingDetails.mappingDate == null and mappingDetails.performer == null}">
+        <a th:href="@{/associations/{associationId}/force_mapping(associationId=${form.associationId})}"
+           class="btn btn-primary"  role="button">Force Mapping</a>
+
+    </div>
+
+</div>
+</body>
+</html>

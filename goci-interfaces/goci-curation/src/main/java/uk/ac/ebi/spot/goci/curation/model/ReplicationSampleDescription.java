@@ -4,7 +4,7 @@ package uk.ac.ebi.spot.goci.curation.model;
  * Created by emma on 04/02/15.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model class that takes text entered REPLICATE_SAMPLE_SIZE and passes it between controller and view
  */
 public class ReplicationSampleDescription {

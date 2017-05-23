@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
-import net.sourceforge.fluxion.spi.Spi;
+import uk.ac.ebi.spot.goci.spi.Spi;
 
 /**
  * An interface that defines a factory method for generating {@link PussycatSession}s

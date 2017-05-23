@@ -4,27 +4,36 @@ html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
 }
+
 .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    height: 60px;
+    /* height: 60px; */
+    height: auto;
     background-color: #f5f5f5;
 }
-
 
 /* Custom page CSS
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
 
 body > .container {
-    padding: 60px 15px 0;
+    /*padding: 60px 15px 0; */
+    padding: 5px 15px 0;
 }
+
+/* reduced the jumbron size */
+.jumbotron {
+    margin-bottom: 10px;
+}
+
 .container .text-muted {
     margin: 20px 0;
 }

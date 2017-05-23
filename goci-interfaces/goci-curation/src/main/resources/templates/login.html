@@ -1,21 +1,43 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script th:src="@{/js/console-plugin.js}"></script>
+    <script th:src="@{/js/goci-curation-login.js}"></script>
+
+
 </head>
 <body>
-<div class="container">
+
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-offset-2 col-md-6">
             <div th:if="${param.error}">
                 Invalid username and password.
             </div>
@@ -23,20 +45,39 @@
                 You have been logged out.
             </div>
 
-            <form class="form-signin" role="form" th:action="@{/login}" method="post">
-                <h2 class="form-signin-heading">Please sign in to GWAS curation tool</h2>
-                <label for="username" class="sr-only">User Name</label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="User name"/>
-                <label for="password" class="sr-only">Password</label>
-                <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+            <div>
+                <h2>This is the login page for the GWAS Catalog data deposition system</h2>
+                <p>If your are a GWAS Catalog-approved curator, please login to the system
+                using your GWAS Catalog curator credentials.
+                </p>
+                <p>To obtain an account, please contact
+                    <a href="mailto:gwas-info@ebi.ac.uk?Subject=Curation%20system%20account" target="_top">gwas-info@ebi.ac.uk</a>
+                </p>
+                <br/>
+            </div>
 
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <form class="form" role="form"  method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
+                <!--<h4 class="form-signin-heading">Please login to the GWAS curation tool</h4>-->
+
+                <div class="form-group">
+                    <label for="useremail" class="control-label">User email</label>
+                    <input type="email" id="useremail" name="useremail" class="form-control" placeholder="User email"/>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="control-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
 
 </body>
 </html>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-model</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.2.21</version>
 
     <name>GOCI Object Model</name>
     <description>Classes representing the core, modelled objects in the GWAS Catalog</description>
@@ -13,15 +13,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.2.21</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
@@ -31,16 +28,18 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-core</artifactId>
         </dependency>
     </dependencies>
 

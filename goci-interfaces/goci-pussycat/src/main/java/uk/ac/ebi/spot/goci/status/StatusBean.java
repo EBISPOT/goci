@@ -6,6 +6,7 @@ package uk.ac.ebi.spot.goci.status;
  * @author Tony Burdett
  * @date 06/09/12
  */
+
 public class StatusBean {
     private final String version;
     private final String buildNumber;

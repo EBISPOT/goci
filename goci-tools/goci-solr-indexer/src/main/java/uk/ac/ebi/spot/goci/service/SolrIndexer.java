@@ -9,15 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.exception.SolrIndexingException;
-import uk.ac.ebi.spot.goci.index.AssociationIndex;
-import uk.ac.ebi.spot.goci.index.SnpIndex;
-import uk.ac.ebi.spot.goci.index.StudyIndex;
-import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -33,28 +30,43 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class SolrIndexer {
-    @Autowired StudyService studyService;
-    @Autowired SingleNucleotidePolymorphismService snpService;
-    @Autowired DiseaseTraitRepository diseaseTraitRepository;
-    @Autowired AssociationService associationService;
+    private StudyService studyService;
+    private DiseaseTraitRepository diseaseTraitRepository;
+    private AssociationService associationService;
+    private EfoTraitRepository efoTraitRepository;
 
-    @Autowired SnpIndex snpIndex;
-    @Autowired StudyIndex studyIndex;
-    @Autowired TraitIndex traitIndex;
-    @Autowired AssociationIndex associationIndex;
-
-    @Autowired StudyMapper studyMapper;
-    @Autowired SingleNucleotidePolymorphismMapper snpMapper;
-    @Autowired TraitMapper traitMapper;
-    @Autowired AssociationMapper associationMapper;
+    private StudyMapper studyMapper;
+    private TraitMapper traitMapper;
+    private AssociationMapper associationMapper;
+    private EfoMapper efoMapper;
 
     private int pageSize = 1000;
+    private int maxPages = -1;
     private boolean sysOutLogging = false;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
+    }
+
+    @Autowired
+    public SolrIndexer(StudyService studyService,
+                       DiseaseTraitRepository diseaseTraitRepository,
+                       EfoTraitRepository efoTraitRepository,
+                       AssociationService associationService,
+                       StudyMapper studyMapper,
+                       TraitMapper traitMapper,
+                       AssociationMapper associationMapper,
+                       EfoMapper efoMapper) {
+        this.studyService = studyService;
+        this.diseaseTraitRepository = diseaseTraitRepository;
+        this.efoTraitRepository = efoTraitRepository;
+        this.associationService = associationService;
+        this.studyMapper = studyMapper;
+        this.traitMapper = traitMapper;
+        this.associationMapper = associationMapper;
+        this.efoMapper = efoMapper;
     }
 
     public int getPageSize() {
@@ -77,15 +89,16 @@ public class SolrIndexer {
         ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
 
         Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
-        Future<Integer> snpCountFuture = taskExecutor.submit(this::mapSnps);
-        Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
         Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
+        Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
+        Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
+
         try {
             int studyCount = studyCountFuture.get();
-            int snpCount = snpCountFuture.get();
-            int traitCount = traitCountFuture.get();
             int associationCount = associationCountFuture.get();
-            return studyCount + snpCount + traitCount + associationCount;
+            int traitCount = traitCountFuture.get();
+            int efoCount = efoCountFuture.get();
+            return studyCount + traitCount + associationCount + efoCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
@@ -103,13 +116,16 @@ public class SolrIndexer {
     }
 
     Integer mapStudies() {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "studyDate"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Study> studyPage = studyService.deepFindPublished(pager);
+        Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());
         while (studyPage.hasNext()) {
+            if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
-            studyPage = studyService.deepFindPublished(pager);
+            studyPage = studyService.findPublishedStudies(pager);
             studyMapper.map(studyPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
@@ -118,20 +134,23 @@ public class SolrIndexer {
         return (int) studyPage.getTotalElements();
     }
 
-    Integer mapSnps() {
-        Sort sort = new Sort(new Sort.Order("rsId"));
+    Integer mapAssociations() {
+        Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<SingleNucleotidePolymorphism> snpPage = snpService.deepFindAll(pager);
-        snpMapper.map(snpPage.getContent());
-        while (snpPage.hasNext()) {
+        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
+        associationMapper.map(associationPage.getContent());
+        while (associationPage.hasNext()) {
+            if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
-            snpPage = snpService.deepFindAll(pager);
-            snpMapper.map(snpPage.getContent());
+            associationPage = associationService.findPublishedAssociations(pager);
+            associationMapper.map(associationPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
         }
-        return (int) snpPage.getTotalElements();
+        return (int) associationPage.getTotalElements();
     }
 
     Integer mapTraits() {
@@ -140,6 +159,9 @@ public class SolrIndexer {
         Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
         traitMapper.map(diseaseTraitPage.getContent());
         while (diseaseTraitPage.hasNext()) {
+            if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
             diseaseTraitPage = diseaseTraitRepository.findAll(pager);
             traitMapper.map(diseaseTraitPage.getContent());
@@ -150,19 +172,22 @@ public class SolrIndexer {
         return (int) diseaseTraitPage.getTotalElements();
     }
 
-    Integer mapAssociations() {
+    Integer mapEfo() {
         Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize, sort);
-        Page<Association> associationPage = associationService.deepFindPublished(pager);
-        associationMapper.map(associationPage.getContent());
-        while (associationPage.hasNext()) {
+        Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
+        efoMapper.map(efoTraitPage.getContent());
+        while (efoTraitPage.hasNext()) {
+            if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
+                break;
+            }
             pager = pager.next();
-            associationPage = associationService.deepFindPublished(pager);
-            associationMapper.map(associationPage.getContent());
+            efoTraitPage = efoTraitRepository.findAll(pager);
+            efoMapper.map(efoTraitPage.getContent());
             if (sysOutLogging) {
                 System.out.print(".");
             }
         }
-        return (int) associationPage.getTotalElements();
+        return (int) efoTraitPage.getTotalElements();
     }
 }

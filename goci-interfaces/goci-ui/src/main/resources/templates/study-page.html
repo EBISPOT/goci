@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="The NHGRI-EBI GWAS Catalog: a curated collection of all published genome-wide association studies, produced by a collaboration between EMBL-EBI and NHGRI"/>
+    <meta name="keywords" content="GWAS Catalog, GWAS, NHGRI, EBI, EMBL-EBI, SPOT"/>
+    <meta name="author" content="Tony Burdett, Emma Hastings, Dani Welter, SPOT, EMBL-EBI, NHGRI"/>
+    <link rel="icon" href="../static/images/favicon.ico" th:href="@{images/favicon.ico}"/>
+
+    <title>GWAS Catalog</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
+    <!--<link rel="stylesheet" href="../static/css/science-and-medicine/flaticon.css" th:href="@{css/science-and-medicine/flaticon.css}"/>-->
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html" th:href="@{home}">GWAS Catalog</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="index.html" th:href="@{home}">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="search.html" th:href="@{search}">Search</a></li>
+                <li><a href="http://www.ebi.ac.uk/fgpt/gwas">Diagram</a></li>
+                <li class="hidden-sm"><a href="docs/downloads" th:href="@{docs/downloads}">Download</a></li>
+                <li><a href="docs" th:href="@{docs}">Help</a></li>
+                <li class="hidden-sm"><a href="docs/about" th:href="@{docs/about}">About</a></li>
+
+                <li>
+                    <a class="icon" id="ebi-logo" href="http://www.ebi.ac.uk">
+                        <img alt="EBI logo"
+                             src="../static/icons/EMBL_EBI_Logo_white.png"
+                             th:src="@{icons/EMBL_EBI_Logo_white.png}"/>
+                    </a>
+                </li>
+                <li>
+                    <a class="icon" id="nhgri-logo" href="http://www.genome.gov">
+                        <img alt="GWAS logo"
+                             src="../static/icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png"
+                             th:src="@{icons/NHGRI_NIH%20logo%20all%20verions-02-scaled.png}"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+    <div class="navbar-bottom-banner-1 background-color-complementary">
+    </div>
+    <div class="navbar-bottom-banner-2 background-color-primary-bold">
+    </div>
+    <div class="navbar-bottom-banner-3 background-color-primary">
+    </div>
+</nav>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron background-color-primary-accent" style="margin: 0%; padding-bottom: 30px;">
+    <div class="container">
+        <!-- search box goes here -->
+        <div class="input-group" style="width: 250px; float: right;">
+            <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="search-button">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+        </div>
+
+    </div>
+    <div class="container">
+
+        <h1><img alt="externalLink" style="width: 1em; height: auto;" src="../static/icons/erlenmeyer1.png" th:src="@{icons/erlenmeyer1.png}">&nbsp;Study: Jeff JM (PMID:23534349)</h1>
+
+    </div>
+</div>
+</div>
+
+
+
+<div class="container-fluid" style="padding-top: 30px">
+
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a href="home">GWAS</a></li>
+        <li><a href="studies">Studies</a></li>
+        <li><a href="23534349">23534349</a></li>
+        <li class="active">7210</li>
+    </ol>
+
+    <div class="container-fluid" id="lower_container">
+        <div class="row">
+            <!--<div class="col-md-2 tight-to-side" id="filter-bar">-->
+            <!--<div class="panel panel-default">-->
+            <!--<div class="panel-heading background-color-primary-accent">-->
+            <!--<h3 class="panel-title">Jump to</h3>-->
+            <!--<span class="pull-right clickable"-->
+            <!--onclick="toggleSidebar('.panel-heading span.clickable')">-->
+            <!--<i class="glyphicon glyphicon-chevron-up"></i>-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div class="panel-body">-->
+            <!--<div id="facets">-->
+            <!--<div class="list-group">-->
+            <!--&lt;!&ndash;add an "active" class annotation to each a tag when it's selected&ndash;&gt;-->
+            <!--<a href="#study" class="list-group-item" id="study-facet">-->
+            <!--<span class="badge">0</span>Studies-->
+            <!--</a>-->
+            <!--<a href="#association" class="list-group-item" id="association-facet">-->
+            <!--<span class="badge">0</span>Associations-->
+            <!--</a>-->
+            <!--<a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">-->
+            <!--<span class="badge">0</span>Catalog traits-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
+
+
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Study information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="summary-info" class="col-md-8">
+                            <!--flaticon news3-->
+                            <div class="flaticon-news3 color-primary-bold">
+                                <span style="display: inline-block"><h4>Publication</h4></span>
+                                <button type="button" class="btn btn-default pull-right">View publication page</button>
+                            </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Author</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Jeff JM</span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Title</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">Generalization of variants identified by genome-wide association studies for electrocardiographic traits in African Americans.  </span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Journal</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Ann Hum Genet      </span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Publication date</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> 2013-03-28       </span> </div>
+                            <!--flaticon group12-->
+                            <div class="flaticon-group12 color-primary-bold"><span style="display: inline-block"><h4>Sample descriptions</h4></span></div>
+
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Initial sample description</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> 455 African American individuals      </span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Replication sample description</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> NA       </span> </div>
+
+                                <!--flaticon text21-->
+                            <div class="flaticon-text21 color-primary-bold"><span style="display: inline-block"><h4>Trait information</h4></span></div>
+
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Reported trait</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">QRS duration</span> </div>
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Mapped trait(s)</span><span style="display: inline-block; width: 75%; margin-bottom: 1em">QRS duration (EFO_0005055)     </span> </div>
+
+                                <!--flaticon settings11-->
+                            <div class="flaticon-settings11 color-primary-bold"><span style="display: inline-block"><h4>Platform information</h4></span></div>
+
+                            <div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Platform [SNPs passing QC]</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> Illumina [>930,000]      </span> </div>
+                                <!--<div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">CNV study?</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> No       </span> </div>-->
+
+                            <!--<div><span style="font-weight: bold; display: inline-block; width: 25%; margin-bottom: 1em">Identified associations</span><span style="display: inline-block; width: 75%; margin-bottom: 1em"> <a href="#">9</a></span> </div>-->
+                        </div>
+                        <div id="links" class="col-md-4">
+                            <div class="color-primary-bold">
+                                <span style="display: inline-block"><h4><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}">
+                                    External links</h4></span>
+                            </div>
+                            <div style="margin-bottom: 1em">
+                                <button type="button" class="btn btn-default">View in PubMed</button>
+
+                            </div>
+                            <div style="margin-bottom: 1em"><button type="button" class="btn btn-default">View in EuropePMC</button>
+                            </div>
+
+                            <div style="margin-bottom: 1em">other links to external sites</div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                
+                <!--<div class="row">-->
+                <div class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Associations  <span class="badge" style="background-color: #398A96;">9</span>
+
+                        </h3>
+                         <span class="pull-right clickable"
+                               onclick="toggleSidebar('.panel-heading span.clickable')">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </span>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <table id="association-table" class="table table-striped">
+                            <thead id="association-table-header">
+                            <tr>
+                                <th style="width: 10%" id="strongestAllele">SNP
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="SNP most strongly associated with trait + risk/effect allele. This may also be haplotype or SNPxSNP interaction."></span>
+                                                                            <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                </th>
+                                <th style="width: 8%" id="riskFrequency">RAF
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Risk/effect allele frequency in controls"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 8%" id="pValue">p-value
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="p-value for most strongly associated SNP, along with any information describing context of p-value"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 6%" id="orPerCopyNum">OR
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Odds ratio associated with SNP"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 8%" id="orType">Beta
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Beta-coefficient and unit increase/decrease associated with SNP"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                                <th style="width: 6%">CI
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="95% confidence interval for OR or beta"></span>
+                                </th>
+                                <th style="width: 6%">Region
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Cytogenetic region of SNP"></span>
+                                </th>
+                                <th style="width: 6%" id="chromosomePosition">Location
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Chromosome and base pair location of SNP"></span>
+                                                                              <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+
+                                </th>
+                                <th style="width: 8%">Functional class
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Functional class of SNP"></span>
+                                </th>
+                                <th style="width: 8%">Reported gene(s)
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) reported by author"></span>
+                                </th>
+                                <th style="width: 8%">Mapped gene(s)
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Gene(s) mapped by the NCBI"></span>
+                                </th>
+                                <th style="width: 8%" id="traitName_s-alt">Reported trait
+                                    <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-original-title="Description of disease/trait analysed in the study"></span>
+                                    <span class="glyphicon clickable sorting glyphicon-arrow-up sorted glyhicon-arrow-up glyphicon-arrow-down desc"> </span>
+                                </th>
+                                <th style="width: 8%" id="author_s-alt">Mapped trait
+                                    <span class="glyphicon glyphicon-question-sign context-help" data-toggle="tooltip" data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
+                                    <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                </th>
+                            </tr>
+                            </thead>                            <tbody id="association-table-body">
+                            <tr><td><span><a href="search?query=rs1867082">rs1867082-A</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs1867082" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>1 x10<sup>-6</sup></td><td></td><td>2.82 ms increase</td><td>[NR]</td><td><span><a href="search?query=14q31.3">14q31.3</a></span></td><td>chr14:85270825&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=14:85270325-85271325" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=Intergenic">Intergenic</a></span></td><td><span><a href="search?query=RNU7-51P">RNU7-51P</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100151647" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=RNU3P3">RNU3P3</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=26843" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs504008">rs504008-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs504008" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>3 x10<sup>-6</sup></td><td></td><td>2.7 ms increase</td><td>[NR]</td><td><span><a href="search?query=6q22.31">6q22.31</a></span></td><td>chr6:124629917&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=6:124629417-124630417" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=NKAIN2">NKAIN2</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=154215" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=NKAIN2">NKAIN2</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=154215" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs6861497">rs6861497-A</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs6861497" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>5 x10<sup>-6</sup></td><td></td><td>2.34 ms increase</td><td>[NR]</td><td><span><a href="search?query=5q21.1">5q21.1</a></span></td><td>chr5:102067882&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=5:102067382-102068382" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=Intergenic">Intergenic</a></span></td><td><span><a href="search?query=OR7H2P">OR7H2P</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=403301" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=RNA5SP188">RNA5SP188</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100873450" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs308309">rs308309-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs308309" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>5 x10<sup>-6</sup></td><td></td><td>4.39 ms increase</td><td>[NR]</td><td><span><a href="search?query=11q13.2">11q13.2</a></span></td><td>chr11:67947557&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=11:67947057-67948057" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=Intergenic">Intergenic</a></span></td><td><span><a href="search?query=RPS3AP40">RPS3AP40</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100129199" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=OR7E1P">OR7E1P</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=341128" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs12194062">rs12194062-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs12194062" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>5 x10<sup>-6</sup></td><td></td><td>5.16 ms increase</td><td>[NR]</td><td><span><a href="search?query=6q22.33">6q22.33</a></span></td><td>chr6:127873328&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=6:127872828-127873828" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=C6orf190">C6orf190</a></span></td><td><span><a href="search?query=THEMIS">THEMIS</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=387357" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs6820368">rs6820368-C</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs6820368" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>6 x10<sup>-6</sup></td><td></td><td>9.9 ms increase</td><td>[NR]</td><td><span><a href="search?query=4q23">4q23</a></span></td><td>chr4:99216337&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=4:99215837-99216837" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron;intron</td><td><span><a href="search?query=ADH6">ADH6</a></span></td><td>ADH6, <span><a href="search?query=LOC100507053">LOC100507053</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100507053" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs10784762">rs10784762-T</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs10784762" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>6 x10<sup>-6</sup></td><td></td><td>2.38 ms decrease</td><td>[NR]</td><td><span><a href="search?query=12q15">12q15</a></span></td><td>chr12:69130143&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=12:69129643-69130643" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=Intergenic">Intergenic</a></span></td><td><span><a href="search?query=CPM">CPM</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=1368" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=CPSF6">CPSF6</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=11052" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs17444745">rs17444745-A</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs17444745" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>7 x10<sup>-6</sup></td><td></td><td>6.4 ms decrease</td><td>[NR]</td><td><span><a href="search?query=16q24.1">16q24.1</a></span></td><td>chr16:85927956&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=16:85927456-85928456" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td><span><a href="search?query=Intergenic">Intergenic</a></span></td><td><span><a href="search?query=MIR6774">MIR6774</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=102466732" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span> - <span><a href="search?query=LINC01082">LINC01082</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=100506542" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                            <tr><td><span><a href="search?query=rs13375391">rs13375391-A</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=rs13375391" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td></td><td>9 x10<sup>-6</sup></td><td></td><td>5.82 ms increase</td><td>[NR]</td><td><span><a href="search?query=1q25.3 / 1q31.1">1q25.3 / 1q31.1</a></span></td><td>chr1:185825751&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Location/View?r=1:185825251-185826251" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td>intron</td><td><span><a href="search?query=HMCN1">HMCN1</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=83872" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=HMCN1">HMCN1</a></span>&nbsp;&nbsp;<span><a href="http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=83872" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></span></td><td><span><a href="search?query=QRS duration">QRS duration</a></span></td><td><span><a href="search?query=QT interval">QRS duration</a></span>&nbsp;&nbsp;<a href="http://www.ebi.ac.uk/efo/EFO_0005055" target="_blank"><img alt="externalLink" class="link-icon" src="../static/icons/external1.png" th:src="@{icons/external1.png}"></a></td></tr>
+                             </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <!--</div>-->
+
+
+            </div>
+        </div>
+
+        <hr/>
+
+    </div>
+    <!-- /container -->
+
+    <footer class="footer background-color-primary-accent">
+        <!--<div class="footer-banner background-color-primary"></div>-->
+        <div class="container">
+            <p class="text-muted">Copyright &copy; EMBL-EBI 2015 | EMBL-EBI is an Outstation of the
+                <a href="http://www.embl.org">European Molecular
+                                              Biology
+                                              Laboratory</a> |
+                <a href="//www.ebi.ac.uk/about/privacy">Privacy</a> |
+                <a href="//www.ebi.ac.uk/about/cookies">Cookies</a> |
+                <a href="//www.ebi.ac.uk/about/terms-of-use">Terms of use</a></p>
+        </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../static/js/ie10-viewport-bug-workaround.js" th:src="@{js/ie10-viewport-bug-workaround.js}"></script>
+
+    <!-- GOCI JavaScript
+    ================================================== -->
+    <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+
+    <!-- Google analytics
+    ================================================== -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-60195133-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

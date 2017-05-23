@@ -1,34 +1,59 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.mashape.unirest.request.GetRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
+import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
+import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
+import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
 import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
+import uk.ac.ebi.spot.goci.curation.model.SnpFormColumn;
 import uk.ac.ebi.spot.goci.curation.model.SnpFormRow;
-import uk.ac.ebi.spot.goci.curation.service.AssociationBatchLoaderService;
-import uk.ac.ebi.spot.goci.curation.service.AssociationCalculationService;
+import uk.ac.ebi.spot.goci.curation.service.*;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
+import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by emma on 06/01/15.
  *
  * @author emma
- *         Association controller, interpret user input and transform it into a snp/association
- *         model that is represented to the user by the associated HTML page. Used to view, add and edit
- *         existing snp/assocaition information.
+ *         <p>
+ *         Association controller, interpret user input and transform it into a snp/association model that is
+ *         represented to the user by the associated HTML page. Used to view, add and edit existing snp/assocaition
+ *         information.
  */
 
 @Controller
@@ -38,130 +63,224 @@ public class AssociationController {
     private AssociationRepository associationRepository;
     private StudyRepository studyRepository;
     private EfoTraitRepository efoTraitRepository;
-    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-    private GeneRepository geneRepository;
-    private RiskAlleleRepository riskAlleleRepository;
-    private LocusRepository locusRepository;
 
     // Services
-    private AssociationBatchLoaderService associationBatchLoaderService;
-    private AssociationCalculationService associationCalculationService;
+    private AssociationDownloadService associationDownloadService;
+    private SnpAssociationTableViewService snpAssociationTableViewService;
+    private SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
+    private SnpInteractionAssociationService snpInteractionAssociationService;
+    private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
+    private AssociationOperationsService associationOperationsService;
+    private AssociationUploadService associationUploadService;
+    private CurrentUserDetailsService currentUserDetailsService;
+    private AssociationValidationReportService associationValidationReportService;
+    private AssociationDeletionService associationDeletionService;
+    private EventsViewService eventsViewService;
+    private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+    private CheckMappingService checkMappingService;
+    private MapCatalogService mapCatalogService;
+
+    @Value("${collection.sizelimit}")
+    private int collectionLimit;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
+    @InitBinder(value={"snpAssociationStandardMultiForm", "snpAssociationInteractionForm"})
+    public void initBinder(WebDataBinder dataBinder) {
+        //System.out.println("A binder for object: " + dataBinder.getObjectName());
+        dataBinder.setAutoGrowCollectionLimit(collectionLimit);
+    }
 
     @Autowired
-    public AssociationController(AssociationRepository associationRepository, StudyRepository studyRepository, EfoTraitRepository efoTraitRepository, SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, GeneRepository geneRepository, RiskAlleleRepository riskAlleleRepository, LocusRepository locusRepository, AssociationBatchLoaderService associationBatchLoaderService, AssociationCalculationService associationCalculationService) {
+    public AssociationController(AssociationRepository associationRepository,
+                                 StudyRepository studyRepository,
+                                 EfoTraitRepository efoTraitRepository,
+                                 AssociationDownloadService associationDownloadService,
+                                 SnpAssociationTableViewService snpAssociationTableViewService,
+                                 SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService,
+                                 SnpInteractionAssociationService snpInteractionAssociationService,
+                                 CheckEfoTermAssignmentService checkEfoTermAssignmentService,
+                                 AssociationOperationsService associationOperationsService,
+                                 AssociationUploadService associationUploadService,
+                                 CurrentUserDetailsService currentUserDetailsService,
+                                 AssociationValidationReportService associationValidationReportService,
+                                 AssociationDeletionService associationDeletionService,
+                                 @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
+                                 StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
+                                 EnsemblRestTemplateService ensemblRestTemplateService,
+                                 CheckMappingService checkMappingService,
+                                 MapCatalogService mapCatalogService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
-        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
-        this.geneRepository = geneRepository;
-        this.riskAlleleRepository = riskAlleleRepository;
-        this.locusRepository = locusRepository;
-        this.associationBatchLoaderService = associationBatchLoaderService;
-        this.associationCalculationService = associationCalculationService;
+        this.associationDownloadService = associationDownloadService;
+        this.snpAssociationTableViewService = snpAssociationTableViewService;
+        this.singleSnpMultiSnpAssociationService = singleSnpMultiSnpAssociationService;
+        this.snpInteractionAssociationService = snpInteractionAssociationService;
+        this.checkEfoTermAssignmentService = checkEfoTermAssignmentService;
+        this.associationOperationsService = associationOperationsService;
+        this.associationUploadService = associationUploadService;
+        this.currentUserDetailsService = currentUserDetailsService;
+        this.associationValidationReportService = associationValidationReportService;
+        this.associationDeletionService = associationDeletionService;
+        this.eventsViewService = eventsViewService;
+        this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
+        this.ensemblRestTemplateService = ensemblRestTemplateService;
+        this.checkMappingService = checkMappingService;
+        this.mapCatalogService = mapCatalogService;
     }
 
     /*  Study SNP/Associations */
 
     // Generate list of SNP associations linked to a study
-    @RequestMapping(value = "/studies/{studyId}/associations", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudySnps(Model model, @PathVariable Long studyId) {
+    @RequestMapping(value = "/studies/{studyId}/associations",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String viewStudySnps(Model model,
+                                @PathVariable Long studyId,
+                                @RequestParam(required = false) Long associationId) {
 
-        Collection<Association> associations = new ArrayList<>();
-        associations.addAll(associationRepository.findByStudyId(studyId));
+        // Get all associations for a study
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
 
-        // For our associations create a form object and return
-        Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<SnpAssociationForm>();
+        // For our associations create a table view object and return
+        Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
         for (Association association : associations) {
-            // TODO WOULD NEED SOME SORT OF CHECK FOR SNP:SNP INTERACTION
-            SnpAssociationForm snpAssociationForm = createSnpAssociationForm(association);
-            snpAssociationForms.add(snpAssociationForm);
+            SnpAssociationTableView snpAssociationTableView =
+                    snpAssociationTableViewService.createSnpAssociationTableView(association);
+            snpAssociationTableViews.add(snpAssociationTableView);
         }
-        model.addAttribute("snpAssociationForms", snpAssociationForms);
+        model.addAttribute("snpAssociationTableViews", snpAssociationTableViews);
+
+        // Determine last viewed association
+        LastViewedAssociation lastViewedAssociation =
+                associationOperationsService.getLastViewedAssociation(associationId);
+        model.addAttribute("lastViewedAssociation", lastViewedAssociation);
+
+        // Pass back count of associations
+        Integer totalAssociations = associations.size();
+        model.addAttribute("totalAssociations", totalAssociations);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_association";
     }
 
-    // Upload a spreadsheet of snp association information
-    @RequestMapping(value = "/studies/{studyId}/associations/upload", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String uploadStudySnps(@RequestParam("file") MultipartFile file, @PathVariable Long studyId, Model model) {
 
-        // Establish our study object
-        Study study = studyRepository.findOne(studyId);
-
-        if (!file.isEmpty()) {
-            // Save the uploaded file received in a multipart request as a file in the upload directory
-            // The default temporary-file directory is specified by the system property java.io.tmpdir.
-
-            String uploadDir = System.getProperty("java.io.tmpdir") + File.separator + "gwas_batch_upload" + File.separator;
-
-            // Create file
-            File uploadedFile = new File(uploadDir + file.getOriginalFilename());
-            uploadedFile.getParentFile().mkdirs();
-
-            // Copy contents of multipart request to newly created file
-            try {
-                file.transferTo(uploadedFile);
-            } catch (IOException e) {
-                throw new RuntimeException(
-                        "Unable to to upload file ", e);
-            }
-
-            String uploadedFilePath = uploadedFile.getAbsolutePath();
-
-            // Set permissions
-            uploadedFile.setExecutable(true, false);
-            uploadedFile.setReadable(true, false);
-            uploadedFile.setWritable(true, false);
-
-            // Send file, including path, to SNP batch loader process
-            Collection<SnpAssociationForm> snpAssociationForms = new ArrayList<>();
-            try {
-                snpAssociationForms = associationBatchLoaderService.processData(uploadedFilePath);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // Create our associations
-            if (!snpAssociationForms.isEmpty()) {
-                for (SnpAssociationForm snpAssociationForm : snpAssociationForms) {
-                    Association association = createStandardAssociation(snpAssociationForm);
-
-                    // Set the study ID for our association
-                    association.setStudy(study);
-
-                    // Save our association information
-                    associationRepository.save(association);
-                }
-
-            }
-            return "redirect:/studies/" + studyId + "/associations";
-
-        } else {
-            // File is empty so let user know
-            model.addAttribute("study", studyRepository.findOne(studyId));
-            return "empty_snpfile_upload_warning";
-        }
-
+    @RequestMapping(value = "studies/{studyId}/association_tracking",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String getAssociationEvents(Model model, @PathVariable Long studyId) {
+        model.addAttribute("events", eventsViewService.createViews(studyId));
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "association_events";
     }
 
-    // Generate a empty form page to add standard or multi-snp haplotype
-    @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String addStandardSnps(Model model, @PathVariable Long studyId) {
+
+    // Upload a spreadsheet of snp association information
+    @RequestMapping(value = "/studies/{studyId}/associations/upload",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.POST)
+    public String uploadStudySnps(@RequestParam("file") MultipartFile file,
+                                  @PathVariable Long studyId,
+                                  Model model,
+                                  HttpServletRequest request) throws IOException {
+
+        // Establish our study object and upload file into study dir
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+
+        List<AssociationUploadErrorView> fileErrors = null;
+        List<AssociationUploadErrorView> xlsErrors = null;
+        try {
+            fileErrors =
+                    associationUploadService.upload(file, study, currentUserDetailsService.getUserFromRequest(request));
+        }
+        catch (EnsemblMappingException e) {
+            return "ensembl_mapping_failure";
+        }
+
+        if (fileErrors != null && !fileErrors.isEmpty()) {
+            // Split
+            getLog().error("Errors found in file: " + file.getOriginalFilename());
+
+            // Split the general collection of errors in two different structures. For view purpose.
+            xlsErrors = AssociationUploadService.splitByXLSError(fileErrors);
+            model.addAttribute("fileName", file.getOriginalFilename());
+            model.addAttribute("fileErrors", fileErrors);
+            model.addAttribute("xlsErrors", xlsErrors);
+
+            return "error_pages/association_file_upload_error";
+        }
+        else {
+            return "redirect:/studies/" + studyId + "/associations";
+        }
+    }
+
+    // Generate a empty form page to add standard snp
+    @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String addStandardSnpsView(Model model,
+                                      @PathVariable Long studyId,
+                                      @RequestParam(required = true) String measurementType) {
 
         // Return form object
-        SnpAssociationForm emptyForm = new SnpAssociationForm();
-        model.addAttribute("snpAssociationForm", new SnpAssociationForm());
+        SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
+
+        // Add one row by default and set description
+        emptyForm.getSnpFormRows().add(new SnpFormRow());
+
+        // Measurement type determines whether we render a OR/Beta form
+        model.addAttribute("form", emptyForm);
+        model.addAttribute("measurementType", measurementType);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
-        return "add_standard_or_multi_snp_association";
+        return "add_standard_snp_association";
     }
 
-    // Generate a empty form page to add standard or multi-snp haplotype
-    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String addSnpInteraction(Model model, @PathVariable Long studyId) {
+
+    // Generate a empty form page to add multi-snp haplotype
+    @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String addMultiSnpsView(Model model,
+                                   @PathVariable Long studyId,
+                                   @RequestParam(required = true) String measurementType) {
+
+        // Return form object
+        SnpAssociationStandardMultiForm emptyForm = new SnpAssociationStandardMultiForm();
+        emptyForm.setMultiSnpHaplotype(true);
+
+        // Measurement type determines whether we render a OR/Beta form
+        model.addAttribute("form", emptyForm);
+        model.addAttribute("measurementType", measurementType);
+
+        // Also passes back study object to view so we can create links back to main study page
+        model.addAttribute("study", studyRepository.findOne(studyId));
+        return "add_multi_snp_association";
+    }
+
+    // Generate a empty form page to add a interaction association
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String addSnpInteractionView(Model model,
+                                        @PathVariable Long studyId,
+                                        @RequestParam(required = true) String measurementType) {
+
+        // Return form object
+        SnpAssociationInteractionForm emptyForm = new SnpAssociationInteractionForm();
+
+        // Measurement type determines whether we render a OR/Beta form
+        model.addAttribute("measurementType", measurementType);
+        model.addAttribute("form", emptyForm);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
@@ -169,162 +288,549 @@ public class AssociationController {
     }
 
     // Add multiple rows to table
-    @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"addRows"})
-    public String addRows(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long studyId) {
-        Integer numberOfRows = snpAssociationForm.getMultiSnpHaplotypeNum();
+    @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRows"})
+    public String addRows(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                          Model model,
+                          @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+        Integer numberOfRows = snpAssociationStandardMultiForm.getMultiSnpHaplotypeNum();
 
         // Add number of rows curator selected
         while (numberOfRows != 0) {
-            snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+            snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
             numberOfRows--;
         }
-
-        // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        // Pass back required attributes
+        model.addAttribute("measurementType", measurementType);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "add_standard_or_multi_snp_association";
+        return "add_multi_snp_association";
+    }
+
+    // Add multiple rows to table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCols"})
+    public String addRows(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                          Model model,
+                          @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+        Integer numberOfCols = snpAssociationInteractionForm.getNumOfInteractions();
+
+        // Add number of cols curator selected
+        while (numberOfCols != 0) {
+            snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
+            numberOfCols--;
+        }
+
+        // Pass back required attributes
+        model.addAttribute("form", snpAssociationInteractionForm);
+        model.addAttribute("measurementType", measurementType);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
     }
 
     // Add single row to table
-    @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"addRow"})
-    public String addRow(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long studyId) {
-        snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+    @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"addRow"})
+    public String addRow(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                         Model model,
+                         @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
-        // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
+        snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
-        // Also passes back study object to view so we can create links back to main study page
+        // Pass back required attributes
+        model.addAttribute("form", snpAssociationStandardMultiForm);
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "add_standard_or_multi_snp_association";
+        return "add_multi_snp_association";
+    }
+
+    // Add single column to table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"addCol"})
+    public String addCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                         Model model,
+                         @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
+
+        snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
+
+        // Pass back required attributes
+        model.addAttribute("form", snpAssociationInteractionForm);
+        model.addAttribute("measurementType", measurementType);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
     }
 
     // Remove row from table
-    @RequestMapping(value = "/studies/{studyId}/associations/add", params = {"removeRow"})
-    public String removeRow(SnpAssociationForm snpAssociationForm, HttpServletRequest req, Model model, @PathVariable Long studyId) {
+    @RequestMapping(value = "/studies/{studyId}/associations/add_multi", params = {"removeRow"})
+    public String removeRow(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                            HttpServletRequest req,
+                            Model model,
+                            @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
         //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
 
         // Remove row
-        snpAssociationForm.getSnpFormRows().remove(rowId.intValue());
+        snpAssociationStandardMultiForm.getSnpFormRows().remove(rowId.intValue());
 
-        // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-        // Also passes back study object to view so we can create links back to main study page
+        // Pass back required attributes
+        model.addAttribute("form", snpAssociationStandardMultiForm);
+        model.addAttribute("measurementType", measurementType);
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "add_standard_or_multi_snp_association";
+        return "add_multi_snp_association";
     }
 
+    // Remove column from table
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction", params = {"removeCol"})
+    public String removeCol(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                            HttpServletRequest req,
+                            Model model,
+                            @PathVariable Long studyId, @RequestParam(required = true) String measurementType) {
 
-    // Add new standard or multi-snp haplotype association/snp information to a study
-    @RequestMapping(value = "/studies/{studyId}/associations/add", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String addStudySnps(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long studyId) {
+        //Index of value to remove
+        final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
 
-        // Get our study object
+        // Remove col
+        snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
+
+        // Pass back required attributes
+        model.addAttribute("form", snpAssociationInteractionForm);
+        model.addAttribute("measurementType", measurementType);
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        return "add_snp_interaction_association";
+    }
+
+    // Add new standard association/snp information to a study
+    @RequestMapping(value = "/studies/{studyId}/associations/add_standard",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.POST)
+    public String addStandardSnps(@ModelAttribute("form") @Valid SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                                  BindingResult bindingResult,
+                                  @PathVariable Long studyId,
+                                  Model model,
+                                  @RequestParam(required = true) String measurementType,
+                                  HttpServletRequest request)
+            throws EnsemblMappingException {
+
         Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
 
-        // Create an association object from details in returned form
-        Association newAssociation = createStandardAssociation(snpAssociationForm);
 
-        // Set the study ID for our association
-        newAssociation.setStudy(study);
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            return "add_standard_snp_association";
+        }
 
-        // Save our association information
-        associationRepository.save(newAssociation);
 
-        return "redirect:/studies/" + studyId + "/associations";
+        // Check for errors in form that would prevent saving an association
+        List<AssociationValidationView> rowErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                        measurementType);
+
+        if (!rowErrors.isEmpty()) {
+            model.addAttribute("errors", rowErrors);
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            model.addAttribute("criticalErrorsFound", true);
+            return "add_standard_snp_association";
+        }
+        else {
+            // Create an association object from details in returned form
+            Association newAssociation =
+                    singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
+
+            // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
+            Collection<AssociationValidationView> errors = null;
+            try {
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study,
+                        newAssociation,
+                        currentUserDetailsService.getUserFromRequest(
+                                request), eRelease);
+            }
+            catch (EnsemblMappingException e) {
+                return "ensembl_mapping_failure";
+            }
+
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
+
+            if (errorCount > 0) {
+                model.addAttribute("errors", errors);
+                model.addAttribute("form", snpAssociationStandardMultiForm);
+                model.addAttribute("criticalErrorsFound", true);
+                return "add_standard_snp_association";
+            }
+            else {
+                return "redirect:/associations/" + newAssociation.getId();
+            }
+        }
     }
 
+    @RequestMapping(value = "/studies/{studyId}/associations/add_multi",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.POST)
+    public String addMultiSnps(@ModelAttribute("form") @Valid SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                               BindingResult bindingResult,
+                               @PathVariable Long studyId,
+                               Model model,
+                               @RequestParam(required = true) String measurementType,
+                               HttpServletRequest request)
+            throws EnsemblMappingException {
+
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
+
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            return "add_multi_snp_association";
+        }
+
+
+        // Check for errors in form that would prevent saving an association
+        List<AssociationValidationView> rowErrors =
+                associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                        measurementType);
+
+        if (!rowErrors.isEmpty()) {
+            model.addAttribute("errors", rowErrors);
+            model.addAttribute("form", snpAssociationStandardMultiForm);
+            model.addAttribute("criticalErrorsFound", true);
+            return "add_multi_snp_association";
+        }
+        else {
+
+            // Create an association object from details in returned form
+            Association newAssociation =
+                    singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
+
+            // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
+            Collection<AssociationValidationView> errors = null;
+            try {
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+                        currentUserDetailsService.getUserFromRequest(
+                                request), eRelease);
+            }
+            catch (EnsemblMappingException e) {
+                return "ensembl_mapping_failure";
+            }
+
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
+
+            if (errorCount > 0) {
+                model.addAttribute("errors", errors);
+                model.addAttribute("form", snpAssociationStandardMultiForm);
+                model.addAttribute("criticalErrorsFound", true);
+                return "add_multi_snp_association";
+            }
+            else {
+                return "redirect:/associations/" + newAssociation.getId();
+            }
+        }
+    }
+
+    @RequestMapping(value = "/studies/{studyId}/associations/add_interaction",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.POST)
+    public String addSnpInteraction(@ModelAttribute("form") @Valid SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                    BindingResult bindingResult,
+                                    @PathVariable Long studyId,
+                                    Model model,
+                                    @RequestParam(required = true) String measurementType, HttpServletRequest request)
+            throws EnsemblMappingException {
+
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+        model.addAttribute("measurementType", measurementType);
+
+        // Binding vs Validator issue. File: messages.properties
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", snpAssociationInteractionForm);
+            return "add_snp_interaction_association";
+        }
+
+
+        // Check for errors in form that would prevent saving an association
+        List<AssociationValidationView> colErrors =
+                associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                        measurementType);
+
+        if (!colErrors.isEmpty()) {
+            model.addAttribute("errors", colErrors);
+            model.addAttribute("form", snpAssociationInteractionForm);
+            model.addAttribute("criticalErrorsFound", true);
+            return "add_snp_interaction_association";
+        }
+        else {
+            // Create an association object from details in returned form
+            Association newAssociation =
+                    snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+
+            // Save and validate form
+            Collection<AssociationValidationView> errors = null;
+            String eRelease = ensemblRestTemplateService.getRelease();
+            try {
+                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+                        currentUserDetailsService.getUserFromRequest(
+                                request), eRelease);
+            }
+            catch (EnsemblMappingException e) {
+                return "ensembl_mapping_failure";
+            }
+
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
+
+            if (errorCount > 0) {
+                model.addAttribute("errors", errors);
+                model.addAttribute("form", snpAssociationInteractionForm);
+                model.addAttribute("criticalErrorsFound", true);
+                return "add_snp_interaction_association";
+            }
+            else {
+                return "redirect:/associations/" + newAssociation.getId();
+            }
+        }
+    }
 
      /* Existing association information */
 
     // View association information
-    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/associations/{associationId}",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
     public String viewAssociation(Model model, @PathVariable Long associationId) {
+
 
         // Return association with that ID
         Association associationToView = associationRepository.findOne(associationId);
 
+        // Get mapping details
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(associationToView);
+        model.addAttribute("mappingDetails", mappingDetails);
+
+        // Return any association errors
+        model.addAttribute("errors",
+                associationValidationReportService.generateAssociationWarningsListView(associationId));
+
         // Establish study
         Long studyId = associationToView.getStudy().getId();
 
-        // Placeholder until we get something working
-        if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
-            model.addAttribute("study", studyRepository.findOne(studyId));
-            return "edit_snp_interaction_association";
-
-        } else {
-            // Create form and return to user
-            SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
-            model.addAttribute("snpAssociationForm", snpAssociationForm);
-
-            // Also passes back study object to view so we can create links back to main study page
-            model.addAttribute("study", studyRepository.findOne(studyId));
-
-            return "edit_standard_or_multi_snp_association";
-
-        }
-    }
-
-
-    //Edit existing association
-    @RequestMapping(value = "/associations/{associationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String editAssociation(@ModelAttribute SnpAssociationForm snpAssociationForm, @PathVariable Long associationId) {
-
-        //Create association
-        Association editedAssociation = createStandardAssociation(snpAssociationForm);
-
-        // Set ID of new  association to the ID of the association we're currently editing
-        editedAssociation.setId(associationId);
-
-        // Set study to one currently linked to association
-        Association currentAssociation = associationRepository.findOne(associationId);
-        Study associationStudy = currentAssociation.getStudy();
-        editedAssociation.setStudy(associationStudy);
-
-        // Save our association information
-        associationRepository.save(editedAssociation);
-
-        return "redirect:/studies/" + editedAssociation.getStudy().getId() + "/associations";
-    }
-
-
-    // Add multiple rows to table
-    @RequestMapping(value = "/associations/{associationId}", params = {"addRows"})
-    public String addRowsEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
-        Integer numberOfRows = snpAssociationForm.getMultiSnpHaplotypeNum();
-
-        // Add number of rows curator selected
-        while (numberOfRows != 0) {
-            snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
-            numberOfRows--;
-        }
-
-        // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
-
         // Also passes back study object to view so we can create links back to main study page
-        Association currentAssociation = associationRepository.findOne(associationId);
-        Study associationStudy = currentAssociation.getStudy();
-        Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "edit_standard_or_multi_snp_association";
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToView);
+        model.addAttribute("measurementType", measurementType);
+
+        // Determine form to return
+        SnpAssociationForm form = associationOperationsService.generateForm(associationToView);
+        model.addAttribute("form", form);
+
+        // Determine page to return
+        if (associationToView.getSnpInteraction() != null && associationToView.getSnpInteraction()) {
+            return "edit_snp_interaction_association";
+        }
+
+        else if (associationToView.getMultiSnpHaplotype() != null && associationToView.getMultiSnpHaplotype()) {
+            return "edit_multi_snp_association";
+        }
+
+        else {
+            return "edit_standard_snp_association";
+        }
+    }
+
+    //Edit existing association
+    // We tried to remap if the snp or genes changed.
+    // TODO : implement something for SNP:SNP iteration. Actually we remap.
+    @RequestMapping(value = "/associations/{associationId}",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.POST)
+    // TODO COULD REFACTOR TO JUST USE SUPERCLASS AS METHOD PARAMETER
+    public String editAssociation(@ModelAttribute SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                                  @ModelAttribute SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                  @PathVariable Long associationId,
+                                  @RequestParam(value = "associationtype", required = true) String associationType,
+                                  Model model, HttpServletRequest request,
+                                  RedirectAttributes redirectAttributes) throws EnsemblMappingException {
+
+
+        // Establish study and association we are editing
+        Collection<String> previousAuthorReportedGenes = new HashSet<>();
+        Collection<String> authorReportedGenes = new HashSet<>();
+        Collection<String> previousSnps = new HashSet<>();
+        Collection<String> snps = new HashSet<>();
+        String isToRemapping = "yes";
+
+        Association associationToEdit = associationRepository.findOne(associationId);
+        Long studyId = associationToEdit.getStudy().getId();
+        Study study = studyRepository.findOne(studyId);
+        model.addAttribute("study", study);
+
+        AssociationReport oldAssociationReport = associationToEdit.getAssociationReport();
+        previousAuthorReportedGenes= associationOperationsService.getGenesIds(associationToEdit.getLoci());
+        previousSnps = associationOperationsService.getSpnsName(associationToEdit.getSnps());
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(associationToEdit);
+        model.addAttribute("measurementType", measurementType);
+
+        // Validate returned form depending on association type
+        List<AssociationValidationView> criticalErrors = new ArrayList<>();
+        if (associationType.equalsIgnoreCase("interaction")) {
+            criticalErrors =
+                    associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                            measurementType);
+        }
+        else {
+            criticalErrors =
+                    associationOperationsService.checkSnpAssociationFormErrors(snpAssociationStandardMultiForm,
+                            measurementType);
+        }
+
+        // If errors found then return the edit form with all information entered by curator preserved
+        if (!criticalErrors.isEmpty()) {
+
+            // Get mapping details
+            model.addAttribute("mappingDetails", associationOperationsService.createMappingDetails(associationToEdit));
+
+            // Return any association errors
+            model.addAttribute("errors", criticalErrors);
+            model.addAttribute("criticalErrorsFound", true);
+
+            if (associationType.equalsIgnoreCase("interaction")) {
+                model.addAttribute("form", snpAssociationInteractionForm);
+                return "edit_snp_interaction_association";
+            }
+            else {
+                model.addAttribute("form", snpAssociationStandardMultiForm);
+
+                // Determine view
+                if (associationToEdit.getMultiSnpHaplotype()) {
+                    return "edit_multi_snp_association";
+                }
+                else {
+                    return "edit_standard_snp_association";
+                }
+            }
+        }
+        else {
+            //Create association
+            Association editedAssociation;
+
+            // Request parameter determines how to process form and also which form to process
+            if (associationType.equalsIgnoreCase("interaction")) {
+                editedAssociation =
+                        snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
+            }
+            else {
+                editedAssociation =
+                        singleSnpMultiSnpAssociationService.createAssociation(snpAssociationStandardMultiForm);
+
+                // New snps to compare with the previousSnps.
+                Collection<SnpFormRow> newSnpsList = snpAssociationStandardMultiForm.getSnpFormRows();
+                if (newSnpsList != null && !newSnpsList.isEmpty()) {
+                    for (SnpFormRow snp : newSnpsList) {
+                        snps.add(snp.getSnp());
+                    }
+                }
+            }
+
+
+            authorReportedGenes = associationOperationsService.getGenesIds(editedAssociation.getLoci());
+
+
+            if (oldAssociationReport != null) {
+                if ( (previousAuthorReportedGenes.size() == authorReportedGenes.size())
+                        && (snps.size() == snps.size()))
+                {
+                    //check the values
+                    if ((authorReportedGenes.equals(previousAuthorReportedGenes))
+                            && (snps.equals(previousSnps))    )
+                    {
+                        editedAssociation.setLastMappingDate(associationToEdit.getLastMappingDate());
+                        editedAssociation.setLastMappingPerformedBy(associationToEdit.getLastMappingPerformedBy());
+                        editedAssociation.setAssociationReport(oldAssociationReport);
+                        isToRemapping = "no";
+                    }
+                }
+            }
+
+            if ((oldAssociationReport != null) && (isToRemapping.compareTo("yes") == 0)) {
+                associationOperationsService.deleteAssocationReport(associationToEdit.getAssociationReport().getId());
+            }
+
+
+            // Save and validate form
+            String eRelease = ensemblRestTemplateService.getRelease();
+            Collection<AssociationValidationView> errors =
+                    associationOperationsService.saveEditedAssociationFromForm(study,
+                            editedAssociation,
+                            associationId,
+                            currentUserDetailsService.getUserFromRequest(
+                                    request), eRelease);
+
+
+            // Determine if we have any errors rather than warnings
+            long errorCount = errors.stream()
+                    .filter(validationError -> !validationError.getWarning())
+                    .count();
+
+            if (errorCount > 0) {
+
+                // Get mapping details for association we're editing
+                model.addAttribute("mappingDetails",
+                        associationOperationsService.createMappingDetails(associationToEdit));
+                model.addAttribute("errors", errors);
+                model.addAttribute("criticalErrorsFound", true);
+
+                if (associationType.equalsIgnoreCase("interaction")) {
+                    model.addAttribute("form", snpAssociationInteractionForm);
+                    return "edit_snp_interaction_association";
+                }
+                else {
+                    model.addAttribute("form", snpAssociationStandardMultiForm);
+
+                    // Determine view
+                    if (associationToEdit.getMultiSnpHaplotype()) {
+                        return "edit_multi_snp_association";
+                    }
+                    else {
+                        return "edit_standard_snp_association";
+                    }
+                }
+            }
+            else {
+                redirectAttributes.addFlashAttribute("isToRemapping", isToRemapping);
+                return "redirect:/associations/" + associationId;
+            }
+        }
     }
 
     // Add single row to table
     @RequestMapping(value = "/associations/{associationId}", params = {"addRow"})
-    public String addRowEditMode(SnpAssociationForm snpAssociationForm, Model model, @PathVariable Long associationId) {
-        snpAssociationForm.getSnpFormRows().add(new SnpFormRow());
+    public String addRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                                 Model model,
+                                 @PathVariable Long associationId) {
+
+        snpAssociationStandardMultiForm.getSnpFormRows().add(new SnpFormRow());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -332,21 +838,68 @@ public class AssociationController {
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "edit_standard_or_multi_snp_association";
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
+
+        // Get mapping details
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails", mappingDetails);
+
+        // Return any association errors
+        model.addAttribute("errors",
+                associationValidationReportService.generateAssociationWarningsListView(associationId));
+
+        return "edit_multi_snp_association";
+    }
+
+    // Add single column to table
+    @RequestMapping(value = "/associations/{associationId}", params = {"addCol"})
+    public String addColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                 Model model,
+                                 @PathVariable Long associationId) {
+
+        snpAssociationInteractionForm.getSnpFormColumns().add(new SnpFormColumn());
+
+        // Pass back updated form
+        model.addAttribute("form", snpAssociationInteractionForm);
+
+        // Also passes back study object to view so we can create links back to main study page
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        Long studyId = associationStudy.getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
+
+        // Get mapping details
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails", mappingDetails);
+
+        // Return any association errors
+        model.addAttribute("errors",
+                associationValidationReportService.generateAssociationWarningsListView(associationId));
+
+        return "edit_snp_interaction_association";
     }
 
     // Remove row from table
     @RequestMapping(value = "/associations/{associationId}", params = {"removeRow"})
-    public String removeRowEditMode(SnpAssociationForm snpAssociationForm, HttpServletRequest req, Model model, @PathVariable Long associationId) {
+    public String removeRowEditMode(SnpAssociationStandardMultiForm snpAssociationStandardMultiForm,
+                                    HttpServletRequest req,
+                                    Model model,
+                                    @PathVariable Long associationId) {
 
         //Index of value to remove
         final Integer rowId = Integer.valueOf(req.getParameter("removeRow"));
 
         // Remove row
-        snpAssociationForm.getSnpFormRows().remove(rowId.intValue());
+        snpAssociationStandardMultiForm.getSnpFormRows().remove(rowId.intValue());
 
         // Pass back updated form
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
+        model.addAttribute("form", snpAssociationStandardMultiForm);
 
         // Also passes back study object to view so we can create links back to main study page
         Association currentAssociation = associationRepository.findOne(associationId);
@@ -354,367 +907,532 @@ public class AssociationController {
         Long studyId = associationStudy.getId();
         model.addAttribute("study", studyRepository.findOne(studyId));
 
-        return "edit_standard_or_multi_snp_association";
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
+
+        // Get mapping details
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails", mappingDetails);
+
+        // Return any association errors
+        model.addAttribute("errors",
+                associationValidationReportService.generateAssociationWarningsListView(associationId));
+
+        return "edit_multi_snp_association";
     }
 
+    // Remove column from table
+    @RequestMapping(value = "/associations/{associationId}", params = {"removeCol"})
+    public String removeColEditMode(SnpAssociationInteractionForm snpAssociationInteractionForm,
+                                    HttpServletRequest req,
+                                    Model model,
+                                    @PathVariable Long associationId) {
 
-    // Delete an association
-    @RequestMapping(value = "associations/{associationId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewAssociationToDelete(Model model, @PathVariable Long associationId) {
+        //Index of value to remove
+        final Integer colId = Integer.valueOf(req.getParameter("removeCol"));
 
-        // Return association as a form
-        Association associationToView = associationRepository.findOne(associationId);
-        SnpAssociationForm snpAssociationForm = createSnpAssociationForm(associationToView);
-        model.addAttribute("snpAssociationForm", snpAssociationForm);
+        // Remove col
+        snpAssociationInteractionForm.getSnpFormColumns().remove(colId.intValue());
 
-        // Return study, this will be used to create link back to page containing all studies for that association
-        Study study = studyRepository.findOne(associationToView.getStudy().getId());
-        model.addAttribute("study", study);
+        // Pass back updated form
+        model.addAttribute("form", snpAssociationInteractionForm);
 
-        return "delete_standard_or_multisnp_association";
+        // Also passes back study object to view so we can create links back to main study page
+        Association currentAssociation = associationRepository.findOne(associationId);
+        Study associationStudy = currentAssociation.getStudy();
+        Long studyId = associationStudy.getId();
+        model.addAttribute("study", studyRepository.findOne(studyId));
+
+        // Determine if association is an OR or BETA type
+        String measurementType = associationOperationsService.determineIfAssociationIsOrType(currentAssociation);
+        model.addAttribute("measurementType", measurementType);
+
+        // Get mapping details
+        MappingDetails mappingDetails = associationOperationsService.createMappingDetails(currentAssociation);
+        model.addAttribute("mappingDetails", mappingDetails);
+
+        // Return any association errors
+        model.addAttribute("errors",
+                associationValidationReportService.generateAssociationWarningsListView(associationId));
+
+        return "edit_snp_interaction_association";
     }
 
-    // Delete an association
-    @RequestMapping(value = "associations/{associationId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String deleteAssociation(Model model, @PathVariable Long associationId) {
+    // Delete all associations linked to a study
+    @RequestMapping(value = "/studies/{studyId}/associations/delete_all",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String deleteAllAssociations(@PathVariable Long studyId, HttpServletRequest request) {
 
-
-        // Get association
-        Association associationToDelete = associationRepository.findOne(associationId);
-
-        // Get study Id for redirect
-        Long studyId = associationToDelete.getStudy().getId();
-
-        // Get all loci for association
-        Collection<Locus> loci = associationToDelete.getLoci();
-
-        // Delete each locus, which in turn deletes link to genes via author_reported_gene table,
-        // Snp and risk allele are not deleted as they may be used in other associations
-        for (Locus locus : loci) {
-            locusRepository.delete(locus);
+        // Get all associations and delete
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+        if (studyAssociations.size() > 0) {
+            getLog().info("Deleting all associations for study: " + studyId);
+            SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+            studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(), user);
+            studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
         }
-
-        // Delete association
-        associationRepository.delete(associationToDelete);
-
-        // Get study
-        Study study = studyRepository.findOne(associationToDelete.getStudy().getId());
-
         return "redirect:/studies/" + studyId + "/associations";
     }
 
-    /*  Approve snp associations */
+    // Delete checked SNP associations
+    @RequestMapping(value = "/studies/{studyId}/associations/delete_checked",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> deleteChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                      HttpServletRequest request) {
+
+        String message = "";
+        Integer count = 0;
+
+        // Get all associations and delete
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            associationDeletionService.deleteAssociation(association,
+                    currentUserDetailsService.getUserFromRequest(request));
+            count++;
+        }
+
+        message = "Successfully deleted " + count + " associations";
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+    }
+
+
+    // Approve a single SNP association
+    @RequestMapping(value = "associations/{associationId}/approve",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String approveSnpAssociation(@PathVariable Long associationId,
+                                        RedirectAttributes redirectAttributes,
+                                        HttpServletRequest request) {
+
+        Association association = associationRepository.findOne(associationId);
+
+        // Check if association has an EFO trait
+        Boolean associationEfoTermsAssigned =
+                checkEfoTermAssignmentService.checkAssociationEfoAssignment(association);
+
+
+        //Boolean associationMappingAssigned =
+
+        if (!associationEfoTermsAssigned) {
+            String message = "Cannot approve association as no EFO trait assigned";
+            redirectAttributes.addFlashAttribute("efoMessage", message);
+        } else {
+            Boolean associationMappingAssigned = checkMappingService.checkAssociationMappingAssignment(association);
+            if (!associationMappingAssigned) {
+                String message = "Cannot approve association as no Mapping assigned";
+                redirectAttributes.addFlashAttribute("mappingMessage", message);
+            }
+            else {
+                associationOperationsService.approveAssociation(association, currentUserDetailsService.getUserFromRequest(
+                        request));
+            }
+        }
+
+        return "redirect:/studies/" + association.getStudy().getId() + "/associations";
+    }
+
+
+    // Un-approve a single SNP association
+    @RequestMapping(value = "associations/{associationId}/unapprove",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String unapproveSnpAssociation(@PathVariable Long associationId, HttpServletRequest request) {
+
+        Association association = associationRepository.findOne(associationId);
+        associationOperationsService.unapproveAssociation(association,
+                currentUserDetailsService.getUserFromRequest(request));
+        return "redirect:/studies/" + association.getStudy().getId() + "/associations";
+    }
+
+    // Approve checked SNPs
+    @RequestMapping(value = "/studies/{studyId}/associations/approve_checked",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> approveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                       HttpServletRequest request) {
+
+        String message = "";
+        Integer count = 0;
+
+        // Create a collection of all association objects and check EFO term assignment
+        Collection<Association> allAssociations = new ArrayList<>();
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            allAssociations.add(association);
+        }
+        Boolean associationsEfoTermsAssigned =
+                checkEfoTermAssignmentService.checkAssociationsEfoAssignment(allAssociations);
+
+        if (!associationsEfoTermsAssigned) {
+            message = "Cannot approve association(s) as no EFO trait assigned";
+        }
+
+        else {
+            // For each one set snpChecked attribute to true
+            Boolean associationMappingAssigned = checkMappingService.checkAssociationsMappingAssignment(allAssociations);
+            if (!associationMappingAssigned) {
+                message = "Cannot approve association(s) as no Mapping assigned";
+            }
+            else {
+                for (String associationId : associationsIds) {
+                    Association association = associationRepository.findOne(Long.valueOf(associationId));
+                    associationOperationsService.approveAssociation(association,
+                            currentUserDetailsService.getUserFromRequest(request));
+                    count++;
+                }
+                message = "Successfully updated " + count + " associations";
+            }
+        }
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+    }
+
+    // Un-approve checked SNPs
+    @RequestMapping(value = "/studies/{studyId}/associations/unapprove_checked",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.GET)
+    public @ResponseBody
+    Map<String, String> unapproveChecked(@RequestParam(value = "associationIds[]") String[] associationsIds,
+                                         HttpServletRequest request) {
+
+        String message = "";
+        Integer count = 0;
+
+        // For each one set snpChecked attribute to true
+        for (String associationId : associationsIds) {
+            Association association = associationRepository.findOne(Long.valueOf(associationId));
+            associationOperationsService.unapproveAssociation(association,
+                    currentUserDetailsService.getUserFromRequest(request));
+            count++;
+        }
+        message = "Successfully updated " + count + " associations";
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", message);
+        return result;
+    }
+
+
     // Approve all SNPs
-    @RequestMapping(value = "/studies/{studyId}/associations/approve_all", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String approveAll(Model model, @PathVariable Long studyId) {
+    @RequestMapping(value = "/studies/{studyId}/associations/approve_all",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String approveAll(@PathVariable Long studyId,
+                             RedirectAttributes redirectAttributes,
+                             HttpServletRequest request) {
 
         // Get all associations
         Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+        Boolean associationEfoTermsAssigned =
+                checkEfoTermAssignmentService.checkAssociationsEfoAssignment(studyAssociations);
 
-        // For each one set snpChecked attribute to true
-        for (Association association : studyAssociations) {
-            association.setSnpChecked(true);
-            associationRepository.save(association);
-        }
-        return "redirect:/studies/" + studyId + "/associations";
-
-    }
-
-   /* General purpose methods */
-
-    // Takes information in addSNPForm and creates association
-    private Association createStandardAssociation(SnpAssociationForm snpAssociationForm) throws DataIntegrityException {
-
-        Association association = new Association();
-
-        // Set simple string, boolean and float association attributes
-        association.setRiskFrequency(snpAssociationForm.getRiskFrequency());
-        association.setPvalueText(snpAssociationForm.getPvalueText());
-        association.setOrType(snpAssociationForm.getOrType());
-        association.setSnpType(snpAssociationForm.getSnpType());
-        association.setMultiSnpHaplotype(snpAssociationForm.getMultiSnpHaplotype());
-        association.setSnpInteraction(snpAssociationForm.getSnpInteraction());
-        association.setSnpChecked(snpAssociationForm.getSnpChecked());
-
-        // Add collection of EFO traits
-        association.setEfoTraits(snpAssociationForm.getEfoTraits());
-
-        // Set mantissa and exponent
-        association.setPvalueMantissa(snpAssociationForm.getPvalueMantissa());
-        association.setPvalueExponent(snpAssociationForm.getPvalueExponent());
-
-        // Calculate p-value float
-        Integer pvalueMantissa = snpAssociationForm.getPvalueMantissa();
-        Integer pvalueExponent = snpAssociationForm.getPvalueExponent();
-
-        if (pvalueMantissa != null && pvalueExponent != null) {
-            association.setPvalueFloat(associationCalculationService.calculatePvalueFloat(pvalueMantissa, pvalueExponent));
-        } else {
-            association.setPvalueFloat(Float.valueOf(0));
+        if (!associationEfoTermsAssigned) {
+            String message = "Cannot approve all associations as no EFO trait assigned";
+            redirectAttributes.addFlashAttribute("efoMessage", message);
         }
 
-        // If reciprocal is given, program will calculate OR from that
-        // This logic is retained from Dani's original code
-        Float orPerCopyNum = snpAssociationForm.getOrPerCopyNum();
-        Float orPerCopyRecip = snpAssociationForm.getOrPerCopyRecip();
-        Float orPerCopyStdError = snpAssociationForm.getOrPerCopyStdError();
-        String orPerCopyRange = snpAssociationForm.getOrPerCopyRange();
-        boolean recipReverse = false;
-
-        // Calculate OR per copy num
-        if ((orPerCopyRecip != null) && (orPerCopyNum == null)) {
-            orPerCopyNum = ((100 / orPerCopyRecip) / 100);
-            association.setOrPerCopyNum(orPerCopyNum);
-            recipReverse = true;
-        }
-        // Otherwise set to whatever is in form
         else {
-            association.setOrPerCopyNum(snpAssociationForm.getOrPerCopyNum());
-        }
-
-        // Set OrPerCopyRecip
-        association.setOrPerCopyRecip(snpAssociationForm.getOrPerCopyRecip());
-
-        // This logic is retained from Dani's original code
-        if ((orPerCopyRecip != null) && (orPerCopyRange != null) && recipReverse) {
-            orPerCopyRange = associationCalculationService.reverseCI(orPerCopyRange);
-            association.setOrPerCopyRange(orPerCopyRange);
-        } else if ((orPerCopyRange == null) && (orPerCopyRange.isEmpty()) && (orPerCopyStdError != null)) {
-            orPerCopyRange = associationCalculationService.setRange(orPerCopyStdError, orPerCopyNum);
-            association.setOrPerCopyRange(orPerCopyRange);
-        } else {
-            association.setOrPerCopyRange(snpAssociationForm.getOrPerCopyRange());
-        }
-
-        association.setOrPerCopyStdError(snpAssociationForm.getOrPerCopyStdError());
-        association.setOrPerCopyUnitDescr(snpAssociationForm.getOrPerCopyUnitDescr());
-
-        // Add loci to association or if we are editing an existing one find it
-        // For multi-snp and standard snps we assume their is only one locus
-        Collection<Locus> loci = new ArrayList<>();
-        Locus locus = new Locus();
-
-        // Check for existing locus
-        if (snpAssociationForm.getAssociationId() != null) {
-            Association associationUserIsEditing = associationRepository.findOne(snpAssociationForm.getAssociationId());
-            Collection<Locus> associationLoci = associationUserIsEditing.getLoci();
-            // Based on assumption we have only one locus for standard and multi-snp haplotype
-            for (Locus associationLocus : associationLoci) {
-                locus = associationLocus;
+            // For each one set snpChecked attribute to true
+            Boolean associationMappingAssigned = checkMappingService.checkAssociationsMappingAssignment(studyAssociations);
+            if (!associationMappingAssigned) {
+                String message = "Cannot approve all associations as no Mapping assigned";
+                redirectAttributes.addFlashAttribute("mappingMessage", message);
             }
-        }
-
-        // Set locus description and haplotype count
-        // Set this number to the number of rows entered by curator
-        Integer numberOfRows = snpAssociationForm.getSnpFormRows().size();
-        if (numberOfRows > 1) {
-            locus.setHaplotypeSnpCount(numberOfRows);
-        }
-
-        locus.setDescription(snpAssociationForm.getMultiSnpHaplotypeDescr());
-
-        // Create gene from each string entered, may sure to check pre-existence
-        Collection<String> authorReportedGenes = snpAssociationForm.getAuthorReportedGenes();
-        Collection<Gene> locusGenes = createGene(authorReportedGenes);
-
-        // Set locus genes
-        locus.setAuthorReportedGenes(locusGenes);
-
-        // Handle rows entered for haplotype by curator
-        Collection<SnpFormRow> rows = snpAssociationForm.getSnpFormRows();
-        Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
-
-        for (SnpFormRow row : rows) {
-
-            // Create snps from row information
-            String curatorEnteredSNP = row.getSnp();
-            SingleNucleotidePolymorphism snp = createSnp(curatorEnteredSNP);
-
-            // Get the curator entered risk allele
-            String curatorEnteredRiskAllele = row.getStrongestRiskAllele();
-            RiskAllele riskAllele = createRiskAllele(curatorEnteredRiskAllele);
-
-            // For allele assign SNP if one isn't already present
-            if (riskAllele.getSnp() == null) {
-                riskAllele.setSnp(snp);
-
-                // Save changes to risk allele
-                riskAlleleRepository.save(riskAllele);
-            } else {
-                if (!riskAllele.getSnp().equals(snp)) {
-                    throw new DataIntegrityException("Risk allele: " + riskAllele.getRiskAlleleName() + " has SNP " + riskAllele.getSnp().getRsId() + " attached in database, cannot also add " + snp.getRsId());
-
+            else {
+                for (Association association : studyAssociations) {
+                    associationOperationsService.approveAssociation(association,
+                            currentUserDetailsService.getUserFromRequest(request));
                 }
             }
+        }
+        return "redirect:/studies/" + studyId + "/associations";
+    }
 
-            locusRiskAlleles.add(riskAllele);
+    /**
+     -     * Run mapping pipeline on all SNPs in a study
+     -     *
+     -     * @param studyId            Study ID in database
+     -     * @param redirectAttributes attributes for a redirect scenario
+     -     */
+    @RequestMapping(value = "/studies/{studyId}/associations/validate_unapproved",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String validateUnapproved(@PathVariable Long studyId,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model,
+                                     HttpServletRequest request)
+    //                                         @RequestParam(required = false) Long associationId)
+            throws EnsemblMappingException {
+
+        Study study = studyRepository.findOne(studyId);
+        // For the study get all associations
+        Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+
+        for (Association associationToValidate : studyAssociations) {
+            if (!associationToValidate.getSnpApproved()) {
+                String measurementType =
+                        associationOperationsService.determineIfAssociationIsOrType(associationToValidate);
+                List<AssociationValidationView> criticalErrors = new ArrayList<>();
+                if (associationToValidate.getSnpInteraction()) {
+                    criticalErrors =
+                            associationOperationsService.checkSnpAssociationInteractionFormErrors((SnpAssociationInteractionForm) associationOperationsService
+                                            .generateForm(associationToValidate),
+                                    measurementType);
+                }
+                else {
+                    criticalErrors =
+                            associationOperationsService.checkSnpAssociationFormErrors((SnpAssociationStandardMultiForm) associationOperationsService
+                                            .generateForm(associationToValidate),
+                                    measurementType);
+                }
+
+                //if an association has critical errors, go straight to that association
+                if (!criticalErrors.isEmpty()) {
+                    model.addAttribute("study", study);
+                    model.addAttribute("measurementType", measurementType);
+
+                    // Get mapping details
+                    model.addAttribute("mappingDetails",
+                            associationOperationsService.createMappingDetails(associationToValidate));
+
+                    // Return any association errors
+                    model.addAttribute("errors", criticalErrors);
+                    model.addAttribute("criticalErrorsFound", true);
+
+                    if (associationToValidate.getSnpInteraction()) {
+                        model.addAttribute("form", associationOperationsService
+                                .generateForm(associationToValidate));
+                        return "redirect:/associations/" + associationToValidate.getId();
+
+                        // return "edit_snp_interaction_association";
+                    }
+                    else {
+                        model.addAttribute("form", associationOperationsService
+                                .generateForm(associationToValidate));
+
+                        // Determine view
+                        if (associationToValidate.getMultiSnpHaplotype()) {
+                            return "redirect:/associations/" + associationToValidate.getId();
+                            // return "edit_multi_snp_association";
+                        }
+                        else {
+                            //                             return "edit_standard_snp_association";
+                            return "redirect:/associations/" + associationToValidate.getId();
+
+                        }
+                    }
+                }
+
+                //     if there are no criticial errors, save the validation and go to the next association
+                else{
+                    // Save and validate form
+                    String eRelease = ensemblRestTemplateService.getRelease();
+                    Collection<AssociationValidationView> errors =
+                            associationOperationsService.validateAndSaveAssociation(study,
+                                    associationToValidate,
+                                    currentUserDetailsService.getUserFromRequest(
+                                            request), eRelease);
+
+                    // Determine if we have any errors rather than warnings
+                    long errorCount = errors.stream()
+                            .filter(validationError -> !validationError.getWarning())
+                            .count();
+                    //if there are errors rather than warnings, go straight to the page to edit
+                    if (errorCount > 0) {
+
+                        model.addAttribute("study", study);
+                        model.addAttribute("measurementType", measurementType);
+                        // Get mapping details for association we're editing
+                        model.addAttribute("mappingDetails",
+                                associationOperationsService.createMappingDetails(associationToValidate));
+                        model.addAttribute("errors", errors);
+                        model.addAttribute("criticalErrorsFound", true);
+
+                        if (associationToValidate.getSnpInteraction()) {
+                            model.addAttribute("form", associationOperationsService
+                                    .generateForm(associationToValidate));
+                            //                              return "edit_snp_interaction_association";
+                            return "redirect:/associations/" + associationToValidate.getId();
+
+                        }
+                        else {
+                            model.addAttribute("form", associationOperationsService
+                                    .generateForm(associationToValidate));
+
+                            // Determine view
+                            if (associationToValidate.getMultiSnpHaplotype()) {
+                                //                                  return "edit_multi_snp_association";
+                                return "redirect:/associations/" + associationToValidate.getId();
+
+                            }
+                            else {
+                                //                                  return "edit_standard_snp_association";
+                                return "redirect:/associations/" + associationToValidate.getId();
+
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // Assign all created risk alleles to locus
-        locus.setStrongestRiskAlleles(locusRiskAlleles);
 
-        // Save our newly created locus
-        locusRepository.save(locus);
+        String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
+        redirectAttributes.addFlashAttribute("mappingComplete", message);
+        return "redirect:/studies/" + studyId + "/associations";
+    }
 
-        // Add locus to collection and link to our repository
-        loci.add(locus);
-        association.setLoci(loci);
+    @RequestMapping(value = "/studies/{studyId}/associations/download",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public void downloadStudySnps(HttpServletResponse response, @PathVariable Long studyId)
+            throws IOException {
 
-        return association;
+        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+        Study study = studyRepository.findOne((studyId));
 
+        if (associations.size() > 0) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String now = dateFormat.format(date);
+
+            String fileName =
+                    study.getAuthor()
+                            .concat("-")
+                            .concat(study.getPubmedId())
+                            .concat("-")
+                            .concat(now)
+                            .concat(".tsv");
+            response.setContentType("text/tsv");
+            response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
+            associationDownloadService.createDownloadFile(response.getOutputStream(), associations);
+        }
     }
 
 
-    private Collection<Gene> createGene(Collection<String> authorReportedGenes) {
-        Collection<Gene> locusGenes = new ArrayList<>();
-        for (String authorReportedGene : authorReportedGenes) {
+    @RequestMapping(value = "/studies/{studyId}/associations/applyefotraits",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String applyStudyEFOtraitToSnps(Model model, @PathVariable Long studyId,
+                                           @RequestParam(value = "e",
+                                                   required = false,
+                                                   defaultValue = "false") boolean existing,
+                                           @RequestParam(value = "o",
+                                                   required = false,
+                                                   defaultValue = "true") boolean overwrite)
+            throws IOException {
 
-            // Check if gene already exists, note we may have duplicates so for moment just take first one
-            List<Gene> genesInDatabase = geneRepository.findByGeneNameIgnoreCase(authorReportedGene);
-            Gene gene;
+        Collection<Association> associations = new ArrayList<>();
+        associations.addAll(associationRepository.findByStudyId(studyId));
+        Study study = studyRepository.findOne((studyId));
+        Collection<EfoTrait> efoTraits = study.getEfoTraits();
 
-            // Exists in database already
-            if (genesInDatabase.size() > 0) {
-                gene = genesInDatabase.get(0);
+
+        if (associations.size() == 0 || efoTraits.size() == 0) {
+            model.addAttribute("study", study);
+            return "no_association_efo_trait_warning";
+        }
+        else {
+            if (!existing) {
+                for (Association association : associations) {
+                    if (association.getEfoTraits().size() != 0) {
+                        model.addAttribute("study", study);
+                        return "existing_efo_traits_warning";
+                    }
+                }
+            }
+            Collection<EfoTrait> associationTraits = new ArrayList<EfoTrait>();
+
+            for (EfoTrait efoTrait : efoTraits) {
+                associationTraits.add(efoTrait);
             }
 
-
-            // If gene doesn't exist then create and save
-            else {
-                // Create new gene
-                Gene newGene = new Gene();
-                newGene.setGeneName(authorReportedGene);
-
-                // Save gene
-                gene = geneRepository.save(newGene);
+            for (Association association : associations) {
+                if (association.getEfoTraits().size() != 0 && !overwrite) {
+                    for (EfoTrait trait : associationTraits) {
+                        if (!association.getEfoTraits().contains(trait)) {
+                            association.addEfoTrait(trait);
+                        }
+                    }
+                }
+                else {
+                    association.setEfoTraits(associationTraits);
+                }
+                association.setLastUpdateDate(new Date());
+                associationRepository.save(association);
             }
 
-
-            // Add genes to collection
-            locusGenes.add(gene);
+            return "redirect:/studies/" + studyId + "/associations";
         }
-        return locusGenes;
-    }
-
-    private RiskAllele createRiskAllele(String curatorEnteredRiskAllele) {
-
-        // Check if it exists
-        RiskAllele riskAllele = riskAlleleRepository.findByRiskAlleleName(curatorEnteredRiskAllele);
-
-        // If it doesn't exist create and save
-        if (riskAllele == null) {
-            //Create new risk allele
-            RiskAllele newRiskAllele = new RiskAllele();
-            newRiskAllele.setRiskAlleleName(curatorEnteredRiskAllele);
-
-            // Save risk allele
-            riskAllele = riskAlleleRepository.save(newRiskAllele);
-        }
-
-        return riskAllele;
-    }
-
-    private SingleNucleotidePolymorphism createSnp(String curatorEnteredSNP) {
-
-        // Check if SNP already exists database
-        SingleNucleotidePolymorphism snp = singleNucleotidePolymorphismRepository.findByRsIdIgnoreCase(curatorEnteredSNP);
-
-        // If SNP doesn't exist, create and save
-        if (snp == null) {
-            // Create new SNP
-            SingleNucleotidePolymorphism newSNP = new SingleNucleotidePolymorphism();
-            newSNP.setRsId(curatorEnteredSNP);
-
-            // Save SNP
-            snp = singleNucleotidePolymorphismRepository.save(newSNP);
-        }
-
-        return snp;
-
-    }
-
-    // Creates form which we can then return to view for editing etc.
-    private SnpAssociationForm createSnpAssociationForm(Association association) {
-
-        SnpAssociationForm snpAssociationForm = new SnpAssociationForm();
-
-        // Set association ID
-        snpAssociationForm.setAssociationId(association.getId());
-
-        // Set simple string and float association attributes
-        snpAssociationForm.setRiskFrequency(association.getRiskFrequency());
-        snpAssociationForm.setPvalueText(association.getPvalueText());
-        snpAssociationForm.setOrPerCopyNum(association.getOrPerCopyNum());
-        snpAssociationForm.setOrType(association.getOrType());
-        snpAssociationForm.setSnpType(association.getSnpType());
-        snpAssociationForm.setMultiSnpHaplotype(association.getMultiSnpHaplotype());
-        snpAssociationForm.setSnpChecked(association.getSnpChecked());
-        snpAssociationForm.setSnpInteraction(association.getSnpInteraction());
-        snpAssociationForm.setPvalueMantissa(association.getPvalueMantissa());
-        snpAssociationForm.setPvalueExponent(association.getPvalueExponent());
-        snpAssociationForm.setOrPerCopyRecip(association.getOrPerCopyRecip());
-        snpAssociationForm.setOrPerCopyStdError(association.getOrPerCopyStdError());
-        snpAssociationForm.setOrPerCopyRange(association.getOrPerCopyRange());
-        snpAssociationForm.setOrPerCopyUnitDescr(association.getOrPerCopyUnitDescr());
-        snpAssociationForm.setPvalueFloat(association.getPvalueFloat());
-
-        // Add collection of Efo traits
-        snpAssociationForm.setEfoTraits(association.getEfoTraits());
-
-        // For each locus get genes and risk alleles
-        // For multi-snp and standard snps we assume their is only one locus
-        Collection<Locus> loci = association.getLoci();
-
-        Collection<Gene> locusGenes = new ArrayList<>();
-        Collection<RiskAllele> locusRiskAlleles = new ArrayList<>();
-
-        for (Locus locus : loci) {
-            locusGenes.addAll(locus.getAuthorReportedGenes());
-            locusRiskAlleles.addAll(locus.getStrongestRiskAlleles());
-
-            // There should only be one locus thus should be safe to set these here
-            snpAssociationForm.setMultiSnpHaplotypeNum(locus.getHaplotypeSnpCount());
-            snpAssociationForm.setMultiSnpHaplotypeDescr(locus.getDescription());
-        }
-
-        // Get name of gene and add to form
-        Collection<String> authorReportedGenes = new ArrayList<>();
-        for (Gene locusGene : locusGenes) {
-            authorReportedGenes.add(locusGene.getGeneName());
-        }
-        snpAssociationForm.setAuthorReportedGenes(authorReportedGenes);
-
-        // Handle snp rows
-        List<SnpFormRow> snpFormRows = new ArrayList<SnpFormRow>();
-        for (RiskAllele riskAllele : locusRiskAlleles) {
-            SnpFormRow snpFormRow = new SnpFormRow();
-            snpFormRow.setStrongestRiskAllele(riskAllele.getRiskAlleleName());
-            snpFormRow.setSnp(riskAllele.getSnp().getRsId());
-            snpFormRows.add(snpFormRow);
-        }
-
-        snpAssociationForm.setSnpFormRows(snpFormRows);
-        return snpAssociationForm;
     }
 
 
-  /*  Exception handling */
 
+    // Approve all SNPs
+    @RequestMapping(value = "/associations/{associationId}/force_mapping",
+            produces = MediaType.TEXT_HTML_VALUE,
+            method = RequestMethod.GET)
+    public String forceMapping(@PathVariable Long associationId, RedirectAttributes redirectAttributes,
+                               HttpServletRequest request) {
+        Collection<Association> allAssociations = new ArrayList<>();
+
+        Association association = associationRepository.findOne(associationId);
+        allAssociations.add(association);
+        try {
+            SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+            mapCatalogService.mapCatalogContentsByAssociations(user.getEmail(), allAssociations);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("isToRemapping", "failed");
+        }
+
+        return "redirect:/associations/" + associationId;
+    }
+
+    /* Exception handling */
     @ExceptionHandler(DataIntegrityException.class)
-    public String handleDataIntegrityException(DataIntegrityException dataIntegrityException, Model model) {
+    public String handleDataIntegrityException(DataIntegrityException dataIntegrityException) {
         return dataIntegrityException.getMessage();
     }
 
+    @ExceptionHandler({SheetProcessingException.class})
+    public String handleInvalidFormatExceptionAndInvalidOperationException() {
+        return "error_pages/wrong_file_format_warning";
+    }
+
+    @ExceptionHandler({IOException.class})
+    public String handleIOException() {
+        return "error_pages/data_upload_problem";
+    }
+
+    @ExceptionHandler({FileUploadException.class})
+    public String handleFileUploadException() {
+        return "error_pages/empty_snpfile_upload_warning";
+    }
+
+    @ExceptionHandler({FileNotFoundException.class})
+    public String handleFileNotFound() {
+        return "error_pages/file_not_found";
+    }
 
     /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
-
     // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEfoTraits() {
-        return efoTraitRepository.findAll();
+        return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
+    // Sort options
+    private Sort sortByTraitAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
+    }
 }
-

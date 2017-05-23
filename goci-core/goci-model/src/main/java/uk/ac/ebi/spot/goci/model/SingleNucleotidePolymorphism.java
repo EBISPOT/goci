@@ -1,8 +1,14 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -22,10 +28,6 @@ public class SingleNucleotidePolymorphism {
 
     private String rsId;
 
-    private String chromosomeName;
-
-    private String chromosomePosition;
-
     private Long merged;
 
     private String functionalClass;
@@ -33,32 +35,70 @@ public class SingleNucleotidePolymorphism {
     private Date lastUpdateDate;
 
     @ManyToMany
-    @JoinTable(name = "SNP_REGION",
-            joinColumns = @JoinColumn(name = "SNP_ID"),
-            inverseJoinColumns = @JoinColumn(name = "REGION_ID"))
-    private Collection<Region> regions;
+    @JoinTable(name = "SNP_LOCATION",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "LOCATION_ID"))
+    private Collection<Location> locations;
 
     @OneToMany(mappedBy = "snp")
     private Collection<GenomicContext> genomicContexts;
+
+    @OneToMany(mappedBy = "snp")
+    private Collection<RiskAllele> riskAlleles;
+
+    @ManyToOne
+    @JoinTable(name = "SNP_MERGED_SNP",
+               joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
+               inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
+    private SingleNucleotidePolymorphism currentSnp;
+
+//    @ManyToMany(mappedBy = "snps")
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+    private Collection<Association> associations;
+
+    @ManyToMany
+    @JoinTable(name = "SNP_GENE_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    private Collection<Gene> genes = new ArrayList<>();
+
+//    @ManyToMany(mappedBy = "snps")
+    @ManyToMany
+    @JoinTable(name = "STUDY_SNP_VIEW",
+               joinColumns = @JoinColumn(name = "SNP_ID"),
+               inverseJoinColumns = @JoinColumn(name = "STUDY_ID"))
+    private Collection<Study> studies;
+
 
     // JPA no-args constructor
     public SingleNucleotidePolymorphism() {
     }
 
     public SingleNucleotidePolymorphism(String rsId,
-                                        String chromosomeName,
-                                        String chromosomePosition,
                                         Long merged,
                                         String functionalClass,
                                         Date lastUpdateDate,
-                                        Collection<Region> regions) {
+                                        Collection<Location> locations,
+                                        Collection<GenomicContext> genomicContexts,
+                                        Collection<RiskAllele> riskAlleles,
+                                        SingleNucleotidePolymorphism currentSnp,
+                                        Collection<Association> associations,
+                                        Collection<Gene> genes,
+                                        Collection<Study> studies) {
         this.rsId = rsId;
-        this.chromosomeName = chromosomeName;
-        this.chromosomePosition = chromosomePosition;
         this.merged = merged;
         this.functionalClass = functionalClass;
         this.lastUpdateDate = lastUpdateDate;
-        this.regions = regions;
+        this.locations = locations;
+        this.genomicContexts = genomicContexts;
+        this.riskAlleles = riskAlleles;
+        this.currentSnp = currentSnp;
+        this.associations = associations;
+        this.genes = genes;
+        this.studies = studies;
     }
 
     public Long getId() {
@@ -77,29 +117,15 @@ public class SingleNucleotidePolymorphism {
         this.rsId = rsId;
     }
 
-    public String getChromosomeName() {
-        return chromosomeName;
-    }
-
-    public void setChromosomeName(String chromosomeName) {
-        this.chromosomeName = chromosomeName;
-    }
-
-    public String getChromosomePosition() {
-        return chromosomePosition;
-    }
-
-    public void setChromosomePosition(String chromosomePosition) {
-        this.chromosomePosition = chromosomePosition;
-    }
-
-    public Long getMerged() {
-        return merged;
-    }
+    public Long getMerged() { return merged; }
 
     public void setMerged(Long merged) {
         this.merged = merged;
     }
+
+    public SingleNucleotidePolymorphism getCurrentSnp() { return currentSnp; }
+
+    public void setCurrentSnp(SingleNucleotidePolymorphism currentSnp) { this.currentSnp = currentSnp; }
 
     public String getFunctionalClass() {
         return functionalClass;
@@ -117,12 +143,12 @@ public class SingleNucleotidePolymorphism {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Collection<Region> getRegions() {
-        return regions;
+    public Collection<Location> getLocations() {
+        return locations;
     }
 
-    public void setRegions(Collection<Region> regions) {
-        this.regions = regions;
+    public void setLocations(Collection<Location> locations) {
+        this.locations = locations;
     }
 
     public Collection<GenomicContext> getGenomicContexts() {
@@ -133,16 +159,35 @@ public class SingleNucleotidePolymorphism {
         this.genomicContexts = genomicContexts;
     }
 
-    @Override
-    public String toString() {
-        return "SingleNucleotidePolymorphism{" +
-                "id=" + id +
-                ", rsId='" + rsId + '\'' +
-                ", chromosomeName='" + chromosomeName + '\'' +
-                ", chromosomePosition='" + chromosomePosition + '\'' +
-                ", merged=" + merged +
-                ", functionalClass='" + functionalClass + '\'' +
-                ", lastUpdateDate=" + lastUpdateDate +
-                '}';
+    public Collection<RiskAllele> getRiskAlleles() {
+        return riskAlleles;
+    }
+
+    public void setRiskAlleles(Collection<RiskAllele> riskAlleles) {
+        this.riskAlleles = riskAlleles;
+    }
+
+    public Collection<Association> getAssociations() {
+        return associations;
+    }
+
+    public void setAssociations(Collection<Association> associations) {
+        this.associations = associations;
+    }
+
+    public Collection<Gene> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(Collection<Gene> genes) {
+        this.genes = genes;
+    }
+
+    public Collection<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(Collection<Study> studies) {
+        this.studies = studies;
     }
 }

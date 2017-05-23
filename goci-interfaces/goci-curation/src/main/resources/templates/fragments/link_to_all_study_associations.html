@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="all_associations">
+
+<!--Link back to study page -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <a class="btn btn-default" th:href="@{/studies/{studyId}/associations(studyId=${study.id})}">Back to all SNP
+                                                                                                         associations</a>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

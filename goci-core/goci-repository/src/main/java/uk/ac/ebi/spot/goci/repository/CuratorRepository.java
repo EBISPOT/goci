@@ -8,10 +8,15 @@ import uk.ac.ebi.spot.goci.model.Curator;
  * Created by emma on 27/11/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Repository accessing Curator entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface CuratorRepository extends JpaRepository<Curator, Long> {
-    Curator findByLastName(String curator);
+
+    Curator findByLastName(String lastName);
+
+    Curator findByLastNameIgnoreCase(String lastName);
+
+    Curator findByEmail(String email);
 }

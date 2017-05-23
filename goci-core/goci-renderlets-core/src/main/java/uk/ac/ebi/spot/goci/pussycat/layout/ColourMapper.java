@@ -3,11 +3,8 @@ package uk.ac.ebi.spot.goci.pussycat.layout;
 import java.util.HashMap;
 
 /**
- * Created with IntelliJ IDEA.
- * User: dwelter
- * Date: 03/05/12
- * Time: 14:45
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: dwelter Date: 03/05/12 Time: 14:45 To change this template use File | Settings |
+ * File Templates.
  */
 public class ColourMapper {
     public static final String EFO_ONTOLOGY_BASE_IRI = "http://www.ebi.ac.uk/efo";
@@ -43,7 +40,7 @@ public class ColourMapper {
         COLOUR_MAP.put(OTHER, "#FB8072");
         COLOUR_MAP.put(METABOLIC, "#FDB462");
         COLOUR_MAP.put(DRUG_RESP, "#FCCDE5");
-        COLOUR_MAP.put(LIPID_MSR,"#B3DE69");
+        COLOUR_MAP.put(LIPID_MSR, "#B3DE69");
         COLOUR_MAP.put(BODY_MSR, "#66CCFF");
         COLOUR_MAP.put(NEOPLASM, "#BC80BD");
         COLOUR_MAP.put(INFLAMMATORY_MSR, "#CCEBC5");

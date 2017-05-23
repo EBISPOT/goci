@@ -2,227 +2,117 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}"/>
-    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" th:href="@{css/bootstrap-theme.min.css}"/>
+    <meta charset="utf-8"/>
+    <link rel="icon" th:href="@{/icons/favicon.ico}"/>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" rel="stylesheet"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+    <link th:href="@{/css/select2-bootstrap.css}" rel="stylesheet"/>
 
-    <!--Select2: http://ivaynberg.github.io/select2/-->
-    <!-- Include Select2 CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+   <!-- Bootstrap core CSS -->
+    <!--<link href="../../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>-->
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
+          rel="stylesheet"/>
+    <link th:href="@{/css/bootstrap-table.css}" rel="stylesheet"/>
+    <!--<link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>-->
 
-    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+   <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
-    <!-- Include Select2 JS -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+   <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
 
 
-    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.6.0/bootstrap-table.min.js"></script>
-
+    <script th:src="@{/js/console-plugin.js}"></script>
+    <script th:src="@{/js/goci-print-page.js}"></script>
+    <script th:src="@{/js/goci-show-text.js}"></script>
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT
-- DELETE STUDY-->
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
 
-
-<nav role="navigation" class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
-    </div>
-
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
-        </ul>
-
-        <!--<ul class="nav navbar-nav navbar-right">
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
-            </li>
-        </ul>-->
-    </div>
-</nav>
-
+<!--Include filter-->
+<div th:include="fragments/study_filter :: filter"></div>
 <br/>
-
 <div class="container-fluid">
     <div class="row">
-        <div class="pull-right">
-            <div id="filterParametersForm">
-
-                <form class="form-inline" name="filterParametersForm" role="form" method="post"
-                      th:action="@{/studies(filters=true)}"
-                      th:object="${studySearchFilter} ">
-
-                    <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curator Status:</label>
-                        <select name="curationStatus" class="form-control select2-select"
-                                th:field="*{statusSearchFilterId}" id="curationStatus">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="curator" class="control-label">Curator:</label>
-                        <select name="curator" th:field="*{curatorSearchFilterId}"
-                                class="form-control select2-select" id="curator">
-                            <!-- Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curator : ${curators}"
-                                    th:value="${curator.id}"
-                                    th:text="${curator.lastName}"></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<br/>
-
-<div class="container-fluid">
-    <div class="row">
-
-
         <div class="col-md-12">
-            <div id="filter-bar"></div>
-            <table id="mainTable" class="table table-hover table-bordered"
-                   data-toggle="table"
-                   data-show-pagination-switch="true"
-                   data-show-columns="true"
-                   data-search="true"
-                   data-sort-order="asc"
-                   data-pagination="true">
-                <caption id="total"></caption>
-                <thead>
-                <tr>
-                    <th data-field="action" data-switchable="false"></th>
-                    <th data-field="author" data-sortable="true">Author</th>
-                    <th data-field="title" data-sortable="true">Title</th>
-                    <th data-field="studydate" data-sortable="true">Study Date</th>
-                    <th data-field="pubmedid" data-sortable="true">Pubmed ID</th>
-                    <th data-field="publication" data-sortable="true">Publication</th>
-                    <th data-field="diseasetrait" data-sortable="true">Disease/Trait</th>
-                    <th data-field="curator" data-sortable="true">Curator</th>
-                    <th data-field="curationstatus" data-sortable="true">Curator Status</th>
-                    <th data-field="notes">Notes</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="study : ${studies}">
-                    <td>
-                        <div class="btn-group">
-                            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                                Action<span class="caret"></span></button>
-
-                            <ul class="dropdown-menu">
-                                <li><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
-                                <li><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a></li>
-                                <li><a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a></li>
-                            </ul>
+            <!--Alerts-->
+            <div class="container-fluid" th:if="${!#strings.isEmpty(studySnpsNotApproved)}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong th:text="${studySnpsNotApproved}">Note:</strong>
                         </div>
-                    </td>
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Use an conditional here as a study can have a null attributes-->
-                    <!-- Using thymeleaf elvis operator for string, date attributes-->
+            <div class="container-fluid" th:if="${!#strings.isEmpty(blankAssignee)}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong th:text="${blankAssignee}">Note:</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <td th:text="${study.author} ?: 'null' "></td>
-                    <td th:text="${study.title} ?: 'null'"></td>
-                    <td th:text="${#calendars.format(study.studyDate,'dd MMMM yyyy')} ?: 'null'"></td>
-                    <td th:text="${study.pubmedId} ?: 'null'"></td>
-                    <td th:text="${study.publication} ?: 'null'"></td>
-
-                    <!--If study has associated disease trait return traits name-->
-                    <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : 'null'"></td>
-
-                    <!--If study has associated housekeeping object then get the following attributes -->
-
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : 'null'"></td>
-                    <td th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : 'null'"></td>
-                    <td th:text="${study.housekeeping !=null} ? ${study.housekeeping.notes} : 'null'"></td>
+            <div class="container-fluid" th:if="${!#strings.isEmpty(blankStatus)}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong th:text="${blankStatus}">Note:</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
 
 
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <ul class="nav nav-pills">
+                    <li class="active"><a th:href="@{/studies}">All studies</a></li>
+                    <br/>
+                </ul>
+            </div>
+
+            <!--Table-->
+            <!--Two different table views available depending on if any results are found-->
+            <div th:if="${totalStudies == 0}" th:include="fragments/studies_emptytable :: empty_table"></div>
+            <div th:if="${totalStudies &gt; 0}" th:include="fragments/studies_table_with_results :: results_table"></div>
         </div>
+
+        <!--Only show bar if more that one study available and pagination is set to true-->
+        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }"
+             th:include="fragments/pagination_bar :: pagination_bar"></div>
     </div>
 </div>
 
-<script>
-    $(function () {
-        // turn the element to select2 select style
-        $('#curationStatus').select2({ placeholder: "Select a status",
-            allowClear: true});
-    });
-</script>
-
-<script>
-    $(function () {
-        // turn the element to select2 select style
-        $('#curator').select2({ placeholder: "Select a curator",
-            allowClear: true});
-    });
-</script>
-
-
-<script>
-    //    Count our table rows
-    function myFunction() {
-        // Minus 1 to account for heading
-        var x = document.getElementById("mainTable").rows.length - 1;
-        return "Total Studies: " + x;
-    }
-    document.getElementById("total").innerHTML = myFunction();
-</script>
-
-<!-- extensions -->
-<script src="/js/bootstrap-table-export.js"></script>
-
-<!-- plugins -->
-<script src="/js/tableExport.js"></script>
-<script src="/js/jquery.base64.js"></script>
-<script src="/js/html2canvas.js"></script>
-
+<div th:include="fragments/footer :: page_footer"></div>
 
 </body>
 </html>

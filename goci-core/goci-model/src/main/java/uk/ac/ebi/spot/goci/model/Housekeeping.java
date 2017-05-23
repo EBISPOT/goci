@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by emma on 03/12/14.
  *
  * @author emma
- *         <p/>
+ *         <p>
  *         Model representing housekeeping information stored about a study that is used during curation
  */
 @Entity
@@ -26,22 +26,29 @@ public class Housekeeping {
 
     private Boolean studySnpCheckedLevelTwo = false;
 
-    private Boolean ethnicityCheckedLevelOne = false;
+    private Boolean ancestryCheckedLevelOne = false;
 
-    private Boolean ethnicityCheckedLevelTwo  = false;
+    private Boolean ancestryCheckedLevelTwo = false;
 
-    private Boolean ethnicityBackFilled  = false;
+    private Boolean ancestryBackFilled = false;
 
-    private Boolean checkedNCBIError = false;
+    private Boolean checkedMappingError = false;
+
+    private Boolean snpsRechecked = false;
+
+    private Boolean isPublished = false;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date publishDate;
+    private Date catalogPublishDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendToNCBIDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date studyAddedDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date catalogUnpublishDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastUpdateDate;
@@ -56,26 +63,49 @@ public class Housekeeping {
     @OneToOne
     private CurationStatus curationStatus;
 
+    @OneToOne
+    private UnpublishReason unpublishReason;
+
     // JPA no-args constructor
     public Housekeeping() {
     }
 
-
-    public Housekeeping(Boolean studySnpCheckedLevelOne, Boolean studySnpCheckedLevelTwo, Boolean ethnicityCheckedLevelOne, Boolean ethnicityCheckedLevelTwo, Boolean ethnicityBackFilled, Boolean checkedNCBIError, Date publishDate, Date sendToNCBIDate, Date studyAddedDate, Date lastUpdateDate, String fileName, String notes, Curator curator, CurationStatus curationStatus) {
+    public Housekeeping(Boolean studySnpCheckedLevelOne,
+                        Boolean studySnpCheckedLevelTwo,
+                        Boolean ancestryCheckedLevelOne,
+                        Boolean ancestryCheckedLevelTwo,
+                        Boolean ancestryBackFilled,
+                        Boolean checkedMappingError,
+                        Boolean snpsRechecked,
+                        Boolean isPublished,
+                        Date catalogPublishDate,
+                        Date sendToNCBIDate,
+                        Date studyAddedDate,
+                        Date catalogUnpublishDate,
+                        Date lastUpdateDate,
+                        String fileName,
+                        String notes,
+                        Curator curator,
+                        CurationStatus curationStatus,
+                        UnpublishReason unpublishReason) {
         this.studySnpCheckedLevelOne = studySnpCheckedLevelOne;
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
-        this.ethnicityBackFilled = ethnicityBackFilled;
-        this.checkedNCBIError = checkedNCBIError;
-        this.publishDate = publishDate;
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
+        this.ancestryBackFilled = ancestryBackFilled;
+        this.checkedMappingError = checkedMappingError;
+        this.snpsRechecked = snpsRechecked;
+        this.isPublished = isPublished;
+        this.catalogPublishDate = catalogPublishDate;
         this.sendToNCBIDate = sendToNCBIDate;
         this.studyAddedDate = studyAddedDate;
+        this.catalogUnpublishDate = catalogUnpublishDate;
         this.lastUpdateDate = lastUpdateDate;
         this.fileName = fileName;
         this.notes = notes;
         this.curator = curator;
         this.curationStatus = curationStatus;
+        this.unpublishReason = unpublishReason;
     }
 
     public Long getId() {
@@ -102,44 +132,52 @@ public class Housekeeping {
         this.studySnpCheckedLevelTwo = studySnpCheckedLevelTwo;
     }
 
-    public Boolean getEthnicityCheckedLevelOne() {
-        return ethnicityCheckedLevelOne;
+    public Boolean getAncestryCheckedLevelOne() {
+        return ancestryCheckedLevelOne;
     }
 
-    public void setEthnicityCheckedLevelOne(Boolean ethnicityCheckedLevelOne) {
-        this.ethnicityCheckedLevelOne = ethnicityCheckedLevelOne;
+    public void setAncestryCheckedLevelOne(Boolean ancestryCheckedLevelOne) {
+        this.ancestryCheckedLevelOne = ancestryCheckedLevelOne;
     }
 
-    public Boolean getEthnicityCheckedLevelTwo() {
-        return ethnicityCheckedLevelTwo;
+    public Boolean getAncestryCheckedLevelTwo() {
+        return ancestryCheckedLevelTwo;
     }
 
-    public void setEthnicityCheckedLevelTwo(Boolean ethnicityCheckedLevelTwo) {
-        this.ethnicityCheckedLevelTwo = ethnicityCheckedLevelTwo;
+    public void setAncestryCheckedLevelTwo(Boolean ancestryCheckedLevelTwo) {
+        this.ancestryCheckedLevelTwo = ancestryCheckedLevelTwo;
     }
 
-    public Boolean getEthnicityBackFilled() {
-        return ethnicityBackFilled;
+    public Boolean getAncestryBackFilled() {
+        return ancestryBackFilled;
     }
 
-    public void setEthnicityBackFilled(Boolean ethnicityBackFilled) {
-        this.ethnicityBackFilled = ethnicityBackFilled;
+    public void setAncestryBackFilled(Boolean ancestryBackFilled) {
+        this.ancestryBackFilled = ancestryBackFilled;
     }
 
-    public Boolean getCheckedNCBIError() {
-        return checkedNCBIError;
+    public Boolean getCheckedMappingError() {
+        return checkedMappingError;
     }
 
-    public void setCheckedNCBIError(Boolean checkedNCBIError) {
-        this.checkedNCBIError = checkedNCBIError;
+    public void setCheckedMappingError(Boolean checkedMappingError) {
+        this.checkedMappingError = checkedMappingError;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
+    public Boolean getSnpsRechecked() {
+        return snpsRechecked;
     }
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
+    public void setSnpsRechecked(Boolean snpsRechecked) {
+        this.snpsRechecked = snpsRechecked;
+    }
+
+    public Date getCatalogPublishDate() {
+        return catalogPublishDate;
+    }
+
+    public void setCatalogPublishDate(Date catalogPublishDate) {
+        this.catalogPublishDate = catalogPublishDate;
     }
 
     public Date getSendToNCBIDate() {
@@ -156,6 +194,14 @@ public class Housekeeping {
 
     public void setStudyAddedDate(Date studyAddedDate) {
         this.studyAddedDate = studyAddedDate;
+    }
+
+    public Date getCatalogUnpublishDate() {
+        return catalogUnpublishDate;
+    }
+
+    public void setCatalogUnpublishDate(Date catalogUnpublishDate) {
+        this.catalogUnpublishDate = catalogUnpublishDate;
     }
 
     public Date getLastUpdateDate() {
@@ -198,24 +244,19 @@ public class Housekeeping {
         this.curationStatus = curationStatus;
     }
 
-    @Override
-    public String toString() {
-        return "Housekeeping{" +
-                "id=" + id +
-                ", studySnpCheckedLevelOne='" + studySnpCheckedLevelOne + '\'' +
-                ", studySnpCheckedLevelTwo='" + studySnpCheckedLevelTwo + '\'' +
-                ", ethnicityCheckedLevelOne='" + ethnicityCheckedLevelOne + '\'' +
-                ", ethnicityCheckedLevelTwo='" + ethnicityCheckedLevelTwo + '\'' +
-                ", ethnicityBackFilled='" + ethnicityBackFilled + '\'' +
-                ", checkedNCBIError='" + checkedNCBIError + '\'' +
-                ", publishDate=" + publishDate +
-                ", sendToNCBIDate=" + sendToNCBIDate +
-                ", studyAddedDate=" + studyAddedDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", fileName='" + fileName + '\'' +
-                ", curator=" + curator +
-                ", curationStatus=" + curationStatus +
-                ", notes='" + notes + '\'' +
-                '}';
+    public UnpublishReason getUnpublishReason() {
+        return unpublishReason;
+    }
+
+    public void setUnpublishReason(UnpublishReason unpublishReason) {
+        this.unpublishReason = unpublishReason;
+    }
+
+    public Boolean getIsPublished() {
+        return isPublished;
+    }
+
+    public void setIsPublished(Boolean published) {
+        isPublished = published;
     }
 }

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <script src="https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"
+            th:src="@{https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
+
+    <script src="http://d3js.org/d3.v3.min.js"
+            th:src="@{http://d3js.org/d3.v3.min.js}"></script>
+
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap-theme.min.css}"
+          rel="stylesheet"/>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css"
+          th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.css}"
+          rel="stylesheet"/>
+
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/1.10.12/sorting/date-euro.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.1/spin.min.js'></script>
+    <script th:src="@{/js/reports/study_backlog_view_d3.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/goci-report-studies-backlog.css}"/>
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
+            <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
+            <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
+            <li><a th:href="@{/reports/weekly_progress}">Weekly progress</a></li>
+            <li class="active"><a href="#">Studies Backlog Graph</a></li>
+            <li><a th:href="@{/reports/stats}">Stats</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div id="d3Graph">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <br/>
+            <table id="datatable_studies_backlog" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Tot Studies Published</th>
+                    <th>Tot Studies New</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+<script>
+    $(document).ready(function() {
+        $('#datatable_studies_backlog').DataTable({
+            "aLengthMenu": [
+                [5,10,25, 50, 100, -1],
+                [5,10,25, 50, 100, "All"]
+            ],
+            "iDisplayLength": 10,
+            "order": [[ 0, "desc" ]],
+            "columnDefs": [
+                { "type": "date-euro", targets: 0 }
+            ]
+        } );
+    } );
+</script>
+</body>
+</html>

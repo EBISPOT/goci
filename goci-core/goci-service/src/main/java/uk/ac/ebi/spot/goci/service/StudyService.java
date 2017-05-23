@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,11 +26,23 @@ import java.util.List;
 public class StudyService {
     private StudyRepository studyRepository;
 
+    private CuratorTrackingService curatorTrackingService;
+
+    private WeeklyTrackingService weeklyTrackingService;
+
+    private StudyNoteService studyNoteService;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    public StudyService(StudyRepository studyRepository) {
+    public StudyService(StudyRepository studyRepository,
+                        CuratorTrackingService curatorTrackingService,
+                        WeeklyTrackingService weeklyTrackingService,
+                        StudyNoteService studyNoteService) {
         this.studyRepository = studyRepository;
+        this.curatorTrackingService = curatorTrackingService;
+        this.weeklyTrackingService = weeklyTrackingService;
+        this.studyNoteService = studyNoteService;
     }
 
     protected Logger getLog() {
@@ -47,19 +60,43 @@ public class StudyService {
      * @return a list of Studies
      */
     @Transactional(readOnly = true)
-    public List<Study> deepFindAll() {
+    public List<Study> findAll() {
         List<Study> allStudies = studyRepository.findAll();
-        // iterate over all studies and grab trait info
-        getLog().info("Obtained " + allStudies.size() + " studies, starting deep load...");
         allStudies.forEach(this::loadAssociatedData);
         return allStudies;
+    }
+
+    /**
+     * Get in one transaction all the studies, plus associated Associations, plus associated SNPs and their regions,
+     * plus the studies publish date.
+     *
+     * @return a List of Studies
+     */
+    @Transactional(readOnly = true)
+    public List<Study> deepFindAll() {
+        List<Study> allStudies = studyRepository.findAll();
+        allStudies.forEach(this::deepLoadAssociatedData);
+        return allStudies;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Study> findAll(Sort sort) {
+        List<Study> studies = studyRepository.findAll(sort);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
     }
 
     @Transactional(readOnly = true)
     public List<Study> deepFindAll(Sort sort) {
         List<Study> studies = studyRepository.findAll(sort);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Study> findAll(Pageable pageable) {
+        Page<Study> studies = studyRepository.findAll(pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -67,9 +104,7 @@ public class StudyService {
     @Transactional(readOnly = true)
     public Page<Study> deepFindAll(Pageable pageable) {
         Page<Study> studies = studyRepository.findAll(pageable);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
-        studies.forEach(this::loadAssociatedData);
+        studies.forEach(this::deepLoadAssociatedData);
         return studies;
     }
 
@@ -84,64 +119,199 @@ public class StudyService {
      * @return a list of Studies
      */
     @Transactional(readOnly = true)
-    public List<Study> deepFindPublished() {
-        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull();
-        // iterate over all studies and grab trait info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+    public List<Study> findPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
-    public List<Study> deepFindPublished(Sort sort) {
-        List<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(sort);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.size() + " studies, starting deep load...");
+    public List<Study> deepFindPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Study> deepFindUnPublishedStudies() {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+        studies.forEach(this::deepLoadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Study> findPublishedStudies(Sort sort) {
+        List<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        sort);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
-    public Page<Study> deepFindPublished(Pageable pageable) {
-        Page<Study> studies = studyRepository.findByHousekeepingPublishDateIsNotNull(pageable);
-        // iterate over all studies and grab region info
-        getLog().info("Obtained " + studies.getSize() + " studies, starting deep load...");
+    public Page<Study> findPublishedStudies(Pageable pageable) {
+        Page<Study> studies =
+                studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
-    public Study deepFetchOne(Study study) {
+    public Study fetchOne(Study study) {
         loadAssociatedData(study);
         return study;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Study> deepFetchAll(Collection<Study> studies) {
+    public Collection<Study> fetchAll(Collection<Study> studies) {
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Study> deepFindByDiseaseTraitId(Long diseaseTraitId) {
-        Collection<Study> studies = studyRepository.findByDiseaseTraitId(diseaseTraitId);
+    public Collection<Study> findBySnpId(Long snpId) {
+        Collection<Study> studies =
+                studyRepository.findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        snpId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Study> findByAssociationId(Long associationId) {
+        Collection<Study> studies =
+                studyRepository.findByAssociationsIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        associationId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+    @Transactional(readOnly = true)
+    public Collection<Study> findByDiseaseTraitId(Long diseaseTraitId) {
+        Collection<Study> studies =
+                studyRepository.findByDiseaseTraitIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        diseaseTraitId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+
+
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
-        Date publishDate = study.getHousekeeping().getPublishDate();
+        int ancestryCount = study.getAncestries().size();
+        int platformCount = study.getPlatforms().size();
+        Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
-            getLog().info(
+            getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations and was published on " + publishDate.toString());
+                            "has " + associationCount + " associations, " + ancestryCount +
+                            " ancestry entries, " + platformCount + " platform manufacturers "  +
+                            " and was published on " + publishDate.toString());
         }
         else {
-            getLog().info(
+            getLog().trace(
                     "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
-                            "has " + associationCount + " associations and is not yet published");
+                            "has " + associationCount + " associations, " + ancestryCount +
+                            " ancestry entries , " + platformCount + " platform manufacturers " +
+                            "and is not yet published");
         }
     }
+
+    public void deepLoadAssociatedData(Study study) {
+        int efoTraitCount = study.getEfoTraits().size();
+        int associationCount = study.getAssociations().size();
+//        int snpCount = study.getSingleNucleotidePolymorphisms().size();
+        int platformCount = study.getPlatforms().size();
+
+        int ancestryCount = study.getAncestries().size();
+
+        Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
+        study.getAssociations().forEach(
+                association -> {
+                    association.getLoci().forEach(
+                            locus -> {
+                                locus.getStrongestRiskAlleles().forEach(
+                                        riskAllele -> {
+                                            snps.add(riskAllele.getSnp());
+                                        }
+                                );
+                            }
+                    );
+                }
+        );
+        int snpCount = snps.size();
+
+
+//        for (SingleNucleotidePolymorphism snp : study.getSingleNucleotidePolymorphisms()) {
+        for (SingleNucleotidePolymorphism snp : snps) {
+
+            int locationCount = snp.getLocations().size();
+            getLog().trace("Snp '" + snp.getId() + "' is linked to " + locationCount + " regions.");
+
+
+            for (Association association : study.getAssociations()) {
+                int lociCount = association.getLoci().size();
+                int associationEfoTraitCount = association.getEfoTraits().size();
+                getLog().trace("Association '" + association.getId() + "' is linked to " + lociCount + " loci and " +
+                                       associationEfoTraitCount + "efo traits.");
+                for (Locus locus : association.getLoci()) {
+                    int riskAlleleCount = locus.getStrongestRiskAlleles().size();
+                    getLog().trace("Locus '" + locus.getId() + "' is linked to " + riskAlleleCount + " risk alleles.");
+                    for (RiskAllele riskAllele : locus.getStrongestRiskAlleles()) {
+                        SingleNucleotidePolymorphism riskAlleleSnp = riskAllele.getSnp();
+                        int riskAlleleSnpRegionCount = riskAlleleSnp.getLocations().size();
+                        getLog().trace("Snp '" + riskAlleleSnp.getId() + "' is linked to " + riskAlleleSnpRegionCount +
+                                               " regions.");
+                    }
+                }
+            }
+
+
+            Date publishDate = study.getHousekeeping().getCatalogPublishDate();
+            if (publishDate != null) {
+                getLog().trace(
+                        "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                                "has " + associationCount + " associations, " + snpCount + " snps, " + ancestryCount +
+                                " ancestry entries , " + platformCount + " platform manufacturers " +
+                                " and was published on " +
+                                publishDate.toString());
+            }
+            else {
+                getLog().trace(
+                        "Study '" + study.getId() + "' is mapped to " + efoTraitCount + " traits, " +
+                                "has " + associationCount + " associations, " + snpCount + " snps, , " +
+                                ancestryCount + " ancestry entries , " + platformCount + " platform manufacturers "  +
+                                " and is not yet published");
+            }
+        }
+    }
+
+    // Shared with === DataDeletionService and StudyDeletionService ===
+    public void deleteRelatedInfoByStudy(Study study) {
+        // Delete the curatorTracking rows related
+        curatorTrackingService.deleteByStudy(study);
+
+        // Delete the weeklyTracking rows related
+        weeklyTrackingService.deleteByStudy(study);
+
+        // Delete the note rows related
+        studyNoteService.deleteAllNoteByStudy(study);
+    }
+
+//convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time
+    public void deleteByStudyId(Long studyId){
+        studyRepository.delete(studyId);
+    }
+
+    public Study findOne(Long id){
+        //#xintodo this could be the place to add exception if a study is null
+        return studyRepository.findOne(id);
+    }
+
 }

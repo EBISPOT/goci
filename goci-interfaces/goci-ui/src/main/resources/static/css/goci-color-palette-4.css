@@ -85,3 +85,12 @@ a:hover {
 .btn:hover {
     background-color: #005380 !important;
 }
+
+.sup-new {
+    position: relative;
+    bottom: 1.7em;
+    color: #a94442;
+    font-size: 30%;
+    background: #E4AB67;
+    border-radius: 50px;
+}

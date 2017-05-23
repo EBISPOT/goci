@@ -26,7 +26,7 @@ public class PussycatAwareHttpSessionListener implements HttpSessionListener {
     @Override public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         HttpSession session = httpSessionEvent.getSession();
         getLog().debug("HttpSession '" + session.getId() + "' created - taking no action, " +
-                       "resources will be allocated on first request");
+                               "resources will be allocated on first request");
     }
 
     @Override public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {

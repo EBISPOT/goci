@@ -9,9 +9,8 @@ import javax.persistence.Id;
  *
  * @author emma
  *         <p>
- *         Model object representing status assigned to studies
+ *         Model object representing status assigned to studies.
  */
-
 
 @Entity
 public class CurationStatus {
@@ -21,16 +20,13 @@ public class CurationStatus {
 
     private String status;
 
-    private String seqnbr;
-
     // JPA no-args constructor
     public CurationStatus() {
     }
 
-    public CurationStatus(Long id, String curationStatus, String seqnbr) {
+    public CurationStatus(Long id, String status) {
         this.id = id;
-        this.status = curationStatus;
-        this.seqnbr = seqnbr;
+        this.status = status;
     }
 
     public Long getId() {
@@ -41,16 +37,12 @@ public class CurationStatus {
         return status;
     }
 
-    public String getSeqnbr() {
-        return seqnbr;
+    //Setters used in testing
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "CurationStatus{" +
-                "id=" + id +
-                ", curationStatus='" + status + '\'' +
-                ", seqnbr='" + seqnbr + '\'' +
-                '}';
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

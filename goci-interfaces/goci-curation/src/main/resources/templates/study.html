@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -18,56 +18,39 @@
     <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+    <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
 
-<nav role="navigation" class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
-    </div>
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
 
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
-        </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-             <li>
-                 <form th:action="@{/logout}" method="post">
-                     <input type="submit" value="Sign Out"/>
-                 </form>
-             </li>
-         </ul>-->
-    </div>
-</nav>
-
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#">Study Details</a></li>
-            <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
-        </ul>
-    </div>
+<div>
+    <ol class="breadcrumb pull-right">
+        <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Study Details</li>
+    </ol>
 </div>
 
-<br/>
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
@@ -93,9 +76,11 @@
     </div>
 </div>
 
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 dataForm">
+
             <form id="studyForm" class="form-horizontal" method="post" th:object="${study}" name="studyForm"
                   th:action="@{/studies/{studyId}(studyId=*{id})}">
 
@@ -107,6 +92,15 @@
                         <input type="hidden" th:field="*{id}" class="form-control" id="id"/>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="publish_flag" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label for="initialSampleSize" class="control-label col-md-2"></label>
@@ -126,13 +120,34 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="events" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{events}" class="form-control" id="events"/>
+                    </div>
+                </div>
+
+
+
                 <!--Visible fields-->
+                <div class="form-group">
+                    <label for="accessionId" class="control-label col-md-2">Accession ID</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
+                        <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
+                        <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
                         <input type="text" th:field="*{author}" class="form-control" id="author"/>
+
                     </div>
                 </div>
 
@@ -152,31 +167,101 @@
                     </div>
                 </div>
                 <div class="form-group">
+
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
+
+                        <div class="btn-group pull-right">
+                            <button type="button" data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle always-clickable">
+                                View paper<span class="caret"></span></button>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=*{pubmedId})}"
+                                       target="_blank">View in Europe PMC</a></li>
+                                <li>
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=*{pubmedId})}"
+                                       target="_blank">View in PubMed</a></li>
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="studyDate" class="control-label col-md-2">Study Date</label>
+                    <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="studyDate" th:field="*{studyDate}"/>
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationDate}"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="platform" class="control-label col-md-2">Platform</label>
+                    <label for="platform" class="control-label col-md-2">Array manufacturer</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="platform" th:field="*{platform}"/>
+                        <select name="platform" th:field="*{platforms}" class="form-control select2-select"
+                                multiple="multiple" id="platform">
+                            <option th:each="platform : ${platforms}"
+                                    th:value="${platform.id}"
+                                    th:text="${platform.manufacturer}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <div class="col-md-10 col-md-offset-2">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Qualifier</th>
+                                <th>Number SNPs analysed</th>
+                                <th>Imputed</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+
+                                    <select name="qualifier" th:field="*{qualifier}" class="form-control select2-select"
+                                            id="qualifier">
+                                        <option value=""></option>
+                                        <option th:each="qualifier : ${qualifiers}"
+                                                th:value="${qualifier}"
+                                                th:text="${qualifier}"></option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="snpCount" th:field="*{snpCount}"/>
+                                </td>
+                                <td>
+                                    <input id="imputed" type="checkbox" th:field="*{imputed}"/>
+                                </td>
+
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="studyDesignComment" class="control-label col-md-2">Additional array information</label>
+
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               id="studyDesignComment"
+                               th:field="*{studyDesignComment}"/>
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait:</label>
+                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait</label>
 
                     <div class="col-md-10">
                         <select name="diseaseTrait" th:field="*{diseaseTrait}" id="diseaseTrait"
@@ -192,7 +277,7 @@
 
 
                 <div class="form-group">
-                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
+                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait</label>
 
                     <div class="col-md-10">
                         <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
@@ -204,10 +289,32 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="cnv" class="control-label col-md-2">CNV</label>
 
-                    <input id="cnv" type="checkbox" th:field="*{cnv}"/>
+                <div class="form-group">
+
+                    <div class="col-md-offset-10 col-md-2">
+                        <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=${study.Id})}"
+                           class="btn btn-default pull-right"
+                           role="button">Apply EFO trait(s) to all SNPs</a>
+                    </div>
+                </div>
+
+                <!-- CNV information in no longer captured but is still stored in database, thus field is left as
+                hidden to preserve existing values in database -->
+                <div class="form-group">
+                    <input id="cnv" type="hidden" th:field="*{cnv}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>
+
+                    <input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>
+
+                    <input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>
                 </div>
 
                 <div class="form-group">
@@ -223,6 +330,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="pooled" class="control-label col-md-2">Pooled</label>
+
+                    <input id="pooled" type="checkbox" th:field="*{pooled}"/>
+                </div>
+                <div class="form-group">
+                    <label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>
+
+                    <input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>
+                </div>
+
+                <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <button type="Save" class="btn btn-primary">Save</button>
                     </div>
@@ -233,20 +351,47 @@
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
+
+
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#EFOTrait').select2({ placeholder: "Select an EFO trait",
-            allowClear: true});
+        $('#EFOTrait').select2({
+                                   placeholder: "Select an EFO trait",
+                                   allowClear: true
+                               });
     });
 </script>
 
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#diseaseTrait').select2({ placeholder: "Select a disease/trait",
-            allowClear: true});
+        $('#diseaseTrait').select2({
+                                       placeholder: "Select a disease/trait",
+                                       allowClear: true
+                                   });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#platform').select2({
+                                   placeholder: "Select an array manufacturer",
+                                   allowClear: true
+                               });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#qualifier').select2({
+                                    placeholder: "Select a qualifier",
+                                    allowClear: true
+                                });
     });
 </script>
 

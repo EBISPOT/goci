@@ -8,11 +8,11 @@ import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 /**
- * Manages the relationships between a user-based HttpSession and resources required by Pussycat,
- * including a {@link PussycatSession} and a {@link RenderletNexus}.
- * <p/>
- * Using this manager, it is possible to share a single PussycatSession across many user sessions,
- * but each RenderletNexus must be unique to the HttpSession.
+ * Manages the relationships between a user-based HttpSession and resources required by Pussycat, including a {@link
+ * PussycatSession} and a {@link RenderletNexus}.
+ * <p>
+ * Using this manager, it is possible to share a single PussycatSession across many user sessions, but each
+ * RenderletNexus must be unique to the HttpSession.
  *
  * @author Tony Burdett
  * @date 01/03/12
@@ -67,8 +67,7 @@ public interface PussycatManager {
     PussycatSession bindPussycatSession(HttpSession session, PussycatSession pussycatSession);
 
     /**
-     * Returns an indication as to whether the passed HttpSession has a currently assigned {@link
-     * RenderletNexus}.
+     * Returns an indication as to whether the passed HttpSession has a currently assigned {@link RenderletNexus}.
      *
      * @param session the user's HttpSession
      * @return true if this session has previously been assigned a renderlet nexus, false otherwise
@@ -94,9 +93,9 @@ public interface PussycatManager {
     RenderletNexus bindRenderletNexus(HttpSession session, RenderletNexus RenderletNexus);
 
     /**
-     * Releases any resources associaed with the supplied {@link HttpSession}.  This will have the effect of
-     * unbinding any {@link PussycatSession}s and the {@link RenderletNexus} bound to this HttpSession,
-     * if present.  Any other resources held by this HttpSession should also be released when this method is called.
+     * Releases any resources associaed with the supplied {@link HttpSession}.  This will have the effect of unbinding
+     * any {@link PussycatSession}s and the {@link RenderletNexus} bound to this HttpSession, if present.  Any other
+     * resources held by this HttpSession should also be released when this method is called.
      *
      * @param session the HttpSession to which Pussycat resources are bound
      */

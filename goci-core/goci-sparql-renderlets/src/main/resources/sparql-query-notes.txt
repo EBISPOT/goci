@@ -104,3 +104,17 @@ WHERE {
   ?association a gt:TraitAssociation ;
                oban:has_object ?trait .
 }
+
+
+getAssociationsForPvalue()
+
+SELECT ?association ?pvalue
+WHERE {
+  ?association a gt:TraitAssociation ;
+               oban:has_subject ?snp ;
+               oban:has_object ?trait ;
+               ro:part_of ?study .
+  ?association gt:has_p_value ?pvalue .
+  ?snp ro:located_in ?band .
+  FILTER ( ?pvalue < 5e-8)
+}

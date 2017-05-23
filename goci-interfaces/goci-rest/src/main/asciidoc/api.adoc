@@ -1,0 +1,281 @@
+= GWAS CATALOG API Guide
+:doctype: book
+:toc: left
+:toc-title: GWAS Catalog API
+:sectanchors:
+:sectlinks:
+:toclevels: 4
+:source-highlighter: highlightjs
+
+[[overview]]
+= Overview
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+This API supports the following HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+This API tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[overview-errors]]
+== Errors
+
+Whenever an error response (status code >= 400) is returned, the body will contain a JSON object
+that describes the problem. The error object has the following structure:
+
+include::{snippets}/error-example/response-fields.adoc[]
+
+For example, a request that attempts to apply a non-existent tag to a resource will produce a
+`400 Bad Request` response:
+
+include::{snippets}/error-example/http-response.adoc[]
+
+
+[[overview-hypermedia]]
+== Hypermedia
+
+This API uses hypermedia and resources include links to other resources in their
+responses. Responses are in http://stateless.co/hal_specification.html[Hypertext Application
+Language (HAL)] format. Links can be found benath the `_links` key. Users of the API should
+not created URIs themselves, instead they should use the above-described links to navigate
+from resource to resource.
+
+[[overview-pagination]]
+== Listing resources
+
+Requests that return multiple resources will be paginated to 20 items by default. You can change number of items
+returned using the `size` parameter up to a maximum of 500 for a single request. The API also supports the `page`
+parameter for accessing a specific page of items.
+
+=== Paging resources
+
+Links will be provided in the response to navigate the resources.
+
+==== Example request
+
+include::{snippets}/page-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/page-example/http-response.adoc[]
+
+
+==== Response structure
+
+include::{snippets}/page-example/response-fields.adoc[]
+
+[[resources-page-links]]
+==== Links
+
+include::{snippets}/page-example/links.adoc[]
+
+[[resources]]
+= Resources
+
+
+[[resources-api]]
+== API
+The api endpoint provides the entry point into the service.
+
+
+[[resources-api-access]]
+=== Accessing the API
+
+A `GET` request is used to access the API
+
+==== Example request
+
+include::{snippets}/api-example/curl-request.adoc[]
+
+==== Response structure
+
+include::{snippets}/api-example/response-fields.adoc[]
+
+==== Example response
+
+include::{snippets}/api-example/http-response.adoc[]
+
+[[resources-api-links]]
+==== Links
+
+include::{snippets}/api-example/links.adoc[]
+
+
+[[resources-studies]]
+== Studies
+
+The Studies resources is used to list studies in the GWAS Catalog
+
+[[resources-studies-list]]
+=== Listing studies
+
+A `GET` request will list all of the Catalog studies.
+
+==== Example request
+
+include::{snippets}/studies-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-study,study resources>>  are in the `_embedded.studies` field.
+
+
+
+[[resources-study]]
+== Study
+
+=== Retrieve an study
+
+include::{snippets}/studies-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/studies-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/studies-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/studies-example/response-fields.adoc[]
+
+
+[[resources-study-links]]
+==== Links
+
+include::{snippets}/studies-example/links.adoc[]
+
+
+[[resources-associations]]
+== Associations
+
+The Associations resources is used to list assocations in the GWAS Catalog
+
+[[resources-associations-list]]
+=== Listing associations
+
+A `GET` request will list all of the Catalog associations.
+
+==== Example request
+
+include::{snippets}/associations-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-association,association resources>>  are in the `_embedded.associations` field.
+
+[[resources-association]]
+== Association
+
+=== Retrieve an association
+
+include::{snippets}/associations-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/associations-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/associations-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/associations-example/response-fields.adoc[]
+
+[[resources-association-links]]
+==== Links
+
+include::{snippets}/associations-example/links.adoc[]
+
+
+[[resources-ancestries]]
+== Ancestries
+
+The Ancestries resource is used to list ancestries in the GWAS Catalog
+
+[[resources-ancestries-list]]
+=== Listing ancestries
+
+A `GET` request will list all of the Catalog ancestries.
+
+==== Example request
+
+include::{snippets}/ancestries-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-ancestry,ancestry resources>>  are in the `_embedded.ancestries` field.
+
+[[resources-ancestry]]
+== Ancestry
+
+=== Retrieve an ancestry
+
+include::{snippets}/ancestries-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/ancestries-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/ancestries-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/ancestries-example/response-fields.adoc[]
+
+[[resources-ancestry-links]]
+==== Links
+
+include::{snippets}/ancestries-example/links.adoc[]
+
+
+[[resources-genomic-context]]
+== Genomic context
+
+A genomic context is a convenience model to link a SNP to a gene. It details some additional information about the relationship between that specific SNP and gene.
+
+=== Retrieve a genomic context
+
+include::{snippets}/genomic-contexts-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/genomic-contexts-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/genomic-contexts-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/genomic-contexts-example/response-fields.adoc[]
+
+

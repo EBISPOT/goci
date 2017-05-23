@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="tabs">
+<div class="container-fluid" th:object="${study}">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
+            <li><a th:href="@{/studies/{studyId}/sampledescription(studyId=*{id})}">Sample Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
+            <li><a th:href="@{/studies/{studyId}/studyfiles(studyId=*{id})}">Study Files</a></li>
+            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
+            <li><a th:href="@{/studies/{studyId}/notes(studyId=*{id})}">Notes</a></li>
+            <li><a th:href="@{/studies/{studyId}/tracking(studyId=*{id})}">Tracking Information</a></li>
+            <li><a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'">
+                Print Study</a></li>
+            <li>
+            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.pubmedId} + '\',\'/printview\');'">
+                Print Publication
+            </a></li>
+        </ul>
+
+    </div>
+</div>
+<br/>
+</body>
+</html>

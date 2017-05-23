@@ -1,34 +1,287 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
 
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
+    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
+    <link href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"
+          th:href="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css}" rel="stylesheet"/>
+
+    <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"
+            th:src="@{https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js}"></script>
+
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+    <!--Handles calculations in form -->
+    <script th:src="@{/js/goci-snp-association-calculations.js}"></script>
+
+    <!--Check variants, check reported genes, load variants mappings, load genomic contexts -->
+    <script th:src="@{/js/goci-snp-association-mapping.js}"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
 </head>
 <body>
 
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
 
-<div class="container">
-    <div class="col-md-12">
-        <h2>Error:</h2>
-        <p class="lead">SNP Interaction edit page is under construction</p>
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Editing interaction association</li>
+    </ol>
+</div>
+
+<div class="container-fluid">
+    <!-- Link to the different SNP tabs -->
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a id="association_tab" href="#">SNP Interactions</a></li>
+            <li><a id="mapping_tab" href="#">SNP Mappings</a></li>
+        </ul>
+    </div>
+    <!--Include errors-->
+    <div class="col-md-10" style="margin-top:10px">
+        <div th:include="fragments/association_error :: association_errors"></div>
     </div>
 </div>
 
-<div class="container" th:object="${study}">
+<div class="container">
     <div class="row">
-        <div class="col-md-12 col-md-offset-1">
-            <div><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}" class="btn btn-primary">Back to SNP associations</a></div>
+        <div th:include="fragments/association_mapping_details :: mapping_details"></div>
+        <div class="col-md-10">
+            <div class="form-group">
+                <div id="addSNPForm">
+
+                    <form class="form-horizontal"
+                          method="post"
+                          name="snp-association-form"
+                          th:object="${form}"
+                          th:action="@{${uri}(associationtype=interaction)}">
+
+                        <!--Only show save button if SNP has not been approved, warn if editing approved SNP-->
+                        <div th:include="fragments/association_approval_alert :: association_approval"
+                             th:if="*{#bools.isTrue(snpApproved)}"></div>
+
+                        <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+
+                        <div id="association_div">
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+
+
+                                    <table class="table table-hover table-bordered">
+                                        <div th:hidden="*{numOfInteractions &gt; 0 }">
+                                            <div class="form-group">
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control" id="numOfInteractions"
+                                                           th:field="*{numOfInteractions}"
+                                                           placeholder="Enter the number of interactions"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-10">
+                                                    <button type="submit" name="addCols" class="btn btn-default">Add
+                                                        interactions
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <thead th:if="*{numOfInteractions &gt; 0 }">
+                                        <tr>
+                                            <th>
+                                                <button class="btn btn-default btn-sm" type="submit" name="addCol">Add
+                                                    column
+                                                </button>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody th:if="*{numOfInteractions &gt; 0 }">
+
+                                        <tr>
+                                            <td></td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <button class="btn btn-danger btn-sm"
+                                                        type="submit"
+                                                        name="removeCol"
+                                                        th:value="${colStat.index}"><span
+                                                        class="glyphicon glyphicon-trash"
+                                                        aria-hidden="true"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>SNP</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <span th:text="${colStat.count}"
+                                                      class="snp_row"
+                                                      style="display:none">1</span>
+                                                <input th:id="snp_id_+${colStat.count}"
+                                                       type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].snp}"/>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Strongest SNP-Risk Allele</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].strongestRiskAllele}"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <div>Gene(s)</div>
+                                            </td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       data-role="tagsinput"
+                                                       th:id="'authorgenes'+${colStat.index}"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].authorReportedGenes}"/>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Proxy</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text" data-role="tagsinput" label="proxySnps"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].proxySnps}"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Independent SNP risk allele frequency in controls</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="text"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].riskFrequency}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Genome-wide</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="checkbox"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].genomeWide}"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Limited list</td>
+                                            <td th:each="col,colStat : *{snpFormColumns}">
+                                                <input type="checkbox"
+                                                       th:field="*{snpFormColumns[__${colStat.index}__].limitedList}"/>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="riskFrequency" class="control-label col-md-2">Combined interacting risk
+                                                                                          allele frequency in
+                                                                                          controls</label>
+
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="riskFrequency"
+                                           th:field="*{riskFrequency}" name="riskFrequency"/>
+                                </div>
+                            </div>
+
+                            <div th:include="fragments/common_association_elements :: association_elemets"></div>
+                            <div th:if="${#strings.containsIgnoreCase(measurementType,'or')}"
+                                 th:include="fragments/association_or_fragment :: or"></div>
+                            <div th:if="${#strings.containsIgnoreCase(measurementType,'beta')}"
+                                 th:include="fragments/association_beta_fragment :: beta"></div>
+
+
+                            <!--Hidden as no longer completed for new associations-->
+                            <div class="form-group">
+                                <input id="snpApproved" type="hidden" th:field="*{snpApproved}"/>
+                            </div>
+
+                            <!--Only show save button if SNP has not been approved-->
+                            <div class="form-group" th:if="*{#bools.isFalse(snpApproved)}">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Mapping div containing the mappings and context forms -->
+                        <div class="row" id="mapping_div" style="display:none">
+                            <div class="form-group">
+                                <div>
+                                    <label class="control-label">Mapping data:</label>
+                                </div>
+                                <div th:include="fragments/snp_functional_mapping :: functional_mapping_table"></div>
+                                <div th:include="fragments/snp_region_mapping :: region_mapping_table"></div>
+                                <div th:include="fragments/snp_genomic_context :: genomic_context_table"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#EFOTrait').select2();
+    });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#proxySnps').tagsinput({
+                                  trimValue: true
+                              });
+</script>
+
+<!--Formats tags input -->
+<script>
+    $('#authorgenes').tagsinput({
+                                    trimValue: true
+                                });
+</script>
 
 </body>
+
 </html>

@@ -2,12 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>GWAS Curation Demo</title>
+    <title>GWAS Curation Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -23,55 +33,29 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <!--Handles checkbox in table -->
+    <script th:src="@{/js/goci-study-sample-description.js}"></script>
+
+    <script th:src="@{/js/goci-editing.js}"></script>
+    <script th:src="@{/js/goci-print-page.js}"></script>
 
 </head>
 <body>
 
-<!--TODO
-- REIMPLEMENTED LOGIN
-- COUNT -->
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
 
-<nav role="navigation" class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="http://www.ebi.ac.uk/gwas" class="navbar-brand">GWAS</a>
-    </div>
 
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li><a th:href="@{/studies}">Home</a></li>
-            <li><a th:href="@{/studies/new}">Add Study</a></li>
-            <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
-        </ul>
-        <!--
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <form th:action="@{/logout}" method="post">
-                            <input type="submit" value="Sign Out"/>
-                        </form>
-                    </li>
-
-                </ul>  -->
-    </div>
-</nav>
-
-<div class="container-fluid" th:object="${study}">
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li><a th:href="@{/studies/{studyId}(studyId=*{id})}">Study Details</a></li>
-            <li class="active"><a href="#">Sample Information</a></li>
-            <li><a th:href="@{/studies/{studyId}/associations(studyId=*{id})}">SNP Associations</a></li>
-            <li><a th:href="@{/studies/{studyId}/housekeeping(studyId=*{id})}">Curator Information</a></li>
-        </ul>
-    </div>
+<div>
+    <ol class="breadcrumb pull-right">
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li class="active">Sample Information</li>
+    </ol>
 </div>
 
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
 
 <!--Alert if data is saved-->
 <div class="container" th:if="${!#strings.isEmpty(changesSaved)}">
@@ -85,240 +69,46 @@
     </div>
 </div>
 
-<br></br>
+<br/>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <form class="form-horizontal" method="post" name="addSampleDescription" th:object="${study}"
-                  th:action="@{/studies/{studyId}/initialreplicationsampledescription(studyId=*{id})}">
+<div class="form-group" style="display: none">
+    <label for="publish_flag" class="control-label col-md-2"></label>
 
-                <div class="form-group">
-                    <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
-                        Description:</label>
-
-                    <div class="col-md-10">
-                        <input id="sampleInitialDescription" class="form-control" type="text"
-                               th:field="${initialSampleDescription.initialSampleDescription}"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
-                        Description:</label>
-
-                    <div class="col-md-10">
-                        <input id="sampleReplicationDescription" class="form-control" type="text"
-                               th:field="${replicationSampleDescription.replicationSampleDescription}"/>
-                    </div>
-                </div>
-
-
-                <!--Button -->
-                <div class="form-group inline">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
+    <div class="col-md-10">
+        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
     </div>
 </div>
 
-
-<div class="container">
-    <div class="row">
-
-        <table id="initialTable" class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Type</th>
-                <th>Number of Individuals</th>
-                <th>Ethnic Group</th>
-                <th>Country of Origin</th>
-                <th>Country of Recruitment</th>
-                <th>Previously Reported</th>
-                <th>Sample Sizes Match</th>
-                <th>Additional Description</th>
-                <th>Notes</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="initialStudyEthnicityDescription: ${initialStudyEthnicityDescriptions}"
-                th:if="${initialStudyEthnicityDescriptions}">
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                       class="btn btn-link">Edit</a></td>
-                <td th:text="${initialStudyEthnicityDescription.type} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.numberOfIndividuals} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.ethnicGroup} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfOrigin} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.countryOfRecruitment} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.previouslyReported} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.sampleSizesMatch} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.description} ?: 'null'"></td>
-                <td th:text="${initialStudyEthnicityDescription.notes} ?: 'null'"></td>
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${initialStudyEthnicityDescription.id})}"
-                       class="btn btn-danger">Delete</a></td>
-
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<div class="container">
-    <div class="row">
-
-        <table id="replicationTable" class="table table-hover table-bordered">
-            <thead>
-            <tr>
-                <th></th>
-                <th>Type</th>
-                <th>Number of Individuals</th>
-                <th>Ethnic Group</th>
-                <th>Country of Origin</th>
-                <th>Country of Recruitment</th>
-                <th>Previously Reported</th>
-                <th>Sample Sizes Match</th>
-                <th>Additional Description</th>
-                <th>Notes</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="replicationStudyEthnicityDescription: ${replicationStudyEthnicityDescriptions}">
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                       class="btn btn-link">Edit</a></td>
-                <td th:text="${replicationStudyEthnicityDescription.type}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.numberOfIndividuals}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.ethnicGroup}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfOrigin}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.countryOfRecruitment}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.previouslyReported}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.sampleSizesMatch}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.description}"></td>
-                <td th:text="${replicationStudyEthnicityDescription.notes}"></td>
-                <td>
-                    <a th:href="@{/sampledescriptions/{ethnicityId}/delete(ethnicityId=${replicationStudyEthnicityDescription.id})}"
-                       class="btn btn-danger">Delete</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<div class="container">
-    <div class="row">
-
-        <!--Button-->
-        <input type="button" class="btn btn-primary" value="Add ethnicity" data-toggle="collapse"
-               data-target="#add_ethnicity_form"/>
-    </div>
-</div>
-
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-10">
-            <div id="add_ethnicity_form" class="collapse">
-                <form class="form-horizontal" method="post" th:object="${ethnicity}"
-                      name="addEthnicityForm"  >
-
-                    <!--Type dropdown-->
-                    <div class="form-group">
-                        <label for="type" class="control-label col-md-2">Type</label>
-
-                        <select th:field="*{type}" id="type">
-                            <option th:each="ethnicityType : ${ethnicityTypes}"
-                                    th:value="${ethnicityType}"
-                                    th:text="${ethnicityType}"></option>
-                        </select>
-
-                    </div>
+<div class="dataForm">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form-horizontal" method="post" name="addSampleDescription" th:object="${study}"
+                      th:action="@{/studies/{studyId}/initialreplicationsampledescription(studyId=*{id})}">
 
                     <div class="form-group">
-                        <label for="numberOfIndividuals" class="control-label col-md-2">Number of Individuals:</label>
-                        <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
-                    </div>
-
-
-                    <!--Dropdowns-->
-                    <div class="form-group">
-                        <label for="ethnicGroup" class="control-label col-md-2">Inferred Ethnic/Ancestral Group:</label>
+                        <label for="sampleInitialDescription" class="control-label col-md-2">Initial Sample
+                                                                                             Description:</label>
 
                         <div class="col-md-10">
-                            <select name="ethnicGroup" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Choose ethnic group" th:field="*{ethnicGroup}"
-                                    id="ethnicGroup">
-                                <option th:each="ethnicGroup : ${ethnicGroups}"
-                                        th:value="${ethnicGroup}"
-                                        th:text="${ethnicGroup}"></option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group">
-                        <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
-
-                        <div class="col-md-10">
-                            <select name="countryOfOrigin" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Country of Origin"
-                                    th:field="*{countryOfOrigin}"
-                                    id="countryOfOrigin">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
-                            </select>
+                            <textarea rows="3" id="sampleInitialDescription" class="form-control"
+                                      th:field="${initialSampleDescription.initialSampleDescription}"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
+                        <label for="sampleReplicationDescription" class="control-label col-md-2">Replication Sample
+                                                                                                 Description:</label>
 
                         <div class="col-md-10">
-                            <select name="countryOfRecruitment" class="form-control select2-select"
-                                    multiple="multiple" data-placeholder="Country of Recruitment"
-                                    th:field="*{countryOfRecruitment}"
-                                    id="countryOfRecruitment">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.name}"
-                                        th:text="${country.name}"></option>
-                            </select>
+                            <textarea rows="3" id="sampleReplicationDescription" class="form-control"
+                                      th:field="${replicationSampleDescription.replicationSampleDescription}"></textarea>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="description" class="control-label col-md-2">Additional Description:</label>
-                        <textarea id="description" type="text" th:field="*{description}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes" class="control-label col-md-2">Notes</label>
-                        <textarea id="notes" type="text" th:field="*{notes}"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog at
-                            Study Level?</label>
-
-                        <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
-                            <option th:each="match : ${sampleSizesMatchOptions}"
-                                    th:value="${match}"
-                                    th:text="${match}"></option>
-                        </select>
-                    </div>
 
                     <!--Button -->
-                    <div class="form-group">
+                    <div class="form-group inline">
                         <div class="col-md-offset-2 col-md-10">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
@@ -328,25 +118,345 @@
             </div>
         </div>
     </div>
+
+    <br/>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+
+                <!--Button-->
+                <input type="button" class="btn btn-default" value="Add Ancestry" data-toggle="collapse"
+                       data-target="#add_ancestry_form"/>
+
+                <!--Only show these buttons if there is something to delete-->
+                <a href="#DeleteAllModal"
+                   class="btn btn-default"
+                   data-toggle="modal"
+                   role="button"
+                   th:unless="${#lists.isEmpty(initialStudyAncestryDescriptions) and #lists.isEmpty(replicationStudyAncestryDescriptions)}">Delete
+                                                                                                                                              All
+                                                                                                                                              Ancestry
+                                                                                                                                              information</a>
+
+                <a href="#DeleteSelectedModal"
+                   class="btn btn-default"
+                   role="button"
+                   data-toggle="modal"
+                   th:unless="${#lists.isEmpty(initialStudyAncestryDescriptions) and #lists.isEmpty(replicationStudyAncestryDescriptions)}">Delete
+                                                                                                                                              Checked
+                                                                                                                                              Ancestry
+                                                                                                                                              information</a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal HTML -->
+    <div id="DeleteAllModal" class="modal fade" th:object="${study}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete all ancestry information associated with this study?</p>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                        <a th:href="@{/studies/{studyId}/sampledescription/delete_all(studyId=${study.id})}"
+                           class="btn btn-default"
+                           role="button">Delete All Ancestry Information</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DeleteSelectedModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete selected ancestry information associated with this study?</p>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a id="delete-button"
+                           class="btn btn-default"
+                           role="button">Delete Checked Ancestry Information</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+
+    <!--Initial table-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 dataForm">
+                <div class="well well-sm" th:if="${#lists.isEmpty(initialStudyAncestryDescriptions)}">
+                    <p style="color:grey">No initial ancestry details to display</p>
+                </div>
+                <table id="initialTable"
+                       class="table table-hover table-bordered"
+                       th:if="${not #lists.isEmpty(initialStudyAncestryDescriptions)}">
+                    <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Number of Individuals</th>
+                        <th>Ancestry</th>
+                        <th>Country of Origin</th>
+                        <th>Country of Recruitment</th>
+                        <th>Previously Reported</th>
+                        <th>Sample Sizes Match</th>
+                        <th>Additional Description</th>
+                        <th>Notes</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="initialStudyAncestryDescription: ${initialStudyAncestryDescriptions}"
+                        th:if="${initialStudyAncestryDescriptions}">
+                        <td th:text="${initialStudyAncestryDescription.type} ?: ''"></td>
+                        <td th:text="${initialStudyAncestryDescription.numberOfIndividuals} ?: ''"></td>
+
+                        <td><span th:each="ancestralGroup, iterStat: ${initialStudyAncestryDescription.ancestralGroups}"
+                                  th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfOrigin, iterStat: ${initialStudyAncestryDescription.countryOfOrigin}"
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfRecruitment, iterStat: ${initialStudyAncestryDescription.countryOfRecruitment}"
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
+                        </td>
+
+                        <td th:text="${initialStudyAncestryDescription.previouslyReported} ?: ''"></td>
+                        <td th:text="${initialStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
+                        <td th:text="${initialStudyAncestryDescription.description} ?: ''"></td>
+                        <td th:text="${initialStudyAncestryDescription.notes} ?: ''"></td>
+                        <td>
+                            <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                                <a th:href="@{/sampledescriptions/{ancestryId}(ancestryId=${initialStudyAncestryDescription.id})}"
+                                   class="btn btn-default">Edit</a>
+                            </div>
+                        </td>
+                        <td><input type="checkbox"
+                                   name="checkboxId"
+                                   class="sample-description-selector"
+                                   th:value="${initialStudyAncestryDescription.id}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Replication table-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 dataForm">
+                <div class="well well-sm" th:if="${#lists.isEmpty(replicationStudyAncestryDescriptions)}">
+                    <p style="color:grey">No replication ancestry details to display</p>
+                </div>
+                <table id="replicationTable"
+                       class="table table-hover table-bordered"
+                       th:if="${not #lists.isEmpty(replicationStudyAncestryDescriptions)}">
+                    <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Number of Individuals</th>
+                        <th>Ancestry</th>
+                        <th>Country of Origin</th>
+                        <th>Country of Recruitment</th>
+                        <th>Previously Reported</th>
+                        <th>Sample Sizes Match</th>
+                        <th>Additional Description</th>
+                        <th>Notes</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="replicationStudyAncestryDescription: ${replicationStudyAncestryDescriptions}">
+                        <td th:text="${replicationStudyAncestryDescription.type}  ?: ''"></td>
+                        <td th:text="${replicationStudyAncestryDescription.numberOfIndividuals}  ?: ''"></td>
+
+                        <td><span th:each="ancestralGroup, iterStat: ${replicationStudyAncestryDescription.ancestralGroups}"
+                                  th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfOrigin, iterStat: ${replicationStudyAncestryDescription.countryOfOrigin}"
+                                  th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
+                        </td>
+                        <td><span th:each="countryOfRecruitment, iterStat: ${replicationStudyAncestryDescription.countryOfRecruitment}"
+                                  th:text="(!${iterStat.last} ? ${countryOfRecruitment.countryName}+', ' : ${countryOfRecruitment.countryName}) ?: ''"></span>
+                        </td>
+                        <td th:text="${replicationStudyAncestryDescription.previouslyReported}  ?: ''"></td>
+                        <td th:text="${replicationStudyAncestryDescription.sampleSizesMatch} ?: ''"></td>
+                        <td th:text="${replicationStudyAncestryDescription.description} ?: ''"></td>
+                        <td th:text="${replicationStudyAncestryDescription.notes} ?: ''"></td>
+                        <td>
+                            <div class="btn-group-vertical  btn-group-sm" role="group" aria-label="...">
+                                <a th:href="@{/sampledescriptions/{ancestryId}(ancestryId=${replicationStudyAncestryDescription.id})}"
+                                   class="btn btn-default">Edit</a>
+                            </div>
+                        </td>
+                        <!--This checkbox is used to delete checked rows-->
+                        <td><input type="checkbox"
+                                   name="checkboxId"
+                                   class="sample-description-selector"
+                                   th:value="${replicationStudyAncestryDescription.id}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!--Add ancestry form-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 dataForm">
+                <div id="add_ancestry_form" class="collapse">
+                    <div class="well">
+                        <form class="form-horizontal" method="post" th:object="${ancestry}"
+                              name="addAncestryForm">
+
+                            <!--Type dropdown-->
+                            <div class="form-group">
+                                <label for="type" class="control-label col-md-2">Type</label>
+
+                                <select th:field="*{type}" id="type">
+                                    <option th:each="ancestryType : ${ancestryTypes}"
+                                            th:value="${ancestryType}"
+                                            th:text="${ancestryType}"></option>
+                                </select>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numberOfIndividuals" class="control-label col-md-2">Number of
+                                                                                                Individuals:</label>
+                                <input id="numberOfIndividuals" type="text" th:field="*{numberOfIndividuals}"/>
+                            </div>
+
+
+                            <!--Dropdowns-->
+                            <div class="form-group">
+                                <label for="ancestralGroups" class="control-label col-md-2">Inferred Ancestry:</label>
+
+                                <div class="col-md-10">
+                                    <select name="ancestralGroups" class="form-control select2-select"
+                                            multiple="multiple" data-placeholder="Choose ancestral group"
+                                            th:field="*{ancestralGroups}"
+                                            id="ancestralGroups">
+                                        <option th:each="ancestralGroup : ${ancestralGroups}"
+                                                th:value="${ancestralGroup.id}"
+                                                th:text="${ancestralGroup.ancestralGroup}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="countryOfOrigin" class="control-label col-md-2">Country of Origin:</label>
+
+                                <div class="col-md-10">
+                                    <select name="countryOfOrigin" class="form-control select2-select"
+                                        multiple="multiple" th:field="*{countryOfOrigin}"
+                                        id="countryOfOrigin">
+                                        <option th:each="country : ${countries}"
+                                            th:value="${country.id}"
+                                            th:text="${country.countryName}"></option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
+
+                                <div class="col-md-10">
+                                    <select name="countryOfRecruitment" class="form-control select2-select"
+                                            multiple="multiple"
+                                            th:field="*{countryOfRecruitment}"
+                                            id="countryOfRecruitment">
+                                        <option th:each="country : ${countries}"
+                                                th:value="${country.id}"
+                                                th:text="${country.countryName}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="control-label col-md-2">Additional Description:</label>
+                                <textarea class="col-md-6"
+                                          rows="10"
+                                          id="description"
+                                          th:field="*{description}"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="notes" class="control-label col-md-2">Notes</label>
+                                <textarea class="col-md-6" rows="10" id="notes" th:field="*{notes}"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sampleSizesMatch" class="control-label col-md-2">Sample Sizes Match in Catalog
+                                                                                             at
+                                                                                             Study Level?</label>
+
+                                <select th:field="*{sampleSizesMatch}" id="sampleSizesMatch">
+                                    <option th:each="match : ${sampleSizesMatchOptions}"
+                                            th:value="${match}"
+                                            th:text="${match}"></option>
+                                </select>
+                            </div>
+
+                            <!--Button -->
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div th:include="fragments/footer :: page_footer"></div>
 
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
-        $('#ethnicGroup').select2();
+        $('#ancestralGroups').select2();
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfOrigin').select2();
     });
 </script>
 
 <script>
-    $(function () {
+    $(function() {
         // turn the element to select2 select style
         $('#countryOfRecruitment').select2();
     });

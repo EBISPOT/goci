@@ -1,0 +1,7 @@
+= Known issues
+
+Please refer to https://www.ebi.ac.uk/panda/jira/browse/GOCI/component/11750[our bug tracker] for the status of any known issues.
+
+If you find an issue not documented in the tracker, please submit a bug report to gwas-info@ebi.ac.uk.
+
+Updated: 11 January 2016

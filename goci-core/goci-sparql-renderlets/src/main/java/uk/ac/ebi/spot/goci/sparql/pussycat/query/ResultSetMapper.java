@@ -2,8 +2,6 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 
 import com.hp.hpl.jena.query.ResultSet;
 
-import java.util.List;
-
 /**
  * Maps the results of a sparql query to a corresponding object as determined by the type parameter.
  *

@@ -15,7 +15,7 @@ public class SVGDocument {
                     "width='" + SVGCanvas.canvasWidth + "' " +
                     "zoomAndPan='magnify' " +
                     "contentStyleType='text/css' " +
-                    "viewBox='0 0 " + SVGCanvas.canvasWidth + " " + SVGCanvas.canvasHeight +"' " +
+                    "viewBox='0 0 " + SVGCanvas.canvasWidth + " " + SVGCanvas.canvasHeight + "' " +
                     "height='" + SVGCanvas.canvasHeight + "' " +
                     "id='goci-svg' " +
                     "preserveAspectRatio='xMinYMin slice' " +
@@ -33,7 +33,7 @@ public class SVGDocument {
                     "x='0' height='" + SVGCanvas.canvasHeight + "' y='-200' " +
                     "id='traitMask'>" +
                     "<rect fill='grey' x='0' width='" + SVGCanvas.canvasWidth + "' " +
-                    "height='" + SVGCanvas.canvasHeight+ "' " +
+                    "height='" + SVGCanvas.canvasHeight + "' " +
                     "y='-200' " +
                     "opacity='" +
                     ".25' />" +

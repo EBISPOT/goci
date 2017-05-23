@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="association_errors">
+
+<!--Link back to study page -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <!--Only show this button if no critical errors-->
+            <a class="btn btn-default" th:if="${#bools.isFalse(criticalErrorsFound)}"
+               th:href="@{/studies/{studyId}/associations(studyId=${study.id}, associationId=*{associationId})}">Back to
+                                                                                                                 all SNP
+                                                                                                                 associations</a>
+            <button id="errorButton"
+                    th:if="${ not #lists.isEmpty(errors)}"
+                    type="button"
+                    class="btn btn-danger"
+                    data-toggle="collapse"
+                    data-target="#collapseErrors"
+                    aria-expanded="false"
+                    aria-controls="collapseErrors">
+                <span class="glyphicon glyphicon-collapse-down"></span> Open errors
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="collapse" id="collapseErrors">
+            <div class="well col-md-offset-4 col-md-6">
+                <table id="mainTable"
+                       class="table table-hover table-bordered"
+                       th:if="${not #lists.isEmpty(errors)}" cellspacing="0" width="100%">
+                    <br/>
+                    <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Error Message</th>
+                        <th>Error Level</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="error: ${errors}">
+                        <div th:switch="${error.warning}">
+                            <div th:case="true">
+                                <td th:text="${error.field}?: '' "></td>
+                                <td th:text="${error.errorMessage}?: '' "></td>
+                                <td>Warning</td>
+                            </div>
+                            <div th:case="false">
+                                <td style="color: red" th:text="${error.field}?: '' "></td>
+                                <td style="color: red" th:text="${error.errorMessage}?: '' "></td>
+                                <td style="color: red">Critical</td>
+                            </div>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#collapseErrors").on("hide.bs.collapse", function() {
+            $("#errorButton").html('<span class="glyphicon glyphicon-collapse-down"></span> Open errors');
+        });
+        $("#collapseErrors").on("show.bs.collapse", function() {
+            $("#errorButton").html('<span class="glyphicon glyphicon-collapse-up"></span> Close errors');
+        });
+    });
+</script>
+
+</body>
+</html>

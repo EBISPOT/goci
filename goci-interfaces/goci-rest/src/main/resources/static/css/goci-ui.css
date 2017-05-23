@@ -1,0 +1,319 @@
+#ebi-logo {
+    padding-bottom: 9px !important;
+    padding-top: 11px !important;
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}
+
+#nhgri-logo {
+    padding-bottom: 7px !important;
+    padding-top: 8px !important;
+    padding-left: 5px !important;
+    padding-right: 0px !important;
+}
+
+#imaginary_container {
+    margin-top: 5%;
+}
+
+.stylish-input-group .input-group-addon {
+    background: white !important;
+}
+
+.stylish-input-group .form-control {
+    border-right: 0;
+    box-shadow: 0 0 0;
+    border-color: #ccc;
+}
+
+.stylish-input-group button {
+    border: 0;
+    background: transparent;
+}
+
+/*#lower_container{*/
+/*margin-top:5%;*/
+/*}*/
+
+#center_container {
+    margin-left: 10%;
+    margin-right: auto;
+}
+
+.global_title {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.filter-element {
+    padding: 5px 2px;
+    /*display: inline-block;*/
+    /*width: 100%;*/
+    /*margin-left: 0;*/
+    /*margin-right: 0;*/
+}
+
+.filter-label {
+    font-weight: bold;
+    display: inline-block;
+    width: 30%;
+    margin-left: 1em;
+    margin-right: 0;
+}
+
+.pval-label {
+    font-weight: bold;
+    display: inline-block;
+    /*width: 7%;*/
+    /*width: 2em;*/
+    margin-left: 0.5em;
+    margin-right: 0.3em;
+    text-align: right;
+}
+
+.filter-value {
+    display: inline-block;
+    width: 30%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.p-value {
+    display: inline-block;
+    /*width: 20%;*/
+    width: 2em;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.filter-values {
+    display: inline-block;
+    width: 60%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.from-element {
+    display: inline-block;
+    width: 45%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.to-element {
+    display: inline-block;
+    width: 45%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.date-label {
+    display: inline-block;
+    width: 22%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.date-values {
+    display: inline-block;
+    width: 76%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.from-date {
+    display: inline-block;
+    width: 45%;
+    margin-left: 0;
+    margin-right: 0;
+
+}
+
+.to-date {
+    display: inline-block;
+    width: 45%;
+    margin-left: 15px;
+    margin-right: 0;
+}
+
+.panel-heading span {
+    margin-top: -20px;
+    font-size: 15px;
+}
+
+.row {
+    margin-top: 40px;
+    padding: 0 10px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.navbar-brand {
+    background: url(../icons/GWAS_Catalog_banner_logo_34x40.png) no-repeat !important;
+    background-position: left center;
+    padding-left: 40px;
+}
+
+.navbar-fixed-top {
+    border-bottom: 0px;
+}
+
+.navbar-bottom-banner-1 {
+    height: 4px;
+}
+
+.navbar-bottom-banner-2 {
+    height: 8px;
+}
+
+.navbar-bottom-banner-3 {
+    height: 8px;
+}
+
+.gwas-circle {
+    float: left;
+    width: 200px;
+    height: 100%;
+    padding-top: 20px;
+}
+
+.search-results-container {
+    margin-top: 10px;
+}
+
+.results-container > table {
+    margin-bottom: 0 !important;
+}
+
+.results-container {
+    margin-bottom: 20px !important;
+}
+
+.tight-to-top {
+    padding-top: 0 !important;
+}
+
+.tight-to-side {
+    padding-left: 0 !important;
+}
+
+.toplevel-view {
+    height: 12em;
+    border-radius: 1em;
+}
+
+a > .toplevel-view {
+    color: #333;
+}
+
+/*table .collapse.in {*/
+/*display:table-row;*/
+/*}*/
+
+.hiddenRow {
+    padding: 0 !important;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: scale(1) rotate(0deg);
+    }
+    to {
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+.table-striped-study > tbody > tr:nth-child(4n-3) {
+    background-color: #F6FDFC;
+}
+
+.table-striped-study > tbody > tr:nth-child(4n-2) {
+    background-color: #F6FDFC;
+}
+
+.sample-info {
+    background-color: transparent !important;
+    margin-left: 20%;
+    width: 80%;
+}
+
+.sample-info > thead > tr > th,
+.sample-info > tbody > tr > th,
+.sample-info > tfoot > tr > th,
+.sample-info > thead > tr > td,
+.sample-info > tbody > tr > td,
+.sample-info > tfoot > tr > td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    /*border-top: 1px solid #ddd;*/
+}
+
+.sample-info > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+}
+
+.sample-info-border {
+    border: 1px solid #ddd;
+}
+
+.context-help {
+    margin-left: 1px;
+    font-size: x-small;
+    top: -0.8em;
+}
+
+
+/*.glyphicon-link {*/
+/*color: #A6703F;*/
+/*}*/
+
+.link-icon {
+    width: 1.5em;
+    height: auto;
+}
+
+.link-icon-smaller {
+    width: 1.2em;
+    height: auto;
+}
+
+#trait-dropdown > ul > li {
+    padding-left: 3%;
+    padding-bottom: 1%;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+#catalog-stats {
+    padding-top: 10%;
+    font-style: italic;
+}
+
+#beta-icon {
+    position: absolute;
+    left: 15px;
+    top: 5px;
+}

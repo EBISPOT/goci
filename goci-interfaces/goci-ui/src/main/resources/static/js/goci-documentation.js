@@ -19,28 +19,58 @@ var loadDocumentation = function(pagename, content) {
             return x.toUpperCase();
         });
 
-        if (displayName.toLowerCase() == "about") {
-            $("#help-item").removeClass("active");
-            $("#downloads-item").removeClass("active");
-            $("#about-item").addClass("active");
-        }
-        else if (displayName.toLowerCase() == "downloads") {
-            $("#about-item").removeClass("active");
-            $("#help-item").removeClass("active");
+        displayName = displayName.replace("-", " ");
+
+        // if (displayName.toLowerCase() == "about") {
+        //     $("#help-item").removeClass("active");
+        //     $("#downloads-item").removeClass("active");
+        //     $("#about-item").addClass("active");
+        //     $("#downloads-crumb").hide();
+        //     $("#docs-crumb").show();
+        // }
+        //
+        // else
+        if (displayName.toLowerCase() == "downloads" || displayName.toLowerCase() == "file downloads" || displayName.toLowerCase() == "diagram downloads" || displayName.toLowerCase() == "summary statistics" ) {
+            // $("#about-item").removeClass("active");
+            $("#documentation-item").removeClass("active");
             $("#downloads-item").addClass("active");
+            $("#docs-crumb").hide();
+            $("#downloads-crumb").show();
+
         }
         else {
-            $("#about-item").removeClass("active");
+            // $("#about-item").removeClass("active");
             $("#downloads-item").removeClass("active");
-            $("#help-item").addClass("active");
+            $("#documentation-item").addClass("active");
+            $("#docs-crumb").show();
+            $("#downloads-crumb").hide();
         }
         $("#current-page").text(displayName);
+
+
+
         console.log("Updated breadcrumb (" + displayName + ")");
         // load the data content
         console.log("Updating " + content + "...");
-        console.log(data);
+        //console.log(data);
         content.html(data);
+
+        $.getJSON('../api/search/stats')
+                .done(function(stats) {
+                          setBuilds(stats);
+                      });
+
         console.log("Done!");
 
+    }
+
+    function setBuilds(data) {
+        try {
+            $('#genomeBuild').text(data.genebuild);
+            $('#dbSNP').text(data.dbsnpbuild);
+        }
+        catch (ex) {
+            console.log("Failure to process build variables " + ex);
+        }
     }
 };

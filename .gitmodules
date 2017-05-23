@@ -1,0 +1,4 @@
+[submodule "lodestar"]
+	path = lodestar
+	url = https://github.com/EBISPOT/lodestar
+	branch = 1.3-release

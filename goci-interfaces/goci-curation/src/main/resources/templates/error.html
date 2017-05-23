@@ -1,0 +1,131 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8"/>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Additional styling on top of bootstrap -->
+
+    <style>
+        body {
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAxMC8yOS8xMiKqq3kAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzVxteM2AAABHklEQVRIib2Vyw6EIAxFW5idr///Qx9sfG3pLEyJ3tAwi5EmBqRo7vHawiEEERHS6x7MTMxMVv6+z3tPMUYSkfTM/R0fEaG2bbMv+Gc4nZzn+dN4HAcREa3r+hi3bcuu68jLskhVIlW073tWaYlQ9+F9IpqmSfq+fwskhdO/AwmUTJXrOuaRQNeRkOd5lq7rXmS5InmERKoER/QMvUAPlZDHcZRhGN4CSeGY+aHMqgcks5RrHv/eeh455x5KrMq2yHQdibDO6ncG/KZWL7M8xDyS1/MIO0NJqdULLS81X6/X6aR0nqBSJcPeZnlZrzN477NKURn2Nus8sjzmEII0TfMiyxUuxphVWjpJkbx0btUnshRihVv70Bv8ItXq6Asoi/ZiCbU6YgAAAABJRU5ErkJggg==);
+        }
+
+        .alternative {
+            font-family:arial;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .error-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+
+        .error-actions {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .error-actions .btn {
+            margin-right: 10px;
+        }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('#goback').on('click', function (e) {
+                window.history.back(-1);
+            });
+
+            $('.error-details .btn').on('click', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                var $collapse = $this.closest('.collapse-group').find('.collapse');
+                $collapse.collapse('toggle');
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+<!--  As we are using Thymeleaf, you might consider using
+      ${#httpServletRequest.requestURL}. But that returns the path
+      to this error page.  Hence we explicitly add the url to the
+      Model in some of the example code. -->
+<div class="container">
+    <br/><br/>
+    <br/>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="text-center">
+
+                        <p th:if="${user_error}">
+                            <span th:if="${user_error}" th:text="${user_error}">error ...</span>
+                        </p>
+                        <p><small><span class="alternative" th:text="${user_error_alternative}"></span></small></p>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="error-details">
+
+                        <p th:if="${path}">
+                            <b>Page:</b> <span th:text="${path}">Page URL</span>
+                        </p>
+
+                        <p th:if="${timestamp}" id='created'>
+                            <b>Occurred:</b> <span th:text="${timestamp}">Timestamp</span>
+                        </p>
+
+                        <p th:if="${status}">
+                            <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+                                th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+                        </p>
+                        <p th:if="${message}">
+                            <b>Message:</b> <span th:text="${message}">-</span>
+                        </p>
+
+                        <p th:if="${exception}">
+                            <b>Exception detail:</b> <span th:text="${exception}">-</span>
+                        </p>
+
+                        <p th:if="${trace}">
+                            <div class="collapse-group">
+                               <p class="collapse"><b>Trace:</b> <span th:text="${trace}">-</span></p>
+                               <p><a class="btn btn-info btn-xs" href="#">View Trace details &raquo;</a></p>
+                            </div>
+                        </p>
+                    </div>
+                    <div class="error-actions">
+                        <br/><br/>
+                        <a id="goback" href="#" class="btn btn-primary"><span
+                            class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+
+    </div>
+</div>
+
+
+</body>
+</html>

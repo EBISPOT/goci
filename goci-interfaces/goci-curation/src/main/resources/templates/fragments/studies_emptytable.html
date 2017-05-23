@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="empty_table">
+<table id="mainTable" class="table table-hover table-bordered" style="font-size: small">
+    <caption id="total" th:text="'Total: '+ ${totalStudies}"></caption>
+    <thead>
+    <tr>
+        <th class="col-md-1">Author
+            <div>
+                <a th:href="@{${uri}(sorttype=authorsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=authorsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Title
+            <div>
+                <a th:href="@{${uri}(sorttype=titlesortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=titlesortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Publication Date (YYYY-MM-DD)
+            <div>
+                <a th:href="@{${uri}(sorttype=publicationdatesortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=publicationdatesortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Pubmed ID
+            <div>
+                <a th:href="@{${uri}(sorttype=pubmedsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=pubmedsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Publication
+            <div>
+                <a th:href="@{${uri}(sorttype=publicationsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=publicationsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+
+        <th class="col-md-1">Disease/Trait
+            <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
+                <a th:href="@{${uri}(sorttype=diseasetraitsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=diseasetraitsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">EFO Trait</th>
+        <th class="col-md-2">Curator
+            <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
+                <a th:href="@{${uri}(sorttype=curatorsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=curatorsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-2">Curation Status
+            <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
+                <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
+                <a th:href="@{${uri}(sorttype=curationstatussortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Notes</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td colspan="10"><p style=" font-weight: bold; text-align: center;">No studies found</p></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

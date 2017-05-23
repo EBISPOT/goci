@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.pussycat.renderlet;
 
-import net.sourceforge.fluxion.spi.Spi;
+import uk.ac.ebi.spot.goci.spi.Spi;
 
 /**
  * A renderlet is a small plugin that is capable of rendering small chunks of semantically meaningful data into SVG
@@ -8,8 +8,7 @@ import net.sourceforge.fluxion.spi.Spi;
  * objects).
  *
  * @author Tony Burdett
- * @author Rob Davey
- * Date 27/02/12
+ * @author Rob Davey Date 27/02/12
  */
 @Spi
 public interface Renderlet<C, O> {

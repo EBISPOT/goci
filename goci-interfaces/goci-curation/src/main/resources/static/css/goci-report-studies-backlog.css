@@ -1,0 +1,29 @@
+#d3Graph {
+    font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.x.axis path {
+    display: none;
+}
+.area.above {
+    fill: rgb(199,0,57);
+}
+.area.below {
+    fill: rgb(145,207,96);
+}
+.publishedLine {
+    fill: none;
+    stroke: #38661f;
+    stroke-width: 1.5px;
+}
+.createdLine {
+    fill: none;
+    stroke: #8a0039;
+    stroke-width: 1.5px;
+}
+

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.index.TraitIndex;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.TraitDocument;
+import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
 
 /**
  * Javadocs go here!
@@ -13,9 +13,9 @@ import uk.ac.ebi.spot.goci.model.TraitDocument;
  * @date 19/01/15
  */
 @Service
-public class TraitMapper extends ObjectDocumentMapper<DiseaseTrait, TraitDocument> {
+public class TraitMapper extends ObjectDocumentMapper<DiseaseTrait, DiseaseTraitDocument> {
     @Autowired
     public TraitMapper(ObjectConverter objectConverter, TraitIndex traitIndex) {
-        super(TraitDocument.class, objectConverter, traitIndex);
+        super(DiseaseTraitDocument.class, objectConverter, traitIndex);
     }
 }

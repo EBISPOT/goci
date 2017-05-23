@@ -7,5 +7,5 @@ public class Constants {
     /*
     The path to the gwas.json file that GwasJsonController need to serve.
      */
-    public static final String JSON_FILE_PATH="/Users/catherineleroy/Downloads/gwas.json";
+    public static final String JSON_FILE_PATH = "/Users/catherineleroy/Downloads/gwas.json";
 }
