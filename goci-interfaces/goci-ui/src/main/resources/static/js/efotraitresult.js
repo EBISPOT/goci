@@ -486,6 +486,33 @@ function longContentList (content_id, list, type) {
     return container;
 }
 
+// Create a hidden list of items - Used when we have to display a more or less long list of information
+function longContent (content_id, str, label) {
+
+    var content_text = $('<span></span>');
+    content_text.css('padding-right', '8px');
+    content_text.html(label);
+
+    var content_div  = $('<div></div>');
+    content_div.attr('id', content_id);
+    content_div.addClass('collapse');
+
+    var content_list = $('<p></p>');
+    content_list.css('padding-left', '25px');
+    content_list.css('padding-top', '6px');
+    content_list.html(str);
+
+    content_div.append(content_list);
+
+    var container = $('<div></div>');
+    container.append(content_text);
+    container.append(showHideDiv(content_id));
+    container.append(content_div);
+
+    return container;
+}
+
+
 // Create a button to show/hide content
 function showHideDiv(div_id) {
     var div_button = $("<button></button>");

@@ -9,6 +9,8 @@ var global_ols_seach_api =  global_ols_api + 'search';
 var global_ols_api_all_descendant_limit = 99999;
 var global_efo_info_tag_id = '#efo-info';
 var global_efo_selected_tag_id = '#selected-efos';
+var global_pmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
+
 
 new Clipboard('#sharable_link_btn');
 
@@ -30,7 +32,11 @@ _cleanDataTag = function(tagID){
 }
 
 //get data asyn with promise
-function promiseGet(url, params) {
+function promiseGet(url, params,debug) {
+    if(debug == undefined){
+        debug = false
+    }
+
     if (!url.startsWith("http")) {
         url = window.location.origin + url
     }
@@ -50,6 +56,10 @@ function promiseGet(url, params) {
         }
 
         req.open('GET', url);
+        if(debug){
+            console.log('promise get from :' + url);
+        }
+
         req.onload = function() {
             // This is called even on 404 etc
             // so check the status
@@ -462,6 +472,17 @@ searchOLS = function(keyword,params){
         return data;
     })
 
+}
+
+
+//pmc
+getFromPMC= function(pubmed_id){
+    return promiseGet(global_pmc_api,
+                      {
+                          'query': 'ext_id:'+pubmed_id + '%20src:med',
+                          'resulttype' :  'core',
+                          'format' : 'json'
+                      }).then(JSON.parse);
 }
 
 /*

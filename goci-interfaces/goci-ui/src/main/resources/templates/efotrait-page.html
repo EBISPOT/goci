@@ -93,7 +93,7 @@
                 This shows a summary of the mainEFO. It also contains a highlighted paper that we selected for this triat.
                 Currently, the most recent paper is selected as the highlighted paper for the mainEFO.
             </li>
-            <li><b>Expend your search:</b> This panel displays the currently selected EFOs and gives user three approaches to add interesting EFOs to the page.
+            <li><b>Expand your search:</b> This panel displays the currently selected EFOs and gives user three approaches to add interesting EFOs to the page.
                 <ul>
                     <li>Currently selected EFOs are displayed like this: <button type="button" class="btn  btn-default">EFO_0004467:insulin measurement
                         <span class="badge">  X  </span></button> which can be removed by clicking the 'X'. The mainEFO cannot be removed.</li>
@@ -192,90 +192,132 @@
         <!-- Summary panel -->
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default" style="padding-left:0px">
+                <!--trait summary-->
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Trait information</h3>
                 </div>
                 <div class="clearfix">
-                    <!--trait summary-->
-                    <div class="panel-body col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <!--label-->
+
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Label
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-label">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Label</dt>
+                                <dd id="efotrait-label">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Label-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-label">-</div>-->
                         </div>
                         <!--id-->
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Trait EFO id
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-id">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Trait EFO id</dt>
+                                <dd id="efotrait-id">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Trait EFO id-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-id">-</div>-->
                         </div>
                         <!--label-->
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Description</dt>
+                                <dd id="efotrait-description">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
                         </div>
                         <!--synonym-->
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Synonym(s)
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-synonym">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Synonym(s)</dt>
+                                <dd id="efotrait-synonym">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Synonym(s)-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-synonym">-</div>-->
                         </div>
                     </div>
-                    <!--highlighted study-->
-                    <div class="panel-body col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+                </div>
+
+                <!--highlighted study-->
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">Highlighted study for this trait</h3>
+                </div>
+                <div class="clearfix">
+                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Highlighted study
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-title">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Title</dt>
+                                <dd id="efotrait-highlighted-study-title">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Highlighted study-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-title">-</div>-->
                         </div>
 
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Pubmed id
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-pubmedId">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Author</dt>
+                                <dd id="efotrait-highlighted-study-author">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Author-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-author">-</div>-->
                         </div>
 
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Author
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-author">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 150px;">Catalog Publish Date</dt>
+                                <dd id="efotrait-highlighted-study-catalogPublishDate">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">CatalogPublishDate-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>-->
                         </div>
 
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">CatalogPublishDate
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>
-                        </div>
+                        <!--<div class="clearfix">-->
+                        <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                        <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">InitialSampleDescription-->
+                        <!--</div>-->
+                        <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-initialSampleDescription">-</div>-->
+                        <!--</div>-->
+
+                        <!--<div class="clearfix">-->
+                        <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                        <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">ReplicateSampleDescription-->
+                        <!--</div>-->
+                        <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>-->
+                        <!--</div>-->
 
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">InitialSampleDescription
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-initialSampleDescription">-</div>
-                        </div>
-
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"
-                                 style="font-weight: bold; margin-bottom: 1em;padding-left:0px">ReplicateSampleDescription
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>
+                            <dl class="dl-horizontal">
+                                <dt style="width: 150px;">all</dt>
+                                <dd id="efotrait-highlighted-study-all">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>-->
                         </div>
 
 
                     </div>
 
                 </div>
+
+                <!--first reported-->
                 <div id="efotrait-summary">
                     <span class="glyphicon glyphicon-info-sign" style="padding-right:2px"></span>
                     <span id="efotrait-summary-content"></span>
@@ -285,12 +327,12 @@
     </div>
 
 
-    <!--Expendsion panel-->
+    <!--Expandsion panel-->
     <div class="row" style="margin-top:20px">
         <div id="expension_panel" class="panel panel-default">
             <div class="panel-heading background-color-primary-accent">
                 <h3 class="panel-title">
-                    <span class="locus_label">Expend your search</span>
+                    <span class="locus_label">Expand your search</span>
                 </h3>
                 <span class="pull-right">
                         <span class="clickable panel-collapsed"
@@ -1019,14 +1061,23 @@
 //                return studies;
             }
 
+
+
             var studiesMainEFO = findStudiesForEFO($('#query').text());
             var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
-            $('#efotrait-highlighted-study-pubmedId').html(highlightedStudy.pubmedId);
-            $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
-            $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s);
-            $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
-            $('#efotrait-highlighted-study-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
-            $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
+
+            displayHighlightedStudy = function(highlightedStudy){
+                $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
+                $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' ('+setExternalLink(EPMC+highlightedStudy.pubmedId ,'PMID:'+highlightedStudy.pubmedId )+')');
+                $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
+//                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
+//                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
+                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
+                                                                      JSON.stringify(highlightedStudy),
+                                                                      'all'));
+            }
+
+            displayHighlightedStudy(highlightedStudy);
 
             //query for distinct efo terms. This will reduce the query number so work faster
             var allEFO = {}
@@ -1172,7 +1223,6 @@
         })
     }
 
-
     addRelatedTermGraph = function(mainEFO){
 
         var mainEFOLink = getOLSLink(mainEFO).then(function(termFullLink){
@@ -1278,7 +1328,9 @@
     }
 
 
+
     /*]]>*/
+
 
 </script>
 
