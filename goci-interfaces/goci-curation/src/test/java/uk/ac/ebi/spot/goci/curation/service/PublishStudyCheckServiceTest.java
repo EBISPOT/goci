@@ -5,10 +5,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
+import uk.ac.ebi.spot.goci.builder.CountryBuilder;
 import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -51,6 +55,20 @@ public class PublishStudyCheckServiceTest {
             .setUri("http://www.ebi.ac.uk/efo/EFO_0007159")
             .build();
 
+    private static final Country COR =
+            new CountryBuilder().setId(601L)
+                    .setCountryName("Germany")
+                    .build();
+
+    private static final Ancestry AN_WITH_COR =
+            new AncestryBuilder().setId(605L)
+                    .setCountryOfRecruitment(Collections.singletonList(COR))
+                    .build();
+
+    private static final Ancestry AN_NO_COR =
+            new AncestryBuilder().setId(608L)
+                    .build();
+
     private static final Association ASS_APPROVED =
             new AssociationBuilder().setId(801L)
                     .setSnpApproved(true).build();
@@ -59,15 +77,17 @@ public class PublishStudyCheckServiceTest {
             new AssociationBuilder().setId(803L)
                     .setSnpApproved(false).build();
 
-    private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED =
+    private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR =
             new StudyBuilder().setId(802L)
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setAssociations(Collections.singletonList(ASS_APPROVED))
+                    .setAncestries(Collections.singleton(AN_WITH_COR))
                     .build();
 
     private static final Study STUDY_NO_EFO_TRAIT =
             new StudyBuilder().setId(802L)
                     .setAssociations(Collections.singletonList(ASS_NOT_APPROVED))
+                    .setAncestries(Collections.singleton(AN_NO_COR))
                     .build();
 
     @Before
@@ -84,13 +104,13 @@ public class PublishStudyCheckServiceTest {
     @Test
     public void testStudyWithEfoTraitsAndApprovedAssociation() throws Exception {
 
-        when(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED)).thenReturn(true);
+        when(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR)).thenReturn(true);
 
-        publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
+        publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR,
                                            Collections.singletonList(ASS_APPROVED));
-        verify(checkEfoTermAssignmentService, times(1)).checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED);
-        assertTrue(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED));
-        assertNull(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED,
+        verify(checkEfoTermAssignmentService, times(1)).checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR);
+        assertTrue(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR));
+        assertNull(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR,
                                                       Collections.singletonList(ASS_APPROVED)));
     }
 
