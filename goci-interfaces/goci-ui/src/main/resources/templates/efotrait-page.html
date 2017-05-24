@@ -203,7 +203,7 @@
                         <div class="clearfix">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Label</dt>
-                                <dd id="efotrait-label">-</dd>
+                                <dd style="width: 100%;" id="efotrait-label">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
                             <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Label-->
@@ -301,16 +301,25 @@
                         <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>-->
                         <!--</div>-->
 
+
+
                         <div class="clearfix">
                             <dl class="dl-horizontal">
-                                <dt style="width: 150px;">all</dt>
-                                <dd id="efotrait-highlighted-study-all">-</dd>
+                                <dt style="width: 150px;">Abstract</dt>
+                                <dd id="efotrait-highlighted-study-abstract">-</dd>
                             </dl>
-                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
-                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all-->
-                            <!--</div>-->
-                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>-->
                         </div>
+
+                        <!--<div class="clearfix">-->
+                            <!--<dl class="dl-horizontal">-->
+                                <!--<dt style="width: 150px;">all</dt>-->
+                                <!--<dd id="efotrait-highlighted-study-all">-</dd>-->
+                            <!--</dl>-->
+                            <!--&lt;!&ndash;<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"&ndash;&gt;-->
+                            <!--&lt;!&ndash;style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>&ndash;&gt;-->
+                        <!--</div>-->
 
 
                     </div>
@@ -1066,16 +1075,29 @@
             var studiesMainEFO = findStudiesForEFO($('#query').text());
             var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
 
+
+
             displayHighlightedStudy = function(highlightedStudy){
                 $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
                 $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' ('+setExternalLink(EPMC+highlightedStudy.pubmedId ,'PMID:'+highlightedStudy.pubmedId )+')');
                 $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
 //                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
 //                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
-                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
-                                                                      JSON.stringify(highlightedStudy),
-                                                                      'all'));
+//                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
+//                                                                      JSON.stringify(highlightedStudy),'all'));
+
+                getFromPMC(highlightedStudy.pubmedId).then(function(data){
+                    var paperDetail = data.resultList.result[0];
+//                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
+//                                                                               paperDetail.abstractText,''));
+                    $('#efotrait-highlighted-study-abstract').html( createPopover('detail', 'abstract', paperDetail.abstractText));
+                    return paperDetail;
+                }).catch(function(err){
+                    console.error('Error when loading data from PMC! ' + err);
+                });
             }
+
+
 
             displayHighlightedStudy(highlightedStudy);
 
@@ -1149,9 +1171,10 @@
             var synonym = response.synonyms;
             var efotrait_label = response.label;
             addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
-            $("#efotrait-description").html(response.description);
+            $("#efotrait-description").html(displayArrayAsList(response.description));
             $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-            $("#efotrait-label").html(efotrait_label);
+//            $("#efotrait-label").html(efotrait_label);
+            $("#efotrait-label").html(createPopover(efotrait_label,'description',displayArrayAsList(response.description)));
             if (synonym) {
                 if (synonym.length > list_min) {
                     $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
@@ -1333,6 +1356,7 @@
 
 
 </script>
+
 
 
 
