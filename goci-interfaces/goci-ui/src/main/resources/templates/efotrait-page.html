@@ -377,6 +377,7 @@
                     </div>
 
 
+
                 </div>
 
 
@@ -450,7 +451,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Associations table -->
     <div class="row" style="margin-top:20px">
@@ -985,9 +985,8 @@
                 return traits[0];
             }
 
-            findHighlightedStudiesForEFO = function(efoid){
+            findStudiesForEFO = function(efoid){
                 var studies={};
-                var publishDate = {};
 
                 Object.keys(data.highlighting).forEach(function(key){
                     if(/^study/.test(key)) {
@@ -1002,16 +1001,25 @@
                 $.each(data_study.docs,function(index,value){
                     if($.inArray(value.id, Object.keys(studies))!=-1){
                         studies[value.id] = value;
-                        publishDate[value.id] = value.publicationDate;
                     }
                 })
+                return studies;
+            }
 
+            findHighlightedStudiesForEFO = function(efoid){
+                var studies = findStudiesForEFO(efoid);
+                var publishDate = {};
+
+                $.each(studies,function(index,value){
+                    publishDate[value.id] = value.publicationDate;
+                })
 
                 var keysSorted = Object.keys(publishDate).sort(function(a,b){return Date.parse(publishDate[b])-Date.parse(publishDate[a])})
                 return studies[keysSorted[0]];
 //                return studies;
             }
 
+            var studiesMainEFO = findStudiesForEFO($('#query').text());
             var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
             $('#efotrait-highlighted-study-pubmedId').html(highlightedStudy.pubmedId);
             $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
@@ -1062,7 +1070,7 @@
                                                  })
                                                  if (initLoad) {
                                                      getEfoTraitInfo(data_efo.docs, efotraitId);
-                                                     getSummary(data_study);
+                                                     getSummary(studiesMainEFO);
                                                  }
                                                  getEfotraitAssociations(data_association.docs);
                                                  getEfotraitStudies(data_study.docs);
@@ -1073,7 +1081,7 @@
                 //xintodo create a default colour to plot, if the colour query fail
                 if (initLoad) {
                     getEfoTraitInfo(data_efo.docs, efotraitId);
-                    getSummary(data_study);
+                    getSummary(studiesMainEFO);
                 }
                 getEfotraitAssociations(data_association.docs);
                 getEfotraitStudies(data_study.docs);
@@ -1271,9 +1279,8 @@
 
 
     /*]]>*/
+
 </script>
-
-
 
 
 

@@ -498,6 +498,16 @@ options = {
     checkbox_three_state: false,
     checkbox_keep_selected_style: false,
     onclick: function(params, node, relativePath, termIRI, type){
+        // var isComfirmed =  confirm('Are you sure?');
+        // if(isComfirmed){
+        //     var clicked = node.node.original.iri;
+        //     var efoid = clicked.split('/').slice(-1)[0];
+        //     var tmp = {}
+        //     tmp[efoid] = clicked;
+        //     addEFO(tmp);
+        // }else{
+        //     console.debug('not comfirmed');
+        // }
         var clicked = node.node.original.iri;
         var efoid = clicked.split('/').slice(-1)[0];
         var tmp = {}

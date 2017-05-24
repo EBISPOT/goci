@@ -77,7 +77,7 @@ h6 a:visited {
     border-bottom-color: #0B61A4;
 }
 /* Table heading cells */
-th { background-color: #04859D; }
+/*th { background-color: #04859D; }*/
 
 button.reset {
     color: black;

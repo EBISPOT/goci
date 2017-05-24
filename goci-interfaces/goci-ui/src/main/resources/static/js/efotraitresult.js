@@ -138,10 +138,15 @@ function getEfotraitAssociations(data,cleanBeforeInsert) {
         // Risk allele
         var riskAllele = asso.strongestAllele[0];
         var riskAlleleLabel = riskAllele;
+        var riskAllele_rsid = riskAllele;
         if (riskAlleleLabel.match(/\w+-.+/)) {
             riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
+            riskAllele_rsid = riskAllele.split('-')[0];
         }
-        riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
+        // This is now linking to the variant page instead of the search page
+        // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
+        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+
         row.append(newCell(riskAllele));
 
         // Risk allele frequency
@@ -316,8 +321,8 @@ function getEfotraitStudies(data,cleanBeforeInsert) {
 // Generate the summary sentence, at the bottom of the summary panel
 // xintodo done
 function getSummary(data) {
-    var first_report  = getFirstReportYear(data.docs);
-    var count_studies = countStudies(data.docs);
+    var first_report  = getFirstReportYear(data);
+    var count_studies = countStudies(data);
 
     if (count_studies == 0) {
         count_studies = '';
@@ -427,10 +432,16 @@ function variationClassLabel(label) {
     return new_label.charAt(0).toUpperCase() + new_label.slice(1);
 }
 
+
 // Generate an external link (text + icon)
 function setExternalLink(url,label) {
     return '<a href="'+url+'" target="_blank">'+label+'<span class="glyphicon glyphicon-new-window external-link-smaller"></span></a>';
 
+}
+
+// Generate an external link (text only)
+function setExternalLinkText(url,label) {
+    return '<a href="'+url+'" target="_blank">'+label+'</a>';
 }
 
 // Generate an external link (icon only)
