@@ -128,7 +128,8 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
         "<div>efos: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
         "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
-        "<div>Parent EFO: <strong>{{{{namespace}}category}}</strong></div>"
+        "<div>Category: <strong>{{{{namespace}}category}}</strong></div>" +
+                "{{{{namespace}}popoverHTML}}"
     },
     behaviors: {
         onmouseover: [
@@ -470,7 +471,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
     legend: {
         orientation: "vertical",
         origin: {x: 55, y: 40},
-        hidden: true
+        hidden: false
     },
     data_layers: [
         LocusZoom.Layouts.get("data_layer", "significance", {unnamespaced: true}),

@@ -80,50 +80,75 @@
         <li id="included" th:text="*{included}">Included</li>
     </ul>
 </div>
+<div style="display:none" id="efo-info"></div>
 
 <!--readme-->
-<div class="container-fluid" >
-    <h4  class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo" >readme</h4>
+<div class="container-fluid">
+    <h4 class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo">readme</h4>
     <div id="demo" class="collapse">
         <p>This readme button will be removed in production unless required by curator.</p>
-        <p>The trait page is designed to integrate/visulize all information about a specific triat(termed <b>mainEFO</b>). It
+        <p>The trait page is designed to integrate/visulize all information about a specific triat(termed <b>mainEFO</b>).
+           It
            provedes methods to add/remove other interesting EFOs on top of the mainEFO. It consists of 5 panel boxs:</p>
         <ul>
             <li><b>Trait information:</b>
-                This shows a summary of the mainEFO. It also contains a highlighted paper that we selected for this triat.
+                This shows a summary of the mainEFO. It also contains a highlighted paper that we selected for this
+                triat.
                 Currently, the most recent paper is selected as the highlighted paper for the mainEFO.
             </li>
-            <li><b>Expand your search:</b> This panel displays the currently selected EFOs and gives user three approaches to add interesting EFOs to the page.
+            <li><b>Expand your search:</b> This panel displays the currently selected EFOs and gives user three
+                                           approaches to add interesting EFOs to the page.
                 <ul>
                     <li>Currently selected EFOs are displayed like this: <button type="button" class="btn  btn-default">EFO_0004467:insulin measurement
-                        <span class="badge">  X  </span></button> which can be removed by clicking the 'X'. The mainEFO cannot be removed.</li>
-                    <li>A shareable link that can be use to recreate the page with the current selection of EFOs. Copy the link by clicking
-                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" title="copy to clipboard"></span></button>.</li>
-                    <li>
-                        <b>Search for additional terms:</b> User can search addition EFOs of interests by typing EFO_id or keywords.
+                        <span class="badge">  X  </span></button> which can be removed by clicking the 'X'. The mainEFO
+                        cannot be removed.
+                    </li>
+                    <li>A shareable link that can be use to recreate the page with the current selection of EFOs. Copy
+                        the link by clicking
+                        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk"
+                                                                            aria-hidden="true"
+                                                                            title="copy to clipboard"></span></button>.
                     </li>
                     <li>
-                        <b>Related in EFO hierarchy:</b> User can browse efo terms that are closly located to the mainEFO in
-                        the EFO ontology hierarchy. EFO can be expanded by <b>clicking the '+'</b> and can be selected by
-                        clicking the EFO name.
+                        <b>Search for additional terms:</b> User can search addition EFOs of interests by typing EFO_id
+                                                            or keywords.
                     </li>
                     <li>
-                        <b>Additional related terms eg. measurements and biomarkers:</b> This network displays the related EFOs
-                        of the mainEFO. This comes from an OLS search with the field 'logical_description'. User can <b>DOUBLE click</b>
-                        a node in the network to add it to the currently selection of EFOs.
+                        <b>Related in EFO hierarchy:</b> User can browse efo terms that are closly located to the
+                                                         mainEFO in
+                                                         the EFO ontology hierarchy. EFO can be expanded by <b>clicking
+                                                                                                               the
+                                                                                                               '+'</b>
+                                                         and can be selected by
+                                                         clicking the EFO name.
+                    </li>
+                    <li>
+                        <b>Additional related terms eg. measurements and biomarkers:</b> This network displays the
+                                                                                         related EFOs
+                                                                                         of the mainEFO. This comes from
+                                                                                         an OLS search with the field
+                                                                                         'logical_description'. User can
+                        <b>DOUBLE click</b>
+                                                                                         a node in the network to add it
+                                                                                         to the currently selection of
+                                                                                         EFOs.
                     </li>
 
                 </ul>
             </li>
             <li><b>Manhattan plot (plot of catalog associations for selected trait):</b>
-                Manhattan plot implemented using Locus Zoom. This plot will be updated as new EFOs are added to the page.
+                Manhattan plot implemented using Locus Zoom. This plot will be updated as new EFOs are added to the
+                page.
                 <ul>
-                    <li>Legend can be toggle by clicking the 'Show legend' button on the topright of the plot(the button is hidden until mouse over).
+                    <li>Legend can be toggle by clicking the 'Show legend' button on the topright of the plot(the button
+                        is hidden until mouse over).
                     </li>
-                    <li>Associations are coloured base on its highlighted EFO term when multiple EFOs have been annotated to the association using
+                    <li>Associations are coloured base on its highlighted EFO term when multiple EFOs have been
+                        annotated to the association using
                         'wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400'.
                     </li>
-                    <li>Highlighted EFO is currently either the selected-term, or a random EFO from the annotated EFOs when multiple selected EFO are annotated to the association.
+                    <li>Highlighted EFO is currently either the selected-term, or a random EFO from the annotated EFOs
+                        when multiple selected EFO are annotated to the association.
                     </li>
                     <li>Click 'download image' to download an svg of the current plot.
                     </li>
@@ -156,38 +181,38 @@
 
         <!--debug information-->
         <!--<div class="row" style="margin-top:10px">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading background-color-primary-accent">-->
-                    <!--<h3 class="panel-title">debug information</h3>-->
-                <!--</div>-->
-                <!--<div class="col-lg-12">-->
-                    <!--<button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>-->
-                    <!--<button id="addEfoButton1"-->
-                            <!--class="addEfoButton"-->
-                            <!--value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>-->
-                    <!--<button id="addEfoButton2"-->
-                            <!--class="addEfoButton"-->
-                            <!--value="EFO_0001060">celiac disease EFO_0001060</button>-->
-                    <!--<button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>-->
-                <!--</div>-->
+        <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading background-color-primary-accent">-->
+        <!--<h3 class="panel-title">debug information</h3>-->
+        <!--</div>-->
+        <!--<div class="col-lg-12">-->
+        <!--<button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>-->
+        <!--<button id="addEfoButton1"-->
+        <!--class="addEfoButton"-->
+        <!--value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>-->
+        <!--<button id="addEfoButton2"-->
+        <!--class="addEfoButton"-->
+        <!--value="EFO_0001060">celiac disease EFO_0001060</button>-->
+        <!--<button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>-->
+        <!--</div>-->
 
-                <!--<div class="col-lg-12">-->
-                    <!--<div id="debug">debug information</div>-->
-                <!--</div>-->
-                <!--<input type="checkbox" id="query-include-descendants"/>include descendants-->
+        <!--<div class="col-lg-12">-->
+        <!--<div id="debug">debug information</div>-->
+        <!--</div>-->
+        <!--<input type="checkbox" id="query-include-descendants"/>include descendants-->
 
 
-                <!--<button class="btn btn-large btn-primary" data-toggle="confirmation"-->
-                        <!--data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"-->
-                        <!--data-btn-ok-class="btn-success"-->
-                        <!--data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"-->
-                        <!--data-btn-cancel-class="btn-danger"-->
-                        <!--data-title="Is it ok?" data-content="This might be dangerous">-->
-                  <!--Confirmation-->
-                <!--</button>-->
+        <!--<button class="btn btn-large btn-primary" data-toggle="confirmation"-->
+        <!--data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"-->
+        <!--data-btn-ok-class="btn-success"-->
+        <!--data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"-->
+        <!--data-btn-cancel-class="btn-danger"-->
+        <!--data-title="Is it ok?" data-content="This might be dangerous">-->
+        <!--Confirmation-->
+        <!--</button>-->
 
-            <!--</div>-->
-            <!--<div id="mynetwork"></div>-->
+        <!--</div>-->
+        <!--<div id="mynetwork"></div>-->
         <!--</div>-->
 
         <!-- Summary panel -->
@@ -304,7 +329,6 @@
                         <!--</div>-->
 
 
-
                         <div class="clearfix">
                             <dl class="dl-horizontal">
                                 <dt style="width: 150px;">Abstract</dt>
@@ -313,14 +337,14 @@
                         </div>
 
                         <!--<div class="clearfix">-->
-                            <!--<dl class="dl-horizontal">-->
-                                <!--<dt style="width: 150px;">all</dt>-->
-                                <!--<dd id="efotrait-highlighted-study-all">-</dd>-->
-                            <!--</dl>-->
-                            <!--&lt;!&ndash;<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"&ndash;&gt;-->
-                            <!--&lt;!&ndash;style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all&ndash;&gt;-->
-                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>&ndash;&gt;-->
+                        <!--<dl class="dl-horizontal">-->
+                        <!--<dt style="width: 150px;">all</dt>-->
+                        <!--<dd id="efotrait-highlighted-study-all">-</dd>-->
+                        <!--</dl>-->
+                        <!--&lt;!&ndash;<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"&ndash;&gt;-->
+                        <!--&lt;!&ndash;style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>&ndash;&gt;-->
                         <!--</div>-->
 
 
@@ -337,127 +361,210 @@
         </div>
 
         <!--Expandsion panel-->
-        <div class="row" style="margin-top:20px">
-            <div id="expension_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span class="locus_label">Expand your search</span>
-                    </h3>
-                    <span class="pull-right">
-                        <span class="clickable panel-collapsed"
-                              style="margin-left:25px"
-                              onclick="toggleSidebar('#expension_panel span.clickable')">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </span>
-                    </span>
-                </div>
+        <!--<div class="row" style="margin-top:20px">-->
+        <!--<div id="expension_panel" class="panel panel-default">-->
+        <!--<div class="panel-heading background-color-primary-accent">-->
+        <!--<h3 class="panel-title">-->
+        <!--<span class="locus_label">Expand your search</span>-->
+        <!--</h3>-->
+        <!--<span class="pull-right">-->
+        <!--<sp an class="clickable panel-collapsed"-->
+        <!--style="margin-left:25px"-->
+        <!--onclick="toggleSidebar('#expension_panel span.clickable')">-->
+        <!--<span class="glyphicon glyphicon-chevron-down"></span>-->
+        <!--</span>-->
+        <!--</span>-->
+        <!--</div>-->
 
-                <div class="panel-body" style="display:none">
-                    <!--<div class="panel-body" style="display:initial">-->
+        <!--<div class="panel-body" style="display:none">-->
+        <!--&lt;!&ndash;<div class="panel-body" style="display:initial">&ndash;&gt;-->
 
-                    <!--current selected-->
-                    <div class="col-xs-12 background-color-primary-accent">
-                        <div class="col-xs-6">Selected EFO:
-                            <div id="selected-efos_text"></div>
-                        </div>
-                        <div class="col-xs-12" id="selected-efos_btn">
+        <!--&lt;!&ndash;current selected&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-xs-12 background-color-primary-accent">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-xs-6">Selected EFO:&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="selected-efos_text"></div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-xs-12" id="selected-efos_btn">&ndash;&gt;-->
 
-                        </div>
-                        <div style="display:none" id="efo-info"></div>
-                        <div class="col-xs-12">
-                            <input type="text" id="sharable_link" class="col-xs-6"></input>
-                            <div class="col-xs-1">
-                            <button id="sharable_link_btn"
-                                    type="button"
-                                    class="btn btn-default"
-                                    data-clipboard-target="#sharable_link">
-                              <span class="glyphicon glyphicon-floppy-disk"
-                                    aria-hidden="true"
-                                    title="copy to clipboard"></span>
-                            </button>
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div style="display:none" id="efo-info"></div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-xs-12">&ndash;&gt;-->
+        <!--&lt;!&ndash;<input type="text" id="sharable_link" class="col-xs-6"></input>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="col-xs-1">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button id="sharable_link_btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="btn btn-default"&ndash;&gt;-->
+        <!--&lt;!&ndash;data-clipboard-target="#sharable_link">&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="glyphicon glyphicon-floppy-disk"&ndash;&gt;-->
+        <!--&lt;!&ndash;aria-hidden="true"&ndash;&gt;-->
+        <!--&lt;!&ndash;title="copy to clipboard"></span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<div class="col-xs-12">&ndash;&gt;-->
+        <!--&lt;!&ndash;<button id="btn-query-include-descendants"&ndash;&gt;-->
+        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="btn btn-default">replot with descendants&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<button id="btn-query-include-related-terms"&ndash;&gt;-->
+        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="btn btn-default">replot with related terms&ndash;&gt;-->
+        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;trying bootstrap nav tab&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="container col-xs-12">&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;<ul class="nav nav-tabs">&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;<li class="active"><a data-toggle="tab" href="#ols-search-div">Search for additional terms</a></li>&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;</ul>&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<ul class="nav nav-pills">&ndash;&gt;-->
+        <!--&lt;!&ndash;<li class="active"><a data-toggle="pill" href="#ols-search-div">Search for additional terms</a></li>&ndash;&gt;-->
+        <!--&lt;!&ndash;<li><a data-toggle="pill" href="#ols-tree-div">Related in EFO hierarchy</a></li>&ndash;&gt;-->
+        <!--&lt;!&ndash;<li><a data-toggle="pill" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>&ndash;&gt;-->
+        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+
+
+        <!--&lt;!&ndash;<div class="tab-content">&ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash;auto suggest&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="ols-search-div" class="tab-pane fade in active">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Search for additional terms:</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="left">&ndash;&gt;-->
+        <!--&lt;!&ndash;<label>&ndash;&gt;-->
+        <!--&lt;!&ndash;<input style="font-weight: normal"&ndash;&gt;-->
+        <!--&lt;!&ndash;size="35"&ndash;&gt;-->
+        <!--&lt;!&ndash;type="text"&ndash;&gt;-->
+        <!--&lt;!&ndash;name="q"&ndash;&gt;-->
+        <!--&lt;!&ndash;data-olswidget="select"&ndash;&gt;-->
+        <!--&lt;!&ndash;data-olsontology="efo"&ndash;&gt;-->
+        <!--&lt;!&ndash;data-selectpath="http://www.ebi.ac.uk/ols/"&ndash;&gt;-->
+        <!--&lt;!&ndash;olstype=""&ndash;&gt;-->
+        <!--&lt;!&ndash;id="local-searchbox"&ndash;&gt;-->
+        <!--&lt;!&ndash;placeholder="Enter the term you are looking for"&ndash;&gt;-->
+        <!--&lt;!&ndash;class="ac_input">&ndash;&gt;-->
+        <!--&lt;!&ndash;</input>&ndash;&gt;-->
+        <!--&lt;!&ndash;</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<div id="ols-tree-div" class="tab-pane fade">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Related in EFO hierarchy:</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="term-tree"&ndash;&gt;-->
+        <!--&lt;!&ndash;style="height:500px; width:500px; border:1px solid black;overflow: auto;">&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;<div id="ols-graph-div" class="tab-pane fade">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="expension">&ndash;&gt;-->
+        <!--&lt;!&ndash;<h4>Additional related terms eg. measurements and biomarkers:</h4>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div>&ndash;&gt;-->
+        <!--&lt;!&ndash;<div id="ontology_vis"></div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+        <!--&lt;!&ndash;without nav tab&ndash;&gt;-->
+        <!--<div class="col-xs-12">-->
+        <!--&lt;!&ndash;ols tree&ndash;&gt;-->
+        <!--<div class="col-xs-4">-->
+        <!--&lt;!&ndash;auto-suggestion&ndash;&gt;-->
+        <!--<div class="col-xs-12">-->
+        <!--&lt;!&ndash;auto suggest&ndash;&gt;-->
+        <!--<h4>Search for additional terms:</h4>-->
+        <!--<div class="left">-->
+        <!--<label>-->
+        <!--<input style="font-weight: normal"-->
+        <!--size="35"-->
+        <!--type="text"-->
+        <!--name="q"-->
+        <!--data-olswidget="select"-->
+        <!--data-olsontology="efo"-->
+        <!--data-selectpath="http://www.ebi.ac.uk/ols/"-->
+        <!--olstype=""-->
+        <!--id="local-searchbox"-->
+        <!--placeholder="Enter the term you are looking for"-->
+        <!--class="ac_input">-->
+        <!--</input>-->
+        <!--</label>-->
+        <!--</div>-->
+        <!--</div>-->
+
+
+        <!--<div class="col-xs-12">-->
+        <!--<h4>Related in EFO hierarchy:</h4>-->
+        <!--<div id="term-tree"-->
+        <!--style="height:500px; width:500px; border:1px solid black;overflow: auto;">-->
+
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash;ols graph&ndash;&gt;-->
+        <!--<div class="col-xs-8">-->
+        <!--<div id="expension">-->
+        <!--<h4>Additional related terms eg. measurements and biomarkers:</h4>-->
+        <!--</div>-->
+        <!--<div>-->
+        <!--<div id="ontology_vis"></div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--</div>-->
+
+
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <div class="row search-results-container" id="search-results-container" style="display: block">
+            <div class="col-md-5 tight-to-side" id="filter-bar">
+                <div class="panel panel-default">
+                    <div id="expand_float_panel" class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">Refine search results</h3>
+                        <span class="pull-right clickable"
+                              onclick="toggleSidebar('#expand_float_panel span.clickable')">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </span>
+                    </div>
+                    <div class="panel-body">
+
+                        <!--current select-->
+                        <div>
+                            <b>Current selected:</b>
+                            <div class="list-group" style=" max-height: 300px; overflow-y:scroll; ">
+                                <div id="selected-efos_btn"></div>
                             </div>
                         </div>
 
-                        <div class="col-xs-12">
-                            <button id="btn-query-include-descendants"
-                                    type="button"
-                                    class="btn btn-default">replot with descendants
-                            </button>
-
-                            <button id="btn-query-include-related-terms"
-                                    type="button"
-                                    class="btn btn-default">replot with related terms
-                            </button>
-
-
+                        <!--replot button-->
+                        <div>
+                            <b>Actions:</b>
+                            <div>
+                                <button id="btn-query-include-descendants"
+                                        type="button"
+                                        class="btn btn-default">+descendants
+                                </button>
+                                <button id="btn-query-include-related-terms"
+                                        type="button"
+                                        class="btn btn-default">+related terms
+                                </button>
+                            </div>
                         </div>
 
-                    </div>
-
-                    <!--trying bootstrap nav tab-->
-                    <!--<div class="container col-xs-12">-->
-                    <!--&lt;!&ndash;<ul class="nav nav-tabs">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li class="active"><a data-toggle="tab" href="#ols-search-div">Search for additional terms</a></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-                    <!--<ul class="nav nav-pills">-->
-                    <!--<li class="active"><a data-toggle="pill" href="#ols-search-div">Search for additional terms</a></li>-->
-                    <!--<li><a data-toggle="pill" href="#ols-tree-div">Related in EFO hierarchy</a></li>-->
-                    <!--<li><a data-toggle="pill" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>-->
-                    <!--</ul>-->
-
-
-                    <!--<div class="tab-content">-->
-                    <!--&lt;!&ndash;auto suggest&ndash;&gt;-->
-                    <!--<div id="ols-search-div" class="tab-pane fade in active">-->
-                    <!--<h4>Search for additional terms:</h4>-->
-                    <!--<div class="left">-->
-                    <!--<label>-->
-                    <!--<input style="font-weight: normal"-->
-                    <!--size="35"-->
-                    <!--type="text"-->
-                    <!--name="q"-->
-                    <!--data-olswidget="select"-->
-                    <!--data-olsontology="efo"-->
-                    <!--data-selectpath="http://www.ebi.ac.uk/ols/"-->
-                    <!--olstype=""-->
-                    <!--id="local-searchbox"-->
-                    <!--placeholder="Enter the term you are looking for"-->
-                    <!--class="ac_input">-->
-                    <!--</input>-->
-                    <!--</label>-->
-                    <!--</div>-->
-                    <!--</div>-->
-
-                    <!--<div id="ols-tree-div" class="tab-pane fade">-->
-                    <!--<h4>Related in EFO hierarchy:</h4>-->
-                    <!--<div id="term-tree"-->
-                    <!--style="height:500px; width:500px; border:1px solid black;overflow: auto;">-->
-
-                    <!--</div>-->
-                    <!--</div>-->
-
-                    <!--<div id="ols-graph-div" class="tab-pane fade">-->
-                    <!--<div id="expension">-->
-                    <!--<h4>Additional related terms eg. measurements and biomarkers:</h4>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                    <!--<div id="ontology_vis"></div>-->
-                    <!--</div>-->
-                    <!--</div>-->
-
-                    <!--</div>-->
-                    <!--</div>-->
-
-
-                    <!--without nav tab-->
-                    <div class="col-xs-12">
-                        <!--ols tree-->
-                        <div class="col-xs-4">
-                            <!--auto-suggestion-->
-                            <div class="col-xs-12">
-                                <!--auto suggest-->
+                        <div>
+                            <div id="ols-search-div" class="tab-pane fade in active">
                                 <h4>Search for additional terms:</h4>
                                 <div class="left">
                                     <label>
@@ -476,99 +583,266 @@
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        <!--trying bootstrap nav tab-->
+                        <div class="container col-xs-12">
+                            <!--<ul class="nav nav-tabs">-->
+                            <!--<li class="active"><a data-toggle="tab" href="#ols-search-div">Search for additional terms</a></li>-->
+                            <!--<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>-->
+                            <!--<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>-->
+                            <!--</ul>-->
+                            <ul class="nav nav-pills">
+                                <li><a data-toggle="pill" href="#ols-tree-div">EFO hierarchy</a></li>
+                                <li><a data-toggle="pill" href="#ols-graph-div">Additional terms</a></li>
+                            </ul>
 
 
-                            <div class="col-xs-12">
-                                <h4>Related in EFO hierarchy:</h4>
-                                <div id="term-tree"
-                                     style="height:500px; width:500px; border:1px solid black;overflow: auto;">
+                            <div class="tab-content">
+                                <!--auto suggest-->
 
+
+                                <div id="ols-tree-div" class="tab-pane fade">
+                                    <h4>Related in EFO hierarchy:</h4>
+                                    <div id="term-tree"
+                                         style="height:500px; width:500px; border:1px solid black;overflow: auto;">
+
+                                    </div>
                                 </div>
+
+                                <div id="ols-graph-div" class="tab-pane fade">
+                                    <div id="expension">
+                                        <h4>Additional related terms eg. measurements and biomarkers:</h4>
+                                    </div>
+                                    <div>
+                                        <div id="ontology_vis"></div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
-                        <!--ols graph-->
-                        <div class="col-xs-8">
-                            <div id="expension">
-                                <h4>Additional related terms eg. measurements and biomarkers:</h4>
-                            </div>
-                            <div>
-                                <div id="ontology_vis"></div>
+
+                        <div>
+                            <input type="text" id="sharable_link" class="col-xs-6" style="display: block"></input>
+                            <div class="col-xs-1">
+                                <button id="sharable_link_btn"
+                                        type="button"
+                                        class="btn btn-default"
+                                        data-clipboard-target="#sharable_link">
+                                  <span class="glyphicon glyphicon-floppy-disk"
+                                        aria-hidden="true"
+                                        title="copy to clipboard"></span>
+                            </button>
                             </div>
                         </div>
+                        <!--<div id="facets">-->
+                        <!--<b>Show results for</b>-->
 
+                        <!--<div class="list-group">-->
+                        <!--&lt;!&ndash;add an "active" class annotation to each a tag when it's selected&ndash;&gt;-->
+                        <!--<a href="#study" class="list-group-item" id="study-facet">-->
+                        <!--<span class="badge">0</span>Studies-->
+                        <!--</a>-->
+                        <!--<a href="#association" class="list-group-item" id="association-facet">-->
+                        <!--<span class="badge">0</span>Associations-->
+                        <!--</a>-->
+                        <!--<a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">-->
+                        <!--<span class="badge">0</span>Catalog traits-->
+                        <!--</a>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--<div>-->
+                        <!--<form id="filter-form">-->
+                        <!--<div id="filters">-->
+                        <!--<b>Filter results by</b>-->
+
+                        <!--<div class="list-group">-->
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">p-value-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="p-value for SNP-disease/trait association"></span>-->
+                        <!--</span>-->
+                        <!--<span class="pval-label">&le;</span>-->
+                        <!--<input class="p-value" type="text" id="pval-mant" placeholder="5"/>-->
+                        <!--<span class="pval-label">x 10</span>-->
+                        <!--<input class="p-value" type="text" id="pval-exp" placeholder="-8"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">Odds ratio-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="Odds ratio associated with SNP-disease/trait association"></span>-->
+                        <!--</span>-->
+                        <!--<input class="filter-value" type="text" id="or-min" placeholder="from"/>-->
+                        <!--<input class="filter-value" type="text" id="or-max" placeholder="to"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">Beta coefficient-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="Beta coefficient associated with SNP-disease/trait association"></span>-->
+                        <!--</span>-->
+                        <!--<input class="filter-value"-->
+                        <!--type="text"-->
+                        <!--id="beta-min"-->
+                        <!--placeholder="from"/>-->
+                        <!--<input class="filter-value" type="text" id="beta-max" placeholder="to"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">Study date-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="Publication date (YYYY-MM-DD)"></span>-->
+                        <!--</span>-->
+                        <!--<input class="filter-value"-->
+                        <!--data-provide="datepicker"-->
+                        <!--data-date-format="yyyy-mm"-->
+                        <!--id="date-min"-->
+                        <!--placeholder="from"/>-->
+                        <!--<input class="filter-value"-->
+                        <!--data-provide="datepicker"-->
+                        <!--data-date-format="yyyy-mm"-->
+                        <!--id="date-max"-->
+                        <!--placeholder="to"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">Genomic range-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="Genomic range containing variants of interest"></span>-->
+                        <!--</span>-->
+                        <!--<input class="chrom-value"-->
+                        <!--type="text"-->
+                        <!--id="chrom"-->
+                        <!--placeholder="chromosone"/>-->
+                        <!--<span class="chrom-label">:</span>-->
+                        <!--<input class="bp-value"-->
+                        <!--type="text"-->
+                        <!--id="bp-min"-->
+                        <!--placeholder="from"/>-->
+                        <!--<span class="chrom-label">-</span>-->
+
+                        <!--<input class="bp-value" type="text" id="bp-max" placeholder="to"/>-->
+                        <!--</div>-->
+
+                        <!--<div class="list-group-item filter-element ">-->
+                        <!--<span class="filter-label">Catalog Trait-->
+                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                        <!--data-toggle="tooltip"-->
+                        <!--data-original-title="List of related disease/trait descriptions (total number of studies for this trait)"></span>-->
+                        <!--</span>-->
+
+                        <!--<div class="filter-values">-->
+                        <!--<div class="btn-group" id="trait-dropdown">-->
+                        <!--<button type="button"-->
+                        <!--class="btn btn-default dropdown-toggle multiSelect"-->
+                        <!--aria-expanded="false">-->
+                        <!--Reported trait-->
+                        <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu scrollable-menu" role="menu">-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                        <!--<div>-->
+                        <!--<button type="button"-->
+                        <!--class="btn btn-default pull-right"-->
+                        <!--id="clear-filter">Clear all filters</button>-->
+                        <!--<button type="submit"-->
+                        <!--class="btn btn-default pull-right"-->
+                        <!--style="margin-right: 15px;">Apply filters</button>-->
+                        <!--</div>-->
+                        <!--</form>-->
+                        <!--</div>-->
+                        <!--<div id="catalog-stats" style="display: none" class="row">-->
+                        <!--<h4>Catalog stats</h4>-->
+                        <!--<ul>-->
+                        <!--<li id="releasedate-stat"></li>-->
+                        <!--<li id="studies-stat"></li>-->
+                        <!--<li id="snps-stat"></li>-->
+                        <!--<li id="associations-stat"></li>-->
+                        <!--<li id="genomebuild"></li>-->
+                        <!--<li id="dbsnpbuild"></li>-->
+                        <!--<li id="ensemblbuild"></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
                     </div>
-
-
-
                 </div>
             </div>
-        </div>
-
-        <!-- List the available tables -->
-        <div class="row" style="margin-top:0px">
-            <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
-                <span style="margin-right:10px;font-weight:bold">Available data:</span>
-                <button type="button"
-                        class="btn btn-default"
-                        style="margin-right:10px;font-weight:bold"
-                        onclick="toggle_and_scroll('#locus_panel')">
+            <div class="col-md-7" id="results-area">
+                <!-- List the available tables -->
+                <div class="row" style="margin-top:0px">
+                    <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
+                        <span style="margin-right:10px;font-weight:bold">Available data:</span>
+                        <button type="button"
+                                class="btn btn-default"
+                                style="margin-right:10px;font-weight:bold"
+                                onclick="toggle_and_scroll('#locus_panel')">
                     <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats"
                                                                          style="color:#398A96;margin-left:10px"></span>
                 </button>
-                <button type="button"
-                        class="btn btn-default"
-                        style="margin-right:10px;font-weight:bold"
-                        onclick="toggle_and_scroll('#association_panel')">
+                        <button type="button"
+                                class="btn btn-default"
+                                style="margin-right:10px;font-weight:bold"
+                                onclick="toggle_and_scroll('#association_panel')">
                     <span class="association_label">Associations</span><span class="association_count badge"
                                                                              style="background-color: #398A96;margin-left:10px"></span>
                 </button>
-                <button type="button"
-                        class="btn btn-default"
-                        style="margin-right:10px;font-weight:bold"
-                        onclick="toggle_and_scroll('#study_panel')">
+                        <button type="button"
+                                class="btn btn-default"
+                                style="margin-right:10px;font-weight:bold"
+                                onclick="toggle_and_scroll('#study_panel')">
                     <span class="study_label">Studies</span><span class="study_count badge"
                                                                   style="background-color: #398A96;margin-left:10px"></span>
                 </button>
-                <!--<button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">-->
-                <!--<span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>-->
-                <!--</button>-->
-            </div>
-        </div>
+                        <!--<button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">-->
+                        <!--<span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>-->
+                        <!--</button>-->
+                    </div>
+                </div>
 
-        <!-- locus plot -->
-        <div class="row" style="margin-top:20px">
-            <div id="locus_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span class="locus_label">Manhattan plot (plot of catalog associations for selected trait)</span>
-                        <span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
-                    </h3>
-                    <span class="pull-right">
+                <!-- locus plot -->
+                <div class="row" style="margin-top:20px">
+                    <div id="locus_panel" class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">
+                                <span class="locus_label">Manhattan plot (plot of catalog associations for selected trait)</span>
+                                <span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                            </h3>
+                            <span class="pull-right">
                         <span class="clickable panel-collapsed"
                               style="margin-left:25px"
                               onclick="toggleSidebar('#locus_panel span.clickable')">
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </span>
                     </span>
+                        </div>
+                        <div class="panel-body" style="display:none">
+                            <!--<div class="panel-body" style="display:initial">-->
+                            <!-- locus plot -->
+                            <div id="plot" style=" width: 1000px; height: 900px;"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body" style="display:none">
-                    <!--<div class="panel-body" style="display:initial">-->
-                    <!-- locus plot -->
-                    <div id="plot" style=" width: 1000px; height: 900px;"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Associations table -->
-        <div class="row" style="margin-top:20px">
-            <div id="association_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span class="association_label">Associations</span><span class="association_count badge"
-                                                                                 style="background-color: #398A96;margin-left:10px"></span>
-                    </h3>
-                    <span class="pull-right">
+                <!-- Associations table -->
+                <div class="row" style="margin-top:20px">
+                    <div id="association_panel" class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">
+                                <span class="association_label">Associations</span><span class="association_count badge"
+                                                                                         style="background-color: #398A96;margin-left:10px"></span>
+                            </h3>
+                            <span class="pull-right">
                         <button type="button" class="btn btn-default btn-xs" id="download_data">
                             <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
                             <span>Download association data</span>
@@ -579,152 +853,154 @@
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </span>
                     </span>
+                        </div>
+
+                        <div class="panel-body" style="display:none">
+
+                            <table id="association-table" class="table table-striped">
+                                <thead id="association-table-header">
+                                <tr>
+                                    <th style="width: 10%" id="strongestAllele">Risk allele
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>
+                                                                                <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    </th>
+                                    <th style="width: 8%" id="riskFrequency">RAF
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Risk/effect allele frequency in controls"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 12%" id="pValue">p-value
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 6%" id="orPerCopyNum">OR
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Odds ratio associated with variant"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 14%" id="orType">Beta
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 6%">CI
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="95% confidence interval for OR or beta"></span>
+                                    </th>
+
+                                    <th style="width: 8%">Reported gene(s)
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Gene(s) reported by author"></span>
+                                    </th>
+
+                                    <th style="width: 13%" id="traitName_s-alt">Reported trait
+                                        <span class="glyphicon glyphicon-question-sign"
+                                              data-toggle="tooltip"
+                                              data-original-title="Description of disease/trait analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 13%" id="traitName-alt">Mapped trait
+                                        <span class="glyphicon glyphicon-question-sign"
+                                              data-toggle="tooltip"
+                                              data-original-title="Description of disease/trait mapped to the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 15%" id="author_s-alt" colspan="2">Study
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="association-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="panel-body" style="display:none">
+                <!-- Studies table -->
+                <div class="row" style="margin-top:20px">
+                    <div id="study_panel" class="panel panel-default">
+                        <div class="panel-heading background-color-primary-accent">
+                            <h3 class="panel-title">
+                                <span class="study_label">Studies</span><span class="study_count badge"
+                                                                              style="background-color: #398A96;margin-left:10px"></span>
+                            </h3>
 
-                    <table id="association-table" class="table table-striped">
-                        <thead id="association-table-header">
-                        <tr>
-                            <th style="width: 10%" id="strongestAllele">Risk allele
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>
-                                                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                            </th>
-                            <th style="width: 8%" id="riskFrequency">RAF
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Risk/effect allele frequency in controls"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 12%" id="pValue">p-value
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 6%" id="orPerCopyNum">OR
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Odds ratio associated with variant"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 14%" id="orType">Beta
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 6%">CI
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="95% confidence interval for OR or beta"></span>
-                            </th>
-
-                            <th style="width: 8%">Reported gene(s)
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Gene(s) reported by author"></span>
-                            </th>
-
-                            <th style="width: 13%" id="traitName_s-alt">Reported trait
-                                <span class="glyphicon glyphicon-question-sign"
-                                      data-toggle="tooltip"
-                                      data-original-title="Description of disease/trait analysed in the study"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 13%" id="traitName-alt">Mapped trait
-                                <span class="glyphicon glyphicon-question-sign"
-                                      data-toggle="tooltip"
-                                      data-original-title="Description of disease/trait mapped to the study"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 15%" id="author_s-alt" colspan="2">Study
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody id="association-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Studies table -->
-        <div class="row" style="margin-top:20px">
-            <div id="study_panel" class="panel panel-default">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">
-                        <span class="study_label">Studies</span><span class="study_count badge"
-                                                                      style="background-color: #398A96;margin-left:10px"></span>
-                    </h3>
-
-                    <span class="pull-right clickable panel-collapsed"
-                          onclick="toggleSidebar('#study_panel span.clickable')">
+                            <span class="pull-right clickable panel-collapsed"
+                                  onclick="toggleSidebar('#study_panel span.clickable')">
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </span>
-                </div>
+                        </div>
 
-                <div class="panel-body" style="display:none">
-                    <table id="study-table" class="table table-striped">
-                        <thead id="study-table-header">
-                        <tr>
-                            <th style="width: 12%" id="author_s">Author
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 10%" id="publicationDate">Date
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Publication date (YYYY-MM-DD)"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 12%" id="publication">Journal
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Abbreviated journal name"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 30%" id="title">Title
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Title of paper"></span>
-                                                              <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                            </th>
-                            <th style="width: 12%" id="sample_i">Initial sample description
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Description of the initial sample analysed in the study"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 12%" id="sample_r">Replication sample description
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Description of the replication sample analysed in the study"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                            <th style="width: 12%" id="ancestral_gp">Ancestral groups
-                                <span class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="List of the ancestral groups analysed in the study"></span>
-                                <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody id="study-table-body"></tbody>
-                    </table>
+                        <div class="panel-body" style="display:none">
+                            <table id="study-table" class="table table-striped">
+                                <thead id="study-table-header">
+                                <tr>
+                                    <th style="width: 12%" id="author_s">Author
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 10%" id="publicationDate">Date
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Publication date (YYYY-MM-DD)"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 12%" id="publication">Journal
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Abbreviated journal name"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 30%" id="title">Title
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Title of paper"></span>
+                                                                      <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    </th>
+                                    <th style="width: 12%" id="sample_i">Initial sample description
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Description of the initial sample analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 12%" id="sample_r">Replication sample description
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="Description of the replication sample analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                    <th style="width: 12%" id="ancestral_gp">Ancestral groups
+                                        <span class="glyphicon glyphicon-question-sign context-help"
+                                              data-toggle="tooltip"
+                                              data-original-title="List of the ancestral groups analysed in the study"></span>
+                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="study-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
 
+    </div>
 
 
 </div>
@@ -806,9 +1082,6 @@
 <script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
 
 
-
-
-
 <!-- loading overlay
 ================================================== -->
 
@@ -841,6 +1114,12 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+    var data_efo=undefined
+    var data_study=undefined
+    var data_association=undefined
+    var data_diseasetrait=undefined
+    var data_facet=undefined
+    var data_highlighting=undefined
 
     //show/hide spinner
     toggleSpinner = function(tagID) {
@@ -868,7 +1147,7 @@
 
     $('#btn-query-include-related-terms').click(function() {
         //replot with all related terms, from the currently selected efos
-        getRelatedTerms(getMainEFO().short_form).then(function(data){
+        getRelatedTerms(getMainEFO().short_form).then(function(data) {
             addEFO(data, false, false);
         });
     });
@@ -918,58 +1197,93 @@
         });
     }
 
-    removeEFO = function(efoid){
-        var selected = getDataFromTag(global_efo_info_tag_id,'selectedEfos')
+    removeEFO = function(efoid) {
+        var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
         delete selected[efoid];
         $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
     }
 
-    updateSelectedItem = function(tagID,efoid,additionalLabel,removeable){
-        if(removeable == undefined)
+    addSelectedItem = function(tagID, efoid, additionalLabel, removeable) {
+        if (removeable == undefined) {
             removeable = true;
-        var container = $(tagID);
-        var btn = $('<button />', {type: 'button', class: 'btn  btn-default', text:efoid+additionalLabel+'   '}).appendTo(container);
-        if(removeable) {
-            var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(btn);
-            span.on("click", function(e) {
-                removeEFO(efoid);
-            });
         }
+
+        getColourForEFO(efoid).then(function(data){
+            var colour = data.colour;
+            var container = $(tagID);
+
+
+            var btn = $('<a />', {
+                class: 'list-group-item col-xs-9 col-sm-9 col-md-9 col-lg-9',
+            }).css({
+                'width': '100%', 'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
+            }).appendTo(container);
+            $('<span />', { class: 'badge', text: data.colourLabel.substr(0,1), title:data.colourLabel})
+                    .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
+                    .appendTo(btn);
+
+            if (removeable) {
+                var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(btn);
+                span.on("click", function(e) {
+                    removeEFO(efoid);
+                });
+            }
+            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFO(efoid)).length , title:'Number of study'}).css({'color':'black'}).appendTo(btn);
+            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFO(efoid)).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
+
+            btn.append(additionalLabel)
+
+        })
     }
 
-    updatePage=function(mainEFO,current_select,all_descendants,initLoad){
+    updatePage = function(mainEFO, current_select, all_descendants, initLoad) {
         var current_select = $(global_efo_info_tag_id).data('selectedEfos')
-
-        var current_selected_text='';
-
         var container = $('#selected-efos_btn');
         container.empty()
 
-        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo){
+        //update selection box, the badge will be 0 since the data is not ready at this stage.
+        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
 //                current_selected_text = current_selected_text + efoInfo.short_form + ':' + efoInfo.label + '<br/>';
 //                $("#selected-efos_text").html(current_selected_text);
-                if(efoInfo.short_form == mainEFO)
-                    updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label,false)
+                if (efoInfo.short_form == mainEFO)
+                    addSelectedItem('#selected-efos_btn', efoInfo.short_form, efoInfo.label, false)
                 else
-                    updateSelectedItem('#selected-efos_btn',efoInfo.short_form ,':' + efoInfo.label)
+                    addSelectedItem('#selected-efos_btn', efoInfo.short_form, efoInfo.label)
+                return efoInfo;
             });
-        },Promise.resolve()).catch(function(err){
+        }, Promise.resolve()).catch(function(err) {
             console.error('Error when updating selected efo box! ' + err);
         })
 
-        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(current_select).join(','))
-
-
-        if(initLoad){
+        if (initLoad) {
 //            addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
         }
 
-        getEfoTraitData(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(current_select).join(','))
+
+        Promise.all([updateSelectedBoxPromise,getEfoTraitData(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad)]).then(function(){
+            //update selection box
+            var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+                return sequence.then(function() {
+                    return efoInfo;
+                }).then(function(efoInfo) {
+                    //update the selection box badge number when data is ready
+                    $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
+                    $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
+                    $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
+                    $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
+                });
+            }, Promise.resolve()).catch(function(err) {
+                console.error('Error when updating selected efo box! ' + err);
+            })
+
+
+        });
 
 
     }
@@ -998,6 +1312,50 @@
         }
     });
 
+
+
+    findStudiesForEFO = function(efoid) {
+        var studies = {};
+        if(data_highlighting==undefined)
+            return studies;
+        Object.keys(data_highlighting).forEach(function(key) {
+            if (/^study/.test(key)) {
+                data_highlighting[key].efoLink.forEach(function(highlightedefo) {
+                    if (highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid) {
+                        studies[key] = efoid;
+                    }
+                });
+            }
+        })
+
+        $.each(data_study.docs, function(index, value) {
+            if ($.inArray(value.id, Object.keys(studies)) != -1) {
+                studies[value.id] = value;
+            }
+        })
+        return studies;
+    }
+
+    findAssociationForEFO = function(efoid){
+        var associations = {};
+
+        Object.keys(data_highlighting).forEach(function(key) {
+            if (/^association/.test(key)) {
+                data_highlighting[key].efoLink.forEach(function(highlightedefo) {
+                    if (highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid) {
+                        associations[key] = efoid;
+                    }
+                });
+            }
+        })
+
+        $.each(data_association.docs, function(index, value) {
+            if ($.inArray(value.id, Object.keys(associations)) != -1) {
+                associations[value.id] = value;
+            }
+        })
+        return associations;
+    }
 
     //make solr query
     function getEfoTraitData(mainEFO, additionalEFO, descendants, initLoad) {
@@ -1028,10 +1386,10 @@
             });
         }
 
-        Promise.all([p1,p2]).then(function(){
+        return Promise.all([p1, p2]).then(function() {
             console.log("Solr research request received for " + searchQuery);
             setState(SearchState.LOADING);
-            promiseGet('/gwas/api/search/efotrait',
+            return promiseGet('/gwas/api/search/efotrait',
                        {
                            'q': searchQuery,
                            'max': 9999,
@@ -1040,11 +1398,12 @@
                            'facet.field': 'resourcename',
                            'hl.fl': 'shortForm,efoLink',
                            'hl.snippets': 100
-                       }).then(JSON.parse).then(function(data){
+                       }).then(JSON.parse).then(function(data) {
                 processEfotraitData(data, mainEFO, initLoad);
                 console.log("Solr research done for " + searchQuery);
-            }).catch(function(err){
-                           console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+                return data;
+            }).catch(function(err) {
+                console.error('Error when seaching solr for' + searchQuery + '. ' + err);
             })
         })
 
@@ -1060,9 +1419,9 @@
         }
         else {
             //split the solr search by groups
-            var data_efo, data_study, data_association, data_diseasetrait;
-            var data_facet = data.facet_counts.facet_fields.resourcename;
-            var data_highlighting = data.highlighting;
+//            data_efo, data_study, data_association, data_diseasetrait;
+            data_facet = data.facet_counts.facet_fields.resourcename;
+            data_highlighting = data.highlighting;
 
             $.each(data.grouped.resourcename.groups, function(index, group) {
                 switch (group.groupValue) {
@@ -1083,6 +1442,8 @@
                 }
             });
 
+
+
             findHightlightedEFOsforAssociation = function(association_id) {
                 var terms = data.highlighting[association_id].shortForm;
                 terms.forEach(function(d, i) {
@@ -1096,70 +1457,59 @@
                 return traits[0];
             }
 
-            findStudiesForEFO = function(efoid){
-                var studies={};
 
-                Object.keys(data.highlighting).forEach(function(key){
-                    if(/^study/.test(key)) {
-                        data_highlighting[key].shortForm.forEach(function(highlightedefo){
-                            if(highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid){
-                                studies[key] = efoid;
-                            }
-                        });
-                    }
-                })
-
-                $.each(data_study.docs,function(index,value){
-                    if($.inArray(value.id, Object.keys(studies))!=-1){
-                        studies[value.id] = value;
-                    }
-                })
-                return studies;
-            }
-
-            findHighlightedStudiesForEFO = function(efoid){
+            findHighlightedStudiesForEFO = function(efoid) {
                 var studies = findStudiesForEFO(efoid);
                 var publishDate = {};
 
-                $.each(studies,function(index,value){
+                $.each(studies, function(index, value) {
                     publishDate[value.id] = value.publicationDate;
                 })
 
-                var keysSorted = Object.keys(publishDate).sort(function(a,b){return Date.parse(publishDate[b])-Date.parse(publishDate[a])})
+                var keysSorted = Object.keys(publishDate).sort(function(a, b) {
+                    return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
+                })
                 return studies[keysSorted[0]];
 //                return studies;
             }
-
 
 
             var studiesMainEFO = findStudiesForEFO($('#query').text());
             var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
 
 
-
-            displayHighlightedStudy = function(highlightedStudy){
+            displayHighlightedStudy = function(highlightedStudy) {
                 $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
-                $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' ('+setExternalLink(EPMC+highlightedStudy.pubmedId ,'PMID:'+highlightedStudy.pubmedId )+')');
+                $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' (' +
+                                                             setExternalLink(EPMC + highlightedStudy.pubmedId,
+                                                                             'PMID:' + highlightedStudy.pubmedId) +
+                                                             ')');
                 $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
 //                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
 //                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
 //                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
 //                                                                      JSON.stringify(highlightedStudy),'all'));
 
-                getFromPMC(highlightedStudy.pubmedId).then(function(data){
+                getFromPMC(highlightedStudy.pubmedId).then(function(data) {
                     var paperDetail = data.resultList.result[0];
 //                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
 //                                                                               paperDetail.abstractText,''));
-                    $('#efotrait-highlighted-study-abstract').html( createPopover('detail', 'abstract', paperDetail.abstractText));
+                    $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
+                                                                                 'abstract',
+                                                                                 paperDetail.abstractText));
                     return paperDetail;
-                }).catch(function(err){
+                }).catch(function(err) {
                     console.error('Error when loading data from PMC! ' + err);
                 });
             }
 
 
-
             displayHighlightedStudy(highlightedStudy);
+//
+            buildLocusPlotPopoverHTML = function(association){
+                var html = '<div>aaaaa</div>';
+                return html;
+            }
 
             //query for distinct efo terms. This will reduce the query number so work faster
             var allEFO = {}
@@ -1172,10 +1522,14 @@
                 else {
                     d.preferedEFO = traits[0];
                     d.preferedColor = ''
-
                 }
                 allEFO[d.preferedEFO] = '';
+
+
+                //add any string data that will be use in the locus plot popover
+                d.popoverHTML = buildLocusPlotPopoverHTML(d);
             })
+
 
 //            {
 //                uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
@@ -1234,7 +1588,9 @@
             $("#efotrait-description").html(displayArrayAsList(response.description));
             $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
 //            $("#efotrait-label").html(efotrait_label);
-            $("#efotrait-label").html(createPopover(efotrait_label,'description',displayArrayAsList(response.description)));
+            $("#efotrait-label").html(createPopover(efotrait_label,
+                                                    'description',
+                                                    displayArrayAsList(response.description)));
             if (synonym) {
                 if (synonym.length > list_min) {
                     $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
@@ -1254,7 +1610,7 @@
                      var efotrait_label = data_sample.label;
 
                      $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-                     $("#efotrait-label").html(efotrait_label );
+                     $("#efotrait-label").html(efotrait_label);
                      if (synonym) {
                          if (synonym.length > list_min) {
                              $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
@@ -1270,11 +1626,8 @@
     }
 
 
-
-
-
     //checkbox approach
-    addRelatedTermCheckBox=function(){
+    addRelatedTermCheckBox = function() {
         function addCheckbox(id, name, cbclass) {
             var container = $('#expension');
             $('<input />', {type: 'checkbox', id: id, class: cbclass, value: name}).appendTo(container);
@@ -1284,6 +1637,7 @@
             $('<br />').appendTo(container);
 
         }
+
         getRelatedTerms($('#query').text()).then(function(terms) {
             //make checkbox
             Object.keys(terms).forEach(function(relatedTerm) {
@@ -1306,9 +1660,9 @@
         })
     }
 
-    addRelatedTermGraph = function(mainEFO){
+    addRelatedTermGraph = function(mainEFO) {
 
-        var mainEFOLink = getOLSLink(mainEFO).then(function(termFullLink){
+        var mainEFOLink = getOLSLink(mainEFO).then(function(termFullLink) {
             return termFullLink + '/graph';
         })
 
@@ -1321,16 +1675,23 @@
             },
             displayOptions: {showButtonBox: true, showInfoWindow: false, showLegend: true},
             callbacks: {
-                onSelectNode:function(params){console.log(params);},
-                onDoubleClick:function(params){console.log(params);
+                onSelectNode: function(params) {
+                    console.log(params);
+                },
+                onDoubleClick: function(params) {
+                    console.log(params);
                     var node = params.nodes[0];
                     var efoid = node.split('/').slice(-1)[0];
                     var tmp = {}
                     tmp[efoid] = node;
                     addEFO(tmp);
                 },
-                onSelectEdge:function(params){console.log(params);},
-                onClick:function(params){console.log(params);}
+                onSelectEdge: function(params) {
+                    console.log(params);
+                },
+                onClick: function(params) {
+                    console.log(params);
+                }
             }
         }
         var visoptions = {
@@ -1361,9 +1722,9 @@
         var app = require("ols-graphview");
         var instance = new app();
 
-        var reasonForRelatedEFO={};
+        var reasonForRelatedEFO = {};
 
-        mainEFOLink.then(function(mainLink){
+        mainEFOLink.then(function(mainLink) {
             tmpnetworkOptions['webservice']['URL'] = mainLink;
 
             instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
@@ -1375,49 +1736,46 @@
                     reasonForRelatedEFO[d.obo_id] = d.logical_description;
                 })
 
-                return Object.keys(terms).map(getOLSLink).reduce(function(sequence,termOLSLinkPromise){
+                return Object.keys(terms).map(getOLSLink).reduce(function(sequence, termOLSLinkPromise) {
                     return sequence.then(function() {
                         return termOLSLinkPromise;
-                    }).then(function(termOLSLink){
+                    }).then(function(termOLSLink) {
                         //for each related term, add it to the graph
                         instance.fetchNewGraphData(termOLSLink + '/graph');
                     })
-                },Promise.resolve())
+                }, Promise.resolve())
             })
         }).then(function() {
-            var x=instance.getGraphDataset()
-            window.setTimeout(function(){
+            var x = instance.getGraphDataset()
+            window.setTimeout(function() {
                 //change mainEFO node shape
-                mainEFOIri.then(function(iri){
+                mainEFOIri.then(function(iri) {
                     //http://visjs.org/docs/data/dataset.html
-                    var defaultAttribute =x["nodes"].get(iri)
+                    var defaultAttribute = x["nodes"].get(iri)
                     defaultAttribute.color.border = 'blue';
                     x["nodes"].update(defaultAttribute);
 
                     //add why to the title of node
                     $.each(reasonForRelatedEFO, function(efoid, reason) {
-                        getIriByShortForm(efoid).then(function(iri){
+                        getIriByShortForm(efoid).then(function(iri) {
                             x["nodes"].update({id: iri, title: reason});
                         })
                     })
                 })
 
 
-            },4000)
-        }).catch(function(err){
+            }, 4000)
+        }).catch(function(err) {
             console.error('Error when plotting related terms.' + err);
         })
 
     }
 
 
-
     /*]]>*/
 
 
 </script>
-
-
 
 
 </body>
