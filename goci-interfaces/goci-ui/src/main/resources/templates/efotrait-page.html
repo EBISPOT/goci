@@ -532,7 +532,7 @@
             <div class="col-md-5 tight-to-side" id="filter-bar">
                 <div class="panel panel-default">
                     <div id="expand_float_panel" class="panel-heading background-color-primary-accent">
-                        <h3 class="panel-title">Refine search results</h3>
+                        <h3 class="panel-title">Expand search</h3>
                         <span class="pull-right clickable"
                               onclick="toggleSidebar('#expand_float_panel span.clickable')">
                                     <i class="glyphicon glyphicon-chevron-up"></i>
@@ -1203,11 +1203,13 @@
         $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
     }
 
+    //add a selected efo to the cart, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
     addSelectedItem = function(tagID, efoid, additionalLabel, removeable) {
         if (removeable == undefined) {
             removeable = true;
         }
 
+        //add badge to the selection box to show the toplevel efo and the number of association/trait for this efo
         getColourForEFO(efoid).then(function(data){
             var colour = data.colour;
             var container = $(tagID);
@@ -1232,10 +1234,10 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFO(efoid)).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
 
             btn.append(additionalLabel)
-
         })
     }
 
+    //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(mainEFO, current_select, all_descendants, initLoad) {
         var current_select = $(global_efo_info_tag_id).data('selectedEfos')
         var container = $('#selected-efos_btn');
@@ -1484,7 +1486,7 @@
                                                              setExternalLink(EPMC + highlightedStudy.pubmedId,
                                                                              'PMID:' + highlightedStudy.pubmedId) +
                                                              ')');
-                $('#efotrait-highlighted-study-catalogPublishDate').html(highlightedStudy.catalogPublishDate);
+                $('#efotrait-highlighted-study-catalogPublishDate').html(new Date(highlightedStudy.catalogPublishDate).toLocaleDateString());
 //                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
 //                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
 //                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
@@ -1505,10 +1507,29 @@
 
 
             displayHighlightedStudy(highlightedStudy);
-//
+
+
+            //return html to display information for a data point in the locusplot when moveover the datapoint
             buildLocusPlotPopoverHTML = function(association){
-                var html = '<div>aaaaa</div>';
-                return html;
+                _addNameValuePairHTML = function(name,value){
+                    if(value instanceof Array){
+                        value = value.join(',')
+                    }
+                    return "<div>" + name + ":<strong> " +  value + "</strong></div>";
+                }
+                var text = $('<div/>');
+                text.append(_addNameValuePairHTML('CatalogPublishDate',new Date(association.catalogPublishDate).toLocaleDateString()));
+                text.append(_addNameValuePairHTML('author_s',association.author_s));
+                text.append(_addNameValuePairHTML('chromLocation',association.chromLocation));
+                text.append(_addNameValuePairHTML('countriesOfRecruitment',association.countriesOfRecruitment));
+                text.append(_addNameValuePairHTML('initialSampleDescription',association.initialSampleDescription));
+                text.append(_addNameValuePairHTML('entrezMappedGenes',association.entrezMappedGenes));
+                text.append(_addNameValuePairHTML('mappedLabel',association.mappedLabel));
+                text.append(_addNameValuePairHTML('pValueExponent',association.pValueExponent));
+                text.append(_addNameValuePairHTML('pubmedId',association.pubmedId));
+                text.append(_addNameValuePairHTML('reportedGene',association.reportedGene));
+                text.append(_addNameValuePairHTML('title',association.title));
+                return text.prop('outerHTML');
             }
 
             //query for distinct efo terms. This will reduce the query number so work faster
