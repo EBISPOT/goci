@@ -552,6 +552,7 @@
                         <div>
                             <b>Actions:</b>
                             <div>
+                                <input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants
                                 <button id="btn-query-include-descendants"
                                         type="button"
                                         class="btn btn-default">+descendants
@@ -1147,16 +1148,21 @@
 
     $('#btn-query-include-related-terms').click(function() {
         //replot with all related terms, from the currently selected efos
-        getRelatedTerms(getMainEFO().short_form).then(function(data) {
+        getRelatedTerms(getMainEFO()).then(function(data) {
             addEFO(data, false, false);
         });
+    });
+
+
+    $("#cb-query-include-descendants").change(function() {
+        addEFO({},false,this.checked);
     });
 
     $(document).ready(function() {
         if (window.location.pathname.indexOf("beta") != -1) {
             $('#beta-icon').show();
         }
-        var searchTerm = $('#query').text();
+        var searchTerm = getMainEFO();
         var included = $('#included').text();
         if (included != '') {
             searchTerm = searchTerm + ',' + included;
@@ -1175,8 +1181,10 @@
     });
 
     addEFO = function(data, initLoad, include_descendants) {
-        include_descendants = include_descendants || false;
-        initLoad = initLoad || false;
+        if(include_descendants==undefined)
+            include_descendants = $("#cb-query-include-descendants").is(":checked");
+        if(initLoad==undefined)
+            initLoad = false;
 
         //load all available efo terms in the GWAS Catalog(has at least one annotation)
         //save in the global_efo_info_tag_id tag with key 'availableEFOs'
@@ -1237,9 +1245,12 @@
         })
     }
 
+
     //triger a refresh of the page content, including locusplot, tables, badges.
-    updatePage = function(mainEFO, current_select, all_descendants, initLoad) {
-        var current_select = $(global_efo_info_tag_id).data('selectedEfos')
+    updatePage = function(include_descendants, initLoad) {
+        var current_select = getCurrentSelected();
+        var mainEFO = getMainEFO();
+
         var container = $('#selected-efos_btn');
         container.empty()
 
@@ -1248,8 +1259,6 @@
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
-//                current_selected_text = current_selected_text + efoInfo.short_form + ':' + efoInfo.label + '<br/>';
-//                $("#selected-efos_text").html(current_selected_text);
                 if (efoInfo.short_form == mainEFO)
                     addSelectedItem('#selected-efos_btn', efoInfo.short_form, efoInfo.label, false)
                 else
@@ -1258,64 +1267,72 @@
             });
         }, Promise.resolve()).catch(function(err) {
             console.error('Error when updating selected efo box! ' + err);
-        })
+        });
 
+        //add ols-graph to the page
         if (initLoad) {
 //            addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
         }
 
-        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(current_select).join(','))
+        //update shareable link to the page
+        updateSharableLink();
 
-        Promise.all([updateSelectedBoxPromise,getEfoTraitData(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad)]).then(function(){
-            //update selection box
-            var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
-                return sequence.then(function() {
-                    return efoInfo;
-                }).then(function(efoInfo) {
-                    //update the selection box badge number when data is ready
-                    $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
-                    $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
-                    $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
-                    $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
-                });
-            }, Promise.resolve()).catch(function(err) {
-                console.error('Error when updating selected efo box! ' + err);
-            })
+        //display efo train information when data is ready
+        if (initLoad)
+            displayEfoTraitInfo(mainEFO);
 
 
-        });
-
-
-    }
-
-    $(global_efo_info_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
-        var current_select = $(global_efo_info_tag_id).data('selectedEfos')
-        var mainEFO = $('#query').text();
-
+        //query descendants for current selected terms
+        var all_descendants = {}
         if (include_descendants) {
-            var all_descendants = {}
-            Promise.all(Object.keys(current_select).map(getHierarchicalDescendants)).then(function(descendants) {
+            var desPromise = Promise.all(Object.keys(current_select).map(getHierarchicalDescendants)).then(function(descendants) {
                 descendants.forEach(function(terms) {
                     Object.keys(terms).forEach(function(term) {
                         all_descendants[term] = terms[term];
                     })
                 })
-
-                updatePage(mainEFO, Object.keys(current_select), all_descendants, initLoad);
-
+                return all_descendants;
             }).catch(function(err) {
                 console.log('error when trying to find all descendants with error messgae ' + err);
             })
+        }else{
+            var desPromise = Promise.resolve();
         }
-        else {
-            updatePage(mainEFO, Object.keys(current_select), [], initLoad);
-        }
+
+
+        //when solr data ready, process solr data and update badges in the selection cart
+        Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
+            getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad).then(function(){
+                //update selection boxupdateSelectedBoxPromise
+                Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+                    return sequence.then(function() {
+                        return efoInfo;
+                    }).then(function(efoInfo) {
+                        //update the selection box badge number when data is ready
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
+                    });
+            },Promise.resolve())
+            }).catch(function(err) {
+                console.error('Error when updating selected efo box! ' + err);
+            })
+        });
+    }
+
+    $(global_efo_info_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
+        updatePage(include_descendants, initLoad);
     });
 
 
+    updateSharableLink = function(){
+        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
+                                 Object.keys(getCurrentSelected()).join(','))
+    }
 
+    //find studies for a given efoid from the solr result, return empty hash if the solr result is undefined
     findStudiesForEFO = function(efoid) {
         var studies = {};
         if(data_highlighting==undefined)
@@ -1338,9 +1355,12 @@
         return studies;
     }
 
+    //find association for a given efoid from the solr result, return empty hash if the solr result is undefined
     findAssociationForEFO = function(efoid){
         var associations = {};
 
+        if(data_highlighting==undefined)
+            return associations;
         Object.keys(data_highlighting).forEach(function(key) {
             if (/^association/.test(key)) {
                 data_highlighting[key].efoLink.forEach(function(highlightedefo) {
@@ -1360,7 +1380,7 @@
     }
 
     //make solr query
-    function getEfoTraitData(mainEFO, additionalEFO, descendants, initLoad) {
+    function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad) {
         // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(init load)
         // or just reload the tables(adding another efo term)
         if (initLoad === undefined) {
@@ -1445,8 +1465,8 @@
             });
 
 
-
-            findHightlightedEFOsforAssociation = function(association_id) {
+            //work out which study is the highlighted study
+            _findHightlightedEFOsforAssociation = function(association_id) {
                 var terms = data.highlighting[association_id].shortForm;
                 terms.forEach(function(d, i) {
                     //xintodo only efo?
@@ -1455,10 +1475,9 @@
                 return terms;
             }
 
-            findMostSignificantTraitForAssociation = function(traits, association) {
+            _findMostSignificantTraitForAssociation = function(traits, association) {
                 return traits[0];
             }
-
 
             findHighlightedStudiesForEFO = function(efoid) {
                 var studies = findStudiesForEFO(efoid);
@@ -1476,8 +1495,8 @@
             }
 
 
-            var studiesMainEFO = findStudiesForEFO($('#query').text());
-            var highlightedStudy = findHighlightedStudiesForEFO($('#query').text());
+            var studiesMainEFO = findStudiesForEFO(getMainEFO());
+            var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
 
 
             displayHighlightedStudy = function(highlightedStudy) {
@@ -1536,9 +1555,9 @@
             var allEFO = {}
             var allColorLoaded = []
             data_association.docs.forEach(function(d, i) {
-                var traits = findHightlightedEFOsforAssociation(d.id);
+                var traits = _findHightlightedEFOsforAssociation(d.id);
                 if (traits.length > 1) {
-                    d.preferedEFO = findMostSignificantTraitForAssociation(traits, d.id);
+                    d.preferedEFO = _findMostSignificantTraitForAssociation(traits, d.id);
                 }
                 else {
                     d.preferedEFO = traits[0];
@@ -1645,6 +1664,31 @@
                  }
         )
     }
+    function displayEfoTraitInfo(efotraitId) {
+        getEFOInfo(efotraitId).then(function(response) {
+            var efotrait_link = response.iri;
+            var efotrait_id = efotraitId;
+            var synonym = response.synonyms;
+            var efotrait_label = response.label;
+            addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
+            $("#efotrait-description").html(displayArrayAsList(response.description));
+            $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
+//            $("#efotrait-label").html(efotrait_label);
+            $("#efotrait-label").html(createPopover(efotrait_label,
+                                                    'description',
+                                                    displayArrayAsList(response.description)));
+            if (synonym) {
+                if (synonym.length > list_min) {
+                    $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
+                                                                synonym,
+                                                                'synonyms'));
+                }
+                else {
+                    $("#efotrait-synonym").html(synonym.join(", "));
+                }
+            }
+        })
+    }
 
 
     //checkbox approach
@@ -1659,13 +1703,13 @@
 
         }
 
-        getRelatedTerms($('#query').text()).then(function(terms) {
+        getRelatedTerms(getMainEFO()).then(function(terms) {
             //make checkbox
             Object.keys(terms).forEach(function(relatedTerm) {
                 var d = terms[relatedTerm];
                 addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
                 $("#" + 'whycb' + d.obo_id).html(d.logical_description);
-                if (d.obo_id == $('#query').text()) {
+                if (d.obo_id == getMainEFO()) {
                     $("#cb" + d.obo_id).attr("checked", true);
                 }
             })
@@ -1750,7 +1794,7 @@
 
             instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
 
-            getRelatedTerms($('#query').text()).then(function(terms) {
+            getRelatedTerms(getMainEFO()).then(function(terms) {
 
                 Object.keys(terms).forEach(function(relatedTerm) {
                     var d = terms[relatedTerm];

@@ -485,6 +485,16 @@ getFromPMC= function(pubmed_id){
                       }).then(JSON.parse);
 }
 
+
+//
+getMainEFO = function(){
+    return $('#query').text();
+}
+
+getCurrentSelected = function(){
+    return $(global_efo_info_tag_id).data('selectedEfos');
+}
+
 /*
 ols component
  */
@@ -538,7 +548,7 @@ options = {
 }
 
 
-var searchTerm = $('#query').text();
+var searchTerm = getMainEFO();
 // initialise the tree
 instance.draw($("#term-tree"),
               false,
