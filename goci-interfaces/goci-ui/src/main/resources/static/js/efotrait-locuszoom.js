@@ -1,5 +1,10 @@
 /*
- This is the EFOWAS locus zoom plot
+ This is the EFOWAS locus zoom plot.
+
+ It specifies a layout design for displaying gwas catalog data.
+
+ The x-axes is chromosome location. The y-axes is -log10 p-value.
+
  */
 
 // Genome base pairs static data
@@ -67,19 +72,7 @@ LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fiel
     return {header: chain.header, body: data};
 };
 
-//adding extra information for plotting for the efo association (association doc in this case)
-LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-    var data = JSON.parse(resp);
-    data.forEach(function(d, i) {
-        data[i].chr = data[i].chromosomeName[0];
-        data[i].bp = data[i].chromosomePosition[0];
-        data[i].pval = Math.pow(10, data[i].pValueExponent);
-        data[i].phewas_string = data[i].accessionId;
-        data[i].x = transferLocation(data[i].chr, data[i].bp);
 
-    });
-    return {header: chain.header, body: data};
-};
 
 //control  x,y,and points
 LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
@@ -90,7 +83,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     tooltip_positioning: "vertical",
     id_field: "{{namespace}}id",
     fields: ["{{namespace}}phewas"],
-    always_hide_legend: false,
+    always_hide_legend: true,
     x_axis: {
         field: "{{namespace}}x",
         floor: 0,
