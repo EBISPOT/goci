@@ -223,7 +223,7 @@
                     <h3 class="panel-title">Trait information</h3>
                 </div>
 
-                <div class="clearfix">
+                <div class="clearfix" id="summary-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <!--label-->
 
@@ -278,7 +278,7 @@
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Highlighted study for this trait</h3>
                 </div>
-                <div class="clearfix">
+                <div class="clearfix" id="highlight-study-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
                         <div class="clearfix">
@@ -827,7 +827,7 @@
                         </span>
                     </span>
                         </div>
-                        <div class="panel-body" style="display:none">
+                        <div class="panel-body" id="locus-plot-loading" style="display:none">
                             <!--<div class="panel-body" style="display:initial">-->
                             <!-- locus plot -->
                             <div id="plot" style=" width: 1000px; height: 900px;"></div>
@@ -1248,13 +1248,23 @@
 
     //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(include_descendants, initLoad) {
+
+        if(initLoad){
+            showLoadingOverLay('#summary-panel-loading');
+            showLoadingOverLay('#highlight-study-panel-loading');
+        }
+        showLoadingOverLay('#plot');
+
+
+
         var current_select = getCurrentSelected();
         var mainEFO = getMainEFO();
 
+        //clean the cart
         var container = $('#selected-efos_btn');
         container.empty()
 
-        //update selection box, the badge will be 0 since the data is not ready at this stage.
+        //update selection cart, the badge will be 0 since the data is not ready at this stage.
         var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
@@ -1266,13 +1276,14 @@
                 return efoInfo;
             });
         }, Promise.resolve()).catch(function(err) {
-            console.error('Error when updating selected efo box! ' + err);
+            console.error('Error when updating cart! ' + err);
         });
 
         //add ols-graph to the page
         if (initLoad) {
 //            addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
+
         }
 
         //update shareable link to the page
@@ -1500,6 +1511,7 @@
 
 
             displayHighlightedStudy = function(highlightedStudy) {
+                showLoadingOverLay('#highlight-study-panel-loading');
                 $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
                 $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' (' +
                                                              setExternalLink(EPMC + highlightedStudy.pubmedId,
@@ -1521,12 +1533,13 @@
                     return paperDetail;
                 }).catch(function(err) {
                     console.error('Error when loading data from PMC! ' + err);
+                }).then(function(){
+                    hideLoadingOverLay('#highlight-study-panel-loading');
                 });
             }
 
-
-            displayHighlightedStudy(highlightedStudy);
-
+            if(initLoad)
+                displayHighlightedStudy(highlightedStudy);
 
             //return html to display information for a data point in the locusplot when moveover the datapoint
             buildLocusPlotPopoverHTML = function(association){
@@ -1665,6 +1678,7 @@
         )
     }
     function displayEfoTraitInfo(efotraitId) {
+        showLoadingOverLay('#summary-panel-loading');
         getEFOInfo(efotraitId).then(function(response) {
             var efotrait_link = response.iri;
             var efotrait_id = efotraitId;
@@ -1687,6 +1701,10 @@
                     $("#efotrait-synonym").html(synonym.join(", "));
                 }
             }
+        }).catch(function(err) {
+            console.error(err);
+        }).then(function() {
+            hideLoadingOverLay('#summary-panel-loading')
         })
     }
 
@@ -1840,6 +1858,45 @@
     /*]]>*/
 
 
+</script>
+
+<style>
+
+
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+
+<script>
+    //<![CDATA[
+
+    showLoadingOverLay = function(tagID){
+        var options = {
+            olor: "rgba(255, 255, 255, 0.8)",   // String
+            custom: "",                // String/DOM Element/jQuery Object
+            fade: true,                      // Boolean/Integer/String/Array
+            fontawesome: "",                          // String
+//            image: "data:image/gif;base32,...",  // String
+            imagePosition: "center center",             // String
+            maxSize: "100px",                  // Integer/String
+            minSize: "20px",                    // Integer/String
+            resizeInterval: 50,                       // Integer
+            size: "20%",                       // Integer/String
+            zIndex: 9999,                        // Integer
+        }
+        return $(tagID).LoadingOverlay("show",options);
+    }
+
+    hideLoadingOverLay = function(tagID){
+        return $(tagID).LoadingOverlay("hide", true);
+    }
+
+
+
+
+
+    //]]>
 </script>
 
 
