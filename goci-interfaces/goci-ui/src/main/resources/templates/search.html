@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <div>
-                                <form id="filter-form">
+                                <form id="filter-form" novalidate="novalidate">
                                     <div id="filters">
                                         <b>Filter results by</b>
 
@@ -133,8 +133,8 @@
                                                       data-toggle="tooltip"
                                                       data-original-title="Odds ratio associated with SNP-disease/trait association"></span>
                                             </span>
-                                                <input class="filter-value" type="text" id="or-min" placeholder="from"/>
-                                                <input class="filter-value" type="text" id="or-max" placeholder="to"/>
+                                                <input class="filter-value" type="text" id="or-min" name="or-min" placeholder="from"/>
+                                                <input class="filter-value" type="text" id="or-max" name="or-max" placeholder="to"/>
                                             </div>
 
                                             <div class="list-group-item filter-element ">
@@ -146,8 +146,9 @@
                                                 <input class="filter-value"
                                                        type="text"
                                                        id="beta-min"
+                                                       name="beta-min"
                                                        placeholder="from"/>
-                                                <input class="filter-value" type="text" id="beta-max" placeholder="to"/>
+                                                <input class="filter-value" type="text" id="beta-max" name="beta-max" placeholder="to"/>
                                             </div>
 
                                             <div class="list-group-item filter-element ">
@@ -160,11 +161,13 @@
                                                        data-provide="datepicker"
                                                        data-date-format="yyyy-mm"
                                                        id="date-min"
+                                                       name="date-min"
                                                        placeholder="from"/>
                                                 <input class="filter-value"
                                                        data-provide="datepicker"
                                                        data-date-format="yyyy-mm"
                                                        id="date-max"
+                                                       name="date-max"
                                                        placeholder="to"/>
                                             </div>
 
@@ -177,15 +180,17 @@
                                                 <input class="chrom-value"
                                                        type="text"
                                                        id="chrom"
+                                                       name="chrom"
                                                        placeholder="chromosone"/>
                                                 <span class="chrom-label">:</span>
                                                 <input class="bp-value"
                                                        type="text"
                                                        id="bp-min"
+                                                       name="bp-min"
                                                        placeholder="from"/>
                                                 <span class="chrom-label">-</span>
 
-                                                <input class="bp-value" type="text" id="bp-max" placeholder="to"/>
+                                                <input class="bp-value" type="text" id="bp-max" name="bp-max" placeholder="to"/>
                                             </div>
 
                                             <div class="list-group-item filter-element ">
@@ -477,6 +482,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 <script src="../static/js/bootstrap-datepicker.js" th:src="@{js/bootstrap-datepicker.js}"></script>
+
+<!-- Jquery validate for form validation-->
+<script src="../static/js/plugins/jquery.validate.js" th:src="@{js/plugins/jquery.validate.js}"></script>
+
+<link rel="stylesheet" href="../static/css/tooltipster.bundle.min.css" th:href="@{css/tooltipster.bundle.min.css}" />
+<script src="../static/js/plugins/tooltipster.bundle.min.js" th:src="@{js/plugins/tooltipster.bundle.min.js}"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>-->
