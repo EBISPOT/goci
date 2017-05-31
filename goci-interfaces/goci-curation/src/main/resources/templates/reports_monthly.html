@@ -12,8 +12,12 @@
     <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"
             th:src="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"
             th:src="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.js}"></script>
+
+    <script src="../static/js/bootstrap-table-multiple-sort.js" th:src="@{/js/bootstrap-table-multiple-sort.js}"></script>
+    <script src="../static/js/goci-table-sorter.js" th:src="@{/js/goci-table-sorter.js}"></script>
+
 
     <link href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"
           th:href="@{https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css}"
@@ -62,16 +66,18 @@
     <div class="row">
         <div class="col-md-12">
             <table id="mainTable" class="table table-hover table-bordered"
-                   data-toggle="table" data-show-columns="true">
+                   data-toggle="table" data-show-multi-sort="true" data-search="true"
+                   data-show-columns="true"
+                   >
                 <thead>
                 <tr>
-                    <th class="col-md-1" data-sortable="true">Year</th>
-                    <th class="col-md-1" data-sortable="true">Month</th>
-                    <th class="col-md-2" data-sortable="true">Curator</th>
-                    <th class="col-md-2" data-sortable="true">Total number per curator</th>
-                    <th class="col-md-2" data-sortable="true">Curation Status</th>
+                    <th class="col-md-1" data-field="year" data-sortable="true">Year</th>
+                    <th class="col-md-1" data-field="month" data-sortable="true" data-sorter="monthSorter">Month</th>
+                    <th class="col-md-2" data-field="curator" data-sortable="true">Curator</th>
+                    <th class="col-md-2" data-field="numberPerCurator" data-sortable="true">Total number per curator</th>
+                    <th class="col-md-2" data-field="curationstatus" data-sortable="true">Curation Status</th>
                     <th class="col-md-2">Link to studies</th>
-                    <th class="col-md-2" data-sortable="true">Total number of entries for month</th>
+                    <th class="col-md-2" data-field="numberOfMonth" data-sortable="true">Total number of entries for month</th>
                 </tr>
                 </thead>
                 <tbody>
