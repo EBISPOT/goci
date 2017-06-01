@@ -599,5 +599,5 @@ reloadLocusZoom = function(plot_id, data_association) {
 
     // Generate the plot
     var plot = LocusZoom.populate(plot_id, data_sources, layout);
-    hideLoadingOverLay('#plot');
+    hideLoadingOverLay('#locus-plot-row-loading');
 }

@@ -3,11 +3,6 @@
  * From an EFOtrait, query solr, parse solr search result and display in page
  */
 
-var SearchState = {
-    LOADING: {value: 0},
-    NO_RESULTS: {value: 1},
-    RESULTS: {value: 2}
-};
 
 var EPMC = "http://www.europepmc.org/abstract/MED/";
 var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
@@ -99,9 +94,9 @@ var list_min = 2;
 //         // External links panel
 // //            getLinkButtons(data_facet,efotraitId);
 // //            // Associations table
-//         getEfotraitAssociations(data_association.docs);
+//         displayEfotraitAssociations(data_association.docs);
 // //            // Studies table
-//         getEfotraitStudies(data_study.docs);
+//         displayEfotraitStudies(data_study.docs);
 // //            // Traits table
 // //            getEfotraitDiseasetrait(data_diseasetrait.docs);
 // //
@@ -110,213 +105,6 @@ var list_min = 2;
 //     }
 // }
 
-
-
-//xintodo done
-function getEfotraitAssociations(data,cleanBeforeInsert) {
-    //by default, we clean the table before inserting data
-    if (cleanBeforeInsert === undefined) {
-        cleanBeforeInsert = true;
-    }
-
-    var asso_count = data.length;
-
-    $(".association_count").html(asso_count);
-
-    if (asso_count == 1) {
-        $(".association_label").html("Association");
-    }
-
-    if(cleanBeforeInsert){
-        $("#association-table-body tr").remove();
-    }
-
-    $.each(data, function(index,asso) {
-
-        var row = $('<tr/>');
-
-        // Risk allele
-        var riskAllele = asso.strongestAllele[0];
-        var riskAlleleLabel = riskAllele;
-        var riskAllele_rsid = riskAllele;
-        if (riskAlleleLabel.match(/\w+-.+/)) {
-            riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
-            riskAllele_rsid = riskAllele.split('-')[0];
-        }
-        // This is now linking to the variant page instead of the search page
-        // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
-
-        row.append(newCell(riskAllele));
-
-        // Risk allele frequency
-        var riskAlleleFreq = asso.riskFrequency;
-        row.append(newCell(riskAlleleFreq));
-
-        // p-value
-        var pValue = asso.pValueMantissa;
-        if (pValue) {
-            var pValueExp = " x 10<sup>" + asso.pValueExponent + "</sup>";
-            pValue += pValueExp;
-            if (asso.qualifier) {
-                if (asso.qualifier[0].match(/\w/)) {
-                    pValue += " " + asso.qualifier.join(',');
-                }
-            }
-            row.append(newCell(pValue));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // OR
-        var orValue = asso.orPerCopyNum;
-        if (orValue) {
-            if (asso.orDescription) {
-                orValue += " " + asso.orDescription;
-            }
-            row.append(newCell(orValue));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // Beta
-        var beta = asso.betaNum;
-        if (beta) {
-            if (asso.betaUnit) {
-                beta += " " + asso.betaUnit;
-            }
-            if (asso.betaDirection) {
-                beta += " " + asso.betaDirection;
-            }
-            row.append(newCell(beta));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // CI
-        var ci = (asso.range) ? asso.range : '-';
-        row.append(newCell(ci));
-        // Reported genes
-        var genes = [];
-        var reportedGenes = asso.reportedGene;
-        if (reportedGenes) {
-            $.each(reportedGenes, function(index, gene) {
-                genes.push(setQueryUrl(gene));
-            });
-            row.append(newCell(genes.join(', ')));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // Reported traits
-        var traits = [];
-        var reportedTraits = asso.traitName;
-        if (reportedTraits) {
-            $.each(reportedTraits, function(index, trait) {
-                traits.push(setQueryUrl(trait));
-            });
-            row.append(newCell(traits.join(', ')));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // Mapped traits
-        var mappedTraits = asso.mappedLabel;
-        if (mappedTraits) {
-            row.append(newCell(mappedTraits.join(', ')));
-        } else {
-            row.append(newCell('-'));
-        }
-
-        // Study
-        var author = asso.author_s;
-        var publicationDate = asso.publicationDate;
-        var pubDate = publicationDate.split("-");
-        var pubmedId = asso.pubmedId;
-        var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-        row.append(newCell(study));
-
-        var studyId = asso.studyId;
-
-        // Populate the table
-        $("#association-table-body").append(row);
-    });
-}
-
-
-//xintodo done
-function getEfotraitStudies(data,cleanBeforeInsert) {
-    //by default, we clean the table before inserting data
-    if (cleanBeforeInsert === undefined) {
-        cleanBeforeInsert = true;
-    }
-
-
-    var study_ids = [];
-    if(cleanBeforeInsert){
-        $("#study-table-body tr").remove();
-    }
-    $.each(data, function(index, asso) {
-        var study_id = asso.id;
-        if (jQuery.inArray(study_id, study_ids) == -1) {
-
-            var row = $('<tr/>');
-
-            study_ids.push(study_id);
-
-            // Author
-            var author = asso.author_s;
-            var publicationDate = asso.publicationDate;
-            var pubDate = publicationDate.split("-");
-            var pubmedId = asso.pubmedId;
-            var study_author = setQueryUrl(author, author);
-            study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-            row.append(newCell(study_author));
-
-            // Publication date
-            var p_date = asso.publicationDate;
-            var publi = p_date.split('T')[0];
-            row.append(newCell(publi));
-
-            // Journal
-            row.append(newCell(asso.publication));
-
-            // Title
-            row.append(newCell(asso.title));
-
-            // Initial sample desc
-            var initial_sample_text = '-';
-            if (asso.initialSampleDescription) {
-                initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
-            }
-            row.append(newCell(initial_sample_text));
-
-            // Replicate sample desc
-            var replicate_sample_text = '-';
-            if (asso.replicateSampleDescription) {
-                replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
-            }
-            row.append(newCell(replicate_sample_text));
-
-            // ancestralGroups
-            var ancestral_groups_text = '-';
-            if (asso.ancestralGroups) {
-                ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
-            }
-            row.append(newCell(ancestral_groups_text));
-
-            // Populate the table
-            $("#study-table-body").append(row);
-        }
-    });
-    // Study count //
-    $(".study_count").html(study_ids.length);
-
-    if (study_ids.length == 1) {
-        $(".study_label").html("Study");
-    }
-}
 
 // Generate the summary sentence, at the bottom of the summary panel
 // xintodo done
@@ -626,3 +414,4 @@ function setDownloadLink(rsId) {
     $("#download_data").attr('onclick', url);
 
 }
+
