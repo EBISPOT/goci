@@ -218,12 +218,14 @@
         <!-- Summary panel -->
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default" style="padding-left:0px">
+
+
+
                 <!--trait summary-->
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Trait information</h3>
                 </div>
-
-                <div class="clearfix">
+                <div class="clearfix" id="summary-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <!--label-->
 
@@ -274,13 +276,13 @@
 
                 </div>
 
+
                 <!--highlighted study-->
                 <div class="panel-heading background-color-primary-accent">
                     <h3 class="panel-title">Highlighted study for this trait</h3>
                 </div>
-                <div class="clearfix">
+                <div class="clearfix" id="highlight-study-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
                         <div class="clearfix">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Title</dt>
@@ -314,21 +316,6 @@
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>-->
                         </div>
 
-                        <!--<div class="clearfix">-->
-                        <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
-                        <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">InitialSampleDescription-->
-                        <!--</div>-->
-                        <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-initialSampleDescription">-</div>-->
-                        <!--</div>-->
-
-                        <!--<div class="clearfix">-->
-                        <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
-                        <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">ReplicateSampleDescription-->
-                        <!--</div>-->
-                        <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-replicateSampleDescription">-</div>-->
-                        <!--</div>-->
-
-
                         <div class="clearfix">
                             <dl class="dl-horizontal">
                                 <dt style="width: 150px;">Abstract</dt>
@@ -336,29 +323,28 @@
                             </dl>
                         </div>
 
-                        <!--<div class="clearfix">-->
-                        <!--<dl class="dl-horizontal">-->
-                        <!--<dt style="width: 150px;">all</dt>-->
-                        <!--<dd id="efotrait-highlighted-study-all">-</dd>-->
-                        <!--</dl>-->
-                        <!--&lt;!&ndash;<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"&ndash;&gt;-->
-                        <!--&lt;!&ndash;style="font-weight: bold; margin-bottom: 1em;padding-left:0px">all&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-all">-</div>&ndash;&gt;-->
-                        <!--</div>-->
-
 
                     </div>
 
                 </div>
-
                 <!--first reported-->
                 <div id="efotrait-summary">
                     <span class="glyphicon glyphicon-info-sign" style="padding-right:2px"></span>
                     <span id="efotrait-summary-content"></span>
                 </div>
+
+
             </div>
         </div>
+
+
+
+
+
+
+
+
+
 
         <!--Expandsion panel-->
         <!--<div class="row" style="margin-top:20px">-->
@@ -534,16 +520,15 @@
                     <div id="expand_float_panel" class="panel-heading background-color-primary-accent">
                         <h3 class="panel-title">Expand search</h3>
                         <span class="pull-right clickable"
-                              onclick="toggleSidebar('#expand_float_panel span.clickable')">
+                              onclick="toggleSidebarFlex('#expand_float_panel span.clickable',5,1)">
                                     <i class="glyphicon glyphicon-chevron-up"></i>
                                 </span>
                     </div>
                     <div class="panel-body">
-
                         <!--current select-->
                         <div>
                             <b>Current selected:</b>
-                            <div class="list-group" style=" max-height: 300px; overflow-y:scroll; ">
+                            <div class="list-group" id="cart-loading" style=" max-height: 300px; overflow-y:scroll; ">
                                 <div id="selected-efos_btn"></div>
                             </div>
                         </div>
@@ -552,7 +537,8 @@
                         <div>
                             <b>Actions:</b>
                             <div>
-                                <input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants
+                                <input id="cb-query-include-descendants" type="checkbox"/> always include descendants
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
                                 <button id="btn-query-include-descendants"
                                         type="button"
                                         class="btn btn-default">+descendants
@@ -636,149 +622,11 @@
                             </button>
                             </div>
                         </div>
-                        <!--<div id="facets">-->
-                        <!--<b>Show results for</b>-->
 
-                        <!--<div class="list-group">-->
-                        <!--&lt;!&ndash;add an "active" class annotation to each a tag when it's selected&ndash;&gt;-->
-                        <!--<a href="#study" class="list-group-item" id="study-facet">-->
-                        <!--<span class="badge">0</span>Studies-->
-                        <!--</a>-->
-                        <!--<a href="#association" class="list-group-item" id="association-facet">-->
-                        <!--<span class="badge">0</span>Associations-->
-                        <!--</a>-->
-                        <!--<a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">-->
-                        <!--<span class="badge">0</span>Catalog traits-->
-                        <!--</a>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--<div>-->
-                        <!--<form id="filter-form">-->
-                        <!--<div id="filters">-->
-                        <!--<b>Filter results by</b>-->
-
-                        <!--<div class="list-group">-->
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">p-value-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="p-value for SNP-disease/trait association"></span>-->
-                        <!--</span>-->
-                        <!--<span class="pval-label">&le;</span>-->
-                        <!--<input class="p-value" type="text" id="pval-mant" placeholder="5"/>-->
-                        <!--<span class="pval-label">x 10</span>-->
-                        <!--<input class="p-value" type="text" id="pval-exp" placeholder="-8"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">Odds ratio-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="Odds ratio associated with SNP-disease/trait association"></span>-->
-                        <!--</span>-->
-                        <!--<input class="filter-value" type="text" id="or-min" placeholder="from"/>-->
-                        <!--<input class="filter-value" type="text" id="or-max" placeholder="to"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">Beta coefficient-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="Beta coefficient associated with SNP-disease/trait association"></span>-->
-                        <!--</span>-->
-                        <!--<input class="filter-value"-->
-                        <!--type="text"-->
-                        <!--id="beta-min"-->
-                        <!--placeholder="from"/>-->
-                        <!--<input class="filter-value" type="text" id="beta-max" placeholder="to"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">Study date-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="Publication date (YYYY-MM-DD)"></span>-->
-                        <!--</span>-->
-                        <!--<input class="filter-value"-->
-                        <!--data-provide="datepicker"-->
-                        <!--data-date-format="yyyy-mm"-->
-                        <!--id="date-min"-->
-                        <!--placeholder="from"/>-->
-                        <!--<input class="filter-value"-->
-                        <!--data-provide="datepicker"-->
-                        <!--data-date-format="yyyy-mm"-->
-                        <!--id="date-max"-->
-                        <!--placeholder="to"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">Genomic range-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="Genomic range containing variants of interest"></span>-->
-                        <!--</span>-->
-                        <!--<input class="chrom-value"-->
-                        <!--type="text"-->
-                        <!--id="chrom"-->
-                        <!--placeholder="chromosone"/>-->
-                        <!--<span class="chrom-label">:</span>-->
-                        <!--<input class="bp-value"-->
-                        <!--type="text"-->
-                        <!--id="bp-min"-->
-                        <!--placeholder="from"/>-->
-                        <!--<span class="chrom-label">-</span>-->
-
-                        <!--<input class="bp-value" type="text" id="bp-max" placeholder="to"/>-->
-                        <!--</div>-->
-
-                        <!--<div class="list-group-item filter-element ">-->
-                        <!--<span class="filter-label">Catalog Trait-->
-                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                        <!--data-toggle="tooltip"-->
-                        <!--data-original-title="List of related disease/trait descriptions (total number of studies for this trait)"></span>-->
-                        <!--</span>-->
-
-                        <!--<div class="filter-values">-->
-                        <!--<div class="btn-group" id="trait-dropdown">-->
-                        <!--<button type="button"-->
-                        <!--class="btn btn-default dropdown-toggle multiSelect"-->
-                        <!--aria-expanded="false">-->
-                        <!--Reported trait-->
-                        <!--<span class="caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu scrollable-menu" role="menu">-->
-                        <!--</ul>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-                        <!--<div>-->
-                        <!--<button type="button"-->
-                        <!--class="btn btn-default pull-right"-->
-                        <!--id="clear-filter">Clear all filters</button>-->
-                        <!--<button type="submit"-->
-                        <!--class="btn btn-default pull-right"-->
-                        <!--style="margin-right: 15px;">Apply filters</button>-->
-                        <!--</div>-->
-                        <!--</form>-->
-                        <!--</div>-->
-                        <!--<div id="catalog-stats" style="display: none" class="row">-->
-                        <!--<h4>Catalog stats</h4>-->
-                        <!--<ul>-->
-                        <!--<li id="releasedate-stat"></li>-->
-                        <!--<li id="studies-stat"></li>-->
-                        <!--<li id="snps-stat"></li>-->
-                        <!--<li id="associations-stat"></li>-->
-                        <!--<li id="genomebuild"></li>-->
-                        <!--<li id="dbsnpbuild"></li>-->
-                        <!--<li id="ensemblbuild"></li>-->
-                        <!--</ul>-->
-                        <!--</div>-->
                     </div>
                 </div>
             </div>
+
             <div class="col-md-7" id="results-area">
                 <!-- List the available tables -->
                 <div class="row" style="margin-top:0px">
@@ -812,7 +660,7 @@
                 </div>
 
                 <!-- locus plot -->
-                <div class="row" style="margin-top:20px">
+                <div class="row" style="margin-top:20px" id="locus-plot-row-loading">
                     <div id="locus_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
@@ -827,7 +675,7 @@
                         </span>
                     </span>
                         </div>
-                        <div class="panel-body" style="display:none">
+                        <div class="panel-body" id="locus-plot-loading" style="display:none">
                             <!--<div class="panel-body" style="display:initial">-->
                             <!-- locus plot -->
                             <div id="plot" style=" width: 1000px; height: 900px;"></div>
@@ -836,7 +684,7 @@
                 </div>
 
                 <!-- Associations table -->
-                <div class="row" style="margin-top:20px">
+                <div class="row" id="association-table-loading" style="margin-top:20px">
                     <div id="association_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
@@ -930,7 +778,7 @@
                 </div>
 
                 <!-- Studies table -->
-                <div class="row" style="margin-top:20px">
+                <div class="row" id="study-table-loading" style="margin-top:20px">
                     <div id="study_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
@@ -1003,6 +851,38 @@
 
     </div>
 
+    <!--<table id="table" class="table table-striped"-->
+           <!--data-toggle="table"-->
+           <!--data-toolbar="#toolbar"-->
+           <!--data-height="460"-->
+           <!--data-search="true"-->
+           <!--data-sortable="true">-->
+        <!--<thead>-->
+        <!--<tr>-->
+            <!--<th data-field="id" data-sortable="true">ID</th>-->
+            <!--<th data-field="name" data-sortable="true">Item Name</th>-->
+            <!--<th data-field="price">Item Price</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--<tr>-->
+            <!--<td>1</td>-->
+            <!--<td>box</td>-->
+            <!--<td>10</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td>2</td>-->
+            <!--<td>aox</td>-->
+            <!--<td>14</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td>3</td>-->
+            <!--<td>cox</td>-->
+            <!--<td>11</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+    <!--</table>-->
+
 
 </div>
 
@@ -1018,6 +898,13 @@
 
 
 <script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css"
+      th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css}"
+      rel="stylesheet"/>
+
+
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
         th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
@@ -1083,10 +970,6 @@
 <script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
 
 
-<!-- loading overlay
-================================================== -->
-
-<script src="../static/js/plugins/loading-overlay.min.js" th:src="@{../../js/plugins/loading-overlay.min.js}"></script>
 
 <!--<div id="loadingResults" class="col-md-offset-4" style="display: none">-->
 <!--<button class="btn btn-lg">-->
@@ -1115,6 +998,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
+
     var data_efo=undefined
     var data_study=undefined
     var data_association=undefined
@@ -1122,13 +1006,10 @@
     var data_facet=undefined
     var data_highlighting=undefined
 
-    //show/hide spinner
-    toggleSpinner = function(tagID) {
-        var spinnerID = tagID + '_load';
-        $(spinnerID).toggle();
-        $(tagID).toggle();
 
-    }
+
+
+
 
     $('.addEfoButton').click(function() {
         var elements = {};
@@ -1149,7 +1030,7 @@
     $('#btn-query-include-related-terms').click(function() {
         //replot with all related terms, from the currently selected efos
         getRelatedTerms(getMainEFO()).then(function(data) {
-            addEFO(data, false, false);
+            addEFO(data, false);
         });
     });
 
@@ -1159,9 +1040,13 @@
     });
 
     $(document).ready(function() {
+        //add beta icon
         if (window.location.pathname.indexOf("beta") != -1) {
             $('#beta-icon').show();
         }
+        //jump to the top of the page
+        $('html,body').scrollTop(0);
+
         var searchTerm = getMainEFO();
         var included = $('#included').text();
         if (included != '') {
@@ -1196,8 +1081,8 @@
             console.log('finish loading descendants!')
         });
 
-        //p is the promise for loading all available efo from GWAS Catalog
-        //This needs to be fullfill first before trigger any add event.
+        // p is the promise for loading all available efo from GWAS Catalog
+        // This needs to be fullfill before trigger any add event.
         p.then(function(data) {
             $(global_efo_info_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
         }).catch(function(err) {
@@ -1205,6 +1090,7 @@
         });
     }
 
+    //remove an efo term from the cart
     removeEFO = function(efoid) {
         var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
         delete selected[efoid];
@@ -1248,13 +1134,26 @@
 
     //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(include_descendants, initLoad) {
+
+        if(initLoad){
+            showLoadingOverLay('#summary-panel-loading');
+            showLoadingOverLay('#highlight-study-panel-loading');
+        }
+        showLoadingOverLay('#locus-plot-row-loading');
+        showLoadingOverLay('#association-table-loading');
+        showLoadingOverLay('#study-table-loading');
+        showLoadingOverLay('#cart-loading');
+        showLoadingOverLay('#sharable_link_btn');
+
+
         var current_select = getCurrentSelected();
         var mainEFO = getMainEFO();
 
+        //clean the cart
         var container = $('#selected-efos_btn');
         container.empty()
 
-        //update selection box, the badge will be 0 since the data is not ready at this stage.
+        //update selection cart, the badge will be 0 since the data is not ready at this stage.
         var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
@@ -1266,21 +1165,25 @@
                 return efoInfo;
             });
         }, Promise.resolve()).catch(function(err) {
-            console.error('Error when updating selected efo box! ' + err);
-        });
+            console.error('Error when updating cart! ' + err);
+        }).then(
+//                hideLoadingOverLay('#cart-loading')
+        );
 
         //add ols-graph to the page
         if (initLoad) {
 //            addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
+
         }
 
         //update shareable link to the page
         updateSharableLink();
 
         //display efo train information when data is ready
-        if (initLoad)
+        if (initLoad){
             displayEfoTraitInfo(mainEFO);
+        }
 
 
         //query descendants for current selected terms
@@ -1303,7 +1206,8 @@
 
         //when solr data ready, process solr data and update badges in the selection cart
         Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
-            getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad).then(function(){
+            var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+            solrPromise.then(function(){
                 //update selection boxupdateSelectedBoxPromise
                 Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
                     return sequence.then(function() {
@@ -1315,9 +1219,11 @@
                         $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
                         $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
                     });
-            },Promise.resolve())
+                },Promise.resolve())
             }).catch(function(err) {
                 console.error('Error when updating selected efo box! ' + err);
+            }).then(function(){
+                hideLoadingOverLay('#cart-loading');
             })
         });
     }
@@ -1327,57 +1233,6 @@
     });
 
 
-    updateSharableLink = function(){
-        $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                                 Object.keys(getCurrentSelected()).join(','))
-    }
-
-    //find studies for a given efoid from the solr result, return empty hash if the solr result is undefined
-    findStudiesForEFO = function(efoid) {
-        var studies = {};
-        if(data_highlighting==undefined)
-            return studies;
-        Object.keys(data_highlighting).forEach(function(key) {
-            if (/^study/.test(key)) {
-                data_highlighting[key].efoLink.forEach(function(highlightedefo) {
-                    if (highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid) {
-                        studies[key] = efoid;
-                    }
-                });
-            }
-        })
-
-        $.each(data_study.docs, function(index, value) {
-            if ($.inArray(value.id, Object.keys(studies)) != -1) {
-                studies[value.id] = value;
-            }
-        })
-        return studies;
-    }
-
-    //find association for a given efoid from the solr result, return empty hash if the solr result is undefined
-    findAssociationForEFO = function(efoid){
-        var associations = {};
-
-        if(data_highlighting==undefined)
-            return associations;
-        Object.keys(data_highlighting).forEach(function(key) {
-            if (/^association/.test(key)) {
-                data_highlighting[key].efoLink.forEach(function(highlightedefo) {
-                    if (highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid) {
-                        associations[key] = efoid;
-                    }
-                });
-            }
-        })
-
-        $.each(data_association.docs, function(index, value) {
-            if ($.inArray(value.id, Object.keys(associations)) != -1) {
-                associations[value.id] = value;
-            }
-        })
-        return associations;
-    }
 
     //make solr query
     function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad) {
@@ -1410,7 +1265,6 @@
 
         return Promise.all([p1, p2]).then(function() {
             console.log("Solr research request received for " + searchQuery);
-            setState(SearchState.LOADING);
             return promiseGet('/gwas/api/search/efotrait',
                        {
                            'q': searchQuery,
@@ -1464,113 +1318,37 @@
                 }
             });
 
-
-            //work out which study is the highlighted study
-            _findHightlightedEFOsforAssociation = function(association_id) {
-                var terms = data.highlighting[association_id].shortForm;
-                terms.forEach(function(d, i) {
-                    //xintodo only efo?
-                    terms[i] = d.match(/<b>(\w*_\d*)<\/b>/)[1];
-                })
-                return terms;
-            }
-
-            _findMostSignificantTraitForAssociation = function(traits, association) {
-                return traits[0];
-            }
-
-            findHighlightedStudiesForEFO = function(efoid) {
-                var studies = findStudiesForEFO(efoid);
-                var publishDate = {};
-
-                $.each(studies, function(index, value) {
-                    publishDate[value.id] = value.publicationDate;
-                })
-
-                var keysSorted = Object.keys(publishDate).sort(function(a, b) {
-                    return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
-                })
-                return studies[keysSorted[0]];
-//                return studies;
-            }
+            displayEfotraitAssociations(data_association.docs);
+            displayEfotraitStudies(data_study.docs);
 
 
-            var studiesMainEFO = findStudiesForEFO(getMainEFO());
+
+            //work out highlight study
             var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
-
-
-            displayHighlightedStudy = function(highlightedStudy) {
-                $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
-                $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' (' +
-                                                             setExternalLink(EPMC + highlightedStudy.pubmedId,
-                                                                             'PMID:' + highlightedStudy.pubmedId) +
-                                                             ')');
-                $('#efotrait-highlighted-study-catalogPublishDate').html(new Date(highlightedStudy.catalogPublishDate).toLocaleDateString());
-//                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
-//                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
-//                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
-//                                                                      JSON.stringify(highlightedStudy),'all'));
-
-                getFromPMC(highlightedStudy.pubmedId).then(function(data) {
-                    var paperDetail = data.resultList.result[0];
-//                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
-//                                                                               paperDetail.abstractText,''));
-                    $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
-                                                                                 'abstract',
-                                                                                 paperDetail.abstractText));
-                    return paperDetail;
-                }).catch(function(err) {
-                    console.error('Error when loading data from PMC! ' + err);
-                });
+            if(initLoad){
+                displayHighlightedStudy(highlightedStudy);
+                getSummary(findStudiesForEFO(getMainEFO()));
             }
 
 
-            displayHighlightedStudy(highlightedStudy);
-
-
-            //return html to display information for a data point in the locusplot when moveover the datapoint
-            buildLocusPlotPopoverHTML = function(association){
-                _addNameValuePairHTML = function(name,value){
-                    if(value instanceof Array){
-                        value = value.join(',')
-                    }
-                    return "<div>" + name + ":<strong> " +  value + "</strong></div>";
-                }
-                var text = $('<div/>');
-                text.append(_addNameValuePairHTML('CatalogPublishDate',new Date(association.catalogPublishDate).toLocaleDateString()));
-                text.append(_addNameValuePairHTML('author_s',association.author_s));
-                text.append(_addNameValuePairHTML('chromLocation',association.chromLocation));
-                text.append(_addNameValuePairHTML('countriesOfRecruitment',association.countriesOfRecruitment));
-                text.append(_addNameValuePairHTML('initialSampleDescription',association.initialSampleDescription));
-                text.append(_addNameValuePairHTML('entrezMappedGenes',association.entrezMappedGenes));
-                text.append(_addNameValuePairHTML('mappedLabel',association.mappedLabel));
-                text.append(_addNameValuePairHTML('pValueExponent',association.pValueExponent));
-                text.append(_addNameValuePairHTML('pubmedId',association.pubmedId));
-                text.append(_addNameValuePairHTML('reportedGene',association.reportedGene));
-                text.append(_addNameValuePairHTML('title',association.title));
-                return text.prop('outerHTML');
-            }
-
-            //query for distinct efo terms. This will reduce the query number so work faster
-            var allEFO = {}
-            var allColorLoaded = []
+            //we add preferEFO for each association, generate the association data for popup in the locus plot.
+            var allUniqueEFO = {}
             data_association.docs.forEach(function(d, i) {
-                var traits = _findHightlightedEFOsforAssociation(d.id);
+                var traits = _findAllEFOsforAssociation(d.id,data);
                 if (traits.length > 1) {
-                    d.preferedEFO = _findMostSignificantTraitForAssociation(traits, d.id);
+                    d.preferedEFO = _findhighlightEFOForAssociation(traits, d.id);
                 }
                 else {
                     d.preferedEFO = traits[0];
                     d.preferedColor = ''
                 }
-                allEFO[d.preferedEFO] = '';
-
+                allUniqueEFO[d.preferedEFO] = '';
 
                 //add any string data that will be use in the locus plot popover
                 d.popoverHTML = buildLocusPlotPopoverHTML(d);
             })
 
-
+            //query for distinct efo terms. This will reduce the query number so work faster
 //            {
 //                uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
 //                        trait: "diabetes mellitus",
@@ -1578,117 +1356,38 @@
 //                    parent: "metabolic disease",
 //                    colour: "#FDB462"
 //            }
-            Object.keys(allEFO).forEach(function(efo) {
+            //work out all colour for unique efo
+            var allColorLoaded = []
+            Object.keys(allUniqueEFO).forEach(function(efo) {
                 allColorLoaded.push(getColourForEFO(efo).then(function(response) {
-                    allEFO[efo] = response;
+                    allUniqueEFO[efo] = response;
                     return response;
                 }));
             })
 
             //When all colour are received, replot
             Promise.all(allColorLoaded).then(function() {
+                                                 //assign colour to associations for plot
                                                  console.log('Finish loading color from ' + global_color_url);
-                                                 console.log(allEFO);
+                                                 console.log(allUniqueEFO);
                                                  data_association.docs.forEach(function(d, i) {
-                                                     d.preferedColor = allEFO[d.preferedEFO].colour;
-                                                     d.preferedParentUri = allEFO[d.preferedEFO].parentUri;
-                                                     d.preferedParentLabel = allEFO[d.preferedEFO].parent;
-                                                     d.category = allEFO[d.preferedEFO].parent;
+                                                     d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
+                                                     d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
+                                                     d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
+                                                     d.category = allUniqueEFO[d.preferedEFO].parent;
                                                  })
-                                                 if (initLoad) {
-                                                     getEfoTraitInfo(data_efo.docs, efotraitId);
-                                                     getSummary(studiesMainEFO);
-                                                 }
-                                                 getEfotraitAssociations(data_association.docs);
-                                                 getEfotraitStudies(data_study.docs);
-                                                 reloadLocusZoom('#plot', data_association);
                                              }
             ).catch(function(err) {
                 console.error('Error loading colour from ' + global_color_url + ' with ' + err);
+                console.error('Plot using deault colour.');
                 //xintodo create a default colour to plot, if the colour query fail
-                if (initLoad) {
-                    getEfoTraitInfo(data_efo.docs, efotraitId);
-                    getSummary(studiesMainEFO);
-                }
-                getEfotraitAssociations(data_association.docs);
-                getEfotraitStudies(data_study.docs);
+            }).then(function(){
                 reloadLocusZoom('#plot', data_association);
             });
         }
     }
 
-    //get data for the summary panel
-    function getEfoTraitInfo(data, efotraitId) {
-        getEFOInfo(efotraitId).then(function(response) {
-            var efotrait_link = response.iri;
-            var efotrait_id = efotraitId;
-            var synonym = response.synonyms;
-            var efotrait_label = response.label;
-            addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
-            $("#efotrait-description").html(displayArrayAsList(response.description));
-            $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-//            $("#efotrait-label").html(efotrait_label);
-            $("#efotrait-label").html(createPopover(efotrait_label,
-                                                    'description',
-                                                    displayArrayAsList(response.description)));
-            if (synonym) {
-                if (synonym.length > list_min) {
-                    $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
-                                                                synonym,
-                                                                'synonyms'));
-                }
-                else {
-                    $("#efotrait-synonym").html(synonym.join(", "));
-                }
-            }
-        }).catch(function(err) {
-                     //if query to ols fail, use our solr result
-                     var data_sample = data[0];
-                     var efotrait_id = efotraitId;
-                     var efotrait_link = data_sample.traitUri;
-                     var synonym = data_sample.synonym;
-                     var efotrait_label = data_sample.label;
 
-                     $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-                     $("#efotrait-label").html(efotrait_label);
-                     if (synonym) {
-                         if (synonym.length > list_min) {
-                             $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
-                                                                         synonym,
-                                                                         'synonyms'));
-                         }
-                         else {
-                             $("#efotrait-synonym").html(synonym.join(", "));
-                         }
-                     }
-                 }
-        )
-    }
-    function displayEfoTraitInfo(efotraitId) {
-        getEFOInfo(efotraitId).then(function(response) {
-            var efotrait_link = response.iri;
-            var efotrait_id = efotraitId;
-            var synonym = response.synonyms;
-            var efotrait_label = response.label;
-            addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
-            $("#efotrait-description").html(displayArrayAsList(response.description));
-            $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-//            $("#efotrait-label").html(efotrait_label);
-            $("#efotrait-label").html(createPopover(efotrait_label,
-                                                    'description',
-                                                    displayArrayAsList(response.description)));
-            if (synonym) {
-                if (synonym.length > list_min) {
-                    $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
-                                                                synonym,
-                                                                'synonyms'));
-                }
-                else {
-                    $("#efotrait-synonym").html(synonym.join(", "));
-                }
-            }
-        })
-    }
 
 
     //checkbox approach
@@ -1840,6 +1539,47 @@
     /*]]>*/
 
 
+</script>
+
+<style>
+
+
+
+</style>
+
+<!-- loading overlay
+================================================== -->
+<script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+
+<script>
+    //<![CDATA[
+    //https://gasparesganga.com/labs/jquery-loading-overlay/
+    showLoadingOverLay = function(tagID){
+        var options = {
+            color: "rgba(255, 255, 255, 0.8)",   // String
+            custom: "",                // String/DOM Element/jQuery Object
+            fade: [100, 3000],                      // Boolean/Integer/String/Array
+            fontawesome: "",                          // String
+//            image: "data:image/gif;base32,...",  // String
+            imagePosition: "center center",             // String
+            maxSize: "100px",                  // Integer/String
+            minSize: "20px",                    // Integer/String
+            resizeInterval: 10,                       // Integer
+            size: "20%",                       // Integer/String
+            zIndex: 9999,                        // Integer
+        }
+        return $(tagID).LoadingOverlay("show",options);
+    }
+
+    hideLoadingOverLay = function(tagID){
+        return $(tagID).LoadingOverlay("hide", true);
+    }
+
+
+
+
+
+    //]]>
 </script>
 
 
