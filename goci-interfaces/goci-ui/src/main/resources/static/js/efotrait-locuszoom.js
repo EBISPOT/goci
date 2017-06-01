@@ -539,37 +539,9 @@ reloadLocusZoom = function(plot_id, data_association) {
     var legend = [];
     var colorMap = {};
 
-//
-//        data_association.docs.forEach(function(d, i) {
-//            //algorithm for select efo for association
-////            allEFO.push(d.mappedUri[0]);
-//            allEFO.push( d.preferedEFO);
-//        })
-//        //unique only
-//        allEFO = allEFO.filter(function(value, index, self) {
-//            return self.indexOf(value) === index;
-//        })
-//        //random rgb color at, legend does not work atm
-//        allEFO.forEach(function(d, i) {
-//            col = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) +
-//                    ',' + (Math.floor(Math.random() * 256)) + ')';
-//            allColor.push(col);
-//            legend.push({
-//                            shape: "rect",
-//                            color: col,
-//                            width: 9,
-//                            label: d
-//                        }
-//            )
-//        })
 
     function hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-//            return result ? {
-//                        r: parseInt(result[1], 16),
-//                        g: parseInt(result[2], 16),
-//                        b: parseInt(result[3], 16)
-//                    } : null;
         return result ? 'rgb(' + parseInt(result[1], 16) + ','
                 + parseInt(result[2], 16) + ','
                 + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';

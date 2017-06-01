@@ -515,6 +515,7 @@
         <!--</div>-->
 
         <div class="row search-results-container" id="search-results-container" style="display: block">
+            <!--filter side box-->
             <div class="col-md-5 tight-to-side" id="filter-bar">
                 <div class="panel panel-default">
                     <div id="expand_float_panel" class="panel-heading background-color-primary-accent">
@@ -529,7 +530,7 @@
                         <div>
                             <b>Current selected:</b>
                             <div class="list-group" id="cart-loading" style=" max-height: 300px; overflow-y:scroll; ">
-                                <div id="selected-efos_btn"></div>
+                                <div id="cart"></div>
                             </div>
                         </div>
 
@@ -627,6 +628,7 @@
                 </div>
             </div>
 
+            <!--plot, tables-->
             <div class="col-md-7" id="results-area">
                 <!-- List the available tables -->
                 <div class="row" style="margin-top:0px">
@@ -971,23 +973,6 @@
 
 
 
-<!--<div id="loadingResults" class="col-md-offset-4" style="display: none">-->
-<!--<button class="btn btn-lg">-->
-<!--<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"-->
-<!--style="margin-right: 1em;"></span>Loading...-->
-<!--</button>-->
-<!--</div>-->
-<script>
-    $('#loadingResults').show();
-</script>
-
-<!--<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>-->
-
-<!--visjs-->
-<!--<script src="../static/js/plugins/vis.min.js" th:src="@{../../js/plugins/vis.min.js}"></script>-->
-<!--<link href="../static/css/vis.min.css" rel="stylesheet" type="text/css" th:href="@{../../css/vis.min.css}"/>-->
-
-
 <!-- trait page
 ================================================== -->
 <script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
@@ -1009,8 +994,6 @@
 
 
 
-
-
     $('.addEfoButton').click(function() {
         var elements = {};
         $(this).attr('value').split(',').forEach(function(index, value) {
@@ -1021,6 +1004,7 @@
 //        getEfoTraitData($(this).attr('value'));
 //        console.log('clicked' + $(this).attr('value'));
     });
+
 
     $('#btn-query-include-descendants').click(function() {
         //replot with all children, from the currently selected efos
@@ -1098,32 +1082,40 @@
     }
 
     //add a selected efo to the cart, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
-    addSelectedItem = function(tagID, efoid, additionalLabel, removeable) {
+    addToCart = function(tagID, efoid, additionalLabel, removeable) {
         if (removeable == undefined) {
             removeable = true;
         }
 
-        //add badge to the selection box to show the toplevel efo and the number of association/trait for this efo
+        //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
         getColourForEFO(efoid).then(function(data){
             var colour = data.colour;
             var container = $(tagID);
-
 
             var btn = $('<a />', {
                 class: 'list-group-item col-xs-9 col-sm-9 col-md-9 col-lg-9',
             }).css({
                 'width': '100%', 'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
             }).appendTo(container);
+
+            //to highlight associations only for this efo term
+            btn.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
+
             $('<span />', { class: 'badge', text: data.colourLabel.substr(0,1), title:data.colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
                     .appendTo(btn);
 
+
+            //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
             if (removeable) {
                 var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(btn);
                 span.on("click", function(e) {
                     removeEFO(efoid);
                 });
             }
+            // This will add badge at the end of each cart item, showing the number of association/study linked.
+            // This will be init probably before the association/study data is available, thus generating badges with
+            // 0 as value at the begining. The badge will be update when the data is available.
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFO(efoid)).length , title:'Number of study'}).css({'color':'black'}).appendTo(btn);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFO(efoid)).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
 
@@ -1135,6 +1127,7 @@
     //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(include_descendants, initLoad) {
 
+        //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
         if(initLoad){
             showLoadingOverLay('#summary-panel-loading');
             showLoadingOverLay('#highlight-study-panel-loading');
@@ -1150,41 +1143,40 @@
         var mainEFO = getMainEFO();
 
         //clean the cart
-        var container = $('#selected-efos_btn');
+        var container = $('#cart');
         container.empty()
 
-        //update selection cart, the badge will be 0 since the data is not ready at this stage.
+        //update cart, the badge will be 0 since the data is not ready at this stage.
         var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
                 if (efoInfo.short_form == mainEFO)
-                    addSelectedItem('#selected-efos_btn', efoInfo.short_form, efoInfo.label, false)
+                    addToCart('#cart', efoInfo.short_form, efoInfo.label, false)
                 else
-                    addSelectedItem('#selected-efos_btn', efoInfo.short_form, efoInfo.label)
+                    addToCart('#cart', efoInfo.short_form, efoInfo.label)
                 return efoInfo;
             });
         }, Promise.resolve()).catch(function(err) {
             console.error('Error when updating cart! ' + err);
         }).then(
-//                hideLoadingOverLay('#cart-loading')
+                //hideLoadingOverLay('#cart-loading')
         );
 
-        //add ols-graph to the page
-        if (initLoad) {
-//            addRelatedTermCheckBox();
-            addRelatedTermGraph(mainEFO);
-
-        }
-
-        //update shareable link to the page
-        updateSharableLink();
 
         //display efo train information when data is ready
         if (initLoad){
             displayEfoTraitInfo(mainEFO);
         }
 
+        //add ols-graph to the page
+        if (initLoad) {
+            //addRelatedTermCheckBox();
+            addRelatedTermGraph(mainEFO);
+        }
+
+        //update shareable link to the page
+        updateSharableLink();
 
         //query descendants for current selected terms
         var all_descendants = {}
@@ -1236,13 +1228,14 @@
 
     //make solr query
     function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad) {
-        // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(init load)
+        // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(initload)
         // or just reload the tables(adding another efo term)
         if (initLoad === undefined) {
             initLoad = false;
         }
 
         var searchQuery = mainEFO;
+
 
         if (additionalEFO.length > 0) {
             var p1 = filterAvailableEFOs(additionalEFO).then(function(additionalEFO_filtered) {
@@ -1263,6 +1256,7 @@
             });
         }
 
+        //xintodo the url will be too long if there are a lot of terms to query, maybe change to post?
         return Promise.all([p1, p2]).then(function() {
             console.log("Solr research request received for " + searchQuery);
             return promiseGet('/gwas/api/search/efotrait',
@@ -1318,32 +1312,26 @@
                 }
             });
 
+            //update association/study table
             displayEfotraitAssociations(data_association.docs);
             displayEfotraitStudies(data_study.docs);
-
 
 
             //work out highlight study
             var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
             if(initLoad){
                 displayHighlightedStudy(highlightedStudy);
+                //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
                 getSummary(findStudiesForEFO(getMainEFO()));
             }
 
 
-            //we add preferEFO for each association, generate the association data for popup in the locus plot.
+            //we add preferEFO for each association, generate the association data in popup for locus plot.
             var allUniqueEFO = {}
             data_association.docs.forEach(function(d, i) {
                 var traits = _findAllEFOsforAssociation(d.id,data);
-                if (traits.length > 1) {
-                    d.preferedEFO = _findhighlightEFOForAssociation(traits, d.id);
-                }
-                else {
-                    d.preferedEFO = traits[0];
-                    d.preferedColor = ''
-                }
+                d.preferedEFO = _findhighlightEFOForAssociation(traits, d.id);
                 allUniqueEFO[d.preferedEFO] = '';
-
                 //add any string data that will be use in the locus plot popover
                 d.popoverHTML = buildLocusPlotPopoverHTML(d);
             })
@@ -1356,7 +1344,7 @@
 //                    parent: "metabolic disease",
 //                    colour: "#FDB462"
 //            }
-            //work out all colour for unique efo
+            //Load colour for unique efo
             var allColorLoaded = []
             Object.keys(allUniqueEFO).forEach(function(efo) {
                 allColorLoaded.push(getColourForEFO(efo).then(function(response) {
@@ -1535,6 +1523,94 @@
 
     }
 
+
+
+    //replot receive a list of association_docs from solr search
+    reloadLocusZoomHighlight = function(plot_id, data_association, highlight_associations) {
+        //adding information to association doc
+        LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
+            var data = JSON.parse(JSON.stringify(data_association.docs));
+            console.log("Parsing association doc to locus zoom.");
+            console.log(data_association.docs);
+            data.forEach(function(d, i, object) {
+//                if (d.shortForm.length > 1) {
+//                    console.log(d);
+//                }
+
+                if (d.chromLocation) {
+                    //we only plot those association which have chromosome information
+                    data[i].chr = d.chromLocation[0].split(":")[0];
+                    if (data[i].chr == 'X') {
+                        data[i].chr = 23;
+                    }
+                    if (data[i].chr == 'Y') {
+                        data[i].chr = 24;
+                    }
+                    data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
+                    data[i].pval = Math.pow(10, d.pValueExponent);
+                    data[i].phewas_string = d.rsId[0];
+                    data[i].x = transferLocation(data[i].chr, data[i].bp);
+                }
+                else {
+                    //some association don't have chromosome information
+                    object.splice(i, 1);
+                }
+
+            });
+            return {header: chain.header, body: data};
+        };
+
+        var data_sources = new LocusZoom.DataSources()
+                .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
+
+
+        var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
+        layout.panels[0].margin.top = 32;
+        layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
+
+        //xintodo create the color palate here
+        //find all efos for plotting color
+        var legend = [];
+        var colorMap = {};
+
+
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? 'rgb(' + parseInt(result[1], 16) + ','
+                    + parseInt(result[2], 16) + ','
+                    + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
+        }
+
+        data_association.docs.forEach(function(d, i) {
+            if(highlight_associations.indexOf(d.preferedEFO) == -1){
+                colorMap[d.category] = hexToRgb('#808080');
+            }else{
+                d.category = d.preferedEFO;
+                colorMap[d.category] = hexToRgb('#FF0000');
+            }
+        })
+        legend_catgories = [];
+        legend_color = [];
+        for (var key in colorMap) {
+            legend_catgories.push(key);
+            legend_color.push(colorMap[key]);
+            legend.push({
+                            shape: "rect",
+                            color: colorMap[key],
+                            width: 9,
+                            label: key
+                        }
+            )
+        }
+        layout.panels[0].data_layers[1].color.parameters.categories = legend_catgories;
+        layout.panels[0].data_layers[1].color.parameters.values = legend_color;
+        layout.panels[0].data_layers[1].legend = legend;
+
+
+        // Generate the plot
+        var plot = LocusZoom.populate(plot_id, data_sources, layout);
+        hideLoadingOverLay('#locus-plot-row-loading');
+    }
 
     /*]]>*/
 
