@@ -336,7 +336,8 @@ getAvailableEFOs=function(){
             'q': '*:*',
             'max': 9999,
             'fq': 'resourcename:efotrait',
-            'group.limit': 9999
+            'group.limit': 9999,
+            'fl' : 'shortForm'
         }).then(JSON.parse).then(function(data) {
             $.each(data.grouped.resourcename.groups, function(index, group) {
                 switch (group.groupValue) {

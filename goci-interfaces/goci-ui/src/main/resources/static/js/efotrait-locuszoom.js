@@ -79,7 +79,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     id: "efowaspvalues",
     type: "scatter",
     point_shape: "circle",
-    point_size: 30,
+    point_size: 50,
     tooltip_positioning: "vertical",
     id_field: "{{namespace}}id",
     fields: ["{{namespace}}phewas"],
@@ -112,7 +112,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         }
     },
     legend: [],
-    fill_opacity: 0.7,
+    fill_opacity: 0.5,
     //xintodo datapoint tooltips
     tooltip: {
         closable: true,
