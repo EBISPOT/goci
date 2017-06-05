@@ -12,7 +12,11 @@ var global_efo_selected_tag_id = '#selected-efos';
 var global_pmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 
 
-new Clipboard('#sharable_link_btn');
+new Clipboard('#sharable_link_btn', {
+    text: function (trigger) {
+        return $('#sharable_link').val();
+    }
+});
 
 
 _peak = function() {

@@ -228,8 +228,7 @@
                 <div class="clearfix" id="summary-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <!--label-->
-
-                        <div class="clearfix">
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Label</dt>
                                 <dd id="efotrait-label">-</dd>
@@ -240,7 +239,7 @@
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-label">-</div>-->
                         </div>
                         <!--id-->
-                        <div class="clearfix">
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Trait EFO id</dt>
                                 <dd id="efotrait-id">-</dd>
@@ -250,19 +249,8 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-id">-</div>-->
                         </div>
-                        <!--label-->
-                        <div class="clearfix">
-                            <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Description</dt>
-                                <dd id="efotrait-description">-</dd>
-                            </dl>
-                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
-                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description-->
-                            <!--</div>-->
-                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
-                        </div>
                         <!--synonym-->
-                        <div class="clearfix">
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Synonym(s)</dt>
                                 <dd id="efotrait-synonym">-</dd>
@@ -272,6 +260,18 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-synonym">-</div>-->
                         </div>
+                        <!--description-->
+                        <div class="clearfix col-lg-12">
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">Description</dt>
+                                <dd id="efotrait-description">-</dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
+                        </div>
+
                     </div>
 
                 </div>
@@ -279,11 +279,12 @@
 
                 <!--highlighted study-->
                 <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">Highlighted study for this trait</h3>
+                    <h3 class="panel-title">Highlighted study</h3>
                 </div>
                 <div class="clearfix" id="highlight-study-panel-loading">
                     <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="clearfix">
+                        <!--title-->
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Title</dt>
                                 <dd id="efotrait-highlighted-study-title">-</dd>
@@ -293,8 +294,8 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-title">-</div>-->
                         </div>
-
-                        <div class="clearfix">
+                        <!--author-->
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Author</dt>
                                 <dd id="efotrait-highlighted-study-author">-</dd>
@@ -304,8 +305,8 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-author">-</div>-->
                         </div>
-
-                        <div class="clearfix">
+                        <!--Catalog Publish Date-->
+                        <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 150px;">Catalog Publish Date</dt>
                                 <dd id="efotrait-highlighted-study-catalogPublishDate">-</dd>
@@ -315,10 +316,10 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-highlighted-study-catalogPublishDate">-</div>-->
                         </div>
-
-                        <div class="clearfix">
+                        <!--Abstract-->
+                        <div class="clearfix col-lg-12">
                             <dl class="dl-horizontal">
-                                <dt style="width: 150px;">Abstract</dt>
+                                <dt style="width: 100px;">Abstract</dt>
                                 <dd id="efotrait-highlighted-study-abstract">-</dd>
                             </dl>
                         </div>
@@ -527,7 +528,7 @@
                     </div>
                     <div class="panel-body">
                         <!--current select-->
-                        <div>
+                        <div class="row">
                             <b>Current selected:</b>
                             <div class="list-group" id="cart-loading" style=" max-height: 300px; overflow-y:scroll; ">
                                 <div id="cart"></div>
@@ -535,23 +536,40 @@
                         </div>
 
                         <!--replot button-->
-                        <div>
+                        <div class="row">
                             <b>Actions:</b>
                             <div>
-                                <input id="cb-query-include-descendants" type="checkbox"/> always include descendants
-                                                                                           <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
-                                <button id="btn-query-include-descendants"
-                                        type="button"
-                                        class="btn btn-default">+descendants
-                                </button>
-                                <button id="btn-query-include-related-terms"
-                                        type="button"
-                                        class="btn btn-default">+related terms
-                                </button>
+                                <div class="col-lg-3">
+                                    <input id="cb-query-include-descendants" type="checkbox"/> Descendants
+                                    <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
+                                </div>
+                                <div class="col-lg-6">
+                                    <button id="btn-query-include-descendants"
+                                            type="button"
+                                            class="btn btn-default">+descendants
+                                    </button>
+                                    <button id="btn-query-include-related-terms"
+                                            type="button"
+                                            class="btn btn-default">+related terms
+                                    </button>
+                                </div>
+                                <div class="col-lg-2">
+                                    <input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>
+                                    <div>
+                                        <button id="sharable_link_btn"
+                                                type="button"
+                                                class="btn btn-default"
+                                                data-clipboard-target="#sharable_link">
+                                          <span class="glyphicon glyphicon-floppy-disk"
+                                                aria-hidden="true"
+                                                title="copy sharable link to clipboard"></span>
+                                         </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div>
+                        <div class="row">
                             <div id="ols-search-div" class="tab-pane fade in active">
                                 <h4>Search for additional terms:</h4>
                                 <div class="left">
@@ -609,20 +627,6 @@
                             </div>
                         </div>
 
-
-                        <div>
-                            <input type="text" id="sharable_link" class="col-xs-6" style="display: block"></input>
-                            <div class="col-xs-1">
-                                <button id="sharable_link_btn"
-                                        type="button"
-                                        class="btn btn-default"
-                                        data-clipboard-target="#sharable_link">
-                                  <span class="glyphicon glyphicon-floppy-disk"
-                                        aria-hidden="true"
-                                        title="copy to clipboard"></span>
-                            </button>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
