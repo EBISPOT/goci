@@ -552,6 +552,18 @@
                                             type="button"
                                             class="btn btn-default">+related terms
                                     </button>
+                                    <button id="btn-clear-highlight"
+                                            type="button"
+                                            class="btn btn-default">clear highlight
+                                    </button>
+
+                                    <button id="btn-clear-cart"
+                                            type="button"
+                                            class="btn btn-default">clear cart
+                                    </button>
+
+
+
                                 </div>
                                 <div class="col-lg-2">
                                     <input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>
@@ -591,36 +603,42 @@
                             </div>
                         </div>
                         <!--trying bootstrap nav tab-->
-                        <div class="container col-xs-12">
+                        <div class="container row col-xs-12">
                             <!--<ul class="nav nav-tabs">-->
                             <!--<li class="active"><a data-toggle="tab" href="#ols-search-div">Search for additional terms</a></li>-->
                             <!--<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>-->
                             <!--<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>-->
                             <!--</ul>-->
-                            <ul class="nav nav-pills">
+                            <ul class="nav nav-tabs">
                                 <li><a data-toggle="pill" href="#ols-tree-div">EFO hierarchy</a></li>
                                 <li><a data-toggle="pill" href="#ols-graph-div">Additional terms</a></li>
+                                <li><a data-toggle="pill" href="#oxo-div">OXO</a></li>
+
                             </ul>
 
 
                             <div class="tab-content">
-                                <!--auto suggest-->
-
-
+                                <!--tree-->
                                 <div id="ols-tree-div" class="tab-pane fade">
                                     <h4>Related in EFO hierarchy:</h4>
-                                    <div id="term-tree"
-                                         style="height:500px; width:500px; border:1px solid black;overflow: auto;">
-
-                                    </div>
+                                    <div id="term-tree" style="height:100%; width:100%; border:1px solid black;overflow: auto;"></div>
                                 </div>
-
+                                <!--ols-graph-->
                                 <div id="ols-graph-div" class="tab-pane fade">
                                     <div id="expension">
                                         <h4>Additional related terms eg. measurements and biomarkers:</h4>
+                                        <div>
+                                            <div id="ontology_vis"></div>
+                                        </div>
                                     </div>
+
+                                </div>
+
+                                <!--oxo-->
+                                <div id="oxo-div" class="tab-pane fade" >
+                                    <h4>oxo:</h4>
                                     <div>
-                                        <div id="ontology_vis"></div>
+                                        <div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>
                                     </div>
                                 </div>
 
@@ -630,6 +648,10 @@
 
                     </div>
                 </div>
+
+
+
+
             </div>
 
             <!--plot, tables-->
@@ -890,6 +912,7 @@
     <!--</table>-->
 
 
+
 </div>
 
 <!--Include footer-->
@@ -909,6 +932,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css"
       th:href="@{https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css}"
       rel="stylesheet"/>
+
 
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -975,7 +999,11 @@
       type="text/css"/>
 <script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
 
+<!--vis.js-->
+<script src="https://cdn.rawgit.com/almende/vis/master/dist/vis.js"></script>
 
+<!--oxo-grapg-->
+<script src="../static/js/plugins/oxo-graph.js" th:src="@{../../js/plugins/oxo-graph.js}"></script>
 
 <!-- trait page
 ================================================== -->
@@ -1013,6 +1041,20 @@
     $('#btn-query-include-descendants').click(function() {
         //replot with all children, from the currently selected efos
         addEFO({}, false, true);
+    });
+
+    $('#btn-clear-highlight').click(function() {
+        reloadLocusZoom('#plot', data_association);
+    });
+
+    $('#btn-clear-cart').click(function() {
+        var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
+        var mainEFO = getMainEFO();
+        Object.keys(selected).map(function(key){
+            if(key != mainEFO)
+                delete selected[key];
+        })
+        $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
     });
 
     $('#btn-query-include-related-terms').click(function() {
@@ -1512,9 +1554,12 @@
             })
         }).then(function() {
             var x = instance.getGraphDataset()
-            window.setTimeout(function() {
-                //change mainEFO node shape
-                mainEFOIri.then(function(iri) {
+            var net=instance.getNetwork()
+            console.log(net)
+
+            //change mainEFO node shape
+            mainEFOIri.then(function(iri) {
+                net.once("stabilized", function(params){
                     //http://visjs.org/docs/data/dataset.html
                     var defaultAttribute = x["nodes"].get(iri)
                     defaultAttribute.color.border = 'blue';
@@ -1527,9 +1572,7 @@
                         })
                     })
                 })
-
-
-            }, 4000)
+            })
         }).catch(function(err) {
             console.error('Error when plotting related terms.' + err);
         })
@@ -1630,11 +1673,6 @@
 
 </script>
 
-<style>
-
-
-
-</style>
 
 <!-- loading overlay
 ================================================== -->
@@ -1669,6 +1707,16 @@
 
 
     //]]>
+</script>
+
+<script>
+
+    //<![CDATA[
+
+
+
+    //]]>
+
 </script>
 
 
