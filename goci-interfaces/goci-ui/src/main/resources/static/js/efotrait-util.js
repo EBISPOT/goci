@@ -209,8 +209,6 @@ getColourForEFO = function(efoid) {
             var tmp = {};
             tmp[efoid] = response;
             return tmp;
-        }).catch(function(err) {
-            console.error('Error when loading Colour! ' + err);
         })
     }
 
@@ -634,7 +632,7 @@ displayHighlightedStudy = function(highlightedStudy) {
                                                                      paperDetail.abstractText));
         return paperDetail;
     }).catch(function(err) {
-        console.error('Error when loading data from PMC! ' + err);
+        console.warning('Error when loading data from PMC! ' + err);
     }).then(function(){
         hideLoadingOverLay('#highlight-study-panel-loading');
     });
@@ -665,11 +663,12 @@ displayEfoTraitInfo = function(efotraitId) {
             }
         }
     }).catch(function(err) {
-        console.error(err);
+        console.warning('Error loading efo info from OLS. ' + err);
     }).then(function() {
         hideLoadingOverLay('#summary-panel-loading')
     })
 }
+
 
 
 //display association table

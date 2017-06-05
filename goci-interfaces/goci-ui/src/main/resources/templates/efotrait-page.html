@@ -1086,12 +1086,21 @@
         if (removeable == undefined) {
             removeable = true;
         }
-
+        var colour, colourLabelInit,colourLabel;
         //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
         getColourForEFO(efoid).then(function(data){
-            var colour = data.colour;
+            colour = data.colour;
+            colourLabelInit = data.colourLabel.substr(0,1)
+            colourLabel = data.colourLabel;
+        }).catch(function(err){
+            //if colour server is not available
+            console.warn('Error loading colour for cart item <' + efoid + '>. from ' + global_color_url + '. ' + err + '. Using default colour.')
+            //default value
+            colour = '#808080';
+            colourLabelInit = '?'
+            colourLabel = 'unable to reach colour server.';
+        }).then(function(){
             var container = $(tagID);
-
             var btn = $('<a />', {
                 class: 'list-group-item col-xs-9 col-sm-9 col-md-9 col-lg-9',
             }).css({
@@ -1101,7 +1110,7 @@
             //to highlight associations only for this efo term
             btn.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
-            $('<span />', { class: 'badge', text: data.colourLabel.substr(0,1), title:data.colourLabel})
+            $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
                     .appendTo(btn);
 
@@ -1122,7 +1131,6 @@
             btn.append(additionalLabel)
         })
     }
-
 
     //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(include_descendants, initLoad) {
@@ -1158,7 +1166,7 @@
                 return efoInfo;
             });
         }, Promise.resolve()).catch(function(err) {
-            console.error('Error when updating cart! ' + err);
+            console.warning('Error when updating cart! ' + err);
         }).then(
                 //hideLoadingOverLay('#cart-loading')
         );
@@ -1189,7 +1197,7 @@
                 })
                 return all_descendants;
             }).catch(function(err) {
-                console.log('error when trying to find all descendants with error messgae ' + err);
+                console.warning('Error when trying to find all descendants with error messgae ' + err);
             })
         }else{
             var desPromise = Promise.resolve();
@@ -1213,7 +1221,8 @@
                     });
                 },Promise.resolve())
             }).catch(function(err) {
-                console.error('Error when updating selected efo box! ' + err);
+                console.error('Error search solr. ' + err);
+                $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
             }).then(function(){
                 hideLoadingOverLay('#cart-loading');
             })
@@ -1274,6 +1283,7 @@
                 return data;
             }).catch(function(err) {
                 console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+                throw(err);
             })
         })
 
@@ -1366,8 +1376,7 @@
                                                  })
                                              }
             ).catch(function(err) {
-                console.error('Error loading colour from ' + global_color_url + ' with ' + err);
-                console.error('Plot using deault colour.');
+                console.warn('Error loading colour for Locus zoom plot from ' + global_color_url + '. ' + err + '. Using default colour.')
                 //xintodo create a default colour to plot, if the colour query fail
             }).then(function(){
                 reloadLocusZoom('#plot', data_association);
