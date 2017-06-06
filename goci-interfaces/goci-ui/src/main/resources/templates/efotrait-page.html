@@ -950,7 +950,7 @@
                    }).appendTo(container);
 
             //to highlight associations only for this efo term
-//            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
+            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
@@ -977,11 +977,11 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'white'}).appendTo(item);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
-            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
-            cb.change(function(){
-                //xintodo update the plot
-                $('.cart-item-cb:checked')
-            })
+//            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
+//            cb.change(function(){
+//                //xintodo update the plot
+//                $('.cart-item-cb:checked')
+//            })
 
             item.append(additionalLabel)
         })
