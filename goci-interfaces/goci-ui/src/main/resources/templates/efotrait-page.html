@@ -325,6 +325,7 @@
                         </div>
 
 
+
                     </div>
 
                 </div>
@@ -1005,6 +1006,10 @@
 <!--oxo-grapg-->
 <script src="../static/js/plugins/oxo-graph.js" th:src="@{../../js/plugins/oxo-graph.js}"></script>
 
+<!-- loading overlay
+================================================== -->
+<script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
+
 <!-- trait page
 ================================================== -->
 <script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
@@ -1054,7 +1059,7 @@
             if(key != mainEFO)
                 delete selected[key];
         })
-        $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
+        addEFO({}, false);
     });
 
     $('#btn-query-include-related-terms').click(function() {
@@ -1124,7 +1129,7 @@
     removeEFO = function(efoid) {
         var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
         delete selected[efoid];
-        $(global_efo_info_tag_id).trigger('addToSelect', [false, false]);
+        addEFO({},false);
     }
 
     //add a selected efo to the cart, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
@@ -1171,8 +1176,8 @@
             // This will add badge at the end of each cart item, showing the number of association/study linked.
             // This will be init probably before the association/study data is available, thus generating badges with
             // 0 as value at the begining. The badge will be update when the data is available.
-            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFO(efoid)).length , title:'Number of study'}).css({'color':'black'}).appendTo(btn);
-            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFO(efoid)).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
+            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'black'}).appendTo(btn);
+            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
 
             btn.append(additionalLabel)
         })
@@ -1180,6 +1185,7 @@
 
     //triger a refresh of the page content, including locusplot, tables, badges.
     updatePage = function(include_descendants, initLoad) {
+
 
         //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
         if(initLoad){
@@ -1259,12 +1265,25 @@
                     return sequence.then(function() {
                         return efoInfo;
                     }).then(function(efoInfo) {
-                        //update the selection box badge number when data is ready
-                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
-                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFO(efoInfo.short_form)).length)
-                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
-                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFO(efoInfo.short_form)).length)
-                    });
+                        var target_efos;
+                        if(include_descendants){
+                            //self and decendants
+                            target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
+                                //adding self
+                                return Object.keys(data).concat(efoInfo.short_form);
+                            })
+                        }else{
+                            //only self
+                            target_efos = Promise.resolve([efoInfo.short_form]);
+                        }
+                        target_efos.then(function(efos){
+                            //update the selection box badge number when data is ready
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
+                        });
+                    })
                 },Promise.resolve())
             }).catch(function(err) {
                 console.error('Error search solr. ' + err);
@@ -1674,33 +1693,9 @@
 </script>
 
 
-<!-- loading overlay
-================================================== -->
-<script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
 
 <script>
     //<![CDATA[
-    //https://gasparesganga.com/labs/jquery-loading-overlay/
-    showLoadingOverLay = function(tagID){
-        var options = {
-            color: "rgba(255, 255, 255, 0.8)",   // String
-            custom: "",                // String/DOM Element/jQuery Object
-            fade: [100, 3000],                      // Boolean/Integer/String/Array
-            fontawesome: "",                          // String
-//            image: "data:image/gif;base32,...",  // String
-            imagePosition: "center center",             // String
-            maxSize: "100px",                  // Integer/String
-            minSize: "20px",                    // Integer/String
-            resizeInterval: 10,                       // Integer
-            size: "20%",                       // Integer/String
-            zIndex: 9999,                        // Integer
-        }
-        return $(tagID).LoadingOverlay("show",options);
-    }
-
-    hideLoadingOverLay = function(tagID){
-        return $(tagID).LoadingOverlay("hide", true);
-    }
 
 
 
@@ -1712,7 +1707,6 @@
 <script>
 
     //<![CDATA[
-
 
 
     //]]>

@@ -530,6 +530,8 @@ findStudiesForEFO = function(efoid) {
     return studies;
 }
 
+
+
 // find association for a given efoid from the solr result, return empty hash if the solr result is undefined
 // require solr result.
 findAssociationForEFO = function(efoid){
@@ -542,6 +544,53 @@ findAssociationForEFO = function(efoid){
             data_highlighting[key].efoLink.forEach(function(highlightedefo) {
                 if (highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1] == efoid) {
                     associations[key] = efoid;
+                }
+            });
+        }
+    })
+
+    $.each(data_association.docs, function(index, value) {
+        if ($.inArray(value.id, Object.keys(associations)) != -1) {
+            associations[value.id] = value;
+        }
+    })
+    return associations;
+}
+
+
+
+findStudiesForEFOs = function(efoids){
+    var studies = {};
+    if(data_highlighting==undefined)
+        return studies;
+    Object.keys(data_highlighting).forEach(function(key) {
+        if (/^study/.test(key)) {
+            data_highlighting[key].efoLink.forEach(function(highlightedefo) {
+                if (efoids.indexOf(highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1]) != -1) {
+                    studies[key] = key;
+                }
+            });
+        }
+    })
+
+    $.each(data_study.docs, function(index, value) {
+        if ($.inArray(value.id, Object.keys(studies)) != -1) {
+            studies[value.id] = value;
+        }
+    })
+    return studies;
+}
+
+findAssociationForEFOs = function(efoids){
+    var associations = {};
+
+    if(data_highlighting==undefined)
+        return associations;
+    Object.keys(data_highlighting).forEach(function(key) {
+        if (/^association/.test(key)) {
+            data_highlighting[key].efoLink.forEach(function(highlightedefo) {
+                if (efoids.indexOf(highlightedefo.match(/<b>(\w*_\d*)<\/b>/)[1]) != -1) {
+                    associations[key] = key;
                 }
             });
         }
@@ -631,9 +680,11 @@ displayHighlightedStudy = function(highlightedStudy) {
         var paperDetail = data.resultList.result[0];
 //                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
 //                                                                               paperDetail.abstractText,''));
-        $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
-                                                                     'abstract',
-                                                                     paperDetail.abstractText));
+//         $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
+//                                                                      'abstract',
+//                                                                      paperDetail.abstractText));
+        $('#efotrait-highlighted-study-abstract').html(paperDetail.abstractText);
+
         return paperDetail;
     }).catch(function(err) {
         console.warning('Error when loading data from PMC! ' + err);
@@ -882,6 +933,30 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
 
     hideLoadingOverLay('#study-table-loading')
 }
+
+//Load overlay
+//https://gasparesganga.com/labs/jquery-loading-overlay/
+showLoadingOverLay = function(tagID){
+    var options = {
+        color: "rgba(255, 255, 255, 0.8)",   // String
+        custom: "",                // String/DOM Element/jQuery Object
+        fade: [100, 3000],                      // Boolean/Integer/String/Array
+        fontawesome: "",                          // String
+//            image: "data:image/gif;base32,...",  // String
+        imagePosition: "center center",             // String
+        maxSize: "100px",                  // Integer/String
+        minSize: "20px",                    // Integer/String
+        resizeInterval: 10,                       // Integer
+        size: "20%",                       // Integer/String
+        zIndex: 9999,                        // Integer
+    }
+    return $(tagID).LoadingOverlay("show",options);
+}
+
+hideLoadingOverLay = function(tagID){
+    return $(tagID).LoadingOverlay("hide", true);
+}
+
 
 
 
