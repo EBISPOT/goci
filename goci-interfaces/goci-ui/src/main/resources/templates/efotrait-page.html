@@ -167,6 +167,8 @@
     </div>
 </div>
 
+
+
 <!--main container-->
 <div class="container-fluid" style="padding-top: 30px">
     <!--search meta data-->
@@ -176,43 +178,25 @@
         <li class="active" th:text="${result.query}"></li>
     </ol>
 
+
+
+
+
     <!--disable when search is invalid-->
     <div class="container-fluid" id="lower_container">
 
-        <!--debug information-->
+
         <!--<div class="row" style="margin-top:10px">-->
-        <!--<div class="panel panel-default">-->
-        <!--<div class="panel-heading background-color-primary-accent">-->
-        <!--<h3 class="panel-title">debug information</h3>-->
-        <!--</div>-->
-        <!--<div class="col-lg-12">-->
-        <!--<button id="addEfoButton0" class="addEfoButton" th:value="${result.query}">reset</button>-->
-        <!--<button id="addEfoButton1"-->
-        <!--class="addEfoButton"-->
-        <!--value="EFO_0004211">EFO_0004211 Hypertriglyceridemia</button>-->
-        <!--<button id="addEfoButton2"-->
-        <!--class="addEfoButton"-->
-        <!--value="EFO_0001060">celiac disease EFO_0001060</button>-->
-        <!--<button id="addEfoButton3" class="addEfoButton" value="EFO_0000400,EFO_0004211,EFO_0001060">EFO_0000400 OR EFO_0004211 OR EFO_0001060</button>-->
-        <!--</div>-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading background-color-primary-accent">-->
+                    <!--<h3 class="panel-title">debug information</h3>-->
+                <!--</div>-->
 
-        <!--<div class="col-lg-12">-->
-        <!--<div id="debug">debug information</div>-->
-        <!--</div>-->
-        <!--<input type="checkbox" id="query-include-descendants"/>include descendants-->
+                <!--<button id="btn-toggle-sidebar"-->
+                        <!--type="button"-->
+                        <!--class="btn btn-default" onclick="$('.sidebar').sidebar('toggle')">sidebar</button>-->
 
-
-        <!--<button class="btn btn-large btn-primary" data-toggle="confirmation"-->
-        <!--data-btn-ok-label="Continue" data-btn-ok-icon="glyphicon glyphicon-share-alt"-->
-        <!--data-btn-ok-class="btn-success"-->
-        <!--data-btn-cancel-label="Stoooop!" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"-->
-        <!--data-btn-cancel-class="btn-danger"-->
-        <!--data-title="Is it ok?" data-content="This might be dangerous">-->
-        <!--Confirmation-->
-        <!--</button>-->
-
-        <!--</div>-->
-        <!--<div id="mynetwork"></div>-->
+            <!--</div>-->
         <!--</div>-->
 
         <!-- Summary panel -->
@@ -340,183 +324,10 @@
         </div>
 
 
-
-
-
-
-
-
-
-
-        <!--Expandsion panel-->
-        <!--<div class="row" style="margin-top:20px">-->
-        <!--<div id="expension_panel" class="panel panel-default">-->
-        <!--<div class="panel-heading background-color-primary-accent">-->
-        <!--<h3 class="panel-title">-->
-        <!--<span class="locus_label">Expand your search</span>-->
-        <!--</h3>-->
-        <!--<span class="pull-right">-->
-        <!--<sp an class="clickable panel-collapsed"-->
-        <!--style="margin-left:25px"-->
-        <!--onclick="toggleSidebar('#expension_panel span.clickable')">-->
-        <!--<span class="glyphicon glyphicon-chevron-down"></span>-->
-        <!--</span>-->
-        <!--</span>-->
-        <!--</div>-->
-
-        <!--<div class="panel-body" style="display:none">-->
-        <!--&lt;!&ndash;<div class="panel-body" style="display:initial">&ndash;&gt;-->
-
-        <!--&lt;!&ndash;current selected&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-xs-12 background-color-primary-accent">&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-xs-6">Selected EFO:&ndash;&gt;-->
-        <!--&lt;!&ndash;<div id="selected-efos_text"></div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-xs-12" id="selected-efos_btn">&ndash;&gt;-->
-
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div style="display:none" id="efo-info"></div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-xs-12">&ndash;&gt;-->
-        <!--&lt;!&ndash;<input type="text" id="sharable_link" class="col-xs-6"></input>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="col-xs-1">&ndash;&gt;-->
-        <!--&lt;!&ndash;<button id="sharable_link_btn"&ndash;&gt;-->
-        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
-        <!--&lt;!&ndash;class="btn btn-default"&ndash;&gt;-->
-        <!--&lt;!&ndash;data-clipboard-target="#sharable_link">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon glyphicon-floppy-disk"&ndash;&gt;-->
-        <!--&lt;!&ndash;aria-hidden="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;title="copy to clipboard"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<div class="col-xs-12">&ndash;&gt;-->
-        <!--&lt;!&ndash;<button id="btn-query-include-descendants"&ndash;&gt;-->
-        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
-        <!--&lt;!&ndash;class="btn btn-default">replot with descendants&ndash;&gt;-->
-        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<button id="btn-query-include-related-terms"&ndash;&gt;-->
-        <!--&lt;!&ndash;type="button"&ndash;&gt;-->
-        <!--&lt;!&ndash;class="btn btn-default">replot with related terms&ndash;&gt;-->
-        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-
-
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;trying bootstrap nav tab&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="container col-xs-12">&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<ul class="nav nav-tabs">&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<li class="active"><a data-toggle="tab" href="#ols-search-div">Search for additional terms</a></li>&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;</ul>&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<ul class="nav nav-pills">&ndash;&gt;-->
-        <!--&lt;!&ndash;<li class="active"><a data-toggle="pill" href="#ols-search-div">Search for additional terms</a></li>&ndash;&gt;-->
-        <!--&lt;!&ndash;<li><a data-toggle="pill" href="#ols-tree-div">Related in EFO hierarchy</a></li>&ndash;&gt;-->
-        <!--&lt;!&ndash;<li><a data-toggle="pill" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>&ndash;&gt;-->
-        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-
-
-        <!--&lt;!&ndash;<div class="tab-content">&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash;auto suggest&ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<div id="ols-search-div" class="tab-pane fade in active">&ndash;&gt;-->
-        <!--&lt;!&ndash;<h4>Search for additional terms:</h4>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="left">&ndash;&gt;-->
-        <!--&lt;!&ndash;<label>&ndash;&gt;-->
-        <!--&lt;!&ndash;<input style="font-weight: normal"&ndash;&gt;-->
-        <!--&lt;!&ndash;size="35"&ndash;&gt;-->
-        <!--&lt;!&ndash;type="text"&ndash;&gt;-->
-        <!--&lt;!&ndash;name="q"&ndash;&gt;-->
-        <!--&lt;!&ndash;data-olswidget="select"&ndash;&gt;-->
-        <!--&lt;!&ndash;data-olsontology="efo"&ndash;&gt;-->
-        <!--&lt;!&ndash;data-selectpath="http://www.ebi.ac.uk/ols/"&ndash;&gt;-->
-        <!--&lt;!&ndash;olstype=""&ndash;&gt;-->
-        <!--&lt;!&ndash;id="local-searchbox"&ndash;&gt;-->
-        <!--&lt;!&ndash;placeholder="Enter the term you are looking for"&ndash;&gt;-->
-        <!--&lt;!&ndash;class="ac_input">&ndash;&gt;-->
-        <!--&lt;!&ndash;</input>&ndash;&gt;-->
-        <!--&lt;!&ndash;</label>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<div id="ols-tree-div" class="tab-pane fade">&ndash;&gt;-->
-        <!--&lt;!&ndash;<h4>Related in EFO hierarchy:</h4>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div id="term-tree"&ndash;&gt;-->
-        <!--&lt;!&ndash;style="height:500px; width:500px; border:1px solid black;overflow: auto;">&ndash;&gt;-->
-
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<div id="ols-graph-div" class="tab-pane fade">&ndash;&gt;-->
-        <!--&lt;!&ndash;<div id="expension">&ndash;&gt;-->
-        <!--&lt;!&ndash;<h4>Additional related terms eg. measurements and biomarkers:</h4>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div>&ndash;&gt;-->
-        <!--&lt;!&ndash;<div id="ontology_vis"></div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-        <!--&lt;!&ndash;without nav tab&ndash;&gt;-->
-        <!--<div class="col-xs-12">-->
-        <!--&lt;!&ndash;ols tree&ndash;&gt;-->
-        <!--<div class="col-xs-4">-->
-        <!--&lt;!&ndash;auto-suggestion&ndash;&gt;-->
-        <!--<div class="col-xs-12">-->
-        <!--&lt;!&ndash;auto suggest&ndash;&gt;-->
-        <!--<h4>Search for additional terms:</h4>-->
-        <!--<div class="left">-->
-        <!--<label>-->
-        <!--<input style="font-weight: normal"-->
-        <!--size="35"-->
-        <!--type="text"-->
-        <!--name="q"-->
-        <!--data-olswidget="select"-->
-        <!--data-olsontology="efo"-->
-        <!--data-selectpath="http://www.ebi.ac.uk/ols/"-->
-        <!--olstype=""-->
-        <!--id="local-searchbox"-->
-        <!--placeholder="Enter the term you are looking for"-->
-        <!--class="ac_input">-->
-        <!--</input>-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--</div>-->
-
-
-        <!--<div class="col-xs-12">-->
-        <!--<h4>Related in EFO hierarchy:</h4>-->
-        <!--<div id="term-tree"-->
-        <!--style="height:500px; width:500px; border:1px solid black;overflow: auto;">-->
-
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--&lt;!&ndash;ols graph&ndash;&gt;-->
-        <!--<div class="col-xs-8">-->
-        <!--<div id="expension">-->
-        <!--<h4>Additional related terms eg. measurements and biomarkers:</h4>-->
-        <!--</div>-->
-        <!--<div>-->
-        <!--<div id="ontology_vis"></div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
         <div class="row search-results-container" id="search-results-container" style="display: block">
+
+
+
             <!--filter side box-->
             <div class="col-md-5 tight-to-side" id="filter-bar">
                 <div class="panel panel-default">
@@ -542,7 +353,7 @@
                             <div>
                                 <div class="col-lg-3">
                                     <input id="cb-query-include-descendants" type="checkbox"/> Descendants
-                                    <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
+                                                                                               <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
                                 </div>
                                 <div class="col-lg-6">
                                     <button id="btn-query-include-descendants"
@@ -649,10 +460,6 @@
 
                     </div>
                 </div>
-
-
-
-
             </div>
 
             <!--plot, tables-->
@@ -704,10 +511,11 @@
                         </span>
                     </span>
                         </div>
-                        <div class="panel-body" id="locus-plot-loading" style="display:none">
+                        <div class="panel-body" style="display:none">
                             <!--<div class="panel-body" style="display:initial">-->
                             <!-- locus plot -->
-                            <div id="plot" style=" width: 1000px; height: 900px;"></div>
+                            <!--<div id="plot" style=" width: 1000px; height: 900px;"></div>-->
+                            <div id="plot" style=" width: 100%; height: 100%;"></div>
                         </div>
                     </div>
                 </div>
@@ -880,38 +688,18 @@
 
     </div>
 
-    <!--<table id="table" class="table table-striped"-->
-    <!--data-toggle="table"-->
-    <!--data-toolbar="#toolbar"-->
-    <!--data-height="460"-->
-    <!--data-search="true"-->
-    <!--data-sortable="true">-->
-    <!--<thead>-->
-    <!--<tr>-->
-    <!--<th data-field="id" data-sortable="true">ID</th>-->
-    <!--<th data-field="name" data-sortable="true">Item Name</th>-->
-    <!--<th data-field="price">Item Price</th>-->
-    <!--</tr>-->
-    <!--</thead>-->
-    <!--<tbody>-->
-    <!--<tr>-->
-    <!--<td>1</td>-->
-    <!--<td>box</td>-->
-    <!--<td>10</td>-->
-    <!--</tr>-->
-    <!--<tr>-->
-    <!--<td>2</td>-->
-    <!--<td>aox</td>-->
-    <!--<td>14</td>-->
-    <!--</tr>-->
-    <!--<tr>-->
-    <!--<td>3</td>-->
-    <!--<td>cox</td>-->
-    <!--<td>11</td>-->
-    <!--</tr>-->
-    <!--</tbody>-->
-    <!--</table>-->
+    <div data-name="dock" data-smarti="dock" data-dock-position="left"
+         data-dock-offset="20" style="width:100%; height:90%; margin:0px">
 
+        <div data-dock="true" style="width:50%; background-color:#f5f5f5; border-right:1px solid #ddd; padding:20px; overflow:scroll">
+        aaa
+        </div>
+        <div data-handle="true" class="h" style="left:-18px;"> <span class="glyphicon glyphicon-backward"></span></div>
+        <div data-handle="hidden" class="h" style="left:-15px;"><span class="glyphicon glyphicon-forward"></span></div>
+        <div data-content="true" style=" padding:20px;">
+            bbb
+        </div>
+    </div>
 
 
 </div>
@@ -1003,6 +791,13 @@
 <!--vis.js-->
 <script src="https://cdn.rawgit.com/almende/vis/master/dist/vis.js"></script>
 
+<!--semantic ui for sidebar-->
+<!--<script src="https://cdn.rawgit.com/Semantic-Org/UI-Sidebar/master/sidebar.js"></script>-->
+<!--<link rel="stylesheet" href="https://cdn.rawgit.com/Semantic-Org/UI-Sidebar/master/sidebar.css" type="text/css"></link>-->
+<!--<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>-->
+<script src="https://cdn.rawgit.com/nnattawat/slideReveal/master/dist/jquery.slidereveal.js"></script>
+
+
 <!--oxo-grapg-->
 <script src="../static/js/plugins/oxo-graph.js" th:src="@{../../js/plugins/oxo-graph.js}"></script>
 
@@ -1010,11 +805,17 @@
 ================================================== -->
 <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
 
+
+
 <!-- trait page
 ================================================== -->
 <script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
 <script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
+<script type="text/javascript">
+
+
+</script>
 
 <!--local data-->
 <script th:inline="javascript">
@@ -1028,18 +829,8 @@
     var data_facet=undefined
     var data_highlighting=undefined
 
-
-
-
-    $('.addEfoButton').click(function() {
-        var elements = {};
-        $(this).attr('value').split(',').forEach(function(index, value) {
-            elements[index] = index;
-        });
-        //xintodo first load
-        addEFO(elements, true);
-//        getEfoTraitData($(this).attr('value'));
-//        console.log('clicked' + $(this).attr('value'));
+    $('.cart-item-cb').change(function () {
+        $('.cart-item-cb:checkbox:checked')
     });
 
 
@@ -1152,34 +943,47 @@
             colourLabel = 'unable to reach colour server.';
         }).then(function(){
             var container = $(tagID);
-            var btn = $('<a />', {
+            var item = $('<a />', {
                 class: 'list-group-item col-xs-9 col-sm-9 col-md-9 col-lg-9',
             }).css({
                        'width': '100%', 'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
                    }).appendTo(container);
 
             //to highlight associations only for this efo term
-            btn.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
+//            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
-                    .appendTo(btn);
+                    .appendTo(item);
+
+            //to highlight associations only for this efo term
+//            var highlight_btn = $('<input />', { type:"button", class: 'btn cart-item-highlight-btn', value: efoid})
+//                    .css({'margin-right': '0.3em','float': 'right'})
+//                    .appendTo(item);
+//            highlight_btn.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
 
             //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
             if (removeable) {
-                var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(btn);
+                var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(item);
                 span.on("click", function(e) {
                     removeEFO(efoid);
                 });
             }
+
             // This will add badge at the end of each cart item, showing the number of association/study linked.
             // This will be init probably before the association/study data is available, thus generating badges with
             // 0 as value at the begining. The badge will be update when the data is available.
-            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'black'}).appendTo(btn);
-            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'black'}).appendTo(btn);
+            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'white'}).appendTo(item);
+            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
-            btn.append(additionalLabel)
+            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
+            cb.change(function(){
+                //xintodo update the plot
+                $('.cart-item-cb:checked')
+            })
+
+            item.append(additionalLabel)
         })
     }
 
@@ -1696,13 +1500,135 @@
 
 <script>
     //<![CDATA[
+    var smarti = this['smarti'] || { scope: this };
 
+    $(function () {
+        if (!smarti.initialized) {
+            smarti.initialized = true;
+            $('[data-smarti]').smarti();
+        }
+    })
 
+    $.fn.smarti = function () {
+        $.each(this.selector == '[data-smarti]' ? this : this.find('[data-smarti]'), function () {
+            var jq = $(this);
+            var opts = jq.data();
+            smarti.scope[opts.name] = new smarti[opts['smarti']](jq, opts);
+        });
+    }
 
+    smarti.dock = function (jq, opts) {
+        var that = this;
+        this.dockPosition = 'left';
+        this.dockOffset = 10;
+        this.container = jq.css({ overflow: 'hidden' });
+        $.extend(that, opts);
 
+        if (this.container.css('position') != 'absolute') this.container.css({ position: 'relative' });
+        this.dock = this.container.children('[data-dock]').css({ position: 'absolute', zIndex: 999 });
+        this.handle = this.container.children('[data-handle]').css({ position: 'absolute', zIndex: 1000 });
+        this.content = this.container.children('[data-content]').css({ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 });
+        this._storage = this.useStorage != null ? this.useStorage + 'Storage' : null;
+        if (this.container.height() == 0) {
+            this._autoHeight = true;
+            this.content.css({ bottom: 'auto' });
+        }
+
+        this._ap = function () { return that.dockPosition == 'left' || that.dockPosition == 'right' ? ['top', 'bottom'] : ['left', 'right'] }
+        this._ds = function () { return that._ap()[0] == 'top' ? that.dock.outerWidth(true) : that.dock.outerHeight(true) }
+
+        this._setHover = function () {
+            if (!that.docked) {
+                that.dock.mouseover(function () {
+                    if (!that._sliding && !that._hover) {
+                        that._sliding = true;
+                        that._hover = true;
+                        that.slide(function () { that._sliding = false; });
+                    }
+                });
+                that.content.mouseover(function () {
+                    if (!that._sliding && that._hover) {
+                        that._sliding = true;
+                        that._hover = false;
+                        that.slide(function () { that._sliding = false; });
+                    }
+                });
+            }
+            else {
+                that._hover = false;
+                that.dock.off('mouseover');
+                that.content.off('mouseover');
+            }
+        }
+        this._setDocked = function (docked) {
+            that.docked = docked;
+            if (that._storage != null && smarti.scope[that._storage] != null) smarti.scope[that._storage][that.name + 'Docked'] = docked ? '1' : '0';
+        }
+        this._getDocked = function () {
+            var d = that._storage != null && smarti.scope[that._storage] != null ? smarti.scope[that._storage][that.name + 'Docked'] : null;
+            return d != null ? d == '1' : (that.docked != null ? that.docked : true);
+        }
+        this._fixHeight = function () {
+            if (that._autoHeight) {
+                var ds = !that.fixedContent && that._ap()[0] == 'left' ? (that.docked ? that._ds() : that.dockOffset) : 0;
+                that.container.height(that.content.outerHeight(true) + ds);
+            }
+        }
+        this.toggle = function () {
+            that._setDocked(!that.docked);
+            if (!that.fixedContent) {
+                var o = {};
+                o[that.dockPosition] = that.docked ? that._ds() : that.dockOffset;
+                that.content.animate(o);
+            }
+            if (that.docked) that._fixHeight();
+            that.slide(function () { that._setHover(); that.toggleHandle(); if (!that.docked) that._fixHeight(); });
+        }
+        this.toggleHandle = function () {
+            if (that.handle.length > 1) {
+                that.handle.not("[data-handle='hidden']").toggle(that.docked);
+                that.handle.filter("[data-handle='hidden']").toggle(!that.docked);
+            }
+        }
+        this.slide = function (cb) {
+            var o1 = {}, o2 = {}; ds = that._ds();
+            o1[that.dockPosition] = that.docked || that._hover ? 0 : -ds + that.dockOffset;
+            that.dock.animate(o1, cb);
+            that.handle.each(function () {
+                var jq = $(this);
+                var o = jq.data('o');
+                o2[that.dockPosition] = that.docked || that._hover ? ds + o : o + that.dockOffset;
+                jq.animate(o2);
+            });
+        }
+        this.docked = this._getDocked();
+        this.dock.css(this.dockPosition, this.docked ? 0 : -this._ds() + that.dockOffset);
+        if (!this.fixedContent) {
+            this.content.css(this.dockPosition, this.docked ? this._ds() : that.dockOffset);
+            this.dock.css(this._ap()[0], 0).css(this._ap()[1], 0);
+        }
+        this.handle.each(function () {
+            var jq = $(this);
+            var o = parseInt(jq.css(that.dockPosition)) || 0;
+            jq.data('o', o);
+            jq.css(that.dockPosition, that.docked ? that._ds() + o : o + that.dockOffset);
+        });
+        this.handle.click(this.toggle);
+        this._fixHeight();
+        this._setHover();
+        this.toggleHandle();
+        return this;
+    }
 
     //]]>
 </script>
+
+
+<style type="text/css">
+    /** {*/
+        /*box-sizing: content-box;*/
+    /*}*/
+</style>
 
 <script>
 

@@ -948,7 +948,7 @@ showLoadingOverLay = function(tagID){
         minSize: "20px",                    // Integer/String
         resizeInterval: 10,                       // Integer
         size: "20%",                       // Integer/String
-        zIndex: 9999,                        // Integer
+        zIndex: 1000,                        // Integer
     }
     return $(tagID).LoadingOverlay("show",options);
 }
