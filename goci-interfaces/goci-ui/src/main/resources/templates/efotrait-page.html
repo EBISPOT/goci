@@ -922,8 +922,8 @@
 
     //remove an efo term from the cart
     removeEFO = function(efoid) {
-        var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
-        delete selected[efoid];
+        removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
+        removeDataFromTag(global_efo_info_tag_id,'whichDescendant',efoid)
         addEFO({},false);
     }
 
@@ -1064,7 +1064,7 @@
 
         //query descendants for current selected terms
         var all_descendants = {}
-        if (include_descendants) {
+        if (!include_descendants) {
             var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
                 descendants.forEach(function(terms) {
                     Object.keys(terms).forEach(function(term) {
@@ -1076,7 +1076,18 @@
                 console.warning('Error when trying to find all descendants with error messgae ' + err);
             })
         }else{
-            var desPromise = Promise.resolve();
+//            var desPromise = Promise.resolve();
+//            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
+            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
+                    Object.keys(terms).forEach(function(term) {
+                        all_descendants[term] = terms[term];
+                    })
+                })
+                return all_descendants;
+            }).catch(function(err) {
+                console.warning('Error when trying to find all descendants with error messgae ' + err);
+            })
         }
 
 
