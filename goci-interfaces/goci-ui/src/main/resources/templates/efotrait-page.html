@@ -543,73 +543,80 @@
 
                         <div class="panel-body" style="display:none">
 
-                            <table id="association-table" class="table table-striped">
-                                <thead id="association-table-header">
-                                <tr>
-                                    <th style="width: 10%" id="strongestAllele">Risk allele
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>
-                                                                                <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    </th>
-                                    <th style="width: 8%" id="riskFrequency">RAF
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Risk/effect allele frequency in controls"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 12%" id="pValue">p-value
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 6%" id="orPerCopyNum">OR
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Odds ratio associated with variant"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 14%" id="orType">Beta
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 6%">CI
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="95% confidence interval for OR or beta"></span>
-                                    </th>
 
-                                    <th style="width: 8%">Reported gene(s)
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Gene(s) reported by author"></span>
-                                    </th>
-
-                                    <th style="width: 13%" id="traitName_s-alt">Reported trait
-                                        <span class="glyphicon glyphicon-question-sign"
-                                              data-toggle="tooltip"
-                                              data-original-title="Description of disease/trait analysed in the study"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 13%" id="traitName-alt">Mapped trait
-                                        <span class="glyphicon glyphicon-question-sign"
-                                              data-toggle="tooltip"
-                                              data-original-title="Description of disease/trait mapped to the study"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 15%" id="author_s-alt" colspan="2">Study
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody id="association-table-body"></tbody>
+                            <table id="association-table" class="table table-striped borderless"
+                                   data-flat="true"
+                                   data-search="true"
+                                   data-show-columns="true"
+                                   data-show-multi-sort="true">
                             </table>
+                            <!--<table id="association-table" class="table table-striped">-->
+                                <!--<thead id="association-table-header">-->
+                                <!--<tr>-->
+                                    <!--<th style="width: 10%" id="strongestAllele">Risk allele-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>-->
+                                                                                <!--&lt;!&ndash;<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>&ndash;&gt;-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 8%" id="riskFrequency">RAF-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Risk/effect allele frequency in controls"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 12%" id="pValue">p-value-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 6%" id="orPerCopyNum">OR-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Odds ratio associated with variant"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 14%" id="orType">Beta-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 6%">CI-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="95% confidence interval for OR or beta"></span>-->
+                                    <!--</th>-->
+
+                                    <!--<th style="width: 8%">Reported gene(s)-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Gene(s) reported by author"></span>-->
+                                    <!--</th>-->
+
+                                    <!--<th style="width: 13%" id="traitName_s-alt">Reported trait-->
+                                        <!--<span class="glyphicon glyphicon-question-sign"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Description of disease/trait analysed in the study"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 13%" id="traitName-alt">Mapped trait-->
+                                        <!--<span class="glyphicon glyphicon-question-sign"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Description of disease/trait mapped to the study"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 15%" id="author_s-alt" colspan="2">Study-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody id="association-table-body"></tbody>-->
+                            <!--</table>-->
                         </div>
                     </div>
                 </div>
@@ -630,55 +637,61 @@
                         </div>
 
                         <div class="panel-body" style="display:none">
-                            <table id="study-table" class="table table-striped">
-                                <thead id="study-table-header">
-                                <tr>
-                                    <th style="width: 12%" id="author_s">Author
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="First author, along with link to publication in Europe PubMed Central."></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 10%" id="publicationDate">Date
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Publication date (YYYY-MM-DD)"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 12%" id="publication">Journal
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Abbreviated journal name"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 30%" id="title">Title
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Title of paper"></span>
-                                                                      <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    </th>
-                                    <th style="width: 12%" id="sample_i">Initial sample description
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Description of the initial sample analysed in the study"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 12%" id="sample_r">Replication sample description
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="Description of the replication sample analysed in the study"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                    <th style="width: 12%" id="ancestral_gp">Ancestral groups
-                                        <span class="glyphicon glyphicon-question-sign context-help"
-                                              data-toggle="tooltip"
-                                              data-original-title="List of the ancestral groups analysed in the study"></span>
-                                        <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody id="study-table-body"></tbody>
+                            <table id="study-table" class="table table-striped borderless"
+                                   data-flat="true"
+                                   data-search="true"
+                                   data-show-columns="true"
+                                   data-show-multi-sort="true">
                             </table>
+                            <!--<table id="study-table" class="table table-striped">-->
+                                <!--<thead id="study-table-header">-->
+                                <!--<tr>-->
+                                    <!--<th style="width: 12%" id="author_s">Author-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="First author, along with link to publication in Europe PubMed Central."></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 10%" id="publicationDate">Date-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Publication date (YYYY-MM-DD)"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 12%" id="publication">Journal-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Abbreviated journal name"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 30%" id="title">Title-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Title of paper"></span>-->
+                                                                      <!--&lt;!&ndash;<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>&ndash;&gt;-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 12%" id="sample_i">Initial sample description-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Description of the initial sample analysed in the study"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 12%" id="sample_r">Replication sample description-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="Description of the replication sample analysed in the study"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                    <!--<th style="width: 12%" id="ancestral_gp">Ancestral groups-->
+                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
+                                              <!--data-toggle="tooltip"-->
+                                              <!--data-original-title="List of the ancestral groups analysed in the study"></span>-->
+                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
+                                    <!--</th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody id="study-table-body"></tbody>-->
+                            <!--</table>-->
                         </div>
                     </div>
                 </div>
@@ -688,18 +701,47 @@
 
     </div>
 
-    <div data-name="dock" data-smarti="dock" data-dock-position="left"
-         data-dock-offset="20" style="width:100%; height:90%; margin:0px">
 
-        <div data-dock="true" style="width:50%; background-color:#f5f5f5; border-right:1px solid #ddd; padding:20px; overflow:scroll">
-        aaa
-        </div>
-        <div data-handle="true" class="h" style="left:-18px;"> <span class="glyphicon glyphicon-backward"></span></div>
-        <div data-handle="hidden" class="h" style="left:-15px;"><span class="glyphicon glyphicon-forward"></span></div>
-        <div data-content="true" style=" padding:20px;">
-            bbb
-        </div>
-    </div>
+
+    <!--<table id="table"-->
+           <!--data-toggle="table"-->
+           <!--data-flat="true"-->
+           <!--data-search="true"-->
+           <!--data-show-columns="true"-->
+           <!--data-show-multi-sort="true"-->
+           <!--data-sort-priority='[{"sortName": "github.count.forks","sortOrder":"desc"},{"sortName":"github.count.stargazers","sortOrder":"desc"}]'-->
+           <!--data-url="https://cdn.rawgit.com/wenzhixin/bootstrap-table-examples/master/json/data3.json">-->
+        <!--<thead>-->
+        <!--<tr>-->
+            <!--<th data-field="github.name" data-sortable="true">Name</th>-->
+            <!--<th data-field="github.count.stargazers" data-sortable="true">Stargazers</th>-->
+            <!--<th data-field="github.count.forks" data-sortable="true">Forks</th>-->
+            <!--<th data-field="github.description" data-sortable="true">Description</th>-->
+        <!--</tr>-->
+        <!--</thead>-->
+    <!--</table>-->
+
+    <!--<table id="table" data-height="460"-->
+           <!--data-flat="true"-->
+           <!--data-search="true"-->
+           <!--data-show-columns="true"-->
+           <!--data-show-multi-sort="true">-->
+    <!--</table>-->
+
+    <!--<div data-name="dock" data-smarti="dock" data-dock-position="left"-->
+         <!--data-dock-offset="20" style="width:100%; height:90%; margin:0px">-->
+
+        <!--<div data-dock="true" style="width:50%; background-color:#f5f5f5; border-right:1px solid #ddd; padding:20px; overflow:scroll">-->
+        <!--aaa-->
+        <!--</div>-->
+        <!--<div data-handle="true" class="h" style="left:-18px;"> <span class="glyphicon glyphicon-backward"></span></div>-->
+        <!--<div data-handle="hidden" class="h" style="left:-15px;"><span class="glyphicon glyphicon-forward"></span></div>-->
+        <!--<div data-content="true" style=" padding:20px;">-->
+            <!--bbb-->
+        <!--</div>-->
+    <!--</div>-->
+
+
 
 
 </div>
@@ -805,6 +847,9 @@
 ================================================== -->
 <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
 
+<!--bootstrap-table-flat-json-->
+<script src="https://cdn.rawgit.com/wenzhixin/bootstrap-table/develop/dist/extensions/flat-json/bootstrap-table-flat-json.js"></script>
+<script src="https://cdn.rawgit.com/wenzhixin/bootstrap-table/develop/dist/extensions/multiple-sort/bootstrap-table-multiple-sort.js"></script>
 
 
 <!-- trait page
@@ -813,8 +858,136 @@
 <script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
 <script type="text/javascript">
-
-
+//   var $table = $('#table');
+//   var mydata =
+//           [
+//               {
+//                   "id": 0,
+//                   "name": "test0",
+//                   "price": "$0"
+//               },
+//               {
+//                   "id": 1,
+//                   "name": "test1",
+//                   "price": "$1"
+//               },
+//               {
+//                   "id": 2,
+//                   "name": "test2",
+//                   "price": "$2"
+//               },
+//               {
+//                   "id": 3,
+//                   "name": "test3",
+//                   "price": "$3"
+//               },
+//               {
+//                   "id": 4,
+//                   "name": "test4",
+//                   "price": "$4"
+//               },
+//               {
+//                   "id": 5,
+//                   "name": "test5",
+//                   "price": "$5"
+//               },
+//               {
+//                   "id": 6,
+//                   "name": "test6",
+//                   "price": "$6"
+//               },
+//               {
+//                   "id": 7,
+//                   "name": "test7",
+//                   "price": "$7"
+//               },
+//               {
+//                   "id": 8,
+//                   "name": "test8",
+//                   "price": "$8"
+//               },
+//               {
+//                   "id": 9,
+//                   "name": "test9",
+//                   "price": "$9"
+//               },
+//               {
+//                   "id": 10,
+//                   "name": "test10",
+//                   "price": "$10"
+//               },
+//               {
+//                   "id": 11,
+//                   "name": "test11",
+//                   "price": "$11"
+//               },
+//               {
+//                   "id": 12,
+//                   "name": "test12",
+//                   "price": "$12"
+//               },
+//               {
+//                   "id": 13,
+//                   "name": "test13",
+//                   "price": "$13"
+//               },
+//               {
+//                   "id": 14,
+//                   "name": "test14",
+//                   "price": "$14"
+//               },
+//               {
+//                   "id": 15,
+//                   "name": "test15",
+//                   "price": "$15"
+//               },
+//               {
+//                   "id": 16,
+//                   "name": "test16",
+//                   "price": "$16"
+//               },
+//               {
+//                   "id": 17,
+//                   "name": "test17",
+//                   "price": "$17"
+//               },
+//               {
+//                   "id": 18,
+//                   "name": "test18",
+//                   "price": "$18"
+//               },
+//               {
+//                   "id": 19,
+//                   "name": "test19",
+//                   "price": "$19"
+//               },
+//               {
+//                   "id": 20,
+//                   "name": "test20",
+//                   "price": "$20"
+//               }
+//           ];
+//
+//   $(function () {
+//       $('#table').bootstrapTable({
+//                                      columns: [{
+//                                          field: 'id',
+//                                          title: 'Item ID'
+//                                      }, {
+//                                          field: 'name',
+//                                          title: 'Item Name'
+//                                      }, {
+//                                          field: 'price',
+//                                          title: 'Item Price'
+//                                      }],
+//                                      data: mydata
+//
+//                                  });
+//   });
+//
+//   $(function () {
+//
+//   });
 </script>
 
 <!--local data-->
@@ -1625,15 +1798,12 @@
 
 
 <style type="text/css">
-    /** {*/
-        /*box-sizing: content-box;*/
-    /*}*/
+
 </style>
 
 <script>
 
     //<![CDATA[
-
 
     //]]>
 

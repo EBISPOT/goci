@@ -3,7 +3,7 @@ var colorMap={"efo": "blue", "uberon":"green", "Wikipedia": "red", "BTO": "yello
 
 
 $(document).ready(function() {
-    drawGraph(getMainEFO().replace('_',':'),2);
+    drawGraph(getMainEFO().replace('_',':'),1);
 }) ;
 
 function drawGraph (curie,distance) {
