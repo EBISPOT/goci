@@ -1279,7 +1279,12 @@ hideLoadingOverLay = function(tagID){
     return $(tagID).LoadingOverlay("hide", true);
 }
 
-
+IsDescendantRequired = function(efoid){
+    return whichDescendant().indexOf(efoid) != -1
+}
+IsAlwaysDescendant = function(){
+    return $("#cb-query-include-descendants").is(":checked");
+}
 
 
 /*

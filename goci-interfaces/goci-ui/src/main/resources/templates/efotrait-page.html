@@ -210,7 +210,7 @@
                     <h3 class="panel-title">Trait information</h3>
                 </div>
                 <div class="clearfix" id="summary-panel-loading">
-                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel-body col-lg-10 col-md-10 col-sm-10 col-xs-10">
                         <!--label-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
@@ -255,6 +255,42 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
                         </div>
+                    </div>
+
+                    <div class="panel-body col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div>
+                            <a class="btn btn-default"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#highlight-study-panel-loading"
+                                    aria-expanded="false"
+                                    aria-controls="collapseExample">
+                              Show Highlight Study
+                            </a>
+                        </div>
+
+                        <div>
+                            <a class="btn btn-default"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#oxo-graph"
+                                    aria-expanded="false">
+                              Show OXO
+                            </a>
+                        </div>
+
+                        <div>
+                            <a type="button" class="btn btn-default" id='ols-link'>ols link
+                                <span class="glyphicon glyphicon-new-window external-link"></span>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a type="button" class="btn btn-default" id='oxo-link'>oxo link
+                                <span class="glyphicon glyphicon-new-window external-link"></span>
+                            </a>
+                        </div>
+
 
                     </div>
 
@@ -262,11 +298,9 @@
 
 
                 <!--highlighted study-->
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">Highlighted study</h3>
-                </div>
-                <div class="clearfix" id="highlight-study-panel-loading">
-                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <div class="clearfix collapse" id="highlight-study-panel-loading">
+                    <div  class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <!--title-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
@@ -307,15 +341,25 @@
                                 <dd id="efotrait-highlighted-study-abstract">-</dd>
                             </dl>
                         </div>
-
-
-
                     </div>
 
                 </div>
+
+                <!--oxo graph-->
+                <div class="clearfix collapse" id="oxo-graph">
+                    <div  class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div id="oxo-div" class="tab-pane fade" >
+                            <h4>oxo:</h4>
+                            <div>
+                                <div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!--first reported-->
                 <div id="efotrait-summary">
-                    <span class="glyphicon glyphicon-info-sign" style="padding-right:2px"></span>
+                    <span class="glyphicon glyphicon-info-sign" style="padding-right:2px;margin-left:10px"></span>
                     <span id="efotrait-summary-content"></span>
                 </div>
 
@@ -325,9 +369,6 @@
 
 
         <div class="row search-results-container" id="search-results-container" style="display: block">
-
-
-
             <!--filter side box-->
             <div class="col-md-5 tight-to-side" id="filter-bar">
                 <div class="panel panel-default">
@@ -424,7 +465,7 @@
                             <ul class="nav nav-tabs">
                                 <li><a data-toggle="pill" href="#ols-tree-div">EFO hierarchy</a></li>
                                 <li><a data-toggle="pill" href="#ols-graph-div">Additional terms</a></li>
-                                <li><a data-toggle="pill" href="#oxo-div">OXO</a></li>
+                                <!--<li><a data-toggle="pill" href="#oxo-div">OXO</a></li>-->
 
                             </ul>
 
@@ -446,13 +487,13 @@
 
                                 </div>
 
-                                <!--oxo-->
-                                <div id="oxo-div" class="tab-pane fade" >
-                                    <h4>oxo:</h4>
-                                    <div>
-                                        <div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>
-                                    </div>
-                                </div>
+                                <!--&lt;!&ndash;oxo&ndash;&gt;-->
+                                <!--<div id="oxo-div" class="tab-pane fade" >-->
+                                    <!--<h4>oxo:</h4>-->
+                                    <!--<div>-->
+                                        <!--<div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
 
                             </div>
                         </div>
@@ -703,30 +744,6 @@
 
 
 
-    <!--<table id="table"-->
-           <!--data-toggle="table"-->
-           <!--data-flat="true"-->
-           <!--data-search="true"-->
-           <!--data-show-columns="true"-->
-           <!--data-show-multi-sort="true"-->
-           <!--data-sort-priority='[{"sortName": "github.count.forks","sortOrder":"desc"},{"sortName":"github.count.stargazers","sortOrder":"desc"}]'-->
-           <!--data-url="https://cdn.rawgit.com/wenzhixin/bootstrap-table-examples/master/json/data3.json">-->
-        <!--<thead>-->
-        <!--<tr>-->
-            <!--<th data-field="github.name" data-sortable="true">Name</th>-->
-            <!--<th data-field="github.count.stargazers" data-sortable="true">Stargazers</th>-->
-            <!--<th data-field="github.count.forks" data-sortable="true">Forks</th>-->
-            <!--<th data-field="github.description" data-sortable="true">Description</th>-->
-        <!--</tr>-->
-        <!--</thead>-->
-    <!--</table>-->
-
-    <!--<table id="table" data-height="460"-->
-           <!--data-flat="true"-->
-           <!--data-search="true"-->
-           <!--data-show-columns="true"-->
-           <!--data-show-multi-sort="true">-->
-    <!--</table>-->
 
     <!--<div data-name="dock" data-smarti="dock" data-dock-position="left"-->
          <!--data-dock-offset="20" style="width:100%; height:90%; margin:0px">-->
@@ -1002,9 +1019,7 @@
     var data_facet=undefined
     var data_highlighting=undefined
 
-    $('.cart-item-cb').change(function () {
-        $('.cart-item-cb:checkbox:checked')
-    });
+
 
 
     $('#btn-query-include-descendants').click(function() {
@@ -1036,6 +1051,24 @@
             addEFO(data, false);
         });
     });
+    var url = $(this).prop('href');
+
+
+    getOLSLink(getMainEFO()).then(function(link){
+        $("#ols-btn").prop('href',link);
+    })
+
+    $('#ols-link').click(function() {
+        getOLSLink(getMainEFO()).then(function(link){
+            window.open(link, '_blank');
+        })
+    });
+
+    $('#oxo-link').click(function() {
+            window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
+    });
+
+
 
 
     $("#cb-query-include-descendants").change(function() {
@@ -1068,9 +1101,8 @@
         }
     });
 
-    addEFO = function(data, initLoad, include_descendants) {
-        if(include_descendants==undefined)
-            include_descendants = $("#cb-query-include-descendants").is(":checked");
+    addEFO = function(data, initLoad) {
+
         if(initLoad==undefined)
             initLoad = false;
 
@@ -1087,7 +1119,7 @@
         // p is the promise for loading all available efo from GWAS Catalog
         // This needs to be fullfill before trigger any add event.
         p.then(function(data) {
-            $(global_efo_info_tag_id).trigger('addToSelect', [include_descendants, initLoad]);
+            $(global_efo_info_tag_id).trigger('addToSelect', [initLoad]);
         }).catch(function(err) {
             console.error('Error when loading all available EFOs ' + err)
         });
@@ -1120,14 +1152,46 @@
             colourLabel = 'unable to reach colour server.';
         }).then(function(){
             var container = $(tagID);
+
+            //checkbox idicate require descendant
+            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1", value:efoid}).css({'float':'left'}).appendTo(container);
+            if (IsDescendantRequired(efoid)){
+                cb.attr('checked','checked')
+            }
+
+            cb.change(function(){
+                //xintodo update the plot
+                var id=this.id.split("selected_cb_")[1];
+
+                if(this.checked){
+                    var tmp = {};
+                    tmp[id] = 1;
+                    addDataToTag(global_efo_info_tag_id, tmp, 'whichDescendant')
+                }else{
+                    var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+                    delete tmp[id];
+                }
+                $(global_efo_info_tag_id).trigger('addToSelect', [false]);
+            })
+
+            if(IsAlwaysDescendant()){
+                cb.attr("disabled", true);
+            }else{
+                cb.removeAttr("disabled");
+            }
+
+            //cart item
             var item = $('<a />', {
-                class: 'list-group-item col-xs-9 col-sm-9 col-md-9 col-lg-9',
+                class: 'list-group-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
             }).css({
-                       'width': '100%', 'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
+                       'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
                    }).appendTo(container);
 
             //to highlight associations only for this efo term
-//            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
+            item.click(function() {
+                //xintodo toggle higglight
+                reloadLocusZoomHighlight('#plot', data_association,efoid)
+            })
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
@@ -1154,32 +1218,19 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'white'}).appendTo(item);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
-            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
-            if (whichDescendant().indexOf(efoid) != -1){
-                cb.attr('checked','checked')
-            }
 
-            cb.change(function(){
-                //xintodo update the plot
-                var id=this.id.split("selected_cb_")[1];
-
-                if(this.checked){
-                    var tmp = {};
-                    tmp[id] = 1;
-                    addDataToTag(global_efo_info_tag_id, tmp, 'whichDescendant')
-                }else{
-                    var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
-                    delete tmp[id];
-                }
-                $(global_efo_info_tag_id).trigger('addToSelect', [true, false]);
-            })
 
             item.append(additionalLabel)
         })
     }
 
     //triger a refresh of the page content, including locusplot, tables, badges.
-    updatePage = function(include_descendants, initLoad) {
+    updatePage = function(initLoad) {
+
+        if(initLoad==undefined)
+            initLoad = false;
+
+
 
 
         //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
@@ -1197,9 +1248,15 @@
         var current_select = getCurrentSelected();
         var mainEFO = getMainEFO();
 
+
         //clean the cart
         var container = $('#cart');
         container.empty()
+
+        if(IsAlwaysDescendant()){
+            addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
+        }
+
 
 
 
@@ -1237,18 +1294,18 @@
 
         //query descendants for current selected terms
         var all_descendants = {}
-        if (!include_descendants) {
-            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
-                descendants.forEach(function(terms) {
-                    Object.keys(terms).forEach(function(term) {
-                        all_descendants[term] = terms[term];
-                    })
-                })
-                return all_descendants;
-            }).catch(function(err) {
-                console.warning('Error when trying to find all descendants with error messgae ' + err);
-            })
-        }else{
+//        if (!include_descendants) {
+//            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+//                descendants.forEach(function(terms) {
+//                    Object.keys(terms).forEach(function(term) {
+//                        all_descendants[term] = terms[term];
+//                    })
+//                })
+//                return all_descendants;
+//            }).catch(function(err) {
+//                console.warning('Error when trying to find all descendants with error messgae ' + err);
+//            })
+//        }else{
 //            var desPromise = Promise.resolve();
 //            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
             var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
@@ -1261,7 +1318,7 @@
             }).catch(function(err) {
                 console.warning('Error when trying to find all descendants with error messgae ' + err);
             })
-        }
+//        }
 
 
         //when solr data ready, process solr data and update badges in the selection cart
@@ -1274,7 +1331,10 @@
                         return efoInfo;
                     }).then(function(efoInfo) {
                         var target_efos;
-                        if(include_descendants){
+
+
+
+                        if(IsDescendantRequired(efoInfo.short_form)){
                             //self and decendants
                             target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
                                 //adding self
@@ -1284,6 +1344,7 @@
                             //only self
                             target_efos = Promise.resolve([efoInfo.short_form]);
                         }
+
                         target_efos.then(function(efos){
                             //update the selection box badge number when data is ready
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
@@ -1302,8 +1363,8 @@
         });
     }
 
-    $(global_efo_info_tag_id).on('addToSelect', function(e, include_descendants, initLoad) {
-        updatePage(include_descendants, initLoad);
+    $(global_efo_info_tag_id).on('addToSelect', function(e, initLoad) {
+        updatePage( initLoad);
     });
 
 
@@ -1698,6 +1759,7 @@
     /*]]>*/
 
 
+
 </script>
 
 
@@ -1829,7 +1891,10 @@
 
 
 <style type="text/css">
-
+    .cart-item-cb  {
+        transform:scale(2, 2);
+        margin-top: 15px;
+    }
 </style>
 
 <script>
