@@ -352,8 +352,8 @@
                             <b>Actions:</b>
                             <div>
                                 <div class="col-lg-3">
-                                    <input id="cb-query-include-descendants" type="checkbox"/> Descendants
-                                                                                               <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants-->
+                                    <!--<input id="cb-query-include-descendants" type="checkbox"/> Descendants-->
+                                    <input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants
                                 </div>
                                 <div class="col-lg-6">
                                     <button id="btn-query-include-descendants"
@@ -1021,7 +1021,11 @@
         var mainEFO = getMainEFO();
         Object.keys(selected).map(function(key){
             if(key != mainEFO)
-                delete selected[key];
+                removeDataFromTag(global_efo_info_tag_id,'selectedEfos',key)
+        })
+
+        whichDescendant().map(function(key){
+            removeDataFromTag(global_efo_info_tag_id,'whichDescendant',key)
         })
         addEFO({}, false);
     });
@@ -1091,8 +1095,8 @@
 
     //remove an efo term from the cart
     removeEFO = function(efoid) {
-        var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
-        delete selected[efoid];
+        removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
+        removeDataFromTag(global_efo_info_tag_id,'whichDescendant',efoid)
         addEFO({},false);
     }
 
@@ -1123,7 +1127,7 @@
                    }).appendTo(container);
 
             //to highlight associations only for this efo term
-            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
+//            item.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
@@ -1150,11 +1154,25 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'white'}).appendTo(item);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
-//            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
-//            cb.change(function(){
-//                //xintodo update the plot
-//                $('.cart-item-cb:checked')
-//            })
+            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"checkbox cart-item-cb", value:efoid}).css({'float':'left'}).appendTo(item);
+            if (whichDescendant().indexOf(efoid) != -1){
+                cb.attr('checked','checked')
+            }
+
+            cb.change(function(){
+                //xintodo update the plot
+                var id=this.id.split("selected_cb_")[1];
+
+                if(this.checked){
+                    var tmp = {};
+                    tmp[id] = 1;
+                    addDataToTag(global_efo_info_tag_id, tmp, 'whichDescendant')
+                }else{
+                    var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+                    delete tmp[id];
+                }
+                $(global_efo_info_tag_id).trigger('addToSelect', [true, false]);
+            })
 
             item.append(additionalLabel)
         })
@@ -1182,6 +1200,8 @@
         //clean the cart
         var container = $('#cart');
         container.empty()
+
+
 
         //update cart, the badge will be 0 since the data is not ready at this stage.
         var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
@@ -1217,8 +1237,8 @@
 
         //query descendants for current selected terms
         var all_descendants = {}
-        if (include_descendants) {
-            var desPromise = Promise.all(Object.keys(current_select).map(getHierarchicalDescendants)).then(function(descendants) {
+        if (!include_descendants) {
+            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
                 descendants.forEach(function(terms) {
                     Object.keys(terms).forEach(function(term) {
                         all_descendants[term] = terms[term];
@@ -1229,7 +1249,18 @@
                 console.warning('Error when trying to find all descendants with error messgae ' + err);
             })
         }else{
-            var desPromise = Promise.resolve();
+//            var desPromise = Promise.resolve();
+//            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
+            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
+                    Object.keys(terms).forEach(function(term) {
+                        all_descendants[term] = terms[term];
+                    })
+                })
+                return all_descendants;
+            }).catch(function(err) {
+                console.warning('Error when trying to find all descendants with error messgae ' + err);
+            })
         }
 
 

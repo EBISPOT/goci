@@ -450,6 +450,11 @@ getDataFromTag = function(tagID, key) {
     return data[key]
 }
 
+removeDataFromTag = function(tagID, key, tobeDelete){
+    var tmp = getDataFromTag(tagID,key);
+    delete tmp[tobeDelete];
+}
+
 getMainEFO = function(){
     return getDataFromTag(global_efo_info_tag_id,'mainEFOInfo')
 }
@@ -498,6 +503,14 @@ getCurrentSelected = function(){
     return $(global_efo_info_tag_id).data('selectedEfos');
 }
 
+whichDescendant = function(){
+    // return $(".cart-item-cb:checkbox:checked").map(function() { return this.id.split("selected_cb_")[1]; }).get();
+    var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant')
+    if(tmp == undefined)
+        return []
+
+    return Object.keys(tmp);
+}
 
 function updateSharableLink(){
     $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
