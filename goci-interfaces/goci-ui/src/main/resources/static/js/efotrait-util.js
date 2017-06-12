@@ -652,18 +652,59 @@ _findhighlightEFOForAssociation = function(traits, association) {
 //require solr result.
 findHighlightedStudiesForEFO = function(efoid) {
     var studies = findStudiesForEFO(efoid);
+    var sorted_index = _sortBySampleSize(studies);
+    // return studies[sorted_index[sorted_index.length - 1]];
+    return studies[sorted_index[0]];
+}
+
+_sortByPublishDate = function(array){
     var publishDate = {};
 
-    $.each(studies, function(index, value) {
+    $.each(array, function(index, value) {
         publishDate[value.id] = value.publicationDate;
     })
 
     var keysSorted = Object.keys(publishDate).sort(function(a, b) {
         return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
     })
-    return studies[keysSorted[0]];
-//                return studies;
+    return keysSorted;
 }
+
+_sortByCatalogPublishDate = function(array){
+    var catalogPublishDate = {};
+
+    $.each(array, function(index, value) {
+        catalogPublishDate[value.id] = value.catalogPublishDate;
+    })
+
+    var keysSorted = Object.keys(catalogPublishDate).sort(function(a, b) {
+        return Date.parse(catalogPublishDate[b]) - Date.parse(catalogPublishDate[a])
+    })
+    return keysSorted;
+}
+
+_sortBySampleSize = function(array){
+    // studies['study:8072'].initialSampleDescription.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
+    // "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases"
+    var sampleSize = {};
+
+    _add = function (a, b){
+        return parseInt(a) + parseInt(b);
+    }
+
+    $.each(array, function(index, value) {
+        var init = value.initialSampleDescription
+        var total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
+        sampleSize[value.id] = total;
+    })
+
+    //desc
+    var keysSorted = Object.keys(sampleSize).sort(function(a, b) {
+        return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
+    })
+    return keysSorted;
+}
+
 
 //return html to display information for a data point in the locusplot when moveover the datapoint
 buildLocusPlotPopoverHTML = function(association){
