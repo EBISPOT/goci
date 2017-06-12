@@ -1049,12 +1049,6 @@
             addEFO(data, false);
         });
     });
-    var url = $(this).prop('href');
-
-
-    getOLSLink(getMainEFO()).then(function(link){
-        $("#ols-btn").prop('href',link);
-    })
 
     $('#ols-link').click(function() {
         getOLSLink(getMainEFO()).then(function(link){
@@ -1291,7 +1285,7 @@
             var container = $(tagID);
 
             //checkbox idicate require descendant
-            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1", value:efoid}).css({'float':'left'}).appendTo(container);
+            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1", value:efoid}).css({'float':'left','margin-top':'15px'}).appendTo(container);
             if (IsDescendantRequired(efoid)){
                 cb.attr('checked','checked')
             }
@@ -1351,11 +1345,9 @@
 
             // This will add badge at the end of each cart item, showing the number of association/study linked.
             // This will be init probably before the association/study data is available, thus generating badges with
-            // 0 as value at the begining. The badge will be update when the data is available.
+            // '-' as value at the beginning. The badge will be update when the data is available.
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: '-' , title:'Number of study'}).css({'color':'white'}).appendTo(item);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: '-' , title:'Number of association'}).css({'color':'white'}).appendTo(item);
-
-
 
             item.append(additionalLabel)
         })
@@ -1513,8 +1505,6 @@
     }
 
 
-
-
     //checkbox approach
     addRelatedTermCheckBox = function() {
         function addCheckbox(id, name, cbclass) {
@@ -1551,7 +1541,7 @@
 
     addRelatedTermGraph = function(mainEFO) {
 
-        var mainEFOLink = getOLSLink(mainEFO).then(function(termFullLink) {
+        var mainEFOLink = getOLSLinkAPI(mainEFO).then(function(termFullLink) {
             return termFullLink + '/graph';
         })
 
@@ -1625,7 +1615,7 @@
                     reasonForRelatedEFO[d.obo_id] = d.logical_description;
                 })
 
-                return Object.keys(terms).map(getOLSLink).reduce(function(sequence, termOLSLinkPromise) {
+                return Object.keys(terms).map(getOLSLinkAPI).reduce(function(sequence, termOLSLinkPromise) {
                     return sequence.then(function() {
                         return termOLSLinkPromise;
                     }).then(function(termOLSLink) {

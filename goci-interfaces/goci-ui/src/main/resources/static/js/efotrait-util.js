@@ -5,6 +5,7 @@
 
 var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
 var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
+var global_ols = 'http://www.ebi.ac.uk/ols/';
 var global_ols_seach_api =  global_ols_api + 'search';
 var global_ols_api_all_descendant_limit = 99999;
 var global_efo_info_tag_id = '#efo-info';
@@ -238,7 +239,7 @@ getColourForEFO = function(efoid) {
 
 getEFOInfo = function(efoid){
     queryEFOInfo = function(efoid){
-        return getOLSLink(efoid).then(function(url){
+        return getOLSLinkAPI(efoid).then(function(url){
             return promiseGet(url).then(JSON.parse).then(function(response) {
                 var tmp = {};
                 tmp[efoid] = response;
@@ -268,12 +269,22 @@ getEFOInfo = function(efoid){
     })
 }
 
-getOLSLink = function(efoid){
+getOLSLinkAPI = function(efoid){
     var ont = getOntologyByShortForm(efoid);
     var iri = getIriByShortForm(efoid);
     return Promise.all([ont,iri]).then(function(arrayPromise) {
         var url = global_ols_api + 'ontologies/' + arrayPromise[0] + '/terms/' +
                 encodeURIComponent(encodeURIComponent(arrayPromise[1]));
+        return url
+    })
+}
+
+getOLSLink = function(efoid){
+    var ont = getOntologyByShortForm(efoid);
+    var iri = getIriByShortForm(efoid);
+    return Promise.all([ont,iri]).then(function(arrayPromise) {
+        var url = global_ols + 'ontologies/' + arrayPromise[0] + '/terms?iri=' +
+                encodeURIComponent(arrayPromise[1]);
         return url
     })
 }
@@ -1541,3 +1552,7 @@ instance.draw($("#term-tree"),
 //     });
 // }
 //
+
+
+
+
