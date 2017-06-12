@@ -1140,7 +1140,9 @@
         }
     });
 
-    //When adding extra term to the cart
+    /**
+     * When adding extra term to the cart
+     */
     addEFO = function(data, initLoad) {
         if(initLoad==undefined)
             initLoad = false;
@@ -1164,7 +1166,9 @@
         });
     }
 
-    //remove an efo term from the cart
+    /**
+     * When remove an efo term from the cart
+     */
     removeEFO = function(efoid) {
         removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
         removeDataFromTag(global_efo_info_tag_id,'whichDescendant',efoid)
@@ -1172,8 +1176,9 @@
     }
 
 
-
-    //triger a refresh of the page content, including locusplot, tables, badges.
+    /**
+     * triger a refresh of the page content, including locusplot, tables, badges.
+     */
     updatePage = function(initLoad) {
 
         //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
@@ -1368,7 +1373,7 @@
 
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
-                    .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
+                    .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left', 'width': '5%'})
                     .appendTo(item);
 
 
@@ -1412,7 +1417,6 @@
             return '';
         })
     }
-
 
 
     //make solr query

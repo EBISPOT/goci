@@ -171,6 +171,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
     min_width: 800,
     min_height: 300,
     proportional_width: 1,
+    // proportional_height: 0.5,
     margin: {top: 20, right: 50, bottom: 120, left: 50},
     inner_border: "rgb(210, 210, 210)",
     dashboard: (function() {
