@@ -6,6 +6,13 @@ $(document).ready(function() {
     drawGraph(getMainEFO().replace('_',':'),1);
 }) ;
 
+
+$('#btn-toggle-oxo').click(function() {
+    //To redraw the oxo graph so that it is center to the div
+    drawGraph(getMainEFO().replace('_',':'),1);
+});
+
+
 function drawGraph (curie,distance) {
 
     var relativePath = 'http://www.ebi.ac.uk/spot/oxo/'
@@ -46,7 +53,8 @@ function drawGraph (curie,distance) {
 
                 var options = {};
                 var network = new vis.Network(container, data, options);
-
+                //CENTER THE NETWORK
+                network.fit()
 
 
             })

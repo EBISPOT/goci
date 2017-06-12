@@ -270,7 +270,7 @@
                         </div>
 
                         <div>
-                            <a class="btn btn-default"
+                            <a class="btn btn-default" id="btn-toggle-oxo"
                                     type="button"
                                     data-toggle="collapse"
                                     data-target="#oxo-graph"
@@ -347,8 +347,8 @@
 
                 <!--oxo graph-->
                 <div class="clearfix collapse" id="oxo-graph">
-                    <div  class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div id="oxo-div" class="tab-pane fade" >
+                    <div  class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <div id="oxo-div" >
                             <h4>oxo:</h4>
                             <div>
                                 <div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>
@@ -1020,8 +1020,6 @@
     var data_highlighting=undefined
 
 
-
-
     $('#btn-query-include-descendants').click(function() {
         //replot with all children, from the currently selected efos
         addEFO({}, false, true);
@@ -1101,8 +1099,8 @@
         }
     });
 
+    //When adding extra term to the cart
     addEFO = function(data, initLoad) {
-
         if(initLoad==undefined)
             initLoad = false;
 
@@ -1132,7 +1130,154 @@
         addEFO({},false);
     }
 
-    //add a selected efo to the cart, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
+
+
+    //triger a refresh of the page content, including locusplot, tables, badges.
+    updatePage = function(initLoad) {
+
+        //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
+        if(initLoad){
+            showLoadingOverLay('#summary-panel-loading');
+            showLoadingOverLay('#highlight-study-panel-loading');
+        }
+        showLoadingOverLay('#locus-plot-row-loading');
+        showLoadingOverLay('#association-table-loading');
+        showLoadingOverLay('#study-table-loading');
+        showLoadingOverLay('#cart-loading');
+        showLoadingOverLay('#sharable_link_btn');
+
+
+        var current_select = getCurrentSelected();
+        var mainEFO = getMainEFO();
+
+
+        if(IsAlwaysDescendant()){
+            addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
+        }
+
+
+        // ******************************
+        // update cart box
+        // ******************************
+        var container = $('#cart');
+        container.empty()
+
+        //update cart, the badge will be 0 since the data is not ready at this stage.
+        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+            return sequence.then(function() {
+                return efoInfo;
+            }).then(function(efoInfo) {
+                if (efoInfo.short_form == mainEFO)
+                    addToCart('#cart', efoInfo.short_form, efoInfo.label, false)
+                else
+                    addToCart('#cart', efoInfo.short_form, efoInfo.label)
+                return efoInfo;
+            });
+        }, Promise.resolve()).catch(function(err) {
+            console.warning('Error when updating cart! ' + err);
+        }).then(
+                //hideLoadingOverLay('#cart-loading')
+        );
+
+
+        // ******************************
+        // update efo information panel
+        // ******************************
+        if (initLoad){
+            //display efo trait information when data is ready
+            displayEfoTraitInfo(mainEFO);
+        }
+
+        // ******************************
+        // add ols graph for related term
+        // ******************************
+        if (initLoad) {
+            //addRelatedTermCheckBox();
+            addRelatedTermGraph(mainEFO);
+        }
+
+        // ******************************
+        // update shareable link
+        // ******************************
+        updateSharableLink();
+
+        //query descendants for current selected terms
+        var all_descendants = {}
+//        if (!include_descendants) {
+//            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+//                descendants.forEach(function(terms) {
+//                    Object.keys(terms).forEach(function(term) {
+//                        all_descendants[term] = terms[term];
+//                    })
+//                })
+//                return all_descendants;
+//            }).catch(function(err) {
+//                console.warning('Error when trying to find all descendants with error messgae ' + err);
+//            })
+//        }else{
+//            var desPromise = Promise.resolve();
+//            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
+            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+                descendants.forEach(function(terms) {
+                    Object.keys(terms).forEach(function(term) {
+                        all_descendants[term] = terms[term];
+                    })
+                })
+                return all_descendants;
+            }).catch(function(err) {
+                console.warning('Error when trying to find all descendants with error messgae ' + err);
+            })
+//        }
+
+
+        //when solr data ready, process solr data and update badges in the selection cart
+        Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
+            var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+            solrPromise.then(function(){
+                //update selection boxupdateSelectedBoxPromise
+                Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+                    return sequence.then(function() {
+                        return efoInfo;
+                    }).then(function(efoInfo) {
+                        var target_efos;
+
+
+
+                        if(IsDescendantRequired(efoInfo.short_form)){
+                            //self and decendants
+                            target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
+                                //adding self
+                                return Object.keys(data).concat(efoInfo.short_form);
+                            })
+                        }else{
+                            //only self
+                            target_efos = Promise.resolve([efoInfo.short_form]);
+                        }
+
+                        target_efos.then(function(efos){
+                            //update the selection box badge number when data is ready
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
+                        });
+                    })
+                },Promise.resolve())
+            }).catch(function(err) {
+                console.error('Error search solr. ' + err);
+                $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
+            }).then(function(){
+                hideLoadingOverLay('#cart-loading');
+            })
+        });
+    }
+
+    $(global_efo_info_tag_id).on('addToSelect', function(e, initLoad) {
+        updatePage(initLoad);
+    });
+
+
+    //function to add a selected efo to the cart box on the page, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
     addToCart = function(tagID, efoid, additionalLabel, removeable) {
         if (removeable == undefined) {
             removeable = true;
@@ -1223,149 +1368,6 @@
             item.append(additionalLabel)
         })
     }
-
-    //triger a refresh of the page content, including locusplot, tables, badges.
-    updatePage = function(initLoad) {
-
-        if(initLoad==undefined)
-            initLoad = false;
-
-
-
-
-        //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
-        if(initLoad){
-            showLoadingOverLay('#summary-panel-loading');
-            showLoadingOverLay('#highlight-study-panel-loading');
-        }
-        showLoadingOverLay('#locus-plot-row-loading');
-        showLoadingOverLay('#association-table-loading');
-        showLoadingOverLay('#study-table-loading');
-        showLoadingOverLay('#cart-loading');
-        showLoadingOverLay('#sharable_link_btn');
-
-
-        var current_select = getCurrentSelected();
-        var mainEFO = getMainEFO();
-
-
-        //clean the cart
-        var container = $('#cart');
-        container.empty()
-
-        if(IsAlwaysDescendant()){
-            addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
-        }
-
-
-
-
-        //update cart, the badge will be 0 since the data is not ready at this stage.
-        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
-            return sequence.then(function() {
-                return efoInfo;
-            }).then(function(efoInfo) {
-                if (efoInfo.short_form == mainEFO)
-                    addToCart('#cart', efoInfo.short_form, efoInfo.label, false)
-                else
-                    addToCart('#cart', efoInfo.short_form, efoInfo.label)
-                return efoInfo;
-            });
-        }, Promise.resolve()).catch(function(err) {
-            console.warning('Error when updating cart! ' + err);
-        }).then(
-                //hideLoadingOverLay('#cart-loading')
-        );
-
-
-        //display efo train information when data is ready
-        if (initLoad){
-            displayEfoTraitInfo(mainEFO);
-        }
-
-        //add ols-graph to the page
-        if (initLoad) {
-            //addRelatedTermCheckBox();
-            addRelatedTermGraph(mainEFO);
-        }
-
-        //update shareable link to the page
-        updateSharableLink();
-
-        //query descendants for current selected terms
-        var all_descendants = {}
-//        if (!include_descendants) {
-//            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
-//                descendants.forEach(function(terms) {
-//                    Object.keys(terms).forEach(function(term) {
-//                        all_descendants[term] = terms[term];
-//                    })
-//                })
-//                return all_descendants;
-//            }).catch(function(err) {
-//                console.warning('Error when trying to find all descendants with error messgae ' + err);
-//            })
-//        }else{
-//            var desPromise = Promise.resolve();
-//            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
-            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
-                descendants.forEach(function(terms) {
-                    Object.keys(terms).forEach(function(term) {
-                        all_descendants[term] = terms[term];
-                    })
-                })
-                return all_descendants;
-            }).catch(function(err) {
-                console.warning('Error when trying to find all descendants with error messgae ' + err);
-            })
-//        }
-
-
-        //when solr data ready, process solr data and update badges in the selection cart
-        Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
-            var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
-            solrPromise.then(function(){
-                //update selection boxupdateSelectedBoxPromise
-                Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
-                    return sequence.then(function() {
-                        return efoInfo;
-                    }).then(function(efoInfo) {
-                        var target_efos;
-
-
-
-                        if(IsDescendantRequired(efoInfo.short_form)){
-                            //self and decendants
-                            target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
-                                //adding self
-                                return Object.keys(data).concat(efoInfo.short_form);
-                            })
-                        }else{
-                            //only self
-                            target_efos = Promise.resolve([efoInfo.short_form]);
-                        }
-
-                        target_efos.then(function(efos){
-                            //update the selection box badge number when data is ready
-                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
-                            $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
-                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
-                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
-                        });
-                    })
-                },Promise.resolve())
-            }).catch(function(err) {
-                console.error('Error search solr. ' + err);
-                $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
-            }).then(function(){
-                hideLoadingOverLay('#cart-loading');
-            })
-        });
-    }
-
-    $(global_efo_info_tag_id).on('addToSelect', function(e, initLoad) {
-        updatePage( initLoad);
-    });
 
 
 
