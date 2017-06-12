@@ -616,10 +616,10 @@
                                                                                          style="background-color: #398A96;margin-left:10px"></span>
                             </h3>
                             <span class="pull-right">
-                        <button type="button" class="btn btn-default btn-xs" id="download_data">
-                            <span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>
-                            <span>Download association data</span>
-                        </button>
+                        <!--<button type="button" class="btn btn-default btn-xs" id="download_data">-->
+                            <!--<span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>-->
+                            <!--<span>Download association data</span>-->
+                        <!--</button>-->
                         <span class="clickable panel-collapsed"
                               style="margin-left:25px"
                               onclick="toggleSidebar('#association_panel span.clickable')">
@@ -631,8 +631,9 @@
                         <div class="panel-body" style="display:none">
 
 
-                            <table id="association-table" class="table table-striped borderless"
+                            <table id="association-table" class="table table-striped borderless "
                                    data-flat="true"
+                                   data-show-export="true"
                                    data-search="true"
                                    data-show-columns="true"
                                    data-show-multi-sort="true">
@@ -726,6 +727,7 @@
                         <div class="panel-body" style="display:none">
                             <table id="study-table" class="table table-striped borderless"
                                    data-flat="true"
+                                   data-show-export="true"
                                    data-search="true"
                                    data-show-columns="true"
                                    data-show-multi-sort="true">
@@ -913,6 +915,9 @@
 <!--bootstrap-table-flat-json-->
 <script src="https://cdn.rawgit.com/wenzhixin/bootstrap-table/develop/dist/extensions/flat-json/bootstrap-table-flat-json.js"></script>
 <script src="https://cdn.rawgit.com/wenzhixin/bootstrap-table/develop/dist/extensions/multiple-sort/bootstrap-table-multiple-sort.js"></script>
+<script src="https://cdn.rawgit.com/wenzhixin/bootstrap-table/develop/dist/extensions/export/bootstrap-table-export.js"></script>
+<script src="https://cdn.rawgit.com/wenzhixin/09e218c884f4f380b68a/raw/5d258d2f78225a4ac1a72d54a34cc7976d630df1/jquery.base64.js"></script>
+<script src="https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/master/tableExport.js"></script>
 
 
 <!-- trait page
@@ -921,136 +926,7 @@
 <script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
 
 <script type="text/javascript">
-//   var $table = $('#table');
-//   var mydata =
-//           [
-//               {
-//                   "id": 0,
-//                   "name": "test0",
-//                   "price": "$0"
-//               },
-//               {
-//                   "id": 1,
-//                   "name": "test1",
-//                   "price": "$1"
-//               },
-//               {
-//                   "id": 2,
-//                   "name": "test2",
-//                   "price": "$2"
-//               },
-//               {
-//                   "id": 3,
-//                   "name": "test3",
-//                   "price": "$3"
-//               },
-//               {
-//                   "id": 4,
-//                   "name": "test4",
-//                   "price": "$4"
-//               },
-//               {
-//                   "id": 5,
-//                   "name": "test5",
-//                   "price": "$5"
-//               },
-//               {
-//                   "id": 6,
-//                   "name": "test6",
-//                   "price": "$6"
-//               },
-//               {
-//                   "id": 7,
-//                   "name": "test7",
-//                   "price": "$7"
-//               },
-//               {
-//                   "id": 8,
-//                   "name": "test8",
-//                   "price": "$8"
-//               },
-//               {
-//                   "id": 9,
-//                   "name": "test9",
-//                   "price": "$9"
-//               },
-//               {
-//                   "id": 10,
-//                   "name": "test10",
-//                   "price": "$10"
-//               },
-//               {
-//                   "id": 11,
-//                   "name": "test11",
-//                   "price": "$11"
-//               },
-//               {
-//                   "id": 12,
-//                   "name": "test12",
-//                   "price": "$12"
-//               },
-//               {
-//                   "id": 13,
-//                   "name": "test13",
-//                   "price": "$13"
-//               },
-//               {
-//                   "id": 14,
-//                   "name": "test14",
-//                   "price": "$14"
-//               },
-//               {
-//                   "id": 15,
-//                   "name": "test15",
-//                   "price": "$15"
-//               },
-//               {
-//                   "id": 16,
-//                   "name": "test16",
-//                   "price": "$16"
-//               },
-//               {
-//                   "id": 17,
-//                   "name": "test17",
-//                   "price": "$17"
-//               },
-//               {
-//                   "id": 18,
-//                   "name": "test18",
-//                   "price": "$18"
-//               },
-//               {
-//                   "id": 19,
-//                   "name": "test19",
-//                   "price": "$19"
-//               },
-//               {
-//                   "id": 20,
-//                   "name": "test20",
-//                   "price": "$20"
-//               }
-//           ];
-//
-//   $(function () {
-//       $('#table').bootstrapTable({
-//                                      columns: [{
-//                                          field: 'id',
-//                                          title: 'Item ID'
-//                                      }, {
-//                                          field: 'name',
-//                                          title: 'Item Name'
-//                                      }, {
-//                                          field: 'price',
-//                                          title: 'Item Price'
-//                                      }],
-//                                      data: mydata
-//
-//                                  });
-//   });
-//
-//   $(function () {
-//
-//   });
+
 </script>
 
 <!--local data-->
@@ -1096,6 +972,19 @@
             addEFO(data, false);
         });
     });
+//
+//    $('#association-table').bootstrapTable({
+//                                               exportDataType: 'all'
+//                                           })
+
+
+//    $("#btn-query-include-related-terms").html(createPopover('+RelatedTerms','',));
+////            createPopover(efotrait_label,
+//                                            //                                         'description',
+//                                            //                                         displayArrayAsList(response.description)));
+//    $('#btn-query-include-related-terms').append(
+//
+//    )
 
     $('#ols-link').click(function() {
         getOLSLink(getMainEFO()).then(function(link){
@@ -1875,9 +1764,12 @@
 
     //<![CDATA[
 
+
     //]]>
 
 </script>
+
+
 
 
 </body>

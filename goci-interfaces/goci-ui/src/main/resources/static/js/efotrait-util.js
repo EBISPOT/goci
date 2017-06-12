@@ -657,6 +657,8 @@ findHighlightedStudiesForEFO = function(efoid) {
     return studies[sorted_index[0]];
 }
 
+
+
 _sortByPublishDate = function(array){
     var publishDate = {};
 
@@ -927,6 +929,7 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
     });
 
     $('#association-table').bootstrapTable({
+                                               exportDataType: 'all',
                                                columns: [{
                                                    field: 'riskAllele',
                                                    title: 'Risk allele',
@@ -968,7 +971,8 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
                                                    title: 'Study',
                                                    sortable: true
                                                }],
-                                               data: data_json
+                                               data: data_json,
+
                                            });
 
     $('#association-table').bootstrapTable('load',data_json)
@@ -1062,6 +1066,7 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
     }
 
     $('#study-table').bootstrapTable({
+                                         exportDataType: 'all',
                                          columns: [{
                                              field: 'Author',
                                              title: 'Author',
@@ -1091,7 +1096,8 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
                                              title: 'Ancestral groups',
                                              sortable: true
                                          }],
-                                         data: data_json
+                                         data: data_json,
+
                                      });
     $('#study-table').bootstrapTable('load',data_json)
     if(data_json.length>5){
@@ -1344,7 +1350,6 @@ isMainEFO = function(efoid){
 }
 
 
-
 // Create a popover to display content
 createPopover = function(label,header,content){
     var content_text = $('<a></a>');
@@ -1358,7 +1363,6 @@ createPopover = function(label,header,content){
                          });
     return content_text;
 }
-
 
 /*
 ols component
