@@ -1161,7 +1161,6 @@
         // ******************************
         var container = $('#cart');
         container.empty()
-
         //update cart, the badge will be 0 since the data is not ready at this stage.
         var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
@@ -1180,69 +1179,54 @@
         );
 
 
-        // ******************************
+        //******************************
         // update efo information panel
-        // ******************************
+        //******************************
         if (initLoad){
             //display efo trait information when data is ready
             displayEfoTraitInfo(mainEFO);
         }
 
-        // ******************************
+        //******************************
         // add ols graph for related term
-        // ******************************
+        //******************************
         if (initLoad) {
             //addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
         }
 
-        // ******************************
+        //******************************
         // update shareable link
-        // ******************************
+        //******************************
         updateSharableLink();
 
-        //query descendants for current selected terms
+        //******************************
+        // query descendants for current selected terms
+        //******************************
         var all_descendants = {}
-//        if (!include_descendants) {
-//            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
-//                descendants.forEach(function(terms) {
-//                    Object.keys(terms).forEach(function(term) {
-//                        all_descendants[term] = terms[term];
-//                    })
-//                })
-//                return all_descendants;
-//            }).catch(function(err) {
-//                console.warning('Error when trying to find all descendants with error messgae ' + err);
-//            })
-//        }else{
-//            var desPromise = Promise.resolve();
-//            addDataToTag(global_efo_info_tag_id, getCurrentSelected(),'whichDescendant')
-            var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
-                descendants.forEach(function(terms) {
-                    Object.keys(terms).forEach(function(term) {
-                        all_descendants[term] = terms[term];
-                    })
+        var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+            descendants.forEach(function(terms) {
+                Object.keys(terms).forEach(function(term) {
+                    all_descendants[term] = terms[term];
                 })
-                return all_descendants;
-            }).catch(function(err) {
-                console.warning('Error when trying to find all descendants with error messgae ' + err);
             })
-//        }
+            return all_descendants;
+        }).catch(function(err) {
+            console.warning('Error when trying to find all descendants with error messgae ' + err);
+        })
 
 
-        //when solr data ready, process solr data and update badges in the selection cart
+        //******************************
+        // when solr data ready, process solr data and update badges in the selection cart
+        //******************************
         Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
             var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
             solrPromise.then(function(){
-                //update selection boxupdateSelectedBoxPromise
+
+                //update selection cart
                 Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
-                    return sequence.then(function() {
-                        return efoInfo;
-                    }).then(function(efoInfo) {
+                    return sequence.then(function() {return efoInfo;}).then(function(efoInfo){
                         var target_efos;
-
-
-
                         if(IsDescendantRequired(efoInfo.short_form)){
                             //self and decendants
                             target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
@@ -1263,6 +1247,8 @@
                         });
                     })
                 },Promise.resolve())
+
+
             }).catch(function(err) {
                 console.error('Error search solr. ' + err);
                 $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
@@ -1272,15 +1258,21 @@
         });
     }
 
+
+
     $(global_efo_info_tag_id).on('addToSelect', function(e, initLoad) {
         updatePage(initLoad);
     });
 
 
-    //function to add a selected efo to the cart box on the page, also add bagdes to idicate the the toplevel efo and the number of association/trait for this efo
-    addToCart = function(tagID, efoid, additionalLabel, removeable) {
-        if (removeable == undefined) {
-            removeable = true;
+    /**
+     * function to add a selected efo to the cart box on the page,
+     * add bagdes to indicate the the toplevel efo and the number of association/trait for this efo
+     * add checkkbox to indicate the descendants
+     */
+    addToCart = function(tagID, efoid, additionalLabel, removable) {
+        if (removable == undefined) {
+            removable = true;
         }
         var colour, colourLabelInit,colourLabel;
         //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
@@ -1350,7 +1342,7 @@
 
 
             //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
-            if (removeable) {
+            if (removable) {
                 var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(item);
                 span.on("click", function(e) {
                     removeEFO(efoid);
@@ -1360,8 +1352,8 @@
             // This will add badge at the end of each cart item, showing the number of association/study linked.
             // This will be init probably before the association/study data is available, thus generating badges with
             // 0 as value at the begining. The badge will be update when the data is available.
-            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: Object.keys(findStudiesForEFOs([efoid])).length , title:'Number of study'}).css({'color':'white'}).appendTo(item);
-            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: Object.keys(findAssociationForEFOs([efoid])).length , title:'Number of association'}).css({'color':'white'}).appendTo(item);
+            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: '-' , title:'Number of study'}).css({'color':'white'}).appendTo(item);
+            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: '-' , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
 
 
