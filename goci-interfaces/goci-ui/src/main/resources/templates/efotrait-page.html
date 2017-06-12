@@ -379,48 +379,41 @@
                                     <i class="glyphicon glyphicon-chevron-up"></i>
                                 </span>
                     </div>
+
+
                     <div class="panel-body">
-                        <!--current select-->
                         <div class="row">
-                            <b>Current selected:</b>
-                            <div class="list-group" id="cart-loading" style=" max-height: 300px; overflow-y:scroll; ">
-                                <div id="cart"></div>
+
+                            <div class="col-lg-2">
+                                <input id="cb-query-include-descendants" type="checkbox"/>Descendants
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
-                        </div>
+                            <div class="col-lg-9">
+                                <button id="btn-cart-check-item-cbs"
+                                        type="button"
+                                        class="btn btn-default">CheckAll
+                                        </button>
+                                <button id="btn-cart-uncheck-item-cbs"
+                                        type="button"
+                                        class="btn btn-default">UnCheckAll
+                                        </button>
+                                <button id="btn-query-include-related-terms"
+                                        type="button"
+                                        class="btn btn-default">+related terms
+                                        </button>
+                                <button id="btn-clear-highlight"
+                                        type="button"
+                                        class="btn btn-default">clear highlight
+                                        </button>
+                                <button id="btn-clear-cart"
+                                        type="button"
+                                        class="btn btn-default">clear cart
+                                        </button>
+                            </div>
 
-                        <!--replot button-->
-                        <div class="row">
-                            <b>Actions:</b>
-                            <div>
-                                <div class="col-lg-3">
-                                    <!--<input id="cb-query-include-descendants" type="checkbox"/> Descendants-->
-                                    <input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants
-                                </div>
-                                <div class="col-lg-6">
-                                    <button id="btn-query-include-descendants"
-                                            type="button"
-                                            class="btn btn-default">+descendants
-                                    </button>
-                                    <button id="btn-query-include-related-terms"
-                                            type="button"
-                                            class="btn btn-default">+related terms
-                                    </button>
-                                    <button id="btn-clear-highlight"
-                                            type="button"
-                                            class="btn btn-default">clear highlight
-                                    </button>
-
-                                    <button id="btn-clear-cart"
-                                            type="button"
-                                            class="btn btn-default">clear cart
-                                    </button>
-
-
-
-                                </div>
-                                <div class="col-lg-2">
-                                    <input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>
-                                    <div>
+                            <div class="col-lg-1">
+                                <input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>
+                                <div>
                                         <button id="sharable_link_btn"
                                                 type="button"
                                                 class="btn btn-default"
@@ -429,10 +422,63 @@
                                                 aria-hidden="true"
                                                 title="copy sharable link to clipboard"></span>
                                          </button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <!--current select-->
+                        <div class="row">
+                                <b>Current selected:</b>
+                            <div class="list-group" id="cart-loading">
+                                <div id="cart"></div>
+                            </div>
+                            <!--<div class="col-lg-12   ">-->
+                                <!--&lt;!&ndash;<input id="cb-query-include-descendants" type="checkbox"/> Descendants&ndash;&gt;-->
+                                <!--<input id="" type="checkbox" checked=""/>Check/Uncheck all-->
+                            <!--</div>-->
+                        </div>
+
+                        <!--replot button-->
+                        <!--<div class="row">-->
+                            <!--&lt;!&ndash;<b>Actions:</b>&ndash;&gt;-->
+                            <!--<div>-->
+                                <!--&lt;!&ndash;<div class="col-lg-3">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;&lt;!&ndash;<input id="cb-query-include-descendants" type="checkbox"/> Descendants&ndash;&gt;&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<input id="cb-query-include-descendants" type="checkbox" checked=""/> always include descendants&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="col-lg-6">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<button id="btn-query-include-descendants"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;class="btn btn-default">+descendants&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<button id="btn-query-include-related-terms"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;class="btn btn-default">+related terms&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<button id="btn-clear-highlight"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;class="btn btn-default">clear highlight&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+                                    <!--&lt;!&ndash;<button id="btn-clear-cart"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+                                            <!--&lt;!&ndash;class="btn btn-default">clear cart&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="col-lg-2">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<button id="sharable_link_btn"&ndash;&gt;-->
+                                                <!--&lt;!&ndash;type="button"&ndash;&gt;-->
+                                                <!--&lt;!&ndash;class="btn btn-default"&ndash;&gt;-->
+                                                <!--&lt;!&ndash;data-clipboard-target="#sharable_link">&ndash;&gt;-->
+                                          <!--&lt;!&ndash;<span class="glyphicon glyphicon-floppy-disk"&ndash;&gt;-->
+                                                <!--&lt;!&ndash;aria-hidden="true"&ndash;&gt;-->
+                                                <!--&lt;!&ndash;title="copy sharable link to clipboard"></span>&ndash;&gt;-->
+                                         <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <div class="row">
                             <div id="ols-search-div" class="tab-pane fade in active">
@@ -1064,7 +1110,7 @@
 
 
     $("#cb-query-include-descendants").change(function() {
-        addEFO({},false,this.checked);
+        addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
     });
 
     $(document).ready(function() {
@@ -1145,7 +1191,7 @@
         var mainEFO = getMainEFO();
 
 
-        if(IsAlwaysDescendant()){
+        if(isAlwaysDescendant()){
             addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
         }
 
@@ -1160,11 +1206,10 @@
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
-                if (efoInfo.short_form == mainEFO)
-                    addToCart('#cart', efoInfo.short_form, efoInfo.label, false)
-                else
-                    addToCart('#cart', efoInfo.short_form, efoInfo.label)
-                return efoInfo;
+                return addToCart('#cart', efoInfo.short_form, efoInfo.label).then(function(){
+                    return efoInfo;
+                })
+
             });
         }, Promise.resolve()).catch(function(err) {
             console.warning('Error when updating cart! ' + err);
@@ -1221,7 +1266,7 @@
                 Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
                     return sequence.then(function() {return efoInfo;}).then(function(efoInfo){
                         var target_efos;
-                        if(IsDescendantRequired(efoInfo.short_form)){
+                        if(isDescendantRequired(efoInfo.short_form)){
                             //self and decendants
                             target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
                                 //adding self
@@ -1264,13 +1309,13 @@
      * add bagdes to indicate the the toplevel efo and the number of association/trait for this efo
      * add checkkbox to indicate the descendants
      */
-    addToCart = function(tagID, efoid, additionalLabel, removable) {
-        if (removable == undefined) {
-            removable = true;
-        }
+    addToCart = function(tagID, efoid, additionalLabel) {
+
+        var isMain = isMainEFO(efoid);
+
         var colour, colourLabelInit,colourLabel;
         //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
-        getColourForEFO(efoid).then(function(data){
+        return getColourForEFO(efoid).then(function(data){
             colour = data.colour;
             colourLabelInit = data.colourLabel.substr(0,1)
             colourLabel = data.colourLabel;
@@ -1286,7 +1331,7 @@
 
             //checkbox idicate require descendant
             var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1", value:efoid}).css({'float':'left','margin-top':'15px'}).appendTo(container);
-            if (IsDescendantRequired(efoid)){
+            if (isDescendantRequired(efoid)){
                 cb.attr('checked','checked')
             }
 
@@ -1305,7 +1350,7 @@
                 $(global_efo_info_tag_id).trigger('addToSelect', [false]);
             })
 
-            if(IsAlwaysDescendant()){
+            if(isAlwaysDescendant()){
                 cb.attr("disabled", true);
             }else{
                 cb.removeAttr("disabled");
@@ -1336,7 +1381,7 @@
 
 
             //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
-            if (removable) {
+            if (!isMain) {
                 var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(item);
                 span.on("click", function(e) {
                     removeEFO(efoid);
@@ -1350,6 +1395,7 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: '-' , title:'Number of association'}).css({'color':'white'}).appendTo(item);
 
             item.append(additionalLabel)
+            return '';
         })
     }
 
@@ -1879,6 +1925,16 @@
         transform:scale(2, 2);
         margin-top: 15px;
     }
+
+    #cart {
+        max-height: 300px;
+        overflow-y:scroll;
+    }
+
+    #cb-query-include-descendants {
+        transform:scale(2, 2);
+    }
+
 </style>
 
 <script>

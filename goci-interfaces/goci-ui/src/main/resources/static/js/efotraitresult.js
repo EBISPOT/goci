@@ -300,19 +300,6 @@ function longContent (content_id, str, label) {
     return container;
 }
 
-// Create a popover to display content
-createPopover = function(label,header,content){
-    var content_text = $('<a></a>');
-    content_text.html(label);
-    content_text.popover({title: header, content: content, animation : true,
-                             delay: {show: 100, hide: 200},
-                             placement :'auto right',
-                             trigger : 'hover',
-                             html: true,
-                             template: '<div class="popover" role="tooltip" style="width: 100%;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"><div class="data-content"></div></div></div>'
-                         });
-    return content_text;
-}
 
 // Create a button to show/hide content
 function showHideDiv(div_id) {

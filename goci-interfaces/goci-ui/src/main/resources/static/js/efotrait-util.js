@@ -471,6 +471,7 @@ getMainEFO = function(){
 }
 
 
+
 //When ploting with descendants, the number of efos increase drmatically.
 //This is to remove the efos that have no annotation in GWAS catalog,
 //Thus querying/ploting only those have at lease one annotation
@@ -727,10 +728,10 @@ displayEfoTraitInfo = function(efotraitId) {
         addDataToTag(global_efo_info_tag_id, response, 'mainEFOInfo');
         $("#efotrait-description").html(displayArrayAsList(response.description));
         $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-//            $("#efotrait-label").html(efotrait_label);
-        $("#efotrait-label").html(createPopover(efotrait_label,
-                                                'description',
-                                                displayArrayAsList(response.description)));
+        $("#efotrait-label").html(efotrait_label);
+        // $("#efotrait-label").html(createPopover(efotrait_label,
+        //                                         'description',
+        //                                         displayArrayAsList(response.description)));
         if (synonym) {
             if (synonym.length > list_min) {
                 $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
@@ -1290,11 +1291,31 @@ hideLoadingOverLay = function(tagID){
     return $(tagID).LoadingOverlay("hide", true);
 }
 
-IsDescendantRequired = function(efoid){
+isDescendantRequired = function(efoid){
     return whichDescendant().indexOf(efoid) != -1
 }
-IsAlwaysDescendant = function(){
+isAlwaysDescendant = function(){
     return $("#cb-query-include-descendants").is(":checked");
+}
+
+isMainEFO = function(efoid){
+    return efoid == getMainEFO();
+}
+
+
+
+// Create a popover to display content
+createPopover = function(label,header,content){
+    var content_text = $('<a></a>');
+    content_text.html(label);
+    content_text.popover({title: header, content: content, animation : true,
+                             delay: {show: 100, hide: 200},
+                             placement :'auto right',
+                             trigger : 'hover',
+                             html: true,
+                             template: '<div class="popover" role="tooltip" style="width: 100%;"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"><div class="data-content"></div></div></div>'
+                         });
+    return content_text;
 }
 
 
