@@ -1207,7 +1207,7 @@
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
-                return addToCart('#cart', efoInfo.short_form, efoInfo.label).then(function(){
+                return addToCart('#cart', efoInfo.short_form, '['+efoInfo.short_form+'] '+efoInfo.label).then(function(){
                     return efoInfo;
                 })
 
@@ -1366,38 +1366,11 @@
                        'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
                    }).appendTo(container);
 
-            //to highlight associations only for this efo term
-            item.click(function() {
-                //xintodo toggle higglight
-//                reloadLocusZoomHighlight('#plot', data_association,efoid)
-                //TOGGLE HIGHLIGHT
-                if(item.hasClass("highlight")){
-                    item.removeClass("highlight");
-                    reloadLocusZoom('#plot', data_association)
-                }else{
-                    $('.list-group-item').removeClass("highlight");
-                    item.addClass("highlight");
-
-                    var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
-                    reloadLocusZoomHighlight('#plot', data_association, Object.keys(highlightAssociations));
-                }
-
-                if(isAlwaysDescendant()){
-                    cb.attr("disabled", true);
-                }else{
-                    cb.removeAttr("disabled");
-                }
-            })
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left'})
                     .appendTo(item);
 
-            //to highlight associations only for this efo term
-//            var highlight_btn = $('<input />', { type:"button", class: 'btn cart-item-highlight-btn', value: efoid})
-//                    .css({'margin-right': '0.3em','float': 'right'})
-//                    .appendTo(item);
-//            highlight_btn.click(function() {reloadLocusZoomHighlight('#plot', data_association,efoid)})
 
 
             //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
@@ -1413,6 +1386,27 @@
             // '-' as value at the beginning. The badge will be update when the data is available.
             $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: '-' , title:'Number of study'}).css({'color':'white'}).appendTo(item);
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: '-' , title:'Number of association'}).css({'color':'white'}).appendTo(item);
+
+
+            //to highlight associations only for this efo term
+            item.click(function() {
+                //TOGGLE HIGHLIGHT
+                if(item.hasClass("highlight")){
+                    item.removeClass("highlight");
+                    reloadLocusZoom('#plot', data_association)
+                }else{
+                    $('.list-group-item').removeClass("highlight");
+                    item.addClass("highlight");
+                    var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
+                    reloadLocusZoom('#plot', data_association, Object.keys(highlightAssociations));
+                }
+
+                if(isAlwaysDescendant()){
+                    cb.attr("disabled", true);
+                }else{
+                    cb.removeAttr("disabled");
+                }
+            })
 
             item.append(additionalLabel)
             return '';
@@ -1717,94 +1711,6 @@
 
     }
 
-
-
-    //replot receive a list of association_docs from solr search
-    reloadLocusZoomHighlight = function(plot_id, data_association, highlight_associations) {
-        //adding information to association doc
-        LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
-            var data = JSON.parse(JSON.stringify(data_association.docs));
-            console.log("Parsing association doc to locus zoom.");
-            console.log(data_association.docs);
-            data.forEach(function(d, i, object) {
-//                if (d.shortForm.length > 1) {
-//                    console.log(d);
-//                }
-
-                if (d.chromLocation) {
-                    //we only plot those association which have chromosome information
-                    data[i].chr = d.chromLocation[0].split(":")[0];
-                    if (data[i].chr == 'X') {
-                        data[i].chr = 23;
-                    }
-                    if (data[i].chr == 'Y') {
-                        data[i].chr = 24;
-                    }
-                    data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
-                    data[i].pval = Math.pow(10, d.pValueExponent);
-                    data[i].phewas_string = d.rsId[0];
-                    data[i].x = transferLocation(data[i].chr, data[i].bp);
-                }
-                else {
-                    //some association don't have chromosome information
-                    object.splice(i, 1);
-                }
-
-            });
-            return {header: chain.header, body: data};
-        };
-
-        var data_sources = new LocusZoom.DataSources()
-                .add("base", ["EfoWASLZ", {url: "www.api.com"}]);
-
-
-        var layout = LocusZoom.Layouts.get("plot", "standard_efowas");
-        layout.panels[0].margin.top = 32;
-        layout.panels[0].data_layers[0].offset = 7.30103; // Higher offset for line of GWAS significance than the default 4.522
-
-        //xintodo create the color palate here
-        //find all efos for plotting color
-        var legend = [];
-        var colorMap = {};
-
-
-        function hexToRgb(hex) {
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? 'rgb(' + parseInt(result[1], 16) + ','
-                    + parseInt(result[2], 16) + ','
-                    + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
-        }
-
-        data_association.docs.forEach(function(d, i) {
-            if(highlight_associations.indexOf(d.id) == -1){
-                colorMap[d.category] = hexToRgb('#808080');
-            }else{
-                d.category = d.preferedEFO;
-                colorMap[d.category] = hexToRgb('#FF0000');
-            }
-        })
-        legend_catgories = [];
-        legend_color = [];
-        for (var key in colorMap) {
-            legend_catgories.push(key);
-            legend_color.push(colorMap[key]);
-            legend.push({
-                            shape: "rect",
-                            color: colorMap[key],
-                            width: 9,
-                            label: key
-                        }
-            )
-        }
-        layout.panels[0].data_layers[1].color.parameters.categories = legend_catgories;
-        layout.panels[0].data_layers[1].color.parameters.values = legend_color;
-        layout.panels[0].data_layers[1].legend = legend;
-
-
-        // Generate the plot
-        var plot = LocusZoom.populate(plot_id, data_sources, layout);
-        hideLoadingOverLay('#locus-plot-row-loading');
-    }
 
     /*]]>*/
 
