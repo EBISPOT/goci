@@ -1072,6 +1072,7 @@
     });
 
     $('#btn-clear-highlight').click(function() {
+        $('.list-group-item').removeClass("highlight");
         reloadLocusZoom('#plot', data_association);
     });
 
@@ -1178,7 +1179,7 @@
         //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
         if(initLoad){
             showLoadingOverLay('#summary-panel-loading');
-            showLoadingOverLay('#highlight-study-panel-loading');
+//            showLoadingOverLay('#highlight-study-panel-loading');
         }
         showLoadingOverLay('#locus-plot-row-loading');
         showLoadingOverLay('#association-table-loading');
@@ -1283,6 +1284,8 @@
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
+                            //work out what association is included (self or self+descendants), this is used for highlighting the plot.
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').data('associations', findAssociationForEFOs(efos))
                         });
                     })
                 },Promise.resolve())
@@ -1366,7 +1369,24 @@
             //to highlight associations only for this efo term
             item.click(function() {
                 //xintodo toggle higglight
-                reloadLocusZoomHighlight('#plot', data_association,efoid)
+//                reloadLocusZoomHighlight('#plot', data_association,efoid)
+                //TOGGLE HIGHLIGHT
+                if(item.hasClass("highlight")){
+                    item.removeClass("highlight");
+                    reloadLocusZoom('#plot', data_association)
+                }else{
+                    $('.list-group-item').removeClass("highlight");
+                    item.addClass("highlight");
+
+                    var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
+                    reloadLocusZoomHighlight('#plot', data_association, Object.keys(highlightAssociations));
+                }
+
+                if(isAlwaysDescendant()){
+                    cb.attr("disabled", true);
+                }else{
+                    cb.removeAttr("disabled");
+                }
             })
 
             $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
@@ -1756,7 +1776,7 @@
         }
 
         data_association.docs.forEach(function(d, i) {
-            if(highlight_associations.indexOf(d.preferedEFO) == -1){
+            if(highlight_associations.indexOf(d.id) == -1){
                 colorMap[d.category] = hexToRgb('#808080');
             }else{
                 d.category = d.preferedEFO;
@@ -1933,6 +1953,10 @@
 
     #cb-query-include-descendants {
         transform:scale(2, 2);
+    }
+
+    .list-group-item.highlight {
+        background-color: #ffe6f0
     }
 
 </style>
