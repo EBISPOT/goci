@@ -977,7 +977,7 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
 
     $('#association-table').bootstrapTable('load',data_json)
     if(data_json.length>5){
-        $('#association-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5})
+        $('#association-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
     }
     hideLoadingOverLay('#association-table-loading')
 }
@@ -1073,7 +1073,7 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
                                              sortable: true
                                          }, {
                                              field: 'publi',
-                                             title: 'Date',
+                                             title: 'Publication Date',
                                              sortable: true
                                          }, {
                                              field: 'Journal',
@@ -1101,7 +1101,7 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
                                      });
     $('#study-table').bootstrapTable('load',data_json)
     if(data_json.length>5){
-        $('#study-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5})
+        $('#study-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
     }
     hideLoadingOverLay('#study-table-loading')
 }

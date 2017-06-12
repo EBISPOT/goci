@@ -160,7 +160,8 @@ function getLinkButtons (data,rsId) {
 function getFirstReportYear(data) {
     var study_date = '';
     $.each(data, function(index,asso) {
-        var p_date = asso.publicationDate;
+        // var p_date = asso.publicationDate;
+        var p_date = asso.catalogPublishDate;
         var year = p_date.split('-')[0];
         if (year < study_date || study_date == '') {
             study_date = year;
