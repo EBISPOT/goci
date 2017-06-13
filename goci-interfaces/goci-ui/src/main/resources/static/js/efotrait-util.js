@@ -11,6 +11,7 @@ var global_ols_api_all_descendant_limit = 99999;
 var global_efo_info_tag_id = '#efo-info';
 var global_efo_selected_tag_id = '#selected-efos';
 var global_pmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
+var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
 
 new Clipboard('#sharable_link_btn', {
@@ -505,6 +506,40 @@ getFromPMC= function(pubmed_id){
                       }).then(JSON.parse);
 }
 
+//OXO
+getOXO = function(efoid){
+
+    queryOXO = function(efoid){
+        return promiseGet(global_oxo_api + '/mappings',
+                          {
+                              'fromId': efoid.replace('_',':'),
+                          }
+        ).then(JSON.parse).then(function(data){
+            var tmp = {}
+            tmp[efoid] = data;
+            return tmp;
+        });
+    }
+
+
+    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efo2OXO');
+    return dataPromise.then(function(data) {
+        if ($.inArray(efoid, Object.keys(data)) == -1) {
+            //efo info is not currently loaded
+            console.log('Loading oxo for ' + efoid)
+            dataPromise = queryOXO(efoid);
+            return dataPromise.then(function(data){
+                //add to tag
+                addPromiseToTag(global_efo_info_tag_id,dataPromise,'efo2OXO');
+                return data[efoid];
+            })
+        }else {
+            //efo colour is has been loaded perviously
+            console.debug('Loading oxo from cache for ' + efoid);
+            return data[efoid]
+        }
+    })
+}
 
 //
 getMainEFO = function(){

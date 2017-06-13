@@ -2,15 +2,20 @@
 var colorMap={"efo": "blue", "uberon":"green", "Wikipedia": "red", "BTO": "yellow", "XAO":"black", "ZFA":"gray"}
 
 
-$(document).ready(function() {
-    drawGraph(getMainEFO().replace('_',':'),1);
-}) ;
+// $(document).ready(function() {
+//     drawGraph(getMainEFO().replace('_',':'),1);
+// }) ;
 
 
 $('#btn-toggle-oxo').click(function() {
     //To redraw the oxo graph so that it is center to the div
     drawGraph(getMainEFO().replace('_',':'),1);
 });
+
+// $('#button-oxo-graph').click(function() {
+//     //To redraw the oxo graph so that it is center to the div
+//     drawGraph(getMainEFO().replace('_',':'),1);
+// });
 
 
 function drawGraph (curie,distance) {

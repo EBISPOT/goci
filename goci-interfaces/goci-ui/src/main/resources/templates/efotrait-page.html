@@ -260,15 +260,15 @@
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">OXO</dt>
-                                <dd >
-                                    <div>
-                                        <a class="btn btn-default" id="btn-toggle-oxo"
-                                           type="button"
-                                           data-toggle="collapse"
-                                           data-target="#oxo-graph"
-                                           aria-expanded="false">
-                                            +
-                                        </a>
+                                <dd>
+                                    <div id="btn-oxo-expand">
+                                        <!--<a class="btn btn-default" id="btn-toggle-oxo"-->
+                                           <!--type="button"-->
+                                           <!--data-toggle="collapse"-->
+                                           <!--data-target="#oxo-graph"-->
+                                           <!--aria-expanded="false">-->
+                                            <!--+-->
+                                        <!--</a>-->
                                     </div>
                                     <!--oxo graph-->
                                     <!--<div class="clearfix collapse col-lg-2 col-md-2 col-sm-2 col-xs-2" id="oxo-graph">-->
@@ -1001,19 +1001,9 @@
             addEFO(data, false);
         });
     });
-//
-//    $('#association-table').bootstrapTable({
-//                                               exportDataType: 'all'
-//                                           })
 
 
-//    $("#btn-query-include-related-terms").html(createPopover('+RelatedTerms','',));
-////            createPopover(efotrait_label,
-//                                            //                                         'description',
-//                                            //                                         displayArrayAsList(response.description)));
-//    $('#btn-query-include-related-terms').append(
-//
-//    )
+
 
     $('#ols-link').click(function() {
         getOLSLink(getMainEFO()).then(function(link){
@@ -1157,6 +1147,23 @@
             //addRelatedTermCheckBox();
             addRelatedTermGraph(mainEFO);
         }
+
+        //******************************
+        // add oxo graph
+        //******************************
+        if (initLoad) {
+            getOXO(getMainEFO()).then(function(data){
+                var container = $('#btn-oxo-expand');
+                var totalMapping = data.page.totalElements;
+                container.html("<b>" + totalMapping + "</b>" + ' ontology Xrefs ');
+                container.append(showHideDiv('oxo-graph'));
+                $('#button-oxo-graph').click(function() {
+                    //To redraw the oxo graph so that it is center to the div
+                    drawGraph(getMainEFO().replace('_',':'),1);
+                });
+            })
+        }
+
 
         //******************************
         // update shareable link
@@ -1791,7 +1798,16 @@
 
 <script>
 
+
+
     //<![CDATA[
+
+
+
+
+
+
+
 
 
     //]]>
