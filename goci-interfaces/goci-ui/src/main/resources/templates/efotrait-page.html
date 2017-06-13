@@ -210,7 +210,7 @@
                     <h3 class="panel-title">Trait information</h3>
                 </div>
                 <div class="clearfix" id="summary-panel-loading">
-                    <div class="panel-body col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    <div class="panel-body col-lg-10 col-md-10 col-sm-8 col-xs-8">
                         <!--label-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
@@ -245,7 +245,7 @@
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-synonym">-</div>-->
                         </div>
                         <!--description-->
-                        <div class="clearfix col-lg-12">
+                        <div class="clearfix col-lg-8">
                             <dl class="dl-horizontal">
                                 <dt style="width: 100px;">Description</dt>
                                 <dd id="efotrait-description">-</dd>
@@ -255,7 +255,55 @@
                             <!--</div>-->
                             <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
                         </div>
+
+
+                        <div class="clearfix col-lg-4">
+                            <dl class="dl-horizontal">
+                                <dt style="width: 100px;">OXO</dt>
+                                <dd >
+                                    <div>
+                                        <a class="btn btn-default" id="btn-toggle-oxo"
+                                           type="button"
+                                           data-toggle="collapse"
+                                           data-target="#oxo-graph"
+                                           aria-expanded="false">
+                                            +
+                                        </a>
+                                    </div>
+                                    <!--oxo graph-->
+                                    <!--<div class="clearfix collapse col-lg-2 col-md-2 col-sm-2 col-xs-2" id="oxo-graph">-->
+                                    <div class="clearfix collapse" id="oxo-graph">
+                                        <div  class="panel-body">
+                                            <div id="oxo-div" >
+                                                <div>
+                                                    <div id="oxo-vis" style="height:300px; width:300px; border:1px solid black;overflow: auto;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
+                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
+                        </div>
+
+                        <!--&lt;!&ndash;oxo graph&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="clearfix collapse col-lg-2 col-md-2 col-sm-2 col-xs-2" id="oxo-graph">&ndash;&gt;-->
+                        <!--<div class="clearfix col-lg-3 col-md-3 col-sm-3 col-xs-3" id="oxo-graph">-->
+                            <!--<div  class="panel-body">-->
+                                <!--<div id="oxo-div" >-->
+                                    <!--<h4>oxo:</h4>-->
+                                    <!--<div>-->
+                                        <!--<div id="oxo-vis" style="height:300px; width:300px; border:1px solid black;overflow: auto;"></div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
+
+
 
                     <div class="panel-body col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         <div>
@@ -266,16 +314,6 @@
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
                               Show Highlight Study
-                            </a>
-                        </div>
-
-                        <div>
-                            <a class="btn btn-default" id="btn-toggle-oxo"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#oxo-graph"
-                                    aria-expanded="false">
-                              Show OXO
                             </a>
                         </div>
 
@@ -345,17 +383,7 @@
 
                 </div>
 
-                <!--oxo graph-->
-                <div class="clearfix collapse" id="oxo-graph">
-                    <div  class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <div id="oxo-div" >
-                            <h4>oxo:</h4>
-                            <div>
-                                <div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!--first reported-->
                 <div id="efotrait-summary">
@@ -389,6 +417,7 @@
                                 <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
                             <div class="col-lg-9">
+                                <!--xintodo add click function-->
                                 <button id="btn-cart-check-item-cbs"
                                         type="button"
                                         class="btn btn-default">CheckAll
