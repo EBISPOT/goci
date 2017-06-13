@@ -276,7 +276,7 @@
                                         <div  class="panel-body">
                                             <div id="oxo-div" >
                                                 <div>
-                                                    <div id="oxo-vis" style="height:300px; width:300px; border:1px solid black;overflow: auto;"></div>
+                                                    <div id="oxo-vis"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -305,7 +305,7 @@
 
 
 
-                    <div class="panel-body col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="panel-body col-lg-2 col-md-2 col-sm-2 col-xs-2" id="panel-links">
                         <div>
                             <a class="btn btn-default"
                                     type="button"
@@ -313,7 +313,7 @@
                                     data-target="#highlight-study-panel-loading"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                              Show Highlight Study
+                              Highlight Study
                             </a>
                         </div>
 
@@ -1776,23 +1776,45 @@
 
 
 <style type="text/css">
+
+    /* cart item checkbox, for including descendant */
     .cart-item-cb  {
         transform:scale(2, 2);
         margin-top: 15px;
     }
 
+    /* selected term cart */
     #cart {
         max-height: 300px;
         overflow-y:scroll;
     }
 
+    /* check box to select all descendants */
     #cb-query-include-descendants {
         transform:scale(2, 2);
     }
 
+    /* when user select an item fron cart, highlight it */
     .list-group-item.highlight {
         background-color: #ffe6f0
     }
+
+    /* oxo graph */
+    #oxo-vis {
+        height: 300px;
+        width: 300px;
+        border: 1px solid black;
+        overflow: auto;
+    }
+
+    /* right part of the efotrait info panel that display a set of buttons */
+    #panel-links {
+        text-align:right
+    }
+
+
+
+
 
 </style>
 
