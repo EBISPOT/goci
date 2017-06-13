@@ -41,6 +41,7 @@ _cleanDataTag = function(tagID){
 
 /**
  * get data asyn with promise
+ * @return Promise
  */
 function promiseGet(url, params,debug) {
     if(debug == undefined){
@@ -94,27 +95,36 @@ function promiseGet(url, params,debug) {
     });
 }
 
+
+
+
+
 /**
  * Load ontology info from ols api.
  * @return Promise
  */
 getOntologyInfo=function() {
+
+    var _methods = {
+        parseOntologies : function(response){
+            var ontologyInfo = {};
+            response._embedded.ontologies.forEach(function(d) {
+                ontologyInfo[d.ontologyId] = d;
+            })
+            return ontologyInfo;
+        }
+
+
+    }
+
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
     if (dataPromise == undefined) {
         //lazy load
         console.log('Loading Ontology Info...')
         dataPromise = promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',
-                                 {'size': 99999}).then(JSON.parse).then(function(response) {
-            var ontologyInfo = {};
-            response._embedded.ontologies.forEach(function(d) {
-                ontologyInfo[d.ontologyId] = d;
-            })
-
-            return ontologyInfo;
-        }).catch(function(err) {
+                                 {'size': 99999}).then(JSON.parse).then(_methods.parseOntologies).catch(function(err) {
             console.error('Error when loading ontology info! ' + err);
         })
-
         //add to tag
         $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
     }else{
@@ -124,7 +134,9 @@ getOntologyInfo=function() {
 }
 
 /**
- *
+ * Mapping for ontology name and abbrvation
+ * For example, 'ordo' is used for Orphanet
+ * This is needed to workout the ols link
  * @return Promise
  */
 getPrefix2OntologyId=function(){
@@ -329,7 +341,84 @@ getHierarchicalDescendants = function(efoid){
         })
     }
 
+    // var t0 = performance.now();
+    // var t1 ;
+    // queryDescendant2('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants?size=1000')
+    // queryDescendant3('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants?size=1000')
+    queryDescendant2 = function(url,result,t0){
+        if(!t0)
+            t0=performance.now();
+        return promiseGet(url).then(JSON.parse).then(function(response) {
+            if(!result){
+                result = []
+            }
+            result = result.concat(response._embedded.terms);
+            console.log(result.length + " terms so far");
 
+            if(response._links.next != undefined){
+                console.log("There is more.");
+                var next = response._links.next.href;
+                console.log(response.page.number + ' done!')
+                return queryDescendant2(next, result, t0);
+            }
+
+            return result
+        }).then(function(result){
+            t1 = performance.now();
+            console.log("Call to 2 took " + (t1 - t0) + " milliseconds.")
+            return result;
+        })
+    }
+    // queryDescendant2('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants?size=5').then(function(result){
+    //     var terms = {};
+    //     result.map(function(d) {
+    //         terms[d.short_form] = d;
+    //     })
+    //     var tmp = {}
+    //     tmp['a'] = terms;
+    //     return tmp;
+    // })
+
+    queryDescendant3 = function(url){
+        var t0 = performance.now();
+        var all = []
+        return promiseGet(url).then(JSON.parse).then(function(response) {
+            var totalPages = response.page.totalPages;
+            var totalElements = response.page.totalElements;
+
+            var loop = $.map($(Array(totalPages)), function(val, i) {
+                return url + '&page=' + i;
+            })
+
+            return Promise.all(loop.map(function(url) {
+                // console.log('querying ' + url);
+                return promiseGet(url).then(JSON.parse).then(function(data) {
+                    console.log(data.page.number + ' done!');
+                    return data
+                })
+            }))
+        }).then(function(results){
+            console.log('all done');
+            results.map(function(result){
+                all = all.concat(result._embedded.terms);
+            })
+            return all;
+        }).then(function(all){
+            var t1 = performance.now();
+            console.log("Call to 3 took " + (t1 - t0) + " milliseconds.")
+
+            var terms = {};
+            all.map(function(d) {
+                terms[d.short_form] = d;
+            })
+            var tmp = {}
+            tmp['a'] = terms;
+            return tmp;
+
+
+            return tmp;
+        })
+    }
 
     var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
 
@@ -350,6 +439,8 @@ getHierarchicalDescendants = function(efoid){
         }
     })
 }
+
+
 
 //return a data promise containing all available efos. lazy load.
 getAvailableEFOs=function(){
