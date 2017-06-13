@@ -21,23 +21,27 @@ new Clipboard('#sharable_link_btn', {
 });
 
 
+/**
+ * debug function
+ */
 _peak = function() {
     console.log($(global_efo_info_tag_id).data());
-    console.log($(global_efo_selected_tag_id).data());
 }
 
+/**
+ * debug function
+ */
 _cleanDataTag = function(tagID){
-    console.debug('before clean...')
-    _peak();
     tagID=tagID || global_efo_info_tag_id;
     Object.keys($(tagID).data()).forEach(function(i){
         $(tagID).removeData(i)
     })
-    console.debug('after clean...')
-    _peak()
 }
 
-//get data asyn with promise
+
+/**
+ * get data asyn with promise
+ */
 function promiseGet(url, params,debug) {
     if(debug == undefined){
         debug = false
@@ -90,7 +94,10 @@ function promiseGet(url, params,debug) {
     });
 }
 
-//load ontology info
+/**
+ * Load ontology info from ols api.
+ * @return Promise
+ */
 getOntologyInfo=function() {
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
     if (dataPromise == undefined) {
@@ -116,6 +123,10 @@ getOntologyInfo=function() {
     return dataPromise;
 }
 
+/**
+ *
+ * @return Promise
+ */
 getPrefix2OntologyId=function(){
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
     if (dataPromise == undefined) {

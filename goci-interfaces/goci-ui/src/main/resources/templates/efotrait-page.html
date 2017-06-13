@@ -80,6 +80,7 @@
         <li id="included" th:text="*{included}">Included</li>
     </ul>
 </div>
+<!-- this is the main tag for all the cache data. -->
 <div style="display:none" id="efo-info"></div>
 
 <!--readme-->
@@ -214,7 +215,7 @@
                         <!--label-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Label</dt>
+                                <dt>Label</dt>
                                 <dd id="efotrait-label">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -225,7 +226,7 @@
                         <!--id-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Trait EFO id</dt>
+                                <dt>Trait EFO id</dt>
                                 <dd id="efotrait-id">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -236,7 +237,7 @@
                         <!--synonym-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Synonym(s)</dt>
+                                <dt>Synonym(s)</dt>
                                 <dd id="efotrait-synonym">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -247,7 +248,7 @@
                         <!--description-->
                         <div class="clearfix col-lg-8">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Description</dt>
+                                <dt>Description</dt>
                                 <dd id="efotrait-description">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -259,7 +260,7 @@
 
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">OXO</dt>
+                                <dt>OXO</dt>
                                 <dd>
                                     <div id="btn-oxo-expand">
                                         <!--<a class="btn btn-default" id="btn-toggle-oxo"-->
@@ -283,24 +284,8 @@
                                     </div>
                                 </dd>
                             </dl>
-                            <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
-                            <!--style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Description-->
-                            <!--</div>-->
-                            <!--<div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="efotrait-description">-</div>-->
                         </div>
 
-                        <!--&lt;!&ndash;oxo graph&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="clearfix collapse col-lg-2 col-md-2 col-sm-2 col-xs-2" id="oxo-graph">&ndash;&gt;-->
-                        <!--<div class="clearfix col-lg-3 col-md-3 col-sm-3 col-xs-3" id="oxo-graph">-->
-                            <!--<div  class="panel-body">-->
-                                <!--<div id="oxo-div" >-->
-                                    <!--<h4>oxo:</h4>-->
-                                    <!--<div>-->
-                                        <!--<div id="oxo-vis" style="height:300px; width:300px; border:1px solid black;overflow: auto;"></div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
                     </div>
 
 
@@ -342,7 +327,7 @@
                         <!--title-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Title</dt>
+                                <dt>Title</dt>
                                 <dd id="efotrait-highlighted-study-title">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -353,7 +338,7 @@
                         <!--author-->
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Author</dt>
+                                <dt>Author</dt>
                                 <dd id="efotrait-highlighted-study-author">-</dd>
                             </dl>
                             <!--<div class="col-lg-4 col-md-5 col-sm-5 col-xs-5"-->
@@ -375,7 +360,7 @@
                         <!--Abstract-->
                         <div class="clearfix col-lg-12">
                             <dl class="dl-horizontal">
-                                <dt style="width: 100px;">Abstract</dt>
+                                <dt>Abstract</dt>
                                 <dd id="efotrait-highlighted-study-abstract">-</dd>
                             </dl>
                         </div>
@@ -387,7 +372,7 @@
 
                 <!--first reported-->
                 <div id="efotrait-summary">
-                    <span class="glyphicon glyphicon-info-sign" style="padding-right:2px;margin-left:10px"></span>
+                    <span class="glyphicon glyphicon-info-sign" id="efotrait-summary-icon"></span>
                     <span id="efotrait-summary-content"></span>
                 </div>
 
@@ -396,7 +381,7 @@
         </div>
 
 
-        <div class="row search-results-container" id="search-results-container" style="display: block">
+        <div class="row search-results-container" id="search-results-container">
             <!--filter side box-->
             <div class="col-md-5 tight-to-side" id="filter-bar">
                 <div class="panel panel-default">
@@ -441,7 +426,7 @@
                             </div>
 
                             <div class="col-lg-1">
-                                <input type="text" id="sharable_link" class="col-xs-6" style="display:none" th:readonly="readonly"></input>
+                                <input type="text" id="sharable_link" class="col-xs-6" th:readonly="readonly"></input>
                                 <div>
                                         <button id="sharable_link_btn"
                                                 type="button"
@@ -549,7 +534,7 @@
                                 <!--tree-->
                                 <div id="ols-tree-div" class="tab-pane fade">
                                     <h4>Related in EFO hierarchy:</h4>
-                                    <div id="term-tree" style="height:100%; width:100%; border:1px solid black;overflow: auto;"></div>
+                                    <div id="term-tree"></div>
                                 </div>
                                 <!--ols-graph-->
                                 <div id="ols-graph-div" class="tab-pane fade">
@@ -585,25 +570,19 @@
                     <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
                         <span style="margin-right:10px;font-weight:bold">Available data:</span>
                         <button type="button"
-                                class="btn btn-default"
-                                style="margin-right:10px;font-weight:bold"
+                                class="btn btn-default available-data-btn"
                                 onclick="toggle_and_scroll('#locus_panel')">
-                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats"
-                                                                         style="color:#398A96;margin-left:10px"></span>
+                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
                 </button>
                         <button type="button"
-                                class="btn btn-default"
-                                style="margin-right:10px;font-weight:bold"
+                                class="btn btn-default available-data-btn"
                                 onclick="toggle_and_scroll('#association_panel')">
-                    <span class="association_label">Associations</span><span class="association_count badge"
-                                                                             style="background-color: #398A96;margin-left:10px"></span>
+                    <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
                 </button>
                         <button type="button"
-                                class="btn btn-default"
-                                style="margin-right:10px;font-weight:bold"
+                                class="btn btn-default available-data-btn"
                                 onclick="toggle_and_scroll('#study_panel')">
-                    <span class="study_label">Studies</span><span class="study_count badge"
-                                                                  style="background-color: #398A96;margin-left:10px"></span>
+                    <span class="study_label">Studies</span><span class="study_count badge available-data-btn-badge"></span>
                 </button>
                         <!--<button type="button" class="btn btn-default" style="margin-right:10px;font-weight:bold" onclick="toggle_and_scroll('#diseasetrait_panel')">-->
                         <!--<span class="diseasetrait_label">Traits</span><span class="diseasetrait_count badge" style="background-color: #398A96;margin-left:10px"></span>-->
@@ -617,7 +596,7 @@
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
                                 <span class="locus_label">Manhattan plot (plot of catalog associations for selected trait)</span>
-                                <span class="glyphicon glyphicon-stats" style="color:#398A96;margin-left:10px"></span>
+                                <span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
                             </h3>
                             <span class="pull-right">
                         <span class="clickable panel-collapsed"
@@ -631,7 +610,7 @@
                             <!--<div class="panel-body" style="display:initial">-->
                             <!-- locus plot -->
                             <!--<div id="plot" style=" width: 1000px; height: 900px;"></div>-->
-                            <div id="plot" style=" width: 100%; height: 100%;"></div>
+                            <div id="plot"></div>
                         </div>
                     </div>
                 </div>
@@ -641,8 +620,7 @@
                     <div id="association_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
-                                <span class="association_label">Associations</span><span class="association_count badge"
-                                                                                         style="background-color: #398A96;margin-left:10px"></span>
+                                <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
                             </h3>
                             <span class="pull-right">
                         <!--<button type="button" class="btn btn-default btn-xs" id="download_data">-->
@@ -658,8 +636,6 @@
                         </div>
 
                         <div class="panel-body" style="display:none">
-
-
                             <table id="association-table" class="table table-striped borderless "
                                    data-flat="true"
                                    data-show-export="true"
@@ -667,73 +643,6 @@
                                    data-show-columns="true"
                                    data-show-multi-sort="true">
                             </table>
-                            <!--<table id="association-table" class="table table-striped">-->
-                                <!--<thead id="association-table-header">-->
-                                <!--<tr>-->
-                                    <!--<th style="width: 10%" id="strongestAllele">Risk allele-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Variant most strongly associated with trait + risk/effect allele. This may also be haplotype or variant x variant interaction."></span>-->
-                                                                                <!--&lt;!&ndash;<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>&ndash;&gt;-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 8%" id="riskFrequency">RAF-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Risk/effect allele frequency in controls"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 12%" id="pValue">p-value-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="p-value for most strongly associated variant, along with any information describing context of p-value"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 6%" id="orPerCopyNum">OR-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Odds ratio associated with variant"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 14%" id="orType">Beta-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Beta-coefficient and unit increase/decrease associated with variant"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 6%">CI-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="95% confidence interval for OR or beta"></span>-->
-                                    <!--</th>-->
-
-                                    <!--<th style="width: 8%">Reported gene(s)-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Gene(s) reported by author"></span>-->
-                                    <!--</th>-->
-
-                                    <!--<th style="width: 13%" id="traitName_s-alt">Reported trait-->
-                                        <!--<span class="glyphicon glyphicon-question-sign"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Description of disease/trait analysed in the study"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 13%" id="traitName-alt">Mapped trait-->
-                                        <!--<span class="glyphicon glyphicon-question-sign"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Description of disease/trait mapped to the study"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 15%" id="author_s-alt" colspan="2">Study-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="First author and year of publication, along with link to publication in Europe PubMed Central."></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody id="association-table-body"></tbody>-->
-                            <!--</table>-->
                         </div>
                     </div>
                 </div>
@@ -743,8 +652,7 @@
                     <div id="study_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
-                                <span class="study_label">Studies</span><span class="study_count badge"
-                                                                              style="background-color: #398A96;margin-left:10px"></span>
+                                <span class="study_label">Studies</span><span class="study_count badge available-data-btn-badge"></span>
                             </h3>
 
                             <span class="pull-right clickable panel-collapsed"
@@ -761,55 +669,6 @@
                                    data-show-columns="true"
                                    data-show-multi-sort="true">
                             </table>
-                            <!--<table id="study-table" class="table table-striped">-->
-                                <!--<thead id="study-table-header">-->
-                                <!--<tr>-->
-                                    <!--<th style="width: 12%" id="author_s">Author-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="First author, along with link to publication in Europe PubMed Central."></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 10%" id="publicationDate">Date-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Publication date (YYYY-MM-DD)"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 12%" id="publication">Journal-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Abbreviated journal name"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 30%" id="title">Title-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Title of paper"></span>-->
-                                                                      <!--&lt;!&ndash;<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>&ndash;&gt;-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 12%" id="sample_i">Initial sample description-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Description of the initial sample analysed in the study"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 12%" id="sample_r">Replication sample description-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="Description of the replication sample analysed in the study"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                    <!--<th style="width: 12%" id="ancestral_gp">Ancestral groups-->
-                                        <!--<span class="glyphicon glyphicon-question-sign context-help"-->
-                                              <!--data-toggle="tooltip"-->
-                                              <!--data-original-title="List of the ancestral groups analysed in the study"></span>-->
-                                        <!--<span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>-->
-                                    <!--</th>-->
-                                <!--</tr>-->
-                                <!--</thead>-->
-                                <!--<tbody id="study-table-body"></tbody>-->
-                            <!--</table>-->
                         </div>
                     </div>
                 </div>
@@ -1263,7 +1122,13 @@
             var container = $(tagID);
 
             //checkbox idicate require descendant
-            var cb = $('<input />', { id: 'selected_cb_' + efoid , type: 'checkbox',class:"cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1", value:efoid}).css({'float':'left','margin-top':'15px'}).appendTo(container);
+            var cb = $('<input />',
+                       {
+                           id: 'selected_cb_' + efoid,
+                           type: 'checkbox',
+                           class: "cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1",
+                           value: efoid
+                       }).appendTo(container);
             if (isDescendantRequired(efoid)){
                 cb.attr('checked','checked')
             }
@@ -1291,14 +1156,12 @@
 
             //cart item
             var item = $('<a />', {
-                class: 'list-group-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
-            }).css({
-                       'overflow': 'hidden', 'white-space': 'nowrap;', 'text-overflow': 'ellipsis', 'color' :'black'
-                   }).appendTo(container);
+                class: 'list-group-item cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
+            }).appendTo(container);
 
 
-            $('<span />', { class: 'badge', text: colourLabelInit, title:colourLabel})
-                    .css({'background-color' :colour,'margin-right': '0.3em','color':'black', 'float': 'left', 'width': '5%'})
+            $('<span />', { class: 'badge cart-item-category-badge', text: colourLabelInit, title:colourLabel})
+                    .css({'background-color' :colour})
                     .appendTo(item);
 
 
@@ -1314,8 +1177,8 @@
             // This will add badge at the end of each cart item, showing the number of association/study linked.
             // This will be init probably before the association/study data is available, thus generating badges with
             // '-' as value at the beginning. The badge will be update when the data is available.
-            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge', text: '-' , title:'Number of study'}).css({'color':'white'}).appendTo(item);
-            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge', text: '-' , title:'Number of association'}).css({'color':'white'}).appendTo(item);
+            $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge cart-item-number-badge', text: '-' , title:'Number of study'}).appendTo(item);
+            $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge cart-item-number-badge', text: '-' , title:'Number of association'}).appendTo(item);
 
 
             //to highlight associations only for this efo term
@@ -1779,40 +1642,108 @@
 
     /* cart item checkbox, for including descendant */
     .cart-item-cb  {
-        transform:scale(2, 2);
-        margin-top: 15px;
+        float: left !important;
+        transform:scale(2, 2) !important;
+        margin-top: 15px !important;
     }
 
     /* selected term cart */
     #cart {
-        max-height: 300px;
-        overflow-y:scroll;
+        max-height: 300px !important;
+        overflow-y:scroll !important;
     }
 
     /* check box to select all descendants */
     #cb-query-include-descendants {
-        transform:scale(2, 2);
+        transform:scale(2, 2) !important;
     }
 
     /* when user select an item fron cart, highlight it */
     .list-group-item.highlight {
-        background-color: #ffe6f0
+        background-color: #ffe6f0 !important;
     }
 
     /* oxo graph */
     #oxo-vis {
-        height: 300px;
-        width: 300px;
-        border: 1px solid black;
-        overflow: auto;
+        height: 300px !important;
+        width: 300px !important;
+        border: 1px solid black !important;
+        overflow: auto !important;
     }
 
     /* right part of the efotrait info panel that display a set of buttons */
     #panel-links {
-        text-align:right
+        text-align:right !important;
+    }
+
+    /* top panel key-value display*/
+    dt {
+        width: 100px !important;
+    }
+
+    /* Display the summary information at the bottn of the efo info panel box. */
+    #efotrait-summary-icon {
+        padding-right: 2px !important;
+        margin-left: 10px !important;
+    }
+
+    /* by default, the link is hide so the user cannot change it.*/
+    #sharable_link {
+        display:none !important;
+    }
+
+    /* ols tree */
+    #term-tree {
+        height: 100% !important;
+        width: 100% !important;
+        border: 1px solid black !important;
+        overflow: auto !important;
+    }
+
+    /* button showing the locusplot / association table /study table. */
+    .available-data-btn {
+        margin-right: 10px !important;
+        font-weight: bold !important;
+    }
+
+    /* available data button badge showing the number of association/study */
+    .available-data-btn-badge{
+        background-color: #398A96 !important;
+        margin-left: 10px !important;
+    }
+
+    /* locus zoom title badge */
+    .manhattan-plot-badge{
+        color: #398A96 !important;
+        margin-left: 10px !important;
     }
 
 
+    /* locus zoom plot */
+    #plot{
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* select item in the cart */
+    .cart-item {
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        color: black !important;
+    }
+     /*disease category badge before the cart item */
+    .cart-item-category-badge {
+        margin-right: 0.3em !important;
+        color: black !important;
+        float: left !important;
+        width: 5% !important;
+    }
+
+    /* badge showing number of association/study for each cart item*/
+    .cart-item-number-badge {
+        color: white !important;
+    }
 
 
 
