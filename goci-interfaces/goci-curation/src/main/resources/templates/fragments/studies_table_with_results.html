@@ -44,15 +44,15 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md-1">User Requested
-            <div>
-                <a th:href="@{${uri}(sorttype=userrequestedsortasc)}"
-                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
-                <a th:href="@{${uri}(sorttype=userrequestedsortdesc)}"
-                   class="btn btn-default btn-xs"><span
-                        class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
-            </div>
-        </th>
+        <!--<th class="col-md-1">User Requested-->
+            <!--<div>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortasc)}"-->
+                   <!--class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortdesc)}"-->
+                   <!--class="btn btn-default btn-xs"><span-->
+                        <!--class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>-->
+            <!--</div>-->
+        <!--</th>-->
         <th class="col-md-1">Publication
             <div>
                 <a th:href="@{${uri}(sorttype=publicationsortasc)}"
@@ -150,7 +150,7 @@
             </div>
         </td>
 
-        <td th:text="${study.userRequested} ?: ''"></td>
+        <!--<td th:text="${study.userRequested} ?: ''"></td>-->
 
         <td th:text="${study.publication} ?: ''"></td>
 
