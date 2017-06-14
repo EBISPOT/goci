@@ -1,30 +1,28 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.curation.model.AssociationEventView;
-import uk.ac.ebi.spot.goci.curation.model.AssociationUploadErrorView;
-import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
-import uk.ac.ebi.spot.goci.curation.model.LastViewedAssociation;
-import uk.ac.ebi.spot.goci.curation.model.MappingDetails;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationInteractionForm;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
-import uk.ac.ebi.spot.goci.curation.service.*;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
+import uk.ac.ebi.spot.goci.curation.service.AssociationDeletionService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationDownloadService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationEventsViewService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationUploadService;
+import uk.ac.ebi.spot.goci.curation.service.AssociationValidationReportService;
+import uk.ac.ebi.spot.goci.curation.service.CheckEfoTermAssignmentService;
+import uk.ac.ebi.spot.goci.curation.service.CheckMappingService;
+import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.SnpAssociationTableViewService;
+import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -34,26 +32,6 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Created by emma on 11/07/2016.
@@ -218,11 +196,16 @@ public class AssociationControllerTest {
 
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
-                SECURE_USER);
-        when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(uploadErrorViews);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
+        Future<Boolean> f = mock(Future.class);
+
+        HashMap<String, Object> sessionattr = new HashMap<String, Object>();
+        sessionattr.put("fileName", file.getOriginalFilename());
+        sessionattr.put("fileErrors", uploadErrorViews);
+        sessionattr.put("future", f);
+
+        mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("fileName", file.getOriginalFilename()))
                 .andExpect(model().attribute("fileErrors", instanceOf(List.class)))
@@ -231,7 +214,6 @@ public class AssociationControllerTest {
                 .andExpect(view().name("error_pages/association_file_upload_error"));
 
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
-        verify(associationUploadService, times(1)).upload(file, STUDY, SECURE_USER);
     }
 
     @Test
@@ -247,11 +229,18 @@ public class AssociationControllerTest {
                 SECURE_USER);
         when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenReturn(Collections.EMPTY_LIST);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
-                .andExpect(status().is3xxRedirection())
+        MvcResult mvcResult = this.mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
+                .andExpect(request().asyncStarted())
+                .andExpect(request().asyncResult("association_upload_progress"))
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("study"))
-                .andExpect(view().name("redirect:/studies/1234/associations"));
+                .andExpect(forwardedUrl("association_upload_progress"));
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
+
     }
 
     @Test
@@ -261,16 +250,23 @@ public class AssociationControllerTest {
         MockMultipartFile file =
                 new MockMultipartFile("file", "filename.txt", "text/plain", "TEST".getBytes());
 
+
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
-                SECURE_USER);
-        when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenThrow(EnsemblMappingException.class);
 
-        mockMvc.perform(fileUpload("/studies/1234/associations/upload").file(file).param("studyId", "1234"))
-                .andExpect(status().isOk())
+        Future<Boolean> f = mock(Future.class);
+
+        HashMap<String, Object> sessionattr = new HashMap<String, Object>();
+        sessionattr.put("fileName", file.getOriginalFilename());
+        sessionattr.put("ensemblMappingFailure", true);
+        sessionattr.put("exception", new EnsemblMappingException());
+        sessionattr.put("future", f);
+
+        mockMvc.perform(get("/studies/1234/associations/getUploadResults").sessionAttrs(sessionattr).param("studyId", "1234"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("study"))
-                .andExpect(view().name("ensembl_mapping_failure"));
+                .andExpect(forwardedUrl("ensembl_mapping_failure"));
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
     }
 
@@ -568,7 +564,7 @@ public class AssociationControllerTest {
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
         verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
-                Matchers.anyString());
+                                                                                      Matchers.anyString());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(currentUserDetailsService, times(1)).getUserFromRequest(Matchers.any(HttpServletRequest.class));
