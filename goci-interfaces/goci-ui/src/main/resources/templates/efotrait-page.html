@@ -1607,129 +1607,12 @@
 
     //<![CDATA[
 
-    var RESTFUL_Response = {
-        hasPage : function(response){
-            return response.page != undefined;
-        },
-        hasNext : function(response){
-            return response._links.next!= undefined;
-        },
-        pageNumber : function(response){
-            return response.page.number;
-        },
-        pageSize : function(response){
-            return response.page.size;
-        },
-        totalElements : function(response){
-            return response.page.totalElements;
-        },
-        totalPages :  function(response){
-            return response.page.totalPages;
-        },
-        _embedded : function(response){
-            return response._embedded;
-
-        }
-
-    }
 
 
 
-    /**
-     * get data asyn with promise, recursively querying if the response has 'next' link.
-     * The return Promise contains a hash with keys coresponding to the _embedded keys.
-     * @return Promise
-     * @example promiseGetRESTFUL('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants',{'size':5})
-     * @example promiseGetRESTFUL('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants',{'size':1000})
-     *
-     */
-    function promiseGetRESTFUL(url,params){
-        var _method = {
-            query : function(url,params,result){
-                return promiseGet(url,params).then(JSON.parse).then(function(response) {
-                    if(!result){
-                        result = []
-                    }
-                    result = result.concat(RESTFUL_Response._embedded(response));
-                    console.log(RESTFUL_Response.pageNumber(response)+1 + '/' + RESTFUL_Response.totalPages(response) + ' done!')
-                    if(RESTFUL_Response.hasNext(response)){
-                        var next = response._links.next.href;
-                        //no need to parse params, this already included in the 'next' url
-                        return _method.query(next,undefined,result);
-                    }
-                    return result
-                })
-            }
-        }
 
 
-        return _method.query(url,params).then(function(result){
-            var resultArray = {};
-            result.map(function(r){
-                //all keys in _embedded
-                var keys = Object.keys(r);
-                keys.map(function(k){
-                    if(!resultArray[k]){
-                        resultArray[k] = [];
-                    }
-                    resultArray[k] = resultArray[k].concat(r[k])
-                })
-            })
-            return resultArray;
-        })
-    }
 
-    /**
-     * get data asyn with promise, workout the pages and query them at the same time.
-     * The return Promise contains a hash with keys coresponding to the _embedded keys.
-     * @return Promise
-     * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants',{'size':5})
-     * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants',{'size':1000})
-     *
-     */
-    function promiseGetRESTFUL_fast(url,params){
-        if(params == undefined){
-            params = {};
-        }
-        return promiseGet(url,params).then(JSON.parse).then(function(response) {
-            var totalPages = RESTFUL_Response.totalPages(response)
-            var totalElements = RESTFUL_Response.totalElements(response)
-            if(params.size == undefined){
-                params.size = RESTFUL_Response.pageSize(response);
-            }
-
-            if(RESTFUL_Response.hasPage(response)){
-                var allurls = $.map($(Array(totalPages)), function(val, i) {
-                    return url + '?page=' + i  + '&size=' +params.size;
-                })
-                return Promise.all(allurls.map(function(url) {
-                    // console.log('querying ' + url);
-                    return promiseGet(url).then(JSON.parse).then(function(response) {
-                        console.log(RESTFUL_Response.pageNumber(response) + ' done!');
-                        return RESTFUL_Response._embedded(response);
-                    })
-                }))
-            }else{
-                return response.RESTFUL_Response._embedded(response);
-            }
-        }).then(function(result){
-            console.log('all done');
-            var resultArray = {};
-            result.map(function(r){
-                //all keys in _embedded
-                var keys = Object.keys(r);
-                keys.map(function(k){
-                    if(!resultArray[k]){
-                        resultArray[k] = [];
-                    }
-                    resultArray[k] = resultArray[k].concat(r[k])
-                })
-            })
-            return resultArray;
-        }).then(function(resultArray){
-            return resultArray;
-        })
-    }
 
 
 

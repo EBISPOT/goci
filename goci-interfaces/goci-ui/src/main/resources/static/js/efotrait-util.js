@@ -40,8 +40,40 @@ _cleanDataTag = function(tagID){
 
 
 /**
+ * Helper functions for parsing HATEOAS RESTFUL response
+ */
+var RESTFUL_Response = {
+    hasPage : function(response){
+        return response.page != undefined;
+    },
+    hasNext : function(response){
+        return response._links.next!= undefined;
+    },
+    pageNumber : function(response){
+        return response.page.number;
+    },
+    pageSize : function(response){
+        return response.page.size;
+    },
+    totalElements : function(response){
+        return response.page.totalElements;
+    },
+    totalPages :  function(response){
+        return response.page.totalPages;
+    },
+    _embedded : function(response){
+        return response._embedded;
+
+    }
+}
+
+
+/**
  * get data asyn with promise
- * @return Promise
+ * @param {String} url
+ * @param {hash} params
+ * @param {Boolean} debug
+ * @returns {Promise}
  */
 function promiseGet(url, params,debug) {
     if(debug == undefined){
@@ -96,37 +128,129 @@ function promiseGet(url, params,debug) {
 }
 
 
+/**
+ * get data asyn with promise, recursively querying if the response has 'next' link.
+ * The return Promise contains a hash with keys coresponding to the _embedded keys.
+ * @param {String} url
+ * @param {hash} params
+ * @returns {Promise}
+ * @example promiseGetRESTFUL_HATEOAS('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants',{'size':5})
+ * @example promiseGetRESTFUL_HATEOAS('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants',{'size':1000})
+ *
+ */
+function promiseGetRESTFUL_HATEOAS(url,params){
 
+    var query = function(url,params,result){
+        return promiseGet(url,params).then(JSON.parse).then(function(response) {
+            if(!result){
+                result = []
+            }
+            result = result.concat(RESTFUL_Response._embedded(response));
+            console.log(RESTFUL_Response.pageNumber(response)+1 + '/' + RESTFUL_Response.totalPages(response) + ' done!')
+            if(RESTFUL_Response.hasNext(response)){
+                var next = response._links.next.href;
+                //no need to parse params, this already included in the 'next' url
+                return query(next,undefined,result);
+            }
+            return result
+        })
+    }
+
+
+
+    return query(url,params).then(function(result){
+        var resultArray = {};
+        result.map(function(r){
+            //all keys in _embedded
+            var keys = Object.keys(r);
+            keys.map(function(k){
+                if(!resultArray[k]){
+                    resultArray[k] = [];
+                }
+                resultArray[k] = resultArray[k].concat(r[k])
+            })
+        })
+        return resultArray;
+    })
+}
+
+/**
+ * get data asyn with promise, workout the pages and query them at the same time.
+ * The return Promise contains a hash with keys coresponding to the _embedded keys.
+ * @param {String} url
+ * @param {hash} params
+ * @returns {Promise}
+ * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants',{'size':5})
+ * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants',{'size':1000})
+ *
+ */
+function promiseGetRESTFUL(url,params){
+    if(params == undefined){
+        params = {};
+    }
+    return promiseGet(url,params).then(JSON.parse).then(function(response) {
+        var totalPages = RESTFUL_Response.totalPages(response)
+        var totalElements = RESTFUL_Response.totalElements(response)
+        if(params.size == undefined){
+            params.size = RESTFUL_Response.pageSize(response);
+        }
+
+        if(RESTFUL_Response.hasPage(response)){
+            var allurls = $.map($(Array(totalPages)), function(val, i) {
+                return url + '?page=' + i  + '&size=' +params.size;
+            })
+            return Promise.all(allurls.map(function(url) {
+                // console.log('querying ' + url);
+                return promiseGet(url).then(JSON.parse).then(function(response) {
+                    console.log(RESTFUL_Response.pageNumber(response) + ' done!');
+                    return RESTFUL_Response._embedded(response);
+                })
+            }))
+        }else{
+            return response.RESTFUL_Response._embedded(response);
+        }
+    }).then(function(result){
+        console.log('all done');
+        var resultArray = {};
+        result.map(function(r){
+            //all keys in _embedded
+            var keys = Object.keys(r);
+            keys.map(function(k){
+                if(!resultArray[k]){
+                    resultArray[k] = [];
+                }
+                resultArray[k] = resultArray[k].concat(r[k])
+            })
+        })
+        return resultArray;
+    }).then(function(resultArray){
+        return resultArray;
+    })
+}
 
 
 /**
  * Load ontology info from ols api.
- * @return Promise
+ * @returns {Promise}
  */
 getOntologyInfo=function() {
-
-    var _methods = {
-        parseOntologies : function(response){
-            var ontologyInfo = {};
-            response._embedded.ontologies.forEach(function(d) {
-                ontologyInfo[d.ontologyId] = d;
-            })
-            return ontologyInfo;
-        }
-
-
+    var _parseOntologies = function(response){
+        var ontologyInfo = {};
+        response.ontologies.forEach(function(d) {
+            ontologyInfo[d.ontologyId] = d;
+        })
+        return ontologyInfo;
     }
 
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
     if (dataPromise == undefined) {
         //lazy load
         console.log('Loading Ontology Info...')
-        // xintodo refactor
-        dataPromise = promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',
-                                 {'size': 99999}).then(JSON.parse).then(_methods.parseOntologies).catch(function(err) {
+        dataPromise = promiseGetRESTFUL('http://www.ebi.ac.uk/ols/api/ontologies',
+                                        {'size': 1000}).then(_parseOntologies).catch(function(err) {
             console.error('Error when loading ontology info! ' + err);
         })
-        //add to tag
+        //cache data
         $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
     }else{
         console.debug('Loading Ontology Info from cache.')
@@ -138,7 +262,7 @@ getOntologyInfo=function() {
  * Mapping for ontology name and abbrvation
  * For example, 'ordo' is used for Orphanet
  * This is needed to workout the ols link
- * @return Promise
+ * @returns {Promise}
  */
 getPrefix2OntologyId=function(){
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
@@ -194,8 +318,19 @@ getOntologyByShortForm = function(shortForm){
     })
 }
 
+
+searchOLS = function(keyword,params){
+    params = $.extend({}, params, {'q':keyword});
+    return promiseGet(global_ols_seach_api,params).then(JSON.parse).then(function(data){
+        console.log("data returned by ols search:");
+        console.log(data);
+        return data;
+    })
+
+}
+
 getRelatedTerms = function(efoid){
-    queryRelatedTerms = function(efoid){
+    var queryRelatedTerms = function(efoid){
         console.log('Loading related terms...')
         return searchOLS(efoid,{
             'ontology': 'efo',
@@ -233,7 +368,7 @@ getRelatedTerms = function(efoid){
 }
 
 getColourForEFO = function(efoid) {
-    queryColour = function(efoid){
+    var queryColour = function(efoid){
         console.log('Loading Colour...')
         return promiseGet(global_color_url + efoid).then(JSON.parse).then(function(response) {
             var tmp = {};
@@ -263,7 +398,7 @@ getColourForEFO = function(efoid) {
 }
 
 getEFOInfo = function(efoid){
-    queryEFOInfo = function(efoid){
+    var queryEFOInfo = function(efoid){
         return getOLSLinkAPI(efoid).then(function(url){
             return promiseGet(url).then(JSON.parse).then(function(response) {
                 var tmp = {};
@@ -314,136 +449,13 @@ getOLSLink = function(efoid){
     })
 }
 
-getHierarchicalDescendants = function(efoid){
-    queryDescendant = function(efoid){
-        var efoinfo = getEFOInfo(efoid)
-        return efoinfo.then(function(response){
-            if (response.has_children) {
-                //xintodo size >=1000 is set to 1000 by ols, ask?
-                return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
-                                  global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
-                    var terms = {};
-                    response._embedded.terms.forEach(function(d, i) {
-                        terms[d.short_form] = d;
-                    })
-                    var tmp = {}
-                    tmp[efoid] = terms;
-                    return tmp;
-                })
-            }
-            else {
-                console.log('no descendant found for ' + efoid);
-                return new Promise(function(resolve, reject) {
-                    var tmp = {};
-                    tmp[efoid] = {};
-                    resolve(tmp);
-                })
-            }
-        })
-    }
-
-    // var t0 = performance.now();
-    // var t1 ;
-    // queryDescendant2('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants?size=1000')
-    // queryDescendant3('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants?size=1000')
-    queryDescendant2 = function(url,result,t0){
-        if(!t0)
-            t0=performance.now();
-        return promiseGet(url).then(JSON.parse).then(function(response) {
-            if(!result){
-                result = []
-            }
-            result = result.concat(response._embedded.terms);
-            console.log(result.length + " terms so far");
-
-            if(response._links.next != undefined){
-                console.log("There is more.");
-                var next = response._links.next.href;
-                console.log(response.page.number + ' done!')
-                return queryDescendant2(next, result, t0);
-            }
-
-            return result
-        }).then(function(result){
-            t1 = performance.now();
-            console.log("Call to 2 took " + (t1 - t0) + " milliseconds.")
-            return result;
-        })
-    }
-    // queryDescendant2('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants?size=5').then(function(result){
-    //     var terms = {};
-    //     result.map(function(d) {
-    //         terms[d.short_form] = d;
-    //     })
-    //     var tmp = {}
-    //     tmp['a'] = terms;
-    //     return tmp;
-    // })
-
-    queryDescendant3 = function(url){
-        var t0 = performance.now();
-        var all = []
-        return promiseGet(url).then(JSON.parse).then(function(response) {
-            var totalPages = response.page.totalPages;
-            var totalElements = response.page.totalElements;
-
-            var loop = $.map($(Array(totalPages)), function(val, i) {
-                return url + '&page=' + i;
-            })
-
-            return Promise.all(loop.map(function(url) {
-                // console.log('querying ' + url);
-                return promiseGet(url).then(JSON.parse).then(function(data) {
-                    console.log(data.page.number + ' done!');
-                    return data
-                })
-            }))
-        }).then(function(results){
-            console.log('all done');
-            results.map(function(result){
-                all = all.concat(result._embedded.terms);
-            })
-            return all;
-        }).then(function(all){
-            var t1 = performance.now();
-            console.log("Call to 3 took " + (t1 - t0) + " milliseconds.")
-
-            var terms = {};
-            all.map(function(d) {
-                terms[d.short_form] = d;
-            })
-            var tmp = {}
-            tmp['a'] = terms;
-            return tmp;
 
 
-            return tmp;
-        })
-    }
-
-    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
-
-    return dataPromise.then(function(data) {
-        if ($.inArray(efoid, Object.keys(data)) == -1) {
-            //efo descendant not currently loaded
-            console.log('Loading descendant for ' + efoid)
-            dataPromise = queryDescendant(efoid);
-            return dataPromise.then(function(data){
-                //add to tag
-                addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoDecendants');
-                return data[efoid];
-            })
-        }else {
-            //efo colour is has been loaded perviously
-            console.debug('Loading descendant from cache for ' + efoid);
-            return data[efoid]
-        }
-    })
-}
-
-
-
-//return a data promise containing all available efos. lazy load.
+/**
+ * Query SOLR for all available efo traits.
+ * @return Promise
+ * @example http://localhost:8280/gwas/api/search/efotrait?&q=*:*&fq=resourcename:efotrait&group.limit=99999&fl=shortForm
+ */
 getAvailableEFOs=function(){
     var dataPromise = getDataFromTag(global_efo_info_tag_id,'availableEFOs');
     if(dataPromise == undefined){
@@ -451,9 +463,8 @@ getAvailableEFOs=function(){
         console.log('Loading all available EFOs in Gwas Catalog...')
         dataPromise =  promiseGet('/gwas/api/search/efotrait', {
             'q': '*:*',
-            'max': 9999,
             'fq': 'resourcename:efotrait',
-            'group.limit': 9999,
+            'group.limit': 99999,
             'fl' : 'shortForm'
         }).then(JSON.parse).then(function(data) {
             $.each(data.grouped.resourcename.groups, function(index, group) {
@@ -485,6 +496,16 @@ getAvailableEFOs=function(){
     return dataPromise;
 }
 
+/**
+ * Add a promise to a tag's data attribute. The data attribute contains a hash.
+ * If the hash key exist, the new promise data is merged to the old one.
+ * @param String tagID - the html tag used to store the data, with the '#'
+ * @param Promise promise - the promise, fullfilled or pending
+ * @param String key - the has key for Promise
+ * @param Boolean overwriteWarning - Default value is false. if true, print log to idicate overwritting.
+ * @return undefined
+ * @example addPromiseToTag('#efoInfo',promise,'key',false)
+ */
 addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
     overwriteWarning = overwriteWarning || false;
 
@@ -519,6 +540,14 @@ addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
     })
 }
 
+/**
+ * query a promise from a tag's data attribute with a key. The data attribute contains a hash.
+ * If the hash key exist, the promise is returned, otherwise, a new empty resolved promise is returned.
+ * @param String tagID - the html tag used to store the data, with the '#'
+ * @param String key - the has key for promise
+ * @return Promise
+ * @example getPromiseFromTag('#efoInfo','key')
+ */
 getPromiseFromTag = function(tagID,key){
     var dataPromise =  getDataFromTag(tagID,key)
     if (dataPromise == undefined) {
@@ -529,6 +558,16 @@ getPromiseFromTag = function(tagID,key){
     return dataPromise;
 }
 
+/**
+ * Add user hash data to a tag's data attribute. The data attribute contains a hash.
+ * If the hash key exist, the user hash data is merged to the existing one.
+ * @param String tagID - the html tag used to store the data, with the '#'
+ * @param {} hash - an hash
+ * @param String key - the has key for Promise
+ * @param Boolean overwriteWarning - Default value is false. if true, print log to idicate overwritting.
+ * @return undefined
+ * @example addDataToTag('#efoInfo',{'name':'xin'},'key',false)
+ */
 addDataToTag = function(tagID, hash, key, overwriteWarning) {
     var old = $(tagID).data(key) || {};
     overwriteWarning = overwriteWarning || false;
@@ -553,6 +592,14 @@ addDataToTag = function(tagID, hash, key, overwriteWarning) {
     return result;
 }
 
+/**
+ * query data from a tag's data attribute with a key. The data attribute contains a hash.
+ * If the hash key exist, the date is returned, otherwise, a new empty hash is returned.
+ * @param String tagID - the html tag used to store the data, with the '#'
+ * @param String key - the has key for promise
+ * @return {}
+ * @example getDataFromTag('#efoInfo','key')
+ */
 getDataFromTag = function(tagID, key) {
     key = key || ''
     var data = $(tagID).data();
@@ -565,20 +612,44 @@ getDataFromTag = function(tagID, key) {
     return data[key]
 }
 
+
+/**
+ * remove hash data from a tag's data attribute with a key. The data attribute contains a hash.
+ * If the hash key exist, it is removed and return true, otherwise, return false.
+ * @param {String} tagID - the html tag used to store the data, with the '#'
+ * @param {String} key - the has key for date
+ * @param {String} tobeDelete - the has key to be removed
+ * @return {Boolean} true if success, otherwise false.
+ * @example removeDataFromTag('#efoInfo','key','xin')
+ */
 removeDataFromTag = function(tagID, key, tobeDelete){
     var tmp = getDataFromTag(tagID,key);
-    delete tmp[tobeDelete];
+    if(Object.keys(tmp).indexOf(tobeDelete) != -1){
+        delete tmp[tobeDelete];
+        return true;
+    }
+    return false;
 }
 
+/**
+ * The main efo is defined by the url, as a main entry of the page. It is stored in 'mainEFOInfo'
+ * in the date attribute of the <global_efo_info_tag_id>
+ * @return String efoID - 'EFO_0000400'
+ * @example getMainEFO()
+ */
 getMainEFO = function(){
     return getDataFromTag(global_efo_info_tag_id,'mainEFOInfo')
 }
 
 
-
-//When ploting with descendants, the number of efos increase drmatically.
-//This is to remove the efos that have no annotation in GWAS catalog,
-//Thus querying/ploting only those have at lease one annotation
+/**
+ * When ploting with descendants, the number of efos increase dramatically.
+ * This is to remove the efos that have no annotation in GWAS catalog,
+ * thus querying/ploting only those have at lease one annotation
+ * @param []String toBeFilter - array of efoIDs
+ * @return []String - array of efoIDs that has at least one annotation in the GWAS CATALOG
+ * @example filterAvailableEFOs(['EFO_0000400','EFO_1234567'])
+ */
 filterAvailableEFOs = function(toBeFilter) {
     return getAvailableEFOs().then(function(availableEFOs){
         if(availableEFOs)
@@ -588,15 +659,65 @@ filterAvailableEFOs = function(toBeFilter) {
     })
 }
 
-searchOLS = function(keyword,params){
-    params = $.extend({}, params, {'q':keyword});
-    return promiseGet(global_ols_seach_api,params).then(JSON.parse).then(function(data){
-        console.log("data returned by ols search:");
-        console.log(data);
-        return data;
-    })
 
+/**
+ * Query ols for hierarchical descendants for a give efo term.
+ * If the data is available in the cache, load it fron cache. Other wise, query from ols.
+ * Currently ols query has a size limit of 1000, and it is set to 1000 to reduce the number of query needed.
+ * For query of high level efo terms, for example, EFO_0000408 disease which has 9k descendant, this will be slow.
+ * @param String efoid
+ * @return Promise - hash contain
+ * @example getHierarchicalDescendants('EFO_0000400')
+ */
+getHierarchicalDescendants = function(efoid){
+    var convert2Hash = function(response){
+        var terms = {};
+        response.terms.forEach(function(d, i) {
+            terms[d.short_form] = d;
+        })
+        var tmp = {}
+        tmp[efoid] = terms;
+        return tmp;
+    }
+    var queryDescendant = function(efoid){
+        var efoinfo = getEFOInfo(efoid)
+        return efoinfo.then(function(response){
+            if (response.has_children) {
+                return promiseGetRESTFUL(response._links.hierarchicalDescendants.href,{'size':1000})
+                        .then(convert2Hash);
+            }
+            else {
+                console.log('no descendant found for ' + efoid);
+                return new Promise(function(resolve, reject) {
+                    var tmp = {};
+                    tmp[efoid] = {};
+                    resolve(tmp);
+                })
+            }
+        })
+    }
+
+    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
+
+    return dataPromise.then(function(data) {
+        if ($.inArray(efoid, Object.keys(data)) == -1) {
+            //efo descendant not currently loaded
+            console.log('Loading descendant for ' + efoid)
+            dataPromise = queryDescendant(efoid);
+            return dataPromise.then(function(data){
+                //add to tag
+                addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoDecendants');
+                return data[efoid];
+            })
+        }else {
+            //efo colour is has been loaded perviously
+            console.debug('Loading descendant from cache for ' + efoid);
+            return data[efoid]
+        }
+    })
 }
+
+
 
 
 //pmc
@@ -785,65 +906,111 @@ _findhighlightEFOForAssociation = function(traits, association) {
     return traits[0];
 }
 
-//work out which study is the highlighted study
-//currently find the most recent one
-//require solr result.
+
+/**
+ * Study sorting functions.
+ */
+var studySorting = {
+
+    add : function (a, b){
+        return parseInt(a) + parseInt(b);
+    },
+
+    sortByPublishDate : function(array){
+        var publishDate = {};
+
+        $.each(array, function(index, value) {
+            publishDate[value.id] = value.publicationDate;
+        })
+
+        var keysSorted = Object.keys(publishDate).sort(function(a, b) {
+            return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
+        })
+        return keysSorted;
+    },
+
+
+    sortByCatalogPublishDate : function(array){
+        var catalogPublishDate = {};
+
+        $.each(array, function(index, value) {
+            catalogPublishDate[value.id] = value.catalogPublishDate;
+        })
+
+        var keysSorted = Object.keys(catalogPublishDate).sort(function(a, b) {
+            return Date.parse(catalogPublishDate[b]) - Date.parse(catalogPublishDate[a])
+        })
+        return keysSorted;
+    },
+
+
+    // sortBySampleSize : function(array){
+    //     // studies['study:8072'].initialSampleDescription.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
+    //     // "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases"
+    //     var sampleSize = {};
+    //
+    //     $.each(array, function(index, value) {
+    //         var init = value.initialSampleDescription
+    //         var total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(studySorting.add,0)
+    //         sampleSize[value.id] = total;
+    //     })
+    //
+    //     //desc
+    //     var keysSorted = Object.keys(sampleSize).sort(function(a, b){
+    //         return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
+    //     })
+    //     return keysSorted;
+    // },
+
+
+    sortByInitialSampleSize : function(array){
+        // "initial|NR|NR|European|11522|NA"
+        // "replication|NR|NR|European|4955|NA"
+        var sampleSize = {};
+
+        var isInitial = function(ancestryLinkString){
+            return ancestryLinkString.match(/^initial/) != null
+        }
+        var InitialSampleSize = function(ancestryLinkString){
+            return ancestryLinkString.split('|')[4]
+        }
+
+
+
+        $.each(array, function(index, value) {
+            var init = value.ancestryLinks
+            var total = init.filter(isInitial)
+                    .map(InitialSampleSize)
+                    .reduce(studySorting.add,0)
+            sampleSize[index] = total;
+        })
+
+        //desc
+        var keysSorted = Object.keys(sampleSize).sort(function(a, b){
+            return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
+        });
+        return keysSorted;
+    },
+}
+
+/**
+ * work out which study is the highlighted study for an efo trait.
+ * Currently find the one with largest initial sample size.
+ * This require the solr search data.
+ * @param String efoid
+ * @return []String - array of sorted study ids(solr id)
+ * @example findHighlightedStudiesForEFO('EFO_0000400')
+ */
 findHighlightedStudiesForEFO = function(efoid) {
     var studies = findStudiesForEFO(efoid);
-    var sorted_index = _sortBySampleSize(studies);
+    var sorted_index = studySorting.sortByInitialSampleSize(studies);
     // return studies[sorted_index[sorted_index.length - 1]];
     return studies[sorted_index[0]];
 }
 
 
 
-_sortByPublishDate = function(array){
-    var publishDate = {};
 
-    $.each(array, function(index, value) {
-        publishDate[value.id] = value.publicationDate;
-    })
-
-    var keysSorted = Object.keys(publishDate).sort(function(a, b) {
-        return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
-    })
-    return keysSorted;
-}
-
-_sortByCatalogPublishDate = function(array){
-    var catalogPublishDate = {};
-
-    $.each(array, function(index, value) {
-        catalogPublishDate[value.id] = value.catalogPublishDate;
-    })
-
-    var keysSorted = Object.keys(catalogPublishDate).sort(function(a, b) {
-        return Date.parse(catalogPublishDate[b]) - Date.parse(catalogPublishDate[a])
-    })
-    return keysSorted;
-}
-
-_sortBySampleSize = function(array){
-    // studies['study:8072'].initialSampleDescription.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
-    // "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases"
-    var sampleSize = {};
-
-    _add = function (a, b){
-        return parseInt(a) + parseInt(b);
-    }
-
-    $.each(array, function(index, value) {
-        var init = value.initialSampleDescription
-        var total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
-        sampleSize[value.id] = total;
-    })
-
-    //desc
-    var keysSorted = Object.keys(sampleSize).sort(function(a, b) {
-        return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
-    })
-    return keysSorted;
-}
 
 
 //return html to display information for a data point in the locusplot when moveover the datapoint
