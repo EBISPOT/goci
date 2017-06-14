@@ -607,7 +607,7 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
-
+//        xintodo edit study
         studyUpdateService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
@@ -829,6 +829,8 @@ public class StudyController {
         sortTypeMap.put("publicationdatesortdesc", sortByPublicationDateDesc());
         sortTypeMap.put("pubmedsortasc", sortByPubmedIdAsc());
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
+        sortTypeMap.put("userrequestedsortasc", sortByUserRequestedAsc());
+        sortTypeMap.put("userrequestedsortdesc", sortByUserRequestedDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
         sortTypeMap.put("publicationsortdesc", sortByPublicationDesc());
         sortTypeMap.put("efotraitsortasc", sortByEfoTraitAsc());
@@ -1053,6 +1055,14 @@ public class StudyController {
 
     private Sort sortByPubmedIdAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));
+    }
+
+    private Sort sortByUserRequestedAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "userRequested"));
+    }
+
+    private Sort sortByUserRequestedDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "userRequested"));
     }
 
     private Sort sortByPubmedIdDesc() {
