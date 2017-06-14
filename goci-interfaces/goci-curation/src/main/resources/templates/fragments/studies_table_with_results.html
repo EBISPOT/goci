@@ -122,7 +122,17 @@
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a></p>
         </td>
-        <td th:text="${study.title} ?: ''"></td>
+
+        <td >
+            <p>
+                <span th:text="${study.title} ?: ''"></span>
+                <div th:if="${study.userRequested}" th:remove="tag">
+                         <span class="gst" aria-hidden="true"
+                               title="User Requested Study"></span>
+                </div>
+            </p>
+        </td>
+
         <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
             <span th:text="${study.pubmedId} ?: ''"></span>
