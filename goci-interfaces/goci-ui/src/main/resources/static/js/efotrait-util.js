@@ -121,6 +121,7 @@ getOntologyInfo=function() {
     if (dataPromise == undefined) {
         //lazy load
         console.log('Loading Ontology Info...')
+        // xintodo refactor
         dataPromise = promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',
                                  {'size': 99999}).then(JSON.parse).then(_methods.parseOntologies).catch(function(err) {
             console.error('Error when loading ontology info! ' + err);

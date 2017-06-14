@@ -1,0 +1,105 @@
+
+/* cart item checkbox, for including descendant */
+.cart-item-cb  {
+    float: left !important;
+    transform:scale(2, 2) !important;
+    margin-top: 15px !important;
+}
+
+/* selected term cart */
+#cart {
+    max-height: 300px !important;
+    overflow-y:scroll !important;
+}
+
+/* check box to select all descendants */
+#cb-query-include-descendants {
+    transform:scale(2, 2) !important;
+}
+
+/* when user select an item fron cart, highlight it */
+.list-group-item.highlight {
+    background-color: #ffe6f0 !important;
+}
+
+/* oxo graph */
+#oxo-vis {
+    height: 300px !important;
+    width: 300px !important;
+    border: 1px solid black !important;
+    overflow: auto !important;
+}
+
+/* right part of the efotrait info panel that display a set of buttons */
+#panel-links {
+    text-align:right !important;
+}
+
+/* top panel key-value display*/
+dt {
+    width: 100px !important;
+}
+
+/* Display the summary information at the bottn of the efo info panel box. */
+#efotrait-summary-icon {
+    padding-right: 2px !important;
+    margin-left: 10px !important;
+}
+
+/* by default, the link is hide so the user cannot change it.*/
+#sharable_link {
+    display:none !important;
+}
+
+/* ols tree */
+#term-tree {
+    height: 100% !important;
+    width: 100% !important;
+    border: 1px solid black !important;
+    overflow: auto !important;
+}
+
+/* button showing the locusplot / association table /study table. */
+.available-data-btn {
+    margin-right: 10px !important;
+    font-weight: bold !important;
+}
+
+/* available data button badge showing the number of association/study */
+.available-data-btn-badge{
+    background-color: #398A96 !important;
+    margin-left: 10px !important;
+}
+
+/* locus zoom title badge */
+.manhattan-plot-badge{
+    color: #398A96 !important;
+    margin-left: 10px !important;
+}
+
+
+/* locus zoom plot */
+#plot{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* select item in the cart */
+.cart-item {
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+    color: black !important;
+}
+/*disease category badge before the cart item */
+.cart-item-category-badge {
+    margin-right: 0.3em !important;
+    color: black !important;
+    float: left !important;
+    width: 5% !important;
+}
+
+/* badge showing number of association/study for each cart item*/
+.cart-item-number-badge {
+    color: white !important;
+}
