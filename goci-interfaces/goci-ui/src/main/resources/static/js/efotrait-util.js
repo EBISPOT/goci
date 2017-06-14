@@ -140,6 +140,7 @@ function promiseGet(url, params,debug) {
  */
 function promiseGetRESTFUL_HATEOAS(url,params){
 
+    //following the link recursively
     var query = function(url,params,result){
         return promiseGet(url,params).then(JSON.parse).then(function(response) {
             if(!result){
@@ -156,8 +157,7 @@ function promiseGetRESTFUL_HATEOAS(url,params){
         })
     }
 
-
-
+    //merge the result into an hash
     return query(url,params).then(function(result){
         var resultArray = {};
         result.map(function(r){
@@ -182,7 +182,6 @@ function promiseGetRESTFUL_HATEOAS(url,params){
  * @returns {Promise}
  * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000400/hierarchicalDescendants',{'size':5})
  * @example promiseGetRESTFUL_fast('http://www.ebi.ac.uk/ols/api/ontologies/efo/terms/http%253A%252F%252Fwww.ebi.ac.uk%252Fefo%252FEFO_0000408/hierarchicalDescendants',{'size':1000})
- *
  */
 function promiseGetRESTFUL(url,params){
     if(params == undefined){
@@ -231,7 +230,9 @@ function promiseGetRESTFUL(url,params){
 
 /**
  * Load ontology info from ols api.
+ * Lazy load.
  * @returns {Promise}
+ * @example getOntologyInfo()
  */
 getOntologyInfo=function() {
     var _parseOntologies = function(response){
@@ -262,7 +263,9 @@ getOntologyInfo=function() {
  * Mapping for ontology name and abbrvation
  * For example, 'ordo' is used for Orphanet
  * This is needed to workout the ols link
- * @returns {Promise}
+ * Lazy load.
+ * @returns {Promise} - hash containing prefix2ontology mapping
+ * @example getPrefix2OntologyId()
  */
 getPrefix2OntologyId=function(){
     var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
@@ -286,12 +289,26 @@ getPrefix2OntologyId=function(){
     return dataPromise;
 }
 
+/**
+ * giving a prefix, for example, EFO, return the ontology name which is 'efo'
+ * Lazy load.
+ * @param {String} prefix - The prefix is usually the first part of an ontology id (EFO_0000400)
+ * @returns {Promise} - the name of the ontology
+ * @example getOntologyIdByPrefix('Orphanet')
+ */
 getOntologyIdByPrefix = function(prefix) {
     return getPrefix2OntologyId().then(function(p2o){
         return p2o[prefix]
     })
 }
 
+/**
+ * Get ontology term iri from short form. The iri looks like this:
+ * http://www.ebi.ac.uk/efo/EFO_0000400
+ * Lazy load.
+ * @param {String} shortForm - ontology id short form, like EFO_0000400.
+ * @return {Promise} getIriByShortForm('EFO_0000400')
+ */
 getIriByShortForm = function(shortForm){
     var prefix = shortForm.split('_')[0];
     var id = shortForm.split('_')[1];
@@ -306,6 +323,13 @@ getIriByShortForm = function(shortForm){
     })
 }
 
+/**
+ * Get ontology name by ontology term short form.
+ * For example, EFO_0000400 is an 'efo' term.
+ * Lazy load.
+ * @param {String} shortForm - ontology id short form, like EFO_0000400.
+ * @example getOntologyByShortForm('EFO_0000400')
+ */
 getOntologyByShortForm = function(shortForm){
     var prefix = shortForm.split('_')[0];
     var id = shortForm.split('_')[1];
@@ -319,6 +343,16 @@ getOntologyByShortForm = function(shortForm){
 }
 
 
+/**
+ * Search the ols seach API (solr).
+ * @param {String}keyword Search keyword.
+ * @param {}params - paramaters in hash.
+ * @returns {Promise} - search result in Json
+ * @example searchOLS('EFO_0000400',{
+            'ontology': 'efo',
+            'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
+        })
+ */
 searchOLS = function(keyword,params){
     params = $.extend({}, params, {'q':keyword});
     return promiseGet(global_ols_seach_api,params).then(JSON.parse).then(function(data){
@@ -329,6 +363,13 @@ searchOLS = function(keyword,params){
 
 }
 
+/**
+ * Find related term for a give efo term using ols solr search api. This is primarily from the 'logical_description' field.
+ * Lazy load.
+ * @param {String} efoid
+ * @returns {Promise} - solr result in JSON
+ * @example getRelatedTerms('EFO_0000400')
+ */
 getRelatedTerms = function(efoid){
     var queryRelatedTerms = function(efoid){
         console.log('Loading related terms...')
@@ -367,6 +408,14 @@ getRelatedTerms = function(efoid){
     })
 }
 
+/**
+ * Get color for a give efo term by querying the parentMapping api.
+ * The give back the prefered parent term and the predefined color of that parent term.
+ * The color will be use in badges and plots, and it is consistence with the digram.
+ * Lazy load.
+ * @param {String} efoid
+ * @returns {Promise} - json result.
+ */
 getColourForEFO = function(efoid) {
     var queryColour = function(efoid){
         console.log('Loading Colour...')
@@ -397,6 +446,14 @@ getColourForEFO = function(efoid) {
     })
 }
 
+
+/**
+ * Query OLS for efo term information.
+ * Lazy load.
+ * @param efoid
+ * @returns {Promise}
+ * @example getEFOInfo('EFO_0000400')
+ */
 getEFOInfo = function(efoid){
     var queryEFOInfo = function(efoid){
         return getOLSLinkAPI(efoid).then(function(url){
@@ -429,6 +486,13 @@ getEFOInfo = function(efoid){
     })
 }
 
+/**
+ * Get the OLS API link for a give efo term.
+ * Lazy load.
+ * @param {String} efoid
+ * @returns {Promise} a link to the ols api for the queryed term
+ * @example getOLSLinkAPI('EFO_0000400')
+ */
 getOLSLinkAPI = function(efoid){
     var ont = getOntologyByShortForm(efoid);
     var iri = getIriByShortForm(efoid);
@@ -439,6 +503,11 @@ getOLSLinkAPI = function(efoid){
     })
 }
 
+/**
+ * Get the OLS link for a give efo term. This is return a link to the term page.
+ * @param {String} efoid
+ * @returns {Promise}
+ */
 getOLSLink = function(efoid){
     var ont = getOntologyByShortForm(efoid);
     var iri = getIriByShortForm(efoid);
