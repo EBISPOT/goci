@@ -1700,20 +1700,10 @@
             return studydocumentSolr.pubmedId;
         }
     }
-    var PMCSearchResult = {
-        paper : function(PMCresult){
-            return PMCresult.resultList.result[0];
-        },
-        citedByCount : function(PMCresult){
-            return PMCSearchResult.paper(PMCresult).citedByCount;
-        },
-        firstPublicationDate : function(PMCresult){
-            return PMCSearchResult.paper(PMCresult).firstPublicationDate;
-        },
-        journalInfo : function(PMCresult){
-            return PMCSearchResult.paper(PMCresult).journalInfo;
-        },
-    }
+
+
+
+
 
     //    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
     //            .then(function(array) {

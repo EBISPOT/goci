@@ -542,6 +542,45 @@ var OLS = {
     },
 }
 
+
+
+//http://www.ebi.ac.uk/europepmc/webservices/rest/search?&query=ext_id:26831199%20src:med&resulttype=core&format=json
+var EPMC = {
+    /**
+     * Query PMC for paper info. PMC uses their own id, but can optionally accept pubmed id.
+     * @param {String} pubmed_id
+     * @returns {Promise}
+     * @example EPMC.getFromEPMC('')
+     */
+    getByPumbedId : function(pubmed_id){
+        return promiseGet(global_pmc_api,
+                          {
+                              'query': 'ext_id:'+pubmed_id + '%20src:med',
+                              'resulttype' :  'core',
+                              'format' : 'json'
+                          }).then(JSON.parse);
+    },
+
+    searchResult : {
+        paper : function(EPMCresult){
+            return EPMCresult.resultList.result[0];
+        },
+        citedByCount : function(EPMCresult){
+            return EPMC.searchResult.paper(EPMCresult).citedByCount;
+        },
+        firstPublicationDate : function(EPMCresult){
+            return EPMC.searchResult.paper(EPMCresult).firstPublicationDate;
+        },
+        journalInfo : function(EPMCresult){
+            return EPMC.searchResult.paper(EPMCresult).journalInfo;
+        },
+        abstractText : function(EPMCresult){
+            return EPMC.searchResult.paper(EPMCresult).abstractText;
+        },
+    },
+}
+
+
 /**
  * Get color for a give efo term by querying the parentMapping api.
  * The give back the prefered parent term and the predefined color of that parent term.
@@ -779,20 +818,8 @@ filterAvailableEFOs = function(toBeFilter) {
 }
 
 
-/**
- * Query PMC for paper info. PMC uses their own id, but can optionally accept pubmed id.
- * @param {String} pubmed_id
- * @returns {Promise}
- * @example getFromPMC('')
- */
-getFromPMC= function(pubmed_id){
-    return promiseGet(global_pmc_api,
-                      {
-                          'query': 'ext_id:'+pubmed_id + '%20src:med',
-                          'resulttype' :  'core',
-                          'format' : 'json'
-                      }).then(JSON.parse);
-}
+
+
 
 
 /**
@@ -1178,14 +1205,14 @@ displayHighlightedStudy = function(highlightedStudy) {
 //                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
 //                                                                      JSON.stringify(highlightedStudy),'all'));
 
-    getFromPMC(highlightedStudy.pubmedId).then(function(data) {
+    EPMC.getByPumbedId(highlightedStudy.pubmedId).then(function(data) {
         var paperDetail = data.resultList.result[0];
 //                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
 //                                                                               paperDetail.abstractText,''));
 //         $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
 //                                                                      'abstract',
 //                                                                      paperDetail.abstractText));
-        $('#efotrait-highlighted-study-abstract').html(paperDetail.abstractText);
+        $('#efotrait-highlighted-study-abstract').html(EPMC.searchResult.abstractText(data));
 
         return paperDetail;
     }).catch(function(err) {
