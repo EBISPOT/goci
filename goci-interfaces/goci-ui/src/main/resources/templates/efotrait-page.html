@@ -866,6 +866,10 @@
 
     /**
      * When adding extra term to the cart
+     * @param {Object} data - a hash, hash keys are the efo ids and value are the efo infos. These efo are to be added to the cart.
+     * @param {Boolean} initLoad - if true, the efoinfo/highlight study will be update
+     * @example addEFO{{},false} - simply trigger the update page event without adding anything to the cart.
+     * @example addEFO{{'EFO_0000400':{}},false} - add EFO_0000400 to the cart and trigger page update
      */
     addEFO = function(data, initLoad) {
         if(initLoad==undefined)
@@ -892,6 +896,7 @@
 
     /**
      * When remove an efo term from the cart
+     * @param {String} efoid - remove the EFO from the cart.
      */
     removeEFO = function(efoid) {
         removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
@@ -901,7 +906,8 @@
 
 
     /**
-     * triger a refresh of the page content, including locusplot, tables, badges.
+     * trigger a refresh of the page content, including cart, locus plot, tables, badges.
+     * @param {Boolean} initLoad - if true, the efoinfo/highlight study will be update
      */
     updatePage = function(initLoad) {
 
@@ -953,7 +959,11 @@
         //******************************
         if (initLoad){
             //display efo trait information when data is ready
-            displayEfoTraitInfo(mainEFO);
+            getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch(function(err) {
+                console.warning('Error loading efo info from OLS. ' + err);
+            }).then(function() {
+                hideLoadingOverLay('#summary-panel-loading')
+            })
         }
 
         //******************************
@@ -1270,8 +1280,7 @@
             //we add preferEFO for each association, generate the association data in popup for locus plot.
             var allUniqueEFO = {}
             data_association.docs.forEach(function(d, i) {
-                var traits = _findAllEFOsforAssociation(d.id,data);
-                d.preferedEFO = _findhighlightEFOForAssociation(traits, d.id);
+                d.preferedEFO = findhighlightEFOForAssociation(d.id,data);
                 allUniqueEFO[d.preferedEFO] = '';
                 //add any string data that will be use in the locus plot popover
                 d.popoverHTML = buildLocusPlotPopoverHTML(d);
@@ -1685,14 +1694,193 @@
 
 
 
+//    var studies = findStudiesForEFO(getMainEFO())
+    var studyDocument = {
+        pubmedId : function(studydocumentSolr){
+            return studydocumentSolr.pubmedId;
+        }
+    }
+    var PMCSearchResult = {
+        paper : function(PMCresult){
+            return PMCresult.resultList.result[0];
+        },
+        citedByCount : function(PMCresult){
+            return PMCSearchResult.paper(PMCresult).citedByCount;
+        },
+        firstPublicationDate : function(PMCresult){
+            return PMCSearchResult.paper(PMCresult).firstPublicationDate;
+        },
+        journalInfo : function(PMCresult){
+            return PMCSearchResult.paper(PMCresult).journalInfo;
+        },
+    }
+
+//    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
+//            .then(function(array) {
+//
+//                return array.map(PMCSearchResult.journalInfo).forEach()
+//            });
+//    studies.nocallthisoneok(studyDocument.pubmedId).nocallthisoneok(getFromPMC).then(function(x){return x})
+//    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
+//            .then(function(array) {
+//
+//                return array.map(PMCSearchResult.journalInfo).forEach()
+//            });
+
+    //xintodo refactor into code
+    arrayToHash = function(array,key){
+        var hash = {}
+        array.map(function(d){
+            hash[d[key]] = d;
+        })
+        return hash;
+    }
+
+
+    arrayToHashWithKeys = function(array,keys){
+        var hash = {}
+        keys.slice()
+        array.map(function(d){
+            hash[d[key]] = d;
+        })
+        return hash;
+    }
+
+
+
+
+
+
+
+
+//    var a = {'a':1,'b':2}
+//    a.hashMap(console.log)
+//    Object.prototype.nocallthisoneok= function(callback) {
+//        var beforemap = this;
+//        var aftermap = {};
+//        Object.keys(beforemap).forEach(function(k){
+//            aftermap[k]=callback(beforemap[k]);
+//            if(aftermap[k] == undefined){
+//                aftermap[k] = beforemap[k]
+//            }
+//        })
+//        return aftermap;
+//    };
+//    var a = {'a':1,'b':2}
+//    a.hashMap(console.log)
+
+
+//
+//    var request = require('request-promise');
+//
+//    var github = {
+//        token: null,
+//
+//        getUser: function() {
+//            return request({
+//                               "method":"GET",
+//                               "uri": "https://api.github.com/user",
+//                               "json": true,
+//                               "headers": {
+//                                   "Authorization": "Bearer " + github.token,
+//                                   "User-Agent": "My little demo app"
+//                               }
+//                           });
+//        },
+//
+//        getUserReposUrl: function(user) {
+//            return user.repos_url;
+//        },
+//
+//        getUserRepos: function(uri, repos) {
+//            return request({
+//                               "method": "GET",
+//                               "uri": uri,
+//                               "json": true,
+//                               "resolveWithFullResponse": true,
+//                               "headers": {
+//                                   "Authorization": "Bearer " + github.token,
+//                                   "User-Agent": "My little demo app"
+//                               }
+//                           }).then(function(response) {
+//                if (!repos) {
+//                    repos = [];
+//                }
+//                repos = repos.concat(response.body);
+//                console.log(repos.length + " repos so far");
+//
+//                if (response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) }).length > 0) {
+//                    console.log("There is more.");
+//                    var next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) })[0])[1];
+//                    return github.getUserRepos(next, repos);
+//                }
+//                return repos;
+//            });
+//        },
+//
+//        isPublic: function(repo) {
+//            return !repo.private;
+//        },
+//
+//        isOriginal: function(repo) {
+//            return !repo.fork;
+//        },
+//
+//        licenseUrl: function(repo) {
+//            return repo.contents_url.replace(/\{\+path\}/,"LICENSE");
+//        },
+//
+//        checkLicense: function(uri) {
+//            return request({
+//                               "method": "GET",
+//                               "uri": uri,
+//                               "json": true,
+//                               "headers": {
+//                                   "Authorization": "Bearer " + github.token,
+//                                   "User-Agent": "My little demo app"
+//                               }
+//                           }).then(function(fulfilled_body) {
+//                return false;
+//            }, function(rejected_body){
+//                return uri;
+//            });
+//        },
+//
+//        isMissing: function(license) {
+//            return license;
+//        },
+//
+//        createLicenseLink: function(license) {
+//            return license.replace(/https:\/\/api.github.com\/repos\/(.*)\/(.*)\/contents\/LICENSE/, "https://github.com/$1/$2/new/master?filename=LICENSE");
+//        }
+//    }
+//
+//    function main(params) {
+//        github.token = params.token;
+//        return github.getUser()
+//                .then(github.getUserReposUrl)
+//                .then(github.getUserRepos)
+//                .filter(github.isPublic)
+//                .filter(github.isOriginal)
+//                .map(github.licenseUrl)
+//                .map(github.checkLicense)
+//                .filter(github.isMissing)
+//                .map(github.createLicenseLink);
+//    }
+//
+//    main({"token": process.argv[2]}).then(function(result) {
+//        console.log(result);
+//    });
+
+
 
 
 
 
     //]]>
 
-</script>
 
+</script>
 
 
 
