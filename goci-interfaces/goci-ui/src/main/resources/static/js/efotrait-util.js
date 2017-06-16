@@ -229,184 +229,317 @@ function promiseGetRESTFUL(url,params){
 
 
 /**
- * Load ontology info from ols api.
- * Lazy load.
- * @returns {Promise}
- * @example getOntologyInfo()
- * @example http://www.ebi.ac.uk/ols/api/ontologies
+ * OLS FUNCTIONS
+ * @type {{getOntologyInfo: OLS.getOntologyInfo, getPrefix2OntologyId: OLS.getPrefix2OntologyId, getOntologyIdByPrefix: OLS.getOntologyIdByPrefix, getIriByShortForm: OLS.getIriByShortForm, getOntologyByShortForm: OLS.getOntologyByShortForm, searchOLS: OLS.searchOLS, getRelatedTerms: OLS.getRelatedTerms, getEFOInfo: OLS.getEFOInfo, getOLSLinkAPI: OLS.getOLSLinkAPI, getOLSLink: OLS.getOLSLink, getHierarchicalDescendants: OLS.getHierarchicalDescendants}}
  */
-getOntologyInfo=function() {
-    var _parseOntologies = function(response){
-        var ontologyInfo = {};
-        response.ontologies.forEach(function(d) {
-            ontologyInfo[d.ontologyId] = d;
-        })
-        return ontologyInfo;
-    }
-
-    var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
-    if (dataPromise == undefined) {
-        //lazy load
-        console.log('Loading Ontology Info...')
-        dataPromise = promiseGetRESTFUL(global_ols_restful_api_ontology,
-                                        {'size': 1000}).then(_parseOntologies).catch(function(err) {
-            console.error('Error when loading ontology info! ' + err);
-        })
-        //cache data
-        $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
-    }else{
-        console.debug('Loading Ontology Info from cache.')
-    }
-    return dataPromise;
-}
-
-/**
- * Mapping for ontology name and abbrvation
- * For example, 'ordo' is used for Orphanet
- * This is needed to workout the ols link
- * Lazy load.
- * @returns {Promise} - hash containing prefix2ontology mapping
- * @example getPrefix2OntologyId()
- */
-getPrefix2OntologyId=function(){
-    var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
-    if (dataPromise == undefined) {
-        //lazy load
-        console.log('Loading prefix2ontId...')
-        dataPromise = getOntologyInfo().then(function(ontoInfo){
-            var prefix2ontid = {}
-            Object.keys(ontoInfo).forEach(function(ontId){
-                prefix2ontid[ontoInfo[ontId].config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = ontId;
+var OLS = {
+    /**
+     * Load ontology info from ols api.
+     * Lazy load.
+     * @returns {Promise}
+     * @example OLS.getOntologyInfo()
+     * @example http://www.ebi.ac.uk/ols/api/ontologies
+     */
+    getOntologyInfo:function() {
+        var _parseOntologies = function(response){
+            var ontologyInfo = {};
+            response.ontologies.forEach(function(d) {
+                ontologyInfo[d.ontologyId] = d;
             })
-            return prefix2ontid;
+            return ontologyInfo;
+        }
+
+        var dataPromise = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo');
+        if (dataPromise == undefined) {
+            //lazy load
+            console.log('Loading Ontology Info...')
+            dataPromise = promiseGetRESTFUL(global_ols_restful_api_ontology,
+                                            {'size': 1000}).then(_parseOntologies).catch(function(err) {
+                console.error('Error when loading ontology info! ' + err);
+            })
+            //cache data
+            $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
+        }else{
+            console.debug('Loading Ontology Info from cache.')
+        }
+        return dataPromise;
+    },
+
+    /**
+     * Mapping for ontology name and abbrvation
+     * For example, 'ordo' is used for Orphanet
+     * This is needed to workout the ols link
+     * Lazy load.
+     * @returns {Promise} - hash containing prefix2ontology mapping
+     * @example getPrefix2OntologyId()
+     */
+    getPrefix2OntologyId:function(){
+        var dataPromise = getDataFromTag(global_efo_info_tag_id, 'prefix2ontId');
+        if (dataPromise == undefined) {
+            //lazy load
+            console.log('Loading prefix2ontId...')
+            dataPromise = OLS.getOntologyInfo().then(function(ontoInfo){
+                var prefix2ontid = {}
+                Object.keys(ontoInfo).forEach(function(ontId){
+                    prefix2ontid[ontoInfo[ontId].config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = ontId;
+                })
+                return prefix2ontid;
+            }).catch(function(err){
+                console.error('Error when loading prefix2ontId! ' + err);
+            })
+            //add to tag
+            $(global_efo_info_tag_id).data('prefix2ontId',dataPromise);
+        }else{
+            console.debug('Loading prefix2ontId from cache.')
+        }
+        return dataPromise;
+    },
+
+    /**
+     * giving a prefix, for example, EFO, return the ontology name which is 'efo'
+     * Lazy load.
+     * @param {String} prefix - The prefix is usually the first part of an ontology id (EFO_0000400)
+     * @returns {Promise} - the name of the ontology
+     * @example OLS.getOntologyIdByPrefix('Orphanet')
+     */
+    getOntologyIdByPrefix : function(prefix) {
+        return OLS.getPrefix2OntologyId().then(function(p2o){
+            return p2o[prefix]
+        })
+    },
+
+    /**
+     * Get ontology term iri from short form. The iri looks like this:
+     * http://www.ebi.ac.uk/efo/EFO_0000400
+     * Lazy load.
+     * @param {String} shortForm - ontology id short form, like EFO_0000400.
+     * @return {Promise} getIriByShortForm('EFO_0000400')
+     */
+    getIriByShortForm : function(shortForm){
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        var ont = OLS.getOntologyByShortForm(shortForm);
+
+        return ont.then(function(ontName){
+            return OLS.getOntologyInfo().then(function(ontologies){
+                return ontologies[ontName].config.baseUris[0] + id;
+            })
         }).catch(function(err){
-            console.error('Error when loading prefix2ontId! ' + err);
+            console.log('Error finding iri for term ' + shortForm + '. ' + err);
         })
-        //add to tag
-        $(global_efo_info_tag_id).data('prefix2ontId',dataPromise);
-    }else{
-        console.debug('Loading prefix2ontId from cache.')
-    }
-    return dataPromise;
-}
+    },
 
-/**
- * giving a prefix, for example, EFO, return the ontology name which is 'efo'
- * Lazy load.
- * @param {String} prefix - The prefix is usually the first part of an ontology id (EFO_0000400)
- * @returns {Promise} - the name of the ontology
- * @example getOntologyIdByPrefix('Orphanet')
- */
-getOntologyIdByPrefix = function(prefix) {
-    return getPrefix2OntologyId().then(function(p2o){
-        return p2o[prefix]
-    })
-}
+    /**
+     * Get ontology name by ontology term short form.
+     * For example, EFO_0000400 is an 'efo' term.
+     * Lazy load.
+     * @param {String} shortForm - ontology id short form, like EFO_0000400.
+     * @example OLS.getOntologyByShortForm('EFO_0000400')
+     */
+    getOntologyByShortForm : function(shortForm){
+        var prefix = shortForm.split('_')[0];
+        var id = shortForm.split('_')[1];
+        p = OLS.getOntologyIdByPrefix(prefix);
 
-/**
- * Get ontology term iri from short form. The iri looks like this:
- * http://www.ebi.ac.uk/efo/EFO_0000400
- * Lazy load.
- * @param {String} shortForm - ontology id short form, like EFO_0000400.
- * @return {Promise} getIriByShortForm('EFO_0000400')
- */
-getIriByShortForm = function(shortForm){
-    var prefix = shortForm.split('_')[0];
-    var id = shortForm.split('_')[1];
-    var ont = getOntologyByShortForm(shortForm);
-
-    return ont.then(function(ontName){
-        return getOntologyInfo().then(function(ontologies){
-            return ontologies[ontName].config.baseUris[0] + id;
+        return p.then(function(ontology){
+            return ontology;
+        }).catch(function(err){
+            console.log('Error finding iri for term ' + shortForm + '. ' + err);
         })
-    }).catch(function(err){
-        console.log('Error finding iri for term ' + shortForm + '. ' + err);
-    })
-}
+    },
 
-/**
- * Get ontology name by ontology term short form.
- * For example, EFO_0000400 is an 'efo' term.
- * Lazy load.
- * @param {String} shortForm - ontology id short form, like EFO_0000400.
- * @example getOntologyByShortForm('EFO_0000400')
- */
-getOntologyByShortForm = function(shortForm){
-    var prefix = shortForm.split('_')[0];
-    var id = shortForm.split('_')[1];
-    p = getOntologyIdByPrefix(prefix);
-
-    return p.then(function(ontology){
-        return ontology;
-    }).catch(function(err){
-        console.log('Error finding iri for term ' + shortForm + '. ' + err);
-    })
-}
-
-
-/**
- * Search the ols seach API (solr).
- * @param {String}keyword Search keyword.
- * @param {}params - paramaters in hash.
- * @returns {Promise} - search result in Json
- * @example searchOLS('EFO_0000400',{
+    /**
+     * Search the ols seach API (solr).
+     * @param {String}keyword Search keyword.
+     * @param {}params - paramaters in hash. use solr parameter to filter the result.
+     * @returns {Promise} - search result in Json
+     * @example searchOLS('EFO_0000400',{
             'ontology': 'efo',
             'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
         })
- */
-searchOLS = function(keyword,params){
-    params = $.extend({}, params, {'q':keyword});
-    return promiseGet(global_ols_seach_api,params).then(JSON.parse).then(function(data){
-        console.log("data returned by ols search:");
-        console.log(data);
-        return data;
-    })
+     */
+    searchOLS : function(keyword,params){
+        params = $.extend({}, params, {'q':keyword});
+        return promiseGet(global_ols_seach_api,params).then(JSON.parse).then(function(data){
+            console.log("data returned by ols search:");
+            console.log(data);
+            return data;
+        })
 
-}
+    },
 
-/**
- * Find related term for a give efo term using ols solr search api. This is primarily from the 'logical_description' field.
- * Lazy load.
- * @param {String} efoid
- * @returns {Promise} - solr result in JSON
- * @example getRelatedTerms('EFO_0000400')
- */
-getRelatedTerms = function(efoid){
-    var queryRelatedTerms = function(efoid){
-        console.log('Loading related terms...')
-        return searchOLS(efoid,{
-            'ontology': 'efo',
-            'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
-        }).then(function(data){
-            var terms = {};
-            data.response.docs.forEach(function(d) {
-                d.obo_id = d.obo_id.replace(":", "_")
-                terms[d.obo_id] = d
+    /**
+     * Find related term for a give efo term using ols solr search api. This is primarily from the 'logical_description' field.
+     * Lazy load.
+     * @param {String} efoid
+     * @returns {Promise} - solr result in JSON
+     * @example OLS.getRelatedTerms*'EFO_0000400')
+     */
+    getRelatedTerms : function(efoid){
+        var queryRelatedTerms = function(efoid){
+            console.log('Loading related terms...')
+            return OLS.searchOLS(efoid,{
+                'ontology': 'efo',
+                'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
+            }).then(function(data){
+                var terms = {};
+                data.response.docs.forEach(function(d) {
+                    d.obo_id = d.obo_id.replace(":", "_")
+                    terms[d.obo_id] = d
+                })
+                var tmp={};
+                tmp[efoid] = terms;
+                return tmp;
+            }).catch(function(err){
+                console.error('Error when loading related terms! ' + err);
             })
-            var tmp={};
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'relatedEFOs');
+
+        return dataPromise.then(function(data){
+            //query if data not exist
+            if($.inArray(efoid,Object.keys(data)) == -1){
+                dataPromise = queryRelatedTerms(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'relatedEFOs');
+                    return data[efoid];
+                })
+            }else{
+                console.debug('Loading related terms from cache.')
+                return data[efoid]
+            }
+        })
+    },
+
+    /**
+     * Query OLS for efo term information.
+     * Lazy load.
+     * @param efoid
+     * @returns {Promise}
+     * @example OLS.getEFOInfo('EFO_0000400')
+     */
+    getEFOInfo : function(efoid){
+        var queryEFOInfo = function(efoid){
+            return OLS.getOLSLinkAPI(efoid).then(function(url){
+                return promiseGet(url).then(JSON.parse).then(function(response) {
+                    var tmp = {};
+                    tmp[efoid] = response;
+                    return tmp;
+                }).catch(function(err){
+                    console.debug('error when loading efo info for ' + efoid + '. ' + err);
+                })
+            })
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoInfo');
+        return dataPromise.then(function(data) {
+            if ($.inArray(efoid, Object.keys(data)) == -1) {
+                //efo info is not currently loaded
+                console.log('Loading efoInfo for ' + efoid)
+                dataPromise = queryEFOInfo(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoInfo');
+                    return data[efoid];
+                })
+            }else {
+                //efo colour is has been loaded perviously
+                console.debug('Loading efoInfo from cache for ' + efoid);
+                return data[efoid]
+            }
+        })
+    },
+
+    /**
+     * Get the OLS API link for a give efo term.
+     * Lazy load.
+     * @param {String} efoid
+     * @returns {Promise} a link to the ols api for the queryed term
+     * @example OLS.getOLSLinkAPI('EFO_0000400')
+     */
+    getOLSLinkAPI : function(efoid){
+        var ont = OLS.getOntologyByShortForm(efoid);
+        var iri = OLS.getIriByShortForm(efoid);
+        return Promise.all([ont,iri]).then(function(arrayPromise) {
+            var url = global_ols_api + 'ontologies/' + arrayPromise[0] + '/terms/' +
+                    encodeURIComponent(encodeURIComponent(arrayPromise[1]));
+            return url
+        })
+    },
+
+    /**
+     * Get the OLS link for a give efo term. This is return a link to the term page.
+     * @param {String} efoid
+     * @returns {Promise}
+     */
+    getOLSLink : function(efoid){
+        var ont = OLS.getOntologyByShortForm(efoid);
+        var iri = OLS.getIriByShortForm(efoid);
+        return Promise.all([ont,iri]).then(function(arrayPromise) {
+            var url = global_ols + 'ontologies/' + arrayPromise[0] + '/terms?iri=' +
+                    encodeURIComponent(arrayPromise[1]);
+            return url
+        })
+    },
+
+    /**
+     * Query ols for hierarchical descendants for a give efo term.
+     * If the data is available in the cache, load it fron cache. Other wise, query from ols.
+     * Currently ols query has a size limit of 1000, and it is set to 1000 to reduce the number of query needed.
+     * For query of high level efo terms, for example, EFO_0000408 disease which has 9k descendant, this will be slow.
+     * @param String efoid
+     * @return Promise - hash contain
+     * @example OLS.getHierarchicalDescendants('EFO_0000400')
+     */
+    getHierarchicalDescendants : function(efoid){
+        var parseResponse = function(response){
+            var terms = {};
+            response.terms.forEach(function(d, i) {
+                terms[d.short_form] = d;
+            })
+            var tmp = {}
             tmp[efoid] = terms;
             return tmp;
-        }).catch(function(err){
-            console.error('Error when loading related terms! ' + err);
-        })
-    }
-
-    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'relatedEFOs');
-
-    return dataPromise.then(function(data){
-        //query if data not exist
-        if($.inArray(efoid,Object.keys(data)) == -1){
-            dataPromise = queryRelatedTerms(efoid);
-            return dataPromise.then(function(data){
-                //add to tag
-                addPromiseToTag(global_efo_info_tag_id,dataPromise,'relatedEFOs');
-                return data[efoid];
-            })
-        }else{
-            console.debug('Loading related terms from cache.')
-            return data[efoid]
         }
-    })
+        var queryDescendant = function(efoid){
+            var efoinfo = OLS.getEFOInfo(efoid)
+            return efoinfo.then(function(response){
+                if (response.has_children) {
+                    return promiseGetRESTFUL(response._links.hierarchicalDescendants.href,{'size':1000})
+                            .then(parseResponse);
+                }
+                else {
+                    console.log('no descendant found for ' + efoid);
+                    return new Promise(function(resolve, reject) {
+                        var tmp = {};
+                        tmp[efoid] = {};
+                        resolve(tmp);
+                    })
+                }
+            })
+        }
+
+        var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
+
+        return dataPromise.then(function(data) {
+            if ($.inArray(efoid, Object.keys(data)) == -1) {
+                //efo descendant not currently loaded
+                console.log('Loading descendant for ' + efoid)
+                dataPromise = queryDescendant(efoid);
+                return dataPromise.then(function(data){
+                    //add to tag
+                    addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoDecendants');
+                    return data[efoid];
+                })
+            }else {
+                //efo colour is has been loaded perviously
+                console.debug('Loading descendant from cache for ' + efoid);
+                return data[efoid]
+            }
+        })
+    },
 }
 
 /**
@@ -444,78 +577,6 @@ getColourForEFO = function(efoid) {
             console.debug('Loading Colour from cache.')
             return data[efoid]
         }
-    })
-}
-
-
-/**
- * Query OLS for efo term information.
- * Lazy load.
- * @param efoid
- * @returns {Promise}
- * @example getEFOInfo('EFO_0000400')
- */
-getEFOInfo = function(efoid){
-    var queryEFOInfo = function(efoid){
-        return getOLSLinkAPI(efoid).then(function(url){
-            return promiseGet(url).then(JSON.parse).then(function(response) {
-                var tmp = {};
-                tmp[efoid] = response;
-                return tmp;
-            }).catch(function(err){
-                console.debug('error when loading efo info for ' + efoid + '. ' + err);
-            })
-        })
-    }
-
-    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoInfo');
-    return dataPromise.then(function(data) {
-        if ($.inArray(efoid, Object.keys(data)) == -1) {
-            //efo info is not currently loaded
-            console.log('Loading efoInfo for ' + efoid)
-            dataPromise = queryEFOInfo(efoid);
-            return dataPromise.then(function(data){
-                //add to tag
-                addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoInfo');
-                return data[efoid];
-            })
-        }else {
-            //efo colour is has been loaded perviously
-            console.debug('Loading efoInfo from cache for ' + efoid);
-            return data[efoid]
-        }
-    })
-}
-
-/**
- * Get the OLS API link for a give efo term.
- * Lazy load.
- * @param {String} efoid
- * @returns {Promise} a link to the ols api for the queryed term
- * @example getOLSLinkAPI('EFO_0000400')
- */
-getOLSLinkAPI = function(efoid){
-    var ont = getOntologyByShortForm(efoid);
-    var iri = getIriByShortForm(efoid);
-    return Promise.all([ont,iri]).then(function(arrayPromise) {
-        var url = global_ols_api + 'ontologies/' + arrayPromise[0] + '/terms/' +
-                encodeURIComponent(encodeURIComponent(arrayPromise[1]));
-        return url
-    })
-}
-
-/**
- * Get the OLS link for a give efo term. This is return a link to the term page.
- * @param {String} efoid
- * @returns {Promise}
- */
-getOLSLink = function(efoid){
-    var ont = getOntologyByShortForm(efoid);
-    var iri = getIriByShortForm(efoid);
-    return Promise.all([ont,iri]).then(function(arrayPromise) {
-        var url = global_ols + 'ontologies/' + arrayPromise[0] + '/terms?iri=' +
-                encodeURIComponent(arrayPromise[1]);
-        return url
     })
 }
 
@@ -699,16 +760,6 @@ removeDataFromTag = function(tagID, key, tobeDelete){
     return false;
 }
 
-/**
- * The main efo is defined by the url, as a main entry of the page. It is stored in 'mainEFOInfo'
- * in the date attribute of the <global_efo_info_tag_id>
- * @return String efoID - 'EFO_0000400'
- * @example getMainEFO()
- */
-getMainEFO = function(){
-    return getDataFromTag(global_efo_info_tag_id,'mainEFOInfo')
-}
-
 
 /**
  * When ploting with descendants, the number of efos increase dramatically.
@@ -724,64 +775,6 @@ filterAvailableEFOs = function(toBeFilter) {
             return toBeFilter.filter(function(n) {
                 return Object.keys(availableEFOs).indexOf(n) !== -1;
             });
-    })
-}
-
-
-/**
- * Query ols for hierarchical descendants for a give efo term.
- * If the data is available in the cache, load it fron cache. Other wise, query from ols.
- * Currently ols query has a size limit of 1000, and it is set to 1000 to reduce the number of query needed.
- * For query of high level efo terms, for example, EFO_0000408 disease which has 9k descendant, this will be slow.
- * @param String efoid
- * @return Promise - hash contain
- * @example getHierarchicalDescendants('EFO_0000400')
- */
-getHierarchicalDescendants = function(efoid){
-    var parseResponse = function(response){
-        var terms = {};
-        response.terms.forEach(function(d, i) {
-            terms[d.short_form] = d;
-        })
-        var tmp = {}
-        tmp[efoid] = terms;
-        return tmp;
-    }
-    var queryDescendant = function(efoid){
-        var efoinfo = getEFOInfo(efoid)
-        return efoinfo.then(function(response){
-            if (response.has_children) {
-                return promiseGetRESTFUL(response._links.hierarchicalDescendants.href,{'size':1000})
-                        .then(parseResponse);
-            }
-            else {
-                console.log('no descendant found for ' + efoid);
-                return new Promise(function(resolve, reject) {
-                    var tmp = {};
-                    tmp[efoid] = {};
-                    resolve(tmp);
-                })
-            }
-        })
-    }
-
-    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efoDecendants');
-
-    return dataPromise.then(function(data) {
-        if ($.inArray(efoid, Object.keys(data)) == -1) {
-            //efo descendant not currently loaded
-            console.log('Loading descendant for ' + efoid)
-            dataPromise = queryDescendant(efoid);
-            return dataPromise.then(function(data){
-                //add to tag
-                addPromiseToTag(global_efo_info_tag_id,dataPromise,'efoDecendants');
-                return data[efoid];
-            })
-        }else {
-            //efo colour is has been loaded perviously
-            console.debug('Loading descendant from cache for ' + efoid);
-            return data[efoid]
-        }
     })
 }
 
@@ -843,8 +836,10 @@ getOXO = function(efoid){
 }
 
 /**
- * The main EFO is defined from the page URL.
- * @returns {String} efoid
+ * The main efo is defined by the url, as a main entry of the page. It is stored in 'mainEFOInfo'
+ * in the date attribute of the <global_efo_info_tag_id>
+ * @return String efoID - 'EFO_0000400'
+ * @example getMainEFO()
  */
 getMainEFO = function(){
     return $('#query').text();
@@ -876,12 +871,11 @@ whichDescendant = function(){
  * A sharable link is generated dynamically as the page changes. This function is call
  * every time the page updated, to update the link so the users can share their result.
  */
-function updateSharableLink(){
+updateSharableLink = function(){
     $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
                              Object.keys(getCurrentSelected()).join(','));
     hideLoadingOverLay('#sharable_link_btn');
 }
-
 
 
 /**
@@ -1141,8 +1135,6 @@ findHighlightedStudiesForEFO = function(efoid) {
     return studies[sorted_index[0]];
 }
 
-
-
 /**
  * return html to display information for a data point(association) in the locus plot when moveover the datapoint
  * @param {Hash} association_solr_doc
@@ -1209,27 +1201,27 @@ displayHighlightedStudy = function(highlightedStudy) {
  * @param efotraitId
  */
 displayEfoTraitInfo = function(efoinfo) {
-        var efotrait_link = efoinfo.iri;
-        var efotrait_id = efoinfo.short_form;
-        var synonym = efoinfo.synonyms;
-        var efotrait_label = efoinfo.label;
-        addDataToTag(global_efo_info_tag_id, efoinfo, 'mainEFOInfo');
-        $("#efotrait-description").html(displayArrayAsList(efoinfo.description));
-        $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-        $("#efotrait-label").html(efotrait_label);
-        // $("#efotrait-label").html(createPopover(efotrait_label,
-        //                                         'description',
-        //                                         displayArrayAsList(efoinfo.description)));
-        if (synonym) {
-            if (synonym.length > list_min) {
-                $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
-                                                            synonym,
-                                                            'synonyms'));
-            }
-            else {
-                $("#efotrait-synonym").html(synonym.join(", "));
-            }
+    var efotrait_link = efoinfo.iri;
+    var efotrait_id = efoinfo.short_form;
+    var synonym = efoinfo.synonyms;
+    var efotrait_label = efoinfo.label;
+    addDataToTag(global_efo_info_tag_id, efoinfo, 'mainEFOInfo');
+    $("#efotrait-description").html(displayArrayAsList(efoinfo.description));
+    $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
+    $("#efotrait-label").html(efotrait_label);
+    // $("#efotrait-label").html(createPopover(efotrait_label,
+    //                                         'description',
+    //                                         displayArrayAsList(efoinfo.description)));
+    if (synonym) {
+        if (synonym.length > list_min) {
+            $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
+                                                        synonym,
+                                                        'synonyms'));
         }
+        else {
+            $("#efotrait-synonym").html(synonym.join(", "));
+        }
+    }
 }
 
 /**
@@ -1554,7 +1546,6 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
     hideLoadingOverLay('#study-table-loading')
 }
 
-
 // //display association table
 // function displayEfotraitAssociations(data, cleanBeforeInsert) {
 //     //by default, we clean the table before inserting data
@@ -1839,7 +1830,7 @@ createPopover = function(label,header,content){
 }
 
 /*
-ols component
+ ols component
  */
 //auto-complete/search box in the expension panel
 $(document).ready(function() {
@@ -2076,7 +2067,7 @@ instance.draw($("#term-tree"),
 //         })
 //     }
 //
-//     return searchOLS($('#query').text(),{
+//     return OLS.searchOLS($('#query').text(),{
 //         'ontology': 'efo',
 //         'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
 //     }).then(function(data){

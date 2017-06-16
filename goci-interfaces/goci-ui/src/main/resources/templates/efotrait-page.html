@@ -188,16 +188,16 @@
 
 
         <!--<div class="row" style="margin-top:10px">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading background-color-primary-accent">-->
-                    <!--<h3 class="panel-title">debug information</h3>-->
-                <!--</div>-->
+        <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading background-color-primary-accent">-->
+        <!--<h3 class="panel-title">debug information</h3>-->
+        <!--</div>-->
 
-                <!--<button id="btn-toggle-sidebar"-->
-                        <!--type="button"-->
-                        <!--class="btn btn-default" onclick="$('.sidebar').sidebar('toggle')">sidebar</button>-->
+        <!--<button id="btn-toggle-sidebar"-->
+        <!--type="button"-->
+        <!--class="btn btn-default" onclick="$('.sidebar').sidebar('toggle')">sidebar</button>-->
 
-            <!--</div>-->
+        <!--</div>-->
         <!--</div>-->
 
         <!-- Summary panel -->
@@ -264,11 +264,11 @@
                                 <dd>
                                     <div id="btn-oxo-expand">
                                         <!--<a class="btn btn-default" id="btn-toggle-oxo"-->
-                                           <!--type="button"-->
-                                           <!--data-toggle="collapse"-->
-                                           <!--data-target="#oxo-graph"-->
-                                           <!--aria-expanded="false">-->
-                                            <!--+-->
+                                        <!--type="button"-->
+                                        <!--data-toggle="collapse"-->
+                                        <!--data-target="#oxo-graph"-->
+                                        <!--aria-expanded="false">-->
+                                        <!--+-->
                                         <!--</a>-->
                                     </div>
                                     <!--oxo graph-->
@@ -293,12 +293,12 @@
                     <div class="panel-body col-lg-2 col-md-2 col-sm-2 col-xs-2" id="panel-links">
                         <div>
                             <a class="btn btn-default"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#highlight-study-panel-loading"
-                                    aria-expanded="false"
-                                    aria-controls="collapseExample">
-                              Highlight Study
+                               type="button"
+                               data-toggle="collapse"
+                               data-target="#highlight-study-panel-loading"
+                               aria-expanded="false"
+                               aria-controls="collapseExample">
+                                Highlight Study
                             </a>
                         </div>
 
@@ -399,7 +399,7 @@
 
                             <div class="col-lg-3">
                                 <input id="cb-query-include-descendants" type="checkbox"/>Descendants
-                                <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
+                                                                                          <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
                             <div class="col-lg-8">
                                 <!--xintodo add click function-->
@@ -441,7 +441,7 @@
                         </div>
                         <!--current select-->
                         <div class="row">
-                                <b>Current selected:</b>
+                            <b>Current selected:</b>
                             <div class="list-group" id="cart-loading">
                                 <div id="cart"></div>
                             </div>
@@ -503,10 +503,10 @@
 
                                 <!--&lt;!&ndash;oxo&ndash;&gt;-->
                                 <!--<div id="oxo-div" class="tab-pane fade" >-->
-                                    <!--<h4>oxo:</h4>-->
-                                    <!--<div>-->
-                                        <!--<div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>-->
-                                    <!--</div>-->
+                                <!--<h4>oxo:</h4>-->
+                                <!--<div>-->
+                                <!--<div id="oxo-vis" style="height:500px; width:500px; border:1px solid black;overflow: auto;"></div>-->
+                                <!--</div>-->
                                 <!--</div>-->
 
                             </div>
@@ -578,8 +578,8 @@
                             </h3>
                             <span class="pull-right">
                         <!--<button type="button" class="btn btn-default btn-xs" id="download_data">-->
-                            <!--<span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>-->
-                            <!--<span>Download association data</span>-->
+                        <!--<span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>-->
+                        <!--<span>Download association data</span>-->
                         <!--</button>-->
                         <span class="clickable panel-collapsed"
                               style="margin-left:25px"
@@ -636,16 +636,16 @@
 
 
     <!--<div data-name="dock" data-smarti="dock" data-dock-position="left"-->
-         <!--data-dock-offset="20" style="width:100%; height:90%; margin:0px">-->
+    <!--data-dock-offset="20" style="width:100%; height:90%; margin:0px">-->
 
-        <!--<div data-dock="true" style="width:50%; background-color:#f5f5f5; border-right:1px solid #ddd; padding:20px; overflow:scroll">-->
-        <!--aaa-->
-        <!--</div>-->
-        <!--<div data-handle="true" class="h" style="left:-18px;"> <span class="glyphicon glyphicon-backward"></span></div>-->
-        <!--<div data-handle="hidden" class="h" style="left:-15px;"><span class="glyphicon glyphicon-forward"></span></div>-->
-        <!--<div data-content="true" style=" padding:20px;">-->
-            <!--bbb-->
-        <!--</div>-->
+    <!--<div data-dock="true" style="width:50%; background-color:#f5f5f5; border-right:1px solid #ddd; padding:20px; overflow:scroll">-->
+    <!--aaa-->
+    <!--</div>-->
+    <!--<div data-handle="true" class="h" style="left:-18px;"> <span class="glyphicon glyphicon-backward"></span></div>-->
+    <!--<div data-handle="hidden" class="h" style="left:-15px;"><span class="glyphicon glyphicon-forward"></span></div>-->
+    <!--<div data-content="true" style=" padding:20px;">-->
+    <!--bbb-->
+    <!--</div>-->
     <!--</div>-->
 
 
@@ -813,7 +813,7 @@
 
     $('#btn-query-include-related-terms').click(function() {
         //replot with all related terms, from the currently selected efos
-        getRelatedTerms(getMainEFO()).then(function(data) {
+        OLS.getRelatedTerms(getMainEFO()).then(function(data) {
             addEFO(data, false);
         });
     });
@@ -822,13 +822,13 @@
 
 
     $('#ols-link').click(function() {
-        getOLSLink(getMainEFO()).then(function(link){
+        OLS.getOLSLink(getMainEFO()).then(function(link){
             window.open(link, '_blank');
         })
     });
 
     $('#oxo-link').click(function() {
-            window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
+        window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
     });
 
 
@@ -881,7 +881,7 @@
 
         var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
 
-        Promise.all(Object.keys(data).map(getHierarchicalDescendants)).then(function(data) {
+        Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(function(data) {
             console.log('finish loading descendants!')
         });
 
@@ -938,7 +938,7 @@
         var container = $('#cart');
         container.empty()
         //update cart, the badge will be 0 since the data is not ready at this stage.
-        var updateSelectedBoxPromise = Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+        var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
@@ -959,7 +959,7 @@
         //******************************
         if (initLoad){
             //display efo trait information when data is ready
-            getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch(function(err) {
+            OLS.getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch(function(err) {
                 console.warning('Error loading efo info from OLS. ' + err);
             }).then(function() {
                 hideLoadingOverLay('#summary-panel-loading')
@@ -1000,7 +1000,7 @@
         // query descendants for current selected terms
         //******************************
         var all_descendants = {}
-        var desPromise = Promise.all(whichDescendant().map(getHierarchicalDescendants)).then(function(descendants) {
+        var desPromise = Promise.all(whichDescendant().map(OLS.getHierarchicalDescendants)).then(function(descendants) {
             descendants.forEach(function(terms) {
                 Object.keys(terms).forEach(function(term) {
                     all_descendants[term] = terms[term];
@@ -1020,12 +1020,12 @@
             solrPromise.then(function(){
 
                 //update selection cart
-                Object.keys(current_select).map(getEFOInfo).reduce(function(sequence, efoInfo) {
+                Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
                     return sequence.then(function() {return efoInfo;}).then(function(efoInfo){
                         var target_efos;
                         if(isDescendantRequired(efoInfo.short_form)){
                             //self and decendants
-                            target_efos = getHierarchicalDescendants(efoInfo.short_form).then(function(data){
+                            target_efos = OLS.getHierarchicalDescendants(efoInfo.short_form).then(function(data){
                                 //adding self
                                 return Object.keys(data).concat(efoInfo.short_form);
                             })
@@ -1209,7 +1209,7 @@
         return Promise.all([p1, p2]).then(function() {
             console.log("Solr research request received for " + searchQuery);
             return promiseGet('/gwas/api/search/efotrait',
-//            return promisePost('/gwas/api/search/efotrait',
+                              //            return promisePost('/gwas/api/search/efotrait',
                               {
                                   'q': searchQuery,
                                   'max': 99999,
@@ -1337,7 +1337,7 @@
 
         }
 
-        getRelatedTerms(getMainEFO()).then(function(terms) {
+        OLS.getRelatedTerms(getMainEFO()).then(function(terms) {
             //make checkbox
             Object.keys(terms).forEach(function(relatedTerm) {
                 var d = terms[relatedTerm];
@@ -1361,11 +1361,11 @@
 
     addRelatedTermGraph = function(mainEFO) {
 
-        var mainEFOLink = getOLSLinkAPI(mainEFO).then(function(termFullLink) {
+        var mainEFOLink = OLS.getOLSLinkAPI(mainEFO).then(function(termFullLink) {
             return termFullLink + '/graph';
         })
 
-        var mainEFOIri = getIriByShortForm(mainEFO)
+        var mainEFOIri = OLS.getIriByShortForm(mainEFO)
 
         var tmpnetworkOptions = {
             webservice: {
@@ -1428,14 +1428,14 @@
 
             instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
 
-            getRelatedTerms(getMainEFO()).then(function(terms) {
+            OLS.getRelatedTerms(getMainEFO()).then(function(terms) {
 
                 Object.keys(terms).forEach(function(relatedTerm) {
                     var d = terms[relatedTerm];
                     reasonForRelatedEFO[d.obo_id] = d.logical_description;
                 })
 
-                return Object.keys(terms).map(getOLSLinkAPI).reduce(function(sequence, termOLSLinkPromise) {
+                return Object.keys(terms).map(OLS.getOLSLinkAPI).reduce(function(sequence, termOLSLinkPromise) {
                     return sequence.then(function() {
                         return termOLSLinkPromise;
                     }).then(function(termOLSLink) {
@@ -1459,7 +1459,7 @@
 
                     //add why to the title of node
                     $.each(reasonForRelatedEFO, function(efoid, reason) {
-                        getIriByShortForm(efoid).then(function(iri) {
+                        OLS.getIriByShortForm(efoid).then(function(iri) {
                             x["nodes"].update({id: iri, title: reason});
                         })
                     })
@@ -1619,20 +1619,20 @@
     //<![CDATA[
 
 
-//    promisePost('http://localhost:8280/gwas/api/search/efotrait',{
-//        'q': 'EFO_0000400,EFO_0000400',
-//        'max': 99999,
-//        'group.limit': 99999,
-//        'group.field': 'resourcename',
-//        'facet.field': 'resourcename',
-//        'hl.fl': 'shortForm,efoLink',
-//        'hl.snippets': 100
-//    }).then(JSON.parse)
-//      promisePost('http://localhost:8983/solr/gwas/select',{
-//        'q': '*:*',
-//        'rows': 1,
-//          'wt':'json'
-//    }).then(JSON.parse);
+    //    promisePost('http://localhost:8280/gwas/api/search/efotrait',{
+    //        'q': 'EFO_0000400,EFO_0000400',
+    //        'max': 99999,
+    //        'group.limit': 99999,
+    //        'group.field': 'resourcename',
+    //        'facet.field': 'resourcename',
+    //        'hl.fl': 'shortForm,efoLink',
+    //        'hl.snippets': 100
+    //    }).then(JSON.parse)
+    //      promisePost('http://localhost:8983/solr/gwas/select',{
+    //        'q': '*:*',
+    //        'rows': 1,
+    //          'wt':'json'
+    //    }).then(JSON.parse);
 
     function promisePost(url, params,debug) {
         if(debug == undefined){
@@ -1665,7 +1665,7 @@
 
             req.open('POST', url);
 //            if(debug){
-                console.log('promise get from :' + url);
+            console.log('promise get from :' + url);
 //            }
 
             req.onload = function() {
@@ -1694,7 +1694,7 @@
 
 
 
-//    var studies = findStudiesForEFO(getMainEFO())
+    //    var studies = findStudiesForEFO(getMainEFO())
     var studyDocument = {
         pubmedId : function(studydocumentSolr){
             return studydocumentSolr.pubmedId;
@@ -1715,17 +1715,17 @@
         },
     }
 
-//    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
-//            .then(function(array) {
-//
-//                return array.map(PMCSearchResult.journalInfo).forEach()
-//            });
-//    studies.nocallthisoneok(studyDocument.pubmedId).nocallthisoneok(getFromPMC).then(function(x){return x})
-//    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
-//            .then(function(array) {
-//
-//                return array.map(PMCSearchResult.journalInfo).forEach()
-//            });
+    //    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
+    //            .then(function(array) {
+    //
+    //                return array.map(PMCSearchResult.journalInfo).forEach()
+    //            });
+    //    studies.nocallthisoneok(studyDocument.pubmedId).nocallthisoneok(getFromPMC).then(function(x){return x})
+    //    Promise.all(values(studies).map(studyDocument.pubmedId).map(getFromPMC))
+    //            .then(function(array) {
+    //
+    //                return array.map(PMCSearchResult.journalInfo).forEach()
+    //            });
 
     //xintodo refactor into code
     arrayToHash = function(array,key){
@@ -1753,124 +1753,124 @@
 
 
 
-//    var a = {'a':1,'b':2}
-//    a.hashMap(console.log)
-//    Object.prototype.nocallthisoneok= function(callback) {
-//        var beforemap = this;
-//        var aftermap = {};
-//        Object.keys(beforemap).forEach(function(k){
-//            aftermap[k]=callback(beforemap[k]);
-//            if(aftermap[k] == undefined){
-//                aftermap[k] = beforemap[k]
-//            }
-//        })
-//        return aftermap;
-//    };
-//    var a = {'a':1,'b':2}
-//    a.hashMap(console.log)
+    //    var a = {'a':1,'b':2}
+    //    a.hashMap(console.log)
+    //    Object.prototype.nocallthisoneok= function(callback) {
+    //        var beforemap = this;
+    //        var aftermap = {};
+    //        Object.keys(beforemap).forEach(function(k){
+    //            aftermap[k]=callback(beforemap[k]);
+    //            if(aftermap[k] == undefined){
+    //                aftermap[k] = beforemap[k]
+    //            }
+    //        })
+    //        return aftermap;
+    //    };
+    //    var a = {'a':1,'b':2}
+    //    a.hashMap(console.log)
 
 
-//
-//    var request = require('request-promise');
-//
-//    var github = {
-//        token: null,
-//
-//        getUser: function() {
-//            return request({
-//                               "method":"GET",
-//                               "uri": "https://api.github.com/user",
-//                               "json": true,
-//                               "headers": {
-//                                   "Authorization": "Bearer " + github.token,
-//                                   "User-Agent": "My little demo app"
-//                               }
-//                           });
-//        },
-//
-//        getUserReposUrl: function(user) {
-//            return user.repos_url;
-//        },
-//
-//        getUserRepos: function(uri, repos) {
-//            return request({
-//                               "method": "GET",
-//                               "uri": uri,
-//                               "json": true,
-//                               "resolveWithFullResponse": true,
-//                               "headers": {
-//                                   "Authorization": "Bearer " + github.token,
-//                                   "User-Agent": "My little demo app"
-//                               }
-//                           }).then(function(response) {
-//                if (!repos) {
-//                    repos = [];
-//                }
-//                repos = repos.concat(response.body);
-//                console.log(repos.length + " repos so far");
-//
-//                if (response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) }).length > 0) {
-//                    console.log("There is more.");
-//                    var next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) })[0])[1];
-//                    return github.getUserRepos(next, repos);
-//                }
-//                return repos;
-//            });
-//        },
-//
-//        isPublic: function(repo) {
-//            return !repo.private;
-//        },
-//
-//        isOriginal: function(repo) {
-//            return !repo.fork;
-//        },
-//
-//        licenseUrl: function(repo) {
-//            return repo.contents_url.replace(/\{\+path\}/,"LICENSE");
-//        },
-//
-//        checkLicense: function(uri) {
-//            return request({
-//                               "method": "GET",
-//                               "uri": uri,
-//                               "json": true,
-//                               "headers": {
-//                                   "Authorization": "Bearer " + github.token,
-//                                   "User-Agent": "My little demo app"
-//                               }
-//                           }).then(function(fulfilled_body) {
-//                return false;
-//            }, function(rejected_body){
-//                return uri;
-//            });
-//        },
-//
-//        isMissing: function(license) {
-//            return license;
-//        },
-//
-//        createLicenseLink: function(license) {
-//            return license.replace(/https:\/\/api.github.com\/repos\/(.*)\/(.*)\/contents\/LICENSE/, "https://github.com/$1/$2/new/master?filename=LICENSE");
-//        }
-//    }
-//
-//    function main(params) {
-//        github.token = params.token;
-//        return github.getUser()
-//                .then(github.getUserReposUrl)
-//                .then(github.getUserRepos)
-//                .filter(github.isPublic)
-//                .filter(github.isOriginal)
-//                .map(github.licenseUrl)
-//                .map(github.checkLicense)
-//                .filter(github.isMissing)
-//                .map(github.createLicenseLink);
-//    }
-//
-//    main({"token": process.argv[2]}).then(function(result) {
-//        console.log(result);
-//    });
+    //
+    //    var request = require('request-promise');
+    //
+    //    var github = {
+    //        token: null,
+    //
+    //        getUser: function() {
+    //            return request({
+    //                               "method":"GET",
+    //                               "uri": "https://api.github.com/user",
+    //                               "json": true,
+    //                               "headers": {
+    //                                   "Authorization": "Bearer " + github.token,
+    //                                   "User-Agent": "My little demo app"
+    //                               }
+    //                           });
+    //        },
+    //
+    //        getUserReposUrl: function(user) {
+    //            return user.repos_url;
+    //        },
+    //
+    //        getUserRepos: function(uri, repos) {
+    //            return request({
+    //                               "method": "GET",
+    //                               "uri": uri,
+    //                               "json": true,
+    //                               "resolveWithFullResponse": true,
+    //                               "headers": {
+    //                                   "Authorization": "Bearer " + github.token,
+    //                                   "User-Agent": "My little demo app"
+    //                               }
+    //                           }).then(function(response) {
+    //                if (!repos) {
+    //                    repos = [];
+    //                }
+    //                repos = repos.concat(response.body);
+    //                console.log(repos.length + " repos so far");
+    //
+    //                if (response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) }).length > 0) {
+    //                    console.log("There is more.");
+    //                    var next = new RegExp(/<(.*)>/).exec(response.headers.link.split(",").filter(function(link){ return link.match(/rel="next"/) })[0])[1];
+    //                    return github.getUserRepos(next, repos);
+    //                }
+    //                return repos;
+    //            });
+    //        },
+    //
+    //        isPublic: function(repo) {
+    //            return !repo.private;
+    //        },
+    //
+    //        isOriginal: function(repo) {
+    //            return !repo.fork;
+    //        },
+    //
+    //        licenseUrl: function(repo) {
+    //            return repo.contents_url.replace(/\{\+path\}/,"LICENSE");
+    //        },
+    //
+    //        checkLicense: function(uri) {
+    //            return request({
+    //                               "method": "GET",
+    //                               "uri": uri,
+    //                               "json": true,
+    //                               "headers": {
+    //                                   "Authorization": "Bearer " + github.token,
+    //                                   "User-Agent": "My little demo app"
+    //                               }
+    //                           }).then(function(fulfilled_body) {
+    //                return false;
+    //            }, function(rejected_body){
+    //                return uri;
+    //            });
+    //        },
+    //
+    //        isMissing: function(license) {
+    //            return license;
+    //        },
+    //
+    //        createLicenseLink: function(license) {
+    //            return license.replace(/https:\/\/api.github.com\/repos\/(.*)\/(.*)\/contents\/LICENSE/, "https://github.com/$1/$2/new/master?filename=LICENSE");
+    //        }
+    //    }
+    //
+    //    function main(params) {
+    //        github.token = params.token;
+    //        return github.getUser()
+    //                .then(github.getUserReposUrl)
+    //                .then(github.getUserRepos)
+    //                .filter(github.isPublic)
+    //                .filter(github.isOriginal)
+    //                .map(github.licenseUrl)
+    //                .map(github.checkLicense)
+    //                .filter(github.isMissing)
+    //                .map(github.createLicenseLink);
+    //    }
+    //
+    //    main({"token": process.argv[2]}).then(function(result) {
+    //        console.log(result);
+    //    });
 
 
 
