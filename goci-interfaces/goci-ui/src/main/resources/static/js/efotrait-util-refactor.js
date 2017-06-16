@@ -460,7 +460,7 @@ var OLS = {
                     encodeURIComponent(encodeURIComponent(arrayPromise[1]));
             return url
         })
-    }
+    },
 
     /**
      * Get the OLS link for a give efo term. This is return a link to the term page.
