@@ -550,6 +550,7 @@ reloadLocusZoom = function(plot_id, data_association, highlight_associations) {
                 + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
     }
 
+    //highlight association colour
     if(highlight_associations != undefined){
         data_association.docs.forEach(function(d, i) {
             if(highlight_associations.indexOf(d.id) == -1){

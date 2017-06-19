@@ -543,7 +543,6 @@ var OLS = {
 }
 
 
-
 //http://www.ebi.ac.uk/europepmc/webservices/rest/search?&query=ext_id:26831199%20src:med&resulttype=core&format=json
 var EPMC = {
     /**
