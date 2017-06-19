@@ -52,6 +52,8 @@ public class SingleSnpMultiSnpAssociationServiceTest {
     @Mock
     private LociAttributesService lociAttributesService;
 
+    @Mock
+
     private SnpAssociationFormService snpAssociationFormService;
 
     // Entity objects
