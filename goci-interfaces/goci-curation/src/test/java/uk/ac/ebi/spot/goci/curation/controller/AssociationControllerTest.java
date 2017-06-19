@@ -137,7 +137,8 @@ public class AssociationControllerTest {
                 studyAssociationBatchDeletionEventService,
                 ensemblRestTemplateService,
                 checkMappingService,
-                mapCatalogService);
+                mapCatalogService,
+                associationService);
          
         mockMvc = MockMvcBuilders.standaloneSetup(associationController).build();
         //System.setProperty("ensembl.server", "http://rest.ensembl.org");

@@ -159,7 +159,8 @@ public class AssociationController {
                                  StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
                                  EnsemblRestTemplateService ensemblRestTemplateService,
                                  CheckMappingService checkMappingService,
-                                 MapCatalogService mapCatalogService) {
+                                 MapCatalogService mapCatalogService,
+                                 AssociationService associationService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -1613,7 +1614,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/getValidationResults",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String getValidationResult(@PathVariable Long studyId, HttpSession session, Model model)
+    public String getValidationResult(@PathVariable Long studyId, HttpSession session, Model model, RedirectAttributes redirectAttributes)
             throws ExecutionException, InterruptedException, SheetProcessingException, FileUploadException, IOException {
 
 
@@ -1664,7 +1665,7 @@ public class AssociationController {
             }
         }
        else {
-            RedirectAttributes redirectAttributes = (RedirectAttributes) session.getAttribute("redirectAttributes");
+//            RedirectAttributes redirectAttributes = (RedirectAttributes) session.getAttribute("redirectAttributes");
 
             String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
             redirectAttributes.addFlashAttribute("mappingComplete", message);
