@@ -130,6 +130,117 @@ function promiseGet(url, params,debug) {
 
 
 /**
+ * get data asyn with promise. This is first implemented to query efo colour but turn out to be slower
+ * then making multiple GET request.
+ * need to refactor to change header
+ * @param {String} url
+ * @param {hash} params
+ * @param {Boolean} debug
+ * @returns {Promise}
+ */
+function promisePost(url, params,debug) {
+    if(debug == undefined){
+        debug = false
+    }
+
+    if (!url.startsWith("http")) {
+        url = window.location.origin + url
+    }
+
+    // Return a new promise.
+    return new Promise(function(resolve, reject) {
+        // Do the usual XHR stuff
+        var req = new XMLHttpRequest();
+           //
+           // params = params || {}
+           // var params_str = '';
+           // if (Object.keys(params).length > 0) {
+           //     Object.keys(params).forEach(function(key, index) {
+           //         params_str = params_str + '&' + key + '=' + this[key];
+           //     }, params);
+           //     params_str = params_str.substr(1)
+           // }else{
+           //     params_str = null;
+           // }
+           //
+           // params = Object.keys(params).map(function (key) {
+           //     return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+           // }).join('&');
+        params_str = JSON.stringify(params)
+
+        req.open('POST', url);
+        //xintodo refactor to accept header as parameter
+        req.setRequestHeader("Content-Type", "application/json");
+
+
+        if(debug){
+            console.log('promise post from :' + url);
+        }
+
+        req.onload = function() {
+            // This is called even on 404 etc
+            // so check the status
+            if (req.status == 200) {
+                // Resolve the promise with the response text
+                resolve(req.response);
+            }
+            else {
+                // Otherwise reject with the status text
+                // which will hopefully be a meaningful error
+                reject(Error(req.statusText));
+            }
+        };
+
+        // Handle network errors
+        req.onerror = function() {
+            reject(Error("Network Error"));
+        };
+
+        // Make the request
+        req.send(params_str);
+    });
+
+
+   // //testing how fast the post method works
+   // //"{"1":472.7800000000002,"10":1723.4450000000002,"50":8417.69,"100":16249.485000000002,"200":30406.670000000002,"205":28694.609999999986,"208":30608.684999999823,"209":29462.99499999988,"210":30634.399999999907}"
+   // var size = [1,10,50,100,200,400,800,1000]
+   // var size = [220,240,260,280,300]
+   // var result = {};
+   // var t0 = performance.now();
+   // size.forEach(function(s){
+   //     getAvailableEFOs().then(function(x) {
+   //         t0 = performance.now();
+   //         return getColourForEFOs(Object.keys(x).slice(0, s))
+   //     }).then(console.log).then(function(){
+   //         var t1 = performance.now();
+   //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+   //         result[s.toString()] = t1 - t0;
+   //     })
+   // });
+   // result
+   //
+   // //testing using get
+   // var size = [1,10,50,100,200,400,800,1000]
+   // var size = [1500]
+   // var result = {};
+   // var t0 = performance.now();
+   // size.forEach(function(s){
+   //     getAvailableEFOs().then(function(x) {
+   //         t0 = performance.now();
+   //         return Promise.all( Object.keys(x).slice(0, s).map(getColourForEFO))
+   //     }).then(console.log).then(function(){
+   //         var t1 = performance.now();
+   //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+   //         result[s.toString()] = t1 - t0;
+   //     })
+   // });
+   // result
+}
+
+
+
+
+/**
  * get data asyn with promise, recursively querying if the response has 'next' link.
  * The return Promise contains a hash with keys coresponding to the _embedded keys.
  * @param {String} url
@@ -617,6 +728,50 @@ getColourForEFO = function(efoid) {
             return data[efoid]
         }
     })
+}
+
+/**
+ * Use POST to query colour for multiple efo terms. This turn out to be slower
+ * @param {[String]}efoids
+ * @returns {Promise}
+ * @example getColourForEFOs(["EFO_0000249",'abdc'])
+ */
+getColourForEFOs = function(efoids){
+    var queryColours = function(efoids){
+        console.log('Loading Colours...')
+        return promisePost(global_color_url_batch, efoids).then(JSON.parse).then(function(response){
+            return hashFromArrays(efoids,response);
+        });
+    }
+
+    var dataPromise = getPromiseFromTag(global_efo_info_tag_id, 'efo2colour');
+
+
+    return dataPromise.then(function(data) {
+//            workout what is missing
+        var missing = efoids.filter(function(n) {
+            return Object.keys(data).indexOf(n) == -1;
+        });
+//            missing=efoids;
+        if(missing.length >0){
+            console.log('Loading Colour...' + missing);
+            var promiseMissingColour = promisePost(global_color_url_batch, missing).then(JSON.parse).then(function(response){
+                return hashFromArrays(missing,response);
+            });
+
+            return promiseMissingColour.then(function(colours){
+                //add new data to the tag
+                return addPromiseToTag(global_efo_info_tag_id,promiseMissingColour,'efo2colour').then(function(efo2colour){
+                    return subHash(efo2colour,efoids)
+                })
+            })
+        }else{
+            console.debug('Loading Colour from cache.')
+            //xintodo select those efoids
+            return subHash(data,efoids)
+        }
+    })
+
 }
 
 /**
@@ -1845,6 +2000,7 @@ isMainEFO = function(efoid){
  * @param {String} hash
  * @param {[]} keys
  * @returns {{}}
+ * @example subHash({'a':1,'b':2,'c':3},['a','c'])    //{'a':1,'c':3}
  */
 var subHash = function(hash, keys){
     var tmp = {};
@@ -1855,6 +2011,44 @@ var subHash = function(hash, keys){
     })
     return tmp;
 }
+
+/**
+ * A helper function to re-index an array of hash, with the key being one of the hash value.
+ * @param indexStr - one of the key in each of the arrayofHash
+ * @param arrayofHash
+ * @returns {{}}
+ * @example addIndexToArrayOfHash('name',[{'name':'a','age':1},{'name':'b','age':2}])   // {a:{'name':'a','age':1},'b':{'name':'b','age':2}}
+ *
+ */
+addIndexToArrayOfHash = function(indexStr,arrayofHash){
+    var hash = {}
+    arrayofHash.map(function(d){
+        hash[d[indexStr]] = d;
+    })
+    return hash;
+}
+
+
+/**
+ * A helper function to make a hash with two arrays, one being keys and one being values.
+ *
+ * @param array
+ * @param keys
+ * @returns {{}}
+ * @example hashFromArrays(['a','b','c'],[1,2,3])       //{'a':1,'b':2,'c':3}
+ */
+hashFromArrays = function(arr_keys,arr_values){
+    if(arr_keys.length != arr_values.length){
+        console.error('the number of keys(' + arr_keys + ') must be the same of the number of values(' + arr_values + ')!')
+        return undefined;
+    }
+    var hash = {}
+    arr_keys.forEach(function(i) {
+        hash[i] = arr_values.shift();
+    })
+    return hash;
+}
+
 
 // Create a popover to display content
 createPopover = function(label,header,content){
