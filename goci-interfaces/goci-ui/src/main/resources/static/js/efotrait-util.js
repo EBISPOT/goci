@@ -4,6 +4,7 @@
 
 
 var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
+var global_color_url_batch = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMappings';
 var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
 var global_ols = 'http://www.ebi.ac.uk/ols/';
 var global_ols_seach_api =  global_ols_api + 'search';
@@ -670,7 +671,7 @@ getAvailableEFOs=function(){
  * @param Promise promise - the promise, fullfilled or pending
  * @param String key - the has key for Promise
  * @param Boolean overwriteWarning - Default value is false. if true, print log to idicate overwritting.
- * @return undefined
+ * @return {Promise} - Promise containing merged data
  * @example addPromiseToTag('#efoInfo',promise,'key',false)
  */
 addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
@@ -702,9 +703,10 @@ addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
 
 
     p.then(function(){
-        $(global_efo_info_tag_id).data(key,p);
+        $(tagID).data(key,p);
         console.debug('adding promise to ' + key + ' tag ' + tagID);
     })
+    return p;
 }
 
 /**
@@ -815,8 +817,6 @@ filterAvailableEFOs = function(toBeFilter) {
             });
     })
 }
-
-
 
 
 
@@ -1840,6 +1840,21 @@ isMainEFO = function(efoid){
     return efoid == getMainEFO();
 }
 
+/**
+ * subset a hash back on keys provided.
+ * @param {String} hash
+ * @param {[]} keys
+ * @returns {{}}
+ */
+var subHash = function(hash, keys){
+    var tmp = {};
+    var subHashKeys =  Object.keys(hash).map(function(n) {
+        if(keys.indexOf(n) !== -1){
+            tmp[n] = hash[n];
+        }
+    })
+    return tmp;
+}
 
 // Create a popover to display content
 createPopover = function(label,header,content){
