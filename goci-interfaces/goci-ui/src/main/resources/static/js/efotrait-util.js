@@ -12,6 +12,7 @@
  * http://es6-features.org/#ObjectMatchingShorthandNotation  //for parsing some ajax result!!
  * http://es6-features.org/#ObjectAndArrayMatchingDefaultValues  //find value from object and assign to var directly
  * http://es6-features.org/#ParameterContextMatching
+ * http://es6-features.org/#ObjectPropertyAssignment //merge object
  */
 var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
 var global_color_url_batch = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMappings';

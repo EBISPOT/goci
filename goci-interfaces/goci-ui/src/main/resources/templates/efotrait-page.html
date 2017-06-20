@@ -885,6 +885,7 @@
             console.log('finish loading descendants!')
         });
 
+
         // p is the promise for loading all available efo from GWAS Catalog
         // This needs to be fullfill before trigger any add event.
         p.then(function(data) {
@@ -943,7 +944,7 @@
             return sequence.then(function() {
                 return efoInfo;
             }).then(function(efoInfo) {
-                return addToCart('#cart', efoInfo.short_form, '['+efoInfo.short_form+'] '+efoInfo.label).then(function(){
+                return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+efoInfo.label).then(function(){
                     return efoInfo;
                 })
             });
