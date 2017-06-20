@@ -938,6 +938,7 @@
         var container = $('#cart');
         container.empty()
         //update cart, the badge will be 0 since the data is not ready at this stage.
+        //xintodo Using reduce force the order, do I need order here?
         var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
             return sequence.then(function() {
                 return efoInfo;
@@ -1455,6 +1456,7 @@
 
             //change mainEFO node shape
             mainEFOIri.then(function(iri) {
+                //Thi is to make sure the setting apply AFTER the nodes are loaded.
                 net.once("stabilized", function(params){
                     //http://visjs.org/docs/data/dataset.html
                     var defaultAttribute = x["nodes"].get(iri)

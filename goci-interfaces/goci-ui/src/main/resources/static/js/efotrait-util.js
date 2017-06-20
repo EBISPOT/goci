@@ -2,7 +2,17 @@
  * Created by xin on 19/04/2017.
  */
 
-
+/**
+ * xintodo refactor this!!!!!
+ * use let instead of var
+ * http://es6-features.org/#ExpressionBodies
+ * http://es6-features.org/#ComputedPropertyNames
+ * http://es6-features.org/#MethodProperties
+ * http://es6-features.org/#StringInterpolation
+ * http://es6-features.org/#ObjectMatchingShorthandNotation  //for parsing some ajax result!!
+ * http://es6-features.org/#ObjectAndArrayMatchingDefaultValues  //find value from object and assign to var directly
+ * http://es6-features.org/#ParameterContextMatching
+ */
 var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
 var global_color_url_batch = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMappings';
 var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
