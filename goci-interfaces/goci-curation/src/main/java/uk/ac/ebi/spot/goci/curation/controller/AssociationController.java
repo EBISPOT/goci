@@ -1665,8 +1665,6 @@ public class AssociationController {
             }
         }
        else {
-//            RedirectAttributes redirectAttributes = (RedirectAttributes) session.getAttribute("redirectAttributes");
-
             String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
             redirectAttributes.addFlashAttribute("mappingComplete", message);
             return "redirect:/studies/" + studyId + "/associations";
