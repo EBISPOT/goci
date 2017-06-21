@@ -30,7 +30,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String platform;
     @Field private String accessionId;
     @Field @NonEmbeddableField private Boolean fullPvalueSet;
-    @Field private Boolean userRequested;
 
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
@@ -80,7 +79,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.publication = study.getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
-        this.userRequested = study.getUserRequested();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -446,7 +444,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public Boolean getFullPvalueSet() { return fullPvalueSet; }
 
-    public Boolean getUserRequested() { return userRequested; }
 
 
 }
