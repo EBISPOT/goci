@@ -949,10 +949,10 @@
                     });
                 }
 
+                if(totalMapping > 0) {
+                    $('#oxo-list').append(displayArrayAsList(xrefs))
+                }
 
-
-
-                $('#oxo-list').append(displayArrayAsList(xrefs))
 
 
                 //we want to show a mesh here
@@ -976,11 +976,7 @@
                 });
             })
         }
-        getOXO(getMainEFO()).then((data)=>{
-            return xrefs = data._embedded.mappings.map((xref) => {
-                return xref.toTerm.curie
-            }).filter((xref_id) => {return xref_id.startsWith("MeSH",0)});
-            })
+
         //******************************
         // update shareable link
         //******************************
