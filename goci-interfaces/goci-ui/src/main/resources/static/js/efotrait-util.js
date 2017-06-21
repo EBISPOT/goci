@@ -35,6 +35,8 @@ var data_diseasetrait=undefined
 var data_facet=undefined
 var data_highlighting=undefined
 
+//*************************** registering button clicking event *************************
+
 /**
  * toggle checkAll/uncheck All for the cart item checkbox.
  */
@@ -142,10 +144,1365 @@ new Clipboard('#sharable_link_btn', {
     }
 });
 
+//*********************** core functions *****************************
+
+/**
+ * When adding extra term to the cart
+ * @param {Object} data - a hash, hash keys are the efo ids and value are the efo infos. These efo are to be added to the cart.
+ * @param {Boolean} initLoad - if true, the efoinfo/highlighted study will be update
+ * @example addEFO{{},false} - simply trigger the update page event without adding anything to the cart.
+ * @example addEFO{{'EFO_0000400':{}},false} - add EFO_0000400 to the cart and trigger page update
+ */
+addEFO = function(data={}, initLoad=false) {
+
+    //If this is the first load, check ever efo id is valid
+    if(initLoad){
+        Promise.all(Object.keys(data).map(OLS.getEFOInfo)).catch((err)=>{
+            $('#lower_container').html("<h2>Invalid EFO id.</h2>");
+            return ''
+        })
+    }
+
+
+    //add these terms to seleted
+    var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
+
+    Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
+        console.log('finish loading descendants!')
+    })
+
+
+    //load all available efo terms in the GWAS Catalog(has at least one annotation)
+    //save in the global_efo_info_tag_id tag with key 'availableEFOs'
+    //This needs to be fullfill before trigger any add event.
+    getAvailableEFOs().then((availableEFO) => {
+        updatePage(initLoad);
+    }).catch((err) => {
+        console.error(`Error when loading all available EFOs ${err}`);
+    });
+}
+
+/**
+ * When remove an efo term from the cart
+ * @param {String} efoid - remove the EFO from the cart.
+ */
+removeEFO = function(efoid) {
+    removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
+    removeDataFromTag(global_efo_info_tag_id,'whichDescendant',efoid)
+    addEFO({});
+}
+
+
+/**
+ * function to add a selected efo to the cart box on the page,
+ * add bagdes to indicate the the toplevel efo and the number of association/trait for this efo
+ * add checkkbox to indicate the descendants
+ */
+addToCart = function(tagID, efoid, additionalLabel) {
+
+    var isMain = isMainEFO(efoid);
+
+    var colour, colourLabelInit, colourLabel;
+    //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
+    return getColourForEFO(efoid).then((data)=>{
+        colour = data.colour;
+        colourLabel = data.colourLabel;
+        //use the first letter to idicate the label
+        colourLabelInit = colourLabel.substr(0,1)
+    }).catch((err)=>{
+        //if colour server is not available
+        console.warn(`Error loading colour for cart item < ${efoid} > from ${global_color_url}. ${err}. Using default colour.`)
+        //default value
+        colour = '#808080';
+        colourLabelInit = '?'
+        colourLabel = 'unable to reach colour server.';
+    }).then(() =>{
+        var container = $(tagID);
+
+        //checkbox indicate require descendant
+        var cb = $('<input />',
+                   {
+                       id: 'selected_cb_' + efoid,
+                       type: 'checkbox',
+                       class: "cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1",
+                       value: efoid
+                   }).appendTo(container);
+
+        if (isDescendantRequired(efoid)){
+            cb.attr('checked','checked')
+        }
+
+        cb.change(function(){
+//                var id=this.id.split("selected_cb_")[1];
+            var id=efoid;
+
+            if(this.checked){
+                addDataToTag(global_efo_info_tag_id, {[id]:true}, 'whichDescendant')
+            }else{
+                var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+                delete tmp[id];
+            }
+            updatePage()
+        })
+
+        if(isAlwaysDescendant()){
+            cb.attr("disabled", true);
+        }else{
+            cb.removeAttr("disabled");
+        }
+
+        //show the descendants number in checkbox tooltips
+        OLS.getHierarchicalDescendants(efoid).then((descendants) => {
+            cb.attr("title", `${Object.keys(descendants).length} descendants.`);
+//                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
+        });
+
+        //cart item
+        var item = $('<a />', {
+            class: 'list-group-item cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
+        }).appendTo(container);
+
+        //colour badge for category
+        $('<span />', { class: 'badge cart-item-category-badge', text: colourLabelInit, title:colourLabel})
+                .css({'background-color' :colour})
+                .appendTo(item);
+
+        //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
+        if (!isMain) {
+            var span = $('<span />', {id: 'selected_btn_' + efoid, class: 'badge', text: '  X  '}).appendTo(item);
+            span.on("click", function(e) {
+                removeEFO(efoid);
+            });
+        }
+
+        // This will add badge at the end of each cart item, showing the number of association/study linked.
+        // This will be init probably before the association/study data is available, thus generating badges with
+        // '-' as value at the beginning. The badge will be update when the data is available.
+        $('<span />', { id: 'selected_btn_' + efoid + '_nos' ,class: 'badge cart-item-number-badge', text: '-' , title:'Number of study'}).appendTo(item);
+        $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge cart-item-number-badge', text: '-' , title:'Number of association'}).appendTo(item);
+
+
+        //to highlight associations only for this term
+        item.click(() => {
+            //TOGGLE HIGHLIGHT
+            if(item.hasClass("highlight")){
+                item.removeClass("highlight");
+                reloadLocusZoom('#plot', data_association)
+            }else{
+                $('.list-group-item').removeClass("highlight");
+                item.addClass("highlight");
+                var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
+                reloadLocusZoom('#plot', data_association, Object.keys(highlightAssociations));
+            }
+        })
+
+        item.append(additionalLabel)
+    })
+}
+
+/**
+ * trigger a refresh of the page content, including cart, locus plot, tables, badges.
+ * @param {Boolean} initLoad - if true, the efoinfo/highlighted study will be update
+ */
+updatePage = function(initLoad=false) {
+
+    //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
+    if(initLoad){
+        showLoadingOverLay('#summary-panel-loading');
+//            showLoadingOverLay('#highlight-study-panel-loading');
+    }
+    showLoadingOverLay('#locus-plot-row-loading');
+    showLoadingOverLay('#association-table-loading');
+    showLoadingOverLay('#study-table-loading');
+    showLoadingOverLay('#cart-loading');
+    showLoadingOverLay('#sharable_link_btn');
+    //temporarily disable the button
+    $('.cart-action-btn').attr('disabled',true)
+
+
+    var current_select = getCurrentSelected();
+    var mainEFO = getMainEFO();
+
+    //add all items in the card to require-descendants
+    if(isAlwaysDescendant()){
+        addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
+    }
+
+    // ******************************
+    // update cart box
+    // ******************************
+    var container = $('#cart');
+    container.empty()
+    //update cart, the badge will be 0 since the data is not ready at this stage.
+    //xintodo Using reduce force the order, do I need order here?
+    var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
+        return sequence.then(() => {
+            return efoInfo;
+        }).then(function(efoInfo) {
+            return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+ efoInfo.label).then(() =>{
+                return efoInfo;
+            })
+        });
+    }, Promise.resolve()).catch((err) => {
+        console.warning(`Error when updating cart! ${err}`);
+    })
+
+
+    //        var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).map((efoInfo) => {
+    //            efoInfo.then(function(efoInfo) {
+    //                return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+efoInfo.label).then(() =>{
+    //                    return efoInfo;
+    //                })
+    //            });
+    //        }, Promise.resolve()).catch((err) => {
+    //            console.warning(`Error when updating cart! ${err}`);
+    //        })
+
+    //******************************
+    // update efo information panel
+    //******************************
+    if (initLoad){
+        //display efo trait information when data is ready
+        OLS.getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch((err) => {
+            console.warning(`Error loading efo info from OLS. ${err}`);
+        }).then(() => {
+            hideLoadingOverLay('#summary-panel-loading')
+        })
+    }
+
+    //******************************
+    // add ols graph for related term
+    //******************************
+    if (initLoad) {
+        //addRelatedTermCheckBox();
+        initOLS_GraphWiget(mainEFO);
+        initOLS_TreeWiget(mainEFO)
+        initOLS_AutocompleteWiget();
+    }
+
+    //******************************
+    // add oxo graph
+    //******************************
+    if (initLoad) {
+        getOXO(getMainEFO()).then((data)=>{
+            var container = $('#btn-oxo-expand');
+            var totalMapping = parseInt(data.page.totalElements);
+            var xrefs = [];
+            var xrefs_mesh = []
+            if(totalMapping > 0){
+                xrefs = data._embedded.mappings.map((xref) => {
+                    return xref.toTerm.curie
+                })
+
+                xrefs_mesh = xrefs.filter((xref_id) => {
+                    return xref_id.startsWith("MeSH")
+                });
+            }
+
+            if(totalMapping > 0) {
+                $('#oxo-list').append(displayArrayAsList(xrefs))
+            }
 
 
 
+            //we want to show a mesh here
+            if(totalMapping > 0){
+                if(xrefs_mesh.length > 0){
+                    var xref_mesh = xrefs_mesh[0];
+                    container.html(`<!--<b> ${xref_mesh} </b> and <b>${totalMapping}</b>  more ontology Xrefs--> `);
+                    container.html(`${xref_mesh} ...`);
+                }else{
+                    container.html(`<b> ${totalMapping} </b> ontology Xrefs`);
+                }
+                container.append(showHideDiv('oxo-graph'));
 
+            }else{
+                container.html(`no ontology Xrefs found.`);
+            }
+
+            $('#button-oxo-graph').click(() => {
+                //To redraw the oxo graph so that it is center to the div
+                drawGraph(getMainEFO().replace('_',':'),1);
+            });
+        })
+    }
+
+    //******************************
+    // update shareable link
+    //******************************
+    updateSharableLink();
+
+    //******************************
+    // query descendants for current selected terms
+    //******************************
+    var all_descendants = {}
+    var desPromise = Promise.all(whichDescendant().map(OLS.getHierarchicalDescendants)).then((descendants) => {
+        descendants.forEach((terms) => {
+            Object.keys(terms).forEach( (term) => {
+                all_descendants[term] = terms[term];
+            })
+        })
+        return all_descendants;
+    }).catch(function(err) {
+        console.warning(`Error when trying to find all descendants with error messgae. ${err}`);
+    })
+
+
+    //******************************
+    // when solr data ready, process solr data and update badges in the selection cart
+    //******************************
+    Promise.all([updateSelectedBoxPromise,desPromise]).then((arr)=>{
+        var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
+        solrPromise.then(() =>{
+            //update selection cart
+            Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
+                return sequence.then(() => {return efoInfo;}).then((efoInfo)=>{
+                    var target_efos;
+                    //do we include descendant for this term
+                    if(isDescendantRequired(efoInfo.short_form)){
+                        //self and decendants
+                        target_efos = OLS.getHierarchicalDescendants(efoInfo.short_form).then((descendants) => {
+                            //adding self
+                            return Object.keys(descendants).concat(efoInfo.short_form);
+                        })
+                    }else{
+                        //only self
+                        target_efos = Promise.resolve([efoInfo.short_form]);
+                    }
+
+                    //update the cart box badge number when data is ready
+                    target_efos.then(function(efos){
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
+                        //work out what association is included (self or self+descendants), this is used for highlighting the plot.
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').data('associations', findAssociationForEFOs(efos))
+                        $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').data('efos', efos)
+                    });
+                })
+            },Promise.resolve())
+
+
+        }).catch((err) => {
+            console.error(`Error searching solr. ${err}`);
+            $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
+        }).then(() =>{
+            hideLoadingOverLay('#cart-loading');
+            $('.cart-action-btn').removeAttr("disabled");
+        })
+    });
+}
+
+//make solr query
+function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false) {
+    // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(initload)
+    // or just reload the tables(adding another efo term)
+
+    var searchQuery = mainEFO;
+
+
+    if (additionalEFO.length > 0) {
+        var p1 = filterAvailableEFOs(additionalEFO).then((additionalEFO_filtered) => {
+            if (additionalEFO_filtered.length > 0)
+                return searchQuery = searchQuery + ',' + additionalEFO_filtered.join(',');
+            else
+                return searchQuery;
+        });
+
+    }
+
+    if (descendants.length > 0) {
+        var p2 = filterAvailableEFOs(descendants).then((descendants_filtered) => {
+            if (descendants_filtered.length > 0)
+                searchQuery = searchQuery + ',' + descendants_filtered.join(',');
+            else
+                return searchQuery;
+        });
+    }
+
+    //xintodo the url will be too long if there are a lot of terms to query, maybe change to post?
+    //http://localhost:8280/gwas/api/search/efotrait?&q=EFO_0000400,EFO_0000400&max=9999&group.limit=9999&group.field=resourcename&facet.field=resourcename&hl.fl=shortForm,efoLink&hl.snippets=100
+    return Promise.all([p1, p2]).then(() => {
+        console.log("Solr research request received for " + searchQuery);
+        return promiseGet('/gwas/api/search/efotrait',
+                          //            return promisePost('/gwas/api/search/efotrait',
+                          {
+                              'q': searchQuery,
+                              'max': 99999,
+                              'group.limit': 99999,
+                              'group.field': 'resourcename',
+                              'facet.field': 'resourcename',
+                              'hl.fl': 'shortForm,efoLink',
+                              'hl.snippets': 100
+                          }).then(JSON.parse).then(function(data) {
+            processEfotraitData(data, mainEFO, initLoad);
+            console.log("Solr research done for " + searchQuery);
+            return data;
+        }).catch(function(err) {
+            console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+            throw(err);
+        })
+    })
+
+}
+
+
+//Parse the Solr results and display the data on the HTML page
+function processEfotraitData(data, efotraitId, initLoad) {
+    // Check if Solr returns some results
+    if (data.grouped.resourcename.matches == 0) {
+        $('#lower_container').html("<h2>The efotrait <em>" + efotraitId +
+                                   "</em> cannot be found in the GWAS Catalog database</h2>");
+    }
+    else {
+        //split the solr search by groups
+//            data_efo, data_study, data_association, data_diseasetrait;
+        data_facet = data.facet_counts.facet_fields.resourcename;
+        data_highlighting = data.highlighting;
+
+        $.each(data.grouped.resourcename.groups, function(index, group) {
+            switch (group.groupValue) {
+                case "efotrait":
+                    data_efo = group.doclist;
+                    break;
+                case "study":
+                    data_study = group.doclist;
+                    break;
+                case "association":
+                    data_association = group.doclist;
+                    break;
+                    //not sure we need this!
+                case "diseasetrait":
+                    data_diseasetrait = group.doclist;
+                    break;
+                default:
+            }
+        });
+
+        //update association/study table
+        displayEfotraitAssociations(data_association.docs);
+        displayEfotraitStudies(data_study.docs);
+
+
+        //work out highlight study
+        var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
+        if(initLoad){
+            displayHighlightedStudy(highlightedStudy);
+            //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
+            getSummary(findStudiesForEFO(getMainEFO()));
+        }
+
+
+        //we add preferEFO for each association, generate the association data in popup for locus plot.
+        var allUniqueEFO = {}
+        data_association.docs.forEach(function(d, i) {
+            d.preferedEFO = findhighlightEFOForAssociation(d.id,data);
+            allUniqueEFO[d.preferedEFO] = '';
+            //add any string data that will be use in the locus plot popover
+            d.popoverHTML = buildLocusPlotPopoverHTML(d);
+        })
+
+        //query for distinct efo terms. This will reduce the query number so work faster
+//            {
+//                uri: "http://www.ebi.ac.uk/efo/EFO_0000400",
+//                        trait: "diabetes mellitus",
+//                    parentUri: "http://www.ebi.ac.uk/efo/EFO_0000589",
+//                    parent: "metabolic disease",
+//                    colour: "#FDB462"
+//            }
+        //Load colour for unique efo
+        var allColorLoaded = []
+        Object.keys(allUniqueEFO).forEach(function(efo) {
+            allColorLoaded.push(getColourForEFO(efo).then(function(response) {
+                allUniqueEFO[efo] = response;
+                return response;
+            }));
+        })
+
+        //When all colour are received, replot
+        Promise.all(allColorLoaded).then(() => {
+                                             //assign colour to associations for plot
+                                             console.log('Finish loading color from ' + global_color_url);
+                                             console.log(allUniqueEFO);
+                                             data_association.docs.forEach(function(d, i) {
+                                                 d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
+                                                 d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
+                                                 d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
+                                                 d.category = allUniqueEFO[d.preferedEFO].parent;
+                                             })
+                                         }
+        ).catch(function(err) {
+            console.warn('Error loading colour for Locus zoom plot from ' + global_color_url + '. ' + err + '. Using default colour.')
+            //xintodo create a default colour to plot, if the colour query fail
+        }).then(() =>{
+            reloadLocusZoom('#plot', data_association);
+        });
+    }
+}
+
+
+/**
+ * This is to add checkbox for each related terms
+ * but this is not used atm.
+ */
+addRelatedTermCheckBox = () => {
+    function addCheckbox(id, name, cbclass) {
+        var container = $('#expension');
+        $('<input />', {type: 'checkbox', id: id, class: cbclass, value: name}).appendTo(container);
+        $('<label />', {'for': id, text: name}).appendTo(container);
+        $('<div />', {'id': 'why' + id}).appendTo(container);
+
+        $('<br />').appendTo(container);
+
+    }
+
+    OLS.getRelatedTerms(getMainEFO()).then(function(terms) {
+        //make checkbox
+        Object.keys(terms).forEach(function(relatedTerm) {
+            var d = terms[relatedTerm];
+            addCheckbox('cb' + d.obo_id, d.obo_id + ' : ' + d.label, 'efocheckbox');
+            $("#" + 'whycb' + d.obo_id).html(d.logical_description);
+            if (d.obo_id == getMainEFO()) {
+                $("#cb" + d.obo_id).attr("checked", true);
+            }
+        })
+
+        //add check event.
+        $(".efocheckbox").change(() => {
+            var elements = {};
+            $('.efocheckbox:input:checked').each(function(cb) {
+                elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
+            });
+            addEFO(elements);
+        });
+    })
+}
+
+/**
+ * init a network using ols-graph at the <#ontology_vis> tag.
+ * The network shows the mainEFO with all the realted EFOs.
+ * @param {String} mainEFO
+ */
+initOLS_GraphWiget = function(mainEFO) {
+    var mainEFOLink = OLS.getOLSLinkAPI(mainEFO).then(function(termFullLink) {
+        return termFullLink + '/graph';
+    })
+
+    var mainEFOIri = OLS.getIriByShortForm(mainEFO)
+
+    var tmpnetworkOptions = {
+        webservice: {
+//            URL: "http://www.ebi.ac.uk/ols/api/ontologies/cmpo/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FCHEBI_33839/graph",
+            OLSschema: false
+        },
+        displayOptions: {showButtonBox: true, showInfoWindow: false, showLegend: true},
+        callbacks: {
+            onSelectNode: function(params) {
+                console.log(params);
+            },
+            onDoubleClick: function(params) {
+                console.log(params);
+                var node = params.nodes[0];
+                var efoid = node.split('/').slice(-1)[0];
+                var tmp = {}
+                tmp[efoid] = node;
+                addEFO(tmp);
+            },
+            onSelectEdge: function(params) {
+                console.log(params);
+            },
+            onClick: function(params) {
+                console.log(params);
+            }
+        }
+    }
+    var visoptions = {
+        physics: {
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springConstant: 0.08,
+                springLength: 100,
+                damping: 0.4,
+                avoidOverlap: 0
+            },
+        },
+        layout: {
+            hierarchical: false
+        },
+        nodes: {
+            borderWidth: 4,
+            shape: 'ellipse'
+        },
+        edges: {
+            arrows: {middle: {enabled: true}},
+            dashes: true,
+        },
+    }
+
+    var term = "Can be whatever at the moment - if you chose OLSschema false"
+    var app = require("ols-graphview");
+    var instance = new app();
+
+    var reasonForRelatedEFO = {};
+
+    mainEFOLink.then(function(mainLink) {
+        tmpnetworkOptions['webservice']['URL'] = mainLink;
+
+        instance.visstart("ontology_vis", term, tmpnetworkOptions, visoptions);
+
+        OLS.getRelatedTerms(getMainEFO()).then(function(terms) {
+
+            Object.keys(terms).forEach(function(relatedTerm) {
+                var d = terms[relatedTerm];
+                reasonForRelatedEFO[d.obo_id] = d.logical_description;
+            })
+
+            return Object.keys(terms).map(OLS.getOLSLinkAPI).reduce(function(sequence, termOLSLinkPromise) {
+                return sequence.then(() => {
+                    return termOLSLinkPromise;
+                }).then(function(termOLSLink) {
+                    //for each related term, add it to the graph
+                    instance.fetchNewGraphData(termOLSLink + '/graph');
+                })
+            }, Promise.resolve())
+        })
+    }).then(() => {
+        var x = instance.getGraphDataset()
+        var net=instance.getNetwork()
+        console.log(net)
+
+        //change mainEFO node shape
+        mainEFOIri.then(function(iri) {
+            //Thi is to make sure the setting apply AFTER the nodes are loaded.
+            net.once("stabilized", function(params){
+                //http://visjs.org/docs/data/dataset.html
+                var defaultAttribute = x["nodes"].get(iri)
+                defaultAttribute.color.border = 'blue';
+                x["nodes"].update(defaultAttribute);
+
+                //add why to the title of node
+                $.each(reasonForRelatedEFO, function(efoid, reason) {
+                    OLS.getIriByShortForm(efoid).then(function(iri) {
+                        x["nodes"].update({id: iri, title: reason});
+                    })
+                })
+            })
+        })
+    }).catch(function(err) {
+        console.error('Error when plotting related terms.' + err);
+    })
+
+}
+
+/**
+ * init ols-tree wiget for the main efo in tag <#ols-treeview>
+ */
+initOLS_TreeWiget = function(searchTerm){
+    //ols-tree
+    var app = require("ols-treeview");
+    var instance = new app();
+
+    var options = {
+        // checkbox: false,
+        // checkbox_cascade: '',
+        // checkbox_three_state: false,
+        // checkbox_keep_selected_style: false,
+        onclick: function(params, node, relativePath, termIRI, type){
+            // var isComfirmed =  confirm('Are you sure?');
+            // if(isComfirmed){
+            //     var clicked = node.node.original.iri;
+            //     var efoid = clicked.split('/').slice(-1)[0];
+            //     var tmp = {}
+            //     tmp[efoid] = clicked;
+            //     addEFO(tmp);
+            // }else{
+            //     console.debug('not comfirmed');
+            // }
+            var clicked = node.node.original.iri;
+            var efoid = clicked.split('/').slice(-1)[0];
+            var tmp = {}
+            tmp[efoid] = clicked;
+            addEFO(tmp);
+        },
+    }
+
+    //initialise the tree
+    instance.draw($("#term-tree"),
+                  false,
+                  "efo",
+                  "terms",
+                  "http://www.ebi.ac.uk/efo/" + searchTerm,
+                  "http://www.ebi.ac.uk/ols/",
+                  options);
+}
+
+/**
+ * init ols-autocomplete
+ */
+initOLS_AutocompleteWiget = function(){
+    var app = require("ols-autocomplete");
+    var instance = new app();
+    options = {
+        action: function(relativePath, suggestion_ontology, type, iri) {
+            // console.log("In overwritten function")
+            // console.log("Relative Path: " + relativePath)
+            // console.log("Suggested Ontology: " + suggestion_ontology)
+            // console.log("Type (optional): " + type)
+            // console.log("iri (optional): " + iri)
+            elements = {};
+            elements['EFO_' + iri.split("EFO_")[1]] = 'EFO_' + iri.split("EFO_")[1];
+            //xintodo auto load
+            addEFO(elements);
+        }
+    }
+    instance.start(options)
+}
+
+
+/**
+ * Display highlighted study on the page
+ * @param highlightedStudy
+ */
+displayHighlightedStudy = function(highlightedStudy) {
+    $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
+    $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' (' +
+                                                 setExternalLink(EPMC + highlightedStudy.pubmedId,
+                                                                 'PMID:' + highlightedStudy.pubmedId) +
+                                                 ')');
+    $('#efotrait-highlighted-study-catalogPublishDate').html(new Date(highlightedStudy.catalogPublishDate).toLocaleDateString());
+//                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
+//                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
+//                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
+//                                                                      JSON.stringify(highlightedStudy),'all'));
+
+    EPMC.getByPumbedId(highlightedStudy.pubmedId).then(function(data) {
+        var paperDetail = data.resultList.result[0];
+//                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
+//                                                                               paperDetail.abstractText,''));
+//         $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
+//                                                                      'abstract',
+//                                                                      paperDetail.abstractText));
+        $('#efotrait-highlighted-study-abstract').html(EPMC.searchResult.abstractText(data));
+
+        return paperDetail;
+    }).catch(function(err) {
+        console.warning('Error when loading data from PMC! ' + err);
+    }).then(function(){
+        hideLoadingOverLay('#highlight-study-panel-loading');
+    });
+}
+
+/**
+ * display in efo information on the page
+
+ * @param efotraitId
+ */
+displayEfoTraitInfo = function(efoinfo) {
+    var efotrait_link = efoinfo.iri;
+    var efotrait_id = efoinfo.short_form;
+    var synonym = efoinfo.synonyms;
+    var efotrait_label = efoinfo.label;
+    addDataToTag(global_efo_info_tag_id, efoinfo, 'mainEFOInfo');
+    $("#efotrait-description").html(displayArrayAsList(efoinfo.description));
+    $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
+    $("#efotrait-label").html(efotrait_label);
+    // $("#efotrait-label").html(createPopover(efotrait_label,
+    //                                         'description',
+    //                                         displayArrayAsList(efoinfo.description)));
+    if (synonym) {
+        if (synonym.length > list_min) {
+            $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
+                                                        synonym,
+                                                        'synonyms'));
+        }
+        else {
+            $("#efotrait-synonym").html(synonym.join(", "));
+        }
+    }
+}
+
+/**
+ * display association table
+ * @param {Object} data - association solr docs
+ * @param {Boolean} cleanBeforeInsert
+ */
+function displayEfotraitAssociations(data, cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
+    var asso_count = data.length;
+
+    $(".association_count").html(asso_count);
+
+    if (asso_count == 1) {
+        $(".association_label").html("Association");
+    }
+
+    if(cleanBeforeInsert){
+        $('#association-table').bootstrapTable('removeAll');
+    }
+
+    var data_json = []
+    $.each(data, function(index,asso) {
+
+        var tmp = {};
+        // Risk allele
+        var riskAllele = asso.strongestAllele[0];
+        var riskAlleleLabel = riskAllele;
+        var riskAllele_rsid = riskAllele;
+        if (riskAlleleLabel.match(/\w+-.+/)) {
+            riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
+            riskAllele_rsid = riskAllele.split('-')[0];
+        }
+        // This is now linking to the variant page instead of the search page
+        // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
+        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+
+        tmp['riskAllele'] = riskAllele;
+
+        // Risk allele frequency
+        tmp['riskAlleleFreq'] = asso.riskFrequency;
+
+        // p-value
+        var pValue = asso.pValueMantissa;
+        if (pValue) {
+            var pValueExp = " x 10<sup>" + asso.pValueExponent + "</sup>";
+            pValue += pValueExp;
+            if (asso.qualifier) {
+                if (asso.qualifier[0].match(/\w/)) {
+                    pValue += " " + asso.qualifier.join(',');
+                }
+            }
+            tmp['pValue'] = pValue;
+        } else {
+            tmp['pValue'] = '-';
+        }
+
+        // OR
+        var orValue = asso.orPerCopyNum;
+        if (orValue) {
+            if (asso.orDescription) {
+                orValue += " " + asso.orDescription;
+            }
+            tmp['orValue'] = orValue;
+        } else {
+            tmp['orValue'] = '-';
+        }
+
+        // Beta
+        var beta = asso.betaNum;
+        if (beta) {
+            if (asso.betaUnit) {
+                beta += " " + asso.betaUnit;
+            }
+            if (asso.betaDirection) {
+                beta += " " + asso.betaDirection;
+            }
+            tmp['beta'] = beta;
+        } else {
+            tmp['beta'] = '-';
+        }
+
+        // CI
+        var ci = (asso.range) ? asso.range : '-';
+        tmp['beta'] = ci;
+
+
+        // Reported genes
+        var genes = [];
+        var reportedGenes = asso.reportedGene;
+        if (reportedGenes) {
+            $.each(reportedGenes, function(index, gene) {
+                genes.push(setQueryUrl(gene));
+            });
+            tmp['reportedGenes'] = genes.join(', ');
+        } else {
+            tmp['reportedGenes'] = '-';
+
+
+        }
+
+        // Reported traits
+        var traits = [];
+        var reportedTraits = asso.traitName;
+        if (reportedTraits) {
+            $.each(reportedTraits, function(index, trait) {
+                traits.push(setQueryUrl(trait));
+            });
+            tmp['reportedTraits'] = traits.join(', ');
+        } else {
+            tmp['reportedTraits'] = '-';
+        }
+
+        // Mapped traits
+        var mappedTraits = asso.mappedLabel;
+        if (mappedTraits) {
+            tmp['mappedTraits'] = mappedTraits.join(', ');
+        } else {
+            tmp['mappedTraits'] = '-';
+        }
+
+        // Study
+        var author = asso.author_s;
+        var publicationDate = asso.publicationDate;
+        var pubDate = publicationDate.split("-");
+        var pubmedId = asso.pubmedId;
+        var study = setQueryUrl(author, author + " - " + pubDate[0]);
+        study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
+        tmp['study'] = study;
+
+        var studyId = asso.studyId;
+
+        // Populate the table
+        data_json.push(tmp)
+
+
+    });
+
+    $('#association-table').bootstrapTable({
+                                               exportDataType: 'all',
+                                               columns: [{
+                                                   field: 'riskAllele',
+                                                   title: 'Risk allele',
+                                                   sortable: true
+                                               }, {
+                                                   field: 'riskAlleleFreq',
+                                                   title: 'RAF',
+                                                   sortable: true
+                                               }, {
+                                                   field: 'pValue',
+                                                   title: 'p-value',
+                                                   sortable: true
+                                               },{
+                                                   field: 'orValue',
+                                                   title: 'OR',
+                                                   sortable: true
+                                               },{
+                                                   field: 'beta',
+                                                   title: 'Beta',
+                                                   sortable: true
+                                               },{
+                                                   field: 'price',
+                                                   title: 'CI',
+                                                   sortable: true
+                                               },{
+                                                   field: 'reportedGenes',
+                                                   title: 'Reported gene(s)',
+                                                   sortable: true
+                                               },{
+                                                   field: 'reportedTraits',
+                                                   title: 'Reported trait',
+                                                   sortable: true
+                                               },{
+                                                   field: 'mappedTraits',
+                                                   title: 'Mapped trait',
+                                                   sortable: true
+                                               },{
+                                                   field: 'study',
+                                                   title: 'Study',
+                                                   sortable: true
+                                               }],
+                                               data: data_json,
+
+                                           });
+
+    $('#association-table').bootstrapTable('load',data_json)
+    if(data_json.length>5){
+        $('#association-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
+    }
+    hideLoadingOverLay('#association-table-loading')
+}
+
+/**
+ * display study table
+ * @param {Object} data - study solr docs
+ * @param {Boolean} cleanBeforeInsert
+ */
+function displayEfotraitStudies(data, cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
+
+    var study_ids = [];
+    if(cleanBeforeInsert){
+        $('#study-table').bootstrapTable('removeAll');
+    }
+
+    var data_json = []
+    $.each(data, function(index, asso) {
+        var tmp={};
+        var study_id = asso.id;
+        if (jQuery.inArray(study_id, study_ids) == -1) {
+
+
+            study_ids.push(study_id);
+
+            // Author
+            var author = asso.author_s;
+            var publicationDate = asso.publicationDate;
+            var pubDate = publicationDate.split("-");
+            var pubmedId = asso.pubmedId;
+            var study_author = setQueryUrl(author, author);
+            study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
+            tmp['Author'] = study_author;
+
+            // Publication date
+            var p_date = asso.publicationDate;
+            var publi = p_date.split('T')[0];
+            tmp['publi'] = publi;
+
+
+            // Journal
+            tmp['Journal'] = asso.publication;
+
+            // Title
+            tmp['Title'] = asso.title;
+
+            // Initial sample desc
+            var initial_sample_text = '-';
+            if (asso.initialSampleDescription) {
+
+                initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
+                if(asso.initialSampleDescription.split(', ').length>1)
+                    initial_sample_text = initial_sample_text.html()
+            }
+            tmp['initial_sample_text'] = initial_sample_text;
+
+
+            // Replicate sample desc
+            var replicate_sample_text = '-';
+            if (asso.replicateSampleDescription) {
+                replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
+                if(asso.replicateSampleDescription.split(', ').length>1)
+                    replicate_sample_text = replicate_sample_text.html()
+            }
+            tmp['replicate_sample_text'] = replicate_sample_text;
+
+
+            // ancestralGroups
+            var ancestral_groups_text = '-';
+            if (asso.ancestralGroups) {
+                ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
+                if(asso.ancestralGroups.length>1)
+                    ancestral_groups_text = ancestral_groups_text.html()
+            }
+            tmp['ancestral_groups_text'] = ancestral_groups_text;
+
+            data_json.push(tmp)
+        }
+    });
+    // Study count //
+    $(".study_count").html(study_ids.length);
+
+    if (study_ids.length == 1) {
+        $(".study_label").html("Study");
+    }
+
+    $('#study-table').bootstrapTable({
+                                         exportDataType: 'all',
+                                         columns: [{
+                                             field: 'Author',
+                                             title: 'Author',
+                                             sortable: true
+                                         }, {
+                                             field: 'publi',
+                                             title: 'Publication Date',
+                                             sortable: true
+                                         }, {
+                                             field: 'Journal',
+                                             title: 'Journal',
+                                             sortable: true
+                                         },{
+                                             field: 'Title',
+                                             title: 'Title',
+                                             sortable: true
+                                         },{
+                                             field: 'initial_sample_text',
+                                             title: 'Initial sample description',
+                                             sortable: true
+                                         },{
+                                             field: 'replicate_sample_text',
+                                             title: 'Replication sample description',
+                                             sortable: true
+                                         },{
+                                             field: 'ancestral_groups_text',
+                                             title: 'Ancestral groups',
+                                             sortable: true
+                                         }],
+                                         data: data_json,
+
+                                     });
+    $('#study-table').bootstrapTable('load',data_json)
+    if(data_json.length>5){
+        $('#study-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
+    }
+    hideLoadingOverLay('#study-table-loading')
+}
+
+
+/**
+ * trigger a download from the browser.
+ * @param {String} content
+ * @param {String} filename - default file name to save the download
+ * @param {String} contentType - default is 'application/octet-stream'
+ */
+function download(content, filename, contentType) {
+    if(!contentType) contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    var blob = new Blob([content], {'type':contentType});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+/**
+ * Generate content of currently selected terms
+ * @returns {Promise} - contins a string of the content
+ */
+generateDownloadContentForCart = function(){
+    var rowSep = '\n'
+    var colSep = '\t'
+    var list = [];
+    $('.badge.cart-item-number-badge').filter(function() {
+        return this.id.match(/_noa/);
+    }).map(function(){
+        list = list.concat($('#'+this.id).data('efos'))
+    })
+    var list_unique = list.filter(function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+
+    var rows = Promise.all(list_unique.map(OLS.getEFOInfo)).then((efoinfos) => {
+        return efoinfos.map((efoinfo)=>{
+            return [efoinfo.short_form,efoinfo.ontology_name,efoinfo.iri].join(colSep)
+        })
+    })
+
+//        var content = encodeURIComponent(list_unique.join('\n'));
+    var content = rows.then((rows)=>{
+        return rows.join(rowSep);
+    })
+    return content;
+}
+
+//display association table
+function displayEfotraitAssociations_deprecated(data, cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
+    var asso_count = data.length;
+
+    $(".association_count").html(asso_count);
+
+    if (asso_count == 1) {
+        $(".association_label").html("Association");
+    }
+
+    if(cleanBeforeInsert){
+        $("#association-table-body tr").remove();
+    }
+
+    $.each(data, function(index,asso) {
+
+        var row = $('<tr/>');
+
+        // Risk allele
+        var riskAllele = asso.strongestAllele[0];
+        var riskAlleleLabel = riskAllele;
+        var riskAllele_rsid = riskAllele;
+        if (riskAlleleLabel.match(/\w+-.+/)) {
+            riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
+            riskAllele_rsid = riskAllele.split('-')[0];
+        }
+        // This is now linking to the variant page instead of the search page
+        // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
+        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+
+        row.append(newCell(riskAllele));
+
+        // Risk allele frequency
+        var riskAlleleFreq = asso.riskFrequency;
+        row.append(newCell(riskAlleleFreq));
+
+        // p-value
+        var pValue = asso.pValueMantissa;
+        if (pValue) {
+            var pValueExp = " x 10<sup>" + asso.pValueExponent + "</sup>";
+            pValue += pValueExp;
+            if (asso.qualifier) {
+                if (asso.qualifier[0].match(/\w/)) {
+                    pValue += " " + asso.qualifier.join(',');
+                }
+            }
+            row.append(newCell(pValue));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // OR
+        var orValue = asso.orPerCopyNum;
+        if (orValue) {
+            if (asso.orDescription) {
+                orValue += " " + asso.orDescription;
+            }
+            row.append(newCell(orValue));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // Beta
+        var beta = asso.betaNum;
+        if (beta) {
+            if (asso.betaUnit) {
+                beta += " " + asso.betaUnit;
+            }
+            if (asso.betaDirection) {
+                beta += " " + asso.betaDirection;
+            }
+            row.append(newCell(beta));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // CI
+        var ci = (asso.range) ? asso.range : '-';
+        row.append(newCell(ci));
+        // Reported genes
+        var genes = [];
+        var reportedGenes = asso.reportedGene;
+        if (reportedGenes) {
+            $.each(reportedGenes, function(index, gene) {
+                genes.push(setQueryUrl(gene));
+            });
+            row.append(newCell(genes.join(', ')));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // Reported traits
+        var traits = [];
+        var reportedTraits = asso.traitName;
+        if (reportedTraits) {
+            $.each(reportedTraits, function(index, trait) {
+                traits.push(setQueryUrl(trait));
+            });
+            row.append(newCell(traits.join(', ')));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // Mapped traits
+        var mappedTraits = asso.mappedLabel;
+        if (mappedTraits) {
+            row.append(newCell(mappedTraits.join(', ')));
+        } else {
+            row.append(newCell('-'));
+        }
+
+        // Study
+        var author = asso.author_s;
+        var publicationDate = asso.publicationDate;
+        var pubDate = publicationDate.split("-");
+        var pubmedId = asso.pubmedId;
+        var study = setQueryUrl(author, author + " - " + pubDate[0]);
+        study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
+        row.append(newCell(study));
+
+        var studyId = asso.studyId;
+
+        // Populate the table
+        $("#association-table-body").append(row);
+        hideLoadingOverLay('#association-table-loading')
+    });
+}
+
+//display study table
+function displayEfotraitStudies_deprecated(data, cleanBeforeInsert) {
+    //by default, we clean the table before inserting data
+    if (cleanBeforeInsert === undefined) {
+        cleanBeforeInsert = true;
+    }
+
+
+    var study_ids = [];
+    if(cleanBeforeInsert){
+        $("#study-table-body tr").remove();
+    }
+    $.each(data, function(index, asso) {
+        var study_id = asso.id;
+        if (jQuery.inArray(study_id, study_ids) == -1) {
+
+            var row = $('<tr/>');
+
+            study_ids.push(study_id);
+
+            // Author
+            var author = asso.author_s;
+            var publicationDate = asso.publicationDate;
+            var pubDate = publicationDate.split("-");
+            var pubmedId = asso.pubmedId;
+            var study_author = setQueryUrl(author, author);
+            study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
+            row.append(newCell(study_author));
+
+            // Publication date
+            var p_date = asso.publicationDate;
+            var publi = p_date.split('T')[0];
+            row.append(newCell(publi));
+
+            // Journal
+            row.append(newCell(asso.publication));
+
+            // Title
+            row.append(newCell(asso.title));
+
+            // Initial sample desc
+            var initial_sample_text = '-';
+            if (asso.initialSampleDescription) {
+                initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
+            }
+            row.append(newCell(initial_sample_text));
+
+            // Replicate sample desc
+            var replicate_sample_text = '-';
+            if (asso.replicateSampleDescription) {
+                replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
+            }
+            row.append(newCell(replicate_sample_text));
+
+            // ancestralGroups
+            var ancestral_groups_text = '-';
+            if (asso.ancestralGroups) {
+                ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
+            }
+            row.append(newCell(ancestral_groups_text));
+
+            // Populate the table
+            $("#study-table-body").append(row);
+        }
+    });
+    // Study count //
+    $(".study_count").html(study_ids.length);
+
+    if (study_ids.length == 1) {
+        $(".study_label").html("Study");
+    }
+
+    hideLoadingOverLay('#study-table-loading')
+}
+
+
+
+//************************** helper functions **************************
 /**
  * Helper functions for parsing HATEOAS RESTFUL response
  */
@@ -173,7 +1530,6 @@ var RESTFUL_Response = {
 
     }
 }
-
 
 /**
  * get data asyn with promise
@@ -342,9 +1698,6 @@ function promisePost(url, params,debug) {
    // });
    // result
 }
-
-
-
 
 /**
  * get data asyn with promise, recursively querying if the response has 'next' link.
@@ -1080,8 +2433,6 @@ filterAvailableEFOs = function(toBeFilter) {
 }
 
 
-
-
 /**
  * Query oxo for cross reference of an given term.
  * Note, oxo uses 'EFO:0000400' instead of 'EFO_0000400'.
@@ -1450,645 +2801,6 @@ buildLocusPlotPopoverHTML = function(association){
 }
 
 /**
- * Display highlighted study on the page
- * @param highlightedStudy
- */
-displayHighlightedStudy = function(highlightedStudy) {
-    $('#efotrait-highlighted-study-title').html(highlightedStudy.title);
-    $('#efotrait-highlighted-study-author').html(highlightedStudy.author_s + ' (' +
-                                                 setExternalLink(EPMC + highlightedStudy.pubmedId,
-                                                                 'PMID:' + highlightedStudy.pubmedId) +
-                                                 ')');
-    $('#efotrait-highlighted-study-catalogPublishDate').html(new Date(highlightedStudy.catalogPublishDate).toLocaleDateString());
-//                $('#efotrait-highlighted-st udy-initialSampleDescription').html(highlightedStudy.initialSampleDescription);
-//                $('#efotrait-highlighted-study-replicateSampleDescription').html(highlightedStudy.replicateSampleDescription);
-//                $("#efotrait-highlighted-study-all").html(longContent("efotrait-highlighted-study-all_div",
-//                                                                      JSON.stringify(highlightedStudy),'all'));
-
-    EPMC.getByPumbedId(highlightedStudy.pubmedId).then(function(data) {
-        var paperDetail = data.resultList.result[0];
-//                    $("#efotrait-highlighted-study-abstract").html(longContent("efotrait-highlighted-study-abstract_div",
-//                                                                               paperDetail.abstractText,''));
-//         $('#efotrait-highlighted-study-abstract').html(createPopover('detail',
-//                                                                      'abstract',
-//                                                                      paperDetail.abstractText));
-        $('#efotrait-highlighted-study-abstract').html(EPMC.searchResult.abstractText(data));
-
-        return paperDetail;
-    }).catch(function(err) {
-        console.warning('Error when loading data from PMC! ' + err);
-    }).then(function(){
-        hideLoadingOverLay('#highlight-study-panel-loading');
-    });
-}
-
-/**
- * display in efo information on the page
-
- * @param efotraitId
- */
-displayEfoTraitInfo = function(efoinfo) {
-    var efotrait_link = efoinfo.iri;
-    var efotrait_id = efoinfo.short_form;
-    var synonym = efoinfo.synonyms;
-    var efotrait_label = efoinfo.label;
-    addDataToTag(global_efo_info_tag_id, efoinfo, 'mainEFOInfo');
-    $("#efotrait-description").html(displayArrayAsList(efoinfo.description));
-    $("#efotrait-id").html(setExternalLink(efotrait_link, efotrait_id));
-    $("#efotrait-label").html(efotrait_label);
-    // $("#efotrait-label").html(createPopover(efotrait_label,
-    //                                         'description',
-    //                                         displayArrayAsList(efoinfo.description)));
-    if (synonym) {
-        if (synonym.length > list_min) {
-            $("#efotrait-synonym").html(longContentList("gwas_efotrait_synonym_div",
-                                                        synonym,
-                                                        'synonyms'));
-        }
-        else {
-            $("#efotrait-synonym").html(synonym.join(", "));
-        }
-    }
-}
-
-/**
- * display association table
- * @param {Object} data - association solr docs
- * @param {Boolean} cleanBeforeInsert
- */
-function displayEfotraitAssociations(data, cleanBeforeInsert) {
-    //by default, we clean the table before inserting data
-    if (cleanBeforeInsert === undefined) {
-        cleanBeforeInsert = true;
-    }
-
-    var asso_count = data.length;
-
-    $(".association_count").html(asso_count);
-
-    if (asso_count == 1) {
-        $(".association_label").html("Association");
-    }
-
-    if(cleanBeforeInsert){
-        $('#association-table').bootstrapTable('removeAll');
-    }
-
-    var data_json = []
-    $.each(data, function(index,asso) {
-
-        var tmp = {};
-        // Risk allele
-        var riskAllele = asso.strongestAllele[0];
-        var riskAlleleLabel = riskAllele;
-        var riskAllele_rsid = riskAllele;
-        if (riskAlleleLabel.match(/\w+-.+/)) {
-            riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
-            riskAllele_rsid = riskAllele.split('-')[0];
-        }
-        // This is now linking to the variant page instead of the search page
-        // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
-
-        tmp['riskAllele'] = riskAllele;
-
-        // Risk allele frequency
-        tmp['riskAlleleFreq'] = asso.riskFrequency;
-
-        // p-value
-        var pValue = asso.pValueMantissa;
-        if (pValue) {
-            var pValueExp = " x 10<sup>" + asso.pValueExponent + "</sup>";
-            pValue += pValueExp;
-            if (asso.qualifier) {
-                if (asso.qualifier[0].match(/\w/)) {
-                    pValue += " " + asso.qualifier.join(',');
-                }
-            }
-            tmp['pValue'] = pValue;
-        } else {
-            tmp['pValue'] = '-';
-        }
-
-        // OR
-        var orValue = asso.orPerCopyNum;
-        if (orValue) {
-            if (asso.orDescription) {
-                orValue += " " + asso.orDescription;
-            }
-            tmp['orValue'] = orValue;
-        } else {
-            tmp['orValue'] = '-';
-        }
-
-        // Beta
-        var beta = asso.betaNum;
-        if (beta) {
-            if (asso.betaUnit) {
-                beta += " " + asso.betaUnit;
-            }
-            if (asso.betaDirection) {
-                beta += " " + asso.betaDirection;
-            }
-            tmp['beta'] = beta;
-        } else {
-            tmp['beta'] = '-';
-        }
-
-        // CI
-        var ci = (asso.range) ? asso.range : '-';
-        tmp['beta'] = ci;
-
-
-        // Reported genes
-        var genes = [];
-        var reportedGenes = asso.reportedGene;
-        if (reportedGenes) {
-            $.each(reportedGenes, function(index, gene) {
-                genes.push(setQueryUrl(gene));
-            });
-            tmp['reportedGenes'] = genes.join(', ');
-        } else {
-            tmp['reportedGenes'] = '-';
-
-
-        }
-
-        // Reported traits
-        var traits = [];
-        var reportedTraits = asso.traitName;
-        if (reportedTraits) {
-            $.each(reportedTraits, function(index, trait) {
-                traits.push(setQueryUrl(trait));
-            });
-            tmp['reportedTraits'] = traits.join(', ');
-        } else {
-            tmp['reportedTraits'] = '-';
-        }
-
-        // Mapped traits
-        var mappedTraits = asso.mappedLabel;
-        if (mappedTraits) {
-            tmp['mappedTraits'] = mappedTraits.join(', ');
-        } else {
-            tmp['mappedTraits'] = '-';
-        }
-
-        // Study
-        var author = asso.author_s;
-        var publicationDate = asso.publicationDate;
-        var pubDate = publicationDate.split("-");
-        var pubmedId = asso.pubmedId;
-        var study = setQueryUrl(author, author + " - " + pubDate[0]);
-        study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-        tmp['study'] = study;
-
-        var studyId = asso.studyId;
-
-        // Populate the table
-        data_json.push(tmp)
-
-
-    });
-
-    $('#association-table').bootstrapTable({
-                                               exportDataType: 'all',
-                                               columns: [{
-                                                   field: 'riskAllele',
-                                                   title: 'Risk allele',
-                                                   sortable: true
-                                               }, {
-                                                   field: 'riskAlleleFreq',
-                                                   title: 'RAF',
-                                                   sortable: true
-                                               }, {
-                                                   field: 'pValue',
-                                                   title: 'p-value',
-                                                   sortable: true
-                                               },{
-                                                   field: 'orValue',
-                                                   title: 'OR',
-                                                   sortable: true
-                                               },{
-                                                   field: 'beta',
-                                                   title: 'Beta',
-                                                   sortable: true
-                                               },{
-                                                   field: 'price',
-                                                   title: 'CI',
-                                                   sortable: true
-                                               },{
-                                                   field: 'reportedGenes',
-                                                   title: 'Reported gene(s)',
-                                                   sortable: true
-                                               },{
-                                                   field: 'reportedTraits',
-                                                   title: 'Reported trait',
-                                                   sortable: true
-                                               },{
-                                                   field: 'mappedTraits',
-                                                   title: 'Mapped trait',
-                                                   sortable: true
-                                               },{
-                                                   field: 'study',
-                                                   title: 'Study',
-                                                   sortable: true
-                                               }],
-                                               data: data_json,
-
-                                           });
-
-    $('#association-table').bootstrapTable('load',data_json)
-    if(data_json.length>5){
-        $('#association-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
-    }
-    hideLoadingOverLay('#association-table-loading')
-}
-
-/**
- * display study table
- * @param {Object} data - study solr docs
- * @param {Boolean} cleanBeforeInsert
- */
-function displayEfotraitStudies(data, cleanBeforeInsert) {
-    //by default, we clean the table before inserting data
-    if (cleanBeforeInsert === undefined) {
-        cleanBeforeInsert = true;
-    }
-
-
-    var study_ids = [];
-    if(cleanBeforeInsert){
-        $('#study-table').bootstrapTable('removeAll');
-    }
-
-    var data_json = []
-    $.each(data, function(index, asso) {
-        var tmp={};
-        var study_id = asso.id;
-        if (jQuery.inArray(study_id, study_ids) == -1) {
-
-
-            study_ids.push(study_id);
-
-            // Author
-            var author = asso.author_s;
-            var publicationDate = asso.publicationDate;
-            var pubDate = publicationDate.split("-");
-            var pubmedId = asso.pubmedId;
-            var study_author = setQueryUrl(author, author);
-            study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-            tmp['Author'] = study_author;
-
-            // Publication date
-            var p_date = asso.publicationDate;
-            var publi = p_date.split('T')[0];
-            tmp['publi'] = publi;
-
-
-            // Journal
-            tmp['Journal'] = asso.publication;
-
-            // Title
-            tmp['Title'] = asso.title;
-
-            // Initial sample desc
-            var initial_sample_text = '-';
-            if (asso.initialSampleDescription) {
-
-                initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
-                if(asso.initialSampleDescription.split(', ').length>1)
-                    initial_sample_text = initial_sample_text.html()
-            }
-            tmp['initial_sample_text'] = initial_sample_text;
-
-
-            // Replicate sample desc
-            var replicate_sample_text = '-';
-            if (asso.replicateSampleDescription) {
-                replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
-                if(asso.replicateSampleDescription.split(', ').length>1)
-                    replicate_sample_text = replicate_sample_text.html()
-            }
-            tmp['replicate_sample_text'] = replicate_sample_text;
-
-
-            // ancestralGroups
-            var ancestral_groups_text = '-';
-            if (asso.ancestralGroups) {
-                ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
-                if(asso.ancestralGroups.length>1)
-                    ancestral_groups_text = ancestral_groups_text.html()
-            }
-            tmp['ancestral_groups_text'] = ancestral_groups_text;
-
-            data_json.push(tmp)
-        }
-    });
-    // Study count //
-    $(".study_count").html(study_ids.length);
-
-    if (study_ids.length == 1) {
-        $(".study_label").html("Study");
-    }
-
-    $('#study-table').bootstrapTable({
-                                         exportDataType: 'all',
-                                         columns: [{
-                                             field: 'Author',
-                                             title: 'Author',
-                                             sortable: true
-                                         }, {
-                                             field: 'publi',
-                                             title: 'Publication Date',
-                                             sortable: true
-                                         }, {
-                                             field: 'Journal',
-                                             title: 'Journal',
-                                             sortable: true
-                                         },{
-                                             field: 'Title',
-                                             title: 'Title',
-                                             sortable: true
-                                         },{
-                                             field: 'initial_sample_text',
-                                             title: 'Initial sample description',
-                                             sortable: true
-                                         },{
-                                             field: 'replicate_sample_text',
-                                             title: 'Replication sample description',
-                                             sortable: true
-                                         },{
-                                             field: 'ancestral_groups_text',
-                                             title: 'Ancestral groups',
-                                             sortable: true
-                                         }],
-                                         data: data_json,
-
-                                     });
-    $('#study-table').bootstrapTable('load',data_json)
-    if(data_json.length>5){
-        $('#study-table').bootstrapTable('refreshOptions',{pagination: true,pageSize: 5,pageList: [5,10,25,50,100,'All']})
-    }
-    hideLoadingOverLay('#study-table-loading')
-}
-
-
-/**
- * trigger a download from the browser.
- * @param {String} content
- * @param {String} filename - default file name to save the download
- * @param {String} contentType - default is 'application/octet-stream'
- */
-function download(content, filename, contentType)
-{
-    if(!contentType) contentType = 'application/octet-stream';
-    var a = document.createElement('a');
-    var blob = new Blob([content], {'type':contentType});
-    a.href = window.URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-}
-
-/**
- * Generate content of currently selected terms
- * @returns {Promise} - contins a string of the content
- */
-generateDownloadContentForCart = function(){
-    var rowSep = '\n'
-    var colSep = '\t'
-    var list = [];
-    $('.badge.cart-item-number-badge').filter(function() {
-        return this.id.match(/_noa/);
-    }).map(function(){
-        list = list.concat($('#'+this.id).data('efos'))
-    })
-    var list_unique = list.filter(function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-    })
-
-
-    var rows = Promise.all(list_unique.map(OLS.getEFOInfo)).then((efoinfos) => {
-        return efoinfos.map((efoinfo)=>{
-            return [efoinfo.short_form,efoinfo.ontology_name,efoinfo.iri].join(colSep)
-        })
-    })
-
-//        var content = encodeURIComponent(list_unique.join('\n'));
-    var content = rows.then((rows)=>{
-        return rows.join(rowSep);
-    })
-    return content;
-}
-// //display association table
-// function displayEfotraitAssociations(data, cleanBeforeInsert) {
-//     //by default, we clean the table before inserting data
-//     if (cleanBeforeInsert === undefined) {
-//         cleanBeforeInsert = true;
-//     }
-//
-//     var asso_count = data.length;
-//
-//     $(".association_count").html(asso_count);
-//
-//     if (asso_count == 1) {
-//         $(".association_label").html("Association");
-//     }
-//
-//     if(cleanBeforeInsert){
-//         $("#association-table-body tr").remove();
-//     }
-//
-//     $.each(data, function(index,asso) {
-//
-//         var row = $('<tr/>');
-//
-//         // Risk allele
-//         var riskAllele = asso.strongestAllele[0];
-//         var riskAlleleLabel = riskAllele;
-//         var riskAllele_rsid = riskAllele;
-//         if (riskAlleleLabel.match(/\w+-.+/)) {
-//             riskAlleleLabel = riskAllele.split('-').join('-<b>')+'</b>';
-//             riskAllele_rsid = riskAllele.split('-')[0];
-//         }
-//         // This is now linking to the variant page instead of the search page
-//         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-//         riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
-//
-//         row.append(newCell(riskAllele));
-//
-//         // Risk allele frequency
-//         var riskAlleleFreq = asso.riskFrequency;
-//         row.append(newCell(riskAlleleFreq));
-//
-//         // p-value
-//         var pValue = asso.pValueMantissa;
-//         if (pValue) {
-//             var pValueExp = " x 10<sup>" + asso.pValueExponent + "</sup>";
-//             pValue += pValueExp;
-//             if (asso.qualifier) {
-//                 if (asso.qualifier[0].match(/\w/)) {
-//                     pValue += " " + asso.qualifier.join(',');
-//                 }
-//             }
-//             row.append(newCell(pValue));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // OR
-//         var orValue = asso.orPerCopyNum;
-//         if (orValue) {
-//             if (asso.orDescription) {
-//                 orValue += " " + asso.orDescription;
-//             }
-//             row.append(newCell(orValue));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // Beta
-//         var beta = asso.betaNum;
-//         if (beta) {
-//             if (asso.betaUnit) {
-//                 beta += " " + asso.betaUnit;
-//             }
-//             if (asso.betaDirection) {
-//                 beta += " " + asso.betaDirection;
-//             }
-//             row.append(newCell(beta));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // CI
-//         var ci = (asso.range) ? asso.range : '-';
-//         row.append(newCell(ci));
-//         // Reported genes
-//         var genes = [];
-//         var reportedGenes = asso.reportedGene;
-//         if (reportedGenes) {
-//             $.each(reportedGenes, function(index, gene) {
-//                 genes.push(setQueryUrl(gene));
-//             });
-//             row.append(newCell(genes.join(', ')));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // Reported traits
-//         var traits = [];
-//         var reportedTraits = asso.traitName;
-//         if (reportedTraits) {
-//             $.each(reportedTraits, function(index, trait) {
-//                 traits.push(setQueryUrl(trait));
-//             });
-//             row.append(newCell(traits.join(', ')));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // Mapped traits
-//         var mappedTraits = asso.mappedLabel;
-//         if (mappedTraits) {
-//             row.append(newCell(mappedTraits.join(', ')));
-//         } else {
-//             row.append(newCell('-'));
-//         }
-//
-//         // Study
-//         var author = asso.author_s;
-//         var publicationDate = asso.publicationDate;
-//         var pubDate = publicationDate.split("-");
-//         var pubmedId = asso.pubmedId;
-//         var study = setQueryUrl(author, author + " - " + pubDate[0]);
-//         study += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-//         row.append(newCell(study));
-//
-//         var studyId = asso.studyId;
-//
-//         // Populate the table
-//         $("#association-table-body").append(row);
-//         hideLoadingOverLay('#association-table-loading')
-//     });
-// }
-//
-// //display study table
-// function displayEfotraitStudies(data, cleanBeforeInsert) {
-//     //by default, we clean the table before inserting data
-//     if (cleanBeforeInsert === undefined) {
-//         cleanBeforeInsert = true;
-//     }
-//
-//
-//     var study_ids = [];
-//     if(cleanBeforeInsert){
-//         $("#study-table-body tr").remove();
-//     }
-//     $.each(data, function(index, asso) {
-//         var study_id = asso.id;
-//         if (jQuery.inArray(study_id, study_ids) == -1) {
-//
-//             var row = $('<tr/>');
-//
-//             study_ids.push(study_id);
-//
-//             // Author
-//             var author = asso.author_s;
-//             var publicationDate = asso.publicationDate;
-//             var pubDate = publicationDate.split("-");
-//             var pubmedId = asso.pubmedId;
-//             var study_author = setQueryUrl(author, author);
-//             study_author += '<div><small>'+setExternalLink(EPMC+pubmedId,'PMID:'+pubmedId)+'</small></div>';
-//             row.append(newCell(study_author));
-//
-//             // Publication date
-//             var p_date = asso.publicationDate;
-//             var publi = p_date.split('T')[0];
-//             row.append(newCell(publi));
-//
-//             // Journal
-//             row.append(newCell(asso.publication));
-//
-//             // Title
-//             row.append(newCell(asso.title));
-//
-//             // Initial sample desc
-//             var initial_sample_text = '-';
-//             if (asso.initialSampleDescription) {
-//                 initial_sample_text = displayArrayAsList(asso.initialSampleDescription.split(', '));
-//             }
-//             row.append(newCell(initial_sample_text));
-//
-//             // Replicate sample desc
-//             var replicate_sample_text = '-';
-//             if (asso.replicateSampleDescription) {
-//                 replicate_sample_text = displayArrayAsList(asso.replicateSampleDescription.split(', '));
-//             }
-//             row.append(newCell(replicate_sample_text));
-//
-//             // ancestralGroups
-//             var ancestral_groups_text = '-';
-//             if (asso.ancestralGroups) {
-//                 ancestral_groups_text = displayArrayAsList(asso.ancestralGroups);
-//             }
-//             row.append(newCell(ancestral_groups_text));
-//
-//             // Populate the table
-//             $("#study-table-body").append(row);
-//         }
-//     });
-//     // Study count //
-//     $(".study_count").html(study_ids.length);
-//
-//     if (study_ids.length == 1) {
-//         $(".study_label").html("Study");
-//     }
-//
-//     hideLoadingOverLay('#study-table-loading')
-// }
-
-/**
  * Display an overlay spinner on a tag
  * https://gasparesganga.com/labs/jquery-loading-overlay/
  * @param {String} tagID
@@ -2147,6 +2859,9 @@ isAlwaysDescendant = function(){
 isMainEFO = function(efoid){
     return efoid == getMainEFO();
 }
+
+
+
 
 /**
  * subset a hash back on keys provided.
@@ -2217,260 +2932,9 @@ createPopover = function(label,header,content){
     return content_text;
 }
 
-/*
- ols component
- */
-//auto-complete/search box in the expension panel
-$(document).ready(function() {
-    var app = require("ols-autocomplete");
-    var instance = new app();
-    options = {
-        action: function(relativePath, suggestion_ontology, type, iri) {
-//                console.log("In overwritten function")
-//                console.log("Relative Path: " + relativePath)
-//                console.log("Suggested Ontology: " + suggestion_ontology)
-//                console.log("Type (optional): " + type)
-//                console.log("iri (optional): " + iri)
-            elements = {};
-            elements['EFO_' + iri.split("EFO_")[1]] = 'EFO_' + iri.split("EFO_")[1];
-            //xintodo auto load
-            addEFO(elements);
-        }
-    }
-    instance.start(options)
-});
-
-
-//ols-tree
-var app = require("ols-treeview");
-var instance = new app();
-
-options = {
-    checkbox: false,
-    checkbox_cascade: '',
-    checkbox_three_state: false,
-    checkbox_keep_selected_style: false,
-    onclick: function(params, node, relativePath, termIRI, type){
-        // var isComfirmed =  confirm('Are you sure?');
-        // if(isComfirmed){
-        //     var clicked = node.node.original.iri;
-        //     var efoid = clicked.split('/').slice(-1)[0];
-        //     var tmp = {}
-        //     tmp[efoid] = clicked;
-        //     addEFO(tmp);
-        // }else{
-        //     console.debug('not comfirmed');
-        // }
-        var clicked = node.node.original.iri;
-        var efoid = clicked.split('/').slice(-1)[0];
-        var tmp = {}
-        tmp[efoid] = clicked;
-        addEFO(tmp);
-    },
-}
-
-
-var searchTerm = getMainEFO();
-// initialise the tree
-instance.draw($("#term-tree"),
-              false,
-              "efo",
-              "terms",
-              "http://www.ebi.ac.uk/efo/" + searchTerm,
-              "http://www.ebi.ac.uk/ols/",
-              options);
 
 
 
-
-//
-// findEFOInfoLocal = function(efoid) {
-//     var data = getDataFromTag(global_efo_info_tag_id, 'efoInfo')
-//     if(data==undefined)
-//         return undefined;
-//     return data[efoid]
-// }
-//
-// findOntologyInfoLocal = function(ontologyId) {
-//     var data = getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')
-//     if(data==undefined)
-//         return undefined;
-//     return data[ontologyId]
-// }
-//
-// findOntologyInfo = function(ontologyId){
-//     ontologyId = ontologyId.toLowerCase();
-//     var localefoinfo = findOntologyInfoLocal(ontologyId)
-//     if (localefoinfo) {
-//         return new Promise(function(resolve, reject) {
-//             resolve(localefoinfo);
-//         })
-//     }
-//
-//     return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-//         var ontologyInfo = {};
-//         response._embedded.ontologies.forEach(function(d){
-//             ontologyInfo[d.ontologyId] = d;
-//         })
-//         addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
-//         return ontologyInfo[ontologyId];
-//     }).catch(function(err){
-//         console.error('Error when querying ontology info. ' + err);
-//         return err;
-//     })
-// }
-//
-// findIriByShortForm = function(shortForm){
-//     var prefix = shortForm.split('_')[0];
-//     var id = shortForm.split('_')[1];
-//     var p = findOntologyIdByPrefix(prefix)
-//
-//     return p.then(function(ontology){
-//         return findOntologyInfo(ontology).then(function(o){
-//             return {'ontology':ontology,'iri' : o.config.baseUris[0] + id};
-//         })
-//     }).catch(function(err){
-//         console.log('Error finding iri for term ' + shortForm + '. ' + err);
-//     })
-// }
-//
-// fetchOntologyInfo=function(){
-//     return promiseGet('http://www.ebi.ac.uk/ols/api/ontologies',{'size':99999}).then(JSON.parse).then(function(response){
-//         var ontologyInfo = {};
-//         var prefix2ontid = {}
-//         response._embedded.ontologies.forEach(function(d){
-//             ontologyInfo[d.ontologyId] = d;
-//             prefix2ontid[d.config.baseUris[0].split('/').slice(-1)[0].split('_')[0]] = d.ontologyId;
-//         })
-//         addDataToTag(global_efo_info_tag_id,ontologyInfo,'ontologyInfo')
-//         addDataToTag(global_efo_info_tag_id,prefix2ontid,'prefix2ontid')
-//         return response;
-//     }).catch(function(err){
-//         console.error('Error when querying ontology info. ' + err);
-//         return err;
-//     })
-// }
-//
-// findOntologyIdByPrefix = function(prefix) {
-//     if(getDataFromTag(global_efo_info_tag_id, 'ontologyInfo')==undefined || getDataFromTag(global_efo_info_tag_id, 'prefix2ontid') == undefined){
-//         return fetchOntologyInfo().then(function(){
-//             return getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]
-//         });
-//     }else{
-//         return new Promise(function(resolve, reject) {
-//             resolve(getDataFromTag(global_efo_info_tag_id, 'prefix2ontid')[prefix]);
-//         })
-//     }
-// }
-//
-//
-// findEFOInfo = function(shortForm) {
-//     //EFO does not follow the same naming convension
-//     //need to due with terms such as 'CHEBI_17234'
-//     console.debug(shortForm);
-//     return findIriByShortForm(shortForm).then(function(response) {
-//         var ont = response.ontology;
-//         var iri = response.iri;
-//
-//         var localefoinfo = findEFOInfoLocal(shortForm)
-//         if (localefoinfo) {
-//             return new Promise(function(resolve, reject) {
-//                 resolve(localefoinfo);
-//             })
-//         }
-//
-//         var url = global_ols_api + 'ontologies/' + ont + '/terms/' + encodeURIComponent(encodeURIComponent(iri));
-//         return promiseGet(url).then(JSON.parse).then(function(response) {
-//             var tmp = {};
-//             tmp[shortForm] = response;
-//             addDataToTag(global_efo_info_tag_id, tmp, 'efoInfo');
-//             return response;
-//         }).catch(function(err){
-//             console.debug('error when loading efo info for ' + shortForm + '. ' + err);
-//             return err;
-//         })
-//
-//     });
-// }
-//
-// findAllHierarchicalDescendantsLocal = function(efoid) {
-//     var decendants =getDataFromTag(global_efo_info_tag_id,'efoDecendants');
-//     if (decendants == undefined)
-//         return decendants
-//     return decendants[efoid];
-// }
-//
-// findAllHierarchicalDescendants = function(efoid) {
-//     return findEFOInfo(efoid).then(function(response) {
-//         console.log('looking for descendants for ' + efoid);
-//         console.log(response);
-//         if (response.has_children) {
-//             var localDescentandInfo = findAllHierarchicalDescendantsLocal(efoid)
-//             if (localDescentandInfo) {
-//                 return new Promise(function(resolve, reject) {
-//                     resolve(localDescentandInfo);
-//                 })
-//             }
-//             //xintodo size >=1000 is set to 1000 by ols, ask?
-//             return promiseGet(response._links.hierarchicalDescendants.href + '?size=' +
-//                               global_ols_api_all_descendant_limit).then(JSON.parse).then(function(response) {
-//                 console.log('all descendants: ');
-//                 console.log(response);
-//                 var terms = {};
-//                 response._embedded.terms.forEach(function(d, i) {
-//                     terms[d.short_form] = d;
-//                 })
-//                 var tmp = {}
-//                 tmp[efoid] = Object.keys(terms);
-//                 addDataToTag(global_efo_info_tag_id, terms, 'efoInfo');
-//                 addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
-//                 return response._embedded.terms;
-//             })
-//         }
-//         else {
-//             console.log('no descendant.');
-//             return new Promise(function(resolve, reject) {
-//                 resolve(JSON.parse("[]"));
-//             }).then(function() {
-//                 tmp = {}
-//                 tmp[efoid] = []
-//                 addDataToTag(global_efo_info_tag_id, tmp, 'efoDecendants')
-//             })
-//         }
-//     })
-// }
-//
-// findRelatedTermsoLocal = function(efoid) {
-//     var data = getDataFromTag(global_efo_info_tag_id, 'relatedEFOs')
-//     if(data==undefined)
-//         return undefined;
-//     return data[efoid]
-// }
-//
-// findRelatedTerms = function(efoid){
-//     var relatedTermsLocal = findRelatedTermsoLocal(efoid)
-//     if (relatedTermsLocal) {
-//         return new Promise(function(resolve, reject) {
-//             resolve(relatedTermsLocal);
-//         })
-//     }
-//
-//     return OLS.searchOLS($('#query').text(),{
-//         'ontology': 'efo',
-//         'fieldList': 'iri,ontology_name,ontology_prefix,short_form,description,id,label,is_defining_ontology,obo_id,type,logical_description'
-//     }).then(function(data){
-//         var terms = {};
-//         data.response.docs.forEach(function(d) {
-//             d.obo_id = d.obo_id.replace(":", "_")
-//             terms[d.obo_id] = d
-//         })
-//         addDataToTag(global_efo_info_tag_id,terms,'relatedEFOs');
-//         return terms;
-//     }).catch(function(err){
-//         console.error('Error when finding related term from OLS for keywork ' + keyword + '. ' + err);
-//     });
-// }
-//
 
 
 
