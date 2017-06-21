@@ -646,7 +646,7 @@ function setState(state) {
 }
 
 function setDownloadLink(rsId) {
-    var baseUrl = '../api/search/downloads?';
+    var baseUrl = '../../api/search/downloads?';
     var q = "q=".concat(rsId);
 
     var facet = '&facet=association';
