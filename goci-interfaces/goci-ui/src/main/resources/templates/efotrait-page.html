@@ -411,10 +411,10 @@
                                         type="button"
                                         class="btn btn-default cart-action-btn">+RelatedTerms
                                         </button>
-                                <a id="btn-cart-action-download"
+                                <button id="btn-cart-action-download"
                                         type="button"
                                         class="btn btn-default cart-action-btn">DownloadList
-                                        </a>
+                                        </button>
                                 <!--<button id="btn-clear-highlight"-->
                                         <!--type="button"-->
                                         <!--class="btn btn-default cart-action-btn">clearHighlight-->
@@ -789,7 +789,7 @@
 
     $('#btn-query-include-descendants').click(() =>{
         //replot with all children, from the currently selected efos
-        addEFO({}, false, true);
+        addEFO({});
     });
 
     $('#btn-cart-toggle-check-cbs').click(() =>{
@@ -811,7 +811,25 @@
     });
 
     $('#btn-cart-action-download').click(() =>{
+        generateDownloadContentForCart().then((content) => {
+            download(content,'term_list.txt')
+        })
+    });
 
+
+    function download(content, filename, contentType)
+    {
+        if(!contentType) contentType = 'application/octet-stream';
+        var a = document.createElement('a');
+        var blob = new Blob([content], {'type':contentType});
+        a.href = window.URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+    }
+
+    generateDownloadContentForCart = function(){
+        var rowSep = '\n'
+        var colSep = '\t'
         var list = [];
         $('.badge.cart-item-number-badge').filter(function() {
             return this.id.match(/_noa/);
@@ -821,18 +839,20 @@
         var list_unique = list.filter(function onlyUnique(value, index, self) {
             return self.indexOf(value) === index;
         })
-        list_unique.join(',')
 
-        var data = "text/json;charset=utf-8," + encodeURIComponent(list_unique.join(','));
 
-        var a = document.getElementById('btn-cart-action-download');
-        a.href = 'data:' + data;
-        a.download = 'data.json';
-        a.innerHTML = 'download JSON';
+        var rows = Promise.all(list_unique.map(OLS.getEFOInfo)).then((efoinfos) => {
+            return efoinfos.map((efoinfo)=>{
+                return [efoinfo.short_form,efoinfo.ontology_name,efoinfo.iri].join(colSep)
+            })
+        })
 
-        //append <a>
-
-    });
+//        var content = encodeURIComponent(list_unique.join('\n'));
+        var content = rows.then((rows)=>{
+            return rows.join(rowSep);
+        })
+        return content;
+    }
 
 
     $('#btn-clear-highlight').click(() => {
@@ -851,13 +871,13 @@
         whichDescendant().map((key) => {
             removeDataFromTag(global_efo_info_tag_id, 'whichDescendant', key)
         })
-        addEFO({}, false);
+        addEFO({});
     });
 
     $('#btn-query-include-related-terms').click(() => {
         //replot with all related terms, from the currently selected efos
         OLS.getRelatedTerms(getMainEFO()).then((data) => {
-            addEFO(data, false);
+            addEFO(data);
         });
     });
 
@@ -940,7 +960,7 @@
     removeEFO = function(efoid) {
         removeDataFromTag(global_efo_info_tag_id,'selectedEfos',efoid)
         removeDataFromTag(global_efo_info_tag_id,'whichDescendant',efoid)
-        addEFO({},false);
+        addEFO({});
     }
 
 
@@ -1404,7 +1424,6 @@
     }
 
     addRelatedTermGraph = function(mainEFO) {
-
         var mainEFOLink = OLS.getOLSLinkAPI(mainEFO).then(function(termFullLink) {
             return termFullLink + '/graph';
         })
