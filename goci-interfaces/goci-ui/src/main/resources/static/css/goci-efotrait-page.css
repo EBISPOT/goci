@@ -35,10 +35,12 @@ input[type=checkbox].cart-item-cb {
 }
 
 /* top panel key-value display*/
-dt {
+.dl-horizontal dt {
     width: 100px;
 }
-
+.dl-horizontal dd {
+    margin-left: 120px;
+}
 /* Display the summary information at the bottn of the efo info panel box. */
 #efotrait-summary-icon {
     padding-right: 2px;

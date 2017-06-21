@@ -25,7 +25,117 @@ var global_efo_info_tag_id = '#efo-info';
 var global_pmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
+/**
+ * global variable storing solr query result.
+ */
+var data_efo=undefined
+var data_study=undefined
+var data_association=undefined
+var data_diseasetrait=undefined
+var data_facet=undefined
+var data_highlighting=undefined
 
+/**
+ * toggle checkAll/uncheck All for the cart item checkbox.
+ */
+$('#btn-cart-toggle-check-cbs').click(() =>{
+    if($('.cart-item-cb:input:checked').length != $('.cart-item-cb:input').length){
+        //not everthing checked, check everthing
+        $('.cart-item-cb:input').attr('checked','checked')
+        addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
+        addEFO({});
+    }else{
+        //uncheck everything
+        $('.cart-item-cb:input').removeAttr('checked');
+        var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+        Object.keys(tmp).map((id) => {
+            delete tmp[id];
+        })
+        addEFO({});
+    }
+
+});
+
+/**
+ * Trigger the download of the current cart.
+ */
+$('#btn-cart-action-download').click(() =>{
+    generateDownloadContentForCart().then((content) => {
+        download(content,'term_list.txt')
+    })
+});
+
+/**
+ * Trigger the remove of highlight from locus plot.
+ * This button is currently removed since it is not really important.
+ * The function is kept for future reference.
+ */
+$('#btn-clear-highlight').click(() => {
+    $('.list-group-item').removeClass("highlight");
+    reloadLocusZoom('#plot', data_association);
+});
+
+/**
+ * Trigger the remove of all cart items except the mainEFO.
+ * This is functionally similar to reload the page, but instead, keep all the cache data.
+ * This button is currently removed since it is not really important.
+ * The function is kept for future reference.
+ */
+$('#btn-clear-cart').click(() => {
+    var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
+    var mainEFO = getMainEFO();
+    Object.keys(selected).map((key)=>{
+        if(key != mainEFO)
+            removeDataFromTag(global_efo_info_tag_id,'selectedEfos',key)
+    })
+
+    whichDescendant().map((key) => {
+        removeDataFromTag(global_efo_info_tag_id, 'whichDescendant', key)
+    })
+    addEFO({});
+});
+
+
+/**
+ * Trigger the action to add all related terms to the cart.
+ */
+$('#btn-query-include-related-terms').click(() => {
+    OLS.getRelatedTerms(getMainEFO()).then((relatedTerms) => {
+        addEFO(relatedTerms);
+    });
+});
+
+
+/**
+ * Linkout to ols page of the main EFO term
+ */
+$('#ols-link').click(() => {
+    OLS.getOLSLink(getMainEFO()).then((link)=>{
+        window.open(link, '_blank');
+    })
+});
+
+/**
+ * Linkout to oxo page of the main EFO term
+ */
+$('#oxo-link').click(() => {
+    window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
+});
+
+/**
+ * Checkbox to toggle always include all descendants.
+ * When uncheck, the newly added efo term will be added to the cart without any descendants.
+ * The users can latter add the descendant by clicking the checkbox in front of the cart item.
+ * When checked, descendant will always be included for newly added efo terms.
+ */
+$("#cb-query-include-descendants").change(() => {
+    addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
+});
+
+
+/**
+ * Copy the sharable link to clipboard.
+ */
 new Clipboard('#sharable_link_btn', {
     text: function (trigger) {
         return $('#sharable_link').val();
@@ -33,22 +143,7 @@ new Clipboard('#sharable_link_btn', {
 });
 
 
-/**
- * debug function
- */
-_peak = function() {
-    console.log($(global_efo_info_tag_id).data());
-}
 
-/**
- * debug function
- */
-_cleanDataTag = function(tagID){
-    tagID=tagID || global_efo_info_tag_id;
-    Object.keys($(tagID).data()).forEach(function(i){
-        $(tagID).removeData(i)
-    })
-}
 
 
 /**
@@ -1738,6 +1833,53 @@ function displayEfotraitStudies(data, cleanBeforeInsert) {
     hideLoadingOverLay('#study-table-loading')
 }
 
+
+/**
+ * trigger a download from the browser.
+ * @param {String} content
+ * @param {String} filename - default file name to save the download
+ * @param {String} contentType - default is 'application/octet-stream'
+ */
+function download(content, filename, contentType)
+{
+    if(!contentType) contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    var blob = new Blob([content], {'type':contentType});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+/**
+ * Generate content of currently selected terms
+ * @returns {Promise} - contins a string of the content
+ */
+generateDownloadContentForCart = function(){
+    var rowSep = '\n'
+    var colSep = '\t'
+    var list = [];
+    $('.badge.cart-item-number-badge').filter(function() {
+        return this.id.match(/_noa/);
+    }).map(function(){
+        list = list.concat($('#'+this.id).data('efos'))
+    })
+    var list_unique = list.filter(function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+
+    var rows = Promise.all(list_unique.map(OLS.getEFOInfo)).then((efoinfos) => {
+        return efoinfos.map((efoinfo)=>{
+            return [efoinfo.short_form,efoinfo.ontology_name,efoinfo.iri].join(colSep)
+        })
+    })
+
+//        var content = encodeURIComponent(list_unique.join('\n'));
+    var content = rows.then((rows)=>{
+        return rows.join(rowSep);
+    })
+    return content;
+}
 // //display association table
 // function displayEfotraitAssociations(data, cleanBeforeInsert) {
 //     //by default, we clean the table before inserting data
@@ -2333,3 +2475,19 @@ instance.draw($("#term-tree"),
 
 
 
+/**
+ * debug function
+ */
+_peak = function() {
+    console.log($(global_efo_info_tag_id).data());
+}
+
+/**
+ * debug function
+ */
+_cleanDataTag = function(tagID){
+    tagID=tagID || global_efo_info_tag_id;
+    Object.keys($(tagID).data()).forEach(function(i){
+        $(tagID).removeData(i)
+    })
+}

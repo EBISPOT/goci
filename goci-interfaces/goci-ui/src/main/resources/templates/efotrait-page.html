@@ -260,7 +260,7 @@
 
                         <div class="clearfix col-lg-4">
                             <dl class="dl-horizontal">
-                                <dt>Ontology Xref</dt>
+                                <dt>Xrefs</dt>
                                 <dd>
                                     <div id="btn-oxo-expand">
                                         <!--<a class="btn btn-default" id="btn-toggle-oxo"-->
@@ -276,6 +276,7 @@
                                     <div class="clearfix collapse" id="oxo-graph">
                                         <div  class="panel-body">
                                             <div id="oxo-div" >
+                                                <div id="oxo-list"></div>
                                                 <div>
                                                     <div id="oxo-vis"></div>
                                                 </div>
@@ -778,129 +779,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-
-    var data_efo=undefined
-    var data_study=undefined
-    var data_association=undefined
-    var data_diseasetrait=undefined
-    var data_facet=undefined
-    var data_highlighting=undefined
-
-
-    $('#btn-query-include-descendants').click(() =>{
-        //replot with all children, from the currently selected efos
-        addEFO({});
-    });
-
-    $('#btn-cart-toggle-check-cbs').click(() =>{
-        if($('.cart-item-cb:input:checked').length != $('.cart-item-cb:input').length){
-            //not everthing checked, check everthing
-            $('.cart-item-cb:input').attr('checked','checked')
-            addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
-            addEFO({});
-        }else{
-            //uncheck everything
-            $('.cart-item-cb:input').removeAttr('checked');
-            var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
-            Object.keys(tmp).map((id) => {
-                delete tmp[id];
-            })
-            addEFO({});
-        }
-
-    });
-
-    $('#btn-cart-action-download').click(() =>{
-        generateDownloadContentForCart().then((content) => {
-            download(content,'term_list.txt')
-        })
-    });
-
-
-    function download(content, filename, contentType)
-    {
-        if(!contentType) contentType = 'application/octet-stream';
-        var a = document.createElement('a');
-        var blob = new Blob([content], {'type':contentType});
-        a.href = window.URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
-    }
-
-    generateDownloadContentForCart = function(){
-        var rowSep = '\n'
-        var colSep = '\t'
-        var list = [];
-        $('.badge.cart-item-number-badge').filter(function() {
-            return this.id.match(/_noa/);
-        }).map(function(){
-            list = list.concat($('#'+this.id).data('efos'))
-        })
-        var list_unique = list.filter(function onlyUnique(value, index, self) {
-            return self.indexOf(value) === index;
-        })
-
-
-        var rows = Promise.all(list_unique.map(OLS.getEFOInfo)).then((efoinfos) => {
-            return efoinfos.map((efoinfo)=>{
-                return [efoinfo.short_form,efoinfo.ontology_name,efoinfo.iri].join(colSep)
-            })
-        })
-
-//        var content = encodeURIComponent(list_unique.join('\n'));
-        var content = rows.then((rows)=>{
-            return rows.join(rowSep);
-        })
-        return content;
-    }
-
-
-    $('#btn-clear-highlight').click(() => {
-        $('.list-group-item').removeClass("highlight");
-        reloadLocusZoom('#plot', data_association);
-    });
-
-    $('#btn-clear-cart').click(() => {
-        var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
-        var mainEFO = getMainEFO();
-        Object.keys(selected).map((key)=>{
-            if(key != mainEFO)
-                removeDataFromTag(global_efo_info_tag_id,'selectedEfos',key)
-        })
-
-        whichDescendant().map((key) => {
-            removeDataFromTag(global_efo_info_tag_id, 'whichDescendant', key)
-        })
-        addEFO({});
-    });
-
-    $('#btn-query-include-related-terms').click(() => {
-        //replot with all related terms, from the currently selected efos
-        OLS.getRelatedTerms(getMainEFO()).then((data) => {
-            addEFO(data);
-        });
-    });
-
-
-
-
-    $('#ols-link').click(() => {
-        OLS.getOLSLink(getMainEFO()).then((link)=>{
-            window.open(link, '_blank');
-        })
-    });
-
-    $('#oxo-link').click(() => {
-        window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
-    });
-
-
-
-
-    $("#cb-query-include-descendants").change(() => {
-        addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
-    });
-
     $(document).ready(() => {
         //add beta icon
         if (window.location.pathname.indexOf("beta") != -1) {
@@ -922,7 +800,7 @@
                                               elements[term] = term;
                                           }
             )
-            //xintodo first load
+            //first load
             addEFO(elements, true);
         }
     });
@@ -936,12 +814,22 @@
      */
     addEFO = function(data={}, initLoad=false) {
 
+        //If this is the first load, check ever efo id is valid
+        if(initLoad){
+            Promise.all(Object.keys(data).map(OLS.getEFOInfo)).catch((err)=>{
+                $('#lower_container').html("<h2>Invalid EFO id.</h2>");
+                return ''
+            })
+        }
+
+
         //add these terms to seleted
         var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
 
         Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
             console.log('finish loading descendants!')
-        });
+        })
+
 
         //load all available efo terms in the GWAS Catalog(has at least one annotation)
         //save in the global_efo_info_tag_id tag with key 'availableEFOs'
@@ -1048,17 +936,51 @@
         if (initLoad) {
             getOXO(getMainEFO()).then((data)=>{
                 var container = $('#btn-oxo-expand');
-                var totalMapping = data.page.totalElements;
-                container.html(`<b> ${totalMapping} </b> ontology Xrefs`);
-                container.append(showHideDiv('oxo-graph'));
+                var totalMapping = parseInt(data.page.totalElements);
+                var xrefs = [];
+                var xrefs_mesh = []
+                if(totalMapping > 0){
+                    xrefs = data._embedded.mappings.map((xref) => {
+                        return xref.toTerm.curie
+                    })
+
+                    xrefs_mesh = xrefs.filter((xref_id) => {
+                        return xref_id.startsWith("MeSH")
+                    });
+                }
+
+
+
+
+                $('#oxo-list').append(displayArrayAsList(xrefs))
+
+
+                //we want to show a mesh here
+                if(totalMapping > 0){
+                    if(xrefs_mesh.length > 0){
+                        var xref_mesh = xrefs_mesh[0];
+                        container.html(`<!--<b> ${xref_mesh} </b> and <b>${totalMapping}</b>  more ontology Xrefs--> `);
+                        container.html(`${xref_mesh} ...`);
+                    }else{
+                        container.html(`<b> ${totalMapping} </b> ontology Xrefs`);
+                    }
+                    container.append(showHideDiv('oxo-graph'));
+
+                }else{
+                    container.html(`no ontology Xrefs found.`);
+                }
+
                 $('#button-oxo-graph').click(() => {
                     //To redraw the oxo graph so that it is center to the div
                     drawGraph(getMainEFO().replace('_',':'),1);
                 });
             })
         }
-
-
+        getOXO(getMainEFO()).then((data)=>{
+            return xrefs = data._embedded.mappings.map((xref) => {
+                return xref.toTerm.curie
+            }).filter((xref_id) => {return xref_id.startsWith("MeSH",0)});
+            })
         //******************************
         // update shareable link
         //******************************
@@ -1671,8 +1593,12 @@
 
 
 <style type="text/css">
-
-
+    .dl-horizontal dt {
+        width: 80px;
+    }
+    .dl-horizontal dd {
+        margin-left: 120px;
+    }
 </style>
 
 <script>
