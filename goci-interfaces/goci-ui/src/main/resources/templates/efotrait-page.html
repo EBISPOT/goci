@@ -137,7 +137,7 @@
 
                 </ul>
             </li>
-            <li><b>Manhattan plot (plot of catalog associations for selected trait):</b>
+            <li><b>Manhattan plot (plot of Catalog associations for selected trait):</b>
                 Manhattan plot implemented using Locus Zoom. This plot will be updated as new EFOs are added to the
                 page.
                 <ul>
@@ -157,12 +157,12 @@
             </li>
 
             <li>
-                <b>Association table:</b> All association found in the GWAS catalog for the selected triat(s).
+                <b>Association table:</b> All association found in the GWAS Catalog for the selected triat(s).
             </li>
 
 
             <li>
-                <b>studies table:</b> All studies found in the GWAS catalog for the selected triat(s).
+                <b>studies table:</b> All studies found in the GWAS Catalog for the selected triat(s).
             </li>
         </ul>
     </div>
@@ -298,7 +298,7 @@
                                data-target="#highlight-study-panel-loading"
                                aria-expanded="false"
                                aria-controls="collapseExample">
-                                Highlight Study
+                                Highlighted Study
                             </a>
                         </div>
 
@@ -398,31 +398,31 @@
                         <div class="row">
 
                             <div class="col-lg-3">
-                                <input id="cb-query-include-descendants" type="checkbox"/>Descendants
+                                <input id="cb-query-include-descendants" type="checkbox"/>  Descendants
                                                                                           <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
                             <div class="col-lg-8">
                                 <!--xintodo add click function-->
-                                <button id="btn-cart-check-item-cbs"
+                                <button id="btn-cart-toggle-check-cbs"
                                         type="button"
-                                        class="btn btn-default">CheckAll
-                                        </button>
-                                <button id="btn-cart-uncheck-item-cbs"
-                                        type="button"
-                                        class="btn btn-default">UnCheckAll
+                                        class="btn btn-default cart-action-btn">Check/Uncheck All
                                         </button>
                                 <button id="btn-query-include-related-terms"
                                         type="button"
-                                        class="btn btn-default">+relatedTerms
+                                        class="btn btn-default cart-action-btn">+RelatedTerms
                                         </button>
-                                <button id="btn-clear-highlight"
+                                <a id="btn-cart-action-download"
                                         type="button"
-                                        class="btn btn-default">clearHighlight
-                                        </button>
-                                <button id="btn-clear-cart"
-                                        type="button"
-                                        class="btn btn-default">clearCart
-                                        </button>
+                                        class="btn btn-default cart-action-btn">DownloadList
+                                        </a>
+                                <!--<button id="btn-clear-highlight"-->
+                                        <!--type="button"-->
+                                        <!--class="btn btn-default cart-action-btn">clearHighlight-->
+                                        <!--</button>-->
+                                <!--<button id="btn-clear-cart"-->
+                                        <!--type="button"-->
+                                        <!--class="btn btn-default cart-action-btn">clearCart-->
+                                        <!--</button>-->
                             </div>
 
                             <div class="col-lg-1">
@@ -549,19 +549,19 @@
                     <div id="locus_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
-                                <span class="locus_label">Manhattan plot (plot of catalog associations for selected trait)</span>
+                                <span class="locus_label">Manhattan plot (plot of Catalog associations for selected trait(s))</span>
                                 <span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
                             </h3>
                             <span class="pull-right">
-                        <span class="clickable panel-collapsed"
+                        <span class="clickable"
                               style="margin-left:25px"
                               onclick="toggleSidebar('#locus_panel span.clickable')">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
+                            <span class="glyphicon glyphicon-chevron-up"></span>
                         </span>
                     </span>
                         </div>
-                        <div class="panel-body" style="display:none">
-                            <!--<div class="panel-body" style="display:initial">-->
+                        <!--<div class="panel-body" style="display:none">-->
+                            <div class="panel-body">
                             <!-- locus plot -->
                             <!--<div id="plot" style=" width: 1000px; height: 900px;"></div>-->
                             <div id="plot"></div>
@@ -677,7 +677,7 @@
 <script src="../static/js/ie10-viewport-bug-workaround.js"
         th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(() => {
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
@@ -787,33 +787,76 @@
     var data_highlighting=undefined
 
 
-    $('#btn-query-include-descendants').click(function() {
+    $('#btn-query-include-descendants').click(() =>{
         //replot with all children, from the currently selected efos
         addEFO({}, false, true);
     });
 
-    $('#btn-clear-highlight').click(function() {
+    $('#btn-cart-toggle-check-cbs').click(() =>{
+        if($('.cart-item-cb:input:checked').length != $('.cart-item-cb:input').length){
+            //not everthing checked, check everthing
+            $('.cart-item-cb:input').attr('checked','checked')
+            addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
+            addEFO({});
+        }else{
+            //uncheck everything
+            $('.cart-item-cb:input').removeAttr('checked');
+            var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+            Object.keys(tmp).map((id) => {
+                delete tmp[id];
+            })
+            addEFO({});
+        }
+
+    });
+
+    $('#btn-cart-action-download').click(() =>{
+
+        var list = [];
+        $('.badge.cart-item-number-badge').filter(function() {
+            return this.id.match(/_noa/);
+        }).map(function(){
+            list = list.concat($('#'+this.id).data('efos'))
+        })
+        var list_unique = list.filter(function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        })
+        list_unique.join(',')
+
+        var data = "text/json;charset=utf-8," + encodeURIComponent(list_unique.join(','));
+
+        var a = document.getElementById('btn-cart-action-download');
+        a.href = 'data:' + data;
+        a.download = 'data.json';
+        a.innerHTML = 'download JSON';
+
+        //append <a>
+
+    });
+
+
+    $('#btn-clear-highlight').click(() => {
         $('.list-group-item').removeClass("highlight");
         reloadLocusZoom('#plot', data_association);
     });
 
-    $('#btn-clear-cart').click(function() {
+    $('#btn-clear-cart').click(() => {
         var selected = getDataFromTag(global_efo_info_tag_id, 'selectedEfos')
         var mainEFO = getMainEFO();
-        Object.keys(selected).map(function(key){
+        Object.keys(selected).map((key)=>{
             if(key != mainEFO)
                 removeDataFromTag(global_efo_info_tag_id,'selectedEfos',key)
         })
 
-        whichDescendant().map(function(key){
-            removeDataFromTag(global_efo_info_tag_id,'whichDescendant',key)
+        whichDescendant().map((key) => {
+            removeDataFromTag(global_efo_info_tag_id, 'whichDescendant', key)
         })
         addEFO({}, false);
     });
 
-    $('#btn-query-include-related-terms').click(function() {
+    $('#btn-query-include-related-terms').click(() => {
         //replot with all related terms, from the currently selected efos
-        OLS.getRelatedTerms(getMainEFO()).then(function(data) {
+        OLS.getRelatedTerms(getMainEFO()).then((data) => {
             addEFO(data, false);
         });
     });
@@ -821,24 +864,24 @@
 
 
 
-    $('#ols-link').click(function() {
-        OLS.getOLSLink(getMainEFO()).then(function(link){
+    $('#ols-link').click(() => {
+        OLS.getOLSLink(getMainEFO()).then((link)=>{
             window.open(link, '_blank');
         })
     });
 
-    $('#oxo-link').click(function() {
+    $('#oxo-link').click(() => {
         window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
     });
 
 
 
 
-    $("#cb-query-include-descendants").change(function() {
+    $("#cb-query-include-descendants").change(() => {
         addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
     });
 
-    $(document).ready(function() {
+    $(document).ready(() => {
         //add beta icon
         if (window.location.pathname.indexOf("beta") != -1) {
             $('#beta-icon').show();
@@ -855,7 +898,7 @@
         if (searchTerm != '') {
             console.log("Start search for the efotrait " + searchTerm);
             var elements = {};
-            searchTerm.split(',').forEach(function(term) {
+            searchTerm.split(',').forEach((term) => {
                                               elements[term] = term;
                                           }
             )
@@ -867,31 +910,26 @@
     /**
      * When adding extra term to the cart
      * @param {Object} data - a hash, hash keys are the efo ids and value are the efo infos. These efo are to be added to the cart.
-     * @param {Boolean} initLoad - if true, the efoinfo/highlight study will be update
+     * @param {Boolean} initLoad - if true, the efoinfo/highlighted study will be update
      * @example addEFO{{},false} - simply trigger the update page event without adding anything to the cart.
      * @example addEFO{{'EFO_0000400':{}},false} - add EFO_0000400 to the cart and trigger page update
      */
-    addEFO = function(data, initLoad) {
-        if(initLoad==undefined)
-            initLoad = false;
+    addEFO = function(data={}, initLoad=false) {
 
-        //load all available efo terms in the GWAS Catalog(has at least one annotation)
-        //save in the global_efo_info_tag_id tag with key 'availableEFOs'
-        var p = getAvailableEFOs();
-
+        //add these terms to seleted
         var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
 
-        Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(function(data) {
+        Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
             console.log('finish loading descendants!')
         });
 
-
-        // p is the promise for loading all available efo from GWAS Catalog
-        // This needs to be fullfill before trigger any add event.
-        p.then(function(data) {
+        //load all available efo terms in the GWAS Catalog(has at least one annotation)
+        //save in the global_efo_info_tag_id tag with key 'availableEFOs'
+        //This needs to be fullfill before trigger any add event.
+        getAvailableEFOs().then((availableEFO) => {
             $(global_efo_info_tag_id).trigger('addToSelect', [initLoad]);
-        }).catch(function(err) {
-            console.error('Error when loading all available EFOs ' + err)
+        }).catch((err) => {
+            console.error(`Error when loading all available EFOs ${err}`);
         });
     }
 
@@ -908,9 +946,9 @@
 
     /**
      * trigger a refresh of the page content, including cart, locus plot, tables, badges.
-     * @param {Boolean} initLoad - if true, the efoinfo/highlight study will be update
+     * @param {Boolean} initLoad - if true, the efoinfo/highlighted study will be update
      */
-    updatePage = function(initLoad) {
+    updatePage = function(initLoad=false) {
 
         //start spinner. The spinner will be stoped whenever the data is ready, thus closed by the coresponding data loading function.
         if(initLoad){
@@ -922,16 +960,17 @@
         showLoadingOverLay('#study-table-loading');
         showLoadingOverLay('#cart-loading');
         showLoadingOverLay('#sharable_link_btn');
+        //temporarily disable the button
+        $('.cart-action-btn').attr('disabled',true)
 
 
         var current_select = getCurrentSelected();
         var mainEFO = getMainEFO();
 
-
+        //add all items in the card to require-descendants
         if(isAlwaysDescendant()){
             addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
         }
-
 
         // ******************************
         // update cart box
@@ -941,28 +980,36 @@
         //update cart, the badge will be 0 since the data is not ready at this stage.
         //xintodo Using reduce force the order, do I need order here?
         var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
-            return sequence.then(function() {
+            return sequence.then(() => {
                 return efoInfo;
             }).then(function(efoInfo) {
-                return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+efoInfo.label).then(function(){
+                return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+ efoInfo.label).then(() =>{
                     return efoInfo;
                 })
             });
-        }, Promise.resolve()).catch(function(err) {
-            console.warning('Error when updating cart! ' + err);
-        }).then(
-                //hideLoadingOverLay('#cart-loading')
-        );
+        }, Promise.resolve()).catch((err) => {
+            console.warning(`Error when updating cart! ${err}`);
+        })
 
+
+    //        var updateSelectedBoxPromise = Object.keys(current_select).map(OLS.getEFOInfo).map((efoInfo) => {
+    //            efoInfo.then(function(efoInfo) {
+    //                return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+efoInfo.label).then(() =>{
+    //                    return efoInfo;
+    //                })
+    //            });
+    //        }, Promise.resolve()).catch((err) => {
+    //            console.warning(`Error when updating cart! ${err}`);
+    //        })
 
         //******************************
         // update efo information panel
         //******************************
         if (initLoad){
             //display efo trait information when data is ready
-            OLS.getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch(function(err) {
-                console.warning('Error loading efo info from OLS. ' + err);
-            }).then(function() {
+            OLS.getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch((err) => {
+                console.warning(`Error loading efo info from OLS. ${err}`);
+            }).then(() => {
                 hideLoadingOverLay('#summary-panel-loading')
             })
         }
@@ -979,12 +1026,12 @@
         // add oxo graph
         //******************************
         if (initLoad) {
-            getOXO(getMainEFO()).then(function(data){
+            getOXO(getMainEFO()).then((data)=>{
                 var container = $('#btn-oxo-expand');
                 var totalMapping = data.page.totalElements;
-                container.html("<b>" + totalMapping + "</b>" + ' ontology Xrefs ');
+                container.html(`<b> ${totalMapping} </b> ontology Xrefs`);
                 container.append(showHideDiv('oxo-graph'));
-                $('#button-oxo-graph').click(function() {
+                $('#button-oxo-graph').click(() => {
                     //To redraw the oxo graph so that it is center to the div
                     drawGraph(getMainEFO().replace('_',':'),1);
                 });
@@ -1001,58 +1048,60 @@
         // query descendants for current selected terms
         //******************************
         var all_descendants = {}
-        var desPromise = Promise.all(whichDescendant().map(OLS.getHierarchicalDescendants)).then(function(descendants) {
-            descendants.forEach(function(terms) {
-                Object.keys(terms).forEach(function(term) {
+        var desPromise = Promise.all(whichDescendant().map(OLS.getHierarchicalDescendants)).then((descendants) => {
+            descendants.forEach((terms) => {
+                Object.keys(terms).forEach( (term) => {
                     all_descendants[term] = terms[term];
                 })
             })
             return all_descendants;
         }).catch(function(err) {
-            console.warning('Error when trying to find all descendants with error messgae ' + err);
+            console.warning(`Error when trying to find all descendants with error messgae. ${err}`);
         })
 
 
         //******************************
         // when solr data ready, process solr data and update badges in the selection cart
         //******************************
-        Promise.all([updateSelectedBoxPromise,desPromise]).then(function(arr){
+        Promise.all([updateSelectedBoxPromise,desPromise]).then((arr)=>{
             var solrPromise = getEfoTraitDataSolr(mainEFO, Object.keys(current_select), Object.keys(all_descendants), initLoad);
-            solrPromise.then(function(){
-
+            solrPromise.then(() =>{
                 //update selection cart
                 Object.keys(current_select).map(OLS.getEFOInfo).reduce(function(sequence, efoInfo) {
-                    return sequence.then(function() {return efoInfo;}).then(function(efoInfo){
+                    return sequence.then(() => {return efoInfo;}).then((efoInfo)=>{
                         var target_efos;
+                        //do we include descendant for this term
                         if(isDescendantRequired(efoInfo.short_form)){
                             //self and decendants
-                            target_efos = OLS.getHierarchicalDescendants(efoInfo.short_form).then(function(data){
+                            target_efos = OLS.getHierarchicalDescendants(efoInfo.short_form).then((descendants) => {
                                 //adding self
-                                return Object.keys(data).concat(efoInfo.short_form);
+                                return Object.keys(descendants).concat(efoInfo.short_form);
                             })
                         }else{
                             //only self
                             target_efos = Promise.resolve([efoInfo.short_form]);
                         }
 
+                        //update the cart box badge number when data is ready
                         target_efos.then(function(efos){
-                            //update the selection box badge number when data is ready
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').html(Object.keys(findAssociationForEFOs(efos)).length)
                             //work out what association is included (self or self+descendants), this is used for highlighting the plot.
                             $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').data('associations', findAssociationForEFOs(efos))
+                            $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').data('efos', efos)
                         });
                     })
                 },Promise.resolve())
 
 
-            }).catch(function(err) {
-                console.error('Error search solr. ' + err);
+            }).catch((err) => {
+                console.error(`Error searching solr. ${err}`);
                 $('#lower_container').html("<h2>Solr server is not available. Please try again later.</h2>");
-            }).then(function(){
+            }).then(() =>{
                 hideLoadingOverLay('#cart-loading');
+                $('.cart-action-btn').removeAttr("disabled");
             })
         });
     }
@@ -1073,23 +1122,24 @@
 
         var isMain = isMainEFO(efoid);
 
-        var colour, colourLabelInit,colourLabel;
+        var colour, colourLabelInit, colourLabel;
         //add badge to the cart item to show the toplevel efo and the number of association/trait for this efo
-        return getColourForEFO(efoid).then(function(data){
+        return getColourForEFO(efoid).then((data)=>{
             colour = data.colour;
-            colourLabelInit = data.colourLabel.substr(0,1)
             colourLabel = data.colourLabel;
-        }).catch(function(err){
+            //use the first letter to idicate the label
+            colourLabelInit = colourLabel.substr(0,1)
+        }).catch((err)=>{
             //if colour server is not available
-            console.warn('Error loading colour for cart item <' + efoid + '>. from ' + global_color_url + '. ' + err + '. Using default colour.')
+            console.warn(`Error loading colour for cart item < ${efoid} > from ${global_color_url}. ${err}. Using default colour.`)
             //default value
             colour = '#808080';
             colourLabelInit = '?'
             colourLabel = 'unable to reach colour server.';
-        }).then(function(){
+        }).then(() =>{
             var container = $(tagID);
 
-            //checkbox idicate require descendant
+            //checkbox indicate require descendant
             var cb = $('<input />',
                        {
                            id: 'selected_cb_' + efoid,
@@ -1097,18 +1147,17 @@
                            class: "cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1",
                            value: efoid
                        }).appendTo(container);
+
             if (isDescendantRequired(efoid)){
                 cb.attr('checked','checked')
             }
 
             cb.change(function(){
-                //xintodo update the plot
-                var id=this.id.split("selected_cb_")[1];
+//                var id=this.id.split("selected_cb_")[1];
+                var id=efoid;
 
                 if(this.checked){
-                    var tmp = {};
-                    tmp[id] = 1;
-                    addDataToTag(global_efo_info_tag_id, tmp, 'whichDescendant')
+                    addDataToTag(global_efo_info_tag_id, {[id]:true}, 'whichDescendant')
                 }else{
                     var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
                     delete tmp[id];
@@ -1123,8 +1172,9 @@
             }
 
             //show the descendants number in checkbox tooltips
-            OLS.getHierarchicalDescendants(efoid).then(function(data) {
-                cb.attr("title", Object.keys(data).length + ' descendants.');
+            OLS.getHierarchicalDescendants(efoid).then((descendants) => {
+                cb.attr("title", `${Object.keys(descendants).length} descendants.`);
+//                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
             });
 
             //cart item
@@ -1132,12 +1182,10 @@
                 class: 'list-group-item cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
             }).appendTo(container);
 
-
+            //colour badge for category
             $('<span />', { class: 'badge cart-item-category-badge', text: colourLabelInit, title:colourLabel})
                     .css({'background-color' :colour})
                     .appendTo(item);
-
-
 
             //Add a 'x' to item than can be remove from cart, this will be all terms except the mainEFO
             if (!isMain) {
@@ -1154,8 +1202,8 @@
             $('<span />', { id: 'selected_btn_' + efoid + '_noa', class: 'badge cart-item-number-badge', text: '-' , title:'Number of association'}).appendTo(item);
 
 
-            //to highlight associations only for this efo term
-            item.click(function() {
+            //to highlight associations only for this term
+            item.click(() => {
                 //TOGGLE HIGHLIGHT
                 if(item.hasClass("highlight")){
                     item.removeClass("highlight");
@@ -1166,33 +1214,23 @@
                     var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
                     reloadLocusZoom('#plot', data_association, Object.keys(highlightAssociations));
                 }
-
-                if(isAlwaysDescendant()){
-                    cb.attr("disabled", true);
-                }else{
-                    cb.removeAttr("disabled");
-                }
             })
 
             item.append(additionalLabel)
-            return '';
         })
     }
 
 
     //make solr query
-    function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad) {
+    function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false) {
         // initLoad will be pass to processEfotraitData, controlling whether to upload the triat information(initload)
         // or just reload the tables(adding another efo term)
-        if (initLoad === undefined) {
-            initLoad = false;
-        }
 
         var searchQuery = mainEFO;
 
 
         if (additionalEFO.length > 0) {
-            var p1 = filterAvailableEFOs(additionalEFO).then(function(additionalEFO_filtered) {
+            var p1 = filterAvailableEFOs(additionalEFO).then((additionalEFO_filtered) => {
                 if (additionalEFO_filtered.length > 0)
                     return searchQuery = searchQuery + ',' + additionalEFO_filtered.join(',');
                 else
@@ -1202,7 +1240,7 @@
         }
 
         if (descendants.length > 0) {
-            var p2 = filterAvailableEFOs(descendants).then(function(descendants_filtered) {
+            var p2 = filterAvailableEFOs(descendants).then((descendants_filtered) => {
                 if (descendants_filtered.length > 0)
                     searchQuery = searchQuery + ',' + descendants_filtered.join(',');
                 else
@@ -1212,7 +1250,7 @@
 
         //xintodo the url will be too long if there are a lot of terms to query, maybe change to post?
         //http://localhost:8280/gwas/api/search/efotrait?&q=EFO_0000400,EFO_0000400&max=9999&group.limit=9999&group.field=resourcename&facet.field=resourcename&hl.fl=shortForm,efoLink&hl.snippets=100
-        return Promise.all([p1, p2]).then(function() {
+        return Promise.all([p1, p2]).then(() => {
             console.log("Solr research request received for " + searchQuery);
             return promiseGet('/gwas/api/search/efotrait',
                               //            return promisePost('/gwas/api/search/efotrait',
@@ -1310,7 +1348,7 @@
             })
 
             //When all colour are received, replot
-            Promise.all(allColorLoaded).then(function() {
+            Promise.all(allColorLoaded).then(() => {
                                                  //assign colour to associations for plot
                                                  console.log('Finish loading color from ' + global_color_url);
                                                  console.log(allUniqueEFO);
@@ -1324,7 +1362,7 @@
             ).catch(function(err) {
                 console.warn('Error loading colour for Locus zoom plot from ' + global_color_url + '. ' + err + '. Using default colour.')
                 //xintodo create a default colour to plot, if the colour query fail
-            }).then(function(){
+            }).then(() =>{
                 reloadLocusZoom('#plot', data_association);
             });
         }
@@ -1332,7 +1370,7 @@
 
 
     //checkbox approach
-    addRelatedTermCheckBox = function() {
+    addRelatedTermCheckBox = () => {
         function addCheckbox(id, name, cbclass) {
             var container = $('#expension');
             $('<input />', {type: 'checkbox', id: id, class: cbclass, value: name}).appendTo(container);
@@ -1355,7 +1393,7 @@
             })
 
             //add check event.
-            $(".efocheckbox").change(function() {
+            $(".efocheckbox").change(() => {
                 var elements = {};
                 $('.efocheckbox:input:checked').each(function(cb) {
                     elements[$(this).attr('value').split(" : ")[0]] = $(this).attr('value').split(" : ")[1];
@@ -1442,7 +1480,7 @@
                 })
 
                 return Object.keys(terms).map(OLS.getOLSLinkAPI).reduce(function(sequence, termOLSLinkPromise) {
-                    return sequence.then(function() {
+                    return sequence.then(() => {
                         return termOLSLinkPromise;
                     }).then(function(termOLSLink) {
                         //for each related term, add it to the graph
@@ -1450,7 +1488,7 @@
                     })
                 }, Promise.resolve())
             })
-        }).then(function() {
+        }).then(() => {
             var x = instance.getGraphDataset()
             var net=instance.getNetwork()
             console.log(net)
@@ -1614,7 +1652,6 @@
 
 
 <style type="text/css">
-
 
 
 </style>
