@@ -399,9 +399,8 @@
                         <!--current select-->
                         <div class="row" style="margin-top: 10px">
                             <div class="col-lg-12">
-                                <b class="col-lg-6" style="float:left">Current selected:</b>
+                                <h4 class="col-lg-6" style="float:left;padding-left:0px">Current selected traitsgst:</h4>
                                 <div class="col-lg-6">
-
                                     <div class="col-lg-1.5" style="float:right;margin-bottom: 5px">
                                         <input type="text"
                                                id="sharable_link"
@@ -411,10 +410,10 @@
                                         <button id="sharable_link_btn"
                                                 type="button"
                                                 class="btn btn-default"
-                                                data-clipboard-target="#sharable_link">
+                                                data-clipboard-target="#sharable_link"
+                                                title="copy sharable link to clipboard">
                                           <span class="glyphicon glyphicon-share"
-                                                aria-hidden="true"
-                                                title="copy sharable link to clipboard"></span>
+                                                aria-hidden="true"></span>
                                          </button>
                                         </div>
                                     </div>
@@ -432,10 +431,10 @@
                                     <div class="col-lg-1.5" style="float:right">
                                         <button id="btn-query-include-related-terms"
                                                 type="button"
-                                                class="btn btn-default cart-action-btn">
+                                                class="btn btn-default cart-action-btn"
+                                                title="Add related terms to the cart.">
                                             <span class="glyphicon glyphicon-plus"
-                                                  aria-hidden="true"
-                                                  title="Add related terms to the cart."></span>
+                                                  aria-hidden="true"></span>
                                         </button>
                                     </div>
 
@@ -482,6 +481,9 @@
                             <!--<li><a data-toggle="tab" href="#ols-tree-div">Related in EFO hierarchy</a></li>-->
                             <!--<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>-->
                             <!--</ul>-->
+                            <div class="col-lg-12">
+                                <h4>Advance functions for adding additional traits:</h4>
+                            </div>
                             <ul class="nav nav-tabs">
                                 <li><a data-toggle="pill" href="#ols-search-div">EFO Search</a></li>
                                 <li><a data-toggle="pill" href="#ols-tree-div">EFO Hierarchy</a></li>
@@ -493,13 +495,13 @@
                             <div class="tab-content">
                                 <!--tree-->
                                 <div id="ols-tree-div" class="tab-pane fade">
-                                    <h4>Related in EFO hierarchy:</h4>
+                                    <h4>Related traits in EFO hierarchy:</h4>
                                     <div id="term-tree"></div>
                                 </div>
                                 <!--ols-graph-->
                                 <div id="ols-graph-div" class="tab-pane fade">
                                     <div id="expension">
-                                        <h4>Additional related terms eg. measurements and biomarkers:</h4>
+                                        <h4>Additional related traits eg. measurements and biomarkers:</h4>
                                         <div>
                                             <div id="ontology_vis"></div>
                                         </div>
@@ -508,7 +510,7 @@
                                 </div>
 
                                 <div id="ols-search-div" class="tab-pane fade">
-                                    <h4>Search for additional terms:</h4>
+                                    <h4>Search for additional trait:</h4>
                                     <div class="left">
                                         <label>
                                             <input style="font-weight: normal"
