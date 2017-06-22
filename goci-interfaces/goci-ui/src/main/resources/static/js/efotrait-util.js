@@ -2319,10 +2319,27 @@ var EPMC = {
  * The give back the prefered parent term and the predefined color of that parent term.
  * The color will be use in badges and plots, and it is consistence with the digram.
  * Lazy load.
+ *
+ * The loaning of the colour take a long time when the number of efo term increase.
+ * Disease this (using a default colour, commented out) will increase the speed.
+ * Need to optimize this for better performance.
  * @param {String} efoid
  * @returns {Promise} - json result.
  */
 getColourForEFO = function(efoid) {
+    // return new Promise(function(resolve){
+    //     resolve({
+    //                 uri: "-",
+    //                 trait: "-",
+    //                 parentUri: "-",
+    //                 parent: "?",
+    //                 colour: "#808080",
+    //                 colourLabel: "?",
+    //                 message: null
+    //             })
+    // });
+
+
     var queryColour = function(efoid){
         console.debug('Loading Colour...')
         return promiseGet(global_color_url + efoid).then(JSON.parse).then(function(response) {
