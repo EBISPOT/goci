@@ -753,7 +753,7 @@ initOLS_GraphWiget = function(mainEFO) {
     }).then(() => {
         var x = instance.getGraphDataset()
         var net=instance.getNetwork()
-        console.log(net)
+        console.debug(net)
 
         //change mainEFO node shape to hightlight related terms
         mainEFOIri.then((iri) => {
@@ -973,6 +973,9 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
 
     var data_json = []
     $.each(data, function(index,asso) {
+
+        //if association does not have rsid, skip
+        if(asso.strongestAllele == undefined){return true};
 
         var tmp = {};
         // Risk allele
@@ -1816,7 +1819,7 @@ function promiseGetRESTFUL_HATEOAS(url,params){
                 result = []
             }
             result = result.concat(RESTFUL_Response._embedded(response));
-            console.log(RESTFUL_Response.pageNumber(response)+1 + '/' + RESTFUL_Response.totalPages(response) + ' done!')
+            console.debug(RESTFUL_Response.pageNumber(response)+1 + '/' + RESTFUL_Response.totalPages(response) + ' done!')
             if(RESTFUL_Response.hasNext(response)){
                 var next = response._links.next.href;
                 //no need to parse params, this already included in the 'next' url
@@ -1870,7 +1873,7 @@ function promiseGetRESTFUL(url,params){
             return Promise.all(allurls.map(function(url) {
                 // console.log('querying ' + url);
                 return promiseGet(url).then(JSON.parse).then(function(response) {
-                    console.log(RESTFUL_Response.pageNumber(response) + ' done!');
+                    console.debug(RESTFUL_Response.pageNumber(response) + ' done!');
                     return RESTFUL_Response._embedded(response);
                 })
             }))
@@ -1878,7 +1881,7 @@ function promiseGetRESTFUL(url,params){
             return response.RESTFUL_Response._embedded(response);
         }
     }).then(function(result){
-        console.log('all done');
+        console.debug('all done');
         var resultArray = {};
         result.map(function(r){
             //all keys in _embedded
@@ -1929,7 +1932,7 @@ var OLS = {
             //cache data
             $(global_efo_info_tag_id).data('ontologyInfo',dataPromise);
         }else{
-            console.debug('Loading Ontology Info from cache.')
+            console.log('Loading Ontology Info from cache.')
         }
         return dataPromise;
     },
@@ -1959,7 +1962,7 @@ var OLS = {
             //add to tag
             $(global_efo_info_tag_id).data('prefix2ontId',dataPromise);
         }else{
-            console.debug('Loading prefix2ontId from cache.')
+            console.log('Loading prefix2ontId from cache.')
         }
         return dataPromise;
     },
@@ -1994,7 +1997,7 @@ var OLS = {
                 return ontologies[ontName].config.baseUris[0] + id;
             })
         }).catch(function(err){
-            console.log('Error finding iri for term ' + shortForm + '. ' + err);
+            console.error(`Error finding iri for term ${shortForm}. ${err}`);
         })
     },
 
@@ -2060,7 +2063,7 @@ var OLS = {
                 tmp[efoid] = terms;
                 return tmp;
             }).catch(function(err){
-                console.error('Error when loading related terms! ' + err);
+                console.error(`Error when loading related terms! ${err}`);
             })
         }
 
@@ -2180,7 +2183,7 @@ var OLS = {
                             .then(parseResponse);
                 }
                 else {
-                    console.log('no descendant found for ' + efoid);
+                    console.debug('no descendant found for ' + efoid);
                     return new Promise(function(resolve, reject) {
                         var tmp = {};
                         tmp[efoid] = {};
@@ -2195,7 +2198,7 @@ var OLS = {
         return dataPromise.then(function(data) {
             if ($.inArray(efoid, Object.keys(data)) == -1) {
                 //efo descendant not currently loaded
-                console.log('Loading descendant for ' + efoid)
+                console.debug(`Loading descendant for ${efoid}`)
                 dataPromise = queryDescendant(efoid);
                 return dataPromise.then(function(data){
                     //add to tag
@@ -2259,7 +2262,7 @@ var EPMC = {
  */
 getColourForEFO = function(efoid) {
     var queryColour = function(efoid){
-        console.log('Loading Colour...')
+        console.debug('Loading Colour...')
         return promiseGet(global_color_url + efoid).then(JSON.parse).then(function(response) {
             var tmp = {};
             tmp[efoid] = response;
@@ -2272,7 +2275,7 @@ getColourForEFO = function(efoid) {
     return dataPromise.then(function(data) {
         if ($.inArray(efoid, Object.keys(data)) == -1) {
             //efo colour is not currently loaded
-            console.log('Loading Colour...')
+            console.debug('Loading Colour...')
             dataPromise = queryColour(efoid);
             return dataPromise.then(function(data){
                 //add to tag
@@ -2295,7 +2298,7 @@ getColourForEFO = function(efoid) {
  */
 getColourForEFOs = function(efoids){
     var queryColours = function(efoids){
-        console.log('Loading Colours...')
+        console.debug('Loading Colours...')
         return promisePost(global_color_url_batch, efoids).then(JSON.parse).then(function(response){
             return hashFromArrays(efoids,response);
         });
@@ -2311,7 +2314,7 @@ getColourForEFOs = function(efoids){
         });
 //            missing=efoids;
         if(missing.length >0){
-            console.log('Loading Colour...' + missing);
+            console.debug('Loading Colour...' + missing);
             var promiseMissingColour = promisePost(global_color_url_batch, missing).then(JSON.parse).then(function(response){
                 return hashFromArrays(missing,response);
             });
@@ -3006,7 +3009,7 @@ addIndexToArrayOfHash = function(indexStr,arrayofHash){
  */
 hashFromArrays = function(arr_keys,arr_values){
     if(arr_keys.length != arr_values.length){
-        console.error('the number of keys(' + arr_keys + ') must be the same of the number of values(' + arr_values + ')!')
+        console.error(`the number of keys ${arr_keys} must be the same of the number of values ${arr_values}!`)
         return undefined;
     }
     var hash = {}
