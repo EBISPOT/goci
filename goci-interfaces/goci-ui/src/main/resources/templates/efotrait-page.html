@@ -53,20 +53,8 @@
                 <img alt="externalLink"
                      style="width: 1em; height: auto;"
                      src="../static/icons/dna13.png"
-                     th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Trait</span><span th:text="${rsId}"
-                                                                                                     style="padding-left:15px"></span>
+                     th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Trait</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
             </h2>
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-            <!-- search box goes here -->
-            <div class="input-group" style="width: 250px; float: right;">
-                <input type="text" class="form-control" placeholder="Search the catalog" id="search-box"/>
-                <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="search-button">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </span>
-            </div>
         </div>
     </div>
 </div>
@@ -834,31 +822,6 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    $(document).ready(() => {
-        //add beta icon
-        if (window.location.pathname.indexOf("beta") != -1) {
-            $('#beta-icon').show();
-        }
-        //jump to the top of the page
-        $('html,body').scrollTop(0);
-
-        var searchTerm = getMainEFO();
-        var included = $('#included').text();
-        if (included != '') {
-            searchTerm = searchTerm + ',' + included;
-        }
-        console.log("Loading search module!");
-        if (searchTerm != '') {
-            console.log("Start search for the efotrait " + searchTerm);
-            var elements = {};
-            searchTerm.split(',').forEach((term) => {
-                                              elements[term] = term;
-                                          }
-            )
-            //first load
-            addEFO(elements, true);
-        }
-    });
 
 
 

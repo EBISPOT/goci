@@ -154,6 +154,34 @@ new Clipboard('#sharable_link_btn', {
     }
 });
 
+$(document).ready(() => {
+    //add beta icon
+    if (window.location.pathname.indexOf("beta") != -1) {
+        $('#beta-icon').show();
+    }
+    //jump to the top of the page
+    $('html,body').scrollTop(0);
+
+    var searchTerm = getMainEFO();
+    var included = $('#included').text();
+    if (included != '') {
+        searchTerm = searchTerm + ',' + included;
+    }
+    console.log("Loading search module!");
+    if (searchTerm != '') {
+        console.log("Start search for the efotrait " + searchTerm);
+        var elements = {};
+        searchTerm.split(',').forEach((term) => {
+                                          elements[term] = term;
+                                      }
+        )
+        //first load
+        addEFO(elements, true);
+    }
+});
+
+
+
 //*********************** core functions *****************************
 
 /**
@@ -366,6 +394,7 @@ updatePage = function(initLoad=false) {
     //******************************
     if (initLoad){
         //display efo trait information when data is ready
+        displayEFOLabel();
         OLS.getEFOInfo(mainEFO).then(displayEfoTraitInfo).catch((err) => {
             console.warning(`Error loading efo info from OLS. ${err}`);
         }).then(() => {
@@ -846,6 +875,14 @@ initOLS_AutocompleteWiget = function(){
     instance.start(options)
 }
 
+/**
+ * Display the main EFO label on the top of the page
+ */
+displayEFOLabel = function(){
+    OLS.getEFOInfo(getMainEFO()).then((efoInfo)=>{
+        $('#top-panel-trait-label').html(efoInfo.label);
+    })
+}
 
 /**
  * Display highlighted study on the page

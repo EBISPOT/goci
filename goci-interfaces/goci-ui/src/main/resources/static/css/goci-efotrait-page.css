@@ -109,3 +109,9 @@ input[type=checkbox].cart-item-cb {
 .cart-item-number-badge {
     color: white;
 }
+
+/* The top page of the page <Trait XXXXX> */
+h2 > span {
+    color: #222222;
+}
+
