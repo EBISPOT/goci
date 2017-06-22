@@ -61,16 +61,22 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByGxg(Boolean gxg, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByCnv(Boolean cnv, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByTargetedArray(Boolean targetedArray, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
 
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
                                                                                     Long status,
                                                                                     Pageable pageable);
+
+    Page<Study> findByGenotypingTechnologies(String genotypingTechnology, Pageable pageable);
+
 
     List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(Sort sort);
 

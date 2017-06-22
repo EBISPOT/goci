@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
@@ -42,7 +43,16 @@ public class PublishStudyCheckService {
 
         boolean missingCoR = countryOfRecruitmentCheck(study);
 
-        Boolean targetedArrayStudy = study.getTargetedArray();
+        Collection<GenotypingTechnology> genotypingTechnologies = study.getGenotypingTechnologies();
+
+        Boolean targetedArrayStudy = false;
+
+        for(GenotypingTechnology gt : genotypingTechnologies){
+            if(gt.getGenotypingTechnology().equals("Targeted genotyping array")){
+                targetedArrayStudy = true;
+            }
+        }
+
 
         if (targetedArrayStudy) {
             message = "Study: "

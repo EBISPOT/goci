@@ -45,6 +45,7 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -55,6 +56,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -98,6 +100,7 @@ public class StudyController {
     private AssociationRepository associationRepository;
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
+    private GenotypingTechnologyRepository genotypingTechnologyRepository;
 
     // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -129,6 +132,7 @@ public class StudyController {
                            AssociationRepository associationRepository,
                            AncestryRepository ancestryRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
+                           GenotypingTechnologyRepository genotypingTechnologyRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
@@ -148,6 +152,7 @@ public class StudyController {
         this.associationRepository = associationRepository;
         this.ancestryRepository = ancestryRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
+        this.genotypingTechnologyRepository = genotypingTechnologyRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
@@ -238,14 +243,31 @@ public class StudyController {
                                                                                        sort));
             }
 
-            if (studyType.equals("Genomewide array studies")) {
-                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
+            if (studyType.equals("Genome-wide genotyping array studies")) {
+//                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
+//                                                                                                   sort));
+                studyPage = studyRepository.findByGenotypingTechnologies("Genome-wide genotyping array", constructPageSpecification(page - 1,
                                                                                                    sort));
             }
 
-            if (studyType.equals("Targeted array studies")) {
-                studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
+            if (studyType.equals("Targeted genotyping array studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologies("Targeted genotyping array", constructPageSpecification(page - 1,
                                                                                                  sort));
+            }
+
+            if (studyType.equals("Exome genotyping array studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologies("Exome genotyping array", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
+            }
+
+            if (studyType.equals("Exome-wide sequencing studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologies("Exome-wide sequencing", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
+            }
+
+            if (studyType.equals("Genome-wide sequencing studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologies("Genome-wide sequencing", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
             }
 
             if (studyType.equals("Studies in curation queue")) {
@@ -955,6 +977,9 @@ public class StudyController {
     @ModelAttribute("platforms")
     public List<Platform> populatePlatforms() {return platformRepository.findAll(); }
 
+    @ModelAttribute("genotypingTechnologies")
+    public List<GenotypingTechnology> populateGenotypingTechnologies() {return genotypingTechnologyRepository.findAll();}
+
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
@@ -977,8 +1002,11 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Genomewide array studies");
-        studyTypesOptions.add("Targeted array studies");
+        studyTypesOptions.add("Genome-wide genotyping array studies");
+        studyTypesOptions.add("Targeted genotyping array studies");
+        studyTypesOptions.add("Exome genotyping array studies");
+        studyTypesOptions.add("Genome-wide sequencing studies");
+        studyTypesOptions.add("Exome-wide sequencing studies");
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");

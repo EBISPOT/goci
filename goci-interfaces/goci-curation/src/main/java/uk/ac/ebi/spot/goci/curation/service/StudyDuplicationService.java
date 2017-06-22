@@ -116,8 +116,9 @@ public class StudyDuplicationService {
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
-        duplicateStudy.setGenomewideArray(studyToDuplicate.getGenomewideArray());
-        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
+        duplicateStudy.setGenotypingTechnologies(studyToDuplicate.getGenotypingTechnologies());
+//        duplicateStudy.setGenomewideArray(studyToDuplicate.getGenomewideArray());
+//        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
         duplicateStudy.setSnpCount(studyToDuplicate.getSnpCount());
         duplicateStudy.setQualifier(studyToDuplicate.getQualifier());
