@@ -60,12 +60,14 @@
 </div>
 
 <!--init search parameter-->
-<div style="display: none">
+<!--<div style="display: none">-->
+<div>
     <ul th:object="${result}" id="variables">
         <li id="query" th:text="*{query}">User query</li>
         <li id="facet" th:text="*{facet}">Facet</li>
         <li id="filter" th:text="*{filter}">Disease trait</li>
         <li id="included" th:text="*{included}">Included</li>
+        <li id="checked" th:text="*{checked}">checked</li>
     </ul>
 </div>
 <!-- this is the main tag for all the cache data. -->

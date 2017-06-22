@@ -167,6 +167,20 @@ $(document).ready(() => {
     if (included != '') {
         searchTerm = searchTerm + ',' + included;
     }
+
+    var checked = $('#checked').text();
+    if (checked != '') {
+        if(checked == "true"){
+
+            $('#cb-query-include-descendants').attr('checked','checked')
+        }else{
+            checked.split(',').map((efoid) => {
+                addDataToTag(global_efo_info_tag_id, {[efoid]:true}, 'whichDescendant')
+            })
+        }
+        searchTerm = searchTerm + ',' + included;
+    }
+
     console.log("Loading search module!");
     if (searchTerm != '') {
         console.log("Start search for the efotrait " + searchTerm);
@@ -285,10 +299,8 @@ addToCart = function(tagID, efoid, additionalLabel) {
 
         if(isAlwaysDescendant()){
             cb.attr("disabled", true);
-            $('#btn-cart-toggle-check-cbs').attr('disabled',true)
         }else{
             cb.removeAttr("disabled");
-            $('#btn-cart-toggle-check-cbs').removeAttr("disabled");
         }
 
         //show the descendants number in checkbox tooltips
@@ -2662,8 +2674,16 @@ whichDescendant = function(){
  * every time the page updated, to update the link so the users can share their result.
  */
 updateSharableLink = function(){
+    var checked;
+    if(whichDescendant().length > 0){
+        var tmp = isAlwaysDescendant()? isAlwaysDescendant().toString() : whichDescendant().join(',')
+        checked = '&checked=' + tmp;
+    }else{
+        checked = '';
+    }
+
     $("#sharable_link").attr('value', window.location.origin + window.location.pathname + '?included=' +
-                             Object.keys(getCurrentSelected()).join(','));
+                             Object.keys(getCurrentSelected()).join(',') + checked);
     hideLoadingOverLay('#sharable_link_btn');
 }
 
