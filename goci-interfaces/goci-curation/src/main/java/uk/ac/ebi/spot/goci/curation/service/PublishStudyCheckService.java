@@ -48,7 +48,7 @@ public class PublishStudyCheckService {
         Boolean targetedArrayStudy = false;
 
         for(GenotypingTechnology gt : genotypingTechnologies){
-            if(gt.getGenotypingTechnology().equals("Targeted genotyping array")){
+            if(gt.getGenotypingTechnology().contains("Targeted") || gt.getGenotypingTechnology().contains("Exome") || gt.getGenotypingTechnology().contains("sequencing")){
                 targetedArrayStudy = true;
             }
         }
@@ -58,7 +58,7 @@ public class PublishStudyCheckService {
             message = "Study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
-                    + ", is a targeted array study and should not be published.";
+                    + ", is a targeted array, other non-genone-wide or sequencing study and should not be published.";
         }
 
         else if (snpNotApproved == 1 && !efoTermsAssigned && missingCoR) {
