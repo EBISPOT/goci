@@ -4,7 +4,11 @@
  */
 
 
-var EPMC = "http://www.europepmc.org/abstract/MED/";
+/**
+ * Other global setting
+ */
+var list_min = 2;
+var EPMC_URL = "http://www.europepmc.org/abstract/MED/";
 var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
 var ENSVAR = "http://www.ensembl.org/Homo_sapiens/Variation/";
 var DBSNP  = "http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs=";
@@ -12,7 +16,7 @@ var UCSC   = "https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches=";
 var ENS_SHARE_LINK = 'Variant_specific_location_link/97NKbgkp09vPRy1xXwnqG1x6KGgQ8s7S';
 var CONTEXT_RANGE = 500;
 
-var list_min = 2;
+
 // $(document).ready(function() {
 //     if (window.location.pathname.indexOf("beta") != -1) {
 //         $('#beta-icon').show();
@@ -322,84 +326,4 @@ function toggle_and_scroll (id) {
     $(window).scrollTop($(id).offset().top - 70);
 }
 
-function getVariantInfoFromEnsembl(rsId) {
-    $.getJSON('http://rest.ensembl.org/variation/human/'+rsId+'?content-type=application/json')
-            .done(function(data) {
-                console.log(data);
-                processVariantInfoFromEnsembl(rsId,data);
-            });
-    console.log("Ensembl REST query done to retrieve variant information");
-}
-
-function processVariantInfoFromEnsembl(rsId, data) {
-    if (!data.error) {
-        var var_id  = data.name;
-        var alleles = 'NA';
-        var strand  = '';
-        $.each(data.mappings, function(index, mapping) {
-            if (mapping.seq_region_name.match(/\w{1,2}/)) {
-                alleles = mapping.allele_string;
-                strand  = (mapping.strand == 1) ? 'forward' : 'reverse';
-                strand  = '<span style="padding-left:5px"><small>('+strand+' strand)</small></span>';
-                alleles += strand;
-            }
-        });
-        var maf = (data.MAF) ? data.MAF : 'NA';
-        var ma  = (data.minor_allele) ? data.minor_allele : 'NA';
-
-        $("#variant-alleles").html(alleles);
-        $("#variant-strand").html(strand);
-        $("#minor-allele").html(ma);
-        $("#minor-allele-freq").html(maf);
-
-        if (var_id != rsId) {
-            var var_link = setExternalLink(DBSNP+var_id,var_id);
-            $("#merged-variant-label").html("Merged into");
-            $("#merged-variant").html(var_link);
-        }
-    }
-}
-
-function setState(state) {
-    var loading = $('#loading');
-    var noresults = $('#noResults');
-    var results = $('#results');
-    console.log("Search state update...");
-    console.log(state);
-    switch (state.value) {
-        case 0:
-            loading.show();
-            noresults.hide();
-            results.hide();
-            break;
-        case 1:
-            loading.hide();
-            noresults.show();
-            results.hide();
-            break;
-        case 2:
-            loading.hide();
-            noresults.hide();
-            results.show();
-            break;
-        default:
-            console.log("Unknown search state; redirecting to search page");
-            window.location = "variant";
-    }
-}
-
-function setDownloadLink(rsId) {
-    var baseUrl = '../api/search/downloads?';
-    var q = "q=".concat(rsId);
-
-    var facet = '&facet=association';
-    var efo = '&efo=true';
-    var params = '&pvalfilter=&orfilter=&betafilter=&datefilter=&genomicfilter=&traitfilter[]=&dateaddedfilter=';
-
-
-    var url = "window.open('".concat(baseUrl).concat(q).concat(params).concat(facet).concat(efo).concat("',    '_blank')");
-
-    $("#download_data").attr('onclick', url);
-
-}
 

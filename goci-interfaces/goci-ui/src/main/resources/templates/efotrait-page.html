@@ -396,80 +396,85 @@
 
 
                     <div class="panel-body">
-                        <div class="row">
+                        <!--current select-->
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-lg-12">
+                                <b class="col-lg-6" style="float:left">Current selected:</b>
+                                <div class="col-lg-6">
 
-                            <div class="col-lg-3">
-                                <input id="cb-query-include-descendants" type="checkbox"/>  Descendants
-                                                                                          <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
-                            </div>
-                            <div class="col-lg-8">
-                                <!--xintodo add click function-->
-                                <button id="btn-cart-toggle-check-cbs"
-                                        type="button"
-                                        class="btn btn-default cart-action-btn">Check/Uncheck All
-                                        </button>
-                                <button id="btn-query-include-related-terms"
-                                        type="button"
-                                        class="btn btn-default cart-action-btn">+RelatedTerms
-                                        </button>
-                                <button id="btn-cart-action-download"
-                                        type="button"
-                                        class="btn btn-default cart-action-btn">DownloadList
-                                        </button>
-                                <!--<button id="btn-clear-highlight"-->
-                                        <!--type="button"-->
-                                        <!--class="btn btn-default cart-action-btn">clearHighlight-->
-                                        <!--</button>-->
-                                <!--<button id="btn-clear-cart"-->
-                                        <!--type="button"-->
-                                        <!--class="btn btn-default cart-action-btn">clearCart-->
-                                        <!--</button>-->
-                            </div>
-
-                            <div class="col-lg-1">
-                                <input type="text" id="sharable_link" class="col-xs-6" th:readonly="readonly"></input>
-                                <div>
+                                    <div class="col-lg-1.5" style="float:right;margin-bottom: 5px">
+                                        <input type="text"
+                                               id="sharable_link"
+                                               class="col-xs-6"
+                                               th:readonly="readonly"></input>
+                                        <div>
                                         <button id="sharable_link_btn"
                                                 type="button"
                                                 class="btn btn-default"
                                                 data-clipboard-target="#sharable_link">
-                                          <span class="glyphicon glyphicon-floppy-disk"
+                                          <span class="glyphicon glyphicon-share"
                                                 aria-hidden="true"
                                                 title="copy sharable link to clipboard"></span>
                                          </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-1.5" style="float:right">
+
+                                        <button id="btn-cart-action-download"
+                                                type="button"
+                                                class="btn btn-default cart-action-btn">
+                                            <span class="glyphicon glyphicon glyphicon-download"
+                                                  aria-hidden="true"
+                                                  title="Download efo terms in the cart."></span>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-1.5" style="float:right">
+                                        <button id="btn-query-include-related-terms"
+                                                type="button"
+                                                class="btn btn-default cart-action-btn">
+                                            <span class="glyphicon glyphicon-plus"
+                                                  aria-hidden="true"
+                                                  title="Add related terms to the cart."></span>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-lg-1.5" style="float:right">
+                                     <button id="btn-cart-toggle-check-cbs"
+                                        type="button"
+                                        class="btn btn-default cart-action-btn"
+                                        title="Check/Uncheck all checkbox in cart.">
+                                            <span class="glyphicon glyphicon-check"
+                                              aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+
+
+
+
+                                    <!--<button id="btn-clear-highlight"-->
+                                    <!--type="button"-->
+                                    <!--class="btn btn-default cart-action-btn">clearHighlight-->
+                                    <!--</button>-->
+                                    <!--<button id="btn-clear-cart"-->
+                                    <!--type="button"-->
+                                    <!--class="btn btn-default cart-action-btn">clearCart-->
+                                    <!--</button>-->
                                 </div>
                             </div>
-                        </div>
-                        <!--current select-->
-                        <div class="row">
-                            <b>Current selected:</b>
-                            <div class="list-group" id="cart-loading">
+
+                            <div class="list-group col-lg-12" id="cart-loading">
                                 <div id="cart"></div>
                             </div>
-                        </div>
 
-
-                        <div class="row">
-                            <div id="ols-search-div" class="tab-pane fade in active">
-                                <h4>Search for additional terms:</h4>
-                                <div class="left">
-                                    <label>
-                                        <input style="font-weight: normal"
-                                               size="35"
-                                               type="text"
-                                               name="q"
-                                               data-olswidget="select"
-                                               data-olsontology="efo"
-                                               data-selectpath="http://www.ebi.ac.uk/ols/"
-                                               olstype=""
-                                               id="local-searchbox"
-                                               placeholder="Enter the term you are looking for"
-                                               class="ac_input">
-                                        </input>
-                                    </label>
-                                </div>
+                            <div class="col-lg-12" style="float:left">
+                                <input id="cb-query-include-descendants" type="checkbox"/>
+                                <label for="cb-query-include-descendants">  Always include descendants</label>
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
                         </div>
+
+                        <!--<div class="row">-->
                         <!--trying bootstrap nav tab-->
                         <div class="container row col-xs-12">
                             <!--<ul class="nav nav-tabs">-->
@@ -478,9 +483,9 @@
                             <!--<li><a data-toggle="tab" href="#ols-graph-div">Additional related terms eg. measurements and biomarkers</a></li>-->
                             <!--</ul>-->
                             <ul class="nav nav-tabs">
-                                <li><a data-toggle="pill" href="#ols-tree-div">EFO hierarchy</a></li>
-                                <li><a data-toggle="pill" href="#ols-graph-div">Additional terms</a></li>
-                                <!--<li><a data-toggle="pill" href="#oxo-div">OXO</a></li>-->
+                                <li><a data-toggle="pill" href="#ols-search-div">EFO Search</a></li>
+                                <li><a data-toggle="pill" href="#ols-tree-div">EFO Hierarchy</a></li>
+                                <li><a data-toggle="pill" href="#ols-graph-div">EFO Network</a></li>
 
                             </ul>
 
@@ -502,6 +507,26 @@
 
                                 </div>
 
+                                <div id="ols-search-div" class="tab-pane fade">
+                                    <h4>Search for additional terms:</h4>
+                                    <div class="left">
+                                        <label>
+                                            <input style="font-weight: normal"
+                                                   size="35"
+                                                   type="text"
+                                                   name="q"
+                                                   data-olswidget="select"
+                                                   data-olsontology="efo"
+                                                   data-selectpath="http://www.ebi.ac.uk/ols/"
+                                                   olstype=""
+                                                   id="local-searchbox"
+                                                   placeholder="Enter the term you are looking for"
+                                                   class="ac_input">
+                                            </input>
+                                        </label>
+                                    </div>
+                                </div>
+
                                 <!--&lt;!&ndash;oxo&ndash;&gt;-->
                                 <!--<div id="oxo-div" class="tab-pane fade" >-->
                                 <!--<h4>oxo:</h4>-->
@@ -512,7 +537,7 @@
 
                             </div>
                         </div>
-
+                        <!--</div>-->
 
                     </div>
                 </div>
@@ -943,12 +968,7 @@
 
 
 <style type="text/css">
-    .dl-horizontal dt {
-        width: 80px;
-    }
-    .dl-horizontal dd {
-        margin-left: 120px;
-    }
+
 </style>
 
 <script>
@@ -956,22 +976,6 @@
 
 
     //<![CDATA[
-
-
-    //    promisePost('http://localhost:8280/gwas/api/search/efotrait',{
-    //        'q': 'EFO_0000400,EFO_0000400',
-    //        'max': 99999,
-    //        'group.limit': 99999,
-    //        'group.field': 'resourcename',
-    //        'facet.field': 'resourcename',
-    //        'hl.fl': 'shortForm,efoLink',
-    //        'hl.snippets': 100
-    //    }).then(JSON.parse)
-    //      promisePost('http://localhost:8983/solr/gwas/select',{
-    //        'q': '*:*',
-    //        'rows': 1,
-    //          'wt':'json'
-    //    }).then(JSON.parse);
 
 
 
