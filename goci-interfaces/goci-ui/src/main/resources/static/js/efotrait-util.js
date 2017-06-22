@@ -260,7 +260,7 @@ addToCart = function(tagID, efoid, additionalLabel) {
 
         //show the descendants number in checkbox tooltips
         OLS.getHierarchicalDescendants(efoid).then((descendants) => {
-            cb.attr("title", `${Object.keys(descendants).length} descendants.`);
+            cb.attr("title", `${Object.keys(descendants).length} trait subtypes.`);
 //                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
         });
 

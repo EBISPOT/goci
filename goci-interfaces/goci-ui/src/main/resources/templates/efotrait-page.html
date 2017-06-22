@@ -208,7 +208,12 @@
 
                 <!--trait summary-->
                 <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">Trait information</h3>
+                    <h3 class="panel-title">Trait information
+                        <span class="glyphicon glyphicon-question-sign"
+                              data-toggle="tooltip"
+                              title="Trait summary information displayed relates to specific EFO trait searched for."
+                              style="margin-left:2px;font-size:smaller"></span>
+                    </h3>
                 </div>
                 <div class="clearfix" id="summary-panel-loading">
                     <div class="panel-body col-lg-10 col-md-10 col-sm-8 col-xs-8">
@@ -307,7 +312,7 @@
                                 Highlighted Study
                                 <span class="glyphicon glyphicon-question-sign"
                                       data-toggle="tooltip"
-                                      title="explain"
+                                      title="GWAS Catalog study with largest initial sample size for specific EFO trait."
                                       style="margin-left:2px;font-size:smaller"></span>
                             </a>
                         </div>
@@ -399,7 +404,7 @@
                         <h3 class="panel-title">Expand search
                             <span class="glyphicon glyphicon-question-sign"
                                   data-toggle="tooltip"
-                                  title="explain"
+                                  title="Specify additional EFO traits to expand search. The Manhattan plot, association and study tables will be dynamically updated to reflect the traits selected here."
                                   style="margin-left:2px;font-size:smaller"></span>
                         </h3>
                         <span class="pull-right clickable"
@@ -413,7 +418,7 @@
                         <!--current select-->
                         <div class="row" style="margin-top: 10px">
                             <div class="col-lg-12">
-                                <h4 class="col-lg-6" style="float:left;padding-left:0px">Current selected traitsgst:</h4>
+                                <h4 class="col-lg-6" style="float:left;padding-left:0px">Current selected traits:</h4>
                                 <div class="col-lg-6">
                                     <div class="col-lg-1.5" style="float:right;margin-bottom: 5px">
                                         <input type="text"
@@ -439,14 +444,14 @@
                                                 class="btn btn-default cart-action-btn">
                                             <span class="glyphicon glyphicon glyphicon-download"
                                                   aria-hidden="true"
-                                                  title="Download efo terms in the cart."></span>
+                                                  title="Download all trait(s) in list."></span>
                                         </button>
                                     </div>
                                     <div class="col-lg-1.5" style="float:right">
                                         <button id="btn-query-include-related-terms"
                                                 type="button"
                                                 class="btn btn-default cart-action-btn"
-                                                title="Add related terms to the cart.">
+                                                title="Add related trait(s) to list.">
                                             <span class="glyphicon glyphicon-plus"
                                                   aria-hidden="true"></span>
                                         </button>
@@ -456,7 +461,7 @@
                                      <button id="btn-cart-toggle-check-cbs"
                                         type="button"
                                         class="btn btn-default cart-action-btn"
-                                        title="Check/Uncheck all checkbox in cart.">
+                                        title="Check/Uncheck all traits in list.">
                                             <span class="glyphicon glyphicon-check"
                                               aria-hidden="true"></span>
                                         </button>
@@ -482,7 +487,7 @@
 
                             <div class="col-lg-12" style="float:left">
                                 <input id="cb-query-include-descendants" type="checkbox"/>
-                                <label for="cb-query-include-descendants">  Always include descendants</label>
+                                <label for="cb-query-include-descendants">  Always include trait subtypes</label>
                                 <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
                         </div>
@@ -499,7 +504,7 @@
                                 <h4>Advance functions for adding additional traits:
                                     <span class="glyphicon glyphicon-question-sign"
                                           data-toggle="tooltip"
-                                          title="explain"
+                                          title="Additional EFO traits can be searched for or browsed in the EFO hierarchy and network. Traits can then be added to the list of selected traits above."
                                           style="margin-left:2px;font-size:smaller"></span>
                                 </h4>
                             </div>
@@ -598,6 +603,10 @@
                             <h3 class="panel-title">
                                 <span class="locus_label">Manhattan plot (plot of Catalog associations for selected trait(s))</span>
                                 <span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
+                                <span class="glyphicon glyphicon-question-sign"
+                                      data-toggle="tooltip"
+                                      title="Manhattan plot includes all traits selected in the expanded search."
+                                      style="margin-left:2px;font-size:smaller"></span>
                             </h3>
                             <span class="pull-right">
                         <span class="clickable"
