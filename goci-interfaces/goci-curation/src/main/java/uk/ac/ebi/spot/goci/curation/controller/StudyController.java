@@ -246,27 +246,27 @@ public class StudyController {
             if (studyType.equals("Genome-wide genotyping array studies")) {
 //                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
 //                                                                                                   sort));
-                studyPage = studyRepository.findByGenotypingTechnologies("Genome-wide genotyping array", constructPageSpecification(page - 1,
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide genotyping array", constructPageSpecification(page - 1,
                                                                                                    sort));
             }
 
             if (studyType.equals("Targeted genotyping array studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologies("Targeted genotyping array", constructPageSpecification(page - 1,
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Targeted genotyping array", constructPageSpecification(page - 1,
                                                                                                  sort));
             }
 
             if (studyType.equals("Exome genotyping array studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologies("Exome genotyping array", constructPageSpecification(page - 1,
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome genotyping array", constructPageSpecification(page - 1,
                                                                                                                                  sort));
             }
 
             if (studyType.equals("Exome-wide sequencing studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologies("Exome-wide sequencing", constructPageSpecification(page - 1,
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome-wide sequencing", constructPageSpecification(page - 1,
                                                                                                                                  sort));
             }
 
             if (studyType.equals("Genome-wide sequencing studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologies("Genome-wide sequencing", constructPageSpecification(page - 1,
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide sequencing", constructPageSpecification(page - 1,
                                                                                                                                  sort));
             }
 

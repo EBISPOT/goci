@@ -75,7 +75,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                                                                     Long status,
                                                                                     Pageable pageable);
 
-    Page<Study> findByGenotypingTechnologies(String genotypingTechnology, Pageable pageable);
+    Page<Study> findByGenotypingTechnologiesGenotypingTechnology(String genotypingTechnology, Pageable pageable);
 
 
     List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(Sort sort);
