@@ -25,6 +25,9 @@ var global_efo_info_tag_id = '#efo-info';
 var global_epmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
+var global_solr_url = 'http://localhost:8983/solr/gwas/select';
+
+
 /**
  * global variable storing solr query result.
  */
@@ -490,17 +493,23 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
     // http://localhost:8280/gwas/api/search/efotrait?&q=EFO_0000400,EFO_0000400&max=9999&group.limit=9999&group.field=resourcename&facet.field=resourcename&hl.fl=shortForm,efoLink&hl.snippets=100
     return Promise.all([p1, p2]).then(() => {
         console.log("Solr research request received for " + searchQuery);
-        return promiseGet('/gwas/api/search/efotrait',
-                          //            return promisePost('/gwas/api/search/efotrait',
-                          {
-                              'q': searchQuery,
-                              'max': 99999,
-                              'group.limit': 99999,
-                              'group.field': 'resourcename',
-                              'facet.field': 'resourcename',
-                              'hl.fl': 'shortForm,efoLink',
-                              'hl.snippets': 100
-                          }).then(JSON.parse).then(function(data) {
+        return promisePost(global_solr_url,
+                    {
+                        'wt' : 'json',
+                        'q': searchQuery,
+                        'max': 99999,
+                        group : true,
+                        'group.limit': 99999,
+                        'group.field': 'resourcename',
+                        hl:true,
+                        'hl.fl': 'shortForm,efoLink',
+                        'hl.simple.post' : '</b>',
+                        'hl.simple.pre' : '<b>',
+                        'hl.snippets': 100,
+                        facet : true,
+                        'facet.field': 'resourcename',
+
+                    },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             processSolrData(data, initLoad);
             console.log("Solr research done for " + searchQuery);
             return data;
@@ -508,6 +517,18 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
             console.error('Error when seaching solr for' + searchQuery + '. ' + err);
             throw(err);
         })
+        // return promiseGet('/gwas/api/search/efotrait',
+        //                   //            return promisePost('/gwas/api/search/efotrait',
+        //                   {
+        //                       'q': searchQuery,
+        //                       'max': 99999,
+        //                       'group.limit': 99999,
+        //                       'group.field': 'resourcename',
+        //                       'facet.field': 'resourcename',
+        //                       'hl.fl': 'shortForm,efoLink',
+        //                       'hl.snippets': 100
+        //                   })
+
     })
 
 }
@@ -1595,10 +1616,7 @@ function promiseGet(url, params,debug) {
  * @param {Boolean} debug
  * @returns {Promise}
  */
-function promisePost(url, params,debug) {
-    if(debug == undefined){
-        debug = false
-    }
+function promisePost(url, params={}, header='application/json') {
 
     if (!url.startsWith("http")) {
         url = window.location.origin + url
@@ -1606,33 +1624,22 @@ function promisePost(url, params,debug) {
 
     // Return a new promise.
     return new Promise(function(resolve, reject) {
-        // Do the usual XHR stuff
         var req = new XMLHttpRequest();
-           //
-           // params = params || {}
-           // var params_str = '';
-           // if (Object.keys(params).length > 0) {
-           //     Object.keys(params).forEach(function(key, index) {
-           //         params_str = params_str + '&' + key + '=' + this[key];
-           //     }, params);
-           //     params_str = params_str.substr(1)
-           // }else{
-           //     params_str = null;
-           // }
-           //
-           // params = Object.keys(params).map(function (key) {
-           //     return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-           // }).join('&');
-        params_str = JSON.stringify(params)
+
+        if(header == 'application/json'){
+            params = JSON.stringify(params)
+        }
+        if(header == 'application/x-www-form-urlencoded') {
+            params = Object.keys(params).map(function (key) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+            }).join('&');
+        }
+
 
         req.open('POST', url);
-        //xintodo refactor to accept header as parameter
-        req.setRequestHeader("Content-Type", "application/json");
 
+        req.setRequestHeader("Content-Type", header);
 
-        if(debug){
-            console.log('promise post from :' + url);
-        }
 
         req.onload = function() {
             // This is called even on 404 etc
@@ -1654,45 +1661,141 @@ function promisePost(url, params,debug) {
         };
 
         // Make the request
-        req.send(params_str);
+        req.send(params);
     });
 
 
-   // //testing how fast the post method works
-   // //"{"1":472.7800000000002,"10":1723.4450000000002,"50":8417.69,"100":16249.485000000002,"200":30406.670000000002,"205":28694.609999999986,"208":30608.684999999823,"209":29462.99499999988,"210":30634.399999999907}"
-   // var size = [1,10,50,100,200,400,800,1000]
-   // var size = [220,240,260,280,300]
-   // var result = {};
-   // var t0 = performance.now();
-   // size.forEach(function(s){
-   //     getAvailableEFOs().then(function(x) {
-   //         t0 = performance.now();
-   //         return getColourForEFOs(Object.keys(x).slice(0, s))
-   //     }).then(console.log).then(function(){
-   //         var t1 = performance.now();
-   //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
-   //         result[s.toString()] = t1 - t0;
-   //     })
-   // });
-   // result
-   //
-   // //testing using get
-   // var size = [1,10,50,100,200,400,800,1000]
-   // var size = [1500]
-   // var result = {};
-   // var t0 = performance.now();
-   // size.forEach(function(s){
-   //     getAvailableEFOs().then(function(x) {
-   //         t0 = performance.now();
-   //         return Promise.all( Object.keys(x).slice(0, s).map(getColourForEFO))
-   //     }).then(console.log).then(function(){
-   //         var t1 = performance.now();
-   //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
-   //         result[s.toString()] = t1 - t0;
-   //     })
-   // });
-   // result
+    // //testing how fast the post method works
+    // //"{"1":472.7800000000002,"10":1723.4450000000002,"50":8417.69,"100":16249.485000000002,"200":30406.670000000002,"205":28694.609999999986,"208":30608.684999999823,"209":29462.99499999988,"210":30634.399999999907}"
+    // var size = [1,10,50,100,200,400,800,1000]
+    // var size = [220,240,260,280,300]
+    // var result = {};
+    // var t0 = performance.now();
+    // size.forEach(function(s){
+    //     getAvailableEFOs().then(function(x) {
+    //         t0 = performance.now();
+    //         return getColourForEFOs(Object.keys(x).slice(0, s))
+    //     }).then(console.log).then(function(){
+    //         var t1 = performance.now();
+    //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+    //         result[s.toString()] = t1 - t0;
+    //     })
+    // });
+    // result
+    //
+    // //testing using get
+    // var size = [1,10,50,100,200,400,800,1000]
+    // var size = [1500]
+    // var result = {};
+    // var t0 = performance.now();
+    // size.forEach(function(s){
+    //     getAvailableEFOs().then(function(x) {
+    //         t0 = performance.now();
+    //         return Promise.all( Object.keys(x).slice(0, s).map(getColourForEFO))
+    //     }).then(console.log).then(function(){
+    //         var t1 = performance.now();
+    //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+    //         result[s.toString()] = t1 - t0;
+    //     })
+    // });
+    // result
 }
+
+// function promisePost(url, params,debug=false) {
+//
+//     if (!url.startsWith("http")) {
+//         url = window.location.origin + url
+//     }
+//
+//     // Return a new promise.
+//     return new Promise(function(resolve, reject) {
+//         // Do the usual XHR stuff
+//         var req = new XMLHttpRequest();
+//            //
+//            // params = params || {}
+//            // var params_str = '';
+//            // if (Object.keys(params).length > 0) {
+//            //     Object.keys(params).forEach(function(key, index) {
+//            //         params_str = params_str + '&' + key + '=' + this[key];
+//            //     }, params);
+//            //     params_str = params_str.substr(1)
+//            // }else{
+//            //     params_str = null;
+//            // }
+//            //
+//            // params = Object.keys(params).map(function (key) {
+//            //     return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+//            // }).join('&');
+//         params_str = JSON.stringify(params)
+//
+//         req.open('POST', url);
+//         //xintodo refactor to accept header as parameter
+//         req.setRequestHeader("Content-Type", "application/json");
+//
+//
+//         if(debug){
+//             console.log('promise post from :' + url);
+//         }
+//
+//         req.onload = function() {
+//             // This is called even on 404 etc
+//             // so check the status
+//             if (req.status == 200) {
+//                 // Resolve the promise with the response text
+//                 resolve(req.response);
+//             }
+//             else {
+//                 // Otherwise reject with the status text
+//                 // which will hopefully be a meaningful error
+//                 reject(Error(req.statusText));
+//             }
+//         };
+//
+//         // Handle network errors
+//         req.onerror = function() {
+//             reject(Error("Network Error"));
+//         };
+//
+//         // Make the request
+//         req.send(params_str);
+//     });
+//
+//
+//    // //testing how fast the post method works
+//    // //"{"1":472.7800000000002,"10":1723.4450000000002,"50":8417.69,"100":16249.485000000002,"200":30406.670000000002,"205":28694.609999999986,"208":30608.684999999823,"209":29462.99499999988,"210":30634.399999999907}"
+//    // var size = [1,10,50,100,200,400,800,1000]
+//    // var size = [220,240,260,280,300]
+//    // var result = {};
+//    // var t0 = performance.now();
+//    // size.forEach(function(s){
+//    //     getAvailableEFOs().then(function(x) {
+//    //         t0 = performance.now();
+//    //         return getColourForEFOs(Object.keys(x).slice(0, s))
+//    //     }).then(console.log).then(function(){
+//    //         var t1 = performance.now();
+//    //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+//    //         result[s.toString()] = t1 - t0;
+//    //     })
+//    // });
+//    // result
+//    //
+//    // //testing using get
+//    // var size = [1,10,50,100,200,400,800,1000]
+//    // var size = [1500]
+//    // var result = {};
+//    // var t0 = performance.now();
+//    // size.forEach(function(s){
+//    //     getAvailableEFOs().then(function(x) {
+//    //         t0 = performance.now();
+//    //         return Promise.all( Object.keys(x).slice(0, s).map(getColourForEFO))
+//    //     }).then(console.log).then(function(){
+//    //         var t1 = performance.now();
+//    //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
+//    //         result[s.toString()] = t1 - t0;
+//    //     })
+//    // });
+//    // result
+// }
 
 /**
  * get data asyn with promise, recursively querying if the response has 'next' link.
@@ -2238,6 +2341,7 @@ getAvailableEFOs=function(){
     if(dataPromise == undefined){
         //lazy load
         console.log('Loading all available EFOs in Gwas Catalog...')
+        //xintodo refactor this to use post
         dataPromise =  promiseGet('/gwas/api/search/efotrait', {
             'q': '*:*',
             'fq': 'resourcename:efotrait',
