@@ -285,8 +285,10 @@ addToCart = function(tagID, efoid, additionalLabel) {
 
         if(isAlwaysDescendant()){
             cb.attr("disabled", true);
+            $('#btn-cart-toggle-check-cbs').attr('disabled',true)
         }else{
             cb.removeAttr("disabled");
+            $('#btn-cart-toggle-check-cbs').removeAttr("disabled");
         }
 
         //show the descendants number in checkbox tooltips
@@ -485,6 +487,10 @@ updatePage = function(initLoad=false) {
         }).then(() =>{
             hideLoadingOverLay('#cart-loading');
             $('.cart-action-btn').removeAttr("disabled");
+            //do not remove this if alway include descendant is checked
+            if(isAlwaysDescendant()){
+                $('#btn-cart-toggle-check-cbs').attr('disabled',true)
+            }
         })
     });
 }
