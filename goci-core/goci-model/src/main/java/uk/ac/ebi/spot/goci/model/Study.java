@@ -64,9 +64,9 @@ public class Study implements Trackable {
 
     private Boolean gxg = false;
 
-    private Boolean genomewideArray = true;
-
-    private Boolean targetedArray = false;
+//    private Boolean genomewideArray = true;
+//
+//    private Boolean targetedArray = false;
 
     private Integer snpCount;
 
@@ -168,8 +168,8 @@ public class Study implements Trackable {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
-                 Boolean genomewideArray,
-                 Boolean targetedArray,
+//                 Boolean genomewideArray,
+//                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -196,8 +196,8 @@ public class Study implements Trackable {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.genomewideArray = genomewideArray;
-        this.targetedArray = targetedArray;
+//        this.genomewideArray = genomewideArray;
+//        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -313,13 +313,13 @@ public class Study implements Trackable {
         this.gxg = gxg;
     }
 
-    public Boolean getTargetedArray() {
-        return targetedArray;
-    }
+//    public Boolean getTargetedArray() {
+//        return targetedArray;
+//    }
 
-    public void setTargetedArray(Boolean targetedArray) {
-        this.targetedArray = targetedArray;
-    }
+//    public void setTargetedArray(Boolean targetedArray) {
+//        this.targetedArray = targetedArray;
+//    }
 
     public Collection<Association> getAssociations() {
         return associations;
@@ -410,13 +410,13 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
     }
 
-    public Boolean getGenomewideArray() {
-        return genomewideArray;
-    }
-
-    public void setGenomewideArray(Boolean genomewideArray) {
-        this.genomewideArray = genomewideArray;
-    }
+//    public Boolean getGenomewideArray() {
+//        return genomewideArray;
+//    }
+//
+//    public void setGenomewideArray(Boolean genomewideArray) {
+//        this.genomewideArray = genomewideArray;
+//    }
 
     public Collection<Event> getEvents() {
         return events;

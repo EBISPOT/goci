@@ -64,11 +64,11 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Page<Study> findByCnv(Boolean cnv, Pageable pageable);
 
-    @RestResource(exported = false)
-    Page<Study> findByTargetedArray(Boolean targetedArray, Pageable pageable);
-
-    @RestResource(exported = false)
-    Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
+//    @RestResource(exported = false)
+//    Page<Study> findByTargetedArray(Boolean targetedArray, Pageable pageable);
+//
+//    @RestResource(exported = false)
+//    Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
 
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
