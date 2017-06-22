@@ -263,7 +263,10 @@ addToCart = function(tagID, efoid, additionalLabel) {
 
         //show the descendants number in checkbox tooltips
         OLS.getHierarchicalDescendants(efoid).then((descendants) => {
-            cb.attr("title", `${Object.keys(descendants).length} trait subtypes.`);
+            filterAvailableEFOs(Object.keys(descendants)).then((availableDescendants)=>{
+                cb.attr("title", `${Object.keys(availableDescendants).length} trait subtypes available in GWAS Catalog.`);
+
+            })
 //                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
         });
 
@@ -430,8 +433,11 @@ updatePage = function(initLoad=false) {
                         target_efos = Promise.resolve([efoInfo.short_form]);
                     }
 
+
+
+
                     //update the cart box badge number when data is ready
-                    target_efos.then(function(efos){
+                    target_efos.then(filterAvailableEFOs).then(function(efos){
                         $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').attr('text', Object.keys(findStudiesForEFOs(efos)).length)
                         $('#' + 'selected_btn_' + efoInfo.short_form + '_nos').html(Object.keys(findStudiesForEFOs(efos)).length)
                         $('#' + 'selected_btn_' + efoInfo.short_form + '_noa').attr('text', Object.keys(findAssociationForEFOs(efos)).length)
@@ -493,6 +499,7 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
     // http://localhost:8280/gwas/api/search/efotrait?&q=EFO_0000400,EFO_0000400&max=9999&group.limit=9999&group.field=resourcename&facet.field=resourcename&hl.fl=shortForm,efoLink&hl.snippets=100
     return Promise.all([p1, p2]).then(() => {
         console.log("Solr research request received for " + searchQuery);
+        //xintodo optmize the query, use fl to return less field.
         return promisePost(global_solr_url,
                     {
                         'wt' : 'json',
