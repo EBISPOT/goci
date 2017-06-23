@@ -25,6 +25,7 @@ import uk.ac.ebi.spot.goci.ui.exception.IllegalParameterCombinationException;
 import uk.ac.ebi.spot.goci.ui.service.JsonProcessingService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Null;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -106,6 +107,7 @@ public class SolrSearchController {
             @RequestParam(value = "facet.field", required = false, defaultValue = "resourcename") String facetField,
             @RequestParam(value = "hl.fl", required = false, defaultValue = "shortForm,efoLink") String hlFl,
             @RequestParam(value = "hl.snippets", required = false, defaultValue = "1") int hlSnippets,
+            @RequestParam(value = "fl", required = false, defaultValue = "") String fl,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -125,6 +127,17 @@ public class SolrSearchController {
         Collection<String> highlights = new HashSet<String>(Arrays.asList(hlFl.split(",")));
 
         addHighlights(solrSearchBuilder,highlights,hlSnippets);
+
+
+        if (fl != "") {
+//            HashSet<String> fieldList  = new HashSet<>();
+//            fieldList.add("a");
+//            Arrays.asList(fl.split(","));
+//            HashSet<String> fieldList = new HashSet<String>(Arrays.asList(fl.split(",")));
+//            addReturnFields(solrSearchBuilder,fieldList);
+            solrSearchBuilder.append("&fl=").append(fl);
+        }
+
 
         //xintodo commend out when live
 //        System.out.print(solrSearchBuilder.toString() + "\n");

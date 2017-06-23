@@ -47,12 +47,14 @@ public class EfoTraitController {
     public String search(Model model,
                          @PathVariable(required = false) String efoId,
                          @RequestParam(required = false) String filter,
-                         @RequestParam(required = false, defaultValue = "") String included) {
+                         @RequestParam(required = false, defaultValue = "") String included,
+                         @RequestParam(required = false, defaultValue = "") String checked) {
         EfoTraitResult efoTraitResult = new EfoTraitResult();
         efoTraitResult.setQuery(efoId);
         efoTraitResult.setFilter(filter);
         efoTraitResult.setEfoId(efoId);
         efoTraitResult.setIncluded(included);
+        efoTraitResult.setChecked(checked);
         model.addAttribute("result", efoTraitResult);
         return "efotrait-page";
     }

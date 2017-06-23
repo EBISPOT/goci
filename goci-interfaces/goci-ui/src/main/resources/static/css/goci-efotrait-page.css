@@ -1,0 +1,117 @@
+/* cart item checkbox, for including descendant */
+input[type=checkbox].cart-item-cb {
+    float: left;
+    transform: scale(2, 2);
+    margin-top: 15px;
+}
+
+/* selected term cart */
+#cart {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+/* check box to select all descendants */
+#cb-query-include-descendants {
+    transform: scale(2, 2);
+}
+
+/* when user select an item fron cart, highlight it */
+.list-group-item.highlight {
+    background-color: #ffe6f0;
+}
+
+/* oxo graph */
+#oxo-vis {
+    height: 300px;
+    width: 300px;
+    border: 1px solid black;
+    overflow: auto;
+}
+
+/* right part of the efotrait info panel that display a set of buttons */
+#panel-links {
+    text-align: right;
+}
+
+/* top panel key-value display*/
+.dl-horizontal dt {
+    width: 100px;
+}
+.dl-horizontal dd {
+    margin-left: 120px;
+}
+/* Display the summary information at the bottn of the efo info panel box. */
+#efotrait-summary-icon {
+    padding-right: 2px;
+    margin-left: 10px;
+}
+
+/* by default, the link is hide so the user cannot change it.*/
+#sharable_link {
+    display: none;
+}
+
+/* ols tree */
+#term-tree {
+    height: 100%;
+    width: 100%;
+    border: 1px solid black;
+    overflow: auto;
+}
+
+/* button showing the locusplot / association table /study table. */
+.available-data-btn {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* available data button badge showing the number of association/study */
+.badge.available-data-btn-badge {
+    background-color: #398A96;
+    margin-left: 10px;
+}
+
+.panel-title .badge.available-data-btn-badge {
+    background-color: #398A96;
+    margin-left: 10px;
+}
+
+/* locus zoom title badge */
+.manhattan-plot-badge {
+    color: #398A96;
+    margin-left: 10px;
+}
+
+/* locus zoom plot */
+#plot {
+    width: 100%;
+    height: 100%;
+}
+
+/* select item in the cart */
+.cart-item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: black;
+}
+
+/*disease category badge before the cart item */
+.list-group-item .badge.cart-item-category-badge {
+    margin-right: 0.3em;
+    color: black;
+    float: left;
+    width: 5%;
+}
+
+/* badge showing number of association/study for each cart item*/
+.cart-item-number-badge {
+    color: white;
+}
+
+/* The top page of the page <Trait XXXXX> */
+h2 > span {
+    color: #222222;
+}
+

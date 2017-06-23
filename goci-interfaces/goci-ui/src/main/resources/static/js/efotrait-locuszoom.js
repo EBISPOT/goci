@@ -79,7 +79,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     id: "efowaspvalues",
     type: "scatter",
     point_shape: "circle",
-    point_size: 30,
+    point_size: 50,
     tooltip_positioning: "vertical",
     id_field: "{{namespace}}id",
     fields: ["{{namespace}}phewas"],
@@ -112,7 +112,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         }
     },
     legend: [],
-    fill_opacity: 0.7,
+    fill_opacity: 0.5,
     //xintodo datapoint tooltips
     tooltip: {
         closable: true,
@@ -171,6 +171,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
     min_width: 800,
     min_height: 300,
     proportional_width: 1,
+    // proportional_height: 0.5,
     margin: {top: 20, right: 50, bottom: 120, left: 50},
     inner_border: "rgb(210, 210, 210)",
     dashboard: (function() {
@@ -492,7 +493,9 @@ transferLocation = function(chr, position) {
 }
 
 //replot receive a list of association_docs from solr search
-reloadLocusZoom = function(plot_id, data_association) {
+reloadLocusZoom = function(plot_id, data_association, highlight_associations) {
+    //we make a copy so that we are not changing the raw data
+    var data_association = jQuery.extend(true, {}, data_association)
     //adding information to association doc
     LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
         var data = JSON.parse(JSON.stringify(data_association.docs));
@@ -547,11 +550,26 @@ reloadLocusZoom = function(plot_id, data_association) {
                 + parseInt(result[3], 16) + ')' : 'rgb(255,255,255)';
     }
 
-    data_association.docs.forEach(function(d, i) {
-        colorMap[d.category] = hexToRgb(d.preferedColor);
-    })
-    legend_catgories = [];
-    legend_color = [];
+    //highlight association colour
+    if(highlight_associations != undefined){
+        data_association.docs.forEach(function(d, i) {
+            if(highlight_associations.indexOf(d.id) == -1){
+                d.category = 'other '
+                colorMap[d.category] = hexToRgb('#f2f2f2');
+            }else{
+                d.category = d.preferedEFO;
+                colorMap[d.category] = hexToRgb('#ff5c33');
+            }
+        })
+    }else{
+        data_association.docs.forEach(function(d, i) {
+            colorMap[d.category] = hexToRgb(d.preferedColor);
+        })
+
+    }
+
+    var legend_catgories = [];
+    var legend_color = [];
     for (var key in colorMap) {
         legend_catgories.push(key);
         legend_color.push(colorMap[key]);
