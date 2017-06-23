@@ -25,7 +25,9 @@ var global_efo_info_tag_id = '#efo-info';
 var global_epmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
-var global_solr_url = 'http://localhost:8983/solr/gwas/select';
+// var global_solr_url = 'http://localhost:8983/solr/gwas/select';
+var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select';
+
 
 
 /**
