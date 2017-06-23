@@ -143,7 +143,13 @@ $('#oxo-link').click(() => {
  * When checked, descendant will always be included for newly added efo terms.
  */
 $("#cb-query-include-descendants").change(() => {
-    addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
+    if(isAlwaysDescendant()){
+        $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
+        addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
+    }else{
+        $('.cart-item-cb').removeAttr("disabled");
+        $('#btn-cart-toggle-check-cbs').removeAttr("disabled");
+    }
 });
 
 
@@ -504,6 +510,7 @@ updatePage = function(initLoad=false) {
             //do not remove this if alway include descendant is checked
             if(isAlwaysDescendant()){
                 $('#btn-cart-toggle-check-cbs').attr('disabled',true)
+                $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
             }
         })
     });
