@@ -77,82 +77,131 @@
 <div class="container-fluid">
     <h4 class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo">readme</h4>
     <div id="demo" class="collapse">
-        <p>This readme button will be removed in production unless required by curator.</p>
-        <p>The trait page is designed to integrate/visulize all information about a specific triat(termed <b>mainEFO</b>).
-           It
-           provedes methods to add/remove other interesting EFOs on top of the mainEFO. It consists of 5 panel boxs:</p>
+    <!--<div id="demo">-->
+        <p>This readme button will be removed in production unless required.</p>
+        <p>The trait page is designed to integrate/visualize information about a specific triat (refered as <b>mainEFO</b> in the rest of this document).
+           The mainEFO is defined by the URL and can not be changed once the page is loaded.
+           Methods are provides to add/remove additional interesting EFO traits on top of the mainEFO. The Manhattan plot/association table/study table will be dynamically updated as new EFO traits are added.
+            Most of the page elements have popout tooltips when mouseover for a second.
+           The page consists of 5 panel boxes:</p>
         <ul>
-            <li><b>Trait information:</b>
-                This shows a summary of the mainEFO. It also contains a highlighted paper that we selected for this
-                triat.
-                Currently, the most recent paper is selected as the highlighted paper for the mainEFO.
-            </li>
-            <li><b>Expand your search:</b> This panel displays the currently selected EFOs and gives user three
-                                           approaches to add interesting EFOs to the page.
+            <li><h3>Trait information:</h3><b>Displays a summary of the mainEFO.</b>
+
                 <ul>
-                    <li>Currently selected EFOs are displayed like this: <button type="button" class="btn  btn-default">EFO_0004467:insulin measurement
-                        <span class="badge">  X  </span></button> which can be removed by clicking the 'X'. The mainEFO
-                        cannot be removed.
-                    </li>
-                    <li>A shareable link that can be use to recreate the page with the current selection of EFOs. Copy
-                        the link by clicking
-                        <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-floppy-disk"
-                                                                            aria-hidden="true"
-                                                                            title="copy to clipboard"></span></button>.
+                    Basic Information(from <a href="http://www.ebi.ac.uk/ols/index">Ontology Lookup Service</a>):
+                    <li><b>Label:</b> The mainEFO's label</li>
+                    <li><b>Trait EFO id:</b> The mainEFO's id. Linked out to the mainEFO's OLS page.</li>
+                    <li><b>Synonym(s:</b> The mainEFO's Synonym(s). Hidden if there are more than 5 synonyms for the mainEFO.)</li>
+                    <li><b>Description:</b> The mainEFO's description.</li>
+                </ul>
+                <ul>
+                    <li><b>Xrefs:</b> EFO may have cross-reference to other ontology terms. Here shows the mainEFO trait's cross-reference to other ontologies provided by <a href="http://www.ebi.ac.uk/spot/oxo/">Ontology Xref Service (OxO)</a>.
+                                      A network view is visiable by clicking <button title="Click to show/hide more information" class="btn btn-default btn-xs btn-study"><span class="glyphicon tgb glyphicon-plus"></span></button>
+                                      Here only shows cross-reference term with a <a href="http://www.ebi.ac.uk/spot/oxo/">distance</a> of 1 (direct cross reference).</li>
+                </ul>
+                <ul>
+                    <li>Buttons of links to other relevent resources.</li>
+                    <ul>
+                        <li>A highlighted study is selected for this triat. The study information is by default hidden and you can toggle it by clicking <a class="btn btn-default" type="button">Highlighted Study</a>.
+                            The highlighted study is choosen base on the initial sample size of the study. Currently the one has the largest
+                            initial sample size annotated to the mainEFO trait is selected as the highlighted study.</li>
+                    </ul>
+                </ul>
+
+            </li>
+            <li><h3>Expand search:</h3> <b>This panel box displays the currently selected EFOs, including the mainEFO trait and any additional traits.
+                                           A few approaches are provided to add/expand interesting EFO traits to the page.</b>
+                <ul>
+                    <li>
+                        Action area contains four clickable buttons:
+                        <ul>
+                            <li>
+                                <button type="button" class="btn btn-default cart-action-btn" title="Check/Uncheck all traits in list."><span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
+                                Toggle check/uncheck all the checkbox in the selected trait box. The button is be disable when alway included trait subtype is enabled.
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-default cart-action-btn" title="Add related trait(s) to list."><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                                Add related traits to the selected list. These usually includes EFO traits of disease measurements, biomarkers and other related traits defined in EFO.
+                                These traits are only those related to the mainEFO, not for those subsequenctly added to the selected traut list.
+                                For example, for the mainEFO [EFO_0000400 diabetes mellitus], the related traits include insulin measurement (EFO_0004467), diabetes mellitus biomarker (EFO_0006842) and other 7 EFOs.
+                                This information is from OLS.
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-default cart-action-btn"><span class="glyphicon glyphicon glyphicon-download" aria-hidden="true" title="Download all trait(s) in list."></span></button>
+                                Download the current selected EFO trait list in a tab delimited file.
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-default" title="copy sharable link to clipboard"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></button>
+                                Generate a sharable link containing the current status of the page, abd copy this link to your clipboard. This is used to share the page with your customized conbination of efo traits.
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <b>Search for additional terms:</b> User can search addition EFOs of interests by typing EFO_id
-                                                            or keywords.
-                    </li>
-                    <li>
-                        <b>Related in EFO hierarchy:</b> User can browse efo terms that are closly located to the
-                                                         mainEFO in
-                                                         the EFO ontology hierarchy. EFO can be expanded by <b>clicking
-                                                                                                               the
-                                                                                                               '+'</b>
-                                                         and can be selected by
-                                                         clicking the EFO name.
-                    </li>
-                    <li>
-                        <b>Additional related terms eg. measurements and biomarkers:</b> This network displays the
-                                                                                         related EFOs
-                                                                                         of the mainEFO. This comes from
-                                                                                         an OLS search with the field
-                                                                                         'logical_description'. User can
-                        <b>DOUBLE click</b>
-                                                                                         a node in the network to add it
-                                                                                         to the currently selection of
-                                                                                         EFOs.
+                        Currently selected EFOs are displayed in a list:
+                        <ul>
+                            <li>
+                                <div class="col-lg-12">
+                                    <input type="checkbox" class="cart-item-cb checkbox col-lg-1"  title="3 trait subtypes available in GWAS Catalog."></input> <a class="list-group-item cart-item col-lg-4" style="float: none"><span class="badge cart-item-category-badge" title="Metabolic disorder" style="background-color: rgb(253, 180, 98);">M</span><span class="badge cart-item-number-badge" title="Number of study" text="4">4</span><span class="badge cart-item-number-badge" title="Number of association" text="6">6</span>[EFO_0000400] diabetes mellitus</a>
+                                </div>
+                                Each item in the list represents an selected EFO trait. Association/study data from GWAS Catalog for this trait are displayed in the plot/tables.
+                            </li>
+                            <li>
+                                <input type="checkbox" ></input>The ckechbox on the left of the item indicate the inclusion of trait subtypes. If checked, all the trait subtypes are included for this triat. For example, trait EFO_0000400 diabetes mellitus has
+                            </li>
+                            <li>
+                                <span class="badge cart-item-category-badge" title="Metabolic disorder" style="background-color: rgb(253, 180, 98);">M</span>
+                                This badge idicate the high-level parent EFO trait provided by <a href="wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400">GWAS Catalog</a>. For example, EFO_0000400 diabetes mellitus's  high-level parent EFO is
+                                EFO_0000589 metabolic disease. The colour of the badge represent the parent EFO and is consistent with  <a href="http://localhost:8280/gwas/diagram">the GWAS Diagram</a>. The letter in the badge is the first init of the parent EFO label.
+                            </li>
+
+                            <li>
+                                <span class="badge cart-item-number-badge" style="background-color: #398A96;float: none;" title="Number of association" text="6">6</span><span class="badge cart-item-number-badge" style="background-color: #398A96; float: none;" title="Number of study" text="4">4</span>
+                                These two badges idicate the number of association/study annotated with this triat, or all its trait subtypes when the trait subtypes checkbox is checked.
+                            </li>
+                            <li>
+                                <span class="badge" style="background-color: #398A96;float: none;" title="remove trait">X</span> The mainEFO cannot be removed from the selected trait list. For additional EFO traits added to the list, they can be removed by clicking this badge.
+                            </li>
+
+                            <li>
+                                <input type="checkbox" checked="checked"></input><label>  Always include trait subtypes</label>: If check, trait subtypes will always be included. The individual checkbox and in the selected trait list will be disable. This is by default checked.
+                            </li>
+                            <li>
+                                EFO trait can be toggled hightligh by single clicking it. The Manhattan will highlight the associations that annotated with the highlight triat.
+                                <div>
+                                    <a class="list-group-item cart-item col-lg-6 highlight" style="float: none;"><span class="badge cart-item-category-badge" title="Other measurement" style="background-color: rgb(0, 102, 153);">O</span><span class="badge">  X  </span><span class="badge cart-item-number-badge" title="Number of study" text="6">6</span><span  class="badge cart-item-number-badge" title="Number of association" text="12">12</span>[EFO_0004467] insulin measurement</a>
+                                </div>
+                            </li>
+                        </ul>
                     </li>
 
+                    <li>
+                        Advance functions for adding additional traits: Three approaches are available to add EFO traits to the page.
+                        <ul>
+                            <li><b>EFO Search:</b> Enter text description or EFO id to search EFO trait from OLS. Click the suggested EFO will add it to the page.</li>
+                            <li><b>EFO hierarchy:</b> Browse the EFO hierarchy structure for traits of interested. EFO can be expanded by clicking the <b>'+'</b> and can be selected(added to the page) by clicking the EFO name.</li>
+                            <li><b>EFO network:</b> Browse the EFO network constructed by the mainEFO trait and all related EFO traits to see how they are connected. This cis provided by OLS with from the ontology field 'logical_description'.
+                                                    Double click the node in the network to add it to the page.</li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
-            <li><b>Manhattan plot (plot of Catalog associations for selected trait):</b>
-                Manhattan plot implemented using Locus Zoom. This plot will be updated as new EFOs are added to the
-                page.
+            <li><h3>Manhattan plot (plot of Catalog associations for selected trait(s)):</h3>
+                <a href="https://en.wikipedia.org/wiki/Manhattan_plot">Manhattan plot</a> implemented using Locus Zoom. This plot will be dynamically updated as new EFO traits are added to the page.
+                Each data point in the plot represents an association the annotated with an EFO trait selected in the page.
                 <ul>
-                    <li>Legend can be toggle by clicking the 'Show legend' button on the topright of the plot(the button
-                        is hidden until mouse over).
-                    </li>
-                    <li>Associations are coloured base on its highlighted EFO term when multiple EFOs have been
-                        annotated to the association using
-                        'wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400'.
-                    </li>
-                    <li>Highlighted EFO is currently either the selected-term, or a random EFO from the annotated EFOs
-                        when multiple selected EFO are annotated to the association.
-                    </li>
-                    <li>Click 'download image' to download an svg of the current plot.
-                    </li>
+                    <li>a popup containing association information will be acticated when mouseover the data point in the plot</li>
+                    <li>Legend can be toggle by clicking the 'Show legend' button on the topright of the plot(the button is hidden until mouse over).</li>
+                    <li>Associations are coloured base on its prefered parent EFO term. The colour is consistent with <a href="http://localhost:8280/gwas/diagram">the GWAS Diagram</a>.</li>
+                    <li>When an EFO triat is selected in the EFO list, the association linked to that trait will be highlighted.</li>
+                    <li>Click 'download image' to download an svg of the current plot.</li>
                 </ul>
             </li>
 
             <li>
-                <b>Association table:</b> All association found in the GWAS Catalog for the selected triat(s).
+                <h3>Association table:</h3> All association found in the GWAS Catalog for the selected triat(s). The table is searchable, sortable, customizable, and can be download in different format.
             </li>
-
-
             <li>
-                <b>studies table:</b> All studies found in the GWAS Catalog for the selected triat(s).
+                <h3>Studies table:</h3> All studies found in the GWAS Catalog for the selected triat(s). The table is searchable, sortable, customizable, and can be download in different format.
             </li>
         </ul>
     </div>
@@ -431,10 +480,10 @@
 
                                         <button id="btn-cart-action-download"
                                                 type="button"
-                                                class="btn btn-default cart-action-btn">
+                                                class="btn btn-default cart-action-btn"
+                                                title="Download all trait(s) in list.">
                                             <span class="glyphicon glyphicon glyphicon-download"
-                                                  aria-hidden="true"
-                                                  title="Download all trait(s) in list."></span>
+                                                  aria-hidden="true"></span>
                                         </button>
                                     </div>
                                     <div class="col-lg-1.5" style="float:right">

@@ -2569,7 +2569,7 @@ getDataFromTag = function(tagID, key) {
     var data = $(tagID).data();
     if (key == '')
         return data
-    if (Object.keys(data).valueOf(key) == -1){
+    if (Object.keys(data).indexOf(key) == -1){
         console.warn('The requested data with key ' + key + ' to ' + tagID + ' does not exist!');
         return undefined;
     }
@@ -2588,9 +2588,11 @@ getDataFromTag = function(tagID, key) {
  */
 removeDataFromTag = function(tagID, key, tobeDelete){
     var tmp = getDataFromTag(tagID,key);
-    if(Object.keys(tmp).indexOf(tobeDelete) != -1){
-        delete tmp[tobeDelete];
-        return true;
+    if(tmp != undefined){
+        if(Object.keys(tmp).indexOf(tobeDelete) != -1){
+            delete tmp[tobeDelete];
+            return true;
+        }
     }
     return false;
 }
