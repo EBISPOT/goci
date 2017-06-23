@@ -121,5 +121,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByFullPvalueSet(Boolean fullPvalueSet, Pageable pageable);
 
+    Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
+
+
+
 }
 

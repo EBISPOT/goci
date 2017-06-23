@@ -82,6 +82,8 @@ public class Study implements Trackable {
 
     private Boolean fullPvalueSet = false;
 
+    private Boolean userRequested = false;
+
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -171,6 +173,7 @@ public class Study implements Trackable {
                  String studyDesignComment,
                  String accessionId,
                  Boolean fullPvalueSet,
+                 Boolean userRequested,
                  Collection<Platform> platforms,
                  Collection<Association> associations,
                  Collection<Ancestry> ancestries,
@@ -198,6 +201,7 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
         this.accessionId = accessionId;
         this.fullPvalueSet = fullPvalueSet;
+        this.userRequested = userRequested;
         this.platforms = platforms;
         this.associations = associations;
         this.ancestries = ancestries;
@@ -454,5 +458,13 @@ public class Study implements Trackable {
         Collection<StudyNote> currentNotes = getNotes();
         currentNotes.add(note);
         setNotes((currentNotes));
+    }
+
+    public Boolean getUserRequested() {
+        return userRequested;
+    }
+
+    public void setUserRequested(Boolean userRequested) {
+        this.userRequested = userRequested;
     }
 }

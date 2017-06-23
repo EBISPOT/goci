@@ -156,6 +156,17 @@
     </tr>
 
     <tr>
+        <th>User requested</th>
+        <td th:switch="${study.userRequested}">
+            <p th:case="'null'"></p>
+
+            <p th:case="false">No</p>
+
+            <p th:case="true">Yes</p>
+        </td>
+    </tr>
+
+    <tr>
         <th>Full p-Value Set</th>
         <td th:switch="${study.fullPvalueSet}">
             <p th:case="'null'"></p>
@@ -165,6 +176,8 @@
             <p th:case="true">Yes</p>
         </td>
     </tr>
+
+
 
     <tr>
         <th>Initial Sample Description</th>
