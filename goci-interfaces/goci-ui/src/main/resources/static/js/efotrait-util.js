@@ -556,23 +556,41 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
     return Promise.all([p1, p2]).then(() => {
         console.log("Solr research request received for " + searchQuery);
         //xintodo optmize the query, use fl to return less field.
-        return promisePost(global_solr_url,
-                    {
-                        'wt' : 'json',
-                        'q': searchQuery,
-                        'max': 99999,
-                        group : true,
-                        'group.limit': 99999,
-                        'group.field': 'resourcename',
-                        hl:true,
-                        'hl.fl': 'shortForm,efoLink',
-                        'hl.simple.post' : '</b>',
-                        'hl.simple.pre' : '<b>',
-                        'hl.snippets': 100,
-                        facet : true,
-                        'facet.field': 'resourcename',
-
-                    },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
+        //Cross origin not enable in solr
+        // return promiseGet(global_solr_url,
+        //             {
+        //                 'wt' : 'json',
+        //                 'q': searchQuery,
+        //                 'max': 99999,
+        //                 group : true,
+        //                 'group.limit': 99999,
+        //                 'group.field': 'resourcename',
+        //                 hl:true,
+        //                 'hl.fl': 'shortForm,efoLink',
+        //                 'hl.simple.post' : '</b>',
+        //                 'hl.simple.pre' : '<b>',
+        //                 'hl.snippets': 100,
+        //                 facet : true,
+        //                 'facet.field': 'resourcename',
+        //
+        //             },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
+        //     processSolrData(data, initLoad);
+        //     console.log("Solr research done for " + searchQuery);
+        //     return data;
+        // }).catch(function(err) {
+        //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+        //     throw(err);
+        // })
+        return promiseGet('/gwas/api/search/efotrait',
+                          {
+                              'q': searchQuery,
+                              'max': 99999,
+                              'group.limit': 99999,
+                              'group.field': 'resourcename',
+                              'facet.field': 'resourcename',
+                              'hl.fl': 'shortForm,efoLink',
+                              'hl.snippets': 100
+                          }).then(JSON.parse).then(function(data) {
             processSolrData(data, initLoad);
             console.log("Solr research done for " + searchQuery);
             return data;
@@ -580,17 +598,6 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
             console.error('Error when seaching solr for' + searchQuery + '. ' + err);
             throw(err);
         })
-        // return promiseGet('/gwas/api/search/efotrait',
-        //                   //            return promisePost('/gwas/api/search/efotrait',
-        //                   {
-        //                       'q': searchQuery,
-        //                       'max': 99999,
-        //                       'group.limit': 99999,
-        //                       'group.field': 'resourcename',
-        //                       'facet.field': 'resourcename',
-        //                       'hl.fl': 'shortForm,efoLink',
-        //                       'hl.snippets': 100
-        //                   })
 
     })
 
@@ -2634,7 +2641,7 @@ filterAvailableEFOs = function(toBeFilter) {
  */
 getOXO = function(efoid){
     var queryOXO = function(efoid){
-        return promiseGet(global_oxo_api + '/mappings',
+        return promiseGet(global_oxo_api + 'mappings',
                           {
                               'fromId': efoid.replace('_',':'),
                           }
