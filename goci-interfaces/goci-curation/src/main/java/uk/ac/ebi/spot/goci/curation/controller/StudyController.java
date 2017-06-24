@@ -430,6 +430,18 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
+        Map<String, Map<String,String>> scoreFactors = new HashMap<String, Map<String,String>>();
+        studyPage.getContent().forEach(study -> {
+            Map<String, String> studyScoreFactors = new HashMap<String, String>();
+            studyScoreFactors.put("InitialSampleSize",study.getInitialSampleSize());
+            studyScoreFactors.put("Publication",study.getPublication());
+            studyScoreFactors.put("ReplicateSampleSize",study.getReplicateSampleSize());
+            studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
+
+            scoreFactors.put(study.getId().toString(),studyScoreFactors);
+        });
+        model.addAttribute("scoreFactors", scoreFactors);
+
         return "studies";
     }
 
