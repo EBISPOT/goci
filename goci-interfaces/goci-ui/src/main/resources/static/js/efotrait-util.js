@@ -1655,7 +1655,7 @@ function promiseGet(url, params,debug) {
             Object.keys(params).forEach(function(key, index) {
                 params_str = params_str + '&' + key + '=' + this[key];
             }, params);
-            url = url + '?' + params_str;
+            url = url + '?' + params_str.substring(1);
         }
 
         req.open('GET', url);
