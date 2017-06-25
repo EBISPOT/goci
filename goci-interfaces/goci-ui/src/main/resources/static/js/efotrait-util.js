@@ -2054,7 +2054,11 @@ var OLS = {
      */
     getOntologyIdByPrefix : function(prefix) {
         return OLS.getPrefix2OntologyId().then(function(p2o){
-            return p2o[prefix]
+            //ignore case
+            prefix = prefix.toLowerCase()
+            var index = Object.keys(p2o).map((key)=>{return key.toLowerCase()}).indexOf(prefix)
+            return Object.values(p2o)[index]
+            // return p2o[prefix]
         })
     },
 
@@ -2288,6 +2292,12 @@ var OLS = {
                 console.debug('Loading descendant from cache for ' + efoid);
                 return data[efoid]
             }
+        })
+    },
+
+    hasDescendant : function(efoid){
+        return OLS.getEFOInfo(efoid).then((efoInfo)=>{
+            return efoInfo.has_children;
         })
     },
 }
