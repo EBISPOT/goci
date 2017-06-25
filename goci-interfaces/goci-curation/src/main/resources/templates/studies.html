@@ -56,6 +56,8 @@
         console.log(studies);
 
 
+
+
         sum = (a,b)=>{return a+b}
 
 
@@ -91,94 +93,6 @@
         }
 
 
-        /**
-         * Study sorting functions.
-         */
-        var studySorting = {
-
-            add : function (a, b){
-                return parseInt(a) + parseInt(b);
-            },
-
-            sortByPublishDate : function(array){
-                var publishDate = {};
-
-                $.each(array, function(index, value) {
-                    publishDate[value.id] = value.publicationDate;
-                })
-
-                var keysSorted = Object.keys(publishDate).sort(function(a, b) {
-                    return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
-                })
-                return keysSorted;
-            },
-
-
-            sortByCatalogPublishDate : function(array){
-                var catalogPublishDate = {};
-
-                $.each(array, function(index, value) {
-                    catalogPublishDate[value.id] = value.catalogPublishDate;
-                })
-
-                var keysSorted = Object.keys(catalogPublishDate).sort(function(a, b) {
-                    return Date.parse(catalogPublishDate[b]) - Date.parse(catalogPublishDate[a])
-                })
-                return keysSorted;
-            },
-
-
-             sortBySampleSize : function(array){
-                 // studies['study:8072'].initialSampleDescription.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
-                 // "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases"
-                 var sampleSize = {};
-
-                 $.each(array, function(index, value) {
-                     var init = value.initialSampleDescription
-                     var total = 0;
-                     if(init != 0) {
-                         total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(studySorting.add, 0)
-                     }
-                     sampleSize[value.id] = total;
-                 })
-
-                 //desc
-                 var keysSorted = Object.keys(sampleSize).sort(function(a, b){
-                     return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
-                 })
-                 return keysSorted;
-             },
-
-
-            sortByInitialSampleSize : function(array){
-                // "initial|NR|NR|European|11522|NA"
-                // "replication|NR|NR|European|4955|NA"
-                var sampleSize = {};
-
-                var isInitial = function(ancestryLinkString){
-                    return ancestryLinkString.match(/^initial/) != null
-                }
-                var InitialSampleSize = function(ancestryLinkString){
-                    return ancestryLinkString.split('|')[4]
-                }
-
-
-
-                $.each(array, function(index, value) {
-                    var init = value.ancestryLinks
-                    var total = init.filter(isInitial)
-                            .map(InitialSampleSize)
-                            .reduce(studySorting.add,0)
-                    sampleSize[index] = total;
-                })
-
-                //desc
-                var keysSorted = Object.keys(sampleSize).sort(function(a, b){
-                    return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
-                });
-                return keysSorted;
-            },
-        }
 
 
         var FACTORS = {
@@ -229,24 +143,26 @@
         //ReplicateSampleSize value
         var tmp = objectMap(groupByFactors.InitialSampleSize,(v)=>{
             var init = v
-            var total = 0;
+            var total = 1;
             if(init != 0) {
                 total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(studySorting.add, 0)
             }
+            total = Math.log(total);
             return total;
         })
         groupByFactors.InitialSampleSize = Object.assign(tmp)
 
         var tmp = objectMap(groupByFactors.ReplicateSampleSize,(v)=>{
             var init = v
-            var total = 0;
+            var total = 1;
             if(init != 0) {
                 total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(studySorting.add, 0)
             }
+            total = Math.log(total);
             return total;
         })
         groupByFactors.ReplicateSampleSize = Object.assign(tmp)
-
+        console.log(groupByFactors)
 
 
 
@@ -259,6 +175,7 @@
                 studies_clean[study][factor] = groupByFactors[factor][study]
             })
         })
+        console.log(studies_clean)
 
 
 
@@ -269,7 +186,7 @@
             Object.keys(studies_nomalized[study]).map((factor)=>{
                 studies_nomalized[study][factor] = normalize(studies_nomalized[study][factor],
                                                              Math.min(...Object.values(groupByFactors[factor])),
-                                                             Math.max(...Object.values(groupByFactors[factor])));
+                                                             Math.max(...Object.values(groupByFactors[factor])),100);
                 studies_nomalized[study][factor] = studies_nomalized[study][factor] * FACTORS_NOMALIZED[factor];
             })
         });
@@ -278,6 +195,164 @@
         Object.keys(studies_nomalized).map((study)=>{
             studies_score[study] = Object.values(studies_nomalized[study]).reduce(sum,0)
         });
+
+        /////
+
+
+        score = {
+            sum : (a,b)=>{return a+b},
+            normalizeByMax : (array,scale=1,keys=undefined) => {
+                var min = Math.min(array)
+                var max = Math.max(array)
+                var normalized = array.map((v)=> {
+                    if (min == max) return 1;
+                    return scale * (value - min)  / (max - min);
+                })
+                if(keys != undefined){
+                    return hashFromArrays(keys,normalized);
+                }
+                return normalized;
+            },
+            takeLog : (array,keys=undefined) => {
+                var normalized = array.map((v)=>{
+                    return Math.log(v+1);
+                })
+                if(keys != undefined){
+                    return hashFromArrays(keys,normalized);
+                }
+                return normalized;
+            },
+            normalizeBySum : (array,keys=undefined) => {
+                var total = array.reduce(score.sum,0);
+                var normalized = array.map((v)=> {
+                    if (total ==0 ) return 0;
+                    return v/total;
+                })
+                if(keys != undefined){
+                    return hashFromArrays(keys,normalized);
+                }
+                return normalized;
+            },
+        }
+        var FACTORS = {
+            InitialSampleSize : 23,
+            ReplicateSampleSize : 17,
+            GenomewideArray : 10,
+        }
+        score.normalizeBySum(Object.values(FACTORS),Object.keys(FACTORS))
+
+
+//        /**
+//         * Study sorting functions.
+//         */
+//        var studySorting = {
+//
+//            add : function (a, b){
+//                return parseInt(a) + parseInt(b);
+//            },
+//
+//            sortByPublishDate : function(array){
+//                var publishDate = {};
+//
+//                $.each(array, function(index, value) {
+//                    publishDate[value.id] = value.publicationDate;
+//                })
+//
+//                var keysSorted = Object.keys(publishDate).sort(function(a, b) {
+//                    return Date.parse(publishDate[b]) - Date.parse(publishDate[a])
+//                })
+//                return keysSorted;
+//            },
+//
+//
+//            sortByCatalogPublishDate : function(array){
+//                var catalogPublishDate = {};
+//
+//                $.each(array, function(index, value) {
+//                    catalogPublishDate[value.id] = value.catalogPublishDate;
+//                })
+//
+//                var keysSorted = Object.keys(catalogPublishDate).sort(function(a, b) {
+//                    return Date.parse(catalogPublishDate[b]) - Date.parse(catalogPublishDate[a])
+//                })
+//                return keysSorted;
+//            },
+//
+//
+//            sortBySampleSize : function(array){
+//                // studies['study:8072'].initialSampleDescription.split(',').join('').match(/(\d*)/g).filter(Number).reduce(_add,0)
+//                // "155 Korean ancestry medication non-adherent diabetes cases, 80 Korean ancestry medication non-adherent hypertensive cases, 240 Korean ancestry medication adherent diabetes cases, 827 Korean ancestry medication adherent hypertensive cases"
+//                var sampleSize = {};
+//
+//                $.each(array, function(index, value) {
+//                    var init = value.initialSampleDescription
+//                    var total = 0;
+//                    if(init != 0) {
+//                        total = init.split(',').join('').match(/(\d*)/g).filter(Number).reduce(studySorting.add, 0)
+//                    }
+//                    sampleSize[value.id] = total;
+//                })
+//
+//                //desc
+//                var keysSorted = Object.keys(sampleSize).sort(function(a, b){
+//                    return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
+//                })
+//                return keysSorted;
+//            },
+//
+//
+//            sortByInitialSampleSize : function(array){
+//                // "initial|NR|NR|European|11522|NA"
+//                // "replication|NR|NR|European|4955|NA"
+//                var sampleSize = {};
+//
+//                var isInitial = function(ancestryLinkString){
+//                    return ancestryLinkString.match(/^initial/) != null
+//                }
+//                var InitialSampleSize = function(ancestryLinkString){
+//                    return ancestryLinkString.split('|')[4]
+//                }
+//
+//
+//
+//                $.each(array, function(index, value) {
+//                    var init = value.ancestryLinks
+//                    var total = init.filter(isInitial)
+//                            .map(InitialSampleSize)
+//                            .reduce(studySorting.add,0)
+//                    sampleSize[index] = total;
+//                })
+//
+//                //desc
+//                var keysSorted = Object.keys(sampleSize).sort(function(a, b){
+//                    return parseInt(sampleSize[b]) - parseInt(sampleSize[a])
+//                });
+//                return keysSorted;
+//            },
+//        }
+
+
+
+        //matrix
+//        var parser = math.parser();
+//        var a  = parser.eval('zeros(5, 3)');
+//        var b  = parser.eval('[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]');
+//         parser.eval('d=[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]');
+//        b.toString()
+//        parser.eval('b[1,1:end]').toString()
+//
+//
+//
+//        var matrix=math.zeros(Object.keys(studies).length,Object.keys(FACTORS).length);
+//        matrix.toString();
+//        Object.keys(FACTORS).map((factor)=>{
+//            groupByFactors[factor].values()
+//            var dim = math.size(matrix);
+//            math.subset(matrix, math.index(0), [4, 5])
+//
+//
+//        })
+
 
         /*]]>*/
     </script>
