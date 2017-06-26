@@ -449,8 +449,10 @@ public class StudyController {
             });
 
             studyScoreFactors.put("Publication",study.getPublication());
+            studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
             studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
             studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
+//            studyScoreFactors.put("UserRequested",)
             scoreFactors.put(study.getId().toString(),studyScoreFactors);
         });
 

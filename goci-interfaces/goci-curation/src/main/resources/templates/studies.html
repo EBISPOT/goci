@@ -240,9 +240,11 @@
             },
         }
         var FACTORS = {
-            InitialSampleSize : 23,
-            ReplicateSampleSize : 17,
-            GenomewideArray : 10,
+            InitialSampleSize : 1,
+            ReplicateSampleSize : 1,
+            GenomewideArray : 1,
+            SummaryStatisticsAvailable : 1,
+
         }
 
         FACTORS_NOMALIZED = score.normalizeBySum(Object.values(FACTORS),Object.keys(FACTORS))
