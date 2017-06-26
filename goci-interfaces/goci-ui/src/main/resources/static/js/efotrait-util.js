@@ -2495,8 +2495,8 @@ getAvailableEFOs=function(){
  * @return {Promise} - Promise containing merged data
  * @example addPromiseToTag('#efoInfo',promise,'key',false)
  */
-addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
-    overwriteWarning = overwriteWarning || false;
+addPromiseToTag = function(tagID, promise, key, overwriteWarning=false) {
+    initInfoTag(tagID);
 
     var oldPromise = $(tagID).data(key) || new Promise(function(resolve){
                 resolve({})
@@ -2539,6 +2539,7 @@ addPromiseToTag = function(tagID, promise, key, overwriteWarning) {
  * @example getPromiseFromTag('#efoInfo','key')
  */
 getPromiseFromTag = function(tagID,key){
+    initInfoTag(tagID);
     var dataPromise =  getDataFromTag(tagID,key)
     if (dataPromise == undefined) {
         dataPromise = new Promise(function(resolve){
@@ -2559,6 +2560,7 @@ getPromiseFromTag = function(tagID,key){
  * @example addDataToTag('#efoInfo',{'name':'xin'},'key',false)
  */
 addDataToTag = function(tagID, hash, key, overwriteWarning) {
+    initInfoTag(tagID);
     var old = $(tagID).data(key) || {};
     overwriteWarning = overwriteWarning || false;
     if (overwriteWarning) {
@@ -2583,6 +2585,16 @@ addDataToTag = function(tagID, hash, key, overwriteWarning) {
 }
 
 /**
+ * create a hidden div for cache, if there isn't already one
+ */
+initInfoTag = function(tagID){
+    if ($(tagID).length == 0) {
+        var cb = $('<div />',
+                   {id: tagID.substring(1)}).css({'display': 'none'}).appendTo($("body"));
+    }
+}
+
+/**
  * query data from a tag's data attribute with a key. The data attribute contains a hash.
  * If the hash key exist, the date is returned, otherwise, a new empty hash is returned.
  * @param String tagID - the html tag used to store the data, with the '#'
@@ -2591,6 +2603,7 @@ addDataToTag = function(tagID, hash, key, overwriteWarning) {
  * @example getDataFromTag('#efoInfo','key')
  */
 getDataFromTag = function(tagID, key) {
+    initInfoTag(tagID);
     key = key || ''
     var data = $(tagID).data();
     if (key == '')
