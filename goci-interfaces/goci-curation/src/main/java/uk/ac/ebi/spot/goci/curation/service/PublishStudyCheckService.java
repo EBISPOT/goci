@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
@@ -42,13 +43,22 @@ public class PublishStudyCheckService {
 
         boolean missingCoR = countryOfRecruitmentCheck(study);
 
-        Boolean targetedArrayStudy = study.getTargetedArray();
+        Collection<GenotypingTechnology> genotypingTechnologies = study.getGenotypingTechnologies();
+
+        Boolean targetedArrayStudy = false;
+
+        for(GenotypingTechnology gt : genotypingTechnologies){
+            if(gt.getGenotypingTechnology().contains("Targeted") || gt.getGenotypingTechnology().contains("Exome") || gt.getGenotypingTechnology().contains("sequencing")){
+                targetedArrayStudy = true;
+            }
+        }
+
 
         if (targetedArrayStudy) {
             message = "Study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
-                    + ", is a targeted array study and should not be published.";
+                    + ", is a targeted array, other non-genone-wide or sequencing study and should not be published.";
         }
 
         else if (snpNotApproved == 1 && !efoTermsAssigned && missingCoR) {

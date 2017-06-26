@@ -64,9 +64,9 @@ public class Study implements Trackable {
 
     private Boolean gxg = false;
 
-    private Boolean genomewideArray = true;
-
-    private Boolean targetedArray = false;
+//    private Boolean genomewideArray = true;
+//
+//    private Boolean targetedArray = false;
 
     private Integer snpCount;
 
@@ -124,6 +124,12 @@ public class Study implements Trackable {
     @OrderBy // important don't remove. Tracking ticket
     private Collection<Event> events = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "STUDY_GENOTYPING_TECHNOLOGY",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENOTYPING_TECHNOLOGY_ID"))
+    private Collection<GenotypingTechnology> genotypingTechnologies;
+
     @OneToMany(mappedBy = "study")
     private Collection<WeeklyTracking> weeklyTrackings;
 
@@ -164,8 +170,8 @@ public class Study implements Trackable {
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
-                 Boolean genomewideArray,
-                 Boolean targetedArray,
+//                 Boolean genomewideArray,
+//                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -181,7 +187,8 @@ public class Study implements Trackable {
                  Collection<EfoTrait> efoTraits,
                  Housekeeping housekeeping,
                  StudyReport studyReport, Collection<Event> events,
-                 Collection<SingleNucleotidePolymorphism> snps) {
+                 Collection<SingleNucleotidePolymorphism> snps,
+                 Collection<GenotypingTechnology> genotypingTechnologies) {
         this.author = author;
         this.publicationDate = publicationDate;
         this.publication = publication;
@@ -192,8 +199,8 @@ public class Study implements Trackable {
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.genomewideArray = genomewideArray;
-        this.targetedArray = targetedArray;
+//        this.genomewideArray = genomewideArray;
+//        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -211,6 +218,7 @@ public class Study implements Trackable {
         this.studyReport = studyReport;
         this.events = events;
         this.snps = snps;
+        this.genotypingTechnologies = genotypingTechnologies;
     }
 
     public Long getId() {
@@ -309,13 +317,13 @@ public class Study implements Trackable {
         this.gxg = gxg;
     }
 
-    public Boolean getTargetedArray() {
-        return targetedArray;
-    }
+//    public Boolean getTargetedArray() {
+//        return targetedArray;
+//    }
 
-    public void setTargetedArray(Boolean targetedArray) {
-        this.targetedArray = targetedArray;
-    }
+//    public void setTargetedArray(Boolean targetedArray) {
+//        this.targetedArray = targetedArray;
+//    }
 
     public Collection<Association> getAssociations() {
         return associations;
@@ -406,13 +414,13 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
     }
 
-    public Boolean getGenomewideArray() {
-        return genomewideArray;
-    }
-
-    public void setGenomewideArray(Boolean genomewideArray) {
-        this.genomewideArray = genomewideArray;
-    }
+//    public Boolean getGenomewideArray() {
+//        return genomewideArray;
+//    }
+//
+//    public void setGenomewideArray(Boolean genomewideArray) {
+//        this.genomewideArray = genomewideArray;
+//    }
 
     public Collection<Event> getEvents() {
         return events;
@@ -458,6 +466,14 @@ public class Study implements Trackable {
         Collection<StudyNote> currentNotes = getNotes();
         currentNotes.add(note);
         setNotes((currentNotes));
+    }
+
+    public Collection<GenotypingTechnology> getGenotypingTechnologies() {
+        return genotypingTechnologies;
+    }
+
+    public void setGenotypingTechnologies(Collection<GenotypingTechnology> genotypingTechnologies) {
+        this.genotypingTechnologies = genotypingTechnologies;
     }
 
     public Boolean getUserRequested() {
