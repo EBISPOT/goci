@@ -433,13 +433,27 @@ public class StudyController {
         Map<String, Map<String,String>> scoreFactors = new HashMap<String, Map<String,String>>();
         studyPage.getContent().forEach(study -> {
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
-            studyScoreFactors.put("InitialSampleSize",study.getInitialSampleSize());
-            studyScoreFactors.put("Publication",study.getPublication());
-            studyScoreFactors.put("ReplicateSampleSize",study.getReplicateSampleSize());
-            studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
+            studyScoreFactors.put("InitialSampleSize","0");
+            studyScoreFactors.put("ReplicateSampleSize","0");
+            study.getAncestries().forEach(ancestry -> {
+                switch(ancestry.getType()){
+                    case "initial":
+                        studyScoreFactors.put("InitialSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        break;
+                    case "replication":
+                        studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        break;
+                    default:
+                        ;
+                }
+            });
 
+            studyScoreFactors.put("Publication",study.getPublication());
+            studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
+            studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
             scoreFactors.put(study.getId().toString(),studyScoreFactors);
         });
+
         model.addAttribute("scoreFactors", scoreFactors);
 
         return "studies";
