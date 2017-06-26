@@ -5,6 +5,7 @@ import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Event;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -78,15 +79,15 @@ public class StudyBuilder {
         return this;
     }
 
-    public StudyBuilder setGenomewideArray(Boolean genomewideArray) {
-        study.setGenomewideArray(genomewideArray);
-        return this;
-    }
-
-    public StudyBuilder setTargetedArray(Boolean targetedArray) {
-        study.setTargetedArray(targetedArray);
-        return this;
-    }
+//    public StudyBuilder setGenomewideArray(Boolean genomewideArray) {
+//        study.setGenomewideArray(genomewideArray);
+//        return this;
+//    }
+//
+//    public StudyBuilder setTargetedArray(Boolean targetedArray) {
+//        study.setTargetedArray(targetedArray);
+//        return this;
+//    }
 
     public StudyBuilder setFullPvalueSet(Boolean fullPvalueSet) {
         study.setFullPvalueSet(fullPvalueSet);
@@ -151,6 +152,11 @@ public class StudyBuilder {
 
     public StudyBuilder setEvents(Collection<Event> events) {
         study.setEvents(events);
+        return this;
+    }
+
+    public StudyBuilder setGenotypingTechnologies(Collection<GenotypingTechnology> genotypingTechnologies){
+        study.setGenotypingTechnologies(genotypingTechnologies);
         return this;
     }
 

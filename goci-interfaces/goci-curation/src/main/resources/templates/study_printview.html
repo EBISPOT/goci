@@ -64,6 +64,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Genotyping technology</th>
+                            <td><span th:each="genotypingTechnology, iterStat: ${study.genotypingTechnologies}"
+                                      th:text="(!${iterStat.last} ? ${genotypingTechnology.genotypingTechnology}+', ' : ${genotypingTechnology.genotypingTechnology}) ?: ''"></span>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Platform Manufacturer</th>
                             <td><span th:each="platform, iterStat: ${study.platforms}"
                                       th:text="(!${iterStat.last} ? ${platform.manufacturer}+', ' : ${platform.manufacturer}) ?: ''"></span>
@@ -99,16 +105,16 @@
     </td>
     </tr>
 
-    <tr>
-        <th>Targeted Genotyping Array</th>
-        <td th:switch="${study.targetedArray}">
-            <p th:case="'null'"></p>
+    <!--<tr>-->
+        <!--<th>Targeted Genotyping Array</th>-->
+        <!--<td th:switch="${study.targetedArray}">-->
+            <!--<p th:case="'null'"></p>-->
 
-            <p th:case="false">No</p>
+            <!--<p th:case="false">No</p>-->
 
-            <p th:case="true">Yes</p>
-        </td>
-    </tr>
+            <!--<p th:case="true">Yes</p>-->
+        <!--</td>-->
+    <!--</tr>-->
 
     <tr>
         <th>CNV</th>
@@ -156,6 +162,17 @@
     </tr>
 
     <tr>
+        <th>User requested</th>
+        <td th:switch="${study.userRequested}">
+            <p th:case="'null'"></p>
+
+            <p th:case="false">No</p>
+
+            <p th:case="true">Yes</p>
+        </td>
+    </tr>
+
+    <tr>
         <th>Full p-Value Set</th>
         <td th:switch="${study.fullPvalueSet}">
             <p th:case="'null'"></p>
@@ -165,6 +182,8 @@
             <p th:case="true">Yes</p>
         </td>
     </tr>
+
+
 
     <tr>
         <th>Initial Sample Description</th>

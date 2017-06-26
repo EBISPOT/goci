@@ -45,6 +45,7 @@ import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Platform;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -55,6 +56,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -98,6 +100,7 @@ public class StudyController {
     private AssociationRepository associationRepository;
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
+    private GenotypingTechnologyRepository genotypingTechnologyRepository;
 
     // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -129,6 +132,7 @@ public class StudyController {
                            AssociationRepository associationRepository,
                            AncestryRepository ancestryRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
+                           GenotypingTechnologyRepository genotypingTechnologyRepository,
                            DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
@@ -148,6 +152,7 @@ public class StudyController {
         this.associationRepository = associationRepository;
         this.ancestryRepository = ancestryRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
+        this.genotypingTechnologyRepository = genotypingTechnologyRepository;
         this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
@@ -238,14 +243,31 @@ public class StudyController {
                                                                                        sort));
             }
 
-            if (studyType.equals("Genomewide array studies")) {
-                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
+            if (studyType.equals("Genome-wide genotyping array studies")) {
+//                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
+//                                                                                                   sort));
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide genotyping array", constructPageSpecification(page - 1,
                                                                                                    sort));
             }
 
-            if (studyType.equals("Targeted array studies")) {
-                studyPage = studyRepository.findByTargetedArray(true, constructPageSpecification(page - 1,
+            if (studyType.equals("Targeted genotyping array studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Targeted genotyping array", constructPageSpecification(page - 1,
                                                                                                  sort));
+            }
+
+            if (studyType.equals("Exome genotyping array studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome genotyping array", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
+            }
+
+            if (studyType.equals("Exome-wide sequencing studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome-wide sequencing", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
+            }
+
+            if (studyType.equals("Genome-wide sequencing studies")) {
+                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide sequencing", constructPageSpecification(page - 1,
+                                                                                                                                 sort));
             }
 
             if (studyType.equals("Studies in curation queue")) {
@@ -258,8 +280,14 @@ public class StudyController {
                                                                                           sort));
             }
 
+
             if (studyType.equals("p-Value Set")) {
                 studyPage = studyRepository.findByFullPvalueSet(true,constructPageSpecification(page - 1,
+                        sort));
+            }
+
+            if (studyType.equals("User Requested")) {
+                studyPage = studyRepository.findByUserRequested(true,constructPageSpecification(page - 1,
                         sort));
             }
 
@@ -635,7 +663,7 @@ public class StudyController {
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
-
+//        xintodo edit study
         studyUpdateService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
@@ -857,6 +885,8 @@ public class StudyController {
         sortTypeMap.put("publicationdatesortdesc", sortByPublicationDateDesc());
         sortTypeMap.put("pubmedsortasc", sortByPubmedIdAsc());
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
+        sortTypeMap.put("userrequestedsortasc", sortByUserRequestedAsc());
+        sortTypeMap.put("userrequestedsortdesc", sortByUserRequestedDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
         sortTypeMap.put("publicationsortdesc", sortByPublicationDesc());
         sortTypeMap.put("efotraitsortasc", sortByEfoTraitAsc());
@@ -983,6 +1013,9 @@ public class StudyController {
     @ModelAttribute("platforms")
     public List<Platform> populatePlatforms() {return platformRepository.findAll(); }
 
+    @ModelAttribute("genotypingTechnologies")
+    public List<GenotypingTechnology> populateGenotypingTechnologies() {return genotypingTechnologyRepository.findAll();}
+
 
     // Curation statuses
     @ModelAttribute("curationstatuses")
@@ -1005,12 +1038,16 @@ public class StudyController {
         studyTypesOptions.add("GXE");
         studyTypesOptions.add("GXG");
         studyTypesOptions.add("CNV");
-        studyTypesOptions.add("Genomewide array studies");
-        studyTypesOptions.add("Targeted array studies");
+        studyTypesOptions.add("Genome-wide genotyping array studies");
+        studyTypesOptions.add("Targeted genotyping array studies");
+        studyTypesOptions.add("Exome genotyping array studies");
+        studyTypesOptions.add("Genome-wide sequencing studies");
+        studyTypesOptions.add("Exome-wide sequencing studies");
         studyTypesOptions.add("Studies in curation queue");
         studyTypesOptions.add("Multi-SNP haplotype studies");
         studyTypesOptions.add("SNP Interaction studies");
         studyTypesOptions.add("p-Value Set");
+        studyTypesOptions.add("User Requested");
         return studyTypesOptions;
     }
 
@@ -1081,6 +1118,14 @@ public class StudyController {
 
     private Sort sortByPubmedIdAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));
+    }
+
+    private Sort sortByUserRequestedAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "userRequested"));
+    }
+
+    private Sort sortByUserRequestedDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "userRequested"));
     }
 
     private Sort sortByPubmedIdDesc() {
