@@ -85,7 +85,7 @@ $('#btn-cart-action-download').click(() =>{
  * The function is kept for future reference.
  */
 $('#btn-clear-highlight').click(() => {
-    $('.list-group-item').removeClass("highlight");
+    $('.highlightable').removeClass("highlight");
     reloadLocusZoom('#plot', data_association);
 });
 
@@ -154,6 +154,27 @@ $("#cb-query-include-descendants").change(() => {
     }
 });
 
+
+//we add the options to hide associations that have multiple efo annotations.
+$('#btn-filter-association-by-efo-number').click(() => {
+
+    if($('#btn-filter-association-by-efo-number > span').hasClass('glyphicon-minus')){
+        //remove association which have multiple efos
+        $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-minus').addClass('glyphicon-plus')
+        var multipleEFOAssociation = {}
+        data_association.docs.forEach((d, i) => {
+            if (d.numberEFO > 1){
+                multipleEFOAssociation[d.id]=d.numberEFO;
+            }
+        })
+        reloadLocusZoom('#plot', data_association, undefined,undefined, Object.keys(multipleEFOAssociation));
+    }else{
+        //replot, adding back the association which have multiple efos
+        $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-plus').addClass('glyphicon-minus')
+        reloadLocusZoom('#plot', data_association);
+
+    }
+});
 
 
 
@@ -357,10 +378,10 @@ addToCart = function(tagID, efoid, additionalLabel) {
                 item.removeClass("highlight");
                 reloadLocusZoom('#plot', data_association)
             }else{
-                $('.list-group-item').removeClass("highlight");
+                $('.highlightable.highlight').removeClass("highlight");
                 item.addClass("highlight");
                 var highlightAssociations = $('#selected_btn_' + efoid + '_noa').data('associations')
-                reloadLocusZoom('#plot', data_association, Object.keys(highlightAssociations));
+                reloadLocusZoom('#plot', data_association, Object.keys(highlightAssociations),efoid);
             }
         })
 
@@ -384,6 +405,7 @@ updatePage = function(initLoad=false) {
     showLoadingOverLay('#study-table-loading');
     showLoadingOverLay('#cart-loading');
     showLoadingOverLay('#sharable_link_btn');
+    showLoadingOverLay('#btn-ancestry-dropdown');
     //temporarily disable the button
     $('.cart-action-btn').attr('disabled',true)
 
@@ -606,121 +628,6 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
 
     })
 
-}
-
-/**
- * Parse the Solr results and display the data on the HTML page
- * @param {{}} data - solr result
- * @param {Boolean} initLoad
- */
-function processSolrData(data, initLoad=false) {
-    // Check if Solr returns some results
-    if (data.grouped.resourcename.matches == 0) {
-        $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
-                                   "</em> cannot be found in the GWAS Catalog database</h2>");
-    }
-    else {
-        //split the solr search by groups
-        //data_efo, data_study, data_association, data_diseasetrait;
-        data_facet = data.facet_counts.facet_fields.resourcename;
-        data_highlighting = data.highlighting;
-
-        $.each(data.grouped.resourcename.groups, (index, group) => {
-            switch (group.groupValue) {
-                case "efotrait":
-                    data_efo = group.doclist;
-                    break;
-                case "study":
-                    data_study = group.doclist;
-                    break;
-                case "association":
-                    data_association = group.doclist;
-                    break;
-                    //not sure we need this!
-                case "diseasetrait":
-                    data_diseasetrait = group.doclist;
-                    break;
-                default:
-            }
-        });
-
-        //update association/study table
-        displayEfotraitAssociations(data_association.docs);
-        displayEfotraitStudies(data_study.docs);
-
-
-        //work out highlight study
-        var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
-        if(initLoad){
-            displayHighlightedStudy(highlightedStudy);
-            //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
-            getSummary(findStudiesForEFO(getMainEFO()));
-        }
-
-
-        //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
-        var allUniqueEFO = {}
-        data_association.docs.forEach((d, i) => {
-            d.preferedEFO = findHighlightEFOForAssociation(d.id,data)[0];
-            d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
-            allUniqueEFO[d.preferedEFO] = 1;
-            //add any string data that will be use in the locus plot popover
-            d.popoverHTML = buildLocusPlotPopoverHTML(d);
-        })
-
-        //we add the options to hide associations that have multiple efo annotations.
-        $('#btn-filter-association-by-efo-number').click(() => {
-
-            if($('#btn-filter-association-by-efo-number > span').hasClass('glyphicon-minus')){
-                //remove association which have multiple efos
-                $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-minus').addClass('glyphicon-plus')
-                var multipleEFOAssociation = {}
-                data_association.docs.forEach((d, i) => {
-                    if (d.numberEFO > 1){
-                        multipleEFOAssociation[d.id]=d.numberEFO;
-                    }
-                })
-                reloadLocusZoom('#plot', data_association, undefined, Object.keys(multipleEFOAssociation));
-            }else{
-                //replot, adding back the association which have multiple efos
-                $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-plus').addClass('glyphicon-minus')
-                reloadLocusZoom('#plot', data_association);
-
-            }
-
-
-        });
-
-        //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
-        //Load colour for unique efo
-        var allColorLoaded = []
-        Object.keys(allUniqueEFO).forEach((efo) => {
-            allColorLoaded.push(getColourForEFO(efo).then((response) => {
-                allUniqueEFO[efo] = response;
-                return response;
-            }));
-        })
-
-        //When all colour are received, replot
-        Promise.all(allColorLoaded).then(() => {
-                                             //assign colour to associations for plot
-                                             console.debug(`Finish loading color from ${global_color_url}`);
-                                             console.debug(allUniqueEFO);
-                                             data_association.docs.forEach(function(d, i) {
-                                                 d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
-                                                 d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
-                                                 d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
-                                                 d.category = allUniqueEFO[d.preferedEFO].parent;
-                                             })
-                                         }
-        ).catch((err) => {
-            console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
-            //xintodo create a default colour to plot, if the colour query fail
-        }).then(() =>{
-            //replot
-            reloadLocusZoom('#plot', data_association);
-        });
-    }
 }
 
 /**

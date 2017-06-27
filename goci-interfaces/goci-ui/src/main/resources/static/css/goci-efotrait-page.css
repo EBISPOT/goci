@@ -21,6 +21,11 @@ input[type=checkbox].cart-item-cb {
     background-color: #ffe6f0;
 }
 
+/* when user select an item fron cart, highlight it */
+a.highlight {
+    background-color: #ffe6f0;
+}
+
 /* oxo graph */
 #oxo-vis {
     height: 300px;

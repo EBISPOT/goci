@@ -493,7 +493,7 @@ transferLocation = function(chr, position) {
 }
 
 //replot receive a list of association_docs from solr search
-reloadLocusZoom = function(plot_id, data_association, highlight_associations=undefined,hide_associations=undefined) {
+reloadLocusZoom = function(plot_id, data_association, highlight_associations=undefined,highlight_legend=undefined,hide_associations=undefined) {
     //we make a copy so that we are not changing the raw data
     var data_association = jQuery.extend(true, {}, data_association)
 
@@ -567,7 +567,7 @@ reloadLocusZoom = function(plot_id, data_association, highlight_associations=und
                 d.category = 'other '
                 colorMap[d.category] = hexToRgb('#f2f2f2');
             }else{
-                d.category = d.preferedEFO;
+                d.category = highlight_legend;
                 colorMap[d.category] = hexToRgb('#ff5c33');
             }
         })
