@@ -89,6 +89,8 @@ $('#btn-clear-highlight').click(() => {
     reloadLocusZoom('#plot', data_association);
 });
 
+
+
 /**
  * Trigger the remove of all cart items except the mainEFO.
  * This is functionally similar to reload the page, but instead, keep all the cache data.
@@ -151,6 +153,9 @@ $("#cb-query-include-descendants").change(() => {
         $('#btn-cart-toggle-check-cbs').removeAttr("disabled");
     }
 });
+
+
+
 
 
 /**
@@ -603,7 +608,6 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
 
 }
 
-
 /**
  * Parse the Solr results and display the data on the HTML page
  * @param {{}} data - solr result
@@ -657,12 +661,35 @@ function processSolrData(data, initLoad=false) {
         //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
         var allUniqueEFO = {}
         data_association.docs.forEach((d, i) => {
-            d.preferedEFO = findHighlightEFOForAssociation(d.id,data);
-            allUniqueEFO[d.preferedEFO] = '';
+            d.preferedEFO = findHighlightEFOForAssociation(d.id,data)[0];
+            d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
+            allUniqueEFO[d.preferedEFO] = 1;
             //add any string data that will be use in the locus plot popover
             d.popoverHTML = buildLocusPlotPopoverHTML(d);
         })
 
+        //we add the options to hide associations that have multiple efo annotations.
+        $('#btn-filter-association-by-efo-number').click(() => {
+
+            if($('#btn-filter-association-by-efo-number > span').hasClass('glyphicon-minus')){
+                //remove association which have multiple efos
+                $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-minus').addClass('glyphicon-plus')
+                var multipleEFOAssociation = {}
+                data_association.docs.forEach((d, i) => {
+                    if (d.numberEFO > 1){
+                        multipleEFOAssociation[d.id]=d.numberEFO;
+                    }
+                })
+                reloadLocusZoom('#plot', data_association, undefined, Object.keys(multipleEFOAssociation));
+            }else{
+                //replot, adding back the association which have multiple efos
+                $('#btn-filter-association-by-efo-number > span').removeClass('glyphicon-plus').addClass('glyphicon-minus')
+                reloadLocusZoom('#plot', data_association);
+
+            }
+
+
+        });
 
         //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
         //Load colour for unique efo
@@ -695,7 +722,6 @@ function processSolrData(data, initLoad=false) {
         });
     }
 }
-
 
 /**
  * This is to add checkbox for each related terms
@@ -2777,16 +2803,30 @@ findAssociationForEFOs = function(efoids){
  * efo for an association is wrap by <b/> tag.
  * require solr result.
  * @param {String} association_id - This is the solr id, not the rsid.
- * @param {Hash} data - solr search result
+ * @param {Hash} data - solr search result, group association
  * @returns {array} efoids - an array of efoids annotated to the given association
  */
-var findAllEFOsforAssociation = function(association_id,data) {
-    var terms = data.highlighting[association_id].shortForm;
-    terms.forEach(function(d, i) {
-        //xintodo only efo?
-        terms[i] = d.match(/<b>(\w*_\d*)<\/b>/)[1];
+var findAllEFOsforAssociation = function(association_id,data_association) {
+    var association_doc = data_association.docs.filter((association) => {
+        return association.id == association_id
     })
-    return terms;
+    if(association_doc.length >0){
+        //"C-reactive protein measurement|EFO_0004458|http://www.ebi.ac.uk/efo/EFO_0004458"
+        return association_doc[0].efoLink.map((efoLink)=>{
+            return efoLink.split('|')[1]
+        })
+    }else{
+        return []
+    }
+    // var terms = data.highlighting[association_id].shortForm;
+    // return terms.map((termHighlighted) => {
+    //     return termHighlighted.match(/<b>(\w*_\d*)<\/b>/)[1];
+    // })
+    // terms.forEach(function(d, i) {
+    //     //xintodo only efo?
+    //     terms[i] = d.match(/<b>(\w*_\d*)<\/b>/)[1];
+    // })
+    // return terms;
 }
 
 /**
@@ -2795,14 +2835,13 @@ var findAllEFOsforAssociation = function(association_id,data) {
  * @param data
  * @returns {boolean}
  */
-var isOnlyEFO = function(association_id,data){
-    return findAllEFOsforAssociation(association_id,data).length ==1 ;
-}
+// var hasOneEFO = function(association_id,data){
+//     return findAllEFOsforAssociation(association_id,data).length ==1 ;
+// }
 
 
 /**
- * work out which efo is the highlighted efo. Currently return the first one come in the list
- * require solr result.
+ * The association can link to multiple efo in the selection list. Return all hits.
  * xintodo can this be the most significant one?
  * xintodo refactor findAllEFOsforAssociation into this.
  * @param {String} traits
@@ -2811,8 +2850,10 @@ var isOnlyEFO = function(association_id,data){
  * @private
  */
 findHighlightEFOForAssociation = function(association_id,data) {
-    var allEFOs = findAllEFOsforAssociation(association_id,data)
-    return allEFOs[0];
+    var terms = data.highlighting[association_id].shortForm;
+    return terms.map((termHighlighted) => {
+        return termHighlighted.match(/<b>(\w*_\d*)<\/b>/)[1];
+    })
 }
 
 

@@ -476,7 +476,8 @@
                             </div>
 
                             <div class="col-xs-12" style="float:left">
-                                <input id="cb-query-include-descendants" type="checkbox" checked="checked"/>
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked="checked"/>-->
+                                <input id="cb-query-include-descendants" type="checkbox"/>
                                 <label for="cb-query-include-descendants">  Always include trait subtypes</label>
                                 <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
@@ -608,6 +609,15 @@
                         </div>
                         <!--<div class="panel-body" style="display:none">-->
                             <div class="panel-body">
+                                <div class="col-xs-1.5" style="float:right">
+                                        <button id="btn-filter-association-by-efo-number"
+                                                type="button"
+                                                class="btn btn-default cart-action-btn"
+                                                title="remove associations that have multiple efo annotations.">
+                                            <span class="glyphicon glyphicon-minus"
+                                                  aria-hidden="true"></span>
+                                        </button>
+                                </div>
                             <!-- locus plot -->
                             <!--<div id="plot" style=" width: 1000px; height: 900px;"></div>-->
                             <div id="plot"></div>
@@ -1112,6 +1122,10 @@
 //    OLS.getHierarchicalDescendants(getMainEFO()).then((x) => {
 //        return filterAvailableEFOs(Object.keys(x));
 //    })
+
+
+
+
 
 
 
