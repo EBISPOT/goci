@@ -2789,6 +2789,16 @@ var findAllEFOsforAssociation = function(association_id,data) {
     return terms;
 }
 
+/**
+ * Check if an assocaition has only one efo annotated to it.
+ * @param association_id
+ * @param data
+ * @returns {boolean}
+ */
+var isOnlyEFO = function(association_id,data){
+    return findAllEFOsforAssociation(association_id,data).length ==1 ;
+}
+
 
 /**
  * work out which efo is the highlighted efo. Currently return the first one come in the list
