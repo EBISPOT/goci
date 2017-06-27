@@ -53,13 +53,13 @@ var pageRowLimit=5;
 $('#btn-cart-toggle-check-cbs').click(() =>{
     if($('.cart-item-cb:input:checked').length != $('.cart-item-cb:input').length){
         //not everthing checked, check everthing
-        $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
+        // $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
         $('.cart-item-cb:input').attr('checked','checked')
         addDataToTag(global_efo_info_tag_id, getCurrentSelected(), 'whichDescendant')
         addEFO({});
     }else{
         //uncheck everything
-        $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-unchecked').addClass('glyphicon-check')
+        // $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-unchecked').addClass('glyphicon-check')
         $('.cart-item-cb:input').removeAttr('checked');
         var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
         Object.keys(tmp).map((id) => {
@@ -144,7 +144,7 @@ $('#oxo-link').click(() => {
  */
 $("#cb-query-include-descendants").change(() => {
     if(isAlwaysDescendant()){
-        $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
+        // $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
         addEFO({},false,$("#cb-query-include-descendants").is(":checked"));
     }else{
         $('.cart-item-cb').removeAttr("disabled");
@@ -510,7 +510,7 @@ updatePage = function(initLoad=false) {
             //do not remove this if alway include descendant is checked
             if(isAlwaysDescendant()){
                 $('#btn-cart-toggle-check-cbs').attr('disabled',true)
-                $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
+                // $('#btn-cart-toggle-check-cbs > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked')
             }
         })
     });
