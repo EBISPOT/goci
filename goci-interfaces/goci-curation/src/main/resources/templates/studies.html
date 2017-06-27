@@ -48,15 +48,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.13.3/math.js"></script>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        window.studyScoreFactor = /*[[${scoreFactors}]]*/ null;
+        window.studyScoreFeatures = /*[[${scoreFeatures}]]*/ null;
 //        window.studytest = /*[[${studytest}]]*/ null;
 //        window.studyScoreFactor = {'20509599':{'InitialSampleSize':'13,086 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, 2,119 Japanese ancestry cases, 60,699 European ancestry controls, 129,016 whole genome sequenced European ancestry controls, 2,143 Japanese ancestry controls.','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'20509610':{'InitialSampleSize':'6,592 European ancestry case-parent trios, 795 European ancestry child cases, 6,592 European ancestry child pseudocontrols, 1,975 European ancestry child controls','Publication':'Mol Autism','GenomewideArray':'true','ReplicateSampleSize':'up to 9,152 European ancestry child cases, up to 148,667 European ancestry child controls'},'19744811':{'InitialSampleSize':null,'Publication':'Circ Cardiovasc Genet','GenomewideArray':'true','ReplicateSampleSize':null},'20509659':{'InitialSampleSize':null,'Publication':'Stroke','GenomewideArray':'true','ReplicateSampleSize':null},'21346716':{'InitialSampleSize':null,'Publication':'Twin Res Hum Genet','GenomewideArray':'true','ReplicateSampleSize':null},'20509615':{'InitialSampleSize':null,'Publication':'Pharmacogenet Genomics','GenomewideArray':'true','ReplicateSampleSize':null},'21405446':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405426':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21311803':{'InitialSampleSize':null,'Publication':'Diabetes','GenomewideArray':'true','ReplicateSampleSize':null},'20509592':{'InitialSampleSize':'11,988 European ancestry cases, 275,335 European ancestry controls','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'7,044 European ancestry cases, 11,434 European ancestry controls'},'20509691':{'InitialSampleSize':null,'Publication':'Mol Psychiatry','GenomewideArray':'true','ReplicateSampleSize':null},'19605897':{'InitialSampleSize':'626 European ancestry individuals from families with at least two siblings','Publication':'J Nutr Intermed Metab','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405442':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405422':{'InitialSampleSize':null,'Publication':'Sci Rep','GenomewideArray':'true','ReplicateSampleSize':null},'20509588':{'InitialSampleSize':'78,308 European ancestry individuals','Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':'NA'},'20509683':{'InitialSampleSize':null,'Publication':'Schizophr Bull','GenomewideArray':'true','ReplicateSampleSize':null},'21287406':{'InitialSampleSize':'628 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, 8,858 European ancestry controls, 129,016 whole genome sequenced European ancestry controls','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405450':{'InitialSampleSize':null,'Publication':'Am J Med Genet B Neuropsychiatr Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21289497':{'InitialSampleSize':'up to 6,622 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, up to 2,119 Japanese ancestry cases, 12,105 European ancestry controls, 129,016 whole genome sequenced European ancestry controls, 2,143 Japanese ancestry controls.','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405430':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21311811':{'InitialSampleSize':'310 European ancestry individuals with Alzheimer\'s disease, 511 European ancestry individuals with late mild cognitive impairment, 280 European ancestry individuals with early mild cognitive impairment, 94 European ancestry individuals with significant memory concern, 365 European ancestry with normal cognition','Publication':'Brain Lang','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405458':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21405438':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405454':{'InitialSampleSize':null,'Publication':'Blood','GenomewideArray':'true','ReplicateSampleSize':null},'21405434':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null}};
 
 
-        var studies = Object.assign(window.studyScoreFactor);
-        console.log(studies);
+        var studies = Object.assign({},window.studyScoreFeatures);
 
-
+        console.log('studies from server:' + studies);
 
 
 
@@ -80,19 +79,7 @@
         }
 
 
-
-
-        var FACTORS = {
-            InitialSampleSize : 1,
-            ReplicateSampleSize : 1,
-//            GenomewideArray : 1,
-            SummaryStatisticsAvailable : 1,
-            UserRequested : 1,
-
-        }
-
-
-        score = {
+        var score = {
             sum : (a,b)=>{return a+b},
             normalizeByMax : (array,scale=1,keys=undefined) => {
                 array = array.map(parseFloat);
@@ -118,11 +105,11 @@
                 }
                 return normalized;
             },
-            normalizeBySum : (array,keys=undefined) => {
+            normalizeBySum : (array,scale=1,keys=undefined) => {
                 var total = array.reduce(score.sum,0);
                 var normalized = array.map((v)=> {
                     if (total ==0 ) return 0;
-                    return v/total;
+                    return scale * v/total;
                 })
                 if(keys != undefined){
                     return hashFromArrays(keys,normalized);
@@ -131,18 +118,26 @@
             },
         }
 
-        FACTORS_NOMALIZED = score.normalizeBySum(Object.values(FACTORS),Object.keys(FACTORS))
+        var FRATURES = {
+            InitialSampleSize : 1,
+            ReplicateSampleSize : 1,
+//            GenomewideArray : 1,
+            SummaryStatisticsAvailable : 1,
+            UserRequested : 1,
+
+        }
+
+        FRATURES_NOMALIZED = score.normalizeBySum(Object.values(FRATURES),Object.keys(FRATURES))
 
         //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
-        var studies_clean={};
-        studies_clean=Object.assign(studies)
+        var studies_clean=Object.assign({},studies)
         Object.keys(studies_clean).map((study_id)=>{
-            Object.keys(studies_clean[study_id]).map((factor)=>{
-                //remove element that is not a factor
-                if(Object.keys(FACTORS_NOMALIZED).indexOf(factor) == -1){
-                    delete studies_clean[study_id][factor]
+            Object.keys(studies_clean[study_id]).map((feature)=>{
+                //remove element that is not a feature
+                if(Object.keys(FRATURES_NOMALIZED).indexOf(feature) == -1){
+                    delete studies_clean[study_id][feature]
                 }else{
-                    var value = studies_clean[study_id][factor];
+                    var value = studies_clean[study_id][feature];
                     //clean
                     if(value == undefined | value==null | value === 'false' | value == "NA") {
                         value = 0;
@@ -150,55 +145,41 @@
                     if(value == 'true'){
                         value = 1;
                     }
-                    studies_clean[study_id][factor] = value;
+                    studies_clean[study_id][feature] = value;
                 }
             })
         })
         console.log('Clean null,na,undefined,false and true...');
         console.log(studies_clean);
 
-        //group all factor together for nomolization across studies
-        var groupByFactors={};
-        Object.keys(FACTORS).map((factor)=>{
-            groupByFactors[factor] ={};
+        //group all feature together for nomolization across studies
+        var groupByFeatures={};
+        Object.keys(FRATURES).map((feature)=>{
+            groupByFeatures[feature] ={};
             Object.keys(studies_clean).map((study)=>{
-                groupByFactors[factor][study] = studies_clean[study][factor]
+                groupByFeatures[feature][study] = studies_clean[study][feature]
             })
         })
-        console.log('Group by factors:');
-        console.log(groupByFactors);
+        console.log('Group by features:');
+        console.log(groupByFeatures);
 
-        var groupByFactors_nomalized = {};
-        groupByFactors_nomalized = Object.assign({},groupByFactors)
-        Object.keys(groupByFactors_nomalized).map((factor)=>{
-            var factorObject = groupByFactors_nomalized[factor];
-            if(factor == 'InitialSampleSize'){
+        var groupByFeatures_nomalized = Object.assign({},groupByFeatures)
+        Object.keys(groupByFeatures_nomalized).map((feature)=>{
+            var featureObject = groupByFeatures_nomalized[feature];
+            if(feature == 'InitialSampleSize'){
                 //take log before nomalize
-                factorObject = score.takeLog(Object.values(groupByFactors_nomalized[factor]),Object.keys(groupByFactors_nomalized[factor]));
+                featureObject = score.takeLog(Object.values(groupByFeatures_nomalized[feature]),Object.keys(groupByFeatures_nomalized[feature]));
             }
-            groupByFactors_nomalized[factor] = score.normalizeByMax(Object.values(factorObject),100,Object.keys(factorObject))
+            groupByFeatures_nomalized[feature] = score.normalizeByMax(Object.values(featureObject),100,Object.keys(featureObject))
         })
 
-        var studies_nomalized = {}
         var studies_nomalized = Object.assign({},studies_clean)
-        Object.keys(groupByFactors_nomalized).map((factor)=>{
-            Object.keys(groupByFactors_nomalized[factor]).map((study)=>{
-                studies_nomalized[study][factor]=groupByFactors_nomalized[factor][study] *  FACTORS_NOMALIZED[factor];
+        Object.keys(groupByFeatures_nomalized).map((feature)=>{
+            Object.keys(groupByFeatures_nomalized[feature]).map((study)=>{
+                studies_nomalized[study][feature]=groupByFeatures_nomalized[feature][study] *  FRATURES_NOMALIZED[feature];
             })
         })
-//
-//
-//        var studies_nomalized = {}
-//        var studies_nomalized = Object.assign(studies_clean)
-//        Object.keys(studies_nomalized).map((study)=>{
-//            Object.keys(studies_nomalized[study]).map((factor)=>{
-//                studies_nomalized[study][factor] = normalize(studies_nomalized[study][factor],
-//                                                             Math.min(...Object.values(groupByFactors[factor])),
-//                                                             Math.max(...Object.values(groupByFactors[factor])),100);
-//                studies_nomalized[study][factor] = studies_nomalized[study][factor] * FACTORS_NOMALIZED[factor];
-//            })
-//        });
-//
+
         studies_score={}
         Object.keys(studies_nomalized).map((study)=>{
             studies_score[study] = Object.values(studies_nomalized[study]).reduce(score.sum,0)
@@ -215,10 +196,10 @@
 //
 //
 //
-//        var matrix=math.zeros(Object.keys(studies).length,Object.keys(FACTORS).length);
+//        var matrix=math.zeros(Object.keys(studies).length,Object.keys(FRATURES).length);
 //        matrix.toString();
-//        Object.keys(FACTORS).map((factor)=>{
-//            groupByFactors[factor].values()
+//        Object.keys(FRATURES).map((feature)=>{
+//            groupByFeatures[feature].values()
 //            var dim = math.size(matrix);
 //            math.subset(matrix, math.index(0), [4, 5])
 //

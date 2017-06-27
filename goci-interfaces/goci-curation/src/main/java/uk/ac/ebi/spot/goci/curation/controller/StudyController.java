@@ -458,7 +458,7 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
-        Map<String, Map<String,String>> scoreFactors = new HashMap<String, Map<String,String>>();
+        Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
         studyPage.getContent().forEach(study -> {
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
             studyScoreFactors.put("InitialSampleSize","0");
@@ -479,13 +479,12 @@ public class StudyController {
             studyScoreFactors.put("Publication",study.getPublication());
             studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
             studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
-
 //            studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
             studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
-            scoreFactors.put(study.getId().toString(),studyScoreFactors);
+            scoreFeatures.put(study.getId().toString(),studyScoreFactors);
         });
 
-        model.addAttribute("scoreFactors", scoreFactors);
+        model.addAttribute("scoreFactors", scoreFeatures);
 
         return "studies";
     }
