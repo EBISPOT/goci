@@ -1319,7 +1319,8 @@ function displayEfotraitStudies(data, cleanBeforeInsert=true) {
                                          },{
                                              field: 'Title',
                                              title: 'Title',
-                                             sortable: true
+                                             sortable: true,
+                                             width:"1000", //This works when the table is not nested into other tag, for example, in a simple Div
                                          },{
                                              field: 'initial_sample_text',
                                              title: 'Initial sample description',
