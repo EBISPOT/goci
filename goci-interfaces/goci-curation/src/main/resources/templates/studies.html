@@ -49,171 +49,6 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         window.studyScoreFeatures = /*[[${scoreFeatures}]]*/ null;
-//        window.studytest = /*[[${studytest}]]*/ null;
-//        window.studyScoreFactor = {'20509599':{'InitialSampleSize':'13,086 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, 2,119 Japanese ancestry cases, 60,699 European ancestry controls, 129,016 whole genome sequenced European ancestry controls, 2,143 Japanese ancestry controls.','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'20509610':{'InitialSampleSize':'6,592 European ancestry case-parent trios, 795 European ancestry child cases, 6,592 European ancestry child pseudocontrols, 1,975 European ancestry child controls','Publication':'Mol Autism','GenomewideArray':'true','ReplicateSampleSize':'up to 9,152 European ancestry child cases, up to 148,667 European ancestry child controls'},'19744811':{'InitialSampleSize':null,'Publication':'Circ Cardiovasc Genet','GenomewideArray':'true','ReplicateSampleSize':null},'20509659':{'InitialSampleSize':null,'Publication':'Stroke','GenomewideArray':'true','ReplicateSampleSize':null},'21346716':{'InitialSampleSize':null,'Publication':'Twin Res Hum Genet','GenomewideArray':'true','ReplicateSampleSize':null},'20509615':{'InitialSampleSize':null,'Publication':'Pharmacogenet Genomics','GenomewideArray':'true','ReplicateSampleSize':null},'21405446':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405426':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21311803':{'InitialSampleSize':null,'Publication':'Diabetes','GenomewideArray':'true','ReplicateSampleSize':null},'20509592':{'InitialSampleSize':'11,988 European ancestry cases, 275,335 European ancestry controls','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'7,044 European ancestry cases, 11,434 European ancestry controls'},'20509691':{'InitialSampleSize':null,'Publication':'Mol Psychiatry','GenomewideArray':'true','ReplicateSampleSize':null},'19605897':{'InitialSampleSize':'626 European ancestry individuals from families with at least two siblings','Publication':'J Nutr Intermed Metab','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405442':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405422':{'InitialSampleSize':null,'Publication':'Sci Rep','GenomewideArray':'true','ReplicateSampleSize':null},'20509588':{'InitialSampleSize':'78,308 European ancestry individuals','Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':'NA'},'20509683':{'InitialSampleSize':null,'Publication':'Schizophr Bull','GenomewideArray':'true','ReplicateSampleSize':null},'21287406':{'InitialSampleSize':'628 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, 8,858 European ancestry controls, 129,016 whole genome sequenced European ancestry controls','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405450':{'InitialSampleSize':null,'Publication':'Am J Med Genet B Neuropsychiatr Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21289497':{'InitialSampleSize':'up to 6,622 European ancestry cases, 1,840 whole genome sequenced European ancestry cases, up to 2,119 Japanese ancestry cases, 12,105 European ancestry controls, 129,016 whole genome sequenced European ancestry controls, 2,143 Japanese ancestry controls.','Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405430':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21311811':{'InitialSampleSize':'310 European ancestry individuals with Alzheimer\'s disease, 511 European ancestry individuals with late mild cognitive impairment, 280 European ancestry individuals with early mild cognitive impairment, 94 European ancestry individuals with significant memory concern, 365 European ancestry with normal cognition','Publication':'Brain Lang','GenomewideArray':'true','ReplicateSampleSize':'NA'},'21405458':{'InitialSampleSize':null,'Publication':'Nat Commun','GenomewideArray':'true','ReplicateSampleSize':null},'21405438':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null},'21405454':{'InitialSampleSize':null,'Publication':'Blood','GenomewideArray':'true','ReplicateSampleSize':null},'21405434':{'InitialSampleSize':null,'Publication':'Nat Genet','GenomewideArray':'true','ReplicateSampleSize':null}};
-
-
-        var studies = Object.assign({},window.studyScoreFeatures);
-
-        console.log('studies from server:');
-        console.log(studies);
-
-
-
-        hashFromArrays = function(arr_keys,arr_values){
-            if(arr_keys.length != arr_values.length){
-                console.error('the number of keys(' + arr_keys + ') must be the same of the number of values(' + arr_values + ')!')
-                return undefined;
-            }
-            var hash = {}
-            arr_keys.forEach(function(i) {
-                hash[i] = arr_values.shift();
-            })
-            return hash;
-        }
-
-
-        objectMap = function(object,func) {
-            var keys = Object.keys(object);
-            var values = Object.values(object)
-            return hashFromArrays(keys, values.map(func))
-        }
-
-
-        var score = {
-            sum : (a,b)=>{return a+b},
-            normalizeByMax : (array,scale=1,keys=undefined) => {
-                array = array.map(parseFloat);
-                var min = Math.min(...array)
-                var max = Math.max(...array)
-                var normalized = array.map((v)=> {
-                    if (min == max) return 1*scale;
-                    return scale * (v - min)  / (max - min);
-                })
-                if(keys != undefined){
-                    return hashFromArrays(keys,normalized);
-                }
-                return normalized;
-            },
-            takeLog : (array,keys=undefined) => {
-                array = array.map(parseFloat);
-                var normalized = array.map((v)=>{
-                    //avoid 0
-                    return Math.log(v+1);
-                })
-                if(keys != undefined){
-                    return hashFromArrays(keys,normalized);
-                }
-                return normalized;
-            },
-            normalizeBySum : (array,scale=1,keys=undefined) => {
-                var total = array.reduce(score.sum,0);
-                var normalized = array.map((v)=> {
-                    if (total ==0 ) return 0;
-                    return scale * v/total;
-                })
-                if(keys != undefined){
-                    return hashFromArrays(keys,normalized);
-                }
-                return normalized;
-            },
-        }
-
-        var FRATURES = {
-            InitialSampleSize : 1,
-            ReplicateSampleSize : 1,
-//            GenomewideArray : 1,
-            SummaryStatisticsAvailable : 1,
-            UserRequested : 1,
-
-        }
-
-        FRATURES_NOMALIZED = score.normalizeBySum(Object.values(FRATURES),1,Object.keys(FRATURES))
-
-        //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
-        var studies_clean=Object.assign({},studies)
-        Object.keys(studies_clean).map((study_id)=>{
-            Object.keys(studies_clean[study_id]).map((feature)=>{
-                //remove element that is not a feature
-                if(Object.keys(FRATURES_NOMALIZED).indexOf(feature) == -1){
-                    delete studies_clean[study_id][feature]
-                }else{
-                    var value = studies_clean[study_id][feature];
-                    //clean
-                    if(value == undefined | value==null | value === 'false' | value == "NA") {
-                        value = 0;
-                    }
-                    if(value == 'true'){
-                        value = 1;
-                    }
-                    studies_clean[study_id][feature] = value;
-                }
-            })
-        })
-        console.log('Clean null,na,undefined,false and true...');
-        console.log(studies_clean);
-
-        //group all feature together for nomolization across studies
-        var groupByFeatures={};
-        Object.keys(FRATURES).map((feature)=>{
-            groupByFeatures[feature] ={};
-            Object.keys(studies_clean).map((study)=>{
-                groupByFeatures[feature][study] = studies_clean[study][feature]
-            })
-        })
-        console.log('Group by features:');
-        console.log(groupByFeatures);
-
-        var groupByFeatures_nomalized = Object.assign({},groupByFeatures)
-        Object.keys(groupByFeatures_nomalized).map((feature)=>{
-            var featureObject = groupByFeatures_nomalized[feature];
-            if(feature == 'InitialSampleSize'){
-                //take log before nomalize
-                featureObject = score.takeLog(Object.values(groupByFeatures_nomalized[feature]),Object.keys(groupByFeatures_nomalized[feature]));
-            }
-            groupByFeatures_nomalized[feature] = score.normalizeByMax(Object.values(featureObject),100,Object.keys(featureObject))
-        })
-        console.log('Group by features nomalized:');
-        console.log(groupByFeatures_nomalized);
-
-        var studies_nomalized = Object.assign({},studies_clean)
-        Object.keys(groupByFeatures_nomalized).map((feature)=>{
-            Object.keys(groupByFeatures_nomalized[feature]).map((study)=>{
-                studies_nomalized[study][feature]=groupByFeatures_nomalized[feature][study] *  FRATURES_NOMALIZED[feature];
-            })
-        })
-        console.log('study nomalized:');
-        console.log(studies_nomalized);
-
-        studies_score={}
-        Object.keys(studies_nomalized).map((study)=>{
-            studies_score[study] = Object.values(studies_nomalized[study]).reduce(score.sum,0)
-        });
-        console.log('study score:');
-        console.log(studies_score);
-
-
-        //matrix
-//        var parser = math.parser();
-//        var a  = parser.eval('zeros(5, 3)');
-//        var b  = parser.eval('[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]');
-//         parser.eval('d=[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]');
-//        b.toString()
-//        parser.eval('b[1,1:end]').toString()
-//
-//
-//
-//        var matrix=math.zeros(Object.keys(studies).length,Object.keys(FRATURES).length);
-//        matrix.toString();
-//        Object.keys(FRATURES).map((feature)=>{
-//            groupByFeatures[feature].values()
-//            var dim = math.size(matrix);
-//            math.subset(matrix, math.index(0), [4, 5])
-//
-//
-//        })
-
-
         /*]]>*/
     </script>
 </head>
@@ -286,5 +121,226 @@
 
 <div th:include="fragments/footer :: page_footer"></div>
 
+
+<script>
+
+    var studies = JSON.parse(JSON.stringify(window.studyScoreFeatures));
+
+    console.log('studies from server:');
+    console.log(studies);
+
+
+    hashFromArrays = function(arr_keys,arr_values){
+        if(arr_keys.length != arr_values.length){
+            console.error('the number of keys(' + arr_keys + ') must be the same of the number of values(' + arr_values + ')!')
+            return undefined;
+        }
+        var hash = {}
+        arr_keys.forEach(function(i) {
+            hash[i] = arr_values.shift();
+        })
+        return hash;
+    }
+
+
+    objectMap = function(object,func) {
+        var keys = Object.keys(object);
+        var values = Object.values(object)
+        return hashFromArrays(keys, values.map(func))
+    }
+
+
+    var score = {
+        sum : (a,b)=>{return a+b},
+        normalizeByMax : (array,scale=1,keys=undefined) => {
+            array = array.map(parseFloat);
+            var min = Math.min(...array)
+            var max = Math.max(...array)
+            var normalized = array.map((v)=> {
+                if (min == max) return 1*scale;
+                return scale * (v - min)  / (max - min);
+            })
+            if(keys != undefined){
+                return hashFromArrays(keys,normalized);
+            }
+            return normalized;
+        },
+        takeLog : (array,keys=undefined) => {
+            array = array.map(parseFloat);
+            var normalized = array.map((v)=>{
+                //avoid 0
+                return Math.log(v+1);
+            })
+            if(keys != undefined){
+                return hashFromArrays(keys,normalized);
+            }
+            return normalized;
+        },
+        normalizeBySum : (array,scale=1,keys=undefined) => {
+            var total = array.reduce(score.sum,0);
+            var normalized = array.map((v)=> {
+                if (total ==0 ) return 0;
+                return scale * v/total;
+            })
+            if(keys != undefined){
+                return hashFromArrays(keys,normalized);
+            }
+            return normalized;
+        },
+    }
+
+    var FRATURES = {
+        InitialSampleSize : 10.5,
+//        ReplicateSampleSize : 8.09,
+        GenomeWideCoverage : 8.95,
+        SummaryStatisticsAvailable : 5, //dont know yet
+        UserRequested : 5, //dont know yet
+        ReplicationStageIncluded : 8.09,
+        PublicationDate : 6.7,
+
+    }
+
+    FRATURES_NOMALIZED = score.normalizeBySum(Object.values(FRATURES),1,Object.keys(FRATURES))
+
+    //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
+    var studies_clean=JSON.parse(JSON.stringify(studies))
+    Object.keys(studies_clean).map((study_id)=>{
+        Object.keys(studies_clean[study_id]).map((feature)=>{
+            //remove element that is not a feature
+            if(Object.keys(FRATURES_NOMALIZED).indexOf(feature) == -1){
+                delete studies_clean[study_id][feature]
+            }else{
+                var value = studies_clean[study_id][feature];
+                //clean
+                if(value == undefined | value==null | value === 'false' | value == "NA") {
+                    value = 0;
+                }
+                if(value == 'true'){
+                    value = 1;
+                }
+                if(feature == 'PublicationDate'){
+                    value = new Date() - new Date(value)
+                }
+                studies_clean[study_id][feature] = value;
+            }
+        })
+    })
+    console.log('Clean null,na,undefined,false and true...');
+    console.log(studies_clean);
+
+
+    //group all feature together for nomolization across studies
+    var groupByFeatures={};
+    Object.keys(FRATURES).map((feature)=>{
+        groupByFeatures[feature] ={};
+        Object.keys(studies_clean).map((study)=>{
+            groupByFeatures[feature][study] = studies_clean[study][feature]
+        })
+    })
+    console.log('Group by features:');
+    console.log(groupByFeatures);
+
+    var groupByFeatures_nomalized = JSON.parse(JSON.stringify(groupByFeatures))
+    Object.keys(groupByFeatures_nomalized).map((feature)=>{
+        var featureObject = groupByFeatures_nomalized[feature];
+        if(feature == 'InitialSampleSize'){
+            //take log before nomalize
+            featureObject = score.takeLog(Object.values(groupByFeatures_nomalized[feature]),Object.keys(groupByFeatures_nomalized[feature]));
+        }
+        if(feature == 'InitialSampleSize'){
+            //take log before nomalize
+            featureObject = score.takeLog(Object.values(groupByFeatures_nomalized[feature]),Object.keys(groupByFeatures_nomalized[feature]));
+        }
+        groupByFeatures_nomalized[feature] = score.normalizeByMax(Object.values(featureObject),100,Object.keys(featureObject))
+    })
+    console.log('Group by features nomalized:');
+    console.log(groupByFeatures_nomalized);
+
+    var studies_nomalized = JSON.parse(JSON.stringify(studies_clean))
+    Object.keys(groupByFeatures_nomalized).map((feature)=>{
+        Object.keys(groupByFeatures_nomalized[feature]).map((study)=>{
+            studies_nomalized[study][feature]=groupByFeatures_nomalized[feature][study] *  FRATURES_NOMALIZED[feature];
+        })
+    })
+    console.log('study nomalized:');
+    console.log(studies_nomalized);
+
+    studies_score={}
+    Object.keys(studies_nomalized).map((study)=>{
+        studies_score[study] = Object.values(studies_nomalized[study]).reduce(score.sum,0)
+    });
+    console.log('study score:');
+    console.log(studies_score);
+
+    $( document ).ready(function(){
+        Object.keys(studies_score).map((studyid)=>{
+            $('#'+studyid).append("<b>" + studies_score[studyid] +"</b>");
+        })
+    })
+
+
+    /**
+     * get data asyn with promise
+     * @param {String} url
+     * @param {hash} params
+     * @param {Boolean} debug
+     * @returns {Promise}
+     */
+    function promiseGet(url, params,debug) {
+        if(debug == undefined){
+            debug = false
+        }
+
+        if (!url.startsWith("http")) {
+            url = window.location.origin + url
+        }
+
+        // Return a new promise.
+        return new Promise(function(resolve, reject) {
+            // Do the usual XHR stuff
+            var req = new XMLHttpRequest();
+
+            params = params || {}
+            if (Object.keys(params).length > 0) {
+                var params_str = '';
+                Object.keys(params).forEach(function(key, index) {
+                    params_str = params_str + '&' + key + '=' + this[key];
+                }, params);
+                url = url + '?' + params_str.substring(1);
+            }
+
+            req.open('GET', url);
+            if(debug){
+                console.log('promise get from :' + url);
+            }
+
+            req.onload = function() {
+                // This is called even on 404 etc
+                // so check the status
+                if (req.status == 200) {
+                    // Resolve the promise with the response text
+                    resolve(req.response);
+                }
+                else {
+                    // Otherwise reject with the status text
+                    // which will hopefully be a meaningful error
+                    reject(Error(req.statusText));
+                }
+            };
+
+            // Handle network errors
+            req.onerror = function() {
+                reject(Error("Network Error"));
+            };
+
+            // Make the request
+            req.send();
+        });
+    }
+
+    promiseGet('/studyscore').then(JSON.parse)
+
+
+</script>
 </body>
 </html>

@@ -463,6 +463,7 @@ public class StudyController {
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
             studyScoreFactors.put("InitialSampleSize","0");
             studyScoreFactors.put("ReplicateSampleSize","0");
+            studyScoreFactors.put("ReplicationStageIncluded","false");
             study.getAncestries().forEach(ancestry -> {
                 switch(ancestry.getType()){
                     case "initial":
@@ -470,6 +471,7 @@ public class StudyController {
                         break;
                     case "replication":
                         studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        studyScoreFactors.put("ReplicationStageIncluded","true");
                         break;
                     default:
                         ;
@@ -479,7 +481,7 @@ public class StudyController {
             studyScoreFactors.put("Publication",study.getPublication());
             studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
             studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
-//            studyScoreFactors.put("GenomewideArray",study.getGenomewideArray().toString());
+            studyScoreFactors.put("GenomeWideCoverage","1");
             studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
             scoreFeatures.put(study.getId().toString(),studyScoreFactors);
         });
