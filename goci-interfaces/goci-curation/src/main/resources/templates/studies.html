@@ -55,7 +55,8 @@
 
         var studies = Object.assign({},window.studyScoreFeatures);
 
-        console.log('studies from server:' + studies);
+        console.log('studies from server:');
+        console.log(studies);
 
 
 
@@ -127,7 +128,7 @@
 
         }
 
-        FRATURES_NOMALIZED = score.normalizeBySum(Object.values(FRATURES),Object.keys(FRATURES))
+        FRATURES_NOMALIZED = score.normalizeBySum(Object.values(FRATURES),1,Object.keys(FRATURES))
 
         //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
         var studies_clean=Object.assign({},studies)
@@ -172,6 +173,8 @@
             }
             groupByFeatures_nomalized[feature] = score.normalizeByMax(Object.values(featureObject),100,Object.keys(featureObject))
         })
+        console.log('Group by features nomalized:');
+        console.log(groupByFeatures_nomalized);
 
         var studies_nomalized = Object.assign({},studies_clean)
         Object.keys(groupByFeatures_nomalized).map((feature)=>{
@@ -179,11 +182,15 @@
                 studies_nomalized[study][feature]=groupByFeatures_nomalized[feature][study] *  FRATURES_NOMALIZED[feature];
             })
         })
+        console.log('study nomalized:');
+        console.log(studies_nomalized);
 
         studies_score={}
         Object.keys(studies_nomalized).map((study)=>{
             studies_score[study] = Object.values(studies_nomalized[study]).reduce(score.sum,0)
         });
+        console.log('study score:');
+        console.log(studies_score);
 
 
         //matrix

@@ -484,10 +484,11 @@ public class StudyController {
             scoreFeatures.put(study.getId().toString(),studyScoreFactors);
         });
 
-        model.addAttribute("scoreFactors", scoreFeatures);
+        model.addAttribute("scoreFeatures", scoreFeatures);
 
         return "studies";
     }
+
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
