@@ -348,7 +348,7 @@ addToCart = function(tagID, efoid, additionalLabel) {
 
         //cart item
         var item = $('<a />', {
-            class: 'list-group-item cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
+            class: 'list-group-item highlightable cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
         }).appendTo(container);
 
         //colour badge for category

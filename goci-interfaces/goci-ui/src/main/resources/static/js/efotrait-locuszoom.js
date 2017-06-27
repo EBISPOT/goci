@@ -83,7 +83,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     tooltip_positioning: "vertical",
     id_field: "{{namespace}}id",
     fields: ["{{namespace}}phewas"],
-    always_hide_legend: true,
+    always_hide_legend: false,
     x_axis: {
         field: "{{namespace}}x",
         floor: 0,
@@ -465,7 +465,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
     legend: {
         orientation: "vertical",
         origin: {x: 55, y: 40},
-        hidden: true
+        hidden: false
     },
     data_layers: [
         LocusZoom.Layouts.get("data_layer", "significance", {unnamespaced: true}),
