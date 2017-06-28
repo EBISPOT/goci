@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,21 +25,20 @@ import java.util.Map;
 @RequestMapping("/studyscore")
 public class StudyScoreService {
     private StudyRepository studyRepository;
+    private StudyService studyService;
 
-    public StudyScoreService(StudyRepository studyRepository) {
+    public StudyScoreService(StudyRepository studyRepository, StudyService studyService) {
         this.studyRepository = studyRepository;
+        this.studyService = studyService;
     }
 
-
-
-
-    @RequestMapping( method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Map<String, Map<String,String>> prepareStudiesScore() {
 //        Collection<Study> studies = new ArrayList<Study>();
 //        studies = studyRepository.findAll();
         Page<Study> studyPage = studyRepository.findAll( new PageRequest(1, 10));
-
+//        studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull()
         Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
         studyPage.getContent().forEach(study -> {
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
