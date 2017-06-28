@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by xinhe on 27/06/2017.
@@ -35,12 +36,34 @@ public class StudyScoreService {
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Map<String, Map<String,String>> prepareStudiesScore() {
-//        Collection<Study> studies = new ArrayList<Study>();
-//        studies = studyRepository.findAll();
-        Page<Study> studyPage = studyRepository.findAll( new PageRequest(1, 10));
-//        studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull()
+
+
+        Collection<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+        studies = studies.stream()
+                .filter(study -> {
+                    System.out.print(study.getId());
+                    System.out.print('\n');
+                    if(study.getId()==7864){
+                        System.out.print(study.getId());
+                    }
+                    if(study.getHousekeeping().getCurationStatus() != null){
+                        if (study.getHousekeeping().getCurationStatus().getStatus().equals("Curation Abandoned")  ||
+                                study.getHousekeeping().getCurationStatus().getStatus().equals("CNV Paper")){
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+        //        Page<Study> studyPage = studyRepository.findAll( new PageRequest(1, 10));
         Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
-        studyPage.getContent().forEach(study -> {
+//        studyPage.getContent().forEach(study -> {
+        studies.forEach(study -> {
+            System.out.print(study.getId());
+            System.out.print("\n");
+            if(study.getId() == 14856835){
+                System.out.print(study.getId());
+            }
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
             studyScoreFactors.put("InitialSampleSize","0");
             studyScoreFactors.put("ReplicateSampleSize","0");
@@ -48,11 +71,15 @@ public class StudyScoreService {
             study.getAncestries().forEach(ancestry -> {
                 switch(ancestry.getType()){
                     case "initial":
-                        studyScoreFactors.put("InitialSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        if(ancestry.getNumberOfIndividuals()!=null){
+                            studyScoreFactors.put("InitialSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        }
                         break;
                     case "replication":
-                        studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
-                        studyScoreFactors.put("ReplicationStageIncluded","true");
+                        if(ancestry.getNumberOfIndividuals()!=null){
+                            studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
+                            studyScoreFactors.put("ReplicationStageIncluded","true");
+                        }
                         break;
                     default:
                         ;
@@ -64,6 +91,13 @@ public class StudyScoreService {
             studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
             studyScoreFactors.put("GenomeWideCoverage","1");
             studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
+            studyScoreFactors.put("Trait", study.getEfoTraits().stream().map(efoTrait -> {
+                return efoTrait.getTrait().toString();
+            }).collect(Collectors.joining(",")));
+
+
+            studyScoreFactors.put("Author",study.getAuthor().toString());
+            studyScoreFactors.put("PubmedId",study.getPubmedId().toString());
             scoreFeatures.put(study.getId().toString(),studyScoreFactors);
         });
 
