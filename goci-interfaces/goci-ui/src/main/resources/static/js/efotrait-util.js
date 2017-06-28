@@ -257,7 +257,6 @@ addEFO = function(data={}, initLoad=false) {
         console.log('finish loading descendants!')
     })
 
-
     //load all available efo terms in the GWAS Catalog(has at least one annotation)
     //save in the global_efo_info_tag_id tag with key 'availableEFOs'
     //This needs to be fullfill before trigger any add event.
@@ -400,6 +399,187 @@ generateSelectedItemCheckBox = function(efoid,tagID){
         })
 //                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
     });
+}
+
+/**
+ * Parse the Solr results and display the data on the HTML page
+ * @param {{}} data - solr result
+ * @param {Boolean} initLoad
+ */
+function processSolrData(data, initLoad=false) {
+    // Check if Solr returns some results
+    if (data.grouped.resourcename.matches == 0) {
+        $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
+                                   "</em> cannot be found in the GWAS Catalog database</h2>");
+    }
+    else {
+        //split the solr search by groups
+        //data_efo, data_study, data_association, data_diseasetrait;
+        data_facet = data.facet_counts.facet_fields.resourcename;
+        data_highlighting = data.highlighting;
+
+        $.each(data.grouped.resourcename.groups, (index, group) => {
+            switch (group.groupValue) {
+                case "efotrait":
+                    data_efo = group.doclist;
+                    break;
+                case "study":
+                    data_study = group.doclist;
+                    break;
+                case "association":
+                    data_association = group.doclist;
+                    break;
+                    //not sure we need this!
+                case "diseasetrait":
+                    data_diseasetrait = group.doclist;
+                    break;
+                default:
+            }
+        });
+
+        //update association/study table
+        displayEfotraitAssociations(data_association.docs);
+        displayEfotraitStudies(data_study.docs);
+
+
+        //work out highlight study
+        var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
+        if(initLoad){
+            displayHighlightedStudy(highlightedStudy);
+            //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
+            getSummary(findStudiesForEFO(getMainEFO()));
+        }
+
+
+        //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
+        var allUniqueEFO = {}
+        data_association.docs.forEach((d, i) => {
+            d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
+            d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
+            allUniqueEFO[d.preferedEFO] = 1;
+            //add any string data that will be use in the locus plot popover
+            d.popoverHTML = buildLocusPlotPopoverHTML(d);
+        })
+
+        //get all ancestries of all associations
+        var allAncestries = {};
+        data_association.docs.map((d) => {
+            d.ancestralGroups.map((a)=>{
+                if(allAncestries[a] == undefined) allAncestries[a] = [];
+                allAncestries[a].push(d.id);
+            })
+        })
+
+        prepareAncestryFilter(allAncestries);
+
+
+        //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
+        //Load colour for unique efo
+        var allColorLoaded = []
+        Object.keys(allUniqueEFO).forEach((efo) => {
+            allColorLoaded.push(getColourForEFO(efo).then((response) => {
+                allUniqueEFO[efo] = response;
+                return response;
+            }));
+        })
+
+        //When all colour are received, replot
+        Promise.all(allColorLoaded).then(() => {
+                                             //assign colour to associations for plot
+                                             console.debug(`Finish loading color from ${global_color_url}`);
+                                             console.debug(allUniqueEFO);
+                                             data_association.docs.forEach(function(d, i) {
+                                                 d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
+                                                 d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
+                                                 d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
+                                                 d.category = allUniqueEFO[d.preferedEFO].parent;
+                                             })
+                                         }
+        ).catch((err) => {
+            console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
+            //xintodo create a default colour to plot, if the colour query fail
+        }).then(() =>{
+            //replot
+            reloadLocusZoom('#plot', data_association);
+        });
+    }
+}
+
+/**
+ * Insert ancestry dropdown items, add onclick function
+ * @param {Object} allAncestries - ancestry-associations mappings
+ */
+prepareAncestryFilter = function(allAncestries){
+    //prepare the dropdown for ancestry filter and add click function to highlight ancestry group
+    $('#ancestry-dropdown-menu').empty();
+    Object.keys(allAncestries).map((ancestry)=>{
+        var item = $('<li />')
+        //store the ancestry-association in the ancestry item tag
+        var a = $('<a />', {class: 'list-group-item highlightable', tabIndex: "-1", text: ancestry}).data(
+                'associations',
+                allAncestries[ancestry]).data(
+                'ancestry',
+                ancestry).appendTo(item);
+        $('<span />', { class: 'badge cart-item-number-badge', text:allAncestries[ancestry].length , title:'Number of association'}).appendTo(a);
+        item.appendTo($('#ancestry-dropdown-menu'));
+        item.click((e) => {
+            var a = $(e.currentTarget).children('a')
+            //TOGGLE HIGHLIGHT
+            if(a.hasClass("highlight")){
+                a.removeClass("highlight");
+                reloadLocusZoom('#plot', data_association)
+            }else{
+                $('.highlightable.highlight').removeClass("highlight");
+                a.addClass("highlight");
+
+                var highlightAssociations = a.data('associations');
+                reloadLocusZoom('#plot', data_association, highlightAssociations,a.data('ancestry'));
+            }
+            return false;
+        })
+
+    })
+    //enable dropdown
+    hideLoadingOverLay('#btn-ancestry-dropdown');
+}
+
+
+/**
+ * Insert ancestry dropdown items, add onclick function
+ * @param {Object} allAncestries - ancestry-associations mappings
+ */
+prepareAncestryFilter = function(allAncestries){
+    //prepare the dropdown for ancestry filter and add click function to highlight ancestry group
+    $('#ancestry-dropdown-menu').empty();
+    Object.keys(allAncestries).map((ancestry)=>{
+        var item = $('<li />')
+        //store the ancestry-association in the ancestry item tag
+        var a = $('<a />', {class: 'list-group-item highlightable', tabIndex: "-1", text: ancestry}).data(
+                'associations',
+                allAncestries[ancestry]).data(
+                'ancestry',
+                ancestry).appendTo(item);
+        $('<span />', { class: 'badge cart-item-number-badge', text:allAncestries[ancestry].length , title:'Number of association'}).appendTo(a);
+        item.appendTo($('#ancestry-dropdown-menu'));
+        item.click((e) => {
+            var a = $(e.currentTarget).children('a')
+            //TOGGLE HIGHLIGHT
+            if(a.hasClass("highlight")){
+                a.removeClass("highlight");
+                reloadLocusZoom('#plot', data_association)
+            }else{
+                $('.highlightable.highlight').removeClass("highlight");
+                a.addClass("highlight");
+
+                var highlightAssociations = a.data('associations');
+                reloadLocusZoom('#plot', data_association, highlightAssociations,a.data('ancestry'));
+            }
+            return false;
+        })
+
+    })
+    //enable dropdown
+    hideLoadingOverLay('#btn-ancestry-dropdown');
 }
 
 
@@ -1589,7 +1769,9 @@ var RESTFUL_Response = {
  * @param {Boolean} debug
  * @returns {Promise}
  */
-function promiseGet(url, params,debug) {
+function promiseGet(url, params,debug)
+
+{
     if(debug == undefined){
         debug = false
     }
