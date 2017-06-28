@@ -1067,7 +1067,7 @@
             //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
             var allUniqueEFO = {}
             data_association.docs.forEach((d, i) => {
-                d.preferedEFO = findHighlightEFOForAssociation(d.id,data)[0];
+                d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
                 d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
                 allUniqueEFO[d.preferedEFO] = 1;
                 //add any string data that will be use in the locus plot popover
@@ -1083,36 +1083,7 @@
                 })
             })
 
-            //prepare the dropdown for ancestry filter and add click function to highlight ancestry group
-            $('#ancestry-dropdown-menu').empty();
-            Object.keys(allAncestries).map((ancestry)=>{
-                var item = $('<li />')
-                //store the ancestry-association in the ancestry item tag
-                var a = $('<a />', {class: 'list-group-item highlightable', tabIndex: "-1", text: ancestry}).data(
-                        'associations',
-                        allAncestries[ancestry]).data(
-                        'ancestry',
-                        ancestry).appendTo(item);
-                $('<span />', { class: 'badge cart-item-number-badge', text:allAncestries[ancestry].length , title:'Number of association'}).appendTo(a);
-                item.appendTo($('#ancestry-dropdown-menu'));
-                item.click((e) => {
-                    var a = $(e.currentTarget).children('a')
-                    //TOGGLE HIGHLIGHT
-                    if(a.hasClass("highlight")){
-                        a.removeClass("highlight");
-                        reloadLocusZoom('#plot', data_association)
-                    }else{
-                        $('.highlightable.highlight').removeClass("highlight");
-                        a.addClass("highlight");
-
-                        var highlightAssociations = a.data('associations');
-                        reloadLocusZoom('#plot', data_association, highlightAssociations,a.data('ancestry'));
-                    }
-                    return false;
-                })
-
-            })
-            hideLoadingOverLay('#btn-ancestry-dropdown');
+            prepareAncestryFilter(allAncestries);
 
 
             //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
@@ -1150,7 +1121,43 @@
 
 
 
+    /**
+     * Insert ancestry dropdown items, add onclick function
+     * @param {Object} allAncestries - ancestry-associations mappings
+     */
+    prepareAncestryFilter = function(allAncestries){
+        //prepare the dropdown for ancestry filter and add click function to highlight ancestry group
+        $('#ancestry-dropdown-menu').empty();
+        Object.keys(allAncestries).map((ancestry)=>{
+            var item = $('<li />')
+            //store the ancestry-association in the ancestry item tag
+            var a = $('<a />', {class: 'list-group-item highlightable', tabIndex: "-1", text: ancestry}).data(
+                    'associations',
+                    allAncestries[ancestry]).data(
+                    'ancestry',
+                    ancestry).appendTo(item);
+            $('<span />', { class: 'badge cart-item-number-badge', text:allAncestries[ancestry].length , title:'Number of association'}).appendTo(a);
+            item.appendTo($('#ancestry-dropdown-menu'));
+            item.click((e) => {
+                var a = $(e.currentTarget).children('a')
+                //TOGGLE HIGHLIGHT
+                if(a.hasClass("highlight")){
+                    a.removeClass("highlight");
+                    reloadLocusZoom('#plot', data_association)
+                }else{
+                    $('.highlightable.highlight').removeClass("highlight");
+                    a.addClass("highlight");
 
+                    var highlightAssociations = a.data('associations');
+                    reloadLocusZoom('#plot', data_association, highlightAssociations,a.data('ancestry'));
+                }
+                return false;
+            })
+
+        })
+        //enable dropdown
+        hideLoadingOverLay('#btn-ancestry-dropdown');
+    }
 
 
     //    var studies = findStudiesForEFO(getMainEFO())

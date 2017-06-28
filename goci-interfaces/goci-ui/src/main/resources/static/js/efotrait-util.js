@@ -303,52 +303,14 @@ addToCart = function(tagID, efoid, additionalLabel) {
         colourLabelInit = '?'
         colourLabel = 'unable to reach colour server.';
     }).then(() =>{
+        //generate selectedItem
         var container = $(tagID);
-
-        //checkbox indicate require descendant
-        var cb = $('<input />',
-                   {
-                       id: 'selected_cb_' + efoid,
-                       type: 'checkbox',
-                       class: "cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1",
-                       value: efoid
-                   }).appendTo(container);
-
-        if (isDescendantRequired(efoid)){
-            cb.attr('checked','checked')
-        }
-
-        cb.change(function(){
-//                var id=this.id.split("selected_cb_")[1];
-            var id=efoid;
-
-            if(this.checked){
-                addDataToTag(global_efo_info_tag_id, {[id]:true}, 'whichDescendant')
-            }else{
-                var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
-                delete tmp[id];
-            }
-            updatePage()
-        })
-
-        if(isAlwaysDescendant()){
-            cb.attr("disabled", true);
-        }else{
-            cb.removeAttr("disabled");
-        }
-
-        //show the descendants number in checkbox tooltips
-        OLS.getHierarchicalDescendants(efoid).then((descendants) => {
-            filterAvailableEFOs(Object.keys(descendants)).then((availableDescendants)=>{
-                cb.attr("title", `${Object.keys(availableDescendants).length} trait subtypes available in GWAS Catalog.`);
-
-            })
-//                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
-        });
+        generateSelectedItemCheckBox(efoid,tagID);
 
         //cart item
         var item = $('<a />', {
-            class: 'list-group-item highlightable cart-item col-xs-11 col-sm-11 col-md-11 col-lg-11',
+            class: 'list-group-item highlightable cart-item col-xs-11',
+            title: 'Click to highlight'
         }).appendTo(container);
 
         //colour badge for category
@@ -388,6 +350,58 @@ addToCart = function(tagID, efoid, additionalLabel) {
         item.append(additionalLabel)
     })
 }
+
+
+/**
+ * Generate a check box for an EFO in to asslow including descendants
+ * @param {String} efoid
+ * @param {String} tagID - usually the selected EFO item tag
+ */
+generateSelectedItemCheckBox = function(efoid,tagID){
+    var container = $(tagID);
+
+    //checkbox indicate require descendant
+    var cb = $('<input />',
+               {
+                   id: 'selected_cb_' + efoid,
+                   type: 'checkbox',
+                   class: "cart-item-cb align-middle checkbox col-xs-1 col-sm-1 col-md-1 col-lg-1",
+                   value: efoid
+               }).appendTo(container);
+
+    if (isDescendantRequired(efoid)){
+        cb.attr('checked','checked')
+    }
+
+    cb.change(function(){
+//                var id=this.id.split("selected_cb_")[1];
+        var id=efoid;
+
+        if(this.checked){
+            addDataToTag(global_efo_info_tag_id, {[id]:true}, 'whichDescendant')
+        }else{
+            var tmp = getDataFromTag(global_efo_info_tag_id,'whichDescendant');
+            delete tmp[id];
+        }
+        updatePage()
+    })
+
+    if(isAlwaysDescendant()){
+        cb.attr("disabled", true);
+    }else{
+        cb.removeAttr("disabled");
+    }
+
+    //show the descendants number in checkbox tooltips
+    OLS.getHierarchicalDescendants(efoid).then((descendants) => {
+        filterAvailableEFOs(Object.keys(descendants)).then((availableDescendants)=>{
+            cb.attr("title", `${Object.keys(availableDescendants).length} trait subtypes available in GWAS Catalog.`);
+
+        })
+//                cb.attr("title", `${Object.keys(descendants).length} descendants. ${Object.keys(descendants).join(',')}`);
+    });
+}
+
 
 /**
  * trigger a refresh of the page content, including cart, locus plot, tables, badges.
@@ -429,7 +443,7 @@ updatePage = function(initLoad=false) {
         return sequence.then(() => {
             return efoInfo;
         }).then(function(efoInfo) {
-            return addToCart('#cart', efoInfo.short_form, '['+ efoInfo.short_form+'] '+ efoInfo.label).then(() =>{
+            return addToCart('#cart', efoInfo.short_form,  `${efoInfo.label} [${efoInfo.short_form}]`).then(() =>{
                 return efoInfo;
             })
         });
@@ -1324,14 +1338,15 @@ generateDownloadContentForCart = function(){
     return content;
 }
 
-//display association table
-function displayEfotraitAssociations_deprecated(data, cleanBeforeInsert) {
+/**
+ * Display association table from solr search associations
+ * @param {[association_doc]} solr_association
+ * @param {Boolean} cleanBeforeInsert
+ */
+function displayEfotraitAssociations_deprecated(solr_association, cleanBeforeInsert=true) {
     //by default, we clean the table before inserting data
-    if (cleanBeforeInsert === undefined) {
-        cleanBeforeInsert = true;
-    }
 
-    var asso_count = data.length;
+    var asso_count = solr_association.length;
 
     $(".association_count").html(asso_count);
 
@@ -1343,7 +1358,7 @@ function displayEfotraitAssociations_deprecated(data, cleanBeforeInsert) {
         $("#association-table-body tr").remove();
     }
 
-    $.each(data, function(index,asso) {
+    $.each(solr_association, function(index,asso) {
 
         var row = $('<tr/>');
 
@@ -1457,9 +1472,14 @@ function displayEfotraitAssociations_deprecated(data, cleanBeforeInsert) {
     });
 }
 
-//display study table
-function displayEfotraitStudies_deprecated(data, cleanBeforeInsert) {
-    //by default, we clean the table before inserting data
+
+/**
+ * display study table from solr search studies
+ * @param {[study_doc]} solr_studies
+ * @param {Boolean} cleanBeforeInsert
+ */
+function displayEfotraitStudies_deprecated(solr_study, cleanBeforeInsert=true) {
+    //by default, we clean the table before inserting solr_study
     if (cleanBeforeInsert === undefined) {
         cleanBeforeInsert = true;
     }
@@ -1469,7 +1489,7 @@ function displayEfotraitStudies_deprecated(data, cleanBeforeInsert) {
     if(cleanBeforeInsert){
         $("#study-table-body tr").remove();
     }
-    $.each(data, function(index, asso) {
+    $.each(solr_study, function(index, asso) {
         var study_id = asso.id;
         if (jQuery.inArray(study_id, study_ids) == -1) {
 
@@ -2751,13 +2771,13 @@ var findAllEFOsforAssociation = function(association_id,data_association) {
  * The association can link to multiple efo in the selection list. Return all hits.
  * xintodo can this be the most significant one?
  * xintodo refactor findAllEFOsforAssociation into this.
- * @param {String} traits
- * @param association
- * @returns {*}
+ * @param {String} associationid
+ * @param {Object} solr_highlighting - solr search highlighting object
+ * @returns {[]} array of efo ids
  * @private
  */
-findHighlightEFOForAssociation = function(association_id,data) {
-    var terms = data.highlighting[association_id].shortForm;
+findHighlightEFOForAssociation = function(association_id,solr_highlighting) {
+    var terms = solr_highlighting[association_id].shortForm;
     return terms.map((termHighlighted) => {
         return termHighlighted.match(/<b>(\w*_\d*)<\/b>/)[1];
     })
