@@ -41,6 +41,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script th:src="@{/js/matrix.js}"></script>
     <script th:src="@{/js/console-plugin.js}"></script>
     <script th:src="@{/js/goci-print-page.js}"></script>
     <script th:src="@{/js/goci-show-text.js}"></script>
@@ -193,121 +194,7 @@
         },
     }
 
-    var FEATURES = {
-        InitialSampleSize : 10.5,
-//        ReplicateSampleSize : 8.09,
-        GenomeWideCoverage : 8.95,
-        SummaryStatisticsAvailable : 8.56, //dont know yet
-        UserRequested : 8.56, //dont know yet
-        ReplicationStageIncluded : 8.09,
-        PublicationDate : 6.7,
-
-    }
-    var needTakeLog = ['InitialSampleSize','PublicationDate']
-//    var FEATURES = {
-//        InitialSampleSize : 1,
-////        ReplicateSampleSize : 8.09,
-//        GenomeWideCoverage : 1,
-//        SummaryStatisticsAvailable : 1, //dont know yet
-//        UserRequested : 1, //dont know yet
-//        ReplicationStageIncluded : 1,
-//        PublicationDate : 1,
-//
-//    }
-
-    FEATURES_NOMALIZED = score.normalizeBySum(Object.values(FEATURES),1,Object.keys(FEATURES))
-
-//    //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
-//    var studies_clean=JSON.parse(JSON.stringify(studies))
-//    Object.keys(studies_clean).map((study_id)=>{
-//        Object.keys(studies_clean[study_id]).map((feature)=>{
-//            //remove element that is not a feature
-//            if(Object.keys(FEATURES_NOMALIZED).indexOf(feature) == -1){
-//                delete studies_clean[study_id][feature]
-//            }else{
-//                var value = studies_clean[study_id][feature];
-//                //clean
-//                if(value == undefined | value==null | value === 'false' | value == "NA") {
-//                    value = 0;
-//                }
-//                if(value == 'true'){
-//                    value = 1;
-//                }
-//                if(feature == 'PublicationDate'){
-//                    value = new Date() - new Date(value)
-//                }
-//                studies_clean[study_id][feature] = value;
-//            }
-//        })
-//    })
-//    console.log('Clean null,na,undefined,false and true...');
-//    console.log(studies_clean);
-//
-//
-//    //group all feature together for nomolization across studies
-//    var groupByFeatures={};
-//    Object.keys(FEATURES).map((feature)=>{
-//        groupByFeatures[feature] ={};
-//        Object.keys(studies_clean).map((study)=>{
-//            groupByFeatures[feature][study] = studies_clean[study][feature]
-//        })
-//    })
-//    console.log('Group by features:');
-//    console.log(groupByFeatures);
-//
-//    var groupByFeatures_nomalized = JSON.parse(JSON.stringify(groupByFeatures))
-//    Object.keys(groupByFeatures_nomalized).map((feature)=>{
-//        var featureObject = groupByFeatures_nomalized[feature];
-//        if(feature == 'InitialSampleSize'){
-//            //take log before nomalize
-//            featureObject = score.takeLog(Object.values(groupByFeatures_nomalized[feature]),Object.keys(groupByFeatures_nomalized[feature]));
-//        }
-//        groupByFeatures_nomalized[feature] = score.normalizeByMax(Object.values(featureObject),100,Object.keys(featureObject))
-//    })
-//    console.log('Group by features nomalized:');
-//    console.log(groupByFeatures_nomalized);
-//
-//    var studies_nomalized = JSON.parse(JSON.stringify(studies_clean))
-//    Object.keys(groupByFeatures_nomalized).map((feature)=>{
-//        Object.keys(groupByFeatures_nomalized[feature]).map((study)=>{
-//            studies_nomalized[study][feature]=groupByFeatures_nomalized[feature][study]
-//        })
-//    })
-//    console.log('study nomalized:');
-//    console.log(studies_nomalized);
-//
-//
-//    var studies_nomalized_weighted = JSON.parse(JSON.stringify(studies_nomalized))
-//    Object.keys(studies_nomalized_weighted).map((study_id)=>{
-//        Object.keys(studies_nomalized_weighted[study_id]).map((feature)=>{
-//            studies_nomalized_weighted[study_id][feature] = studies_nomalized_weighted[study_id][feature] * FEATURES_NOMALIZED[feature]
-//        })
-//    })
-//    console.log('study nomalized weighted:');
-//    console.log(studies_nomalized_weighted);
-//
-//    studies_score={}
-//    Object.keys(studies_nomalized_weighted).map((study)=>{
-//        studies_score[study] = Object.values(studies_nomalized_weighted[study]).reduce(score.sum,0)
-//    });
-//    console.log('study score:');
-//    console.log(studies_score);
-//
-//    $( document ).ready(function(){
-//        Object.keys(studies_score).map((studyid)=>{
-//            $('#'+studyid).append("<b>" + studies_score[studyid] +"</b>");
-//        })
-//    })
-
-
-
-
-
-
-
-
-
-        /**
+    /**
      * get data asyn with promise
      * @param {String} url
      * @param {hash} params
@@ -365,6 +252,69 @@
             req.send();
         });
     }
+
+
+    function printResult(studies,FEATURES){
+        var array = [];
+        array.push([''].concat(Object.keys(FEATURES)))
+        Object.keys(studies).map((study_id)=>{
+            var row = [study_id];
+            Object.keys(FEATURES).map((feature)=>{
+                row = row.concat(studies[study_id][feature])
+            })
+            array.push(row);
+            return row;
+        })
+        var A = matrix(array);
+//        console.log(A([],[]))
+        console.log(
+                JSON.stringify(A([],[]))
+        );
+    }
+
+
+    function buildMap(obj,deep=true) {
+        if(map==undefined)
+            map=new Map();
+
+        Object.keys(obj).forEach(key => {
+            var tmp=obj[key];
+            if(deep){
+                if(obj[key] !== null && typeof obj[key] === 'object'){
+                    tmp = buildMap(obj[key],map,true)
+                }
+            }
+            map.set(key, tmp);
+        });
+        return map;
+    }
+
+
+    var FEATURES = {
+        InitialSampleSize : 10.5,
+//        ReplicateSampleSize : 8.09,
+        GenomeWideCoverage : 8.95,
+        SummaryStatisticsAvailable : 8.56, //dont know yet
+        UserRequested : 8.56, //dont know yet
+        ReplicationStageIncluded : 8.09,
+        PublicationDate : 6.7,
+    }
+    var needTakeLog = ['InitialSampleSize','PublicationDate']
+//    var FEATURES = {
+//        InitialSampleSize : 1,
+////        ReplicateSampleSize : 8.09,
+//        GenomeWideCoverage : 1,
+//        SummaryStatisticsAvailable : 1, //dont know yet
+//        UserRequested : 1, //dont know yet
+//        ReplicationStageIncluded : 1,
+//        PublicationDate : 1,
+//
+//    }
+
+    FEATURES_NOMALIZED = score.normalizeBySum(Object.values(FEATURES),1,Object.keys(FEATURES))
+
+
+
 
     promiseGet('/curation/studyscore').then(JSON.parse).then((studies)=>{
         studies_raw = studies;
