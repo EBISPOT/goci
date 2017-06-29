@@ -458,8 +458,39 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
+        Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
+        studyPage.getContent().forEach(study -> {
+            Map<String, String> studyScoreFactors = new HashMap<String, String>();
+            studyScoreFactors.put("InitialSampleSize","0");
+            studyScoreFactors.put("ReplicateSampleSize","0");
+            studyScoreFactors.put("ReplicationStageIncluded","false");
+            study.getAncestries().forEach(ancestry -> {
+                switch(ancestry.getType()){
+                    case "initial":
+                        studyScoreFactors.put("InitialSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        break;
+                    case "replication":
+                        studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
+                        studyScoreFactors.put("ReplicationStageIncluded","true");
+                        break;
+                    default:
+                        ;
+                }
+            });
+
+            studyScoreFactors.put("Publication",study.getPublication());
+            studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
+            studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
+            studyScoreFactors.put("GenomeWideCoverage","1");
+            studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
+            scoreFeatures.put(study.getId().toString(),studyScoreFactors);
+        });
+
+        model.addAttribute("scoreFeatures", scoreFeatures);
+
         return "studies";
     }
+
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)

@@ -95,8 +95,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="study : ${studies}">
-        <td>
+    <tr th:each="study : ${studies}" th:id="${study.id}">
+        <td >
             <div class="btn-group">
                             <button type="button" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
                                 Action<span class="caret"></span></button>
