@@ -18,18 +18,18 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <link th:href="@{/css/select2-bootstrap.css}" rel="stylesheet"/>
 
-   <!-- Bootstrap core CSS -->
+    <!-- Bootstrap core CSS -->
     <!--<link href="../../static/css/bootstrap.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>-->
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
           rel="stylesheet"/>
     <link th:href="@{/css/bootstrap-table.css}" rel="stylesheet"/>
     <!--<link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>-->
 
-   <!-- Custom styles for this template -->
+    <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
     <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
-   <!-- Additional styling on top of bootstrap -->
+    <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
     <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
     <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
@@ -129,10 +129,10 @@
 <script>
     /*<![CDATA[*/
 
-//    var studies = JSON.parse(JSON.stringify(window.studyScoreFeatures));
+    //    var studies = JSON.parse(JSON.stringify(window.studyScoreFeatures));
 
-//    console.log('studies from server:');
-//    console.log(studies);
+    //    console.log('studies from server:');
+    //    console.log(studies);
 
 
     hashFromArrays = function(arr_keys,arr_values){
@@ -268,26 +268,47 @@
         var A = matrix(array);
 //        console.log(A([],[]))
         console.log(
-                JSON.stringify(A([],[]))
+                JSON.stringify(A([],[])).replace(/\],\[/g, "],\n[")
         );
     }
 
 
     function buildMap(obj,deep=true) {
-        if(map==undefined)
+        var map
+        if(typeof map == 'undefined')
             map=new Map();
 
         Object.keys(obj).forEach(key => {
             var tmp=obj[key];
             if(deep){
                 if(obj[key] !== null && typeof obj[key] === 'object'){
-                    tmp = buildMap(obj[key],map,true)
+                    tmp = buildMap(obj[key],true)
                 }
             }
             map.set(key, tmp);
         });
         return map;
     }
+
+    function buildObject(map,deep=true) {
+        var object
+        if (typeof object == 'undefined')
+            object = {};
+
+        map.forEach(function(value, key) {
+            var tmp = Object.assign({}, {[key]: value})
+
+            if (deep) {
+                if (value !== null && typeof value === 'object') {
+                    tmp = buildObject(value, true)
+                }
+            }
+            object[key] = tmp;
+        });
+        return object
+    }
+
+
 
 
     var FEATURES = {
@@ -300,16 +321,16 @@
         PublicationDate : 6.7,
     }
     var needTakeLog = ['InitialSampleSize','PublicationDate']
-//    var FEATURES = {
-//        InitialSampleSize : 1,
-////        ReplicateSampleSize : 8.09,
-//        GenomeWideCoverage : 1,
-//        SummaryStatisticsAvailable : 1, //dont know yet
-//        UserRequested : 1, //dont know yet
-//        ReplicationStageIncluded : 1,
-//        PublicationDate : 1,
-//
-//    }
+    //    var FEATURES = {
+    //        InitialSampleSize : 1,
+    ////        ReplicateSampleSize : 8.09,
+    //        GenomeWideCoverage : 1,
+    //        SummaryStatisticsAvailable : 1, //dont know yet
+    //        UserRequested : 1, //dont know yet
+    //        ReplicationStageIncluded : 1,
+    //        PublicationDate : 1,
+    //
+    //    }
 
     FEATURES_NOMALIZED = score.normalizeBySum(Object.values(FEATURES),1,Object.keys(FEATURES))
 
@@ -330,7 +351,23 @@
 //            ReplicationStageIncluded : 1,
 //            PublicationDate : '2005-04-25 00:00:00.0',
 //        }
+
+
         //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
+        var _cleanData=function(data){
+            var value = data;
+            //clean
+            if(value == undefined | value==null | value === 'false' | value == "NA") {
+                value = 0;
+            }
+            if(value == 'true'){
+                value = 1;
+            }
+            if(feature == 'PublicationDate'){
+                value = new Date() - new Date(value)
+            }
+            return  value;
+        }
         studies_clean=JSON.parse(JSON.stringify(studies))
         Object.keys(studies_clean).map((study_id)=>{
             Object.keys(studies_clean[study_id]).map((feature)=>{
@@ -338,18 +375,7 @@
                 if(Object.keys(FEATURES_NOMALIZED).indexOf(feature) == -1){
                     delete studies_clean[study_id][feature]
                 }else{
-                    var value = studies_clean[study_id][feature];
-                    //clean
-                    if(value == undefined | value==null | value === 'false' | value == "NA") {
-                        value = 0;
-                    }
-                    if(value == 'true'){
-                        value = 1;
-                    }
-                    if(feature == 'PublicationDate'){
-                        value = new Date() - new Date(value)
-                    }
-                    studies_clean[study_id][feature] = value;
+                    studies_clean[study_id][feature] = _cleanData(studies_clean[study_id][feature];)
                 }
             })
         })
@@ -357,7 +383,7 @@
         console.log(studies_clean);
 
 
-        //group all feature together for nomolization across studies
+        //group all feature together for normalization across studies
         groupByFeatures={};
         Object.keys(FEATURES).map((feature)=>{
             groupByFeatures[feature] ={};
@@ -368,6 +394,7 @@
         console.log('Group by features:');
         console.log(groupByFeatures);
 
+        //normalize study features across all studies
         groupByFeatures_nomalized = JSON.parse(JSON.stringify(groupByFeatures))
         Object.keys(groupByFeatures_nomalized).map((feature)=>{
             var featureObject = groupByFeatures_nomalized[feature];
@@ -380,6 +407,8 @@
         console.log('Group by features nomalized:');
         console.log(groupByFeatures_nomalized);
 
+
+        //assign back normalized features
         studies_nomalized = JSON.parse(JSON.stringify(studies_clean))
         Object.keys(groupByFeatures_nomalized).map((feature)=>{
             Object.keys(groupByFeatures_nomalized[feature]).map((study)=>{
@@ -389,7 +418,7 @@
         console.log('study nomalized:');
         console.log(studies_nomalized);
 
-
+        //Apply feature weight to study features
         studies_nomalized_weighted = JSON.parse(JSON.stringify(studies_nomalized))
         Object.keys(studies_nomalized_weighted).map((study_id)=>{
             Object.keys(studies_nomalized_weighted[study_id]).map((feature)=>{
@@ -399,6 +428,7 @@
         console.log('study nomalized weighted:');
         console.log(studies_nomalized_weighted);
 
+        //sum study features for final score
         studies_score={}
         Object.keys(studies_nomalized_weighted).map((study)=>{
             studies_score[study] = Object.values(studies_nomalized_weighted[study]).reduce(score.sum,0)
@@ -406,12 +436,13 @@
         console.log('study score:');
         console.log(studies_score);
 
-        fakePrintMatrix(studies,FEATURES_NOMALIZED)
-        fakePrintMatrix(studies_clean,FEATURES_NOMALIZED)
-        fakePrintMatrix(studies_nomalized,FEATURES_NOMALIZED)
-        fakePrintMatrix(studies_nomalized_weighted,FEATURES_NOMALIZED,studies_score)
+//        fakePrintMatrix(studies,FEATURES_NOMALIZED)
+//        fakePrintMatrix(studies_clean,FEATURES_NOMALIZED)
+//        fakePrintMatrix(studies_nomalized,FEATURES_NOMALIZED)
+//        fakePrintMatrix(studies_nomalized_weighted,FEATURES_NOMALIZED,studies_score)
 
         studies_ordered = getSortedKeys(studies_score)
+        //generate the list for display
         studies_ordered.map((key)=>{
 
             var title = Object.keys(studies_raw[key]).map((features)=>{
@@ -440,7 +471,7 @@
             var link = $('<span />', { class: 'glyphicon glyphicon-new-window external-link'}).css({'float':'right'}).appendTo(item);
 
             link.click(() => {
-                window.open(window.location.pathname+'/'+key, '_blank');
+                window.open(window.location.pathname+'/gwas'+key, '_blank');
             })
         })
 
@@ -469,7 +500,6 @@
         var keys = []; for(var key in obj) keys.push(key);
         return keys.sort(function(a,b){return obj[b]-obj[a]});
     }
-
 
 
     /*]]>*/
