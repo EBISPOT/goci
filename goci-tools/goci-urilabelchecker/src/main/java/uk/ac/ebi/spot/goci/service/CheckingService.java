@@ -50,6 +50,7 @@ public class CheckingService {
 
 
         for (EfoTrait efoTrait : allEfoTraits) {
+            System.out.println("Checking " + efoTrait.getTrait() + " " + efoTrait.getUri());
             validateEfoTrait(efoTrait);
         }
 
