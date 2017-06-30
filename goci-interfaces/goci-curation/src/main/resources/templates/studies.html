@@ -47,11 +47,14 @@
     <script th:src="@{/js/goci-show-text.js}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.13.3/math.js"></script>
+
     <script th:inline="javascript">
         /*<![CDATA[*/
         window.studyScoreFeatures = /*[[${scoreFeatures}]]*/ null;
         /*]]>*/
     </script>
+
+
 </head>
 <body>
 
@@ -337,6 +340,7 @@
 
 
 
+    //promiseGet('/curation/studyscore').then(JSON.parse).then((studies)=>{
     promiseGet('/gwas/curation/studyscore').then(JSON.parse).then((studies)=>{
         studies_raw = studies;
         //debug
@@ -435,6 +439,13 @@
         });
         console.log('study score:');
         console.log(studies_score);
+    $("#mainTable tr").each(function() {
+        console.log(this);
+        if (this.id != "") {
+            var newValue = studies_score[this.id];
+            $(this).find('#score').text(newValue);
+        }
+    });
 
 //        fakePrintMatrix(studies,FEATURES_NOMALIZED)
 //        fakePrintMatrix(studies_clean,FEATURES_NOMALIZED)
