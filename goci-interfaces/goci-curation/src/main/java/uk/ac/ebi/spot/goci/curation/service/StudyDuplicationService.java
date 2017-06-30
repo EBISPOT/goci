@@ -116,7 +116,7 @@ public class StudyDuplicationService {
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());
-        duplicateStudy.setGenotypingTechnologies(studyToDuplicate.getGenotypingTechnologies());
+//        duplicateStudy.setGenotypingTechnologies(studyToDuplicate.getGenotypingTechnologies());
 //        duplicateStudy.setGenomewideArray(studyToDuplicate.getGenomewideArray());
 //        duplicateStudy.setTargetedArray(studyToDuplicate.getTargetedArray());
         duplicateStudy.setDiseaseTrait(studyToDuplicate.getDiseaseTrait());
@@ -145,7 +145,17 @@ public class StudyDuplicationService {
             platformsDuplicateStudy.addAll(platforms);
             duplicateStudy.setPlatforms(platformsDuplicateStudy);
         }
+
+        Collection<GenotypingTechnology> genotypingTechnologies = studyToDuplicate.getGenotypingTechnologies();
+        Collection<GenotypingTechnology> genotypingTechnologiesDuplicateStudy = new ArrayList<>();
+
+        if(genotypingTechnologies != null && !genotypingTechnologies.isEmpty()){
+            genotypingTechnologiesDuplicateStudy.addAll(genotypingTechnologies);
+            duplicateStudy.setGenotypingTechnologies(genotypingTechnologiesDuplicateStudy);
+        }
+
         return duplicateStudy;
+
     }
 
     /**
