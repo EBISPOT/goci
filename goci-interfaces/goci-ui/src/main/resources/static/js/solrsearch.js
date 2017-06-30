@@ -61,7 +61,7 @@ function loadResults() {
     //add the link to the specific page, for example, for snp, to variant-page
     if(/^rs[0-9]/.test(searchTerm)){
         //xintodo this is currently beta so need to change
-        $('#search-term').attr("href", "beta/variants/"+searchTerm);
+        $('#search-term').attr("href", "variants/"+searchTerm);
         $("#search-term-popup").attr("data-original-title","Go to the variant page.");
     }else{
         //we currently only ave variant page, so for other search, we disable the link and hide the popup
