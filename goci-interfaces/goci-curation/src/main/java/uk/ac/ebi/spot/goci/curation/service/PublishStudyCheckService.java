@@ -58,7 +58,7 @@ public class PublishStudyCheckService {
             message = "Study: "
                     + study.getAuthor() + ", "
                     + " pubmed = " + study.getPubmedId()
-                    + ", is a targeted array, other non-genone-wide or sequencing study and should not be published.";
+                    + ", is a targeted array, other non-genome-wide or sequencing study and should not be published.";
         }
 
         else if (snpNotApproved == 1 && !efoTermsAssigned && missingCoR) {

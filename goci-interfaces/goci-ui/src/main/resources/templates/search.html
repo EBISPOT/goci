@@ -259,10 +259,11 @@
                     <div id="results" th:object="${result}">
                         <div id="results-header">
                             <h2>Search results for
-                                <em><a id="search-term" th:text="*{query}">query term</a></em>
-                                <span id="search-term-popup" class="glyphicon glyphicon-question-sign context-help"
-                                      data-toggle="tooltip"
-                                      data-original-title="Go to detail page." ></span>
+                                <em><span id="search-term" th:text="*{query}">query term</span></em>
+                                <!--<em><a id="search-term" th:text="*{query}">query term</a></em>-->
+                                <!--<span id="search-term-popup" class="glyphicon glyphicon-question-sign context-help"-->
+                                      <!--data-toggle="tooltip"-->
+                                      <!--data-original-title="Go to detail page." ></span>-->
                             </h2>
                             <a href="api/search/downloads?q=*" id="results-download">Download association results
                                 <span class="glyphicon glyphicon-download-alt"> </span>
