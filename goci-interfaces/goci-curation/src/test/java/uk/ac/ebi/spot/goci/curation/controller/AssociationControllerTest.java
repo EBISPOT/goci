@@ -289,7 +289,6 @@ public class AssociationControllerTest {
                 .andExpect(model().attributeExists("study"))
                 .andExpect(forwardedUrl("association_upload_progress"));
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
-
     }
 
     @Test
@@ -299,9 +298,11 @@ public class AssociationControllerTest {
         MockMultipartFile file =
                 new MockMultipartFile("file", "filename.txt", "text/plain", "TEST".getBytes());
 
-
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
+        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+                SECURE_USER);
+        when(associationUploadService.upload(file, STUDY, SECURE_USER)).thenThrow(EnsemblMappingException.class);
 
         Future<Boolean> f = mock(Future.class);
 

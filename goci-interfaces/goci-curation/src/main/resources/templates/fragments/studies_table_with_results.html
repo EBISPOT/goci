@@ -44,6 +44,15 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
+        <!--<th class="col-md-1">User Requested-->
+            <!--<div>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortasc)}"-->
+                   <!--class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortdesc)}"-->
+                   <!--class="btn btn-default btn-xs"><span-->
+                        <!--class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>-->
+            <!--</div>-->
+        <!--</th>-->
         <th class="col-md-1">Publication
             <div>
                 <a th:href="@{${uri}(sorttype=publicationsortasc)}"
@@ -113,7 +122,17 @@
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a></p>
         </td>
-        <td th:text="${study.title} ?: ''"></td>
+
+        <td >
+            <p>
+                <span th:text="${study.title} ?: ''"></span>
+                <div th:if="${study.userRequested}" th:remove="tag">
+                         <span class="glyphicon glyphicon-star color-primary-bold" aria-hidden="true"
+                               title="User Requested Study"></span>
+                </div>
+            </p>
+        </td>
+
         <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
             <span th:text="${study.pubmedId} ?: ''"></span>
@@ -141,6 +160,7 @@
             </div>
         </td>
 
+        <!--<td th:text="${study.userRequested} ?: ''"></td>-->
 
         <td th:text="${study.publication} ?: ''"></td>
 

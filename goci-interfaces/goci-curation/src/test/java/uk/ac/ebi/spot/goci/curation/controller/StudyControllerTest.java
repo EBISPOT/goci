@@ -27,12 +27,13 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.PlatformRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -92,6 +93,9 @@ public class StudyControllerTest {
 
     @Mock
     private UnpublishReasonRepository unpublishReasonRepository;
+
+    @Mock
+    private GenotypingTechnologyRepository genotypingTechnologyRepository;
 
     @Mock
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -174,6 +178,7 @@ public class StudyControllerTest {
                                                               associationRepository,
                                                               ancestryRepository,
                                                               unpublishReasonRepository,
+                                                              genotypingTechnologyRepository,
                                                               defaultPubMedSearchService,
                                                               studyOperationsService,
                                                               mappingDetailsService,

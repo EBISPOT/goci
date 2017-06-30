@@ -4,14 +4,93 @@
 
 
 $(document).ready(function() {
+
+    //used to display the error msg of form validation
+    $('#filter-form :input').tooltipster({ //find more options on the tooltipster page
+                                             trigger: 'custom', // default is 'hover' which is no good here
+                                             position: 'top',
+                                             animation: 'grow'
+                                         });
+
+    $.validator.addMethod("greaterThan", function(value, element, param) {
+        return this.optional(element) || parseInt(value) >= parseInt($(param).val());
+    }, "invalid value range");
+
+
+    $.validator.addMethod("laterThan", function(value, element, param) {
+        return this.optional(element) || new Date(value) >= new Date($(param).val());
+    }, "invalid date range");
+
+    $.validator.addMethod("validChrom", function(value, element) {
+        var valid_chrom = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','x','y'];
+        return this.optional(element) || valid_chrom.indexOf($('#chrom').val()) != -1
+    }, "invalid chromosome location");
+
+
     $('#filter-form').submit(function(event) {
         event.preventDefault();
-        doFiltering();
-    });
+    }).validate({
+                    rules: {
+                        chrom: {
+                            validChrom: true,
+                        },
+                        'bp-min': {
+                            digits: true,
+                        },
+                        'bp-max': {
+                            digits: true,
+                            greaterThan: '#bp-min'
+                        },
+                        'date-max':{
+                            laterThan : '#date-min',
+                        },
+                        'or-min' : {
+                            digits: true,
+                        },
+                        'or-max' : {
+                            digits: true,
+                            greaterThan: '#or-min'
+                        },
+                        'beta-min' : {
+                            digits: true,
+                        },
+                        'beta-max' : {
+                            digits: true,
+                            greaterThan: '#beta-min'
+                        }
+                    },
+                    messages: {
+                        'bp-max': {
+                            greaterThan: 'end-bp must be greater than start-bp',
+                        },
+                    },
+                    errorPlacement: function (error, element) {
+                        var ele = $(element),
+                                err = $(error),
+                                msg = err.text();
+                        if (msg != null && msg !== '') {
+                            ele.tooltipster('content', msg);
+                            ele.tooltipster('open');
+                        }
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass(errorClass).addClass(validClass).tooltipster('close');
+                    },
+                    submitHandler: function(form) {
+                        //do the filtering only when passing the validation
+                        doFiltering();
+                        return false;  //This doesn't prevent the form from submitting.
+                    }
+
+                });
 
     $('#clear-filter').click(function() {
+        //remove the error popup when click clear filter
+        $('#filter-form :input[class*=error]').removeClass('has-error').tooltipster('close')
         clearFilters();
     });
+
+
 
     $('#date-min').datepicker({
                                   format: "yyyy-mm",
