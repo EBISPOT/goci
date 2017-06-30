@@ -41,11 +41,11 @@ public class StudyScoreService {
         Collection<Study> studies = studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
         studies = studies.stream()
                 .filter(study -> {
-                    System.out.print(study.getId());
-                    System.out.print('\n');
-                    if(study.getId()==7864){
-                        System.out.print(study.getId());
-                    }
+//                    System.out.print(study.getId());
+//                    System.out.print('\n');
+//                    if(study.getId()==7864){
+//                        System.out.print(study.getId());
+//                    }
                     if(study.getHousekeeping().getCurationStatus() != null){
                         if (study.getHousekeeping().getCurationStatus().getStatus().equals("Curation Abandoned")  ||
                                 study.getHousekeeping().getCurationStatus().getStatus().equals("CNV Paper")){
@@ -59,11 +59,11 @@ public class StudyScoreService {
         Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
 //        studyPage.getContent().forEach(study -> {
         studies.forEach(study -> {
-            System.out.print(study.getId());
-            System.out.print("\n");
-            if(study.getId() == 14856835){
-                System.out.print(study.getId());
-            }
+//            System.out.print(study.getId());
+//            System.out.print("\n");
+//            if(study.getId() == 14856835){
+//                System.out.print(study.getId());
+//            }
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
             studyScoreFactors.put("InitialSampleSize","0");
             studyScoreFactors.put("ReplicateSampleSize","0");
@@ -109,16 +109,16 @@ public class StudyScoreService {
 
 
 
-    @RequestMapping(value = "/{studyId}", method = RequestMethod.GET, produces = "application/json")
-    @ResponseBody
-    public String prepareStudyScore(@PathVariable Long studyId) {
-
-        Study study = studyRepository.findOne(studyId);
-
-
-
-        return "{\"success\":1}";
-    }
+//    @RequestMapping(value = "/{studyId}", method = RequestMethod.GET, produces = "application/json")
+//    @ResponseBody
+//    public String prepareStudyScore(@PathVariable Long studyId) {
+//
+//        Study study = studyRepository.findOne(studyId);
+//
+//
+//
+//        return "{\"success\":1}";
+//    }
 
 
 }
