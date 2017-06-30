@@ -19,9 +19,9 @@ var CONTEXT_RANGE = 500;
 var list_min = 5;
 
 $(document).ready(function() {
-    if(window.location.pathname.indexOf("beta") != -1){
-        $('#beta-icon').show();
-    }
+    // if(window.location.pathname.indexOf("beta") != -1){
+    //     $('#beta-icon').show();
+    // }
     var searchTerm = $('#query').text();
     console.log("Loading search module!");
     console.log("rsID: "+searchTerm);
