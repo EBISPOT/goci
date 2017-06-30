@@ -73,6 +73,7 @@
             </div>
         </th>
         <th class="col-md-1">EFO Trait</th>
+        <th class="col-md-1">Score</th>
         <th class="col-md-2">Curator
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                 <a th:href="@{${uri}(sorttype=curatorsortasc)}"
@@ -92,8 +93,6 @@
             </div>
         </th>
         <th class="col-md-1">Notes</th>
-
-        <th class="col-md-1">Score</th>
     </tr>
     </thead>
     <tbody>
@@ -171,7 +170,7 @@
         <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
                   th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait} ) ?: ''"></span>
         </td>
-
+        <td id="score"> - </td>
         <!--If study has associated housekeeping object then get the following attributes -->
         <td>
             <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>
@@ -248,8 +247,6 @@
              <br/>
              </p>
             </span>
-        </td>
-        <td id="score"> -
         </td>
 
     </tr>

@@ -177,7 +177,7 @@
         $("#mainTable tr").each(function() {
             console.log(this);
             if (this.id != "") {
-                var newValue = studies_score[this.id];
+                var newValue = studies_score[this.id].toFixed(2);
                 $(this).find('#score').text(newValue);
             }
         });

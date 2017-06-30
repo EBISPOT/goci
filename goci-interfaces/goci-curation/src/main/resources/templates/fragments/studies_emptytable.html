@@ -63,6 +63,7 @@
             </div>
         </th>
         <th class="col-md-1">EFO Trait</th>
+        <th class="col-md-1">Score</th>
         <th class="col-md-2">Curator
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                 <a th:href="@{${uri}(sorttype=curatorsortasc)}"
@@ -87,7 +88,7 @@
     <tbody>
     <tr>
         <td colspan="10"><p style=" font-weight: bold; text-align: center;">No studies found</p></td>
-        <th class="col-md-1">Score</th>
+
     </tr>
     </tbody>
 </table>
