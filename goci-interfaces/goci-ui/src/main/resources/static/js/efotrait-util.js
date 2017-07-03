@@ -1321,6 +1321,10 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         // Mapped traits
         var mappedTraits = asso.mappedLabel;
         if (mappedTraits) {
+            $.each(mappedTraits, function(index, trait) {
+                var link = window.location.pathname.split('/efotraits/')[0]+'/efotraits/' + asso.mappedUri[index].split('/').slice(-1)[0]
+                mappedTraits[index] = setExternalLinkText(link,trait)
+            });
             tmp['mappedTraits'] = mappedTraits.join(', ');
         } else {
             tmp['mappedTraits'] = '-';
