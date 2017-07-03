@@ -1303,6 +1303,18 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         } else {
             tmp['reportedGenes'] = '-';
 
+        }
+
+        // Mapped genes
+        var genes = [];
+        var mappedGenes = asso.entrezMappedGenes;
+        if (mappedGenes) {
+            $.each(mappedGenes, function(index, gene) {
+                genes.push(setQueryUrl(gene));
+            });
+            tmp['mappedGenes'] = genes.join(', ');
+        } else {
+            tmp['mappedGenes'] = '-';
 
         }
 
@@ -1374,8 +1386,8 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
                                                    title: 'CI',
                                                    sortable: true
                                                },{
-                                                   field: 'reportedGenes',
-                                                   title: 'Reported gene(s)',
+                                                   field: 'mappedGenes',
+                                                   title: 'Mapped gene(s)',
                                                    sortable: true
                                                },{
                                                    field: 'reportedTraits',
