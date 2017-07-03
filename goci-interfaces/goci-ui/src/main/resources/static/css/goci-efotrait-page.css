@@ -16,8 +16,21 @@ input[type=checkbox].cart-item-cb {
     transform: scale(2, 2);
 }
 
+/*
+check box to remove associations that annotated to efos which are currently not in the cart
+ */
+#cb-remove-nonunique-association {
+    transform: scale(2, 2);
+}
+
+
 /* when user select an item fron cart, highlight it */
 .list-group-item.highlight {
+    background-color: #ffe6f0;
+}
+
+/* when user select an item fron cart, highlight it */
+a.highlight {
     background-color: #ffe6f0;
 }
 

@@ -14,25 +14,25 @@
 
     <title>GWAS Catalog</title>
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{../../css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}" rel="stylesheet"/>
     <!--xintodo disable for offline debug-->
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"/>
     <!--rel="stylesheet"/>-->
-    <link href="../static/css/bootstrap-table.css" th:href="@{../../css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{../../css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{../../css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
     <link href="../static/css/sticky-footer-navbar.css"
-          th:href="@{../../css/sticky-footer-navbar.css}"
+          th:href="@{../css/sticky-footer-navbar.css}"
           rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../../css/goci-ui.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../../css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../css/icons/flaticon.css}"/>
     <link rel="stylesheet"
           href="../static/css/goci-color-palette-1.css"
-          th:href="@{../../css/goci-color-palette-1.css}"/>
+          th:href="@{../css/goci-color-palette-1.css}"/>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -52,8 +52,8 @@
             <h2 style="margin:0px">
                 <img alt="externalLink"
                      style="width: 1em; height: auto;"
-                     src="../static/icons/dna13.png"
-                     th:src="@{/icons/dna13.png}"/><span style="padding-left:10px">Trait</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
+                     src="../static/icons/owl3.png"
+                     th:src="@{/icons/owl3.png}"/><span style="padding-left:10px">EFO traits</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
             </h2>
         </div>
     </div>
@@ -464,7 +464,7 @@
                                         type="button"
                                         class="btn btn-default cart-action-btn"
                                         title="Check/Uncheck all traits in list.">
-                                            <span class="glyphicon glyphicon-unchecked"
+                                            <span class="glyphicon glyphicon-check"
                                               aria-hidden="true"></span>
                                         </button>
                                     </div>
@@ -476,9 +476,46 @@
                             </div>
 
                             <div class="col-xs-12" style="float:left">
-                                <input id="cb-query-include-descendants" type="checkbox" checked="checked"/>
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked="checked"/>-->
+                                <input id="cb-query-include-descendants" type="checkbox"/>
                                 <label for="cb-query-include-descendants">  Always include trait subtypes</label>
                                 <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
+                            </div>
+
+                            <div class="col-xs-12" style="float:left">
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked="checked"/>-->
+                                <input id="cb-remove-nonunique-association" type="checkbox"/>
+                                <label for="cb-remove-nonunique-association">  Remove associations with non-selected EFOs</label>
+                                <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
+                            </div>
+
+                            <div class="container row col-xs-12" style="margin-top: 10px">
+
+                                <div id="filters">
+                                    <h4>HighLight By ancestry</h4>
+
+                                    <div class="col-xs-1.5" style="float:left">
+                                        <div id="btn-ancestry-dropdown" class="button-group">
+                                                <button type="button"
+                                                        class="btn btn-default btn-sm dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <span
+                                                        class="caret"></span></button>
+                                            <ul id="ancestry-dropdown-menu" class="dropdown-menu"></ul>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                                <!--<div>-->
+                                    <!--<button type="button"-->
+                                            <!--class="btn btn-default pull-right"-->
+                                            <!--id="clear-filter">Clear all filters</button>-->
+                                    <!--<button type="submit"-->
+                                            <!--class="btn btn-default pull-right"-->
+                                            <!--style="margin-right: 15px;">Apply filters</button>-->
+                                <!--</div>-->
                             </div>
                         </div>
 
@@ -558,18 +595,17 @@
                     </div>
                 </div>
             </div>
-
             <!--plot, tables-->
             <div class="col-xs-7" id="results-area">
                 <!-- List the available tables -->
                 <div class="row" style="margin-top:0px">
                     <div id="table-list" class="panel clearfix" style="padding-left:0px;box-shadow:none">
                         <span style="margin-right:10px;font-weight:bold">Available data:</span>
-                        <button type="button"
-                                class="btn btn-default available-data-btn"
-                                onclick="toggle_and_scroll('#locus_panel')">
-                    <span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
-                </button>
+                        <!--<button type="button"-->
+                                <!--class="btn btn-default available-data-btn"-->
+                                <!--onclick="toggle_and_scroll('#locus_panel')">-->
+                    <!--<span class="locus_label">Manhattan plot</span><span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>-->
+                <!--</button>-->
                         <button type="button"
                                 class="btn btn-default available-data-btn"
                                 onclick="toggle_and_scroll('#association_panel')">
@@ -647,6 +683,9 @@
                     </div>
                 </div>
 
+
+
+
                 <!-- Studies table -->
                 <div class="row" id="study-table-loading" style="margin-top:20px">
                     <div id="study_panel" class="panel panel-default">
@@ -657,8 +696,8 @@
 
                             <span class="pull-right clickable panel-collapsed"
                                   onclick="toggleSidebar('#study_panel span.clickable')">
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </span>
+                                 <span class="glyphicon glyphicon-chevron-down"></span>
+                            </span>
                         </div>
 
                         <div class="panel-body" style="display:none">
@@ -676,8 +715,9 @@
         </div>
 
 
-    </div>
 
+
+    </div>
 
 
 
@@ -695,8 +735,6 @@
     <!--</div>-->
 
 
-
-
 </div>
 
 <!--Include footer-->
@@ -710,7 +748,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
 
-<script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css"
@@ -721,7 +759,7 @@
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
-        th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
+        th:src="@{../js/ie10-viewport-bug-workaround.js}"></script>
 <script>
     $(document).ready(() => {
         $('[data-toggle="tooltip"]').tooltip();
@@ -730,58 +768,58 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{../../js/goci-ui.js}"></script>
-<script src="../static/js/efotraitresult.js" th:src="@{../../js/efotraitresult.js}"></script>
+<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
+<script src="../static/js/efotraitresult.js" th:src="@{../js/efotraitresult.js}"></script>
 
 <!-- LocusZoom
 ================================================== -->
 <script src="../static/js/plugins/locuszoom.vendor.min.js"
-        th:src="@{../../js/plugins/locuszoom.vendor.min.js}"></script>
-<script src="../static/js/plugins/locuszoom.app.js" th:src="@{../../js/plugins/locuszoom.app.js}"></script>
-<link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
+        th:src="@{../js/plugins/locuszoom.vendor.min.js}"></script>
+<script src="../static/js/plugins/locuszoom.app.js" th:src="@{../js/plugins/locuszoom.app.js}"></script>
+<link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../css/locuszoom.css}"/>
 
 <!-- clipboardjs
 ================================================== -->
-<script src="../static/js/plugins/clipboard.min.js" th:src="@{../../js/plugins/clipboard.min.js}"></script>
+<script src="../static/js/plugins/clipboard.min.js" th:src="@{../js/plugins/clipboard.min.js}"></script>
 
 <!-- OLS-tree
 ================================================== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
+<script src="../static/js/plugins/ols-treeview.js" th:src="@{../js/plugins/ols-treeview.js}"></script>
 <link rel="stylesheet"
       href="../static/css/proton/style.min.css"
-      th:href="@{../../css/proton/style.min.css}"
+      th:href="@{../css/proton/style.min.css}"
       media="screen"/>
 
 <!-- OLS auto-suggest
 ================================================== -->
-<link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../../css/ols_auto_complete/ols.css}"/>
+<link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../css/ols_auto_complete/ols.css}"/>
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/ols-colors.css"
-      th:href="@{../../css/ols_auto_complete/ols-colors.css}"/>
+      th:href="@{../css/ols_auto_complete/ols-colors.css}"/>
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/typeaheadjs.css"
-      th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
+      th:href="@{../css/ols_auto_complete/typeaheadjs.css}"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
-<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
+<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../js/plugins/ols-autocomplete.js}"></script>
 
 <!-- OLS-graph
 ================================================== -->
 <link rel="stylesheet"
       href="../static/css/ols_graph/awesomplete.css"
-      th:href="@{../../css/ols_graph/awesomplete.css}"
+      th:href="@{../css/ols_graph/awesomplete.css}"
       type="text/css"/>
 <link rel="stylesheet"
       href=".../static/css/ols_graph/OLS-graphview.css"
-      th:href="@{../../css/ols_graph/OLS-graphview.css}"
+      th:href="@{../css/ols_graph/OLS-graphview.css}"
       type="text/css"
       media="screen"/>
 <link rel="stylesheet"
       href="../static/css/ols_graph/vis.min.css"
-      th:href="@{../../css/ols_graph/vis.min.css}"
+      th:href="@{../css/ols_graph/vis.min.css}"
       type="text/css"/>
-<script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
+<script src="../static/js/plugins/ols-graphview.js" th:src="@{../js/plugins/ols-graphview.js}"></script>
 
 <!--vis.js-->
 <script src="https://cdn.rawgit.com/almende/vis/master/dist/vis.js"></script>
@@ -794,7 +832,7 @@
 
 
 <!--oxo-grapg-->
-<script src="../static/js/plugins/oxo-graph.js" th:src="@{../../js/plugins/oxo-graph.js}"></script>
+<script src="../static/js/plugins/oxo-graph.js" th:src="@{../js/plugins/oxo-graph.js}"></script>
 
 <!-- loading overlay
 ================================================== -->
@@ -810,10 +848,10 @@
 
 <!-- trait page
 ================================================== -->
-<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
-<script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
+<script src="../static/js/efotrait-locuszoom.js" th:src="@{../js/efotrait-locuszoom.js}"></script>
+<script src="../static/js/efotrait-util.js" th:src="@{../js/efotrait-util.js}"></script>
 <!--this come last to make sure trait page specific style is not overwritten by othe css.-->
-<link rel="stylesheet" href="../static/css/goci-efotrait-page.css" th:href="@{../../css/goci-efotrait-page.css}"/>
+<link rel="stylesheet" href="../static/css/goci-efotrait-page.css" th:href="@{../css/goci-efotrait-page.css}"/>
 
 
 <script type="text/javascript">
@@ -838,125 +876,125 @@
 
 <script>
     //<![CDATA[
-    var smarti = this['smarti'] || { scope: this };
-
-    $(function () {
-        if (!smarti.initialized) {
-            smarti.initialized = true;
-            $('[data-smarti]').smarti();
-        }
-    })
-
-    $.fn.smarti = function () {
-        $.each(this.selector == '[data-smarti]' ? this : this.find('[data-smarti]'), function () {
-            var jq = $(this);
-            var opts = jq.data();
-            smarti.scope[opts.name] = new smarti[opts['smarti']](jq, opts);
-        });
-    }
-
-    smarti.dock = function (jq, opts) {
-        var that = this;
-        this.dockPosition = 'left';
-        this.dockOffset = 10;
-        this.container = jq.css({ overflow: 'hidden' });
-        $.extend(that, opts);
-
-        if (this.container.css('position') != 'absolute') this.container.css({ position: 'relative' });
-        this.dock = this.container.children('[data-dock]').css({ position: 'absolute', zIndex: 999 });
-        this.handle = this.container.children('[data-handle]').css({ position: 'absolute', zIndex: 1000 });
-        this.content = this.container.children('[data-content]').css({ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 });
-        this._storage = this.useStorage != null ? this.useStorage + 'Storage' : null;
-        if (this.container.height() == 0) {
-            this._autoHeight = true;
-            this.content.css({ bottom: 'auto' });
-        }
-
-        this._ap = function () { return that.dockPosition == 'left' || that.dockPosition == 'right' ? ['top', 'bottom'] : ['left', 'right'] }
-        this._ds = function () { return that._ap()[0] == 'top' ? that.dock.outerWidth(true) : that.dock.outerHeight(true) }
-
-        this._setHover = function () {
-            if (!that.docked) {
-                that.dock.mouseover(function () {
-                    if (!that._sliding && !that._hover) {
-                        that._sliding = true;
-                        that._hover = true;
-                        that.slide(function () { that._sliding = false; });
-                    }
-                });
-                that.content.mouseover(function () {
-                    if (!that._sliding && that._hover) {
-                        that._sliding = true;
-                        that._hover = false;
-                        that.slide(function () { that._sliding = false; });
-                    }
-                });
-            }
-            else {
-                that._hover = false;
-                that.dock.off('mouseover');
-                that.content.off('mouseover');
-            }
-        }
-        this._setDocked = function (docked) {
-            that.docked = docked;
-            if (that._storage != null && smarti.scope[that._storage] != null) smarti.scope[that._storage][that.name + 'Docked'] = docked ? '1' : '0';
-        }
-        this._getDocked = function () {
-            var d = that._storage != null && smarti.scope[that._storage] != null ? smarti.scope[that._storage][that.name + 'Docked'] : null;
-            return d != null ? d == '1' : (that.docked != null ? that.docked : true);
-        }
-        this._fixHeight = function () {
-            if (that._autoHeight) {
-                var ds = !that.fixedContent && that._ap()[0] == 'left' ? (that.docked ? that._ds() : that.dockOffset) : 0;
-                that.container.height(that.content.outerHeight(true) + ds);
-            }
-        }
-        this.toggle = function () {
-            that._setDocked(!that.docked);
-            if (!that.fixedContent) {
-                var o = {};
-                o[that.dockPosition] = that.docked ? that._ds() : that.dockOffset;
-                that.content.animate(o);
-            }
-            if (that.docked) that._fixHeight();
-            that.slide(function () { that._setHover(); that.toggleHandle(); if (!that.docked) that._fixHeight(); });
-        }
-        this.toggleHandle = function () {
-            if (that.handle.length > 1) {
-                that.handle.not("[data-handle='hidden']").toggle(that.docked);
-                that.handle.filter("[data-handle='hidden']").toggle(!that.docked);
-            }
-        }
-        this.slide = function (cb) {
-            var o1 = {}, o2 = {}; ds = that._ds();
-            o1[that.dockPosition] = that.docked || that._hover ? 0 : -ds + that.dockOffset;
-            that.dock.animate(o1, cb);
-            that.handle.each(function () {
-                var jq = $(this);
-                var o = jq.data('o');
-                o2[that.dockPosition] = that.docked || that._hover ? ds + o : o + that.dockOffset;
-                jq.animate(o2);
-            });
-        }
-        this.docked = this._getDocked();
-        this.dock.css(this.dockPosition, this.docked ? 0 : -this._ds() + that.dockOffset);
-        if (!this.fixedContent) {
-            this.content.css(this.dockPosition, this.docked ? this._ds() : that.dockOffset);
-            this.dock.css(this._ap()[0], 0).css(this._ap()[1], 0);
-        }
-        this.handle.each(function () {
-            var jq = $(this);
-            var o = parseInt(jq.css(that.dockPosition)) || 0;
-            jq.data('o', o);
-            jq.css(that.dockPosition, that.docked ? that._ds() + o : o + that.dockOffset);
-        });
-        this.handle.click(this.toggle);
-        this._fixHeight();
-        this._setHover();
-        this.toggleHandle();
-        return this;
-    }
+//    var smarti = this['smarti'] || { scope: this };
+//
+//    $(function () {
+//        if (!smarti.initialized) {
+//            smarti.initialized = true;
+//            $('[data-smarti]').smarti();
+//        }
+//    })
+//
+//    $.fn.smarti = function () {
+//        $.each(this.selector == '[data-smarti]' ? this : this.find('[data-smarti]'), function () {
+//            var jq = $(this);
+//            var opts = jq.data();
+//            smarti.scope[opts.name] = new smarti[opts['smarti']](jq, opts);
+//        });
+//    }
+//
+//    smarti.dock = function (jq, opts) {
+//        var that = this;
+//        this.dockPosition = 'left';
+//        this.dockOffset = 10;
+//        this.container = jq.css({ overflow: 'hidden' });
+//        $.extend(that, opts);
+//
+//        if (this.container.css('position') != 'absolute') this.container.css({ position: 'relative' });
+//        this.dock = this.container.children('[data-dock]').css({ position: 'absolute', zIndex: 999 });
+//        this.handle = this.container.children('[data-handle]').css({ position: 'absolute', zIndex: 1000 });
+//        this.content = this.container.children('[data-content]').css({ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 });
+//        this._storage = this.useStorage != null ? this.useStorage + 'Storage' : null;
+//        if (this.container.height() == 0) {
+//            this._autoHeight = true;
+//            this.content.css({ bottom: 'auto' });
+//        }
+//
+//        this._ap = function () { return that.dockPosition == 'left' || that.dockPosition == 'right' ? ['top', 'bottom'] : ['left', 'right'] }
+//        this._ds = function () { return that._ap()[0] == 'top' ? that.dock.outerWidth(true) : that.dock.outerHeight(true) }
+//
+//        this._setHover = function () {
+//            if (!that.docked) {
+//                that.dock.mouseover(function () {
+//                    if (!that._sliding && !that._hover) {
+//                        that._sliding = true;
+//                        that._hover = true;
+//                        that.slide(function () { that._sliding = false; });
+//                    }
+//                });
+//                that.content.mouseover(function () {
+//                    if (!that._sliding && that._hover) {
+//                        that._sliding = true;
+//                        that._hover = false;
+//                        that.slide(function () { that._sliding = false; });
+//                    }
+//                });
+//            }
+//            else {
+//                that._hover = false;
+//                that.dock.off('mouseover');
+//                that.content.off('mouseover');
+//            }
+//        }
+//        this._setDocked = function (docked) {
+//            that.docked = docked;
+//            if (that._storage != null && smarti.scope[that._storage] != null) smarti.scope[that._storage][that.name + 'Docked'] = docked ? '1' : '0';
+//        }
+//        this._getDocked = function () {
+//            var d = that._storage != null && smarti.scope[that._storage] != null ? smarti.scope[that._storage][that.name + 'Docked'] : null;
+//            return d != null ? d == '1' : (that.docked != null ? that.docked : true);
+//        }
+//        this._fixHeight = function () {
+//            if (that._autoHeight) {
+//                var ds = !that.fixedContent && that._ap()[0] == 'left' ? (that.docked ? that._ds() : that.dockOffset) : 0;
+//                that.container.height(that.content.outerHeight(true) + ds);
+//            }
+//        }
+//        this.toggle = function () {
+//            that._setDocked(!that.docked);
+//            if (!that.fixedContent) {
+//                var o = {};
+//                o[that.dockPosition] = that.docked ? that._ds() : that.dockOffset;
+//                that.content.animate(o);
+//            }
+//            if (that.docked) that._fixHeight();
+//            that.slide(function () { that._setHover(); that.toggleHandle(); if (!that.docked) that._fixHeight(); });
+//        }
+//        this.toggleHandle = function () {
+//            if (that.handle.length > 1) {
+//                that.handle.not("[data-handle='hidden']").toggle(that.docked);
+//                that.handle.filter("[data-handle='hidden']").toggle(!that.docked);
+//            }
+//        }
+//        this.slide = function (cb) {
+//            var o1 = {}, o2 = {}; ds = that._ds();
+//            o1[that.dockPosition] = that.docked || that._hover ? 0 : -ds + that.dockOffset;
+//            that.dock.animate(o1, cb);
+//            that.handle.each(function () {
+//                var jq = $(this);
+//                var o = jq.data('o');
+//                o2[that.dockPosition] = that.docked || that._hover ? ds + o : o + that.dockOffset;
+//                jq.animate(o2);
+//            });
+//        }
+//        this.docked = this._getDocked();
+//        this.dock.css(this.dockPosition, this.docked ? 0 : -this._ds() + that.dockOffset);
+//        if (!this.fixedContent) {
+//            this.content.css(this.dockPosition, this.docked ? this._ds() : that.dockOffset);
+//            this.dock.css(this._ap()[0], 0).css(this._ap()[1], 0);
+//        }
+//        this.handle.each(function () {
+//            var jq = $(this);
+//            var o = parseInt(jq.css(that.dockPosition)) || 0;
+//            jq.data('o', o);
+//            jq.css(that.dockPosition, that.docked ? that._ds() + o : o + that.dockOffset);
+//        });
+//        this.handle.click(this.toggle);
+//        this._fixHeight();
+//        this._setHover();
+//        this.toggleHandle();
+//        return this;
+//    }
 
     //]]>
 </script>
@@ -979,146 +1017,14 @@
 
 
 
-
-    //    var studies = findStudiesForEFO(getMainEFO())
-//    var studyDocument = {
-//        pubmedId : function(studydocumentSolr){
-//            return studydocumentSolr.pubmedId;
-//        }
-//    }
-//
-//    Promise.all(values(findStudiesForEFO(getMainEFO())).map(studyDocument.pubmedId).map(EPMC.getByPumbedId)).then(function(array){
-//        return array.map(EPMC.searchResult.citedByCount)
-//    })
-
-//    promiseGet('/gwas/api/search/efotrait',
-//               //            return promisePost('/gwas/api/search/efotrait',
-//               {
-//                   'q': 'EFO_0000400',
-//                   'max': 99999,
-//                   'group.limit': 99999,
-//                   'group.field': 'resourcename',
-//                   'facet.field': 'resourcename',
-//                   'hl.fl': 'shortForm,efoLink',
-//                   'hl.snippets': 100
-//               })
-//
-//    promisePost('http://localhost:8983/solr/gwas/select',
-//                {
-//                    'wt' : 'json',
-//                    'q': 'EFO_0000400',
-//                    'max': 99999,
-//                    group : true,
-//                    'group.limit': 99999,
-//                    'group.field': 'resourcename',
-//                    hl:true,
-//                    'hl.fl': 'shortForm,efoLink',
-//                    'hl.simple.post' : '</b>',
-//                    'hl.simple.pre' : '<b>',
-//                    'hl.snippets': 100,
-//                     facet : true,
-//                    'facet.field': 'resourcename',
-//
-//                },'application/x-www-form-urlencoded')
-//
-//    function promisePost(url, params={}, header='application/json') {
-//
-//        if (!url.startsWith("http")) {
-//            url = window.location.origin + url
-//        }
-//
-//        // Return a new promise.
-//        return new Promise(function(resolve, reject) {
-//            var req = new XMLHttpRequest();
-//
-//            if(header == 'application/json'){
-//                params = JSON.stringify(params)
-//            }
-//            if(header == 'application/x-www-form-urlencoded') {
-//                params = Object.keys(params).map(function (key) {
-//                    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
-//                }).join('&');
-//            }
-//
-//
-//            req.open('POST', url);
-//
-//            req.setRequestHeader("Content-Type", header);
-//
-//
-//            req.onload = function() {
-//                // This is called even on 404 etc
-//                // so check the status
-//                if (req.status == 200) {
-//                    // Resolve the promise with the response text
-//                    resolve(req.response);
-//                }
-//                else {
-//                    // Otherwise reject with the status text
-//                    // which will hopefully be a meaningful error
-//                    reject(Error(req.statusText));
-//                }
-//            };
-//
-//            // Handle network errors
-//            req.onerror = function() {
-//                reject(Error("Network Error"));
-//            };
-//
-//            // Make the request
-//            req.send(params);
-//        });
-//
-//
-//        // //testing how fast the post method works
-//        // //"{"1":472.7800000000002,"10":1723.4450000000002,"50":8417.69,"100":16249.485000000002,"200":30406.670000000002,"205":28694.609999999986,"208":30608.684999999823,"209":29462.99499999988,"210":30634.399999999907}"
-//        // var size = [1,10,50,100,200,400,800,1000]
-//        // var size = [220,240,260,280,300]
-//        // var result = {};
-//        // var t0 = performance.now();
-//        // size.forEach(function(s){
-//        //     getAvailableEFOs().then(function(x) {
-//        //         t0 = performance.now();
-//        //         return getColourForEFOs(Object.keys(x).slice(0, s))
-//        //     }).then(console.log).then(function(){
-//        //         var t1 = performance.now();
-//        //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
-//        //         result[s.toString()] = t1 - t0;
-//        //     })
-//        // });
-//        // result
-//        //
-//        // //testing using get
-//        // var size = [1,10,50,100,200,400,800,1000]
-//        // var size = [1500]
-//        // var result = {};
-//        // var t0 = performance.now();
-//        // size.forEach(function(s){
-//        //     getAvailableEFOs().then(function(x) {
-//        //         t0 = performance.now();
-//        //         return Promise.all( Object.keys(x).slice(0, s).map(getColourForEFO))
-//        //     }).then(console.log).then(function(){
-//        //         var t1 = performance.now();
-//        //         console.warn(s + " took " + (t1 - t0) + " milliseconds.")
-//        //         result[s.toString()] = t1 - t0;
-//        //     })
-//        // });
-//        // result
-//    }
-
-//
-//    OLS.getHierarchicalDescendants(getMainEFO()).then((x) => {
-//        return filterAvailableEFOs(Object.keys(x));
-//    })
-
-
-
-
     //]]>
 
 
 </script>
+<style type="text/css">
 
+
+</style>
 
 
 </body>

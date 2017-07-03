@@ -83,7 +83,7 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
     tooltip_positioning: "vertical",
     id_field: "{{namespace}}id",
     fields: ["{{namespace}}phewas"],
-    always_hide_legend: true,
+    always_hide_legend: false,
     x_axis: {
         field: "{{namespace}}x",
         floor: 0,
@@ -465,7 +465,7 @@ LocusZoom.Layouts.add("panel", "efowas", {
     legend: {
         orientation: "vertical",
         origin: {x: 55, y: 40},
-        hidden: true
+        hidden: false
     },
     data_layers: [
         LocusZoom.Layouts.get("data_layer", "significance", {unnamespaced: true}),
@@ -493,39 +493,49 @@ transferLocation = function(chr, position) {
 }
 
 //replot receive a list of association_docs from solr search
-reloadLocusZoom = function(plot_id, data_association, highlight_associations) {
+reloadLocusZoom = function(plot_id, data_association, highlight_associations=undefined,highlight_legend=undefined,hide_associations=undefined) {
     //we make a copy so that we are not changing the raw data
     var data_association = jQuery.extend(true, {}, data_association)
+
+    //filter unwanted association
+    if(hide_associations != undefined){
+        data_association.docs = data_association.docs.filter((association_doc)=>{
+            return hide_associations.indexOf(association_doc.id) == -1
+        })
+        console.debug('removing associations which have more than one EFO annotations.')
+        console.debug(hide_associations);
+    }
+
+
     //adding information to association doc
     LocusZoom.Data.EfoWASSource.prototype.parseResponse = function(resp, chain, fields, outnames, trans) {
         var data = JSON.parse(JSON.stringify(data_association.docs));
         console.log("Parsing association doc to locus zoom.");
         console.log(data_association.docs);
-        data.forEach(function(d, i, object) {
-//                if (d.shortForm.length > 1) {
-//                    console.log(d);
-//                }
+        data = data.map( (d, i, object) =>{
 
             if (d.chromLocation) {
                 //we only plot those association which have chromosome information
-                data[i].chr = d.chromLocation[0].split(":")[0];
-                if (data[i].chr == 'X') {
-                    data[i].chr = 23;
+                d.chr = d.chromLocation[0].split(":")[0];
+                if (d.chr == 'X') {
+                    d.chr = 23;
                 }
-                if (data[i].chr == 'Y') {
-                    data[i].chr = 24;
+                if (d.chr == 'Y') {
+                    d.chr = 24;
                 }
-                data[i].bp = parseInt(d.chromLocation[0].split(":")[1]);
-                data[i].pval = Math.pow(10, d.pValueExponent);
-                data[i].phewas_string = d.rsId[0];
-                data[i].x = transferLocation(data[i].chr, data[i].bp);
+                d.bp = parseInt(d.chromLocation[0].split(":")[1]);
+                d.pval = Math.pow(10, d.pValueExponent);
+                d.phewas_string = d.rsId[0];
+                d.x = transferLocation(d.chr, d.bp);
+                return d;
             }
             else {
                 //some association don't have chromosome information
-                object.splice(i, 1);
+                console.warn('no location information available for association:')
+                console.warn(d);
+                return false
             }
-
-        });
+        }).filter((d)=>{return d});
         return {header: chain.header, body: data};
     };
 
@@ -557,7 +567,7 @@ reloadLocusZoom = function(plot_id, data_association, highlight_associations) {
                 d.category = 'other '
                 colorMap[d.category] = hexToRgb('#f2f2f2');
             }else{
-                d.category = d.preferedEFO;
+                d.category = highlight_legend;
                 colorMap[d.category] = hexToRgb('#ff5c33');
             }
         })
