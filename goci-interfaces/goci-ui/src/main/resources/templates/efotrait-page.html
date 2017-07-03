@@ -14,25 +14,25 @@
 
     <title>GWAS Catalog</title>
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" th:href="@{../../css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap.css" th:href="@{../css/bootstrap.min.css}" rel="stylesheet"/>
     <!--xintodo disable for offline debug-->
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"/>
     <!--rel="stylesheet"/>-->
-    <link href="../static/css/bootstrap-table.css" th:href="@{../../css/bootstrap-table.css}" rel="stylesheet"/>
-    <link href="../static/css/bootstrap-theme.css" th:href="@{../../css/bootstrap-theme.min.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-table.css" th:href="@{../css/bootstrap-table.css}" rel="stylesheet"/>
+    <link href="../static/css/bootstrap-theme.css" th:href="@{../css/bootstrap-theme.min.css}" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/jumbotron.css" th:href="@{../../css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/jumbotron.css" th:href="@{../css/jumbotron.css}" rel="stylesheet"/>
     <link href="../static/css/sticky-footer-navbar.css"
-          th:href="@{../../css/sticky-footer-navbar.css}"
+          th:href="@{../css/sticky-footer-navbar.css}"
           rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
-    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../../css/goci-ui.css}"/>
-    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../../css/icons/flaticon.css}"/>
+    <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{../css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{../css/icons/flaticon.css}"/>
     <link rel="stylesheet"
           href="../static/css/goci-color-palette-1.css"
-          th:href="@{../../css/goci-color-palette-1.css}"/>
+          th:href="@{../css/goci-color-palette-1.css}"/>
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -53,7 +53,7 @@
                 <img alt="externalLink"
                      style="width: 1em; height: auto;"
                      src="../static/icons/owl3.png"
-                     th:src="@{/icons/owl3.png}"/><span style="padding-left:10px">Trait</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
+                     th:src="@{/icons/owl3.png}"/><span style="padding-left:10px">EFO traits</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
             </h2>
         </div>
     </div>
@@ -748,7 +748,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
 
-<script src="../static/js/bootstrap.min.js" th:src="@{../../js/bootstrap.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{../js/bootstrap.min.js}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.css"
@@ -759,7 +759,7 @@
 
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../static/js/ie10-viewport-bug-workaround.js"
-        th:src="@{../../js/ie10-viewport-bug-workaround.js}"></script>
+        th:src="@{../js/ie10-viewport-bug-workaround.js}"></script>
 <script>
     $(document).ready(() => {
         $('[data-toggle="tooltip"]').tooltip();
@@ -768,58 +768,58 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{../../js/goci-ui.js}"></script>
-<script src="../static/js/efotraitresult.js" th:src="@{../../js/efotraitresult.js}"></script>
+<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
+<script src="../static/js/efotraitresult.js" th:src="@{../js/efotraitresult.js}"></script>
 
 <!-- LocusZoom
 ================================================== -->
 <script src="../static/js/plugins/locuszoom.vendor.min.js"
-        th:src="@{../../js/plugins/locuszoom.vendor.min.js}"></script>
-<script src="../static/js/plugins/locuszoom.app.js" th:src="@{../../js/plugins/locuszoom.app.js}"></script>
-<link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../../css/locuszoom.css}"/>
+        th:src="@{../js/plugins/locuszoom.vendor.min.js}"></script>
+<script src="../static/js/plugins/locuszoom.app.js" th:src="@{../js/plugins/locuszoom.app.js}"></script>
+<link rel="stylesheet" href="../static/css/locuszoom.css" th:href="@{../css/locuszoom.css}"/>
 
 <!-- clipboardjs
 ================================================== -->
-<script src="../static/js/plugins/clipboard.min.js" th:src="@{../../js/plugins/clipboard.min.js}"></script>
+<script src="../static/js/plugins/clipboard.min.js" th:src="@{../js/plugins/clipboard.min.js}"></script>
 
 <!-- OLS-tree
 ================================================== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<script src="../static/js/plugins/ols-treeview.js" th:src="@{../../js/plugins/ols-treeview.js}"></script>
+<script src="../static/js/plugins/ols-treeview.js" th:src="@{../js/plugins/ols-treeview.js}"></script>
 <link rel="stylesheet"
       href="../static/css/proton/style.min.css"
-      th:href="@{../../css/proton/style.min.css}"
+      th:href="@{../css/proton/style.min.css}"
       media="screen"/>
 
 <!-- OLS auto-suggest
 ================================================== -->
-<link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../../css/ols_auto_complete/ols.css}"/>
+<link rel="stylesheet" href="../static/css/ols_auto_complete/ols.css" th:href="@{../css/ols_auto_complete/ols.css}"/>
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/ols-colors.css"
-      th:href="@{../../css/ols_auto_complete/ols-colors.css}"/>
+      th:href="@{../css/ols_auto_complete/ols-colors.css}"/>
 <link rel="stylesheet"
       href="../static/css/ols_auto_complete/typeaheadjs.css"
-      th:href="@{../../css/ols_auto_complete/typeaheadjs.css}"/>
+      th:href="@{../css/ols_auto_complete/typeaheadjs.css}"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/0.11.1/typeahead.bundle.min.js"></script>
-<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../../js/plugins/ols-autocomplete.js}"></script>
+<script src="../static/js/plugins/ols-autocomplete.js" th:src="@{../js/plugins/ols-autocomplete.js}"></script>
 
 <!-- OLS-graph
 ================================================== -->
 <link rel="stylesheet"
       href="../static/css/ols_graph/awesomplete.css"
-      th:href="@{../../css/ols_graph/awesomplete.css}"
+      th:href="@{../css/ols_graph/awesomplete.css}"
       type="text/css"/>
 <link rel="stylesheet"
       href=".../static/css/ols_graph/OLS-graphview.css"
-      th:href="@{../../css/ols_graph/OLS-graphview.css}"
+      th:href="@{../css/ols_graph/OLS-graphview.css}"
       type="text/css"
       media="screen"/>
 <link rel="stylesheet"
       href="../static/css/ols_graph/vis.min.css"
-      th:href="@{../../css/ols_graph/vis.min.css}"
+      th:href="@{../css/ols_graph/vis.min.css}"
       type="text/css"/>
-<script src="../static/js/plugins/ols-graphview.js" th:src="@{../../js/plugins/ols-graphview.js}"></script>
+<script src="../static/js/plugins/ols-graphview.js" th:src="@{../js/plugins/ols-graphview.js}"></script>
 
 <!--vis.js-->
 <script src="https://cdn.rawgit.com/almende/vis/master/dist/vis.js"></script>
@@ -832,7 +832,7 @@
 
 
 <!--oxo-grapg-->
-<script src="../static/js/plugins/oxo-graph.js" th:src="@{../../js/plugins/oxo-graph.js}"></script>
+<script src="../static/js/plugins/oxo-graph.js" th:src="@{../js/plugins/oxo-graph.js}"></script>
 
 <!-- loading overlay
 ================================================== -->
@@ -848,10 +848,10 @@
 
 <!-- trait page
 ================================================== -->
-<script src="../static/js/efotrait-locuszoom.js" th:src="@{../../js/efotrait-locuszoom.js}"></script>
-<script src="../static/js/efotrait-util.js" th:src="@{../../js/efotrait-util.js}"></script>
+<script src="../static/js/efotrait-locuszoom.js" th:src="@{../js/efotrait-locuszoom.js}"></script>
+<script src="../static/js/efotrait-util.js" th:src="@{../js/efotrait-util.js}"></script>
 <!--this come last to make sure trait page specific style is not overwritten by othe css.-->
-<link rel="stylesheet" href="../static/css/goci-efotrait-page.css" th:href="@{../../css/goci-efotrait-page.css}"/>
+<link rel="stylesheet" href="../static/css/goci-efotrait-page.css" th:href="@{../css/goci-efotrait-page.css}"/>
 
 
 <script type="text/javascript">
