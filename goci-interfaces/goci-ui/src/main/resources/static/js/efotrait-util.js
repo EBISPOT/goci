@@ -33,12 +33,12 @@ var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not 
 /**
  * global variable storing solr query result.
  */
-var data_efo=undefined
-var data_study=undefined
-var data_association=undefined
-var data_diseasetrait=undefined
-var data_facet=undefined
-var data_highlighting=undefined
+var data_efo={}
+var data_study={}
+var data_association={}
+var data_diseasetrait={}
+var data_facet={}
+var data_highlighting={}
 
 /**
  * Other global setting
@@ -733,120 +733,120 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
  * @param {Boolean} initLoad
  */
 function processSolrData(data, initLoad=false) {
-    // Check if Solr returns some results
+//        if (data.grouped.resourcename.matches == 0) {
+//            $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
+//                                       "</em> cannot be found in the GWAS Catalog database</h2>");
+//        }
+    var isInCatalog=true;
     if (data.grouped.resourcename.matches == 0) {
-        $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
-                                   "</em> cannot be found in the GWAS Catalog database</h2>");
+        isInCatalog = false
     }
-    else {
-        //split the solr search by groups
-        //data_efo, data_study, data_association, data_diseasetrait;
-        data_facet = data.facet_counts.facet_fields.resourcename;
-        data_highlighting = data.highlighting;
+    //split the solr search by groups
+    //data_efo, data_study, data_association, data_diseasetrait;
+    data_facet = data.facet_counts.facet_fields.resourcename;
+    data_highlighting = data.highlighting;
 
-        $.each(data.grouped.resourcename.groups, (index, group) => {
-            switch (group.groupValue) {
-                case "efotrait":
-                    data_efo = group.doclist;
-                    break;
-                case "study":
-                    data_study = group.doclist;
-                    break;
-                case "association":
-                    data_association = group.doclist;
-                    break;
-                    //not sure we need this!
-                case "diseasetrait":
-                    data_diseasetrait = group.doclist;
-                    break;
-                default:
-            }
-        });
+    $.each(data.grouped.resourcename.groups, (index, group) => {
+        switch (group.groupValue) {
+            case "efotrait":
+                data_efo = group.doclist;
+                break;
+            case "study":
+                data_study = group.doclist;
+                break;
+            case "association":
+                data_association = group.doclist;
+                break;
+                //not sure we need this!
+            case "diseasetrait":
+                data_diseasetrait = group.doclist;
+                break;
+            default:
+        }
+    });
+
+    //remove association that annotated with efos which are not in the list
+    var remove = Promise.resolve();
+
+    if($('#cb-remove-nonunique-association').is(":checked")){
+        remove = removeAssociationWithNonSelectedEFO();
+    }
 
 
+    remove.then(()=>{
+        //If no solr return,greate a fake empyt array so tables/plot are empty
+        if(!isInCatalog) {
+            data_association.docs = []
+            data_study.docs = []
+        }
+
+        //update association/study table
+        displayEfotraitAssociations(data_association.docs);
+        displayEfotraitStudies(data_study.docs);
 
 
-        //remove association that annotated with efos which are not in the list
-        var remove = Promise.resolve();
-
-        if($('#cb-remove-nonunique-association').is(":checked")){
-             remove = removeAssociationWithNonSelectedEFO();
+        //work out highlight study
+        var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
+        if(initLoad && highlightedStudy!= undefined){
+            displayHighlightedStudy(highlightedStudy);
+            //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
+            getSummary(findStudiesForEFO(getMainEFO()));
         }
 
 
-        remove.then(()=>{
-            //update association/study table
-            displayEfotraitAssociations(data_association.docs);
-            displayEfotraitStudies(data_study.docs);
-
-
-            //work out highlight study
-            var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
-            if(initLoad){
-                displayHighlightedStudy(highlightedStudy);
-                //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
-                getSummary(findStudiesForEFO(getMainEFO()));
-            }
-
-
-            //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
-            var allUniqueEFO = {}
-            data_association.docs.forEach((d, i) => {
-                d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
-                d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
-                allUniqueEFO[d.preferedEFO] = 1;
-                //add any string data that will be use in the locus plot popover
-                d.popoverHTML = buildLocusPlotPopoverHTML(d);
-            })
-
-            //get all ancestries of all associations
-            var allAncestries = {};
-            data_association.docs.map((d) => {
-                d.ancestralGroups.map((a)=>{
-                    if(allAncestries[a] == undefined) allAncestries[a] = [];
-                    allAncestries[a].push(d.id);
-                })
-            })
-
-            prepareAncestryFilter(allAncestries);
-
-
-            //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
-            //Load colour for unique efo
-            var allColorLoaded = []
-            Object.keys(allUniqueEFO).forEach((efo) => {
-                allColorLoaded.push(getColourForEFO(efo).then((response) => {
-                    allUniqueEFO[efo] = response;
-                    return response;
-                }));
-            })
-
-            //When all colour are received, replot
-            Promise.all(allColorLoaded).then(() => {
-                                                 //assign colour to associations for plot
-                                                 console.debug(`Finish loading color from ${global_color_url}`);
-                                                 console.debug(allUniqueEFO);
-                                                 data_association.docs.forEach(function(d, i) {
-                                                     d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
-                                                     d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
-                                                     d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
-                                                     d.category = allUniqueEFO[d.preferedEFO].parent;
-                                                 })
-                                             }
-            ).catch((err) => {
-                console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
-                //xintodo create a default colour to plot, if the colour query fail
-            }).then(() =>{
-                //replot
-                reloadLocusZoom('#plot', data_association);
-            });
-
-
+        //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
+        var allUniqueEFO = {}
+        data_association.docs.forEach((d, i) => {
+            d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
+            d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
+            allUniqueEFO[d.preferedEFO] = 1;
+            //add any string data that will be use in the locus plot popover
+            d.popoverHTML = buildLocusPlotPopoverHTML(d);
         })
 
+        //get all ancestries of all associations
+        var allAncestries = {};
+        data_association.docs.map((d) => {
+            d.ancestralGroups.map((a)=>{
+                if(allAncestries[a] == undefined) allAncestries[a] = [];
+                allAncestries[a].push(d.id);
+            })
+        })
+
+        prepareAncestryFilter(allAncestries);
 
 
-    }
+        //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
+        //Load colour for unique efo
+        var allColorLoaded = []
+        Object.keys(allUniqueEFO).forEach((efo) => {
+            allColorLoaded.push(getColourForEFO(efo).then((response) => {
+                allUniqueEFO[efo] = response;
+                return response;
+            }));
+        })
+
+        //When all colour are received, replot
+        Promise.all(allColorLoaded).then(() => {
+                                             //assign colour to associations for plot
+                                             console.debug(`Finish loading color from ${global_color_url}`);
+                                             console.debug(allUniqueEFO);
+                                             data_association.docs.forEach(function(d, i) {
+                                                 d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
+                                                 d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
+                                                 d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
+                                                 d.category = allUniqueEFO[d.preferedEFO].parent;
+                                             })
+                                         }
+        ).catch((err) => {
+            console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
+            //xintodo create a default colour to plot, if the colour query fail
+        }).then(() =>{
+            //replot
+            reloadLocusZoom('#plot', data_association);
+        });
+    })
+
 }
 
 
@@ -3335,3 +3335,4 @@ _cleanDataTag = function(tagID){
         $(tagID).removeData(i)
     })
 }
+
