@@ -35,7 +35,7 @@ $(document).ready(function() {
 function getVariantData(rsId) {
     console.log("Solr research request received for " + rsId);
     setState(SearchState.LOADING);
-    $.getJSON('/gwas/api/search/association',
+    $.getJSON('../api/search/association',
               {
                   'q': "rsId:"+rsId,
                   'max': 1000
@@ -646,7 +646,7 @@ function setState(state) {
 }
 
 function setDownloadLink(rsId) {
-    var baseUrl = '../../api/search/downloads?';
+    var baseUrl = '../api/search/downloads?';
     var q = "q=".concat(rsId);
 
     var facet = '&facet=association';
