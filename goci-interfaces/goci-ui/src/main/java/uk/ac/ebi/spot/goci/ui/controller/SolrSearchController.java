@@ -145,7 +145,7 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "/api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    @RequestMapping(value = "api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     public void select(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
