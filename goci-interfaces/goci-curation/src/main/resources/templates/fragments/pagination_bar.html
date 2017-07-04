@@ -90,5 +90,24 @@ http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-i
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class='pagination pagination-centered'>
+         <form method="post" th:action="@{/studies(filters=true)}"
+               th:object="${studySearchFilter} " class="inline">
+                <input type="hidden" value="fredoom" name="curationStatus" th:field="*{statusSearchFilterId}" id="curationStatus" />
+                <input type="hidden" name="sorttype" value="scoresortdesc" />
+                <input type="hidden" id="hiddenScoreJsonPagination" name="scoreJSON" value="{}" />
+                <button name="page" value="2" type="submit">2</button>
+                <button name="page" value="3" type="submit">3</button>
+                <button name="page" value="4" type="submit">4</button>
+                <button name="page" value="5" type="submit">5</button>
+             <button name="page" value="6" type="submit">6</button>
+             <button name="page" value="7" type="submit">7</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+

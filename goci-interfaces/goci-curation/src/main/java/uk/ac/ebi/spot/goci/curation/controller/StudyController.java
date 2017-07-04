@@ -1,14 +1,15 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.JsonNode;
+import org.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,12 +70,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
+
+import static java.lang.Math.toIntExact;
 
 /**
  * Created by emma on 20/11/14.
@@ -112,6 +111,8 @@ public class StudyController {
     private StudyDeletionService studyDeletionService;
     private EventsViewService eventsViewService;
     private StudyUpdateService studyUpdateService;
+
+    private JsonNode scoreJsonNode;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -203,8 +204,25 @@ public class StudyController {
             sortString = "&sorttype=" + sortType;
         }
 
-        // This is the default study page will all studies
-        Page<Study> studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
+        if (sortType ==null) {
+            this.setScoreJsonNode(null);
+        }
+        else {
+            if (sortType.compareTo("scoresortdesc") != 0) {
+                this.setScoreJsonNode(null);
+            }
+        }
+
+        Page<Study> studyPage = null;
+        if (this.getScoreJsonNode() == null) {
+            // This is the default study page will all studies
+            studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
+        }
+        else {
+            //SCORETASK - to filter
+            List<Study> allStudies = studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+            studyPage = getPageByScore(allStudies, this.getScoreJsonNode(), page);
+        }
 
         // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
         List<Study> studies = null;
@@ -370,9 +388,17 @@ public class StudyController {
 
             }
             else {
-                studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
-                        page - 1,
-                        sort));
+
+                if (this.getScoreJsonNode() == null) {
+                    studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
+                            page - 1,
+                            sort));
+                }
+                else {
+                    //SCORETASK
+                    List<Study> selectedStudies = studyRepository.findByHousekeepingCurationStatusId(status);
+                    studyPage = getPageByScore(selectedStudies, this.getScoreJsonNode(), page);
+                }
                 filters = filters + "&status=" + status;
 
                 // Return this value so it appears in filter result
@@ -458,32 +484,36 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
-        Map<String, Map<String,String>> scoreFeatures = new HashMap<String, Map<String,String>>();
+        Map<String, Map<String, String>> scoreFeatures = new HashMap<String, Map<String, String>>();
         studyPage.getContent().forEach(study -> {
             Map<String, String> studyScoreFactors = new HashMap<String, String>();
-            studyScoreFactors.put("InitialSampleSize","0");
-            studyScoreFactors.put("ReplicateSampleSize","0");
-            studyScoreFactors.put("ReplicationStageIncluded","false");
-            study.getAncestries().forEach(ancestry -> {
-                switch(ancestry.getType()){
-                    case "initial":
-                        studyScoreFactors.put("InitialSampleSize",ancestry.getNumberOfIndividuals().toString());
-                        break;
-                    case "replication":
-                        studyScoreFactors.put("ReplicateSampleSize",ancestry.getNumberOfIndividuals().toString());
-                        studyScoreFactors.put("ReplicationStageIncluded","true");
-                        break;
-                    default:
-                        ;
-                }
-            });
+            studyScoreFactors.put("InitialSampleSize", "0");
+            studyScoreFactors.put("ReplicateSampleSize", "0");
+            studyScoreFactors.put("ReplicationStageIncluded", "false");
+            if (study.getAncestries() != null) {
+                study.getAncestries().forEach(ancestry -> {
+                    if (ancestry.getNumberOfIndividuals() != null) {
+                        switch (ancestry.getType()) {
+                            case "initial":
+                                studyScoreFactors.put("InitialSampleSize", ancestry.getNumberOfIndividuals().toString());
+                                break;
+                            case "replication":
+                                studyScoreFactors.put("ReplicateSampleSize", ancestry.getNumberOfIndividuals().toString());
+                                studyScoreFactors.put("ReplicationStageIncluded", "true");
+                                break;
+                            default:
+                                ;
+                        }
+                    }
+                });
+            }
 
-            studyScoreFactors.put("Publication",study.getPublication());
-            studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
-            studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
-            studyScoreFactors.put("GenomeWideCoverage","1");
-            studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
-            scoreFeatures.put(study.getId().toString(),studyScoreFactors);
+            studyScoreFactors.put("Publication", study.getPublication());
+            studyScoreFactors.put("SummaryStatisticsAvailable", study.getFullPvalueSet().toString());
+            studyScoreFactors.put("PublicationDate", study.getPublicationDate().toString());
+            studyScoreFactors.put("GenomeWideCoverage", "1");
+            studyScoreFactors.put("UserRequested", study.getUserRequested().toString());
+            scoreFeatures.put(study.getId().toString(), studyScoreFactors);
         });
 
         model.addAttribute("scoreFeatures", scoreFeatures);
@@ -494,7 +524,10 @@ public class StudyController {
 
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
+    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
+                                         @RequestParam(value = "sorttype", required = false) String sortType,
+                                         @RequestParam(value = "scoreJSON", required = false) String scoreJSON,
+                                         @RequestParam(required = false) Integer page) {
 
         // Get ids of objects searched for
         Long status = studySearchFilter.getStatusSearchFilterId();
@@ -505,6 +538,22 @@ public class StudyController {
         Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
         String notesQuery = studySearchFilter.getNotesQuery();
         Long diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
+        Integer goToPage;
+        System.out.println(studySearchFilter.toString());
+        System.out.println(status);
+        if (page == null) {
+            goToPage = 1;
+        }
+        else {
+            goToPage = page;
+        }
+
+        if (sortType !=null) {
+            this.setScoreJsonNode(convertScoreJson(scoreJSON));
+        }
+        else {
+            this.setScoreJsonNode(convertScoreJson(null));
+        }
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -543,7 +592,11 @@ public class StudyController {
                 return "redirect:/studies?page=1&status=" + status + "&curator=" + curator;
             }
             else {
-                return "redirect:/studies?page=1&status=" + status;
+                String redirect = "redirect:/studies?page=1&status=" + status;
+                if (sortType !=null) {
+                    redirect = "redirect:/studies?page="+goToPage.toString()+"&status=" + status+"&sorttype="+sortType;
+                }
+                return redirect;
             }
         }
         // If user entered curator
@@ -553,8 +606,13 @@ public class StudyController {
 
         // If all else fails return all studies
         else {
-            // Find all studies ordered by study date and only display first page
-            return "redirect:/studies?page=1";
+            if (sortType !=null) {
+                return "redirect:/studies?page="+goToPage.toString()+"&sorttype="+sortType;
+            }
+            else {
+                // Find all studies ordered by study date and only display first page
+                return "redirect:/studies?page=1";
+            }
         }
 
     }
@@ -1173,5 +1231,64 @@ public class StudyController {
     // Pagination, method passed page index and includes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
+    }
+
+    private JsonNode convertScoreJson(String scoreJSON) {
+        JsonNode jsonNodeInfo = new JsonNode(null);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            jsonNodeInfo = mapper.convertValue(scoreJSON, JsonNode.class);
+        } catch (Exception e) {
+            //nothing to do
+        }
+
+        return jsonNodeInfo;
+    }
+
+    private Page<Study> getPageByScore(List<Study> studyFilterResult, JsonNode scoreJsonNode, int page) {
+        Page<Study> studyPageScored = null;
+
+        JSONObject scoreStudies = scoreJsonNode.getObject();
+        for (Study singleStudy : studyFilterResult) {
+            Object scoreObj = null;
+            try {
+                scoreObj = scoreStudies.get(singleStudy.getId().toString());
+            } catch (Exception e) {
+                //nothing happen
+            }
+            if (scoreObj != null) {
+                singleStudy.setScore(Integer.valueOf(scoreObj.toString()));
+            }
+        }
+
+
+        studyFilterResult.sort(new Comparator<Study>() {
+            @Override
+            public int compare(Study study1, Study study2) {
+                int difference = study2.getScore() - study1.getScore();
+                if (difference == 0) {
+                    return toIntExact(study2.getId() - study1.getId());
+                }
+                return difference;
+            }
+        });
+
+        Pageable pageable = new PageRequest(page-1, MAX_PAGE_ITEM_DISPLAY);
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > studyFilterResult.size() ? studyFilterResult.size() : (start + pageable.getPageSize());
+
+
+        studyPageScored = new PageImpl<Study>(studyFilterResult.subList(start,end), pageable, studyFilterResult.size());
+
+
+        return studyPageScored;
+    }
+
+    public JsonNode getScoreJsonNode() {
+        return scoreJsonNode;
+    }
+
+    public void setScoreJsonNode(JsonNode scoreJsonNode) {
+        this.scoreJsonNode = scoreJsonNode;
     }
 }

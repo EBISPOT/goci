@@ -6,16 +6,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,6 +74,16 @@ public class Study implements Trackable {
     private Boolean fullPvalueSet = false;
 
     private Boolean userRequested = false;
+
+    @Transient
+    private int score = 0;
+
+    public int getScore() { return score; }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
 
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
@@ -483,4 +484,8 @@ public class Study implements Trackable {
     public void setUserRequested(Boolean userRequested) {
         this.userRequested = userRequested;
     }
+
+
 }
+
+

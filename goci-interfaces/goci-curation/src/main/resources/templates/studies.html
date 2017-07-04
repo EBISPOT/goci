@@ -66,7 +66,6 @@
 <div th:include="fragments/study_filter :: filter"></div>
 <br/>
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -175,12 +174,19 @@
     //add data to table
     scorePromise.then((studies_score)=>{
         $("#mainTable tr").each(function() {
-            console.log(this);
             if (this.id != "") {
-                var newValue = studies_score[this.id].toFixed(2);
-                $(this).find('#score').text(newValue);
+                var newValue = studies_score[this.id];
+                if (newValue != null){
+                    $(this).find('#score').text(newValue.toFixed(2));
+                    //console.log(this.id,":", newValue);
+                }
             }
         });
+
+        var scoreJSON=JSON.stringify(hashFromArrays(Object.keys(studies_score).map((x)=>{return x}),Object.values(studies_score).map((x)=>{return Math.trunc((x.toFixed(2)*100))})));
+        document.getElementById('hiddenScoreJson').setAttribute('value', scoreJSON);
+        document.getElementById('hiddenScoreJsonPagination').setAttribute('value', scoreJSON);
+
     })
 
     //create a list of studies sorted by score
@@ -224,6 +230,17 @@
             })
         })
     })
+
+    //$(".pagination a").click(function(e) {
+    //    console.log("clicked");
+    //    e.preventDefault(); // cancel the link itself
+    //    console.log(this);
+    //    $.post(this.href,function(data) {
+    //        console.log(data);
+    //        console.log(this.href);
+    //    });
+    //});
+
 
 
 

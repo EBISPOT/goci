@@ -73,7 +73,17 @@
             </div>
         </th>
         <th class="col-md-1">EFO Trait</th>
-        <th class="col-md-1">Score</th>
+        <th class="col-md-1">Score
+
+            <form method="post" class="inline" th:action="@{/studies(filters=true)}" th:object="${studySearchFilter}" >
+                <input type="hidden" value="fredoom" name="curationStatus" th:field="*{statusSearchFilterId}" id="curationStatus" />
+                <input type="hidden" name="sorttype" value="scoresortdesc" />
+                <input type="hidden" id="hiddenScoreJson" name="scoreJSON" value="{}" />
+                <button type="submit" name="page" value="1" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-sort-by-alphabet"></span>
+                </button>
+            </form>
+        </th>
         <th class="col-md-2">Curator
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                 <a th:href="@{${uri}(sorttype=curatorsortasc)}"

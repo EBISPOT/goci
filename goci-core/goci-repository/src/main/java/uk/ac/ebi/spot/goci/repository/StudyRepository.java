@@ -10,6 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,6 +41,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
                                                                            Long curator,
                                                                            Pageable pageable);
+
+    @RestResource(exported = false)
+    List<Study> findByHousekeepingCurationStatusId(Long status);
+
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
@@ -48,6 +53,9 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCuratorId(Long curator, Pageable pageable);
+
+    @RestResource(exported = false)
+    List<Study> findByHousekeepingCuratorId(Long curator);
 
     @RestResource(exported = false)
     // Custom query to find studies in reports table
