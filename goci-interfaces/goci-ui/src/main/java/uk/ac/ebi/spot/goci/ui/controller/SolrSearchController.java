@@ -108,6 +108,7 @@ public class SolrSearchController {
             @RequestParam(value = "hl.fl", required = false, defaultValue = "shortForm,efoLink") String hlFl,
             @RequestParam(value = "hl.snippets", required = false, defaultValue = "1") int hlSnippets,
             @RequestParam(value = "fl", required = false, defaultValue = "") String fl,
+            @RequestParam(value = "raw", required = false, defaultValue = "") String raw,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
@@ -135,9 +136,12 @@ public class SolrSearchController {
 //            Arrays.asList(fl.split(","));
 //            HashSet<String> fieldList = new HashSet<String>(Arrays.asList(fl.split(",")));
 //            addReturnFields(solrSearchBuilder,fieldList);
-            solrSearchBuilder.append("&fl=").append(fl);
+            solrSearchBuilder.append("&fl=").append(URLEncoder.encode(fl, "UTF-8"));
         }
 
+        if (raw != "") {
+            solrSearchBuilder.append("&").append(URLEncoder.encode(raw, "UTF-8"));
+        }
 
         //xintodo commend out when live
 //        System.out.print(solrSearchBuilder.toString() + "\n");

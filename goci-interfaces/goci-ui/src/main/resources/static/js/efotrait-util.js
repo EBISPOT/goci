@@ -25,10 +25,22 @@ var global_efo_info_tag_id = '#efo-info';
 var global_epmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
-// var global_solr_url = 'http://localhost:8983/solr/gwas/select';
-var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not working  cross origin problem
+var global_solr_url = 'http://localhost:8983/solr/gwas/select';
+// var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not working  cross origin problem
 
+/**
+ * This is to optimize solr query, only keep the fields/resources we need
+ */
+var global_fl;
+var global_raw;
 
+global_fl = 'pubmedId,title,author_s,publication,publicationDate,catalogPublishDate,' +
+        'initialSampleDescription,replicateSampleDescription,ancestralGroups,countriesOfRecruitment,' +
+        'ancestryLinks,' +
+        'traitName,mappedLabel,mappedUri,traitUri,shortForm,' +
+        'label,' + 'efoLink,parent,id,resourcename,';
+global_fl = global_fl + 'riskFrequency,qualifier,pValueMantissa,pValueExponent,snpInteraction,multiSnpHaplotype,rsId,strongestAllele,context,region,entrezMappedGenes,reportedGene,merged,currentSnp,studyId,chromosomeName,chromosomePosition,chromLocation,positionLinks,author_s,publication,publicationDate,catalogPublishDate,publicationLink,accessionId,initialSampleDescription,replicateSampleDescription,ancestralGroups,countriesOfRecruitment,numberOfIndividuals,traitName_s,mappedLabel,mappedUri,traitUri,shortForm,labelda,synonym,efoLink,id,resourcename'
+global_raw = 'fq:resourcename:association or resourcename:study'
 
 /**
  * global variable storing solr query result.
@@ -259,9 +271,9 @@ addEFO = function(data={}, initLoad=false) {
     //add these terms to seleted
     var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
 
-    Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
-        console.log('finish loading descendants!')
-    })
+    // Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
+    //     console.log('finish loading descendants!')
+    // })
 
     //load all available efo terms in the GWAS Catalog(has at least one annotation)
     //save in the global_efo_info_tag_id tag with key 'availableEFOs'
@@ -731,7 +743,10 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
                               'group.field': 'resourcename',
                               'facet.field': 'resourcename',
                               'hl.fl': 'shortForm,efoLink',
-                              'hl.snippets': 100
+                              'hl.snippets': 100,
+                              'fl' : global_fl == undefined ? '*':global_fl,
+                              // 'fq' : global_fq == undefined ? '*:*':global_fq,
+                              'raw' : global_raw == undefined ? '' : global_raw,
                           },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             processSolrData(data, initLoad);
             console.log("Solr research done for " + searchQuery);
@@ -825,10 +840,12 @@ function processSolrData(data, initLoad=false) {
         //get all ancestries of all associations
         var allAncestries = {};
         data_association.docs.map((d) => {
-            d.ancestralGroups.map((a)=>{
-                if(allAncestries[a] == undefined) allAncestries[a] = [];
-                allAncestries[a].push(d.id);
-            })
+            if(d.ancestralGroups!= undefined){
+                d.ancestralGroups.map((a)=>{
+                    if(allAncestries[a] == undefined) allAncestries[a] = [];
+                    allAncestries[a].push(d.id);
+                })
+            }
         })
 
         prepareAncestryFilter(allAncestries);
@@ -3182,7 +3199,7 @@ buildLocusPlotPopoverHTML = function(association){
         return "<div>" + name + ":<strong> " +  value + "</strong></div>";
     }
     var text = $('<div/>');
-    text.append(_addNameValuePairHTML('rsid',association.rsId[0]));
+    text.append(_addNameValuePairHTML('rsid',association.rsId==undefined? '' : association.rsId[0]));
     text.append(_addNameValuePairHTML('pValue in the study',association.pval));
     text.append(_addNameValuePairHTML('Catalog Publish Date',new Date(association.catalogPublishDate).toLocaleDateString()));
     text.append(_addNameValuePairHTML('Author(s)',association.author_s));
