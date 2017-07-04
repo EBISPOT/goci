@@ -94,7 +94,7 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/efotrait", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "api/search/efotrait", produces = MediaType.APPLICATION_JSON_VALUE,method = {RequestMethod.GET,RequestMethod.POST})
     public void doEfoSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
@@ -144,6 +144,8 @@ public class SolrSearchController {
         // dispatch search
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
+
+
 
     @RequestMapping(value = "api/select", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
     public void select(

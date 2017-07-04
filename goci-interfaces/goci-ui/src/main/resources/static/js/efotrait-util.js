@@ -705,9 +705,25 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
         //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
         //     throw(err);
         // })
-        var link = window.location.pathname.split('/gwas/')[0]+'/gwas/'
-
-        return promiseGet( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
+        // var link = window.location.pathname.split('/gwas/')[0]+'/gwas/'
+        // return promiseGet( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
+        //                   {
+        //                       'q': searchQuery,
+        //                       'max': 99999,
+        //                       'group.limit': 99999,
+        //                       'group.field': 'resourcename',
+        //                       'facet.field': 'resourcename',
+        //                       'hl.fl': 'shortForm,efoLink',
+        //                       'hl.snippets': 100
+        //                   }).then(JSON.parse).then(function(data) {
+        //     processSolrData(data, initLoad);
+        //     console.log("Solr research done for " + searchQuery);
+        //     return data;
+        // }).catch(function(err) {
+        //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+        //     throw(err);
+        // })
+        return promisePost( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
                           {
                               'q': searchQuery,
                               'max': 99999,
@@ -716,7 +732,7 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
                               'facet.field': 'resourcename',
                               'hl.fl': 'shortForm,efoLink',
                               'hl.snippets': 100
-                          }).then(JSON.parse).then(function(data) {
+                          },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             processSolrData(data, initLoad);
             console.log("Solr research done for " + searchQuery);
             return data;
@@ -2554,12 +2570,12 @@ getAvailableEFOs=function(){
         //lazy load
         console.log('Loading all available EFOs in Gwas Catalog...')
         //xintodo refactor this to use post
-        dataPromise =  promiseGet(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait', {
+        dataPromise =  promisePost(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait', {
             'q': '*:*',
             'fq': 'resourcename:efotrait',
             'group.limit': 99999,
             'fl' : 'shortForm'
-        }).then(JSON.parse).then(function(data) {
+        },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             $.each(data.grouped.resourcename.groups, function(index, group) {
                 switch (group.groupValue) {
                     case "efotrait":
