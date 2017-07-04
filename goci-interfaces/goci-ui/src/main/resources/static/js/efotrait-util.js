@@ -705,7 +705,9 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
         //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
         //     throw(err);
         // })
-        return promiseGet('/gwas/api/search/efotrait',
+        var link = window.location.pathname.split('/gwas/')[0]+'/gwas/'
+
+        return promiseGet( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
                           {
                               'q': searchQuery,
                               'max': 99999,
@@ -1240,7 +1242,7 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         }
         // This is now linking to the variant page instead of the search page
         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+        riskAllele = setExternalLinkText(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'variants/' + riskAllele_rsid,riskAlleleLabel);
 
         tmp['riskAllele'] = riskAllele;
 
@@ -1615,7 +1617,7 @@ function displayEfotraitAssociations_deprecated(solr_association, cleanBeforeIns
         }
         // This is now linking to the variant page instead of the search page
         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+        riskAllele = setExternalLinkText(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'variants/' + riskAllele_rsid,riskAlleleLabel);
 
         row.append(newCell(riskAllele));
 
@@ -2552,7 +2554,7 @@ getAvailableEFOs=function(){
         //lazy load
         console.log('Loading all available EFOs in Gwas Catalog...')
         //xintodo refactor this to use post
-        dataPromise =  promiseGet('/gwas/api/search/efotrait', {
+        dataPromise =  promiseGet(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait', {
             'q': '*:*',
             'fq': 'resourcename:efotrait',
             'group.limit': 99999,
