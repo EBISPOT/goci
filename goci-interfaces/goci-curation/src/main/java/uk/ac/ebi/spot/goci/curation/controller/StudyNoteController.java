@@ -111,12 +111,12 @@ public class StudyNoteController {
         StudyNoteForm emptyNoteForm = studyNoteOperationsService.convertToStudyNoteForm(emptyNote);
 
         //attach the empty form
-        msnf.getNomalNoteForms().add(emptyNoteForm);
+        msnf.getNomalNoteForms().add(0,emptyNoteForm);
         //Index of value to add
-        final Integer rowId = msnf.getNomalNoteForms().size()-1;
+//        final Integer rowId = msnf.getNomalNoteForms().size()-1;
 
         //enable the edit for the new note and disable all edit for other notes
-        msnf.startEdit(rowId);
+        msnf.startEdit(0);
 
         //reload system notes because they are not part of the input
         msnf.setSystemNoteForms(studyNoteOperationsService.generateSystemNoteForms(study.getNotes()));
