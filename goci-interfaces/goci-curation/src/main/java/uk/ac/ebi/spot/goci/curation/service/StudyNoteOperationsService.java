@@ -69,11 +69,14 @@ public class StudyNoteOperationsService {
     }
 
 
-    public MultiStudyNoteForm generateMultiStudyNoteForm(Collection<StudyNote> notes, Study study){
+    public MultiStudyNoteForm generateMultiStudyNoteForm(Collection<StudyNote> notes, Study study,SecureUser user){
         MultiStudyNoteForm msnf = new MultiStudyNoteForm();
         if(!notes.isEmpty()){
             notes.forEach(studyNote -> {
                 StudyNoteForm row = convertToStudyNoteForm(studyNote);
+                //user can only edit there own note
+                if(!canEdit(row,user))
+                    row.makeNotEditable();
                 if(isSystemNote(studyNote))
                     msnf.getSystemNoteForms().add(row);
                 else
@@ -85,8 +88,17 @@ public class StudyNoteOperationsService {
         if(study.getHousekeeping().getIsPublished()){
             msnf.makeNotEditable();
         }
+
+
         return msnf;
     }
+
+
+    public boolean canEdit(StudyNoteForm studyNoteForm, SecureUser user){
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
+        return studyNoteForm.getCurator().getId() == curator.getId();
+    }
+
 
 
     public List<StudyNoteForm> generateSystemNoteForms(Collection<StudyNote> notes){

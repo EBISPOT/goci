@@ -67,13 +67,15 @@ public class StudyNoteController {
     @RequestMapping(value = "/studies/{studyId}/notes",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String viewStudyNotes(Model model, @PathVariable Long studyId) {
+    public String viewStudyNotes(Model model, @PathVariable Long studyId,HttpServletRequest request) {
         //get the study
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
+        SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+
         // an form object mapped from the studyNote object, it contains a list of notes
-        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study, user);
 
         model.addAttribute("multiStudyNoteForm", msnf);
 
@@ -98,11 +100,11 @@ public class StudyNoteController {
         Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
-        // an form object mapped from the studyNote object, it contains a list of notes
-        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
-
-
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
+
+        // an form object mapped from the studyNote object, it contains a list of notes
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study, user);
+
 
         //create a default study note with default setting
         StudyNote emptyNote = studyNoteOperationsService.createEmptyNote(study,user);
@@ -235,8 +237,10 @@ public class StudyNoteController {
         Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
         model.addAttribute("availableNoteSubject",noteSubjects);
 
+        SecureUser user = currentUserDetailsService.getUserFromRequest(req);
+
         // an form object mapped from the studyNote object, it contains a list of notes
-        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study);
+        MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study, user);
 
         //enable the edit for the note and disable all edit for other notes
         msnf.startEdit(rowId);
