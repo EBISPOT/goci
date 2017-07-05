@@ -23,12 +23,15 @@ import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.NoteService;
 import uk.ac.ebi.spot.goci.service.NoteSubjectService;
+import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by xinhe on 04/04/2017.
@@ -44,6 +47,7 @@ public class StudyNoteController {
     private StudyNoteOperationsService studyNoteOperationsService;
     private StudyOperationsService studyOperationsService;
     private StudyService studyService;
+    private StudyNoteService studyNoteService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
     protected Logger getLog() {
@@ -62,6 +66,7 @@ public class StudyNoteController {
         this.studyNoteOperationsService = studyNoteOperationsService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
+        this.studyNoteService = studyNoteService;
     }
 
     @RequestMapping(value = "/studies/{studyId}/notes",
@@ -254,6 +259,38 @@ public class StudyNoteController {
     public String discardEditNote(@ModelAttribute("multiStudyNoteForm") MultiStudyNoteForm multiStudyNoteForm,
                                  Model model, @PathVariable Long studyId,
                                  HttpServletRequest req) {
+
+        return "redirect:/studies/" + studyId + "/notes";
+    }
+
+    @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"duplicateNote"})
+    public String duplicateNoteAcrossPublication(Model model, @PathVariable Long studyId,
+                                                 HttpServletRequest req) {
+        final Long nodeId = Long.valueOf(req.getParameter("duplicateNote"));
+        SecureUser user = currentUserDetailsService.getUserFromRequest(req);
+
+
+        Study study = studyRepository.findOne(studyId);
+        StudyNote noteToCopy = studyNoteService.findOne(nodeId);
+
+        Collection<Study> studies = studyRepository.findByPubmedId(study.getPubmedId());
+        //remove the current study from the list
+        studies = studies.stream().filter(study1 -> study.getId() != study1.getId()).collect(Collectors.toList());
+
+
+        //copy note to all studies
+        studies.stream().map(study1 -> {
+            ErrorNotification notification = studyOperationsService.addStudyNote(study, studyNoteOperationsService.duplicateNote(noteToCopy), user);
+            if(!notification.hasErrors()){
+                return "redirect:/studies/" + studyId + "/notes";
+            }else{
+                //deal with error
+                // we want to display the error to the user simply on top of the form
+                getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
+                System.out.print("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
+            }
+            return "";
+        });
 
         return "redirect:/studies/" + studyId + "/notes";
     }

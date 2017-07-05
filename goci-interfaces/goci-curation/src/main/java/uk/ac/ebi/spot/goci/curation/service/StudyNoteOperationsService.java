@@ -205,6 +205,15 @@ public class StudyNoteOperationsService {
         return nomalNote;
     }
 
+    public StudyNote duplicateNote(StudyNote noteToDuplicate){
+        StudyNote note = new StudyNote();
+        note.setCurator(noteToDuplicate.getCurator());
+        note.setNoteSubject(noteToDuplicate.getNoteSubject());
+        note.setTextNote(noteToDuplicate.getTextNote());
+        note.setStatus(noteToDuplicate.getStatus());
+        return note;
+    }
+
 
 
 
