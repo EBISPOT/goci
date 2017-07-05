@@ -490,34 +490,7 @@
                                 <!--<input id="cb-query-include-descendants" type="checkbox" checked=""/>Descendants-->
                             </div>
 
-                            <div class="container row col-xs-12" style="margin-top: 10px">
 
-                                <div id="filters">
-                                    <h4>HighLight By ancestry</h4>
-
-                                    <div class="col-xs-1.5" style="float:left">
-                                        <div id="btn-ancestry-dropdown" class="button-group">
-                                                <button type="button"
-                                                        class="btn btn-default btn-sm dropdown-toggle"
-                                                        data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <span
-                                                        class="caret"></span></button>
-                                            <ul id="ancestry-dropdown-menu" class="dropdown-menu"></ul>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-
-                                <!--<div>-->
-                                    <!--<button type="button"-->
-                                            <!--class="btn btn-default pull-right"-->
-                                            <!--id="clear-filter">Clear all filters</button>-->
-                                    <!--<button type="submit"-->
-                                            <!--class="btn btn-default pull-right"-->
-                                            <!--style="margin-right: 15px;">Apply filters</button>-->
-                                <!--</div>-->
-                            </div>
                         </div>
 
                         <!--<div class="row">-->
@@ -592,6 +565,48 @@
                             </div>
                         </div>
                         <!--</div>-->
+
+                        <div class="container row col-xs-12 ">
+                            <a class="btn btn-default"
+                               type="button"
+                               data-toggle="collapse"
+                               data-target="#beta-functions"
+                               aria-expanded="false"
+                               aria-controls="collapseExample">
+                                beta functions
+                                <span class="glyphicon glyphicon-question-sign"
+                                      data-toggle="tooltip"
+                                      title="show beta functions"
+                                      style="margin-left:2px;font-size:smaller"></span>
+                            </a>
+                        </div>
+
+                        <div id="beta-functions" class="container row col-xs-12 collapse" style="margin-top: 10px">
+                            <div id="filters">
+                                <h5>HighLight By ancestry</h5>
+                                <div class="col-xs-1.5" style="float:left">
+                                    <div id="btn-ancestry-dropdown" class="button-group">
+                                                <button type="button"
+                                                        class="btn btn-default btn-sm dropdown-toggle"
+                                                        data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <span
+                                                        class="caret"></span></button>
+                                        <ul id="ancestry-dropdown-menu" class="dropdown-menu"></ul>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--<div>-->
+                            <!--<button type="button"-->
+                            <!--class="btn btn-default pull-right"-->
+                            <!--id="clear-filter">Clear all filters</button>-->
+                            <!--<button type="submit"-->
+                            <!--class="btn btn-default pull-right"-->
+                            <!--style="margin-right: 15px;">Apply filters</button>-->
+                            <!--</div>-->
+                        </div>
+
+
 
                     </div>
                 </div>
@@ -1010,12 +1025,6 @@
 
 
     //<![CDATA[
-
-
-
-
-
-
 
 
     //]]>
