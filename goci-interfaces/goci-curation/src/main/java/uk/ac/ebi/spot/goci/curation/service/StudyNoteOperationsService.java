@@ -123,7 +123,12 @@ public class StudyNoteOperationsService {
         return sysNoteForms;
     }
 
-
+    /**
+     * Creat empty study note and set its subject base on the publish status of the study
+     * @param study
+     * @param user
+     * @return
+     */
     public StudyNote createEmptyStudyNote(Study study, SecureUser user){
         StudyNote note = new StudyNote();
         note.setStudy(study);
@@ -135,6 +140,14 @@ public class StudyNoteOperationsService {
 
         note.setStatus(false);
         note.setGenericId(study.getId());
+
+        if(study.getHousekeeping().getIsPublished()){
+            // general note subject
+            note.setNoteSubject(noteSubjectService.findBySubject("Post-publishing review"));
+        }else{
+            note.setNoteSubject(noteSubjectService.findGeneralNote());
+
+        }
         return note;
     }
 
@@ -155,23 +168,7 @@ public class StudyNoteOperationsService {
         return note;
     }
 
-    /**
-     * Creat empty study note and set its subject base on the publish status of the study
-     * @param study
-     * @param user
-     * @return
-     */
-    public StudyNote createEmptyNote( Study study, SecureUser user) {
-        StudyNote note = createEmptyStudyNote(study, user);
-        if(study.getHousekeeping().getIsPublished()){
-            // general note subject
-            note.setNoteSubject(noteSubjectService.findBySubject("Post-publishing review"));
-        }else{
-            note.setNoteSubject(noteSubjectService.findGeneralNote());
 
-        }
-        return note;
-    }
 
     public Boolean isSystemNote(StudyNote note){
         return noteSubjectService.isSystemNoteSubject(note.getNoteSubject());
@@ -205,8 +202,8 @@ public class StudyNoteOperationsService {
         return nomalNote;
     }
 
-    public StudyNote duplicateNote(StudyNote noteToDuplicate){
-        StudyNote note = new StudyNote();
+    public StudyNote duplicateNote(Study study, StudyNote noteToDuplicate, SecureUser user){
+        StudyNote note = createEmptyStudyNote(study,user);
         note.setCurator(noteToDuplicate.getCurator());
         note.setNoteSubject(noteToDuplicate.getNoteSubject());
         note.setTextNote(noteToDuplicate.getTextNote());

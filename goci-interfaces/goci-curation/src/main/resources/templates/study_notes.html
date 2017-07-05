@@ -379,7 +379,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canRemove}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canRemove}"
                                          type="submit" name="removeNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true">
+                                         class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true" data-title="Are you sure? Deleting a note is irreversible!">
                                      <span class="glyphicon glyphicon-trash" aria-hidden="true"
                                            title="Delete note"></span>
                                 </button>
@@ -388,7 +388,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
                                     <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
                                              type="submit" name="duplicateNote" th:value="*{nomalNoteForms[__${rowStat.index}__].id}"
-                                             class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true">
+                                             class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true" data-title="Are you sure you want to duplicate this study note to all studies with the same pubmed id?">
                                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"
                                           title="Duplicate note to all studies with the same pubmed id"></span>
                                 </button>

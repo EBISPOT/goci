@@ -59,7 +59,9 @@ public class StudyNoteController {
                                CurrentUserDetailsService currentUserDetailsService,
                                StudyNoteOperationsService studyNoteOperationsService,
                                StudyOperationsService studyOperationsService,
-                               StudyService studyService) {
+                               StudyService studyService,
+                               StudyNoteService studyNoteService
+                               ) {
         this.studyRepository = studyRepository;
         this.noteSubjectService = noteSubjectService;
         this.currentUserDetailsService = currentUserDetailsService;
@@ -112,7 +114,7 @@ public class StudyNoteController {
 
 
         //create a default study note with default setting
-        StudyNote emptyNote = studyNoteOperationsService.createEmptyNote(study,user);
+        StudyNote emptyNote = studyNoteOperationsService.createEmptyStudyNote(study,user);
         StudyNoteForm emptyNoteForm = studyNoteOperationsService.convertToStudyNoteForm(emptyNote);
 
         //attach the empty form
@@ -273,23 +275,22 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         StudyNote noteToCopy = studyNoteService.findOne(nodeId);
 
+
         Collection<Study> studies = studyRepository.findByPubmedId(study.getPubmedId());
         //remove the current study from the list
-        studies = studies.stream().filter(study1 -> study.getId() != study1.getId()).collect(Collectors.toList());
+        studies = studies.stream().filter(targetStudy -> study.getId() != targetStudy.getId()).collect(Collectors.toList());
 
 
         //copy note to all studies
-        studies.stream().map(study1 -> {
-            ErrorNotification notification = studyOperationsService.addStudyNote(study, studyNoteOperationsService.duplicateNote(noteToCopy), user);
+        studies.stream().forEach(targetStudy -> {
+            ErrorNotification notification = studyOperationsService.addStudyNote(targetStudy, studyNoteOperationsService.duplicateNote(targetStudy,noteToCopy,user), user);
             if(!notification.hasErrors()){
-                return "redirect:/studies/" + studyId + "/notes";
             }else{
                 //deal with error
                 // we want to display the error to the user simply on top of the form
                 getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
                 System.out.print("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
             }
-            return "";
         });
 
         return "redirect:/studies/" + studyId + "/notes";
