@@ -80,6 +80,7 @@ public class StudyNoteOperationsService {
                     msnf.getNomalNoteForms().add(row);
             });
         }
+
         //if study is published, disable all edit
         if(study.getHousekeeping().getIsPublished()){
             msnf.makeNotEditable();
@@ -142,9 +143,32 @@ public class StudyNoteOperationsService {
         return note;
     }
 
+    /**
+     * Creat empty study note and set its subject base on the publish status of the study
+     * @param study
+     * @param user
+     * @return
+     */
+    public StudyNote createEmptyNote( Study study, SecureUser user) {
+        StudyNote note = createEmptyStudyNote(study, user);
+        if(study.getHousekeeping().getIsPublished()){
+            // general note subject
+            note.setNoteSubject(noteSubjectService.findBySubject("Post-publishing review"));
+        }else{
+            note.setNoteSubject(noteSubjectService.findGeneralNote());
+
+        }
+        return note;
+    }
+
     public Boolean isSystemNote(StudyNote note){
         return noteSubjectService.isSystemNoteSubject(note.getNoteSubject());
     }
+
+    public Boolean isPublicNote(StudyNote note){
+        return note.getStatus();
+    }
+
 
 
     public Collection<StudyNote> filterSystemNote(Collection<StudyNote> notes){

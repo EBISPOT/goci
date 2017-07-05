@@ -228,7 +228,9 @@
                 <th class="col-md-1">createdDate</th>
                 <th class="col-md-1">updatedDate</th>
                 <th class="col-md-2">
-                    <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>
+                    <!--<button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>-->
+                    <!-- logic changed. New note is allowed for published paper -->
+                    <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode}">Add note</button>
                     <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
                 </th>
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
+import uk.ac.ebi.spot.goci.curation.model.errors.PublicNoteIsNotAllowedForPublishedStudyError;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
 import uk.ac.ebi.spot.goci.curation.model.errors.StudyIsLockedError;
@@ -363,10 +364,15 @@ public class StudyOperationsService {
             notification.addError(new NoteIsLockedError());
         }
 
-        //check if study is published
-        if(isPublished(study)){
-            notification.addError(new StudyIsLockedError());
+        //published study can only have private note added to it
+        if(isPublished(study) & studyNoteOperationsService.isPublicNote(studyNote)){
+            notification.addError(new PublicNoteIsNotAllowedForPublishedStudyError());
         }
+
+        //check if study is published
+//        if(isPublished(study)){
+//            notification.addError(new StudyIsLockedError());
+//        }
 
         if(!notification.hasErrors()){
             studyNoteService.saveStudyNote(studyNote);

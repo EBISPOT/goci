@@ -89,10 +89,10 @@ public class StudyNoteController {
         Study study = studyRepository.findOne(studyId);
         model.addAttribute("study", study);
 
-
-        if(study.getHousekeeping().getIsPublished()){
-            return "redirect:/studies/" + studyId + "/notes";
-        }
+//disabled the check because we want to add note to the table
+//        if(study.getHousekeeping().getIsPublished()){
+//            return "redirect:/studies/" + studyId + "/notes";
+//        }
 
         //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
         Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
@@ -105,7 +105,7 @@ public class StudyNoteController {
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
 
         //create a default study note with default setting
-        StudyNote emptyNote = studyNoteOperationsService.createGeneralNote(study,user);
+        StudyNote emptyNote = studyNoteOperationsService.createEmptyNote(study,user);
         StudyNoteForm emptyNoteForm = studyNoteOperationsService.convertToStudyNoteForm(emptyNote);
 
         //attach the empty form
