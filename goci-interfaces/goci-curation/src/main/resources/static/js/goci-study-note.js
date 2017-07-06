@@ -5,9 +5,9 @@
 //init tables
 $(document).ready(function() {
     $('#mainTable').DataTable({
-                                  "info": true, "paging": false, "order": [[7, "desc"],[6, "desc"]],
+                                  "info": true, "paging": false, "order": [[1, "desc"],[6, "desc"]],
                                   "columnDefs": [
-                                      { "orderable": false, "targets": 7 }
+                                      { "orderable": false, "targets": 1 }
                                   ]
                               });
 

@@ -221,19 +221,20 @@
             <thead>
             <tr>
                 <!--<th style="font-size: small">Index</th>-->
-                <th class="col-md-5">Note(s)</th>
-                <th class="col-md-1">NoteSubject</th>
-                <th class="col-md-1">Status</th>
-                <th class="col-md-1">Curator</th>
-                <th class="col-md-1">Published</th>
-                <th class="col-md-1">createdDate</th>
-                <th class="col-md-1">updatedDate</th>
-                <th class="col-md-2">
+                <th class="col-md-8">Note(s)</th>
+                <th class="col-md-1">
                     <!--<button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>-->
                     <!-- logic changed. New note is allowed for published paper -->
                     <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode}">Add note</button>
                     <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
                 </th>
+                <th class="col-md-1">NoteSubject</th>
+                <th class="col-md-1">Status</th>
+                <th class="col-md-1">Curator</th>
+                <!--<th class="col-md-1">Published</th>-->
+                <th class="col-md-1">createdDate</th>
+                <th class="col-md-1">updatedDate</th>
+
 
             </tr>
             </thead>
@@ -254,7 +255,7 @@
 
                         <!--<div class="form-group">-->
                             <textarea style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
-                                    rows="5" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
+                                    rows="10" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
                                       th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"
                                       placeholder="Please enter note here" ></textarea>
                         <!--</div>-->
@@ -273,80 +274,9 @@
 
 
                 </td>
-                <!--NoteSubject-->
-                <td>
-                    <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <p th:text="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"></p>
-                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>
-                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"/>
-                    </div>
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <select class="noteSubjectSelect" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"
-                                th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
-                            <option th:each="noteSubject : ${availableNoteSubject}" th:value="${noteSubject.id}"
-                                    th:text="${noteSubject.subject}"
-                                    th:selected="${noteSubject.id}==*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}">
-                            </option>
-                        </select>
-                    </div>
-                </td>
 
 
-
-                <!--<input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>-->
-                <!--Status-->
-                <td>
-                    <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <div th:switch="*{nomalNoteForms[__${rowStat.index}__].status}" th:remove="tag">
-                            <div th:case="true" th:remove="tag">
-                                <p>Public</p>
-                            </div>
-                            <div th:case="false">
-                                <p>Private</p>
-                            </div>
-                        </div>
-                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].status}"/>
-                    </div>
-
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                    <select th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
-                            th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
-
-                        <option th:value="1" th:text="Public"
-                                th:selected="*{nomalNoteForms[__${rowStat.index}__].status==true}">
-                        </option>
-                        <option th:value="0" th:text="Private"
-                                th:selected="not *{nomalNoteForms[__${rowStat.index}__].status}">
-                        </option>
-                    </select>
-                    </div>
-                </td>
-
-
-                <!--Curator-->
-                <td>
-                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"></p>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.id}"/>
-                </td>
-                <!--Published-->
-                <td>
-                    <div th:switch="${study.housekeeping.isPublished}">
-                        <span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-                        <span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                    </div>
-                </td>
-
-                <td>
-                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
-                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].createdAt}"/>
-                </td>
-                <!--update date-->
-                <td>
-                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
-                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].updatedAt}"/>
-                </td>
-
+                <!--actions-->
                 <td>
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
                                     <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
@@ -406,6 +336,81 @@
                     <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canDiscard}"/>
                     <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].editing}"/>
                 </td>
+
+                <!--NoteSubject-->
+                <td>
+                    <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
+                        <p th:text="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"></p>
+                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>
+                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"/>
+                    </div>
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
+                        <select class="noteSubjectSelect" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"
+                                th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
+                            <option th:each="noteSubject : ${availableNoteSubject}" th:value="${noteSubject.id}"
+                                    th:text="${noteSubject.subject}"
+                                    th:selected="${noteSubject.id}==*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}">
+                            </option>
+                        </select>
+                    </div>
+                </td>
+
+
+
+                <!--<input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>-->
+                <!--Status-->
+                <td>
+                    <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
+                        <div th:switch="*{nomalNoteForms[__${rowStat.index}__].status}" th:remove="tag">
+                            <div th:case="true" th:remove="tag">
+                                <p>Public</p>
+                            </div>
+                            <div th:case="false">
+                                <p>Private</p>
+                            </div>
+                        </div>
+                        <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].status}"/>
+                    </div>
+
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
+                    <select th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
+                            th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
+
+                        <option th:value="1" th:text="Public"
+                                th:selected="*{nomalNoteForms[__${rowStat.index}__].status==true}">
+                        </option>
+                        <option th:value="0" th:text="Private"
+                                th:selected="not *{nomalNoteForms[__${rowStat.index}__].status}">
+                        </option>
+                    </select>
+                    </div>
+                </td>
+
+
+                <!--Curator-->
+                <td>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"></p>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.lastName}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.id}"/>
+                </td>
+                <!--Published-->
+                <!--<td>-->
+                    <!--<div th:switch="${study.housekeeping.isPublished}">-->
+                        <!--<span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>-->
+                        <!--<span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>-->
+                    <!--</div>-->
+                <!--</td>-->
+
+                <td>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
+                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].createdAt}"/>
+                </td>
+                <!--update date-->
+                <td>
+                    <p th:text="*{nomalNoteForms[__${rowStat.index}__].updatedAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
+                    <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].updatedAt}"/>
+                </td>
+
 
             </tr>
             </tbody>
