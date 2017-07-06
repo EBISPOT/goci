@@ -118,11 +118,12 @@ LocusZoom.Layouts.add("data_layer", "efowas_pvalues", {
         closable: true,
         show: {or: ["highlighted", "selected"]},
         hide: {and: ["unhighlighted", "unselected"]},
-        html: "<div><strong>{{{{namespace}}phewas_string}}</strong></div>" +
-        "<div>pvals: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
-        "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
-        "<div>Category: <strong>{{{{namespace}}category}}</strong></div>" +
-                "{{{{namespace}}popoverHTML}}"
+        html: "{{{{namespace}}popoverHTML}}"
+        // "<div> rsid: <strong>{{{{namespace}}phewas_string}}</strong></div>" +
+        // "<div>pValues: <strong>{{{{namespace}}pval|scinotation}}</strong></div>" +
+        // "<div>prefered EFO: <strong>{{{{namespace}}preferedEFO}}</strong></div>" +
+        // "<div>Category: <strong>{{{{namespace}}category}}</strong></div>" +
+
     },
     behaviors: {
         onmouseover: [
@@ -525,7 +526,7 @@ reloadLocusZoom = function(plot_id, data_association, highlight_associations=und
                 }
                 d.bp = parseInt(d.chromLocation[0].split(":")[1]);
                 d.pval = Math.pow(10, d.pValueExponent);
-                d.phewas_string = d.rsId[0];
+                // d.phewas_string = d.rsId[0];
                 d.x = transferLocation(d.chr, d.bp);
                 return d;
             }

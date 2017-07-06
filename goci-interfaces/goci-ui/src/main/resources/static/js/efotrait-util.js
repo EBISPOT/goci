@@ -25,20 +25,32 @@ var global_efo_info_tag_id = '#efo-info';
 var global_epmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
 var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
 
-// var global_solr_url = 'http://localhost:8983/solr/gwas/select';
-var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not working  cross origin problem
+var global_solr_url = 'http://localhost:8983/solr/gwas/select';
+// var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not working  cross origin problem
 
+/**
+ * This is to optimize solr query, only keep the fields/resources we need
+ */
+var global_fl;
+var global_raw;
 
+global_fl = 'pubmedId,title,author_s,publication,publicationDate,catalogPublishDate,' +
+        'initialSampleDescription,replicateSampleDescription,ancestralGroups,countriesOfRecruitment,' +
+        'ancestryLinks,' +
+        'traitName,mappedLabel,mappedUri,traitUri,shortForm,' +
+        'label,' + 'efoLink,parent,id,resourcename,';
+global_fl = global_fl + 'riskFrequency,qualifier,pValueMantissa,pValueExponent,snpInteraction,multiSnpHaplotype,rsId,strongestAllele,context,region,entrezMappedGenes,reportedGene,merged,currentSnp,studyId,chromosomeName,chromosomePosition,chromLocation,positionLinks,author_s,publication,publicationDate,catalogPublishDate,publicationLink,accessionId,initialSampleDescription,replicateSampleDescription,ancestralGroups,countriesOfRecruitment,numberOfIndividuals,traitName_s,mappedLabel,mappedUri,traitUri,shortForm,labelda,synonym,efoLink,id,resourcename'
+global_raw = 'fq:resourcename:association or resourcename:study'
 
 /**
  * global variable storing solr query result.
  */
-var data_efo=undefined
-var data_study=undefined
-var data_association=undefined
-var data_diseasetrait=undefined
-var data_facet=undefined
-var data_highlighting=undefined
+var data_efo={}
+var data_study={}
+var data_association={}
+var data_diseasetrait={}
+var data_facet={}
+var data_highlighting={}
 
 /**
  * Other global setting
@@ -259,9 +271,9 @@ addEFO = function(data={}, initLoad=false) {
     //add these terms to seleted
     var selected = addDataToTag(global_efo_info_tag_id, data, 'selectedEfos')
 
-    Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
-        console.log('finish loading descendants!')
-    })
+    // Promise.all(Object.keys(data).map(OLS.getHierarchicalDescendants)).then(() => {
+    //     console.log('finish loading descendants!')
+    // })
 
     //load all available efo terms in the GWAS Catalog(has at least one annotation)
     //save in the global_efo_info_tag_id tag with key 'availableEFOs'
@@ -705,7 +717,25 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
         //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
         //     throw(err);
         // })
-        return promiseGet('/gwas/api/search/efotrait',
+        // var link = window.location.pathname.split('/gwas/')[0]+'/gwas/'
+        // return promiseGet( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
+        //                   {
+        //                       'q': searchQuery,
+        //                       'max': 99999,
+        //                       'group.limit': 99999,
+        //                       'group.field': 'resourcename',
+        //                       'facet.field': 'resourcename',
+        //                       'hl.fl': 'shortForm,efoLink',
+        //                       'hl.snippets': 100
+        //                   }).then(JSON.parse).then(function(data) {
+        //     processSolrData(data, initLoad);
+        //     console.log("Solr research done for " + searchQuery);
+        //     return data;
+        // }).catch(function(err) {
+        //     console.error('Error when seaching solr for' + searchQuery + '. ' + err);
+        //     throw(err);
+        // })
+        return promisePost( window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait',
                           {
                               'q': searchQuery,
                               'max': 99999,
@@ -713,8 +743,11 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
                               'group.field': 'resourcename',
                               'facet.field': 'resourcename',
                               'hl.fl': 'shortForm,efoLink',
-                              'hl.snippets': 100
-                          }).then(JSON.parse).then(function(data) {
+                              'hl.snippets': 100,
+                              'fl' : global_fl == undefined ? '*':global_fl,
+                              // 'fq' : global_fq == undefined ? '*:*':global_fq,
+                              'raw' : global_raw == undefined ? '' : global_raw,
+                          },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             processSolrData(data, initLoad);
             console.log("Solr research done for " + searchQuery);
             return data;
@@ -733,120 +766,122 @@ function getEfoTraitDataSolr(mainEFO, additionalEFO, descendants, initLoad=false
  * @param {Boolean} initLoad
  */
 function processSolrData(data, initLoad=false) {
-    // Check if Solr returns some results
+//        if (data.grouped.resourcename.matches == 0) {
+//            $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
+//                                       "</em> cannot be found in the GWAS Catalog database</h2>");
+//        }
+    var isInCatalog=true;
     if (data.grouped.resourcename.matches == 0) {
-        $('#lower_container').html("<h2>The efotrait <em>" + getMainEFO() +
-                                   "</em> cannot be found in the GWAS Catalog database</h2>");
+        isInCatalog = false
     }
-    else {
-        //split the solr search by groups
-        //data_efo, data_study, data_association, data_diseasetrait;
-        data_facet = data.facet_counts.facet_fields.resourcename;
-        data_highlighting = data.highlighting;
+    //split the solr search by groups
+    //data_efo, data_study, data_association, data_diseasetrait;
+    data_facet = data.facet_counts.facet_fields.resourcename;
+    data_highlighting = data.highlighting;
 
-        $.each(data.grouped.resourcename.groups, (index, group) => {
-            switch (group.groupValue) {
-                case "efotrait":
-                    data_efo = group.doclist;
-                    break;
-                case "study":
-                    data_study = group.doclist;
-                    break;
-                case "association":
-                    data_association = group.doclist;
-                    break;
-                    //not sure we need this!
-                case "diseasetrait":
-                    data_diseasetrait = group.doclist;
-                    break;
-                default:
-            }
-        });
+    $.each(data.grouped.resourcename.groups, (index, group) => {
+        switch (group.groupValue) {
+            case "efotrait":
+                data_efo = group.doclist;
+                break;
+            case "study":
+                data_study = group.doclist;
+                break;
+            case "association":
+                data_association = group.doclist;
+                break;
+                //not sure we need this!
+            case "diseasetrait":
+                data_diseasetrait = group.doclist;
+                break;
+            default:
+        }
+    });
+
+    //remove association that annotated with efos which are not in the list
+    var remove = Promise.resolve();
+
+    if($('#cb-remove-nonunique-association').is(":checked")){
+        remove = removeAssociationWithNonSelectedEFO();
+    }
 
 
+    remove.then(()=>{
+        //If no solr return,greate a fake empyt array so tables/plot are empty
+        if(!isInCatalog) {
+            data_association.docs = []
+            data_study.docs = []
+        }
+
+        //update association/study table
+        displayEfotraitAssociations(data_association.docs);
+        displayEfotraitStudies(data_study.docs);
 
 
-        //remove association that annotated with efos which are not in the list
-        var remove = Promise.resolve();
-
-        if($('#cb-remove-nonunique-association').is(":checked")){
-             remove = removeAssociationWithNonSelectedEFO();
+        //work out highlight study
+        var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
+        if(initLoad && highlightedStudy!= undefined){
+            displayHighlightedStudy(highlightedStudy);
+            //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
+            getSummary(findStudiesForEFO(getMainEFO()));
         }
 
 
-        remove.then(()=>{
-            //update association/study table
-            displayEfotraitAssociations(data_association.docs);
-            displayEfotraitStudies(data_study.docs);
+        //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
+        var allUniqueEFO = {}
+        data_association.docs.forEach((d, i) => {
+            d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
+            d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
+            allUniqueEFO[d.preferedEFO] = 1;
+            //add any string data that will be use in the locus plot popover
+            d.popoverHTML = buildLocusPlotPopoverHTML(d);
+        })
 
-
-            //work out highlight study
-            var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
-            if(initLoad){
-                displayHighlightedStudy(highlightedStudy);
-                //display summary information like 'EFO trait first reported in GWAS Catalog in 2007, 5 studies report this efotrait'
-                getSummary(findStudiesForEFO(getMainEFO()));
-            }
-
-
-            //we add preferEFO for each association, generate the association data for popup of data points in the locus plot.
-            var allUniqueEFO = {}
-            data_association.docs.forEach((d, i) => {
-                d.preferedEFO = findHighlightEFOForAssociation(d.id,data_highlighting)[0];
-                d.numberEFO = findAllEFOsforAssociation(d.id,data_association).length;
-                allUniqueEFO[d.preferedEFO] = 1;
-                //add any string data that will be use in the locus plot popover
-                d.popoverHTML = buildLocusPlotPopoverHTML(d);
-            })
-
-            //get all ancestries of all associations
-            var allAncestries = {};
-            data_association.docs.map((d) => {
+        //get all ancestries of all associations
+        var allAncestries = {};
+        data_association.docs.map((d) => {
+            if(d.ancestralGroups!= undefined){
                 d.ancestralGroups.map((a)=>{
                     if(allAncestries[a] == undefined) allAncestries[a] = [];
                     allAncestries[a].push(d.id);
                 })
-            })
-
-            prepareAncestryFilter(allAncestries);
-
-
-            //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
-            //Load colour for unique efo
-            var allColorLoaded = []
-            Object.keys(allUniqueEFO).forEach((efo) => {
-                allColorLoaded.push(getColourForEFO(efo).then((response) => {
-                    allUniqueEFO[efo] = response;
-                    return response;
-                }));
-            })
-
-            //When all colour are received, replot
-            Promise.all(allColorLoaded).then(() => {
-                                                 //assign colour to associations for plot
-                                                 console.debug(`Finish loading color from ${global_color_url}`);
-                                                 console.debug(allUniqueEFO);
-                                                 data_association.docs.forEach(function(d, i) {
-                                                     d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
-                                                     d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
-                                                     d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
-                                                     d.category = allUniqueEFO[d.preferedEFO].parent;
-                                                 })
-                                             }
-            ).catch((err) => {
-                console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
-                //xintodo create a default colour to plot, if the colour query fail
-            }).then(() =>{
-                //replot
-                reloadLocusZoom('#plot', data_association);
-            });
-
-
+            }
         })
 
+        prepareAncestryFilter(allAncestries);
 
 
-    }
+        //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
+        //Load colour for unique efo
+        var allColorLoaded = []
+        Object.keys(allUniqueEFO).forEach((efo) => {
+            allColorLoaded.push(getColourForEFO(efo).then((response) => {
+                allUniqueEFO[efo] = response;
+                return response;
+            }));
+        })
+
+        //When all colour are received, replot
+        Promise.all(allColorLoaded).then(() => {
+                                             //assign colour to associations for plot
+                                             console.debug(`Finish loading color from ${global_color_url}`);
+                                             console.debug(allUniqueEFO);
+                                             data_association.docs.forEach(function(d, i) {
+                                                 d.preferedColor = allUniqueEFO[d.preferedEFO].colour;
+                                                 d.preferedParentUri = allUniqueEFO[d.preferedEFO].parentUri;
+                                                 d.preferedParentLabel = allUniqueEFO[d.preferedEFO].parent;
+                                                 d.category = allUniqueEFO[d.preferedEFO].parent;
+                                             })
+                                         }
+        ).catch((err) => {
+            console.warn(`Error loading colour for Locus zoom plot from ${global_color_url}. ${err}. Using default colour.`)
+            //xintodo create a default colour to plot, if the colour query fail
+        }).then(() =>{
+            //replot
+            reloadLocusZoom('#plot', data_association);
+        });
+    })
+
 }
 
 
@@ -1240,7 +1275,7 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         }
         // This is now linking to the variant page instead of the search page
         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+        riskAllele = setExternalLinkText(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'variants/' + riskAllele_rsid,riskAlleleLabel);
 
         tmp['riskAllele'] = riskAllele;
 
@@ -1303,6 +1338,18 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         } else {
             tmp['reportedGenes'] = '-';
 
+        }
+
+        // Mapped genes
+        var genes = [];
+        var mappedGenes = asso.entrezMappedGenes;
+        if (mappedGenes) {
+            $.each(mappedGenes, function(index, gene) {
+                genes.push(setQueryUrl(gene));
+            });
+            tmp['mappedGenes'] = genes.join(', ');
+        } else {
+            tmp['mappedGenes'] = '-';
 
         }
 
@@ -1321,6 +1368,10 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
         // Mapped traits
         var mappedTraits = asso.mappedLabel;
         if (mappedTraits) {
+            $.each(mappedTraits, function(index, trait) {
+                var link = window.location.pathname.split('/efotraits/')[0]+'/efotraits/' + asso.mappedUri[index].split('/').slice(-1)[0]
+                mappedTraits[index] = setExternalLinkText(link,trait)
+            });
             tmp['mappedTraits'] = mappedTraits.join(', ');
         } else {
             tmp['mappedTraits'] = '-';
@@ -1370,8 +1421,8 @@ function displayEfotraitAssociations(data, cleanBeforeInsert) {
                                                    title: 'CI',
                                                    sortable: true
                                                },{
-                                                   field: 'reportedGenes',
-                                                   title: 'Reported gene(s)',
+                                                   field: 'mappedGenes',
+                                                   title: 'Mapped gene(s)',
                                                    sortable: true
                                                },{
                                                    field: 'reportedTraits',
@@ -1599,7 +1650,7 @@ function displayEfotraitAssociations_deprecated(solr_association, cleanBeforeIns
         }
         // This is now linking to the variant page instead of the search page
         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText('/gwas/beta/variants/' + riskAllele_rsid,riskAlleleLabel);
+        riskAllele = setExternalLinkText(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'variants/' + riskAllele_rsid,riskAlleleLabel);
 
         row.append(newCell(riskAllele));
 
@@ -2536,12 +2587,12 @@ getAvailableEFOs=function(){
         //lazy load
         console.log('Loading all available EFOs in Gwas Catalog...')
         //xintodo refactor this to use post
-        dataPromise =  promiseGet('/gwas/api/search/efotrait', {
+        dataPromise =  promisePost(window.location.pathname.split('/gwas/')[0]+'/gwas/' + 'api/search/efotrait', {
             'q': '*:*',
             'fq': 'resourcename:efotrait',
             'group.limit': 99999,
             'fl' : 'shortForm'
-        }).then(JSON.parse).then(function(data) {
+        },'application/x-www-form-urlencoded').then(JSON.parse).then(function(data) {
             $.each(data.grouped.resourcename.groups, function(index, group) {
                 switch (group.groupValue) {
                     case "efotrait":
@@ -3148,17 +3199,19 @@ buildLocusPlotPopoverHTML = function(association){
         return "<div>" + name + ":<strong> " +  value + "</strong></div>";
     }
     var text = $('<div/>');
-    text.append(_addNameValuePairHTML('CatalogPublishDate',new Date(association.catalogPublishDate).toLocaleDateString()));
-    text.append(_addNameValuePairHTML('author_s',association.author_s));
-    text.append(_addNameValuePairHTML('chromLocation',association.chromLocation));
-    text.append(_addNameValuePairHTML('countriesOfRecruitment',association.countriesOfRecruitment));
-    text.append(_addNameValuePairHTML('initialSampleDescription',association.initialSampleDescription));
-    text.append(_addNameValuePairHTML('entrezMappedGenes',association.entrezMappedGenes));
-    text.append(_addNameValuePairHTML('mappedLabel',association.mappedLabel));
-    text.append(_addNameValuePairHTML('pValueExponent',association.pValueExponent));
-    text.append(_addNameValuePairHTML('pubmedId',association.pubmedId));
-    text.append(_addNameValuePairHTML('reportedGene',association.reportedGene));
-    text.append(_addNameValuePairHTML('title',association.title));
+    text.append(_addNameValuePairHTML('rsid',association.rsId==undefined? '' : association.rsId[0]));
+    text.append(_addNameValuePairHTML('pValue in the study',association.pval));
+    text.append(_addNameValuePairHTML('Catalog Publish Date',new Date(association.catalogPublishDate).toLocaleDateString()));
+    text.append(_addNameValuePairHTML('Author(s)',association.author_s));
+    text.append(_addNameValuePairHTML('Chromosome',association.chromLocation));
+    text.append(_addNameValuePairHTML('Countries of Recruitment',association.countriesOfRecruitment));
+    text.append(_addNameValuePairHTML('Initial Sample Description',association.initialSampleDescription));
+    text.append(_addNameValuePairHTML('Mapped Entrez Genes',association.entrezMappedGenes));
+    text.append(_addNameValuePairHTML('Mapped EFO Trait',association.mappedLabel));
+    text.append(_addNameValuePairHTML('pValue Exponent',association.pValueExponent));
+    text.append(_addNameValuePairHTML('Author Reported Gene',association.reportedGene));
+    text.append(_addNameValuePairHTML('PubmedId',association.pubmedId));
+    text.append(_addNameValuePairHTML('Title',association.title));
     return text.prop('outerHTML');
 }
 
@@ -3317,3 +3370,4 @@ _cleanDataTag = function(tagID){
         $(tagID).removeData(i)
     })
 }
+
