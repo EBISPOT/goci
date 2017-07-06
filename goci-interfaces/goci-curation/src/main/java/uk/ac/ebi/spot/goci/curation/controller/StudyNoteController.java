@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.model.MultiStudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.model.StudyNoteForm;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
@@ -85,6 +86,7 @@ public class StudyNoteController {
         MultiStudyNoteForm msnf = studyNoteOperationsService.generateMultiStudyNoteForm(study.getNotes(), study, user);
 
         model.addAttribute("multiStudyNoteForm", msnf);
+
 
         return "study_notes";
     }
@@ -268,30 +270,22 @@ public class StudyNoteController {
     @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"duplicateNote"})
     public String duplicateNoteAcrossPublication(Model model, @PathVariable Long studyId,
                                                  HttpServletRequest req) {
-        final Long nodeId = Long.valueOf(req.getParameter("duplicateNote"));
+        final Long noteId = Long.valueOf(req.getParameter("duplicateNote"));
         SecureUser user = currentUserDetailsService.getUserFromRequest(req);
 
 
         Study study = studyRepository.findOne(studyId);
-        StudyNote noteToCopy = studyNoteService.findOne(nodeId);
 
 
-        Collection<Study> studies = studyRepository.findByPubmedId(study.getPubmedId());
-        //remove the current study from the list
-        studies = studies.stream().filter(targetStudy -> study.getId() != targetStudy.getId()).collect(Collectors.toList());
+        ErrorNotification notification = studyOperationsService.duplicateStudyNoteToSiblingStudies(study,noteId,user);
 
-
-        //copy note to all studies
-        studies.stream().forEach(targetStudy -> {
-            ErrorNotification notification = studyOperationsService.addStudyNote(targetStudy, studyNoteOperationsService.duplicateNote(targetStudy,noteToCopy,user), user);
-            if(!notification.hasErrors()){
-            }else{
-                //deal with error
-                // we want to display the error to the user simply on top of the form
-                getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
-                System.out.print("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
-            }
-        });
+        if(notification.hasErrors()){
+            //we want to display the error to the user simply on top of the form
+            getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
+            model.addAttribute("errors", "Duplicate FAIL! " + notification.errorMessage());
+//            redirectAttributes.addFlashAttribute("errors", "Duplicate FAIL! " + notification.errorMessage());
+//            req.setAttribute("errors", "Duplicate FAIL! " + notification.errorMessage());
+        }
 
         return "redirect:/studies/" + studyId + "/notes";
     }

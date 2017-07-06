@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 /**
  * Created by xinhe on 04/04/2017.
  * This is a serive to convert studyNoteForm from/back the studyNote data object.
@@ -27,6 +28,7 @@ public class StudyNoteOperationsService {
     CuratorService curatorService;
     NoteSubjectService noteSubjectService;
     StudyNoteService studyNoteService;
+
 
     public StudyNoteOperationsService() {
     }
@@ -202,8 +204,8 @@ public class StudyNoteOperationsService {
         return nomalNote;
     }
 
-    public StudyNote duplicateNote(Study study, StudyNote noteToDuplicate, SecureUser user){
-        StudyNote note = createEmptyStudyNote(study,user);
+    public StudyNote duplicateNote(Study targetStudy, StudyNote noteToDuplicate, SecureUser user){
+        StudyNote note = createEmptyStudyNote(targetStudy,user);
         note.setCurator(noteToDuplicate.getCurator());
         note.setNoteSubject(noteToDuplicate.getNoteSubject());
         note.setTextNote(noteToDuplicate.getTextNote());

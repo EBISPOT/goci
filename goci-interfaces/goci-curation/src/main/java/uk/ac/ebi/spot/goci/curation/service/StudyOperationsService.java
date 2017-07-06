@@ -32,6 +32,7 @@ import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 22/10/2015.
@@ -398,6 +399,28 @@ public class StudyOperationsService {
             studyNoteService.deleteStudyNote(studyNote);
         }
 
+        return notification;
+    }
+
+    public ErrorNotification duplicateStudyNoteToSiblingStudies(Study sourceStudy,Long nodeId,SecureUser user){
+        //find all studies with the same pubmed id
+        Collection<Study> studies = studyRepository.findByPubmedId(sourceStudy.getPubmedId());
+        //remove the source study
+        studies = studies.stream().filter(targetStudy -> sourceStudy.getId() != targetStudy.getId()).collect(Collectors.toList());
+
+        //find the note
+        StudyNote noteToCopy = studyNoteService.findOne(nodeId);
+
+        ErrorNotification notification = new ErrorNotification();
+
+
+        //copy note to studies
+        studies.stream().forEach(targetStudy -> {
+            ErrorNotification en = addStudyNote(targetStudy, studyNoteOperationsService.duplicateNote(targetStudy, noteToCopy, user), user);
+            if(en.hasErrors()){
+                notification.addError(en.getErrors());
+            }
+        });
         return notification;
     }
 
