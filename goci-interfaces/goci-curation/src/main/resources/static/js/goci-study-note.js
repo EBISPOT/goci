@@ -16,6 +16,39 @@ $(document).ready(function() {
                              });
 
     $('[data-toggle="confirmation"]').confirmation({ btnOkLabel: "&nbsp;Yes", btnCancelLabel: "&nbsp;No" });
+
+
+
+
+
+//apply template to Initial extraction subject
+    $( ".noteSubjectSelect" ).change(function() {
+        var template = `****
+        **Study design (e.g.reason for split, part of study not eligible)
+        **Summary stats (e.g. whether box ticked, file location, added to Confluence page and/or ftp)
+        **Platform/ SNP n/ imputation
+        **Sample n/ ancestry/ CoR
+        **SNPs
+
+        **EFO/ trait:
+
+        *Queries-   [v brief note if unsure about anything, use this as note to self or reminder for queries to be discussed]
+        Discussed with [initials]-
+        Decided based on discussion –
+
+        *Uploaded study files
+        `
+
+
+        var subjectText = $( ".noteSubjectSelect option:selected" ).text();
+        if(subjectText == 'Initial extraction'){
+            var old = $("textarea[readonly!='readonly']").val();
+            $("textarea[readonly!='readonly']").val(old + '\n' + template);
+        }
+
+    });
+
+
 });
 
 
@@ -40,34 +73,3 @@ window.onload = function() {
 };
 
 
-
-
-
-//apply template to Initial extraction subject
-$( ".noteSubjectSelect" ).change(function() {
-    var template = `****
-        **Study design (e.g.reason for split, part of study not eligible)
-        **Summary stats (e.g. whether box ticked, file location, added to Confluence page and/or ftp)
-        **Platform/ SNP n/ imputation
-        **Sample n/ ancestry/ CoR
-        **SNPs
-
-        **EFO/ trait:
-
-        *Queries-   [v brief note if unsure about anything, use this as note to self or reminder for queries to be discussed]
-        Discussed with [initials]-
-        Decided based on discussion –
-
-        *Uploaded study files
-        `
-
-
-    var subjectText = $( ".noteSubjectSelect option:selected" ).text();
-    if(subjectText == 'Initial extraction'){
-        $("textarea[readonly!='readonly']").text(template)
-    }else{
-        $("textarea[readonly!='readonly']").text('')
-
-    }
-
-});
