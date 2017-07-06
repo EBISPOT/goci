@@ -366,9 +366,10 @@ public class StudyOperationsService {
         }
 
         //published study can only have private note added to it
-        if(isPublished(study) & studyNoteOperationsService.isPublicNote(studyNote)){
-            notification.addError(new PublicNoteIsNotAllowedForPublishedStudyError());
-        }
+        //This is comment out because curators want to add public note to published studies.
+//        if(isPublished(study) & studyNoteOperationsService.isPublicNote(studyNote)){
+//            notification.addError(new PublicNoteIsNotAllowedForPublishedStudyError());
+//        }
 
         //check if study is published
 //        if(isPublished(study)){
