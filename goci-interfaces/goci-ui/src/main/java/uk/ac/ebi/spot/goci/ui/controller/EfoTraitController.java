@@ -43,12 +43,12 @@ public class EfoTraitController {
 //        return "efotrait-page-rest";
 //    }
 
-    @RequestMapping(value = "/efotraits", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "efotraits", produces = MediaType.TEXT_HTML_VALUE)
     public String search() {
         return "efotraits";
     }
 
-    @RequestMapping(value = "/efotraits/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "efotraits/{efoId}", produces = MediaType.TEXT_HTML_VALUE)
     public String search(Model model,
                          @PathVariable(required = false) String efoId,
                          @RequestParam(required = false) String filter,
