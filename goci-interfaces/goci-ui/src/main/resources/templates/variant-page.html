@@ -478,7 +478,7 @@
                             population: '1000GENOMES:phase_3:GBR',
                             svgSize: {
                                 width: 850,
-                                height: 405,
+                                height: 400,
                                 padding: 50
                             },
                             panelSize: {
@@ -494,7 +494,9 @@
                                 ld_link         : "http://www.ensembl.org/Help/View?id=279"
                             },
                             download : {
-                                enable : 1
+                                enable : 1,
+                                download_icon_class : '<span class="glyphicon glyphicon-download-alt" style="margin-right:7px"></span>', //replace this with the correct one from gwas
+                                download_text : "Download LD Data"
                             },
                             filters: {
                                 selected_filters: [],
