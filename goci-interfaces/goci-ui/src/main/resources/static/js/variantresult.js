@@ -68,6 +68,7 @@ function processVariantData(data,rsId) {
         //downloads link
         setDownloadLink(rsId);
     }
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 function getVariantInfo(data,rsId) {
@@ -433,7 +434,7 @@ function getLinkButtons (data,rsId) {
     }
     var pos_end = pos + CONTEXT_RANGE;
     var location = chr+':'+pos_start+'-'+pos_end;
-    var ens_g_context = 'http://www.ensembl.org/Homo_sapiens/Location/View?db=core;r='+location+';v='+rsId+';share_config='+ENS_SHARE_LINK;
+    var ens_g_context = 'http://www.ensembl.org/Homo_sapiens/Location/View?db=core;r='+location+';v='+rsId+';mr='+chr+':'+pos+';share_config='+ENS_SHARE_LINK;
 
     // Summary panel
     $("#ensembl_button").attr('onclick',     "window.open('"+ENSVAR+"Explore?v="+rsId+"',    '_blank')");
@@ -611,7 +612,7 @@ function processVariantInfoFromEnsembl(rsId, data) {
 
         if (var_id != rsId) {
             var var_link = setExternalLink(DBSNP+var_id,var_id);
-            $("#merged-variant-label").html("Merged into");
+            $("#merged-variant-label").show();
             $("#merged-variant").html(var_link);
         }
     }
