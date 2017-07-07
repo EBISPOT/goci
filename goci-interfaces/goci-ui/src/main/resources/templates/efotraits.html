@@ -60,7 +60,7 @@
     <div class="row">
         <h2 style="color: black">GWAS Catalog variants</h2>
         <p>There are now dedicated pages available for all EFO traits recorded in the GWAS Catalog. You can access a EFO trait page by
-           appending the EFO triat's Id to the EFO triat base link <a th:href="@{/efotraits}">www.ebi.ac.uk/gwas/efotraits/</a>.
+           appending the EFO trait's Id to the EFO trait base link <a th:href="@{/efotraits}">www.ebi.ac.uk/gwas/efotraits/</a>.
             <br/>
             <br/>
 
@@ -157,6 +157,7 @@
             //xintodo auto load
             var link = window.location.pathname + '/' +efoid;
             window.open(link, '_blank');
+//            window.open(link);
         }
     }
     instance.start(options)
