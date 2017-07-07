@@ -95,23 +95,38 @@
                 <div class="clearfix">
                     <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Location</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span>Location</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Chromosome and base pair location on the reference genome"></span>
+                            </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-location">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Cytogenetic region</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span>Cytogenetic region</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Cytogenetic band corresponding to the genomic location"></span>
+                            </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-region">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Functional class</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span>Functional class</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Most severe consequence of the variant on the overlapping transcript(s)"></span>
+                            </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-class">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Mapped gene(s)</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span>Mapped gene(s)</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Gene(s) overlapping the variant. If a variant is intergenic, the closest 5' and 3' genes are listed"></span>
+                            </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-mapped-genes">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">GWAS Catalog traits</div>
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span>GWAS Catalog traits</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Description of disease/trait analysed in the study"></span>
+                            </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="variant-traits">-</div>
                         </div>
                     </div>
@@ -119,53 +134,63 @@
                     <!-- Ensembl data -->
                     <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Alleles</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                                <span>Alleles</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Variant alleles: 'reference allele' / 'alternative(s) allele(s)'"></span>
+                            </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="variant-alleles">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">Minor allele</div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                                <span>Minor allele</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele: the second most frequent allele in the 1000 Genomes - Phase 3 combined population"></span>
+                            </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" style="font-weight: bold; margin-bottom: 1em;padding-left:0px">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
                                 <span>MAF</span>
-                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency: frenquency of the second most frequent allele in the 1000 Genomes - Phase 3 combined population" style="margin-left:2px;font-size:smaller"></span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Minor Allele Frequency: frenquency of the second most frequent allele in the 1000 Genomes - Phase 3 combined population"></span>
                             </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="minor-allele-freq">-</div>
                         </div>
                         <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" id="merged-variant-label" style="font-weight:bold; margin-bottom: 1em;padding-left:0px" title="Variant merged into a new variant ID"></div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left" id="merged-variant-label" title="Variant merged into a new variant ID" style="display:none">
+                                <span>Merged into</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="dbSNP variant has been merged into a new dbSNP variant ID"></span>
+                            </div>
                             <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="merged-variant"></div>
                         </div>
                     </div>
 
-                    <div id="links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3" style="text-align:right">
+                    <div id="links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3">
                         <div style="margin-bottom: 0.6em">
-                            <button type="button" class="btn btn-default" id="ensembl_button">Variant in Ensembl<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            <button type="button" class="btn btn-default btn-sm" id="ensembl_button">Variant in <b>Ensembl</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
-                        <button title="Click to show/hide more Ensembl links" id="button-more_ens_links" onclick="toggleDiv('more_ens_links')" class="btn btn-default btn-xs btn-study">Other Ensembl data <span class="glyphicon glyphicon-plus"></span></button>
-                        <div id="more_ens_links" class="collapse">
-                            <div style="margin-bottom: 0.6em;margin-top: 0.6em">
+
+                        <ul style="padding-left:2em">
+                            <li style="margin-bottom:0.5em">
                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_gc_button">Genomic context<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                            </div>
-                            <div style="margin-bottom: 0.6em">
+                            </li>
+                            <li style="margin-bottom:0.5em">
                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_phe_button">Phenotype information<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                            </div>
-                            <div style="margin-bottom: 0.6em">
+                            </li>
+                            <li style="margin-bottom:0.5em">
                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_gr_button">Genes and regulation<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                            </div>
-                            <div style="margin-bottom: 0.6em">
-                                <button type="button" class="btn btn-default btn-xs" id="ensembl_pg_button">Population genetics<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                            </div>
-                            <div style="margin-bottom: 0em">
+                            </li>
+                            <li style="margin-bottom:0.5em">
+                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_pg_button">Population genetics<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </li>
+                            <li>
                                 <button type="button" class="btn btn-default btn-xs" id="ensembl_cit_button">Citations<span class="glyphicon glyphicon-new-window external-link"></span></button>
-                            </div>
-                        </div>
-                        <div style="margin-top: 1.1em;margin-bottom: 1.1em">
-                            <button type="button" class="btn btn-default" id="dbsnp_button">Variant in dbSNP<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            </li>
+                        </ul>
+
+                        <div style="margin-top: 1em;margin-bottom: 0.8em">
+                            <button type="button" class="btn btn-default btn-sm" id="dbsnp_button">Variant in <b>dbSNP</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
                         <div style="margin-bottom: 0.2em">
-                            <button type="button" class="btn btn-default" id="ucsc_button">Variant in UCSC<span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            <button type="button" class="btn btn-default btn-sm" id="ucsc_button">Variant in <b>UCSC</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
                     </div>
                 </div>
@@ -453,7 +478,7 @@
                             population: '1000GENOMES:phase_3:GBR',
                             svgSize: {
                                 width: 850,
-                                height: 405,
+                                height: 400,
                                 padding: 50
                             },
                             panelSize: {
@@ -469,7 +494,9 @@
                                 ld_link         : "http://www.ensembl.org/Help/View?id=279"
                             },
                             download : {
-                                enable : 1
+                                enable : 1,
+                                download_icon_class : '<span class="glyphicon glyphicon-download-alt" style="margin-right:7px"></span>', //replace this with the correct one from gwas
+                                download_text : "Download LD Data"
                             },
                             filters: {
                                 selected_filters: [],
