@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by emma on 22/01/15.
  *
@@ -136,5 +138,22 @@ public class StudySearchFilter {
     public StudySearchFilter setDiseaseTraitSearchFilterId(Long diseaseTraitSearchFilterId) {
         this.diseaseTraitSearchFilterId = diseaseTraitSearchFilterId;
         return this;
+    }
+
+    public Boolean isEmpty() {
+        Boolean empty = true;
+        Field[] fields = this.getClass().getDeclaredFields();
+        for ( Field field : fields  ) {
+            try {
+                //field.getName()
+                if (field.get(this) != null){
+                    empty = false;
+                }
+
+            } catch ( IllegalAccessException ex ) {
+                System.out.println(ex);
+            }
+        }
+        return empty;
     }
 }

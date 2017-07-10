@@ -120,8 +120,12 @@
         </div>
 
         <!--Only show bar if more that one study available and pagination is set to true-->
-        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }"
+        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) and #bools.isFalse(paginationSorting) }"
              th:include="fragments/pagination_bar :: pagination_bar"></div>
+
+        <!--Only show bar if more that one study available and pagination is set to true and order by Score -->
+        <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) and #bools.isTrue(paginationSorting) }"
+             th:include="fragments/score_pagination_bar :: score_pagination_bar"></div>
     </div>
 </div>
 

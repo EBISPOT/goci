@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.component.StudySpecifications;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
@@ -112,7 +113,6 @@ public class StudyController {
     private EventsViewService eventsViewService;
     private StudyUpdateService studyUpdateService;
 
-    private JsonNode scoreJsonNode;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -166,8 +166,10 @@ public class StudyController {
     }
 
     /* All studies and various filtered lists */
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
     public String allStudiesPage(Model model,
+                                 @ModelAttribute StudySearchFilter studySearchFilter,
+                                 HttpServletRequest request,
                                  @RequestParam(required = false) Integer page,
                                  @RequestParam(required = false) String pubmed,
                                  @RequestParam(required = false) String author,
@@ -178,21 +180,41 @@ public class StudyController {
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(value = "sorttype", required = false) String sortType,
                                  @RequestParam(value = "diseasetraitid", required = false) Long diseaseTraitId,
+                                 @RequestParam(value = "scoreJSON", required = false) String scoreJSON,
                                  @RequestParam(required = false) Integer year,
                                  @RequestParam(required = false) Integer month) {
 
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
+        JsonNode scoreJsonNode = null;
+        Boolean sortingScore = false;
+        Boolean allowScoreSorting = true;
+        Boolean paginationSorting = false;
+        StudySpecifications studyspec = new StudySpecifications(studySearchFilter);
+
+
+        if (request.getMethod().compareTo("POST") == 0) {
+            status = studySearchFilter.getStatusSearchFilterId();
+            curator = studySearchFilter.getCuratorSearchFilterId();
+            pubmed = studySearchFilter.getPubmedId();
+            author = studySearchFilter.getAuthor();
+            studyType = studySearchFilter.getStudyType();
+            efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
+            notesQuery = studySearchFilter.getNotesQuery();
+            diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
+            if (scoreJSON != null) {
+                scoreJsonNode = convertScoreJson(scoreJSON);
+                sortingScore = true;
+            }
+
+        }
 
         // Return all studies ordered by date if no page number given
         if (page == null) {
             // Find all studies ordered by study date and only display first page
-            return "redirect:/studies?page=1";
+            page = 1;
         }
-
-        // This will be returned to view and store what curator has searched for
-        StudySearchFilter studySearchFilter = new StudySearchFilter();
 
         // Store filters which will be need for pagination bar and to build URI passed back to view
         String filters = "";
@@ -204,25 +226,18 @@ public class StudyController {
             sortString = "&sorttype=" + sortType;
         }
 
-        if (sortType ==null) {
-            this.setScoreJsonNode(null);
-        }
-        else {
-            if (sortType.compareTo("scoresortdesc") != 0) {
-                this.setScoreJsonNode(null);
-            }
-        }
 
         Page<Study> studyPage = null;
-        if (this.getScoreJsonNode() == null) {
-            // This is the default study page will all studies
+
+        if (!sortingScore) {
             studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
         }
         else {
-            //SCORETASK - to filter
+            paginationSorting = true;
             List<Study> allStudies = studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
-            studyPage = getPageByScore(allStudies, this.getScoreJsonNode(), page);
+            studyPage = getPageByScore(allStudies, scoreJsonNode, page);
         }
+
 
         // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
         List<Study> studies = null;
@@ -230,23 +245,41 @@ public class StudyController {
 
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
-            studyPage =
-                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
+            allowScoreSorting = true;
+            if (!sortingScore) {
+                studyPage =
+                        studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
+            }
+            else {
+                paginationSorting = true;
+                List<Study> allStudies = studyRepository.findAll(studyspec);
+                studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+            }
             filters = filters + "&pubmed=" + pubmed;
             studySearchFilter.setPubmedId(pubmed);
         }
 
         // Search by author option available from landing page
         if (author != null && !author.isEmpty()) {
-            studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
+            allowScoreSorting = true;
+            if (!sortingScore) {
+                studyPage =
+                        studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
                                                                                                             sort));
+            }
+            else {
+                paginationSorting = true;
+                List<Study> allStudies = studyRepository.findAll(studyspec);
+                studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+            }
+
             filters = filters + "&author=" + author;
             studySearchFilter.setAuthor(author);
         }
 
         // Search by study type
         if (studyType != null && !studyType.isEmpty()) {
-
+            allowScoreSorting = false;
             if (studyType.equals("GXE")) {
                 studyPage = studyRepository.findByGxe(true, constructPageSpecification(page - 1,
                                                                                        sort));
@@ -325,14 +358,16 @@ public class StudyController {
 
         // Search by efo trait id
         if (efoTraitId != null) {
+            allowScoreSorting = false;
             studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
-                                                                                                 sort));
+                                                                                                     sort));
             studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
             filters = filters + "&efotraitid=" + efoTraitId;
         }
 
         // Search by disease trait id
         if (diseaseTraitId != null) {
+            allowScoreSorting = false;
             studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
                                                                                                         sort));
             studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
@@ -342,6 +377,7 @@ public class StudyController {
 
         // Search by notes for entered string
         if (notesQuery != null && !notesQuery.isEmpty()) {
+            allowScoreSorting = false;
             studyPage = studyRepository.findDistinctByNotesTextNoteContainingIgnoreCase(notesQuery,
                     constructPageSpecification(page - 1,
                             sort));
@@ -357,6 +393,7 @@ public class StudyController {
 
                 // This is just used to link from reports tab
                 if (year != null && month != null) {
+                    allowScoreSorting = false;
                     studyPage = studyRepository.findByPublicationDateAndCuratorAndStatus(curator,
                                                                                          status,
                                                                                          year,
@@ -372,13 +409,20 @@ public class StudyController {
 
                 }
                 else {
-
-                    studyPage = studyRepository.findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(status,
-                                                                                                           curator,
-                                                                                                           constructPageSpecification(
-                                                                                                                   page -
-                                                                                                                           1,
-                                                                                                                   sort));
+                    allowScoreSorting = true;
+                    if (!sortingScore) {
+                        studyPage = studyRepository.findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(status,
+                                                                                                               curator,
+                                                                                                               constructPageSpecification(
+                                                                                                                       page -
+                                                                                                                               1,
+                                                                                                                       sort));
+                    }
+                    else {
+                        paginationSorting = true;
+                        List<Study> allStudies = studyRepository.findAll(studyspec);
+                        studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+                    }
                     filters = filters + "&status=" + status + "&curator=" + curator;
                 }
 
@@ -388,16 +432,17 @@ public class StudyController {
 
             }
             else {
-
-                if (this.getScoreJsonNode() == null) {
-                    studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
-                            page - 1,
-                            sort));
-                }
+                allowScoreSorting = true;
+                if (!sortingScore) {
+                        studyPage =
+                                studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
+                                        page - 1,
+                                        sort));
+                    }
                 else {
-                    //SCORETASK
-                    List<Study> selectedStudies = studyRepository.findByHousekeepingCurationStatusId(status);
-                    studyPage = getPageByScore(selectedStudies, this.getScoreJsonNode(), page);
+                    paginationSorting = true;
+                    List<Study> allStudies = studyRepository.findAll(studyspec);
+                    studyPage = getPageByScore(allStudies, scoreJsonNode, page);
                 }
                 filters = filters + "&status=" + status;
 
@@ -409,9 +454,17 @@ public class StudyController {
         // If user entered curator
         else {
             if (curator != null) {
+                allowScoreSorting = true;
+                if (!sortingScore) {
                 studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
                         page - 1,
                         sort));
+                }
+                 else {
+                    paginationSorting = true;
+                    List<Study> allStudies = studyRepository.findAll(studyspec);
+                    studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+                }
                 filters = filters + "&curator=" + curator;
 
                 // Return this value so it appears in filter result
@@ -483,6 +536,8 @@ public class StudyController {
         statusAssignment.setUri("/studies?page=" + current + filters);
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
+        model.addAttribute("allowScoreSorting", allowScoreSorting);
+        model.addAttribute("paginationSorting",paginationSorting);
 
         Map<String, Map<String, String>> scoreFeatures = new HashMap<String, Map<String, String>>();
         studyPage.getContent().forEach(study -> {
@@ -519,102 +574,6 @@ public class StudyController {
         model.addAttribute("scoreFeatures", scoreFeatures);
 
         return "studies";
-    }
-
-
-    // Redirects from landing page and main page
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter,
-                                         @RequestParam(value = "sorttype", required = false) String sortType,
-                                         @RequestParam(value = "scoreJSON", required = false) String scoreJSON,
-                                         @RequestParam(required = false) Integer page) {
-
-        // Get ids of objects searched for
-        Long status = studySearchFilter.getStatusSearchFilterId();
-        Long curator = studySearchFilter.getCuratorSearchFilterId();
-        String pubmedId = studySearchFilter.getPubmedId();
-        String author = studySearchFilter.getAuthor();
-        String studyType = studySearchFilter.getStudyType();
-        Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
-        String notesQuery = studySearchFilter.getNotesQuery();
-        Long diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
-        Integer goToPage;
-        System.out.println(studySearchFilter.toString());
-        System.out.println(status);
-        if (page == null) {
-            goToPage = 1;
-        }
-        else {
-            goToPage = page;
-        }
-
-        if (sortType !=null) {
-            this.setScoreJsonNode(convertScoreJson(scoreJSON));
-        }
-        else {
-            this.setScoreJsonNode(convertScoreJson(null));
-        }
-
-        // Search by pubmed ID option available from landing page
-        if (pubmedId != null && !pubmedId.isEmpty()) {
-            return "redirect:/studies?page=1&pubmed=" + pubmedId;
-        }
-
-        // Search by author option available from landing page
-        else if (author != null && !author.isEmpty()) {
-            return "redirect:/studies?page=1&author=" + author;
-        }
-
-        // Search by study type
-        else if (studyType != null && !studyType.isEmpty()) {
-            return "redirect:/studies?page=1&studytype=" + studyType;
-        }
-
-        // Search by efo trait
-        else if (efoTraitId != null) {
-            return "redirect:/studies?page=1&efotraitid=" + efoTraitId;
-        }
-
-        // Search by disease trait
-        else if (diseaseTraitId != null) {
-            return "redirect:/studies?page=1&diseasetraitid=" + diseaseTraitId;
-        }
-
-        // Search by string in notes
-        else if (notesQuery != null && !notesQuery.isEmpty()) {
-            return "redirect:/studies?page=1&notesquery=" + notesQuery;
-        }
-
-        // If user entered a status
-        else if (status != null) {
-            // If we have curator and status find by both
-            if (curator != null) {
-                return "redirect:/studies?page=1&status=" + status + "&curator=" + curator;
-            }
-            else {
-                String redirect = "redirect:/studies?page=1&status=" + status;
-                if (sortType !=null) {
-                    redirect = "redirect:/studies?page="+goToPage.toString()+"&status=" + status+"&sorttype="+sortType;
-                }
-                return redirect;
-            }
-        }
-        // If user entered curator
-        else if (curator != null) {
-            return "redirect:/studies?page=1&curator=" + curator;
-        }
-
-        // If all else fails return all studies
-        else {
-            if (sortType !=null) {
-                return "redirect:/studies?page="+goToPage.toString()+"&sorttype="+sortType;
-            }
-            else {
-                // Find all studies ordered by study date and only display first page
-                return "redirect:/studies?page=1";
-            }
-        }
-
     }
 
 
@@ -1245,6 +1204,9 @@ public class StudyController {
         return jsonNodeInfo;
     }
 
+
+
+
     private Page<Study> getPageByScore(List<Study> studyFilterResult, JsonNode scoreJsonNode, int page) {
         Page<Study> studyPageScored = null;
 
@@ -1284,11 +1246,20 @@ public class StudyController {
         return studyPageScored;
     }
 
-    public JsonNode getScoreJsonNode() {
-        return scoreJsonNode;
+    public Map<String, String> createMappingActions() {
+        Map<String, String> mappingActions = new HashMap<String, String>();
+
+        mappingActions.put("status","statusSearchFilterId");
+        mappingActions.put("curator","curatorSearchFilterId");
+        mappingActions.put("month","monthFilter");
+        mappingActions.put("year","yearFilter");
+        mappingActions.put("pubmed","pubmedId");
+        mappingActions.put("author","author");
+        mappingActions.put("studytype","studyType");
+        mappingActions.put("efotraitid", "efoTraitSearchFilterId");
+        mappingActions.put("diseasetraitid","diseaseTraitSearchFilterId");
+        mappingActions.put("notesquery","notesQuery");
+        return mappingActions;
     }
 
-    public void setScoreJsonNode(JsonNode scoreJsonNode) {
-        this.scoreJsonNode = scoreJsonNode;
-    }
 }

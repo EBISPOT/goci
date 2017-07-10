@@ -74,15 +74,22 @@
         </th>
         <th class="col-md-1">EFO Trait</th>
         <th class="col-md-1">Score
-
+            <div th:if="${#bools.isTrue(allowScoreSorting) }">
             <form method="post" class="inline" th:action="@{/studies(filters=true)}" th:object="${studySearchFilter}" >
-                <input type="hidden" value="fredoom" name="curationStatus" th:field="*{statusSearchFilterId}" id="curationStatus" />
+                <input type="hidden" value="" name="curationStatus" th:field="*{statusSearchFilterId}" id="curationStatus" />
+                <input type="hidden" value="" name="curator" th:field="*{curatorSearchFilterId}" id="curator" />
+                <input type="hidden" value="" name="authors" th:field="*{author}" id="authors" />
+
+                <input type="hidden" value="" name="efoTraits" th:field="*{efoTraitSearchFilterId}" id="efoTraits" />
+                <input type="hidden" value="" name="diseaseTraits" th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits" />
+                <input type="hidden" value="" name="pubmedId" th:field="*{pubmedId}" id="pubmedId" />
                 <input type="hidden" name="sorttype" value="scoresortdesc" />
                 <input type="hidden" id="hiddenScoreJson" name="scoreJSON" value="{}" />
                 <button type="submit" name="page" value="1" class="btn btn-default btn-xs">
                     <span class="glyphicon glyphicon-sort-by-alphabet"></span>
                 </button>
             </form>
+            </div>
         </th>
         <th class="col-md-2">Curator
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="score_pagination_bar">
+
+<!-- Pagination bar, based on
+http://www.stefanalexandru.com/java/spring-boot-with-thymeleaf-and-maven-first-impressions-->
+
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class='pagination pagination-centered'>
+            <form method="post" th:action="@{/studies(filters=true)}"
+                  th:object="${studySearchFilter} " class="inline">
+                <input type="hidden" value="" name="curationStatus" th:field="*{statusSearchFilterId}" id="curationStatus" />
+                <input type="hidden" value="" name="curator" th:field="*{curatorSearchFilterId}" id="curator" />
+                <input type="hidden" value="" name="authors" th:field="*{author}" id="authors" />
+
+                <input type="hidden" value="" name="efoTraits" th:field="*{efoTraitSearchFilterId}" id="efoTraits" />
+                <input type="hidden" value="" name="diseaseTraits" th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits" />
+                <input type="hidden" value="" name="pubmedId" th:field="*{pubmedId}" id="pubmedId" />
+                <input type="hidden" name="sorttype" value="scoresortdesc" />
+                <input type="hidden" id="hiddenScoreJsonPagination" name="scoreJSON" value="{}" />
+
+
+                <div class="btn-toolbar" role="toolbar" style="margin: 0;">
+                    <div class="btn-group">
+                        <!--If we have filters-->
+                        <ul class="pagination" th:if="${filters != null}">
+                            <!--First page-->
+                            <li th:class="${currentIndex == 1}? 'disabled' : ''">
+
+                                <button th:type="submit" th:if='${currentIndex != 1}' name="page" th:value="1"
+                                        type="button" class="btn btn-link">← First</button>
+                            </li>
+                            <!--Move to previous index-->
+                            <li th:class="${currentIndex != 1}? '' : 'disabled'">
+
+                                <button th:type="submit" th:if='${currentIndex != 1}' title='Go to previous page' name="page" th:value="@{${(currentIndex -1)}}"
+                                        type="button" class="btn btn-link">«</button>
+
+                            </li>
+
+                            <!--if item is equal to current page number make it active value, then establish links to other pages-->
+                            <li th:each="item : ${#numbers.sequence(beginIndex,endIndex)}"
+                                th:class="${item == currentIndex ? 'active' : '' }">
+                                <button th:if='${item == currentIndex}'
+                                         type="button" class="btn btn-link" th:disabled="true"><p th:inline="text">
+                                    [[${item}]] </p></button>
+
+                                <button  th:type="submit" th:if='${item != currentIndex}' name="page" th:value="@{${item}}"
+                                        type="button" class="btn btn-link"><p th:inline="text">
+                                    [[${item}]] </p></button>
+
+                            </li>
+
+                            <!--Move to next page-->
+                            <li th:class="${currentIndex != studies.totalPages}? '' : 'disabled'">
+
+                                <button  th:type="submit" th:if='${currentIndex != studies.totalPages}' name="page" th:value="@{${(currentIndex + 1)}}"
+                                         type="button" class="btn btn-link" title='Go to next page'>»</button>
+
+                            </li>
+                            <!--Last page-->
+                            <li th:class="${currentIndex == studies.totalPages}? 'disabled' : ''">
+                                <button th:type="submit" th:if='${currentIndex != studies.totalPages}' name="page" th:value="@{${studies.totalPages}}"
+                                        type="button" class="btn btn-link">Last →</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
