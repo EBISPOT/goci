@@ -205,10 +205,13 @@ public class StudyNoteOperationsService {
     }
 
     public StudyNote duplicateNote(Study targetStudy, StudyNote noteToDuplicate, SecureUser user){
+        Study sourceStudy = noteToDuplicate.getStudy();
         StudyNote note = createEmptyStudyNote(targetStudy,user);
         note.setCurator(noteToDuplicate.getCurator());
         note.setNoteSubject(noteToDuplicate.getNoteSubject());
-        note.setTextNote(noteToDuplicate.getTextNote());
+        //we added some text to indicate that this is a duplicated note.
+        //This is just a hack to distinguish dulicated note since we have study-note one to many as out note model atm
+        note.setTextNote("Duplicated note from ".concat(sourceStudy.getId().toString()).concat("\n").concat(noteToDuplicate.getTextNote()));
         note.setStatus(noteToDuplicate.getStatus());
         return note;
     }

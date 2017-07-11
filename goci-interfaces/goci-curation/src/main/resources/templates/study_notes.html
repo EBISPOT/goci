@@ -264,7 +264,7 @@
                                <!--th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"/>-->
 
                         <!--<div class="form-group">-->
-                            <textarea style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
+                            <textarea class="noteText" style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
                                     rows="10" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
                                       th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"
                                       placeholder="Please enter note here" ></textarea>

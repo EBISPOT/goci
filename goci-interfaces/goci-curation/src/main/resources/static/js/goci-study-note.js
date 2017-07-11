@@ -40,6 +40,8 @@ $(document).ready(function() {
 
     });
 
+    // $(".notetext")
+
     // //popup to confirm public note
     // $(".noteStatus").change(function(e){
     //     var optionSelected = $("option:selected", this);
