@@ -188,9 +188,10 @@
                     }
                     return '';
                     }).filter((x)=>{return x!='';}).join('\n');
+
                     var titleNormalised = Object.keys(studies_nomalized[this.id]).map((features)=>{
                                 if(Object.keys(FEATURES).indexOf(features) != -1){
-                        return features + ':' +studies_nomalized[this.id][features];
+                        return features + ':' + Math.floor(studies_nomalized[this.id][features] * 100) / 100;
                     }
                     return '';
                     }).filter((x)=>{return x!='';}).join('\n');
