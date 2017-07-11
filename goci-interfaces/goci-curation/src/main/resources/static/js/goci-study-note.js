@@ -21,34 +21,41 @@ $(document).ready(function() {
 
 
 
-//apply template to Initial extraction subject
+    //apply template to Initial extraction subject
     $( ".noteSubjectSelect" ).change(function() {
-        var template = `****
-        **Study design (e.g.reason for split, part of study not eligible)
-        **Summary stats (e.g. whether box ticked, file location, added to Confluence page and/or ftp)
+        var template = `**Summary stats
+        **Study design
         **Platform/ SNP n/ imputation
         **Sample n/ ancestry/ CoR
         **SNPs
-
-        **EFO/ trait:
-
-        *Queries-   [v brief note if unsure about anything, use this as note to self or reminder for queries to be discussed]
-        Discussed with [initials]-
-        Decided based on discussion –
-
-        *Uploaded study files
+        **EFO/ trait
+        **Queries
         `
 
-
         var subjectText = $( ".noteSubjectSelect option:selected" ).text();
-        if(subjectText == 'Initial extraction'){
+        if(subjectText == 'Initial extraction' || subjectText == 'review/secondary extraction'){
             var old = $("textarea[readonly!='readonly']").val();
             $("textarea[readonly!='readonly']").val(old + '\n' + template);
         }
 
     });
 
-
+    // //popup to confirm public note
+    // $(".noteStatus").change(function(e){
+    //     var optionSelected = $("option:selected", this);
+    //     var valueSelected = this.value;
+    //
+    //     e.preventDefault()
+    //     var areYouSure = confirm('If you sure you wish to leave this tab?  Any data entered will NOT be saved.  To save information, use the Save buttons.');
+    //     if (areYouSure === true) {
+    //         $(this).tab('show')
+    //     } else {
+    //         // do other stuff
+    //         return false;
+    //     }
+    //
+    //    this.confirmation('show');
+    // })
 });
 
 

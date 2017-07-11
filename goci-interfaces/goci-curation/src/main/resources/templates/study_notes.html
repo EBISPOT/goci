@@ -383,7 +383,7 @@
                     </div>
 
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                    <select th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
+                    <select class="noteStatus" th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
                             th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
 
                         <option th:value="1" th:text="Public"
