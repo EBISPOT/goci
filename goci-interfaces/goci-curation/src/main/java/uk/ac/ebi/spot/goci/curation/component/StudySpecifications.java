@@ -30,60 +30,43 @@ public class StudySpecifications implements Specification<Study> {
         }
 
         //building the desired query
-        root.fetch("diseaseTrait", JoinType.LEFT);
         root.fetch("housekeeping", JoinType.LEFT);
-        //root.fetch("curator",JoinType.LEFT);
         cq.distinct(true);
 
 
-        if (filters.getPubmedId() != null) {
-            System.out.println("pubmedId Predicate");
+        if (filters.getPubmedId() != null && !filters.getPubmedId().isEmpty()) {
             predicates.add(cb.like(cb.lower(root.get("pubmedId")), filters.getPubmedId().toLowerCase() + "%"));
         }
 
-        if (filters.getAuthor() != null) {
-            System.out.println("Author Predicate");
+        if (filters.getAuthor() != null && !filters.getAuthor().isEmpty()) {
             predicates.add(cb.like(cb.lower(root.get("author")), filters.getAuthor().toLowerCase() + "%"));
         }
 
 
-        if (filters.getStudyType() != null) {
-            System.out.println("studyType Predicate");
+        if (filters.getStudyType() != null && !filters.getStudyType().isEmpty()) {
             String studyColumn = convertStudyTypeToColumn(filters.getStudyType());
             if (studyColumn != null) {
                 predicates.add(cb.equal(root.get(studyColumn), 1));
             }
         }
 
-
         if (filters.getCuratorSearchFilterId() != null) {
-            System.out.println("Curator predicate");
             predicates.add(cb.equal(root.get("housekeeping").get("curator").get("id"), filters.getCuratorSearchFilterId()));
         }
 
         if (filters.getStatusSearchFilterId() != null) {
-            //predicates.add(cb.like(cb.lower(root.get(Study_.title)), example.getTitle().toLowerCase() + "%"));
             //predicates.add(cb.equals(cb.lower(root.get("housekeeping")), filters.getCuratorSearchFilterId() + "%"));
-            //Path<Long> path = root.join("housekeeoping").<Long>get("id");
-            //predicates.add(cb.equal(root.get("housekeeping").get("curator").get("id"), filters.getCuratorSearchFilterId()));
             predicates.add(cb.equal(root.get("housekeeping").get("curationStatus").get("id"), filters.getStatusSearchFilterId()));
-
-            System.out.println("Status predicate");
         }
 
-        /*
-        if (example.getAuthor() != null) {
-            //predicates.add(cb.like(cb.lower(root.get(Study_.title)), example.getTitle().toLowerCase() + "%"));
-            predicates.add(cb.like(cb.lower(root.get("author")), example.getAuthor().toLowerCase() + "%"));
-            System.out.println("predicato");
+        if (filters.getDiseaseTraitSearchFilterId() != null) {
+            predicates.add(cb.equal(root.join("diseaseTrait").get("id"), filters.getDiseaseTraitSearchFilterId()));
         }
 
-        if (example.getDiseaseTrait().getTrait() != null) {
-            //predicates.add(cb.like(cb.lower(root.get(Study_.title)), example.getTitle().toLowerCase() + "%"));
-            predicates.add(cb.like(cb.lower(root.get("diseaseTrait").get("trait")), example.getDiseaseTrait().getTrait().toLowerCase() + "%"));
-            System.out.println("predicato");
+        if (filters.getEfoTraitSearchFilterId() != null) {
+            predicates.add(cb.equal(root.join("efoTraits").get("id"), filters.getEfoTraitSearchFilterId()));
         }
-*/
+
         return andTogether(predicates, cb);
     }
 

@@ -147,7 +147,9 @@ public class StudySearchFilter {
             try {
                 //field.getName()
                 if (field.get(this) != null){
-                    empty = false;
+                    if (!field.get(this).toString().isEmpty()) {
+                        empty = false;
+                    }
                 }
 
             } catch ( IllegalAccessException ex ) {

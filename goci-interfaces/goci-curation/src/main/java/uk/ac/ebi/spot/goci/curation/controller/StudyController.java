@@ -234,8 +234,12 @@ public class StudyController {
         }
         else {
             paginationSorting = true;
-            List<Study> allStudies = studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
-            studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+            if (studySearchFilter.isEmpty()) {
+                List<Study> allStudies =
+                        studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+                studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+
+            }
         }
 
 
@@ -358,18 +362,33 @@ public class StudyController {
 
         // Search by efo trait id
         if (efoTraitId != null) {
-            allowScoreSorting = false;
-            studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
+            allowScoreSorting = true;
+            if (!sortingScore) {
+                studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
                                                                                                      sort));
+            }
+            else {
+                paginationSorting = true;
+                List<Study> allStudies = studyRepository.findAll(studyspec);
+                studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+            }
+
             studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
             filters = filters + "&efotraitid=" + efoTraitId;
         }
 
         // Search by disease trait id
         if (diseaseTraitId != null) {
-            allowScoreSorting = false;
-            studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
-                                                                                                        sort));
+            allowScoreSorting = true;
+            if (!sortingScore) {
+                studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
+                                                                                                            sort));
+            }
+            else {
+                paginationSorting = true;
+                List<Study> allStudies = studyRepository.findAll(studyspec);
+                studyPage = getPageByScore(allStudies, scoreJsonNode, page);
+            }
             studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
             filters = filters + "&diseasetraitid=" + diseaseTraitId;
         }
@@ -1244,22 +1263,6 @@ public class StudyController {
 
 
         return studyPageScored;
-    }
-
-    public Map<String, String> createMappingActions() {
-        Map<String, String> mappingActions = new HashMap<String, String>();
-
-        mappingActions.put("status","statusSearchFilterId");
-        mappingActions.put("curator","curatorSearchFilterId");
-        mappingActions.put("month","monthFilter");
-        mappingActions.put("year","yearFilter");
-        mappingActions.put("pubmed","pubmedId");
-        mappingActions.put("author","author");
-        mappingActions.put("studytype","studyType");
-        mappingActions.put("efotraitid", "efoTraitSearchFilterId");
-        mappingActions.put("diseasetraitid","diseaseTraitSearchFilterId");
-        mappingActions.put("notesquery","notesQuery");
-        return mappingActions;
     }
 
 }
