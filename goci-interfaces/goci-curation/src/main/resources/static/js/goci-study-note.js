@@ -31,9 +31,19 @@ $(document).ready(function() {
         **EFO/ trait
         **Queries
         `
-
+        var template = `
+        **Discovery description
+        **Replication description
+        **Study design
+        **Platform/ SNP n/ imputation
+        **Sample n/ ancestry/ CoR
+        **SNPs21
+        **EFO/ trait
+        **Queries
+        **Uploaded study files
+        `
         var subjectText = $( ".noteSubjectSelect option:selected" ).text();
-        if(subjectText == 'Initial extraction' || subjectText == 'review/secondary extraction'){
+        if(subjectText == 'Initial extraction' || subjectText == 'Review/secondary extraction'){
             var old = $("textarea[readonly!='readonly']").val();
             $("textarea[readonly!='readonly']").val(old + '\n' + template);
         }
