@@ -187,7 +187,7 @@
         <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
                   th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait} ) ?: ''"></span>
         </td>
-        <td id="score"> - </td>
+        <td id="score"> </td>
         <!--If study has associated housekeeping object then get the following attributes -->
         <td>
             <p th:text="${study.housekeeping != null and study.housekeeping.curator !=null } ? ${study.housekeeping.curator.lastName} : ''"></p>

@@ -231,3 +231,7 @@ a > .toplevel-view {
 .morelink {
     display: block;
 }
+
+.badge-primary-bold {
+    background-color: #398A96;
+}

@@ -181,20 +181,44 @@
             if (this.id != "") {
                 var newValue = studies_score[this.id];
                 if (newValue != null){
-                    $(this).find('#score').text(newValue.toFixed(2));
                     //console.log(this.id,":", newValue);
+                    var title = Object.keys(studies_raw[this.id]).map((features)=>{
+                                if(Object.keys(FEATURES).indexOf(features) != -1){
+                        return features + ':' +studies_raw[this.id][features];
+                    }
+                    return '';
+                    }).filter((x)=>{return x!='';}).join('\n');
+                    var titleNormalised = Object.keys(studies_nomalized[this.id]).map((features)=>{
+                                if(Object.keys(FEATURES).indexOf(features) != -1){
+                        return features + ':' +studies_nomalized[this.id][features];
+                    }
+                    return '';
+                    }).filter((x)=>{return x!='';}).join('\n');
+
+                    console.log(title);
+                    console.log(titleNormalised);
+                    var item = $(this).find('#score');
+                    $('<span />', { class: 'badge badge-primary-bold', text: studies_score[this.id].toFixed(2), title:title + '\n\n' +titleNormalised,}).appendTo(item);
+
+                }
+                else {
+                    var item = $(this).find('#score');
+                    $('<span />', { class: 'badge badge-primary-bold', text: '-',}).appendTo(item);
+
                 }
             }
         });
 
         var scoreJSON=JSON.stringify(hashFromArrays(Object.keys(studies_score).map((x)=>{return x}),Object.values(studies_score).map((x)=>{return Math.trunc((x.toFixed(2)*100))})));
         document.getElementById('hiddenScoreJson').setAttribute('value', scoreJSON);
-        document.getElementById('hiddenScoreJsonPagination').setAttribute('value', scoreJSON);
+        if (document.getElementById('hiddenScoreJsonPagination')) {
+            document.getElementById('hiddenScoreJsonPagination').setAttribute('value', scoreJSON);
+        }
 
-    })
+   });
 
     //create a list of studies sorted by score
-    scorePromise.then((studies_score)=>{
+    /*scorePromise.then((studies_score)=>{
 
         var getSortedKeys = function(obj) {
             var keys = []; for(var key in obj) keys.push(key);
@@ -234,6 +258,7 @@
             })
         })
     })
+    */
 
     //$(".pagination a").click(function(e) {
     //    console.log("clicked");
@@ -248,7 +273,7 @@
 
 
     //kEY AND VALUE ALL STRING
-    console.log(JSON.stringify(hashFromArrays(Object.keys(studies_score).map((x)=>{return x.toString()}),Object.values(studies_score).map((x)=>{return x.toFixed(2).toString()}))))
+    //console.log(JSON.stringify(hashFromArrays(Object.keys(studies_score).map((x)=>{return x.toString()}),Object.values(studies_score).map((x)=>{return x.toFixed(2).toString()}))))
 
     /*]]>*/
 </script>
