@@ -211,7 +211,7 @@ public class StudyNoteOperationsService {
         note.setNoteSubject(noteToDuplicate.getNoteSubject());
         //we added some text to indicate that this is a duplicated note.
         //This is just a hack to distinguish dulicated note since we have study-note one to many as out note model atm
-        note.setTextNote("Duplicated note from ".concat(sourceStudy.getId().toString()).concat("\n").concat(noteToDuplicate.getTextNote()));
+        note.setTextNote("Duplicated from study: ".concat(sourceStudy.getId().toString()).concat("\n").concat(noteToDuplicate.getTextNote()));
         note.setStatus(noteToDuplicate.getStatus());
         return note;
     }
