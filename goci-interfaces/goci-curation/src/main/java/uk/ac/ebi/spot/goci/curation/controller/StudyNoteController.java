@@ -291,8 +291,14 @@ public class StudyNoteController {
     }
 
 
+    @RequestMapping(value = "/studies/note/subject/{subjectId}",method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public NoteSubject querySubjectSubject(@PathVariable Long subjectId) {
+        return noteSubjectService.findOne(subjectId);
+    }
 
-//      controller base exception handler
+
+        //      controller base exception handler
 //        @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     //#xintodo how we handle exception
         @ExceptionHandler(Exception.class)
@@ -301,6 +307,9 @@ public class StudyNoteController {
             getLog().error(responseMsg, e);
             return responseMsg;
         }
+
+
+
 
 }
 

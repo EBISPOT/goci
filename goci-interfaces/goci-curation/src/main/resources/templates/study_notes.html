@@ -63,6 +63,11 @@
     <script th:src="@{/js/bootstrap-confirmation.min.js}"></script>
     <script th:src="@{/js/goci-study-note.js}"></script>
     <script th:src="@{/js/goci-print-page.js}"></script>
+    <script th:src="@{/js/goci-curation-utli.js}"></script>
+
+    <!-- loading overlay
+================================================== -->
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
 
 </head>
 <body>
@@ -455,9 +460,7 @@
 <!--</script>-->
 
 <script>
-    /**
-     * Created by xinhe on 19/04/2017.
-     */
+
 
 //init tables
     $(document).ready(function() {
@@ -480,30 +483,27 @@
 
         //apply template to Initial extraction subject
         $( ".noteSubjectSelect" ).change(function() {
-            var template = `**Study files
-**Study design
-**Platform/ SNP n/ imputation
-**Sample n/ ancestry/ CoR
-            Discovery:
-            Replication:
-**SNPs
-**Summary stats
-**EFO/ trait
-**Queries
-        `
-            var subjectText = $( ".noteSubjectSelect option:selected" ).text();
-            if(subjectText == 'Initial extraction' || subjectText == 'Review/secondary extraction'){
-                var old = $("textarea[readonly!='readonly']").val();
-                if(old != ''){
-                    $("textarea[readonly!='readonly']").val(old + '\n' + template);
-                }else{
-                    $("textarea[readonly!='readonly']").val(template);
+            var selectedSubject_id= $(this).val()
+            //overlap is not working atm !!!???
+//            showLoadingOverLay('#'+$("textarea[readonly!='readonly']").prop('id'));
+            promiseGet(`/curation/studies/note/subject/${selectedSubject_id}`).then(JSON.parse).then((subject)=>{
+                var template  = subject.template;
+                if(template != ''){
+                    var old = $("textarea[readonly!='readonly']").val();
+                    if(old != ''){
+                        $("textarea[readonly!='readonly']").val(old + '\n' + template);
+                    }else{
+                        $("textarea[readonly!='readonly']").val(template);
+                    }
                 }
-            }
+            }).catch((err)=>{
+                console.log(`Error loading subject template. ${err}`);
+            }).then(()=>{
+//                hideLoadingOverLay('#'+$("textarea[readonly!='readonly']").prop('id'));
+            })
         });
 
         // $(".notetext")
-
         // //popup to confirm public note
         // $(".noteStatus").change(function(e){
         //     var optionSelected = $("option:selected", this);
