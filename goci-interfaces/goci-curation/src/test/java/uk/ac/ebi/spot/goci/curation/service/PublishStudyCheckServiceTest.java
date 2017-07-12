@@ -147,7 +147,7 @@ public class PublishStudyCheckServiceTest {
                                                          Collections.singletonList(ASS_APPROVED)));
         assertThat(publishStudyCheckService.runChecks(STUDY_NO_EFO_TRAIT,
                                                       Collections.singletonList(ASS_APPROVED))
-                           .contains("No EFO trait assigned and some SNP associations have not been approved for study"));
+                           .contains("some SNP associations have not been approved; no EFO trait assigned; "));
 
     }
 
@@ -163,7 +163,7 @@ public class PublishStudyCheckServiceTest {
 
         assertThat(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY,
                                                       Collections.singletonList(ASS_APPROVED))
-                           .contains("is a targeted array study and should not be published."));
+                           .contains("is a targeted array study, other non-genome-wide or sequencing study and should not be published."));
 
     }
 }
