@@ -305,7 +305,7 @@
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].canSave}" th:remove="tag">
                                 <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canSave}"
                                          type="submit" name="saveNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm">
+                                         class="btn btn-primary btn-sm btn-save-note" >
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true"
                                           title="Save note"></span>
                                 </button>
@@ -481,6 +481,7 @@
 
 
 
+
         //apply template to Initial extraction subject
         $( ".noteSubjectSelect" ).change(function() {
             var selectedSubject_id= $(this).val()
@@ -503,23 +504,24 @@
             })
         });
 
-        // $(".notetext")
         // //popup to confirm public note
-        // $(".noteStatus").change(function(e){
-        //     var optionSelected = $("option:selected", this);
-        //     var valueSelected = this.value;
-        //
-        //     e.preventDefault()
-        //     var areYouSure = confirm('If you sure you wish to leave this tab?  Any data entered will NOT be saved.  To save information, use the Save buttons.');
-        //     if (areYouSure === true) {
-        //         $(this).tab('show')
-        //     } else {
-        //         // do other stuff
-        //         return false;
-        //     }
-        //
-        //    this.confirmation('show');
-        // })
+         $(".noteStatus").change(function(e){
+             var isPublic = $(".noteStatus").val()==1
+             if(isPublic){
+                 $('.btn-save-note').confirmation({
+                                                      btnOkLabel: "&nbsp;Yes",
+                                                      btnCancelLabel: "&nbsp;No",
+                                                      popout: true,
+                                                      title : "Are you sure you want to create/save a public note?"
+                                                  });
+             }else{
+                 //The pop up need to be removed if the subject is private,
+                 //Currently I did not find a way to remove the popup from the tag, once it is initliazed
+
+             }
+
+         })
+
     });
 
 
