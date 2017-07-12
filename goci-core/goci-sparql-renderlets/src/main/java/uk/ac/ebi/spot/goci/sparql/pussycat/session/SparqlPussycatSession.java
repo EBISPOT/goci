@@ -123,6 +123,9 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
             String associationDateFilters = "";
             String traitDateFilters = "";
 
+            String associationPmidFilters = "";
+            String traitPmidFilters = "";
+
             for (Filter filter : filters) {
                 if (filter.getFilteredType().equals(Association.class)) {
                     List<Double> values = filter.getFilteredValues();
@@ -138,23 +141,54 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
 
                 }
                 if (filter.getFilteredType().equals(Study.class)) {
+                    if(filter.getFilteredValues() == null) {
 
-                    associationQueryString = associationQueryString.concat(
-                            "?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
-                    traitQueryString = traitQueryString.concat(
-                            "?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
+                        associationQueryString = associationQueryString.concat(
+                                "?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
+                        traitQueryString = traitQueryString.concat(
+                                "?association ro:part_of ?study . ?study gt:has_publication_date ?date . ");
 
-                    associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
-                            .concat("  FILTER ( ?date >= ?? ) ");
+                        associationDateFilters = associationDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                                .concat("  FILTER ( ?date >= ?? ) ");
 
-                    traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
-                            .concat("  FILTER ( ?date >= ?? ) ");
+                        traitDateFilters = traitDateFilters.concat("  FILTER ( ?date < ?? ) ")
+                                .concat("  FILTER ( ?date >= ?? ) ");
+                    }
+                    else {
+                        associationQueryString = associationQueryString.concat(
+                                "?association ro:part_of ?study . ?study gt:has_pubmed_id ?pmid . ");
+                        traitQueryString = traitQueryString.concat(
+                                "?association ro:part_of ?study . ?study gt:has_pubmed_id ?pmid . ");
+
+                        int size = filter.getFilteredValues().size();
+                        String elements = "";
+                        int c = 0;
+
+                        while(c < size){
+                            if(elements.equals("")){
+                                elements = "( ?pmid = ?? )";
+                            }
+                            else {
+                                elements = elements.concat(" || ( ?pmid = ?? )");
+                            }
+                            c++;
+                        }
+
+
+                        associationPmidFilters = associationPmidFilters.concat("  FILTER ( ").concat(elements).concat(") ");
+
+                        traitPmidFilters = traitPmidFilters.concat("  FILTER ( ").concat(elements).concat(") ");
+                    }
                 }
             }
             associationQueryString = associationQueryString.concat(associationPvalueFilters)
                     .concat(associationDateFilters)
+                    .concat(associationPmidFilters)
                     .concat(associationQueryBandFilter);
-            traitQueryString = traitQueryString.concat(traitPvalueFilters).concat(traitDateFilters).concat(" }");
+            traitQueryString = traitQueryString.concat(traitPvalueFilters)
+                                            .concat(traitDateFilters)
+                                            .concat(traitPmidFilters)
+                                            .concat(" }");
 
             System.out.println(associationQueryString);
             System.out.println(traitQueryString);
@@ -262,7 +296,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                                                  filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     associationLocations =
                             sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
                                                                                     and can't be rendered anyway*/
@@ -276,6 +310,21 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                                                      }
                                                  },
                                                  filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    associationLocations =
+                            sparqlTemplate.query(queryString,   /*had to add this line in to exclude "NR" bands as they break the AssociationLocation bit below
+                                                                                    and can't be rendered anyway*/
+                                                 new QuerySolutionMapper<AssociationLocation>() {
+                                                     @Override
+                                                     public AssociationLocation mapQuerySolution(QuerySolution qs) {
+                                                         URI association =
+                                                                 URI.create(qs.getResource("association").getURI());
+                                                         String bandName = qs.getLiteral("band").getLexicalForm();
+                                                         return new AssociationLocation(association, bandName);
+                                                     }
+                                                 },
+                                                 filter.getFilteredValues().toArray());
                 }
             }
         }
@@ -324,9 +373,13 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                                                 filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     return sparqlTemplate.query(queryString, "trait",
                                                 filter.getFilteredRange().to(), filter.getFilteredRange().from());
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    return sparqlTemplate.query(queryString, "trait",
+                                                filter.getFilteredValues().toArray());
                 }
             }
         }

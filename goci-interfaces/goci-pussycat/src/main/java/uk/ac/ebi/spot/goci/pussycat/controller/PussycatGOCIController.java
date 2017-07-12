@@ -19,7 +19,6 @@ import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.manager.PussycatManager;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
-import uk.ac.ebi.spot.goci.pussycat.service.DiagramConversionService;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 
@@ -252,6 +251,30 @@ public class PussycatGOCIController {
     }
 
 
+    private Filter setStudyFilter(String[] pubmedIds){
+        Study study = template(Study.class);
+        Filter filter = refine(study).on(study.getPubmedId()).hasValues(pubmedIds);
+
+        return filter;
+    }
+
+    @RequestMapping(value = "/gwasdiagram/studies")
+    public @ResponseBody String renderAssociationsByStudy(
+                                                   @RequestParam(value = "pubmedIds[]", required = false) String[] pubmedIds,
+                                                   HttpSession session)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+
+        getLog().debug("Received a new rendering request - " +
+                               "putting together the query from pubmedIds "  + pubmedIds.toString());
+
+
+        Filter studyFilter = setStudyFilter(pubmedIds);
+        getRenderletNexus(session).setRenderingContext(studyFilter);
+
+        return getPussycatSession(session).performRendering(getRenderletNexus(session), studyFilter);
+
+    }
+
     @RequestMapping(value = "/snps")
     public @ResponseBody String renderSNPs(HttpSession session)
             throws PussycatSessionNotReadyException, NoRenderableDataException {
@@ -379,6 +402,7 @@ public class PussycatGOCIController {
                                      @RequestParam(value = "pvaluemax", required = false) String pvalueMax,
                                      @RequestParam(value = "datemin", required = false) String dateMin,
                                      @RequestParam(value = "datemax", required = false) String dateMax,
+                                     @RequestParam(value = "pubmedIds[]", required = false) String[] pubmedIds,
                                      HttpSession session,
                                      HttpServletResponse response)
             throws PussycatSessionNotReadyException, NoRenderableDataException, IOException {
@@ -399,8 +423,12 @@ public class PussycatGOCIController {
         if (dateMax == "") {
             dateMax = null;
         }
+        if (pubmedIds == null || pubmedIds.length == 0){
+            pubmedIds = null;
+        }
         Filter pvalueFilter = null;
         Filter dateFilter = null;
+        Filter studyFilter = null;
 
         if (pvalueMin != null || pvalueMax != null) {
             pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
@@ -412,19 +440,28 @@ public class PussycatGOCIController {
             getRenderletNexus(session).setRenderingContext(dateFilter);
         }
 
+        if(pubmedIds != null){
+            studyFilter = setStudyFilter(pubmedIds);
+            getRenderletNexus(session).setRenderingContext(studyFilter);
+        }
+
         String svg;
         String fileName = "gwas-diagram";
 
 
-        if (dateFilter == null && pvalueFilter == null) {
+        if (dateFilter == null && pvalueFilter == null && studyFilter == null) {
             svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
             fileName = fileName.concat("_all.svg");
         }
-        else if (dateFilter == null && pvalueFilter != null) {
+        else if(dateFilter == null && pvalueFilter == null && studyFilter != null){
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), studyFilter);
+            fileName = fileName.concat("_studies.svg");
+        }
+        else if (dateFilter == null && pvalueFilter != null && studyFilter == null) {
             svg = getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
             fileName = fileName.concat("_latest.svg");
         }
-        else if (pvalueFilter == null && dateFilter != null) {
+        else if (pvalueFilter == null && dateFilter != null && studyFilter == null) {
             svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
             if (dateMax != null) {
                 fileName = fileName.concat("_all-").concat(dateMax).concat(".svg");

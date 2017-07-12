@@ -30,6 +30,13 @@ public class SparqlQueries {
                     "FILTER (?band = ??) " +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String ASSOCIATIONS_IN_BAND_PMID_FILTER =
+            "SELECT ?association " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; ro:part_of ?study . " +
+                    "?snp ro:located_in ?band . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "FILTER (?band = ??) " +
+                    "FILTER (**) }";
     public static final String ASSOCIATIONS_IN_BAND_PVALUE_DATE_FILTER =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
@@ -63,6 +70,14 @@ public class SparqlQueries {
                     "FILTER (?band = ??) " +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String ASSOCIATIONS_IN_BAND_NAME_PMID_FILTER =
+            "SELECT ?association " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; ro:part_of ?study . " +
+                    "?snp ro:located_in ?bandUri . " +
+                    "?bandUri rdfs:label ?band . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "FILTER (?band = ??) " +
+                    "FILTER (**) }";
     public static final String ASSOCIATIONS_IN_BAND_NAME_PVALUE_DATE_FILTER =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
@@ -94,6 +109,13 @@ public class SparqlQueries {
                     "FILTER (?band = ??)" +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String TRAITS_IN_BAND_PMID_FILTER =
+            "SELECT ?trait ?band " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
+                    "?snp ro:located_in ?band . " +
+                    "?study gt:has_pumed_id ?pmid . " +
+                    "FILTER (?band = ??)" +
+                    "FILTER (**) }";
     public static final String TRAITS_IN_BAND_PVALUE_DATE_FILTER =
             "SELECT ?trait ?band " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
@@ -127,6 +149,14 @@ public class SparqlQueries {
                     "FILTER (?band = ??) " +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String TRAITS_IN_BAND_NAME_PMID_FILTER =
+            "SELECT ?trait ?band " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study . " +
+                    "?snp ro:located_in ?bandUri . " +
+                    "?bandUri rdfs:label ?band . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "FILTER (?band = ??) " +
+                    "FILTER (**) }";
     public static final String TRAITS_IN_BAND_NAME_PVALUE_DATE_FILTER =
             "SELECT ?trait ?band " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
@@ -169,6 +199,17 @@ public class SparqlQueries {
                     "FILTER (?date >= ??)} " +
                     "GROUP BY ?trait " +
                     "ORDER BY ?first";
+    public static final String DATE_OF_TRAIT_ID_FOR_BAND_PMID_FILTER =
+            "SELECT DISTINCT ?trait (min(?date) as ?first) " +
+                    "WHERE { " +
+                    "?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait ; ro:part_of ?study. " +
+                    "?study gt:has_publication_date ?date . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "?snp ro:located_in ?band . " +
+                    "FILTER ( ?band = ?? ) " +
+                    "FILTER (**)} " +
+                    "GROUP BY ?trait " +
+                    "ORDER BY ?first";
     public static final String DATE_OF_TRAIT_ID_FOR_BAND_PVALUE_DATE_FILTER =
             "SELECT DISTINCT ?trait (min(?date) as ?first) " +
                     "WHERE { " +
@@ -199,6 +240,12 @@ public class SparqlQueries {
                     "FILTER (?trait = ??) " +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String ASSOCIATIONS_FOR_TRAIT_PMID_FILTER =
+            "SELECT ?association " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait ; ro:part_of ?study . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "FILTER (?trait = ??) " +
+                    "FILTER (**) }";
     public static final String ASSOCIATIONS_FOR_TRAIT_PVALUE_DATE_FILTER =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_object ?trait ; gt:has_p_value ?pvalue ; ro:part_of ?study . " +
@@ -253,6 +300,14 @@ public class SparqlQueries {
                     "FILTER (?bandUri = ??) " +
                     "FILTER (?date < ??) " +
                     "FILTER (?date >= ??) }";
+    public static final String ASSOCIATIONS_FOR_TRAIT_AND_BAND_PMID_FILTER =
+            "SELECT ?association " +
+                    "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait; ro:part_of ?study . " +
+                    "?snp ro:located_in ?bandUri . " +
+                    "?study gt:has_pubmed_id ?pmid . " +
+                    "FILTER (?trait = ??) " +
+                    "FILTER (?bandUri = ??) " +
+                    "FILTER (**) }";
     public static final String ASSOCIATIONS_FOR_TRAIT_AND_BAND_PVALUE_DATE_FILTER =
             "SELECT ?association " +
                     "WHERE { ?association a gt:TraitAssociation ; oban:has_subject ?snp ; oban:has_object ?trait; gt:has_p_value ?pvalue ; ro:part_of ?study. " +

@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.model.Association;
@@ -101,7 +102,7 @@ public class QueryManager {
                                  bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand",
                                                   sparqlTemplate,
                                                   bandIndividual,
@@ -118,6 +119,25 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
                                  bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+
+                else if(filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand",
+                                                  sparqlTemplate,
+                                                  bandIndividual,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    String query = replaceWildCard(SparqlQueries.ASSOCIATIONS_IN_BAND_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("association"),
+                                                        ArrayUtils.addAll(new Object[]{bandIndividual}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                                 bandIndividual, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -199,7 +219,7 @@ public class QueryManager {
                                  bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand",
                                                   sparqlTemplate,
                                                   bandName,
@@ -216,6 +236,24 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
                                  bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getAssociationsLocatedInCytogeneticBand",
+                                                  sparqlTemplate,
+                                                  bandName,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    String query = replaceWildCard(SparqlQueries.ASSOCIATIONS_IN_BAND_NAME_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("association"),
+                                                        ArrayUtils.addAll(new String[]{bandName}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getAssociationsLocatedInCytogeneticBand", sparqlTemplate,
+                                 bandName, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -293,7 +331,7 @@ public class QueryManager {
                                  bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand",
                                                   sparqlTemplate,
                                                   bandIndividual,
@@ -310,6 +348,24 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
                                  bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand",
+                                                  sparqlTemplate,
+                                                  bandIndividual,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    String query = replaceWildCard(SparqlQueries.TRAITS_IN_BAND_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("trait"),
+                                                        ArrayUtils.addAll(new Object[]{bandIndividual}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                                 bandIndividual, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -383,7 +439,7 @@ public class QueryManager {
                                  bandName, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand",
                                                   sparqlTemplate,
                                                   bandName,
@@ -400,6 +456,24 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
                                  bandName, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getTraitsLocatedInCytogeneticBand",
+                                                  sparqlTemplate,
+                                                  bandName,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+
+                    String query = replaceWildCard(SparqlQueries.TRAITS_IN_BAND_NAME_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("trait"),
+                                                        ArrayUtils.addAll(new String[]{bandName}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getTraitsLocatedInCytogeneticBand", sparqlTemplate,
+                                 bandName, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -485,7 +559,7 @@ public class QueryManager {
                                  bandIndividual, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand",
                                                   sparqlTemplate,
                                                   bandIndividual,
@@ -502,6 +576,23 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
                                  bandIndividual, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getTraitsOrderedByIdentificationDateForBand",
+                                                  sparqlTemplate,
+                                                  bandIndividual,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+                    String query = replaceWildCard(SparqlQueries.DATE_OF_TRAIT_ID_FOR_BAND_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("trait"),
+                                                        ArrayUtils.addAll(new Object[]{bandIndividual}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getTraitsOrderedByIdentificationDateForBand", sparqlTemplate,
+                                 bandIndividual, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -579,7 +670,7 @@ public class QueryManager {
                                  trait, filter.getFilteredValues().get(1), filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getAssociationsForTrait",
                                                   sparqlTemplate,
                                                   trait,
@@ -596,6 +687,23 @@ public class QueryManager {
                                                         filter.getFilteredRange().from()));
                     return cache(results, "getAssociationsForTrait", sparqlTemplate,
                                  trait, filter.getFilteredRange().to(), filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getAssociationsForTrait",
+                                                  sparqlTemplate,
+                                                  trait,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (Set<URI>) retrieved;
+                    }
+                    String query = replaceWildCard(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("association"),
+                                                        ArrayUtils.addAll(new Object[]{trait}, filter.getFilteredValues().toArray())));
+                    return cache(results, "getAssociationsForTrait", sparqlTemplate,
+                                 trait, filter.getFilteredValues().toArray());
 
                 }
             }
@@ -689,7 +797,7 @@ public class QueryManager {
                                  filter.getFilteredValues().get(0));
 
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Study.class) && filter.getFilteredValues() == null) {
                     Object retrieved = checkCache("getAssociationsForTraitInBand",
                                                   sparqlTemplate,
                                                   trait,
@@ -713,6 +821,29 @@ public class QueryManager {
                                  bandIndividual,
                                  filter.getFilteredRange().to(),
                                  filter.getFilteredRange().from());
+
+                }
+                else if (filter.getFilteredType().equals(Study.class) && !filter.getFilteredValues().isEmpty()) {
+                    Object retrieved = checkCache("getAssociationsForTraitInBand",
+                                                  sparqlTemplate,
+                                                  trait,
+                                                  bandIndividual,
+                                                  filter.getFilteredValues().toArray());
+                    if (retrieved != null) {
+                        return (List<URI>) retrieved;
+                    }
+
+                    String query = replaceWildCard(SparqlQueries.ASSOCIATIONS_FOR_TRAIT_AND_BAND_PMID_FILTER, filter, "?pmid");
+
+                    results.addAll(sparqlTemplate.query(query,
+                                                        new URIMapper("association"),
+                                                        ArrayUtils.addAll(new Object[]{trait, bandIndividual}, filter.getFilteredValues().toArray())));
+                    return cache(results,
+                                 "getAssociationsForTraitInBand",
+                                 sparqlTemplate,
+                                 trait,
+                                 bandIndividual,
+                                 filter.getFilteredValues().toArray());
 
                 }
             }
@@ -842,6 +973,24 @@ public class QueryManager {
             requestCache.put(key, result);
             return result;
         }
+    }
+
+    private String replaceWildCard(String query, Filter filter, String variable){
+        int size = filter.getFilteredValues().size();
+        String elements = "";
+        int c = 0;
+
+        while(c < size){
+            if(elements.equals("")){
+                elements = "( ".concat(variable).concat(" = ?? )");
+            }
+            else {
+                elements = elements.concat(" || ( ").concat(variable).concat(" = ?? )");
+            }
+            c++;
+        }
+
+        return query.replace("**", elements);
     }
 }
 
