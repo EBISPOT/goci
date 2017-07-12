@@ -3,6 +3,154 @@
  */
 
 
+var FEATURES = {
+    InitialSampleSize : 10.5,
+//        ReplicateSampleSize : 8.09,
+    GenomeWideCoverage : 8.95,
+    SummaryStatisticsAvailable : 8.56, //dont know yet
+    UserRequested : 8.56, //dont know yet
+    ReplicationStageIncluded : 8.09,
+    PublicationDate : 6.7,
+}
+
+
+
+var needTakeLog = ['InitialSampleSize','PublicationDate']
+
+
+$(document).ready(() => {
+    //This object hold what the ajax call sends back, which is the an array of unplblished study objects
+    var studies_meta;
+//ajax call
+    var studiesPromise = getStudy().then((studies) => {
+        studies_meta = studies;
+        return studies;
+    })
+//work out score
+    var scorePromise = studiesPromise.then((studies) => {
+        return calculateScore(studies, FEATURES, needTakeLog)
+    })
+
+// add data to table
+    scorePromise.then((studies_score) => {
+        $("#mainTable tr").each(function() {
+            if (this.id != "") {
+                var newValue = studies_score[this.id];
+                if (newValue != null) {
+                    //console.log(this.id,":", newValue);
+                    var title = Object.keys(studies_raw[this.id]).map((features) => {
+                        if (Object.keys(FEATURES).indexOf(features) != -1) {
+                            return features + ':' + studies_raw[this.id][features];
+                        }
+                        return '';
+                    }).filter((x) => {
+                        return x != '';
+                    }).join('\n');
+
+                    var titleNormalised = Object.keys(studies_nomalized[this.id]).map((features) => {
+                        if (Object.keys(FEATURES).indexOf(features) != -1) {
+                            return features + ':' + Math.floor(studies_nomalized[this.id][features] * 100) / 100;
+                        }
+                        return '';
+                    }).filter((x) => {
+                        return x != '';
+                    }).join('\n');
+
+                    console.log(title);
+                    console.log(titleNormalised);
+                    var item = $(this).find('#score');
+                    $('<span />',
+                      {
+                          class: 'badge badge-primary-bold',
+                          text: studies_score[this.id].toFixed(2),
+                          title: title + '\n\n' + titleNormalised,
+                      }).appendTo(item);
+
+                }
+                else {
+                    var item = $(this).find('#score');
+                    $('<span />', {class: 'badge badge-primary-bold', text: '-',}).appendTo(item);
+
+                }
+            }
+        });
+
+        var scoreJSON = JSON.stringify(hashFromArrays(Object.keys(studies_score).map((x) => {
+            return x
+        }), Object.values(studies_score).map((x) => {
+            return Math.trunc((x.toFixed(2) * 100))
+        })));
+        document.getElementById('hiddenScoreJson').setAttribute('value', scoreJSON);
+        if (document.getElementById('hiddenScoreJsonPagination')) {
+            document.getElementById('hiddenScoreJsonPagination').setAttribute('value', scoreJSON);
+        }
+
+    });
+
+//create a list of studies sorted by score
+// scorePromise.then((studies_score) => {
+//
+//     var getSortedKeys = function(obj) {
+//         var keys = [];
+//         for (var key in obj) {
+//             keys.push(key);
+//         }
+//         return keys.sort(function(a, b) {
+//             return obj[b] - obj[a]
+//         });
+//     }
+//
+//     studies_ordered = getSortedKeys(studies_score)
+//     //generate the list for display
+//     studies_ordered.map((key) => {
+//         var title = Object.keys(studies_raw[key]).map((features) => {
+//             if (Object.keys(FEATURES).indexOf(features) != -1) {
+//                 return features + ':' + studies_raw[key][features];
+//             }
+//             return '';
+//         }).filter((x) => {
+//             return x != '';
+//         }).join('\n');
+//
+//         var title2 = Object.keys(studies_nomalized[key]).map((features) => {
+//             if (Object.keys(FEATURES).indexOf(features) != -1) {
+//                 return features + ':' + studies_nomalized[key][features];
+//             }
+//             return '';
+//         }).filter((x) => {
+//             return x != '';
+//         }).join('\n');
+//
+//         var item = $('<a />', {
+//             class: 'list-group-item col-xs-11',
+//             title: key,
+//         }).appendTo($('#study-score'));
+//         //            item.append(key);
+//         item.append(studies_meta[key]['PubmedId'] + ' ' + studies_meta[key]['Author']);
+//
+//
+//         $('<span />', {class: 'badge', text: studies_score[key].toFixed(2), title: title + '\n\n' + title2,}).appendTo(
+//                 item);
+//         var link = $('<span />',
+//                      {class: 'glyphicon glyphicon-new-window external-link'}).css({'float': 'right'}).appendTo(item);
+//
+//         link.click(() => {
+//             window.open(window.location.pathname + '/gwas' + key, '_blank');
+//         })
+//     })
+// })
+})
+
+
+
+
+
+
+
+
+
+
+
 // studies = {'21427606':{'InitialSampleSize':'1733','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'0','UserRequested':'false'},'19744811':{'InitialSampleSize':'0','PublicationDate':'2017-06-01 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Circ Cardiovasc Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21430514':{'InitialSampleSize':'0','PublicationDate':'2017-06-14 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'0','UserRequested':'false'},'21430510':{'InitialSampleSize':'0','PublicationDate':'2017-06-10 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Heart Rhythm','ReplicateSampleSize':'0','UserRequested':'false'},'20509659':{'InitialSampleSize':'0','PublicationDate':'2017-06-01 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Stroke','ReplicateSampleSize':'0','UserRequested':'false'},'21346716':{'InitialSampleSize':'0','PublicationDate':'2017-05-25 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Twin Res Hum Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21429671':{'InitialSampleSize':'1586','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'true','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'300','UserRequested':'false'},'21405446':{'InitialSampleSize':'0','PublicationDate':'2017-06-12 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21427632':{'InitialSampleSize':'1733','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'0','UserRequested':'false'},'21405426':{'InitialSampleSize':'1733','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'true','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'318','UserRequested':'false'},'21311803':{'InitialSampleSize':'0','PublicationDate':'2017-05-31 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Diabetes','ReplicateSampleSize':'0','UserRequested':'false'},'19605897':{'InitialSampleSize':'626','PublicationDate':'2017-06-01 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'J Nutr Intermed Metab','ReplicateSampleSize':'0','UserRequested':'false'},'21405442':{'InitialSampleSize':'0','PublicationDate':'2017-06-12 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21405422':{'InitialSampleSize':'7750','PublicationDate':'2017-06-06 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'true','GenomeWideCoverage':'1','Publication':'Sci Rep','ReplicateSampleSize':'2030','UserRequested':'false'},'21430529':{'InitialSampleSize':'0','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Spine (Phila Pa 1976)','ReplicateSampleSize':'0','UserRequested':'false'},'21430523':{'InitialSampleSize':'0','PublicationDate':'2017-06-19 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Sci Rep','ReplicateSampleSize':'0','UserRequested':'false'},'21430526':{'InitialSampleSize':'0','PublicationDate':'2017-06-20 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Transl Psychiatry','ReplicateSampleSize':'0','UserRequested':'false'},'21430520':{'InitialSampleSize':'0','PublicationDate':'2017-06-19 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'PLoS Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21405450':{'InitialSampleSize':'0','PublicationDate':'2017-06-13 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Am J Med Genet B Neuropsychiatr Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21405430':{'InitialSampleSize':'31250','PublicationDate':'2017-06-09 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'true','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'9483','UserRequested':'false'},'21311811':{'InitialSampleSize':'1560','PublicationDate':'2017-05-31 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Brain Lang','ReplicateSampleSize':'0','UserRequested':'false'},'21405458':{'InitialSampleSize':'0','PublicationDate':'2017-05-26 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Commun','ReplicateSampleSize':'0','UserRequested':'false'},'21405438':{'InitialSampleSize':'0','PublicationDate':'2017-06-12 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Genet','ReplicateSampleSize':'0','UserRequested':'false'},'21405454':{'InitialSampleSize':'1293','PublicationDate':'2017-06-05 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Blood','ReplicateSampleSize':'0','UserRequested':'false'},'21405434':{'InitialSampleSize':'0','PublicationDate':'2017-06-12 00:00:00.0','SummaryStatisticsAvailable':'false','ReplicationStageIncluded':'false','GenomeWideCoverage':'1','Publication':'Nat Genet','ReplicateSampleSize':'0','UserRequested':'false'}};
 
 
@@ -29,8 +177,8 @@ var calculateScore=function(studies,FEATURES,needTakeLog){
 
 
     //CLEAN STUDY DATA, replace null,na,undefined,false to 0, true to 1
-    var _cleanData=function(data){
-        var value = data;
+    var _cleanData=function(feature,value){
+        var value = value;
         //clean
         if(value == undefined | value==null | value === 'false' | value == "NA") {
             value = 0;
@@ -38,8 +186,9 @@ var calculateScore=function(studies,FEATURES,needTakeLog){
         if(value == 'true'){
             value = 1;
         }
-        if(value == 'PublicationDate'){
-            value = new Date() - new Date(value)
+        if(feature == 'PublicationDate'){
+            //We might have publishcation Data which is in the future!
+            value = Math.abs(new Date() - new Date(value))
         }
         return  value;
     }
@@ -50,7 +199,7 @@ var calculateScore=function(studies,FEATURES,needTakeLog){
             if(Object.keys(FEATURES_NOMALIZED).indexOf(feature) == -1){
                 delete studies_clean[study_id][feature]
             }else{
-                studies_clean[study_id][feature] = _cleanData(studies_clean[study_id][feature])
+                studies_clean[study_id][feature] = _cleanData(feature,studies_clean[study_id][feature])
             }
         })
     })
@@ -297,20 +446,20 @@ function printResult(studies,FEATURES){
 }
 
 
-fakePrintMatrix = function(studies,features,score=undefined,colsep='\t\t\t',rowsep='\n'){
-    console.log('\t'+Object.keys(features).join('\t') + rowsep);
-    console.log('nomalized weight\t' + Object.values(features).join(colsep)+ rowsep);
-    var matrixString = ''
-    Object.keys(studies).map((study_id)=>{
-        matrixString = matrixString.concat(study_id + colsep);
-        Object.keys(features).map((feature)=>{
-            matrixString = matrixString.concat(studies[study_id][feature]+colsep);
-        })
-        if(score){
-            matrixString = matrixString.concat(score[study_id]);
-        }
-        matrixString = matrixString.concat(rowsep);
-
-    })
-    console.log(matrixString)
-}
+// fakePrintMatrix = function(studies,features,score=undefined,colsep='\t\t\t',rowsep='\n'){
+//     console.log('\t'+Object.keys(features).join('\t') + rowsep);
+//     console.log('nomalized weight\t' + Object.values(features).join(colsep)+ rowsep);
+//     var matrixString = ''
+//     Object.keys(studies).map((study_id)=>{
+//         matrixString = matrixString.concat(study_id + colsep);
+//         Object.keys(features).map((feature)=>{
+//             matrixString = matrixString.concat(studies[study_id][feature]+colsep);
+//         })
+//         if(score){
+//             matrixString = matrixString.concat(score[study_id]);
+//         }
+//         matrixString = matrixString.concat(rowsep);
+//
+//     })
+//     console.log(matrixString)
+// }

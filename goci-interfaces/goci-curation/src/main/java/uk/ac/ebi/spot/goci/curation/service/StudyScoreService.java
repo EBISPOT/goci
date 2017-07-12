@@ -13,6 +13,8 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -88,7 +90,7 @@ public class StudyScoreService {
 
             studyScoreFactors.put("Publication",study.getPublication());
             studyScoreFactors.put("SummaryStatisticsAvailable",study.getFullPvalueSet().toString());
-            studyScoreFactors.put("PublicationDate",study.getPublicationDate().toString());
+            studyScoreFactors.put("PublicationDate",new SimpleDateFormat("MM/dd/yyyy").format(study.getPublicationDate()));
             studyScoreFactors.put("GenomeWideCoverage","1");
             studyScoreFactors.put("UserRequested",study.getUserRequested().toString());
             studyScoreFactors.put("Trait", study.getEfoTraits().stream().map(efoTrait -> {
