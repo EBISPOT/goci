@@ -20,7 +20,7 @@ $(document).ready(function() {
         var selectedSubject_id= $(this).val()
         //overlap is not working atm !!!???
 //            showLoadingOverLay('#'+$("textarea[readonly!='readonly']").prop('id'));
-        promiseGet(`/curation/studies/note/subject/${selectedSubject_id}`).then(JSON.parse).then((subject)=>{
+        promiseGet(window.location.pathname.split('/curation/')[0] + `/curation/studies/note/subject/${selectedSubject_id}`).then(JSON.parse).then((subject)=>{
             var template  = subject.template;
             if(template != ''){
                 var old = $("textarea[readonly!='readonly']").val();
