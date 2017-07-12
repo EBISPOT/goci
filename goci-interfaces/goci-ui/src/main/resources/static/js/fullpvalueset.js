@@ -85,9 +85,8 @@ function processStudyDoc(study, table) {
 
     row.append($("<td>").html(study.associationCount));
 
-    var a = (study.author_s).replace(" ","");
-    var dir = a.concat("_").concat(study.pubmedId)
-
+    var a = (study.author_s).replace(/\s/g,"");
+    var dir = a.concat("_").concat(study.pubmedId).concat("_").concat(study.accessionId);
     var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(dir).concat("' target='_blank'>Click for summary statistics</a>");
 
     row.append($("<td>").html(ftplink));

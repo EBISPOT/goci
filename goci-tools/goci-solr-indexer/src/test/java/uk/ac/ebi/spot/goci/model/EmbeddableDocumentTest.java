@@ -43,8 +43,8 @@ public class EmbeddableDocumentTest {
                                "initial sample size",
                                "replicate sample size",
                                "123456",
-                               false,
-                               false,
+//                               false,
+//                               false,
                                false,
                                true,
                                false,
@@ -55,12 +55,14 @@ public class EmbeddableDocumentTest {
                                "study design comment",
                                "GCST999999",
                                false,
+                               false,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,
                                null,
                                Collections.EMPTY_LIST,
-                               h, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+                               h, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
+                               Collections.EMPTY_LIST);
 
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
