@@ -298,8 +298,6 @@ public class StudyNoteController {
     }
 
 
-        //      controller base exception handler
-//        @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     //#xintodo how we handle exception
         @ExceptionHandler(Exception.class)
         public @ResponseBody String handleNoRenderableDataException(Exception e) {
