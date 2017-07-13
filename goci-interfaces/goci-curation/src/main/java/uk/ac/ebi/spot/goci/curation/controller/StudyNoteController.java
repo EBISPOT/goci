@@ -106,7 +106,7 @@ public class StudyNoteController {
 //        }
 
         //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findAvailableNoteSubjectForStudy(study);
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         SecureUser user = currentUserDetailsService.getUserFromRequest(request);
@@ -163,7 +163,7 @@ public class StudyNoteController {
                 getLog().warn("Request: " + req.getRequestURL() + " raised an error." + notification.errorMessage());
                 model.addAttribute("errors", "Delete FAIL! " + notification.errorMessage());
 
-                Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
+                Collection<NoteSubject> noteSubjects = noteSubjectService.findAvailableNoteSubjectForStudy(study);
                 model.addAttribute("availableNoteSubject",noteSubjects);
                 model.addAttribute("multiStudyNoteForm", multiStudyNoteForm);
                 return "study_notes";
@@ -194,7 +194,7 @@ public class StudyNoteController {
         model.addAttribute("study", study);
 
         //the newly added note can only be assigned one of the availlable subject, not including system note subjects.
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findAvailableNoteSubjectForStudy(study);
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         //form validation
@@ -231,7 +231,7 @@ public class StudyNoteController {
 
     //This will enable save/remove button for a study note and disable all other action for other notes
     @RequestMapping(value = "/studies/{studyId}/notes", method = RequestMethod.POST, params = {"editNote"})
-    public String EnableEditNote( Model model, @PathVariable Long studyId,
+    public String enableEditNote( Model model, @PathVariable Long studyId,
                              HttpServletRequest req) {
 
         //Index of value to remove
@@ -243,7 +243,7 @@ public class StudyNoteController {
 
         //get All note subjects for dropdown
         //remove subjects including 'Imported from previous system' 'SystemNote'
-        Collection<NoteSubject> noteSubjects = noteSubjectService.findNonSystemNoteSubject();
+        Collection<NoteSubject> noteSubjects = noteSubjectService.findAvailableNoteSubjectForStudy(study);
         model.addAttribute("availableNoteSubject",noteSubjects);
 
         SecureUser user = currentUserDetailsService.getUserFromRequest(req);
