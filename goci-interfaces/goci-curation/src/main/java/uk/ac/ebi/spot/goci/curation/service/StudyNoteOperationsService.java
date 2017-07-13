@@ -209,9 +209,13 @@ public class StudyNoteOperationsService {
         StudyNote note = createEmptyStudyNote(targetStudy,user);
         note.setCurator(noteToDuplicate.getCurator());
         note.setNoteSubject(noteToDuplicate.getNoteSubject());
+
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
+        note.setCurator(curator);
+
         //we added some text to indicate that this is a duplicated note.
         //This is just a hack to distinguish dulicated note since we have study-note one to many as out note model atm
-        note.setTextNote("Duplicated from study: ".concat(sourceStudy.getId().toString()).concat("\n").concat(noteToDuplicate.getTextNote()));
+        note.setTextNote("Duplicated from study: ".concat(sourceStudy.getId().toString()).concat(" by ").concat(curator.getLastName()).concat("\n").concat(noteToDuplicate.getTextNote()));
         note.setStatus(noteToDuplicate.getStatus());
         return note;
     }

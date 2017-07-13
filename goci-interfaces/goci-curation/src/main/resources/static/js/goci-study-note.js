@@ -22,7 +22,7 @@ $(document).ready(function() {
 //            showLoadingOverLay('#'+$("textarea[readonly!='readonly']").prop('id'));
         promiseGet(window.location.pathname.split('/curation/')[0] + `/curation/studies/note/subject/${selectedSubject_id}`).then(JSON.parse).then((subject)=>{
             var template  = subject.template;
-            if(template != ''){
+            if(template != '' && template!= null){
                 var old = $("textarea[readonly!='readonly']").val();
                 if(old != ''){
                     $("textarea[readonly!='readonly']").val(old + '\n' + template);
