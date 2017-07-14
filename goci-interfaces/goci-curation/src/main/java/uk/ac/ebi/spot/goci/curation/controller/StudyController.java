@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.component.StudySpecifications;
+import uk.ac.ebi.spot.goci.curation.component.StudySearchFiltersSpecifications;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
@@ -191,7 +191,7 @@ public class StudyController {
         Boolean sortingScore = false;
         Boolean allowScoreSorting = true;
         Boolean paginationSorting = false;
-        StudySpecifications studyspec = new StudySpecifications(studySearchFilter);
+        StudySearchFiltersSpecifications studyspec = new StudySearchFiltersSpecifications(studySearchFilter);
 
 
         if (request.getMethod().compareTo("POST") == 0) {

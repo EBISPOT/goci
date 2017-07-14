@@ -1,21 +1,19 @@
 package uk.ac.ebi.spot.goci.curation.component;
 import org.springframework.data.jpa.domain.Specification;
 import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.StaticMetamodel;
 import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by cinzia on 05/07/2017.
  */
-public class StudySpecifications implements Specification<Study> {
+public class StudySearchFiltersSpecifications implements Specification<Study> {
 
     private final StudySearchFilter filters;
 
-    public StudySpecifications(StudySearchFilter filters) {
+    public StudySearchFiltersSpecifications(StudySearchFilter filters) {
         this.filters = filters;
     }
 
