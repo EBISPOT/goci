@@ -153,7 +153,7 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 
 ==== [[faq-A6]]6. How can I access the GWAS Catalog data on alternative genome builds?
 
-You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37.
+You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Alternatively, you can also use https://www.ncbi.nlm.nih.gov/genome/tools/remap.
 
 ==== [[faq-A7]]7. How often are the GWAS Catalog and diagram updated?
 
