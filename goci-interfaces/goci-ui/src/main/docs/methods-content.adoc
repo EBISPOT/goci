@@ -18,8 +18,7 @@ A second curator then performs an additional round of curation to double-check t
 
 === Identification of studies
 
-Published GWA studies are identified through a weekly PubMed search.
-The search terms are "genome-wide" OR "genome wide" OR "genome-wide" OR "GWAS", with limits on the current year and human status.
+Published GWA studies are identified through a weekly PubMed search. The search terms are "genome-wide" OR "genome wide" OR "genome-wide" OR "GWAS".
 
 === Eligibility criteria
 
