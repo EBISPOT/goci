@@ -299,9 +299,15 @@ public class StudyOperationsService {
                                 + " and republished on "
                                 + new Date().toString();
 
-                        String notes = housekeeping.getNotes();
+                        //the old note in house keeping comment out.
+//                        String notes = housekeeping.getNotes();
+//                        housekeeping.setNotes(notes.concat("****").concat(republish_message));
 
-                        housekeeping.setNotes(notes.concat("****").concat(republish_message));
+                        StudyNote note = studyNoteOperationsService.createAutomaticNote(republish_message,study,user);
+                        // The note is properly created. We don't need to check any business logic. Just link to the study.
+                        studyNoteService.saveStudyNote(note);
+                        study.addNote(note);
+
                         housekeeping.setCatalogUnpublishDate(null);
                         housekeeping.setUnpublishReason(null);
                     }

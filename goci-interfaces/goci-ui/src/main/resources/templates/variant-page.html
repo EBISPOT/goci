@@ -450,7 +450,7 @@
                         configuration: {
                             ID: (window.location.pathname.match(/variants\W(\w+)/) || []).pop(),
                             window_size: 50,
-                            population: '1000GENOMES:phase_3:CEU',
+                            population: '1000GENOMES:phase_3:GBR',
                             svgSize: {
                                 width: 850,
                                 height: 405,
@@ -463,6 +463,13 @@
                             },
                             legend: {
                                 color_by: "gwas"
+                            },
+                            help : {
+                                population_link : "http://www.internationalgenome.org/faq/which-populations-are-part-your-study",
+                                ld_link         : "http://www.ensembl.org/Help/View?id=279"
+                            },
+                            download : {
+                                enable : 1
                             },
                             filters: {
                                 selected_filters: [],

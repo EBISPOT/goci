@@ -197,6 +197,21 @@
                     </div>
                 </div>
 
+
+                <div class="form-group">
+                    <label for="genotypingTechnology" class="control-label col-md-2">Genotyping technology</label>
+
+                    <div class="col-md-10">
+                        <select name="genotypingTechnology" th:field="*{genotypingTechnologies}" class="form-control select2-select"
+                                multiple="multiple" id="genotypingTechnology">
+                            <option th:each="genotypingTechnology : ${genotypingTechnologies}"
+                                    th:value="${genotypingTechnology.id}"
+                                    th:text="${genotypingTechnology.genotypingTechnology}"></option>
+                        </select>
+                    </div>
+                </div>
+
+
                 <div class="form-group">
                     <label for="platform" class="control-label col-md-2">Array manufacturer</label>
 
@@ -305,17 +320,17 @@
                     <input id="cnv" type="hidden" th:field="*{cnv}"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>
+                <!--<div class="form-group">-->
+                    <!--<label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>-->
 
-                    <input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>
-                </div>
+                    <!--<input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>-->
+                <!--</div>-->
 
-                <div class="form-group">
-                    <label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>
+                <!--<div class="form-group">-->
+                    <!--<label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>-->
 
-                    <input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>
-                </div>
+                    <!--<input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>-->
+                <!--</div>-->
 
                 <div class="form-group">
                     <label for="gxe" class="control-label col-md-2">GxE</label>
@@ -334,11 +349,19 @@
 
                     <input id="pooled" type="checkbox" th:field="*{pooled}"/>
                 </div>
+
+                <div class="form-group">
+                    <label for="userRequested" class="control-label col-md-2">User Requested</label>
+
+                    <input id="userRequested" type="checkbox" th:field="*{userRequested}"/>
+                </div>
+
                 <div class="form-group">
                     <label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>
 
                     <input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>
                 </div>
+
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -372,6 +395,16 @@
                                        placeholder: "Select a disease/trait",
                                        allowClear: true
                                    });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#genotypingTechnology').select2({
+                                   placeholder: "Select a genotyping technology",
+                                   allowClear: true
+                               });
     });
 </script>
 
