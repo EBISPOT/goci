@@ -584,7 +584,7 @@ Hgb: Hemoglobin
 His: Histidine
 
 
-HOMA-IR: homeostasis model insulin resistance
+HOMA-IR: homeostasis model assessment of insulin resistance
 
 
 HIV: human immunodeficiency virus
@@ -593,7 +593,7 @@ HIV: human immunodeficiency virus
 HDL: high density lipoprotein
 
 
-HOMA-B: beta-cell function
+HOMA-B: homeostasis model assessment of beta-cell function
 
 
 HR: hormone receptor
