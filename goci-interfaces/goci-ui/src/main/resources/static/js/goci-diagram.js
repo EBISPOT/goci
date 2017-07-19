@@ -39,6 +39,10 @@ $(document).ready(function() {
 
     });
 
+    $('#trait-filter').change(function() {
+        doFilter();
+    });
+    
     $("#filter-button").click(function() {
         doFilter();
     });
