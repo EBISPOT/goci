@@ -148,6 +148,9 @@ function solrSearch(queryTerm) {
     else if(queryTerm.indexOf(':') != -1 && queryTerm.indexOf('-') != -1){
         var elements = queryTerm.split(':');
         var chrom = elements[0].trim();
+        if(chrom == 23){
+            chrom = 'X'
+        }
         var bp1 = elements[1].split('-')[0].trim();
         var bp2 = elements[1].split('-')[1].trim();
 

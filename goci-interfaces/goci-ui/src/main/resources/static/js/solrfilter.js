@@ -22,7 +22,7 @@ $(document).ready(function() {
     }, "invalid date range");
 
     $.validator.addMethod("validChrom", function(value, element) {
-        var valid_chrom = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','x','y'];
+        var valid_chrom = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22', '23', 'X', 'x','Y', 'y'];
         return this.optional(element) || valid_chrom.indexOf($('#chrom').val()) != -1
     }, "invalid chromosome location");
 
@@ -252,6 +252,9 @@ function processGenomicRegion(){
     var bpMax = $('#bp-max').val();
 
     if(chrom){
+        if(chrom == 23){
+            chrom = 'X'
+        }
         genomicRegion = chrom.concat("-")
     }
 
@@ -341,6 +344,9 @@ function solrfilter(pval, or, beta, date, region, traits, addeddate) {
     else if(query.indexOf(':') != -1 && query.indexOf('-') != -1){
         var elements = query.split(':');
         var chrom = elements[0].trim();
+        if(chrom == 23){
+            chrom = 'X'
+        }
         var bp1 = elements[1].split('-')[0].trim();
         var bp2 = elements[1].split('-')[1].trim();
 
