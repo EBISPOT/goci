@@ -1,0 +1,39 @@
+= Pilots
+:imagesdir: ./images
+
+== Pilots to investigate extending Catalog scope and alternative methods of data acquisition
+
+We have carried out several pilots to investigate extending Catalog scope and alternative methods of data acquisition with a view to incorporating these into future Catalog improvements. Each of these pilots has been designed to allow us to estimate the feasibility of the approach, resources needed to implement and support this, and obtain feedback from users.
+
+=== Author deposition pilot
+
+To support scaling of curation alternative methods of data acquisition have been explored.
+
+* Designed a prototype deposition system was using online deposition forms (created in Cognito Forms) with templates for sample and association results (created in Google Sheets).
+* Emailed 115 authors of 79 selected GWAS publications (53 whole-genome array and 26 targeted array) and invited them to submit data using the test submission system. The deposition pilot was also advertised on Twitter, which was re-tweeted to over 20,000 followers.
+* Preliminary results indicate an uptake of 10% from direct emails, with no uptake from Twitter.
+* Feedback from submitters, along with review of the submitted data, indicated that the format of deposition is easy to understand and allows authors to submit all relevant data with a high level of accuracy and rapidly.
+* Even a small rate of deposition represents a gain for the Catalog as it removes a lengthy paper reading and literature extraction step and the quality of deposited data is high. It should also be noted that retrospective deposition is not our preferred model and reduces take up.
+
+image::author_sub_pilot_main.png[Author submission]
+
+image::author_sub_samples.jpg[Sample descriptions]
+
+image::author_sub_associatons.png[Associations]
+
+
+Data submitted as part of the author deposition pilot can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/2016/08/19/[on our FTP server].
+
+
+
+
+
+=== Targeted array pilot
+
+Association studies using large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome arrays, are currently not included in the Catalog. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog.
+
+* Designed and carried out a literature search to identify all studies that carry out genotyping and association analysis of at least 100,000 SNPs.
+* This identified approximately 150 targeted array studies that have been published up to June 2016 (including 62 Immunochip, 40 Metabochip and 36 exome arrays)
+* Curation of a representative set of these studies indicated that inclusion would require minimal changes to Catalog infrastructure and has enabled us to estimate the additional curation resources required to include these in the future.
+
+Data from the studies curated as part of the targeted array can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/2016/07/28/[on our FTP server].
