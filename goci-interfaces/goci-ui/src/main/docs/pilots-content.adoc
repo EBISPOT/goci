@@ -1,5 +1,6 @@
 = Pilots
 :imagesdir: ./images
+:data-uri:
 
 == Pilots to investigate extending Catalog scope and alternative methods of data acquisition
 
@@ -17,9 +18,12 @@ To support scaling of curation alternative methods of data acquisition have been
 
 image::author_sub_pilot_main.png[Author submission]
 
+
 image::author_sub_samples.jpg[Sample descriptions]
 
+
 image::author_sub_associations.png[Associations]
+
 
 
 Data submitted as part of the author deposition pilot can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/2016/08/19/[on our FTP server].
