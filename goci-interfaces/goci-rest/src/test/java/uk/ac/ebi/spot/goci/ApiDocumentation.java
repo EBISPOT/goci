@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class ApiDocumentation {
 
     @Rule
