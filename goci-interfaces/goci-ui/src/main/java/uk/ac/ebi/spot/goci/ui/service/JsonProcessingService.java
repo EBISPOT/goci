@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -220,13 +223,26 @@ public class JsonProcessingService {
 
         String description = "";
 
-        //TO DO - replace this once additional description has been cleaned up
-//        if(ancestry.length == 6 && !ancestry[5].equals("NA")){
-//            description = ancestry[5];
-//            if(description.contains(newline)){
-//                description = description.replaceAll("\n", "").replaceAll("\r", "");
-//            }
-//        }
+        String dateString = getPublicationDate(doc);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date publicationDate = null;
+        Date minDate = null;
+        try {
+            publicationDate = format.parse(dateString);
+            minDate = format.parse("2017-01-01");
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        if((ancestry.length == 6) && !ancestry[5].equals("NA") && (publicationDate.compareTo(minDate) > 0)){
+            description = ancestry[5];
+            if(description.contains(newline)){
+                description = description.replaceAll("\n", "").replaceAll("\r", "");
+            }
+        }
         line.append(description);
         line.append("\t");
 

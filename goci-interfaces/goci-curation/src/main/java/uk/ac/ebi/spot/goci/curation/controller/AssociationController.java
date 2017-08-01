@@ -121,6 +121,7 @@ public class AssociationController {
     private CheckMappingService checkMappingService;
     private MapCatalogService mapCatalogService;
 
+
     @Value("${collection.sizelimit}")
     private int collectionLimit;
 
@@ -154,10 +155,10 @@ public class AssociationController {
                                  AssociationDeletionService associationDeletionService,
                                  @Qualifier("associationEventsViewService") EventsViewService eventsViewService,
                                  StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService,
-                                 AssociationService associationService,
                                  EnsemblRestTemplateService ensemblRestTemplateService,
                                  CheckMappingService checkMappingService,
-                                 MapCatalogService mapCatalogService) {
+                                 MapCatalogService mapCatalogService,
+                                 AssociationService associationService) {
         this.associationRepository = associationRepository;
         this.studyRepository = studyRepository;
         this.efoTraitRepository = efoTraitRepository;
@@ -173,10 +174,10 @@ public class AssociationController {
         this.associationDeletionService = associationDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyAssociationBatchDeletionEventService = studyAssociationBatchDeletionEventService;
+        this.associationService = associationService;
         this.ensemblRestTemplateService = ensemblRestTemplateService;
         this.checkMappingService = checkMappingService;
         this.mapCatalogService = mapCatalogService;
-        this.associationService = associationService;
 
         this.executorService = Executors.newFixedThreadPool(4);
 
@@ -1236,7 +1237,7 @@ public class AssociationController {
 
           session.setAttribute("study", study);
           session.setAttribute("done", false);
-                
+
           session.setAttribute("redirectAttributes", redirectAttributes);
 
           SecureUser user =  currentUserDetailsService.getUserFromRequest(request);
@@ -1481,8 +1482,9 @@ public class AssociationController {
 
     //     if there are no criticial errors, save the validation and go to the next association
                         else {
-                            String eRelease = ensemblRestTemplateService.getRelease();
                             // Save and validate form
+                            String eRelease = ensemblRestTemplateService.getRelease();
+
                             Collection<AssociationValidationView> errors =
                                     associationOperationsService.validateAndSaveAssociation(study,
                                                                                             associationToValidate,
@@ -1610,7 +1612,7 @@ public class AssociationController {
     @RequestMapping(value = "/studies/{studyId}/associations/getValidationResults",
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.GET)
-    public String getValidationResult(@PathVariable Long studyId, HttpSession session, Model model)
+    public String getValidationResult(@PathVariable Long studyId, HttpSession session, Model model, RedirectAttributes redirectAttributes)
             throws ExecutionException, InterruptedException, SheetProcessingException, FileUploadException, IOException {
 
 
@@ -1661,8 +1663,6 @@ public class AssociationController {
             }
         }
        else {
-            RedirectAttributes redirectAttributes = (RedirectAttributes) session.getAttribute("redirectAttributes");
-
             String message = "Mapping complete, please check for any errors displayed in the 'Errors' column";
             redirectAttributes.addFlashAttribute("mappingComplete", message);
             return "redirect:/studies/" + studyId + "/associations";

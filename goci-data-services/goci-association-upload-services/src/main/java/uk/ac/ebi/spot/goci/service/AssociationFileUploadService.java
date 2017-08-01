@@ -97,6 +97,7 @@ public class AssociationFileUploadService {
 
         String eRelease = ensemblRestTemplateService.getRelease();
         // Error check each row
+        if (!fileRows.isEmpty()) {
             // Check for missing values and syntax errors that would prevent code creating an association
             for (AssociationUploadRow row : fileRows) {
                 getLog().info("Syntax checking row: " + row.getRowNumber() + " of file, " + file.getAbsolutePath());
@@ -108,11 +109,12 @@ public class AssociationFileUploadService {
             }
         }
 
-        if (rowValidationSummaries.isEmpty()) {
-            //Proceed to carry out full checks of values
-            fileRows.forEach(row -> {
-                associationSummaries.add(createAssociationSummary(row, validationLevel, eRelease));
-            });
+            if (rowValidationSummaries.isEmpty()) {
+                //Proceed to carry out full checks of values
+                fileRows.forEach(row -> {
+                    associationSummaries.add(createAssociationSummary(row, validationLevel, eRelease));
+                });
+            }
         }
 
 

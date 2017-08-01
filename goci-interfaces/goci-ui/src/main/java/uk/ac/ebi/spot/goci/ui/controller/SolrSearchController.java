@@ -158,12 +158,12 @@ public class SolrSearchController {
             @RequestParam(value = "callback", required = false) String callbackFunction,
             @RequestParam(value = "fieldList", required = false) Collection<String> fieldList,
             //            @RequestParam(value = "childrenOf", required = false) Collection<String> childrenOf,
-            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "max", required = false, defaultValue = "100") int maxResults,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             HttpServletResponse response
     ) throws IOException {
 
-        query = query.replace(" ", "%20");
+//        query = query.replace(" ", "%20");
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
 
         if (useJsonp) {
@@ -203,7 +203,7 @@ public class SolrSearchController {
         addHighlights(solrSearchBuilder, highlights);
 
         addQuery(solrSearchBuilder, query);
-        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+        dispatchSearch(solrSearchBuilder.toString().replace(" ", "%20"), response.getOutputStream());
 
     }
 
