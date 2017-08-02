@@ -221,7 +221,16 @@ public class StudyNoteOperationsService {
     }
 
 
+    public void updateDuplicatedNote(StudyNote copiedNote, SecureUser user) {
 
+        String body = copiedNote.getTextNote();
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
 
+        Study sourceStudy = copiedNote.getStudy();
 
+        copiedNote.setTextNote(body.concat("\n").concat("Duplicated to other studies with Pubmed ID ").concat(sourceStudy.getPubmedId()).concat(" by ").concat(curator.getLastName()));
+
+        studyNoteService.saveStudyNote(copiedNote);
+
+    }
 }

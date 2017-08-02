@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
-import uk.ac.ebi.spot.goci.curation.model.errors.PublicNoteIsNotAllowedForPublishedStudyError;
-import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
+import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
 import uk.ac.ebi.spot.goci.curation.model.errors.StudyIsLockedError;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -422,6 +421,8 @@ public class StudyOperationsService {
                 notification.addError(en.getErrors());
             }
         });
+
+        studyNoteOperationsService.updateDuplicatedNote(noteToCopy, user);
         return notification;
     }
 
