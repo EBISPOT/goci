@@ -38,6 +38,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
     // Services
     private LociAttributesService lociAttributesService;
 
+
     @Autowired
     public SingleSnpMultiSnpAssociationService(GenomicContextRepository genomicContextRepository,
                                                LociAttributesService lociAttributesService) {
@@ -47,6 +48,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
     // Creates form which we can then return to view for editing etc.
     @Override public SnpAssociationForm createForm(Association association) {
+
 
         SnpAssociationStandardMultiForm form = new SnpAssociationStandardMultiForm();
 

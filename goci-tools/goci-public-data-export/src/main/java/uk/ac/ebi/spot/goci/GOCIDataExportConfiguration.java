@@ -12,7 +12,7 @@ import javax.sql.DataSource;
  */
 
 @Component
-public class GociDataExportConfiguration {
+public class GOCIDataExportConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix="datasource.public")
