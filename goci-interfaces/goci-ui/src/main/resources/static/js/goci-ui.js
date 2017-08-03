@@ -44,6 +44,14 @@ $(document).ready(function() {
 
 });
 
+function useAutoCompleteInput(){
+    if(window.location.pathname.indexOf("/diagram")){
+        doFilter();
+    }
+    else{
+        doSearch();
+    }
+}
 
 function doSearch() {
     var searchTerm = $("#search-box").val();
