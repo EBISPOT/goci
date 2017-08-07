@@ -279,6 +279,9 @@ CEU: CEPH (Centre d'Etude du Polymorphisme Humain) from Utah
 CF-PWVLTA: carotid-femoral pulse wave velocity, long-term average
 
 
+CGI: Clinical Global Impressions-Severity
+
+
 CHS1: 1st principal component on transformed hue and saturation values
 
 
@@ -562,6 +565,9 @@ GP130: glycoprotein 130
 GSE: general side effect burden
 
 === H
+
+HAM-A: Hamilton Anxiety Scale
+
 
 HbA1C: hemoglobin A1c
 
