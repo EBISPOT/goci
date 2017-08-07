@@ -789,6 +789,9 @@ meanratio: mean FEV1/FVC from 2 exams
 METH: Methamphetamine
 
 
+MHBMA: 2-(N-acetyl-L-cystein-S-yl)-1-hydroxybut-3-ene and 1-(N-acetyl-L-cystein-S-yl)-1-hydroxybut-3-ene
+
+
 M-HDL-L: Total lipids in medium HDL
 
 
