@@ -1022,6 +1022,9 @@ PT: prothrombin time
 
 PUFA: polyunsaturated fatty acids
 
+
+pvRSA/HF: peak-valley respiratory sinus arrhythmia or high frequency power
+
 === Q
 
 QC: quality control
@@ -1049,6 +1052,9 @@ RBCC: red blood cell count
 RDW: red cell distribution width
 
 
+RMSSD: root mean square of the successive differences of inter beat intervals
+
+
 RQmax: maximum respiratory quotient during treadmill fitness test
 
 
@@ -1066,6 +1072,9 @@ S2EHR: Stage 2 exercise heart rate
 
 
 S2ESBP: stage 2 exercise systolic blood pressure
+
+
+SDNN: standard deviation of the normal-to-normal inter beat intervals
 
 
 serum TG: serum total triglyceride content
