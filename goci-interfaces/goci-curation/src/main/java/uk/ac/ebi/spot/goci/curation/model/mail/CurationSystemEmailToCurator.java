@@ -33,7 +33,8 @@ public class CurationSystemEmailToCurator extends GenericEmail {
         Collection<StudyNote> studyNotes = study.getNotes();
         if (!studyNotes.isEmpty()) {
             studyNotes.forEach(studyNote -> {
-                notes.append(studyNote.toString()).append("\n");
+                notes.append(studyNote.toStringForEamil()).append("\n");
+                notes.append("-------------------------------------------------------------\n\n");
             });
         }
 

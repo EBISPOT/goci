@@ -1593,13 +1593,18 @@ public class AssociationController {
         List<AssociationUploadErrorView> fileErrors =
                 (List<AssociationUploadErrorView>) session.getAttribute("fileErrors");
 
-        List<AssociationUploadErrorView> xlsErrors = null;
+        List<AssociationUploadErrorView> xlsErrors =
+                 (List<AssociationUploadErrorView>) session.getAttribute("xlsErrors");
 
-        if (session.getAttribute("fileErrors") != null && !fileErrors.isEmpty()) {
-            xlsErrors = (List<AssociationUploadErrorView>) session.getAttribute("xlsErrors");
+        if ((session.getAttribute("fileErrors") != null && !fileErrors.isEmpty()) ||
+                ((session.getAttribute("xlsErrors") != null && !xlsErrors.isEmpty())) )
+        {
+            getLog().debug("Shutting down executor service...");
+
             model.addAttribute("fileName", session.getAttribute("fileName"));
             model.addAttribute("fileErrors", fileErrors);
             model.addAttribute("xlsErrors", xlsErrors);
+
             return "error_pages/association_file_upload_error";
 
         }
