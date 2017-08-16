@@ -2,16 +2,13 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 13892
+Content-Length: 19511
 
 {
   "_embedded" : {
     "ancestries" : [ {
       "type" : "replication",
       "numberOfIndividuals" : 8100,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "U.S.",
       "description" : "Minneapolis, MN; Salt Lake City, UT;",
       "previouslyReported" : "L",
       "notes" : null,
@@ -22,16 +19,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 981,
-      "ancestralGroup" : "NR",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -42,16 +45,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 822,
-      "ancestralGroup" : "NR",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -62,16 +71,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 883,
-      "ancestralGroup" : "NR",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -82,16 +97,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 738,
-      "ancestralGroup" : "NR",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -102,16 +123,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 165,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "U.S.",
       "description" : "Columbia, MO;",
       "previouslyReported" : "Y",
       "notes" : null,
@@ -122,16 +149,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 4305,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "Italy",
       "description" : "Lanusei Valley, Sardinia, Italy;",
       "previouslyReported" : "N",
       "notes" : null,
@@ -142,16 +175,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 1489,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "Canada",
       "description" : null,
       "previouslyReported" : "N",
       "notes" : null,
@@ -162,16 +201,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/countryOfOrigin"
         }
       }
     }, {
       "type" : "replication",
       "numberOfIndividuals" : 23684,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "Finland",
       "description" : null,
       "previouslyReported" : "Y",
       "notes" : null,
@@ -182,16 +227,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 206,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "France,Spain",
       "description" : "Barcelona, Spain; Pamplona, Spain; Toulouse, France; Malaga, Spain;",
       "previouslyReported" : "N",
       "notes" : null,
@@ -202,16 +253,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/countryOfOrigin"
         }
       }
     }, {
       "type" : "replication",
       "numberOfIndividuals" : 8472,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "France,Germany,Netherlands,Poland,U.K.,U.S.",
       "description" : "Dublin, Ireland; Utrecht, Netherlands; Nijmegen, Netherlands; Evry, France; Krakow, Poland; Ulm, Germany; Berlin, Germany;",
       "previouslyReported" : "Y",
       "notes" : null,
@@ -222,16 +279,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 1087,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -242,16 +305,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/countryOfOrigin"
         }
       }
     }, {
       "type" : "replication",
       "numberOfIndividuals" : 4815,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "L",
       "notes" : null,
@@ -262,16 +331,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 561,
-      "ancestralGroup" : "Hispanic/Latin American",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "U.S.",
       "description" : "Starr County, TX, US;",
       "previouslyReported" : "NR",
       "notes" : null,
@@ -282,16 +357,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/countryOfOrigin"
         }
       }
     }, {
       "type" : "replication",
       "numberOfIndividuals" : 1437,
-      "ancestralGroup" : "East Asian",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "Republic of Korea",
       "description" : null,
       "previouslyReported" : "N",
       "notes" : null,
@@ -302,16 +383,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 26316,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "Finland,France,Germany,Netherlands,Switzerland,U.K.,Australia",
       "description" : "Norfolk, UK; Turin, Italy;",
       "previouslyReported" : "Y",
       "notes" : "Study sample and origin from table S1.",
@@ -322,16 +409,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 2096,
-      "ancestralGroup" : "East Asian",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "China",
       "description" : "Beijing, China;",
       "previouslyReported" : "NR",
       "notes" : "Sample size in table 1 \"summary of study cohorts.\"",
@@ -342,16 +435,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/countryOfOrigin"
         }
       }
     }, {
       "type" : "replication",
       "numberOfIndividuals" : 21185,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : "Estonia,France,Italy,Netherlands,U.K.",
-      "countryOfRecruitment" : null,
       "description" : "Cambridgeshire, UK;",
       "previouslyReported" : "Y",
       "notes" : null,
@@ -362,16 +461,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 86995,
-      "ancestralGroup" : "European",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : null,
       "description" : null,
       "previouslyReported" : "Y",
       "notes" : "Checked suppl. notes, only brief description on all the studies.",
@@ -382,16 +487,22 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/countryOfOrigin"
         }
       }
     }, {
       "type" : "initial",
       "numberOfIndividuals" : 7473,
-      "ancestralGroup" : "African American/Afro-Caribbean",
-      "countryOfOrigin" : null,
-      "countryOfRecruitment" : "U.S.",
       "description" : "Jackson, MI; Forsyth County, NC; Sacramento County, CA; Washington County, MD; Pittsurgh, PA; Birmingham, AL; Chicago, IL; Minneapolis, MN; Oakland, CA; Baltimore, MD; Los Angeles County, CA; Manhattan, NY; St. Paul, MN;",
       "previouslyReported" : "Y",
       "notes" : "Sample size found in \"Discussion.\"  Description found in suppl.\r\n\r\nIncluded sample size from Results, p. 5. (IBC analysis not GWAS)",
@@ -402,8 +513,17 @@ Content-Length: 13892
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508"
         },
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/ancestralGroups"
+        },
+        "countryOfRecruitment" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/countryOfRecruitment"
+        },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/study"
+        },
+        "countryOfOrigin" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/countryOfOrigin"
         }
       }
     } ]
@@ -419,7 +539,7 @@ Content-Length: 13892
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=360&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=445&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/ancestries"
@@ -430,8 +550,8 @@ Content-Length: 13892
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 7216,
-    "totalPages" : 361,
+    "totalElements" : 8913,
+    "totalPages" : 446,
     "number" : 0
   }
 }

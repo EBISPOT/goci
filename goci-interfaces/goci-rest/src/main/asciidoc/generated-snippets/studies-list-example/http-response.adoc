@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 34930
+Content-Length: 37106
 
 {
   "_embedded" : {
@@ -16,8 +16,6 @@ Content-Length: 34930
       "pubmedId" : "21041247",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 1922309,
       "qualifier" : null,
       "imputed" : true,
@@ -25,6 +23,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000854",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
@@ -38,17 +37,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
         }
       }
     }, {
@@ -61,8 +63,6 @@ Content-Length: 34930
       "pubmedId" : "20971583",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 251837,
       "qualifier" : null,
       "imputed" : false,
@@ -70,6 +70,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000841",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
@@ -83,17 +84,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         }
       }
     }, {
@@ -106,8 +110,6 @@ Content-Length: 34930
       "pubmedId" : "20864672",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2155369,
       "qualifier" : null,
       "imputed" : true,
@@ -115,6 +117,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000809",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
@@ -128,17 +131,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
         }
       }
     }, {
@@ -151,8 +157,6 @@ Content-Length: 34930
       "pubmedId" : "21060863",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2194468,
       "qualifier" : null,
       "imputed" : true,
@@ -160,6 +164,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000847",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
@@ -173,17 +178,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
         }
       }
     }, {
@@ -196,8 +204,6 @@ Content-Length: 34930
       "pubmedId" : "21079520",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 109365,
       "qualifier" : null,
       "imputed" : false,
@@ -205,6 +211,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000871",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
@@ -218,17 +225,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
         }
       }
     }, {
@@ -241,8 +251,6 @@ Content-Length: 34930
       "pubmedId" : "23358156",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 138093,
       "qualifier" : null,
       "imputed" : true,
@@ -250,6 +258,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST001837",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
@@ -263,17 +272,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
         }
       }
     }, {
@@ -286,8 +298,6 @@ Content-Length: 34930
       "pubmedId" : "21307088",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 551808,
       "qualifier" : null,
       "imputed" : false,
@@ -295,6 +305,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000970",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
@@ -308,17 +319,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
         }
       }
     }, {
@@ -331,8 +345,6 @@ Content-Length: 34930
       "pubmedId" : "21326295",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 520460,
       "qualifier" : null,
       "imputed" : false,
@@ -340,6 +352,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000981",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
@@ -353,17 +366,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
         }
       }
     }, {
@@ -376,8 +392,6 @@ Content-Length: 34930
       "pubmedId" : "21355061",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2500000,
       "qualifier" : "~",
       "imputed" : true,
@@ -385,6 +399,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000988",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
@@ -398,17 +413,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
         }
       }
     }, {
@@ -421,8 +439,6 @@ Content-Length: 34930
       "pubmedId" : "21378095",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2500000,
       "qualifier" : null,
       "imputed" : true,
@@ -430,6 +446,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000997",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
@@ -443,17 +460,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
         }
       }
     }, {
@@ -466,8 +486,6 @@ Content-Length: 34930
       "pubmedId" : "21408207",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 421318,
       "qualifier" : null,
       "imputed" : true,
@@ -475,6 +493,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000996",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
@@ -488,17 +507,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
         }
       }
     }, {
@@ -511,8 +533,6 @@ Content-Length: 34930
       "pubmedId" : "21390209",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : null,
       "qualifier" : null,
       "imputed" : true,
@@ -520,6 +540,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000986",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
@@ -533,17 +554,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
         }
       }
     }, {
@@ -556,8 +580,6 @@ Content-Length: 34930
       "pubmedId" : "21423719",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2400000,
       "qualifier" : "~",
       "imputed" : true,
@@ -565,6 +587,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST001008",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
@@ -578,17 +601,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
         }
       }
     }, {
@@ -601,8 +627,6 @@ Content-Length: 34930
       "pubmedId" : "20600896",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 309200,
       "qualifier" : null,
       "imputed" : false,
@@ -610,6 +634,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000711",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
@@ -623,17 +648,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
         }
       }
     }, {
@@ -646,8 +674,6 @@ Content-Length: 34930
       "pubmedId" : "20064070",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 345926,
       "qualifier" : null,
       "imputed" : false,
@@ -655,6 +681,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000596",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
@@ -668,17 +695,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
         }
       }
     }, {
@@ -691,8 +721,6 @@ Content-Length: 34930
       "pubmedId" : "24105470",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2500000,
       "qualifier" : "~",
       "imputed" : true,
@@ -700,6 +728,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST002233",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
@@ -713,17 +742,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
         }
       }
     }, {
@@ -736,8 +768,6 @@ Content-Length: 34930
       "pubmedId" : "19188921",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 379319,
       "qualifier" : null,
       "imputed" : false,
@@ -745,6 +775,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000332",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
@@ -758,17 +789,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
         }
       }
     }, {
@@ -781,8 +815,6 @@ Content-Length: 34930
       "pubmedId" : "23382691",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 2500000,
       "qualifier" : "~",
       "imputed" : true,
@@ -790,6 +822,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST001848",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
@@ -803,17 +836,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
         }
       }
     }, {
@@ -826,8 +862,6 @@ Content-Length: 34930
       "pubmedId" : "17903294",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 70897,
       "qualifier" : null,
       "imputed" : false,
@@ -835,6 +869,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000082",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
@@ -848,17 +883,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
         }
       }
     }, {
@@ -871,8 +909,6 @@ Content-Length: 34930
       "pubmedId" : "17848626",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 66543,
       "qualifier" : null,
       "imputed" : false,
@@ -880,6 +916,7 @@ Content-Length: 34930
       "studyDesignComment" : null,
       "accessionId" : "GCST000073",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
@@ -893,17 +930,20 @@ Content-Length: 34930
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
         }
       }
     } ]
@@ -919,7 +959,7 @@ Content-Length: 34930
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=193&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=230&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
@@ -930,8 +970,8 @@ Content-Length: 34930
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 3861,
-    "totalPages" : 194,
+    "totalElements" : 4620,
+    "totalPages" : 231,
     "number" : 0
   }
 }

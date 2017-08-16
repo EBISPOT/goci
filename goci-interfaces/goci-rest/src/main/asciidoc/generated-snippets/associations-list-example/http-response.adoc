@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 28002
+Content-Length: 28522
 
 {
   "_embedded" : {
@@ -21,8 +21,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T04:02:33.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:01:53.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:01:53.000+0000",
       "pvalue" : 7.0E-8,
       "_links" : {
         "self" : {
@@ -31,20 +31,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/loci"
         }
       }
     }, {
@@ -62,8 +62,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T04:02:29.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:16.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:16.000+0000",
       "pvalue" : 8.0E-8,
       "_links" : {
         "self" : {
@@ -72,20 +72,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/loci"
         }
       }
     }, {
@@ -103,8 +103,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T04:02:13.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:18.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:18.000+0000",
       "pvalue" : 2.0E-7,
       "_links" : {
         "self" : {
@@ -113,20 +113,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/loci"
         }
       }
     }, {
@@ -144,8 +144,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-24T23:07:48.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-04T01:02:43.000+0000",
+      "lastUpdateDate" : "2017-06-04T01:02:43.000+0000",
       "pvalue" : 3.0E-14,
       "_links" : {
         "self" : {
@@ -154,20 +154,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/loci"
         }
       }
     }, {
@@ -185,8 +185,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T03:52:22.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:20.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:20.000+0000",
       "pvalue" : 9.0E-22,
       "_links" : {
         "self" : {
@@ -195,20 +195,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/loci"
         }
       }
     }, {
@@ -226,8 +226,8 @@ Content-Length: 28002
       "betaNum" : 0.02,
       "betaUnit" : "per log fl",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:51:59.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:23.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:23.000+0000",
       "pvalue" : 7.0E-28,
       "_links" : {
         "self" : {
@@ -236,20 +236,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/loci"
         }
       }
     }, {
@@ -267,8 +267,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T03:56:32.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:27.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:27.000+0000",
       "pvalue" : 6.0E-6,
       "_links" : {
         "self" : {
@@ -277,20 +277,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/loci"
         }
       }
     }, {
@@ -308,8 +308,8 @@ Content-Length: 28002
       "betaNum" : null,
       "betaUnit" : null,
       "betaDirection" : null,
-      "lastMappingDate" : "2016-12-25T03:56:30.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:29.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:29.000+0000",
       "pvalue" : 2.0E-11,
       "_links" : {
         "self" : {
@@ -318,20 +318,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/loci"
         }
       }
     }, {
@@ -349,8 +349,8 @@ Content-Length: 28002
       "betaNum" : 0.01,
       "betaUnit" : null,
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:40:36.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:31.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:31.000+0000",
       "pvalue" : 8.0E-12,
       "_links" : {
         "self" : {
@@ -359,20 +359,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/loci"
         }
       }
     }, {
@@ -390,8 +390,8 @@ Content-Length: 28002
       "betaNum" : 1.09,
       "betaUnit" : "beats per minute",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:40:22.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:34.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:34.000+0000",
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
@@ -400,20 +400,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/loci"
         }
       }
     }, {
@@ -431,8 +431,8 @@ Content-Length: 28002
       "betaNum" : 0.4,
       "betaUnit" : "cm",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:40:34.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:37.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:37.000+0000",
       "pvalue" : 3.0000000000000004E-8,
       "_links" : {
         "self" : {
@@ -441,20 +441,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/loci"
         }
       }
     }, {
@@ -472,8 +472,8 @@ Content-Length: 28002
       "betaNum" : 0.46,
       "betaUnit" : "cm",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:40:31.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:39.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:39.000+0000",
       "pvalue" : 6.0E-12,
       "_links" : {
         "self" : {
@@ -482,20 +482,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/loci"
         }
       }
     }, {
@@ -513,8 +513,8 @@ Content-Length: 28002
       "betaNum" : 0.71,
       "betaUnit" : "cm",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:40:29.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:42.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:42.000+0000",
       "pvalue" : 1.0E-9,
       "_links" : {
         "self" : {
@@ -523,20 +523,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/loci"
         }
       }
     }, {
@@ -554,8 +554,8 @@ Content-Length: 28002
       "betaNum" : 0.42,
       "betaUnit" : "cm",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:40:28.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:44.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:44.000+0000",
       "pvalue" : 2.0E-9,
       "_links" : {
         "self" : {
@@ -564,20 +564,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/loci"
         }
       }
     }, {
@@ -595,8 +595,8 @@ Content-Length: 28002
       "betaNum" : 1.06,
       "betaUnit" : "mm Hg",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:40:26.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:47.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:47.000+0000",
       "pvalue" : 1.0E-7,
       "_links" : {
         "self" : {
@@ -605,20 +605,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/loci"
         }
       }
     }, {
@@ -636,8 +636,8 @@ Content-Length: 28002
       "betaNum" : 0.63,
       "betaUnit" : "mm Hg",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:40:24.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:49.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:49.000+0000",
       "pvalue" : 3.0E-6,
       "_links" : {
         "self" : {
@@ -646,20 +646,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/loci"
         }
       }
     }, {
@@ -677,8 +677,8 @@ Content-Length: 28002
       "betaNum" : 0.07,
       "betaUnit" : "s.d.",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:41:29.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:02:53.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:53.000+0000",
       "pvalue" : 6.000000000000001E-8,
       "_links" : {
         "self" : {
@@ -687,20 +687,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/loci"
         }
       }
     }, {
@@ -718,8 +718,8 @@ Content-Length: 28002
       "betaNum" : 0.07,
       "betaUnit" : "s.d.",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:41:12.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:03:11.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:11.000+0000",
       "pvalue" : 5.0E-8,
       "_links" : {
         "self" : {
@@ -728,20 +728,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/loci"
         }
       }
     }, {
@@ -759,8 +759,8 @@ Content-Length: 28002
       "betaNum" : 0.07,
       "betaUnit" : "s.d.",
       "betaDirection" : "increase",
-      "lastMappingDate" : "2016-12-25T04:40:57.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:03:13.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:13.000+0000",
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
@@ -769,20 +769,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/loci"
         }
       }
     }, {
@@ -800,8 +800,8 @@ Content-Length: 28002
       "betaNum" : 0.06,
       "betaUnit" : "s.d.",
       "betaDirection" : "decrease",
-      "lastMappingDate" : "2016-12-25T04:40:55.000+0000",
-      "lastUpdateDate" : null,
+      "lastMappingDate" : "2017-06-03T01:03:15.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:15.000+0000",
       "pvalue" : 1.0E-8,
       "_links" : {
         "self" : {
@@ -810,20 +810,20 @@ Content-Length: 28002
         "association" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
-        },
-        "loci" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/loci"
-        },
         "genes" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/genes"
         },
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
+        },
+        "loci" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/loci"
         }
       }
     } ]
@@ -839,7 +839,7 @@ Content-Length: 28002
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1844&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=2739&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
@@ -850,8 +850,8 @@ Content-Length: 28002
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 36881,
-    "totalPages" : 1845,
+    "totalElements" : 54798,
+    "totalPages" : 2740,
     "number" : 0
   }
 }

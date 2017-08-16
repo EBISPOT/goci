@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: text/html;charset=UTF-8
-Content-Length: 1026
+Content-Length: 1493
 
 <!DOCTYPE html>
 
@@ -28,6 +28,14 @@ Content-Length: 1026
 <h1>GWAS Catalog REST API</h1>
 
 <p>Welcome to the GWAS Catalog REST API</p>
+
+<p>Please note that the new REST API is currently in beta release, so endpoints may undergo changes. Any feedback, comments, thoughts, questions, bug reports or suggestions, please get in touch via <a href="mailto:gwas-info@ebi.ac.uk">gwas-info@ebi.ac.uk</a>. We'd love to hear from you!</p>
+
+<p><a href="http://www.ebi.ac.uk/gwas/beta/rest/api">List of endpoints</a>
+<br />
+    <br />
+<a href="http://www.ebi.ac.uk/gwas/beta/rest/docs/index">Documentation</a>
+</p>
 
 </body>
 </html>

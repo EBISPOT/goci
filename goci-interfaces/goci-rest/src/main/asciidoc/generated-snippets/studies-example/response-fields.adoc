@@ -49,14 +49,6 @@
 |`Boolean`
 |Whether the study investigates a gene-gene interaction
 
-|`genomewideArray`
-|`Boolean`
-|Whether a genome-wide array was used
-
-|`targetedArray`
-|`Boolean`
-|Whether a targted array was used
-
 |`snpCount`
 |`Number`
 |Number of SNPs passing QC
@@ -76,5 +68,9 @@
 |`studyDesignComment`
 |`Null`
 |Any other relevant study design information
+
+|`userRequested`
+|`Boolean`
+|Whether the addition of this study to the Catalog was requested by a user
 
 |===

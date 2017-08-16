@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2423
+Content-Length: 2532
 
 {
   "_embedded" : {
@@ -16,8 +16,6 @@ Content-Length: 2423
       "pubmedId" : "20971583",
       "gxe" : false,
       "gxg" : false,
-      "genomewideArray" : true,
-      "targetedArray" : false,
       "snpCount" : 251837,
       "qualifier" : null,
       "imputed" : false,
@@ -25,6 +23,7 @@ Content-Length: 2423
       "studyDesignComment" : null,
       "accessionId" : "GCST000841",
       "fullPvalueSet" : false,
+      "userRequested" : false,
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
@@ -38,17 +37,20 @@ Content-Length: 2423
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
+        },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
         },
         "platforms" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
         },
+        "genotypingTechnologies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
+        },
         "ancestries" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         }
       }
     } ]
@@ -67,7 +69,7 @@ Content-Length: 2423
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=2&size=1"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=3860&size=1"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4619&size=1"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
@@ -78,8 +80,8 @@ Content-Length: 2423
   },
   "page" : {
     "size" : 1,
-    "totalElements" : 3861,
-    "totalPages" : 3861,
+    "totalElements" : 4620,
+    "totalPages" : 4620,
     "number" : 1
   }
 }

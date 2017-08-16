@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1567
+Content-Length: 1668
 
 {
   "author" : "Perlis RH",
@@ -14,8 +14,6 @@ Content-Length: 1567
   "pubmedId" : "21041247",
   "gxe" : false,
   "gxg" : false,
-  "genomewideArray" : true,
-  "targetedArray" : false,
   "snpCount" : 1922309,
   "qualifier" : null,
   "imputed" : true,
@@ -23,6 +21,7 @@ Content-Length: 1567
   "studyDesignComment" : null,
   "accessionId" : "GCST000854",
   "fullPvalueSet" : false,
+  "userRequested" : false,
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
@@ -36,17 +35,20 @@ Content-Length: 1567
     "snps" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
     },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
+    },
     "diseaseTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
     },
     "platforms" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
     },
+    "genotypingTechnologies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
+    },
     "ancestries" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
-    },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
     }
   }
 }

@@ -143,12 +143,28 @@ include::{snippets}/studies-list-example/curl-request.adoc[]
 
 The response is <<overview-pagination,paginated>> where the individual <<resources-study,study resources>>  are in the `_embedded.studies` field.
 
+[[resources-studies-search]]
+=== Searching studies
 
+A `GET` request will list all of the Catalog studies search endpoints.
+
+==== Example request
+
+include::{snippets}/studies-search-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/studies-search-example/http-response.adoc[]
+
+[[resources-study-links]]
+==== Links
+
+include::{snippets}/studies-search-example/links.adoc[]
 
 [[resources-study]]
 == Study
 
-=== Retrieve an study
+=== Retrieve a study
 
 include::{snippets}/studies-example/path-parameters.adoc[]
 
@@ -188,6 +204,24 @@ include::{snippets}/associations-list-example/curl-request.adoc[]
 ==== Response structure
 
 The response is <<overview-pagination,paginated>> where the individual <<resources-association,association resources>>  are in the `_embedded.associations` field.
+
+[[resources-associations-search]]
+=== Searching associations
+
+A `GET` request will list all of the Catalog associations search endpoints.
+
+==== Example request
+
+include::{snippets}/associations-search-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/associations-search-example/http-response.adoc[]
+
+[[resources-study-links]]
+==== Links
+
+include::{snippets}/associations-search-example/links.adoc[]
 
 [[resources-association]]
 == Association
@@ -278,4 +312,29 @@ include::{snippets}/genomic-contexts-example/http-response.adoc[]
 
 include::{snippets}/genomic-contexts-example/response-fields.adoc[]
 
+
+[[custom]]
+= Custom endpoints
+
+These are convenience endpoints created as a response to common user requests
+
+[[custom-location]]
+== SNP location
+The SNP location endpoint provides a convenient way of retrieving all variants in the GWAS Catalog within a genomic region of interest.
+
+=== Retrieve a SNPs by location
+
+include::{snippets}/snp-location-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/snp-location-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/snp-location-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/snp-location-example/response-fields.adoc[]
 

@@ -25,4 +25,7 @@
 |`snps`
 |<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study
 
+|`genotypingTechnologies`
+|<<overview-pagination,Paginated>> list of <<genotypingTechnologies-resources,genotyping technologies>> in this study
+
 |===

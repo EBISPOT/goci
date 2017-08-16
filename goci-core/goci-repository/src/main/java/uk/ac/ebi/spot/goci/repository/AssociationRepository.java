@@ -25,9 +25,12 @@ import java.util.List;
 public interface AssociationRepository extends JpaRepository<Association, Long> {
     Collection<Association> findByStudyId(long studyId);
 
+    Collection<Association> findByStudyPubmedId(Long pubmedId);
+
     @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId, Sort sort);
 
+    @RestResource(exported = false)
     List<Association> findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(Long studyId);
 
     Collection<Association> findByLociStrongestRiskAllelesSnpId(long snpId);
@@ -39,6 +42,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     List<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Sort sort);
 
+    @RestResource(exported = false)
     Page<Association> findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable);
 
@@ -51,6 +55,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
             Sort sort,
             Long snpId);
 
+    @RestResource(exported = false)
     Page<Association> findByLociStrongestRiskAllelesSnpIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long snpId);
@@ -64,6 +69,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
             Sort sort,
             Long diseaseTraitId);
 
+    @RestResource(exported = false)
     Page<Association> findByStudyDiseaseTraitIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long diseaseTraitId);
@@ -77,16 +83,18 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
             Sort sort,
             Long efoTraitId);
 
+    @RestResource(exported = false)
     Page<Association> findByEfoTraitsIdAndStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long efoTraitId);
 
+    @RestResource(exported = false)
     @Query(value = "select * from "+
             "(select a.*, rownum rnum from (select * from association order by id) a where rownum <= :maxRow) "+
             " where rnum >= :minRow ",
             nativeQuery = true)
     Collection<Association> findAllLSF(@Param("minRow") Integer minRow, @Param("maxRow") Integer maxRow);
 
-
+    @RestResource(exported = false)
     Collection<Association> findBylastMappingDateIsNull();
 }

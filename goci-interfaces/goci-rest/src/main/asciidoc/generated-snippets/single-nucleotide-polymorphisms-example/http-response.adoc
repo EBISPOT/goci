@@ -8,7 +8,7 @@ Content-Length: 1320
   "rsId" : "rs490608",
   "merged" : 0,
   "functionalClass" : "intron_variant",
-  "lastUpdateDate" : "2016-12-24T11:30:30.770+0000",
+  "lastUpdateDate" : "2017-06-08T00:08:21.974+0000",
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
@@ -16,26 +16,26 @@ Content-Length: 1320
     "singleNucleotidePolymorphism" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
     },
-    "genes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/genes"
-    },
-    "locations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/locations"
-    },
-    "riskAlleles" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/riskAlleles"
+    "genomicContexts" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/genomicContexts"
     },
     "studies" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"
     },
-    "genomicContexts" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/genomicContexts"
+    "locations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/locations"
+    },
+    "genes" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/genes"
     },
     "currentSnp" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/currentSnp"
     },
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/associations"
+    },
+    "riskAlleles" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/riskAlleles"
     }
   }
 }

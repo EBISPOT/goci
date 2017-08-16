@@ -95,6 +95,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
 
     // Custom query to get list of study authors
+    @RestResource(exported = false)
     @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);

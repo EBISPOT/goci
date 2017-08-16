@@ -52,6 +52,12 @@
 |`singleNucleotidePolymorphisms`
 |Link to all the SNPs in the GWAS Catalog
 
+|`ancestralGroups`
+|Link to all the ancestral groups in the GWAS Catalog
+
+|`genotypingTechnologies`
+|Link to all the genotyping technologies in the GWAS Catalog
+
 |`profile`
 |Link to the API profile
 
