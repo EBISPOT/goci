@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'https://www.ebi.ac.uk/gwas/rest/api/associations/search' -i -H 'Accept: application/json'
+----

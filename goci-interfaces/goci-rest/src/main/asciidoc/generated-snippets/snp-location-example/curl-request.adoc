@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ curl 'https://www.ebi.ac.uk/gwas/rest/api/snpLocation/10:95000000-96000000' -i -H 'Accept: application/json'
+----

@@ -1,0 +1,62 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2365
+
+{
+  "_links" : {
+    "findByPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByPubmedId{?pubmedId,page,size,sort}",
+      "templated" : true
+    },
+    "findByGxe" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGxe{?gxe,page,size,sort}",
+      "templated" : true
+    },
+    "findByDiseaseTraitId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByDiseaseTraitId{?diseaseTraitId,page,size,sort}",
+      "templated" : true
+    },
+    "findByGenotypingTechnologiesGenotypingTechnology" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGenotypingTechnologiesGenotypingTechnology{?genotypingTechnology,page,size,sort}",
+      "templated" : true
+    },
+    "findStudyDistinctByAssociationsSnpInteractionTrue" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsSnpInteractionTrue{?sort}",
+      "templated" : true
+    },
+    "findByAssociationsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByAssociationsId{?associationId}",
+      "templated" : true
+    },
+    "findByFullPvalueSet" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByFullPvalueSet{?fullPvalueSet,page,size,sort}",
+      "templated" : true
+    },
+    "findByEfoTraitsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsId{?efoTraitId,page,size,sort}",
+      "templated" : true
+    },
+    "findByUserRequested" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByUserRequested{?userRequested,page,size,sort}",
+      "templated" : true
+    },
+    "findByGxg" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGxg{?gxg,page,size,sort}",
+      "templated" : true
+    },
+    "findStudyDistinctByAssociationsMultiSnpHaplotypeTrue" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsMultiSnpHaplotypeTrue{?sort}",
+      "templated" : true
+    },
+    "findByAuthorContainingIgnoreCase" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByAuthorContainingIgnoreCase{?author,page,size,sort}",
+      "templated" : true
+    },
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
+    }
+  }
+}
+----

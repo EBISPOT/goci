@@ -19,14 +19,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/countryOfOrigin"
@@ -45,14 +45,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/countryOfOrigin"
@@ -71,14 +71,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/countryOfOrigin"
@@ -97,14 +97,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/countryOfOrigin"
@@ -123,14 +123,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/countryOfOrigin"
@@ -149,14 +149,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/countryOfOrigin"
@@ -175,14 +175,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/countryOfOrigin"
@@ -201,14 +201,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/countryOfOrigin"
@@ -227,14 +227,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/countryOfOrigin"
@@ -253,14 +253,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/countryOfOrigin"
@@ -279,14 +279,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/countryOfOrigin"
@@ -305,14 +305,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/countryOfOrigin"
@@ -331,14 +331,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/countryOfOrigin"
@@ -357,14 +357,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/countryOfOrigin"
@@ -383,14 +383,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/countryOfOrigin"
@@ -409,14 +409,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/countryOfOrigin"
@@ -435,14 +435,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/countryOfOrigin"
@@ -461,14 +461,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/countryOfOrigin"
@@ -487,14 +487,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/countryOfOrigin"
@@ -513,14 +513,14 @@ Content-Length: 19511
         "ancestry" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508"
         },
-        "ancestralGroups" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/ancestralGroups"
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/study"
         },
         "countryOfRecruitment" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/countryOfRecruitment"
         },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/study"
+        "ancestralGroups" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/ancestralGroups"
         },
         "countryOfOrigin" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/countryOfOrigin"

@@ -31,26 +31,26 @@ Content-Length: 2532
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
-        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
         },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
         },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
         },
         "genotypingTechnologies" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+        },
+        "platforms" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
         }
       }
     } ]

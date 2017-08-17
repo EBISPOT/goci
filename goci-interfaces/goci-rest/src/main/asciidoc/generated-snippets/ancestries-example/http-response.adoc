@@ -17,14 +17,14 @@ Content-Length: 831
     "ancestry" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
     },
-    "ancestralGroups" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/ancestralGroups"
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
     },
     "countryOfRecruitment" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfRecruitment"
     },
-    "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
+    "ancestralGroups" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/ancestralGroups"
     },
     "countryOfOrigin" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfOrigin"

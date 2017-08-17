@@ -1,0 +1,8 @@
+./gwas/rest/api/snpLocation/{range}
+|===
+|Parameter|Description
+
+|`range`
+|The range of interest, in format chr:bpLocationStart-bpLocationEnd
+
+|===

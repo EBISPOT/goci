@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/snpLocation/10:95000000-96000000' 'Accept:application/json'
+----

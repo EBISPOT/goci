@@ -1,0 +1,108 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 2870
+
+{
+  "content" : [ {
+    "rsId" : "rs1934951",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-03T01:29:57.694+0000"
+  }, {
+    "rsId" : "rs12772243",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-05T05:47:20.926+0000"
+  }, {
+    "rsId" : "rs579342",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-05T02:46:00.398+0000"
+  }, {
+    "rsId" : "rs1326934",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-07T02:02:39.087+0000"
+  }, {
+    "rsId" : "rs56322409",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-06T03:39:44.980+0000"
+  }, {
+    "rsId" : "rs72820627",
+    "merged" : 0,
+    "functionalClass" : "intergenic_variant",
+    "lastUpdateDate" : "2017-06-04T04:12:59.301+0000"
+  }, {
+    "rsId" : "rs4918947",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-07T23:38:04.698+0000"
+  }, {
+    "rsId" : "rs10786213",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-10T03:34:40.296+0000"
+  }, {
+    "rsId" : "rs2274491",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-05T02:44:28.454+0000"
+  }, {
+    "rsId" : "rs4918918",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-04T02:55:01.394+0000"
+  }, {
+    "rsId" : "rs1934954",
+    "merged" : 0,
+    "functionalClass" : "downstream_gene_variant",
+    "lastUpdateDate" : "2017-06-06T04:43:58.531+0000"
+  }, {
+    "rsId" : "rs2275620",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-09T01:39:49.943+0000"
+  }, {
+    "rsId" : "rs2071426",
+    "merged" : 0,
+    "functionalClass" : "splice_donor_variant",
+    "lastUpdateDate" : "2017-06-06T03:39:42.240+0000"
+  }, {
+    "rsId" : "rs7074761",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-10T03:34:40.523+0000"
+  }, {
+    "rsId" : "rs1934955",
+    "merged" : 0,
+    "functionalClass" : "upstream_gene_variant",
+    "lastUpdateDate" : "2017-06-06T03:25:26.666+0000"
+  }, {
+    "rsId" : "rs2860975",
+    "merged" : 0,
+    "functionalClass" : "non_coding_transcript_exon_variant",
+    "lastUpdateDate" : "2017-06-04T05:20:27.874+0000"
+  }, {
+    "rsId" : "rs11188352",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-05T05:57:14.241+0000"
+  }, {
+    "rsId" : "rs1934953",
+    "merged" : 0,
+    "functionalClass" : "intron_variant",
+    "lastUpdateDate" : "2017-06-04T05:40:52.439+0000"
+  } ],
+  "totalPages" : 1,
+  "totalElements" : 18,
+  "last" : true,
+  "sort" : null,
+  "numberOfElements" : 18,
+  "first" : true,
+  "size" : 20,
+  "number" : 0
+}
+----
