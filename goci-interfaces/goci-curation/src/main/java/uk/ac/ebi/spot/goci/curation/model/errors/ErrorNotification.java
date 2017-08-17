@@ -12,11 +12,26 @@ import java.util.stream.Collectors;
  */
 public class ErrorNotification {
 
+
     private List<Error> errors = new ArrayList<>();
+
+    public ErrorNotification() {
+    }
+
+    public ErrorNotification(List<Error> errors) {
+        this.errors = errors;
+    }
+
 
     public void addError(Error error) {
         errors.add(error);
     }
+
+    public void addError(List<Error> errorsToAdd) {
+        errorsToAdd.stream().forEach(error -> errors.add(error));
+    }
+
+
 
     public boolean hasErrors() {
         return ! errors.isEmpty();
@@ -26,6 +41,10 @@ public class ErrorNotification {
         return errors.stream()
                 .map(e -> e.message)
                 .collect(Collectors.joining(", "));
+    }
+
+    public List<Error> getErrors() {
+        return errors;
     }
 
 }

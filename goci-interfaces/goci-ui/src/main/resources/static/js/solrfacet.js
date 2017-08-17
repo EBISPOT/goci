@@ -33,16 +33,15 @@ function applyFacet() {
 //}
 
 function clearFacetting() {
-    $('#facet').text();
+    $('#facet').text("");
     // collapse all expanded sections
-
     loadResults();
 
-    //$(".results-container:not(.no-results)").show();
-    //$(".results-container.more-results .table-toggle").show();
+    $(".results-container:not(.no-results)").show();
+    $(".results-container.more-results .table-toggle").show();
     //$(".hidden-resource.in").collapse('hide');
     //
-    //$(".ttbutton:not(.glyphicon-chevron-down)").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    // $(".ttbutton:not(.glyphicon-chevron-down)").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
 
 }
 

@@ -28,6 +28,7 @@
 
     <!-- Additional styling on top of bootstrap -->
     <link rel="stylesheet" href="../static/css/goci-ui.css" th:href="@{css/goci-ui.css}"/>
+    <link rel="stylesheet" href="../static/css/ontology-autocomplete.css" th:href="@{css/ontology-autocomplete.css}"/>
     <link rel="stylesheet" href="../static/css/icons/flaticon.css" th:href="@{css/icons/flaticon.css}"/>
     <link rel="stylesheet" href="../static/css/goci-color-palette-1.css" th:href="@{css/goci-color-palette-1.css}"/>
 
@@ -77,7 +78,7 @@
             <div class="col-md-4 toplevel-view">
                 <h2 class="flaticon-internet6 color-primary-bold">Related resources</h2>
 
-                <p>A list of resources related to the GWAS Catalog, including training workshop slides.</p>
+                <p>A list of resources related to the GWAS Catalog, including training materials and workshop slides.</p>
             </div>
         </a>
         <a href="docs/ontology" th:href="@{docs/ontology}">
@@ -125,6 +126,8 @@
 <!-- GOCI JavaScript
 ================================================== -->
 <script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
+<script src="../static/js/autocomplete-termselect.js" th:src="@{js/autocomplete-termselect.js}"></script>
+<script src="../static/js/jquery.autocomplete.js" th:src="@{js/jquery.autocomplete.js}"></script>
 
 <!-- Google analytics
 ================================================== -->

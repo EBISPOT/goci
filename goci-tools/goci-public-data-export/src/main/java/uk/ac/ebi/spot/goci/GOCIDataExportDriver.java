@@ -15,14 +15,14 @@ import java.util.Arrays;
  */
 
 @SpringBootApplication
-public class GociDataExportDriver {
+public class GOCIDataExportDriver {
 
     @Autowired
     DataDeletionService dataDeletionervice;
 
     public static void main(String[] args) {
         System.out.println("Starting public data export application...");
-        ApplicationContext ctx = SpringApplication.run(GociDataExportDriver.class, args);
+        ApplicationContext ctx = SpringApplication.run(GOCIDataExportDriver.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }

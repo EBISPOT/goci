@@ -26,7 +26,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addRedirectViewController("/search/most-recent", "/search?query=*&filter=recent");
         registry.addViewController("/snp").setViewName("snp-page");
         registry.addViewController("/ancestry").setViewName("ancestry");
-        registry.addViewController("/beta/variants").setViewName("variants");
+//        registry.addViewController("/beta/variants").setViewName("variants");
 
         // dynamically generated docs pages
         registry.addViewController("/docs").setViewName("docs");
@@ -43,6 +43,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/docs/known-issues").setViewName("docs-template");
         registry.addViewController("/docs/mappingfileheaders").setViewName("docs-template");
         registry.addViewController("/docs/ancestry").setViewName("docs-template");
+        registry.addViewController("/docs/pilots").setViewName("docs-template");
 
     }
 }

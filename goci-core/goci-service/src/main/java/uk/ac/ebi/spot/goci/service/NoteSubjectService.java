@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.NoteSubject;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.NoteSubjectRepository;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class NoteSubjectService {
     //#xintodo
     private static String DEFAULT = "General";
     private static String SYSTEM_NOTE = "System note";
+    private static String POST_PUBLISHED_REVIEW_NOTE = "Post-publishing review";
     private static String IMPORTED_NOTE = "Imported from previous system";
     private static ArrayList<String> SYSTEM_NOTES = new ArrayList<>(Arrays.asList(SYSTEM_NOTE,IMPORTED_NOTE));
 
@@ -65,6 +67,17 @@ public class NoteSubjectService {
                 allNoteSubject.remove(noteSubject);
             }
         });
+        return allNoteSubject;
+    }
+
+    public Collection<NoteSubject> findAvailableNoteSubjectForStudy(Study study){
+        Collection<NoteSubject> allNoteSubject = new ArrayList<NoteSubject>();
+        if(study.getHousekeeping().getIsPublished()){
+            allNoteSubject.add(noteSubjectRepository.findBySubjectIgnoreCase(POST_PUBLISHED_REVIEW_NOTE));
+            return allNoteSubject;
+        }
+
+        allNoteSubject = findNonSystemNoteSubject();
         return allNoteSubject;
     }
 

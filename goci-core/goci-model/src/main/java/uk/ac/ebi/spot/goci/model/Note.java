@@ -150,4 +150,14 @@ public abstract class Note {
                 .append("]");
         return sb.toString();
     }
+
+    public String toStringForEamil() {
+        StringBuilder sb = new StringBuilder();
+        String sp = "\n";
+        sb.append("[").append(this.noteSubject.getSubject())
+                .append(" / ").append(this.curator.getLastName())
+                .append(" / ").append(this.updatedAt)
+                .append("]").append(sp).append(this.textNote);
+        return sb.toString();
+    }
 }

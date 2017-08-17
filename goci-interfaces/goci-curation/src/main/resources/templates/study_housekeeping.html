@@ -130,6 +130,18 @@
     </div>
 </div>
 
+<!--Alert if there are pre-publish errors-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(publishError)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${publishError}">Warning!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Alert if snps not checked-->
 <div class="container-fluid" th:if="${!#strings.isEmpty(snpsNotChecked)}">
     <div class="row">

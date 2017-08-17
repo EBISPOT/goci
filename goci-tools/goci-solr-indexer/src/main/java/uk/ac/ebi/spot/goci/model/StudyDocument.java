@@ -287,7 +287,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     String coo = null;
 
-                    if(ancestry.getCountryOfOrigin() != null) {
+                    if(ancestry.getCountryOfOrigin() != null && !ancestry.getCountryOfOrigin().isEmpty()) {
                         for(Country c : ancestry.getCountryOfOrigin()){
                             if (coo == null){
                                 coo = c.getCountryName();
@@ -306,7 +306,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     String cor = null;
 
-                    if (ancestry.getCountryOfRecruitment() != null) {
+                    if (ancestry.getCountryOfRecruitment() != null && !ancestry.getCountryOfRecruitment().isEmpty()) {
                         for(Country c : ancestry.getCountryOfRecruitment()){
                             if (cor == null){
                                 cor = c.getCountryName();
@@ -323,7 +323,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
                     String ances = null;
 
-                    if (ancestry.getAncestralGroups() != null) {
+                    if (ancestry.getAncestralGroups() != null && !ancestry.getAncestralGroups().isEmpty()) {
                         for(AncestralGroup a : ancestry.getAncestralGroups()){
                             if (ances == null){
                                 ances = a.getAncestralGroup();
@@ -443,4 +443,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
     public Boolean getFullPvalueSet() { return fullPvalueSet; }
+
+
+
 }

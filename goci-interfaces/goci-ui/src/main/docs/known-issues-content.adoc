@@ -1,6 +1,6 @@
 = Known issues
 
-Please refer to https://www.ebi.ac.uk/panda/jira/browse/GOCI/component/11750[our bug tracker] for the status of any known issues.
+Please refer to https://www.ebi.ac.uk/panda/jira/issues/?jql=project%20%3D%20GOCI%20AND%20resolution%20%3D%20Unresolved%20AND%20issuetype%20%3D%20Bug%20AND%20component%20%3D%20%22Search%20interface%22[our bug tracker] for the status of any known issues.
 
 If you find an issue not documented in the tracker, please submit a bug report to gwas-info@ebi.ac.uk.
 

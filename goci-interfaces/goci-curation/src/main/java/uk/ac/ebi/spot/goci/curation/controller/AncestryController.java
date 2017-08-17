@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.curation.model.InitialSampleDescription;
 import uk.ac.ebi.spot.goci.curation.model.ReplicationSampleDescription;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAncestryService;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionService;
-import uk.ac.ebi.spot.goci.model.Country;
+import uk.ac.ebi.spot.goci.model.AncestralGroup;
 import uk.ac.ebi.spot.goci.model.Ancestry;
+import uk.ac.ebi.spot.goci.model.Country;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestralGroupRepository;
-import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
+import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,6 +94,17 @@ public class AncestryController {
         initialStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId, initialType));
         replicationStudyAncestryDescriptions.addAll(ancestryRepository.findByStudyIdAndType(studyId,
                                                                                             replicationType));
+        Collection<Ancestry> allAncestry = new ArrayList<>();
+        allAncestry.addAll(initialStudyAncestryDescriptions);
+        allAncestry.addAll(replicationStudyAncestryDescriptions);
+        for(Ancestry ancestry : allAncestry){
+            if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
+                String message = "No country of recruitment recorded for at least one ancestry entry!";
+                model.addAttribute("noCountryRecruitment",message);
+                break;
+            }
+        }
+
 
         // Add all ancestry/sample information for the study to our model
         model.addAttribute("initialStudyAncestryDescriptions", initialStudyAncestryDescriptions);
@@ -158,7 +169,20 @@ public class AncestryController {
                     method = RequestMethod.POST)
     public String addStudySampleDescription(@ModelAttribute Ancestry ancestry,
                                             @PathVariable Long studyId,
+//                                            Model model,
                                             RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        // Set default values when no country of origin or recruitment supplied
+        if (ancestry.getCountryOfOrigin() == null || ancestry.getCountryOfOrigin().isEmpty()) {
+            Collection<Country> coo = new ArrayList<>();
+            coo.add(countryRepository.findByCountryName("NR"));
+            ancestry.setCountryOfOrigin(coo);
+        }
+
+        if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
+            String message = "No country of recruitment recorded!";
+            redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
+        }
 
         ancestryService.addAncestry(studyId, ancestry, currentUserDetailsService.getUserFromRequest(request));
 
@@ -177,71 +201,15 @@ public class AncestryController {
                     method = RequestMethod.GET)
     public String viewSampleDescription(Model model, @PathVariable Long ancestryId) {
         Ancestry ancestryToView = ancestryRepository.findOne(ancestryId);
+
+//
+//        if(ancestryToView.getCountryOfRecruitment() == null || ancestryToView.getCountryOfRecruitment().isEmpty()){
+//            String message = "No country of recruitment recorded for at least one ancestry entry!";
+//            model.addAttribute("noCountryRecruitment",message);
+//        }
+//    
+
         model.addAttribute("ancestry", ancestryToView);
-
-    /*  Country of origin, country of recruitment and ancestral group are stored as a string in database
-        In order to work with these in view we need to wrap them in a service object
-        that returns the values to the view as an array */
-
-        // Country of origin
-//        String ancestryCountryOfOrigin = ancestryToView.getCountryOfOrigin();
-//        CountryOfOrigin countryOfOrigin = new CountryOfOrigin(); // service object
-//
-//        if (ancestryCountryOfOrigin != null) {
-//            // multiple values separated by comma
-//            if (ancestryCountryOfOrigin.contains(",")) {
-//                String[] countries = ancestryCountryOfOrigin.split(",");
-//                countryOfOrigin.setOriginCountryValues(countries);
-//            }
-//            // single value
-//            else {
-//                String[] countries = new String[1];
-//                countries[0] = ancestryCountryOfOrigin;
-//                countryOfOrigin.setOriginCountryValues(countries);
-//            }
-//        }
-//
-//        model.addAttribute("countryOfOrigin", countryOfOrigin);
-//
-//        //Country of recruitment
-//        String ancestryCountryOfRecruitment = ancestryToView.getCountryOfRecruitment();
-//        CountryOfRecruitment countryOfRecruitment = new CountryOfRecruitment(); // service object
-//
-//        if (ancestryCountryOfRecruitment != null) {
-//            // multiple values separated by comma
-//            if (ancestryCountryOfRecruitment.contains(",")) {
-//                String[] countries = ancestryCountryOfRecruitment.split(",");
-//                countryOfRecruitment.setRecruitmentCountryValues(countries);
-//            }
-//            // single value
-//            else {
-//                String[] countries = new String[1];
-//                countries[0] = ancestryCountryOfRecruitment;
-//                countryOfRecruitment.setRecruitmentCountryValues(countries);
-//            }
-//        }
-//
-//        model.addAttribute("countryOfRecruitment", countryOfRecruitment);
-
-        // Ancestral group
-//        Collection<AncestralGroup> ancestryAncestralGroups = ancestryToView.getAncestralGroups();
-//        AncestralGroup ancestralGroup = new AncestralGroup(); // service class
-//
-//        if (ancestryAncestralGroup != null) {
-//            // multiple values separated by comma
-//            if (ancestryAncestralGroup.contains(",")) {
-//                String[] groups = ancestryAncestralGroup.split(",");
-//                ancestralGroup.setAncestralGroupValues(groups);
-//            }
-//            // single value
-//            else {
-//                String[] groups = new String[1];
-//                groups[0] = ancestryAncestralGroup;
-//                ancestralGroup.setAncestralGroupValues(groups);
-//            }
-//        }
-//
-//        model.addAttribute("ancestralGroup", ancestralGroup);
 
         model.addAttribute("study", studyRepository.findOne(ancestryToView.getStudy().getId()));
         return "edit_sample_description";
@@ -253,16 +221,22 @@ public class AncestryController {
                     produces = MediaType.TEXT_HTML_VALUE,
                     method = RequestMethod.POST)
     public String updateSampleDescription(@ModelAttribute Ancestry ancestry,
-//                                          @ModelAttribute CountryOfOrigin countryOfOrigin,
-//                                          @ModelAttribute CountryOfRecruitment countryOfRecruitment,
-//                                          @ModelAttribute Collection<AncestralGroup> ancestralGroups,
+//                                          Model model,
                                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        // Set default values when no country of origin or recruitment supplied
+        if (ancestry.getCountryOfOrigin() == null || ancestry.getCountryOfOrigin().isEmpty()) {
+            Collection<Country> coo = new ArrayList<>();
+            coo.add(countryRepository.findByCountryName("NR"));
+            ancestry.setCountryOfOrigin(coo);
+        }
+
+        if(ancestry.getCountryOfRecruitment() == null || ancestry.getCountryOfRecruitment().isEmpty()){
+            String message = "No country of recruitment recorded!";
+            redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
+        }
 
 
         ancestryService.updateAncestry(ancestry,
-//                                         countryOfOrigin,
-//                                         countryOfRecruitment,
-//                                         ancestralGroups,
                                          currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
@@ -329,29 +303,6 @@ public class AncestryController {
         return types;
     }
 
-    // Ancestry Types
-//    @ModelAttribute("ancestralGroups")
-//    public List<String> populateAncestralGroups(Model model) {
-//        List<String> types = new ArrayList<>();
-//        types.add("European");
-//        types.add("Sub-Saharan African");
-//        types.add("African unspecified");
-//        types.add("South Asian");
-//        types.add("South East Asian");
-//        types.add("Central Asian");
-//        types.add("East Asian");
-//        types.add("Asian unspecified");
-//        types.add("African American or Afro-Caribbean");
-//        types.add("Greater Middle Eastern (Middle Eastern, North African or Persian)");
-//        types.add("Oceanian");
-//        types.add("Native American");
-//        types.add("Hispanic or Latin American");
-//        types.add("Aboriginal Australian");
-//        types.add("Circumpolar peoples");
-//        types.add("Other");
-//        types.add("NR");
-//        return types;
-//    }
 
     @ModelAttribute("ancestralGroups")
     public List<AncestralGroup> populateAncestralGroups(Model model) {
@@ -361,13 +312,7 @@ public class AncestryController {
 
     @ModelAttribute("countries")
     public List<Country> populateCountries(Model model) {
-        //        List<Country> countries = countryRepository.findAll();
-        //        Country countryNR = new Country();
-        //        // Added NR as an option for curators
-        //        countryNR.setCountryName("NR");
-        //        countries.add(countryNR);
-        //        return countries;
-        List<Country> countries = countryRepository.findAll();
+         List<Country> countries = countryRepository.findAll();
         return countries;
     }
 

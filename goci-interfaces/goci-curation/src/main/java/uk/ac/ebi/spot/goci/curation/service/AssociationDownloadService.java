@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Created by dwelter on 09/04/15. Updated by emma
@@ -294,7 +296,12 @@ public class AssociationDownloadService {
 
             association.getLoci().forEach(
                     locus -> {
-                        locus.getStrongestRiskAlleles().forEach(
+
+                        Collection<RiskAllele> ra = locus.getStrongestRiskAlleles().stream()
+                                .sorted((v1, v2) -> Long.compare(v1.getId(), v2.getId()))
+                                .collect(Collectors.toList());
+
+                        ra.forEach(
                                 riskAllele -> {
 
                                     // Set Risk allele frequency
@@ -332,7 +339,12 @@ public class AssociationDownloadService {
             // Single study or a haplotype
             association.getLoci().forEach(
                     locus -> {
-                        locus.getStrongestRiskAlleles().forEach(
+
+                        Collection<RiskAllele> ra = locus.getStrongestRiskAlleles().stream()
+                                .sorted((v1, v2) -> Long.compare(v1.getId(), v2.getId()))
+                                .collect(Collectors.toList());
+
+                        ra.forEach(
                                 riskAllele -> {
 
                                     // Set Risk allele frequency to blank as its not recorded by curators
@@ -352,7 +364,12 @@ public class AssociationDownloadService {
         // Set attributes common to all associations
         association.getLoci().forEach(
                 locus -> {
-                    locus.getStrongestRiskAlleles().forEach(
+
+                    Collection<RiskAllele> ra = locus.getStrongestRiskAlleles().stream()
+                            .sorted((v1, v2) -> Long.compare(v1.getId(), v2.getId()))
+                            .collect(Collectors.toList());
+
+                    ra.forEach(
                             riskAllele -> {
                                 setOrAppend(strongestAllele, riskAllele.getRiskAlleleName(), delimiter);
 
