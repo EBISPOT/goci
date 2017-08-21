@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -88,6 +89,7 @@ public class Study implements Trackable {
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "PLATFORM_ID"))
+    @JsonManagedReference
     private Collection<Platform> platforms;
 
     @OneToMany(mappedBy = "study")
@@ -128,6 +130,7 @@ public class Study implements Trackable {
     @JoinTable(name = "STUDY_GENOTYPING_TECHNOLOGY",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENOTYPING_TECHNOLOGY_ID"))
+    @JsonManagedReference
     private Collection<GenotypingTechnology> genotypingTechnologies;
 
     @OneToMany(mappedBy = "study")

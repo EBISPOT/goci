@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -24,6 +25,7 @@ public class Platform {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "platforms")
+    @JsonBackReference
     private Collection<Study> studies;
 
     // JPA no-args constructor
@@ -52,6 +54,7 @@ public class Platform {
         this.manufacturer = manufacturer;
     }
 
+    @JsonIgnore
     public Collection<Study> getStudies() {
         return studies;
     }

@@ -1,33 +1,5 @@
 [source,http,options="nowrap"]
 ----
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 737
+HTTP/1.1 404 Not Found
 
-{
-  "isIntergenic" : true,
-  "isUpstream" : false,
-  "isDownstream" : true,
-  "distance" : 2271,
-  "source" : "Ensembl",
-  "mappingMethod" : "Ensembl_pipeline",
-  "isClosestGene" : true,
-  "_links" : {
-    "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953"
-    },
-    "genomicContext" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953"
-    },
-    "gene" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953/gene"
-    },
-    "snp" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953/snp"
-    },
-    "location" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953/location"
-    }
-  }
-}
 ----

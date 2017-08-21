@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -44,6 +46,7 @@ public class SingleNucleotidePolymorphism {
     private Collection<GenomicContext> genomicContexts;
 
     @OneToMany(mappedBy = "snp")
+    @JsonBackReference
     private Collection<RiskAllele> riskAlleles;
 
     @ManyToOne

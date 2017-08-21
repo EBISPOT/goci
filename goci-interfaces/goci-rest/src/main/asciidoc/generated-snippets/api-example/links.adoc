@@ -34,9 +34,6 @@
 |`platforms`
 |Link to all the sequencing platforms in the GWAS Catalog
 
-|`genomicContexts`
-|Link to all the genomic contexts in the GWAS Catalog
-
 |`riskAlleles`
 |Link to all the risk alleles in the GWAS Catalog
 

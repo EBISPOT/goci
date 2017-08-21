@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1668
+Content-Length: 1711
 
 {
   "author" : "Perlis RH",
@@ -22,34 +22,34 @@ Content-Length: 1668
   "accessionId" : "GCST000854",
   "fullPvalueSet" : false,
   "userRequested" : false,
-  "_links" : {
-    "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
-    },
-    "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
-    },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
-    },
-    "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
-    },
-    "diseaseTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
-    },
-    "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
-    },
-    "genotypingTechnologies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
-    },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
-    },
-    "platforms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
-    }
-  }
+  "content" : [ ],
+  "links" : [ {
+    "rel" : "self",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+  }, {
+    "rel" : "study",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+  }, {
+    "rel" : "associations",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
+  }, {
+    "rel" : "ancestries",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
+  }, {
+    "rel" : "diseaseTrait",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
+  }, {
+    "rel" : "efoTraits",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
+  }, {
+    "rel" : "platforms",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
+  }, {
+    "rel" : "genotypingTechnologies",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
+  }, {
+    "rel" : "snps",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+  } ]
 }
 ----

@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.EntrezGene;
  *         <p>
  *         Repository accessing Entrez Gene entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface EntrezGeneRepository extends JpaRepository<EntrezGene, Long> {
 
     EntrezGene findByEntrezGeneId(String entrezGeneId);

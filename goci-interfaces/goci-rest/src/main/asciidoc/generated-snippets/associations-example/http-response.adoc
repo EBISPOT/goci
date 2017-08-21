@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1258
+Content-Length: 1295
 
 {
   "riskFrequency" : "NR",
@@ -22,28 +22,28 @@ Content-Length: 1258
   "lastMappingDate" : "2017-06-09T01:13:39.000+0000",
   "lastUpdateDate" : "2017-06-09T01:13:39.000+0000",
   "pvalue" : 3.0000000000000002E-18,
-  "_links" : {
-    "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
-    },
-    "association" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
-    },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-    },
-    "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
-    },
-    "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
-    },
-    "genes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/genes"
-    },
-    "loci" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
-    }
-  }
+  "content" : [ ],
+  "links" : [ {
+    "rel" : "self",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+  }, {
+    "rel" : "association",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+  }, {
+    "rel" : "study",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
+  }, {
+    "rel" : "loci",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
+  }, {
+    "rel" : "efoTraits",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
+  }, {
+    "rel" : "genes",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/genes"
+  }, {
+    "rel" : "snps",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
+  } ]
 }
 ----

@@ -14,7 +14,8 @@ import java.util.List;
  * <p>
  * Repository accessing GenomicContext entity object
  */
-@RepositoryRestResource
+//@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface GenomicContextRepository extends JpaRepository<GenomicContext, Long> {
 
     Collection<GenomicContext> findBySnpId(Long snpId);

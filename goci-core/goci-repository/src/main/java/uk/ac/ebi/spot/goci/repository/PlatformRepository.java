@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by dwelter on 10/03/16.
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface PlatformRepository extends JpaRepository<Platform, Long>{
 
     Platform findByManufacturer(String manufacturer);

@@ -13,7 +13,7 @@ import java.util.List;
  *         <p>
  *         Repository accessing RiskAllele entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface RiskAlleleRepository extends JpaRepository<RiskAllele, Long> {
     List<RiskAllele> findByRiskAlleleName(String riskAlleleName);
 }

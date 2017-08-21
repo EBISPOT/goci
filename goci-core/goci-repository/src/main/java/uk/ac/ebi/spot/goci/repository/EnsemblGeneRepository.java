@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.EnsemblGene;
  *         <p>
  *         Repository accessing Ensembl Gene entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface EnsemblGeneRepository extends JpaRepository<EnsemblGene, Long> {
 
     EnsemblGene findByEnsemblGeneId(String ensemblGeneId);

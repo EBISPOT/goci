@@ -2,972 +2,969 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 37106
+Content-Length: 36077
 
 {
-  "_embedded" : {
-    "studies" : [ {
-      "author" : "Perlis RH",
-      "publicationDate" : "2010-11-01T00:00:00.000+0000",
-      "publication" : "Am J Psychiatry",
-      "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
-      "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
-      "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
-      "pubmedId" : "21041247",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 1922309,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000854",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
-        }
-      }
+  "links" : [ {
+    "rel" : "first",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=20"
+  }, {
+    "rel" : "self",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies"
+  }, {
+    "rel" : "next",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=20"
+  }, {
+    "rel" : "last",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=230&size=20"
+  }, {
+    "rel" : "profile",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
+  }, {
+    "rel" : "search",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
+  } ],
+  "content" : [ {
+    "author" : "Perlis RH",
+    "publicationDate" : "2010-11-01T00:00:00.000+0000",
+    "publication" : "Am J Psychiatry",
+    "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
+    "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
+    "replicateSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
+    "pubmedId" : "21041247",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 1922309,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000854",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
     }, {
-      "author" : "Ojwang JO",
-      "publicationDate" : "2010-10-21T23:00:00.000+0000",
-      "publication" : "J Hand Surg Am",
-      "title" : "Genome-wide association scan of Dupuytren's disease.",
-      "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
-      "replicateSampleSize" : "NA",
-      "pubmedId" : "20971583",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 251837,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000841",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
-        }
-      }
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
     }, {
-      "author" : "Waterworth DM",
-      "publicationDate" : "2010-09-22T23:00:00.000+0000",
-      "publication" : "Arterioscler Thromb Vasc Biol",
-      "title" : "Genetic variants influencing circulating lipid levels and risk of coronary artery disease.",
-      "initialSampleSize" : "up to 17,723 European ancestry individuals",
-      "replicateSampleSize" : "up to 37,774 European ancestry individuals, up to 9,665 Indian Asian ancestry individuals",
-      "pubmedId" : "20864672",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2155369,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000809",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/platforms"
-        }
-      }
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
     }, {
-      "author" : "Ikram MK",
-      "publicationDate" : "2010-10-27T23:00:00.000+0000",
-      "publication" : "PLoS Genet",
-      "title" : "Four novel Loci (19q13, 6q24, 12q24, and 5q14) influence the microcirculation in vivo.",
-      "initialSampleSize" : "15,358 European ancestry individuals",
-      "replicateSampleSize" : "6,652 European ancestry individuals",
-      "pubmedId" : "21060863",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2194468,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000847",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/platforms"
-        }
-      }
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
     }, {
-      "author" : "Sato Y",
-      "publicationDate" : "2010-11-12T00:00:00.000+0000",
-      "publication" : "J Thorac Oncol",
-      "title" : "Genome-wide association study on overall survival of advanced non-small cell lung cancer patients treated with carboplatin and paclitaxel.",
-      "initialSampleSize" : "105 East Asian ancestry cases",
-      "replicateSampleSize" : "NA",
-      "pubmedId" : "21079520",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 109365,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000871",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/platforms"
-        }
-      }
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
     }, {
-      "author" : "Benyamin B",
-      "publicationDate" : "2013-01-29T00:00:00.000+0000",
-      "publication" : "Mol Psychiatry",
-      "title" : "Childhood intelligence is heritable, highly polygenic and associated with FNBP1L.",
-      "initialSampleSize" : "12,441 European ancestry children",
-      "replicateSampleSize" : "5,548 European ancestry children",
-      "pubmedId" : "23358156",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 138093,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST001837",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/platforms"
-        }
-      }
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
     }, {
-      "author" : "Khor CC",
-      "publicationDate" : "2011-02-09T00:00:00.000+0000",
-      "publication" : "Hum Mol Genet",
-      "title" : "Genome-wide association studies in Asians confirm the involvement of ATOH7 and TGFBR3, and further identify CARD10 as a novel locus influencing optic disc area.",
-      "initialSampleSize" : "2,132 Indian ancestry individuals, 2,313 Malay ancestry individuals",
-      "replicateSampleSize" : "9,326 European ancestry individuals",
-      "pubmedId" : "21307088",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 551808,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000970",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/platforms"
-        }
-      }
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
     }, {
-      "author" : "Jin Y",
-      "publicationDate" : "2011-02-17T00:00:00.000+0000",
-      "publication" : "J Invest Dermatol",
-      "title" : "Genome-wide analysis identifies a quantitative trait locus in the MHC class II region associated with generalized vitiligo age of onset.",
-      "initialSampleSize" : "1,339 European ancestry cases",
-      "replicateSampleSize" : "677 European ancestry cases",
-      "pubmedId" : "21326295",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 520460,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000981",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/platforms"
-        }
-      }
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/genotypingTechnologies"
     }, {
-      "author" : "Boger CA",
-      "publicationDate" : "2011-02-25T00:00:00.000+0000",
-      "publication" : "J Am Soc Nephrol",
-      "title" : "CUBN is a gene locus for albuminuria.",
-      "initialSampleSize" : "31,580 European ancestry individuals",
-      "replicateSampleSize" : "31,277 European ancestry individuals",
-      "pubmedId" : "21355061",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2500000,
-      "qualifier" : "~",
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000988",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/platforms"
-        }
-      }
-    }, {
-      "author" : "Fox ER",
-      "publicationDate" : "2011-03-04T00:00:00.000+0000",
-      "publication" : "Hum Mol Genet",
-      "title" : "Association of genetic variation with systolic and diastolic blood pressure among African Americans: the Candidate Gene Association Resource study.",
-      "initialSampleSize" : "7,473 African American individuals",
-      "replicateSampleSize" : "1,188 Sub-Saharan African individuals, 10,694 African American individuals, 69,899 European ancestry individuals",
-      "pubmedId" : "21378095",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2500000,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000997",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/platforms"
-        }
-      }
-    }, {
-      "author" : "Chung SA",
-      "publicationDate" : "2011-03-03T00:00:00.000+0000",
-      "publication" : "PLoS Genet",
-      "title" : "Differential genetic associations for systemic lupus erythematosus based on anti-dsDNA autoantibody production.",
-      "initialSampleSize" : "811 anti-dsDNA positive European ancestry cases, 906 anti-dsDNA negative European ancestry cases, 4,813 European ancestry controls",
-      "replicateSampleSize" : "NA",
-      "pubmedId" : "21408207",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 421318,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000996",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/platforms"
-        }
-      }
-    }, {
-      "author" : "Hu X",
-      "publicationDate" : "2011-02-24T00:00:00.000+0000",
-      "publication" : "PLoS One",
-      "title" : "Meta-analysis for genome-wide association study identifies multiple variants at the BIN1 locus associated with late-onset Alzheimer's disease.",
-      "initialSampleSize" : "1,831 European ancestry cases, 1,764 European ancestry controls",
-      "replicateSampleSize" : "751 cases, 751 controls",
-      "pubmedId" : "21390209",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : null,
-      "qualifier" : null,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000986",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/platforms"
-        }
-      }
-    }, {
-      "author" : "Speliotes EK",
-      "publicationDate" : "2011-03-10T00:00:00.000+0000",
-      "publication" : "PLoS Genet",
-      "title" : "Genome-wide association analysis identifies variants associated with nonalcoholic fatty liver disease that have distinct effects on metabolic traits.",
-      "initialSampleSize" : "880 Amish individuals, 6,296 European ancestry individuals",
-      "replicateSampleSize" : "592 European ancestry cases, 1,405 European ancestry controls",
-      "pubmedId" : "21423719",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2400000,
-      "qualifier" : "~",
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST001008",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/platforms"
-        }
-      }
-    }, {
-      "author" : "Engelman CD",
-      "publicationDate" : "2010-06-25T23:00:00.000+0000",
-      "publication" : "J Steroid Biochem Mol Biol",
-      "title" : "Genome-wide association study of vitamin D concentrations in Hispanic Americans: the IRAS family study.",
-      "initialSampleSize" : "229 Hispanic individuals from 34 families",
-      "replicateSampleSize" : "961 Hispanic individuals",
-      "pubmedId" : "20600896",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 309200,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000711",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/platforms"
-        }
-      }
-    }, {
-      "author" : "Herbeck JT",
-      "publicationDate" : "2010-02-15T00:00:00.000+0000",
-      "publication" : "J Infect Dis",
-      "title" : "Multistage genomewide association study identifies a locus at 1q41 associated with rate of HIV-1 disease progression to clinical AIDS.",
-      "initialSampleSize" : "51 European ancestry rapid progressor male cases, 57 European ancestry moderate progressor male cases, 48 European ancestry long-term progressor male cases",
-      "replicateSampleSize" : "590 European ancestry seroconverter male cases",
-      "pubmedId" : "20064070",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 345926,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000596",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/platforms"
-        }
-      }
-    }, {
-      "author" : "Wu Y",
-      "publicationDate" : "2013-10-13T23:00:00.000+0000",
-      "publication" : "Hum Mol Genet",
-      "title" : "A meta-analysis of genome-wide association studies for adiponectin levels in East Asians identifies a novel locus near WDR11-FGFR2.",
-      "initialSampleSize" : "7,827 East Asian ancestry individuals",
-      "replicateSampleSize" : "10,252 East Asian ancestry individuals",
-      "pubmedId" : "24105470",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2500000,
-      "qualifier" : "~",
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST002233",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/platforms"
-        }
-      }
-    }, {
-      "author" : "Liu YZ",
-      "publicationDate" : "2009-02-03T00:00:00.000+0000",
-      "publication" : "Mol Psychiatry",
-      "title" : "Genome-wide association analyses suggested a novel mechanism for smoking behavior regulated by IL15.",
-      "initialSampleSize" : "417 European ancestry male individuals, 423 European ancestry female individuals",
-      "replicateSampleSize" : "412 African American male individuals and 839 African American female individuals from 402 families, 3,491 European ancestry male individuals and 4,132 European ancestry female individuals from 1,731 families",
-      "pubmedId" : "19188921",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 379319,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000332",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/platforms"
-        }
-      }
-    }, {
-      "author" : "Lauc G",
-      "publicationDate" : "2013-01-31T00:00:00.000+0000",
-      "publication" : "PLoS Genet",
-      "title" : "Loci associated with N-glycosylation of human immunoglobulin G show pleiotropy with autoimmune diseases and haematological cancers.",
-      "initialSampleSize" : "2,247 European ancestry individuals",
-      "replicateSampleSize" : "NA",
-      "pubmedId" : "23382691",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 2500000,
-      "qualifier" : "~",
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST001848",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/platforms"
-        }
-      }
-    }, {
-      "author" : "Yang Q",
-      "publicationDate" : "2007-09-18T23:00:00.000+0000",
-      "publication" : "BMC Med Genet",
-      "title" : "Genome-wide association and linkage analyses of hemostatic factors and hematological phenotypes in the Framingham Heart Study.",
-      "initialSampleSize" : "886 European ancestry individuals",
-      "replicateSampleSize" : "NA",
-      "pubmedId" : "17903294",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 70897,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000082",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/platforms"
-        }
-      }
-    }, {
-      "author" : "Florez JC",
-      "publicationDate" : "2007-09-09T23:00:00.000+0000",
-      "publication" : "Diabetes",
-      "title" : "A 100K genome-wide association scan for diabetes and related traits in the Framingham Heart Study: replication and integration with other genome-wide datasets.",
-      "initialSampleSize" : "1,087 European ancestry individuals from 307 families",
-      "replicateSampleSize" : "1,465 European ancestry individuals, 1,464 European ancestry cases, 1,467 European ancestry controls, 300 Pima Indian ancestry cases, 334 Pima Indian ancestry controls, 287 Mexican American cases, 316 Mexican American controls, 124 Old Order Amish cases, 295 Old Order Amish controls",
-      "pubmedId" : "17848626",
-      "gxe" : false,
-      "gxg" : false,
-      "snpCount" : 66543,
-      "qualifier" : null,
-      "imputed" : false,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST000073",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
-        },
-        "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/efoTraits"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
-        },
-        "genotypingTechnologies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/genotypingTechnologies"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
-        },
-        "platforms" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/platforms"
-        }
-      }
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
     } ]
-  },
-  "_links" : {
-    "first" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=20"
-    },
-    "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies"
-    },
-    "next" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=20"
-    },
-    "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=230&size=20"
-    },
-    "profile" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
-    },
-    "search" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
-    }
-  },
+  }, {
+    "author" : "Ojwang JO",
+    "publicationDate" : "2010-10-21T23:00:00.000+0000",
+    "publication" : "J Hand Surg Am",
+    "title" : "Genome-wide association scan of Dupuytren's disease.",
+    "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
+    "replicateSampleSize" : "NA",
+    "pubmedId" : "20971583",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 251837,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000841",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+    } ]
+  }, {
+    "author" : "Waterworth DM",
+    "publicationDate" : "2010-09-22T23:00:00.000+0000",
+    "publication" : "Arterioscler Thromb Vasc Biol",
+    "title" : "Genetic variants influencing circulating lipid levels and risk of coronary artery disease.",
+    "initialSampleSize" : "up to 17,723 European ancestry individuals",
+    "replicateSampleSize" : "up to 37,774 European ancestry individuals, up to 9,665 Indian Asian ancestry individuals",
+    "pubmedId" : "20864672",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2155369,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000809",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
+    } ]
+  }, {
+    "author" : "Ikram MK",
+    "publicationDate" : "2010-10-27T23:00:00.000+0000",
+    "publication" : "PLoS Genet",
+    "title" : "Four novel Loci (19q13, 6q24, 12q24, and 5q14) influence the microcirculation in vivo.",
+    "initialSampleSize" : "15,358 European ancestry individuals",
+    "replicateSampleSize" : "6,652 European ancestry individuals",
+    "pubmedId" : "21060863",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2194468,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000847",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
+    } ]
+  }, {
+    "author" : "Sato Y",
+    "publicationDate" : "2010-11-12T00:00:00.000+0000",
+    "publication" : "J Thorac Oncol",
+    "title" : "Genome-wide association study on overall survival of advanced non-small cell lung cancer patients treated with carboplatin and paclitaxel.",
+    "initialSampleSize" : "105 East Asian ancestry cases",
+    "replicateSampleSize" : "NA",
+    "pubmedId" : "21079520",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 109365,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000871",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
+    } ]
+  }, {
+    "author" : "Benyamin B",
+    "publicationDate" : "2013-01-29T00:00:00.000+0000",
+    "publication" : "Mol Psychiatry",
+    "title" : "Childhood intelligence is heritable, highly polygenic and associated with FNBP1L.",
+    "initialSampleSize" : "12,441 European ancestry children",
+    "replicateSampleSize" : "5,548 European ancestry children",
+    "pubmedId" : "23358156",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 138093,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST001837",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
+    } ]
+  }, {
+    "author" : "Khor CC",
+    "publicationDate" : "2011-02-09T00:00:00.000+0000",
+    "publication" : "Hum Mol Genet",
+    "title" : "Genome-wide association studies in Asians confirm the involvement of ATOH7 and TGFBR3, and further identify CARD10 as a novel locus influencing optic disc area.",
+    "initialSampleSize" : "2,132 Indian ancestry individuals, 2,313 Malay ancestry individuals",
+    "replicateSampleSize" : "9,326 European ancestry individuals",
+    "pubmedId" : "21307088",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 551808,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000970",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
+    } ]
+  }, {
+    "author" : "Jin Y",
+    "publicationDate" : "2011-02-17T00:00:00.000+0000",
+    "publication" : "J Invest Dermatol",
+    "title" : "Genome-wide analysis identifies a quantitative trait locus in the MHC class II region associated with generalized vitiligo age of onset.",
+    "initialSampleSize" : "1,339 European ancestry cases",
+    "replicateSampleSize" : "677 European ancestry cases",
+    "pubmedId" : "21326295",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 520460,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000981",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
+    } ]
+  }, {
+    "author" : "Boger CA",
+    "publicationDate" : "2011-02-25T00:00:00.000+0000",
+    "publication" : "J Am Soc Nephrol",
+    "title" : "CUBN is a gene locus for albuminuria.",
+    "initialSampleSize" : "31,580 European ancestry individuals",
+    "replicateSampleSize" : "31,277 European ancestry individuals",
+    "pubmedId" : "21355061",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2500000,
+    "qualifier" : "~",
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000988",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
+    } ]
+  }, {
+    "author" : "Fox ER",
+    "publicationDate" : "2011-03-04T00:00:00.000+0000",
+    "publication" : "Hum Mol Genet",
+    "title" : "Association of genetic variation with systolic and diastolic blood pressure among African Americans: the Candidate Gene Association Resource study.",
+    "initialSampleSize" : "7,473 African American individuals",
+    "replicateSampleSize" : "1,188 Sub-Saharan African individuals, 10,694 African American individuals, 69,899 European ancestry individuals",
+    "pubmedId" : "21378095",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2500000,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000997",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
+    } ]
+  }, {
+    "author" : "Chung SA",
+    "publicationDate" : "2011-03-03T00:00:00.000+0000",
+    "publication" : "PLoS Genet",
+    "title" : "Differential genetic associations for systemic lupus erythematosus based on anti-dsDNA autoantibody production.",
+    "initialSampleSize" : "811 anti-dsDNA positive European ancestry cases, 906 anti-dsDNA negative European ancestry cases, 4,813 European ancestry controls",
+    "replicateSampleSize" : "NA",
+    "pubmedId" : "21408207",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 421318,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000996",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
+    } ]
+  }, {
+    "author" : "Hu X",
+    "publicationDate" : "2011-02-24T00:00:00.000+0000",
+    "publication" : "PLoS One",
+    "title" : "Meta-analysis for genome-wide association study identifies multiple variants at the BIN1 locus associated with late-onset Alzheimer's disease.",
+    "initialSampleSize" : "1,831 European ancestry cases, 1,764 European ancestry controls",
+    "replicateSampleSize" : "751 cases, 751 controls",
+    "pubmedId" : "21390209",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : null,
+    "qualifier" : null,
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000986",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
+    } ]
+  }, {
+    "author" : "Speliotes EK",
+    "publicationDate" : "2011-03-10T00:00:00.000+0000",
+    "publication" : "PLoS Genet",
+    "title" : "Genome-wide association analysis identifies variants associated with nonalcoholic fatty liver disease that have distinct effects on metabolic traits.",
+    "initialSampleSize" : "880 Amish individuals, 6,296 European ancestry individuals",
+    "replicateSampleSize" : "592 European ancestry cases, 1,405 European ancestry controls",
+    "pubmedId" : "21423719",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2400000,
+    "qualifier" : "~",
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST001008",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
+    } ]
+  }, {
+    "author" : "Engelman CD",
+    "publicationDate" : "2010-06-25T23:00:00.000+0000",
+    "publication" : "J Steroid Biochem Mol Biol",
+    "title" : "Genome-wide association study of vitamin D concentrations in Hispanic Americans: the IRAS family study.",
+    "initialSampleSize" : "229 Hispanic individuals from 34 families",
+    "replicateSampleSize" : "961 Hispanic individuals",
+    "pubmedId" : "20600896",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 309200,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000711",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
+    } ]
+  }, {
+    "author" : "Herbeck JT",
+    "publicationDate" : "2010-02-15T00:00:00.000+0000",
+    "publication" : "J Infect Dis",
+    "title" : "Multistage genomewide association study identifies a locus at 1q41 associated with rate of HIV-1 disease progression to clinical AIDS.",
+    "initialSampleSize" : "51 European ancestry rapid progressor male cases, 57 European ancestry moderate progressor male cases, 48 European ancestry long-term progressor male cases",
+    "replicateSampleSize" : "590 European ancestry seroconverter male cases",
+    "pubmedId" : "20064070",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 345926,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000596",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
+    } ]
+  }, {
+    "author" : "Wu Y",
+    "publicationDate" : "2013-10-13T23:00:00.000+0000",
+    "publication" : "Hum Mol Genet",
+    "title" : "A meta-analysis of genome-wide association studies for adiponectin levels in East Asians identifies a novel locus near WDR11-FGFR2.",
+    "initialSampleSize" : "7,827 East Asian ancestry individuals",
+    "replicateSampleSize" : "10,252 East Asian ancestry individuals",
+    "pubmedId" : "24105470",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2500000,
+    "qualifier" : "~",
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST002233",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
+    } ]
+  }, {
+    "author" : "Liu YZ",
+    "publicationDate" : "2009-02-03T00:00:00.000+0000",
+    "publication" : "Mol Psychiatry",
+    "title" : "Genome-wide association analyses suggested a novel mechanism for smoking behavior regulated by IL15.",
+    "initialSampleSize" : "417 European ancestry male individuals, 423 European ancestry female individuals",
+    "replicateSampleSize" : "412 African American male individuals and 839 African American female individuals from 402 families, 3,491 European ancestry male individuals and 4,132 European ancestry female individuals from 1,731 families",
+    "pubmedId" : "19188921",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 379319,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000332",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
+    } ]
+  }, {
+    "author" : "Lauc G",
+    "publicationDate" : "2013-01-31T00:00:00.000+0000",
+    "publication" : "PLoS Genet",
+    "title" : "Loci associated with N-glycosylation of human immunoglobulin G show pleiotropy with autoimmune diseases and haematological cancers.",
+    "initialSampleSize" : "2,247 European ancestry individuals",
+    "replicateSampleSize" : "NA",
+    "pubmedId" : "23382691",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 2500000,
+    "qualifier" : "~",
+    "imputed" : true,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST001848",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
+    } ]
+  }, {
+    "author" : "Yang Q",
+    "publicationDate" : "2007-09-18T23:00:00.000+0000",
+    "publication" : "BMC Med Genet",
+    "title" : "Genome-wide association and linkage analyses of hemostatic factors and hematological phenotypes in the Framingham Heart Study.",
+    "initialSampleSize" : "886 European ancestry individuals",
+    "replicateSampleSize" : "NA",
+    "pubmedId" : "17903294",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 70897,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000082",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
+    } ]
+  }, {
+    "author" : "Florez JC",
+    "publicationDate" : "2007-09-09T23:00:00.000+0000",
+    "publication" : "Diabetes",
+    "title" : "A 100K genome-wide association scan for diabetes and related traits in the Framingham Heart Study: replication and integration with other genome-wide datasets.",
+    "initialSampleSize" : "1,087 European ancestry individuals from 307 families",
+    "replicateSampleSize" : "1,465 European ancestry individuals, 1,464 European ancestry cases, 1,467 European ancestry controls, 300 Pima Indian ancestry cases, 334 Pima Indian ancestry controls, 287 Mexican American cases, 316 Mexican American controls, 124 Old Order Amish cases, 295 Old Order Amish controls",
+    "pubmedId" : "17848626",
+    "gxe" : false,
+    "gxg" : false,
+    "snpCount" : 66543,
+    "qualifier" : null,
+    "imputed" : false,
+    "pooled" : false,
+    "studyDesignComment" : null,
+    "accessionId" : "GCST000073",
+    "fullPvalueSet" : false,
+    "userRequested" : false,
+    "content" : [ ],
+    "links" : [ {
+      "rel" : "self",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
+    }, {
+      "rel" : "study",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
+    }, {
+      "rel" : "associations",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
+    }, {
+      "rel" : "ancestries",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
+    }, {
+      "rel" : "diseaseTrait",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
+    }, {
+      "rel" : "efoTraits",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/efoTraits"
+    }, {
+      "rel" : "platforms",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/platforms"
+    }, {
+      "rel" : "genotypingTechnologies",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/genotypingTechnologies"
+    }, {
+      "rel" : "snps",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
+    } ]
+  } ],
   "page" : {
     "size" : 20,
     "totalElements" : 4620,

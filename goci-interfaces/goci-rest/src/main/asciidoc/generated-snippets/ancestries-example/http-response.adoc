@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 831
+Content-Length: 865
 
 {
   "type" : "initial",
@@ -10,25 +10,25 @@ Content-Length: 831
   "description" : "Indo-European",
   "previouslyReported" : null,
   "notes" : null,
-  "_links" : {
-    "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
-    },
-    "ancestry" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
-    },
-    "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
-    },
-    "countryOfRecruitment" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfRecruitment"
-    },
-    "ancestralGroups" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/ancestralGroups"
-    },
-    "countryOfOrigin" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfOrigin"
-    }
-  }
+  "content" : [ ],
+  "links" : [ {
+    "rel" : "self",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
+  }, {
+    "rel" : "ancestry",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"
+  }, {
+    "rel" : "countryOfOrigin",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfOrigin"
+  }, {
+    "rel" : "countryOfRecruitment",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/countryOfRecruitment"
+  }, {
+    "rel" : "ancestralGroups",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/ancestralGroups"
+  }, {
+    "rel" : "study",
+    "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643/study"
+  } ]
 }
 ----

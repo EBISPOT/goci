@@ -10,7 +10,7 @@ import java.util.List;
  * Created by dwelter on 22/06/17.
  */
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface GenotypingTechnologyRepository extends JpaRepository<GenotypingTechnology, Long> {
 
     GenotypingTechnology findByGenotypingTechnology(String genotypingTechnology);

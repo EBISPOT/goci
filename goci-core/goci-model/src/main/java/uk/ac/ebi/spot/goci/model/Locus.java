@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,6 +33,7 @@ public class Locus {
     @JoinTable(name = "LOCUS_RISK_ALLELE",
                joinColumns = @JoinColumn(name = "LOCUS_ID"),
                inverseJoinColumns = @JoinColumn(name = "RISK_ALLELE_ID"))
+    @JsonManagedReference
     private Collection<RiskAllele> strongestRiskAlleles = new ArrayList<>();
 
     @ManyToMany

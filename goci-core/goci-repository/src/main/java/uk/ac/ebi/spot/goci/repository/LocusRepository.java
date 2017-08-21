@@ -11,6 +11,6 @@ import uk.ac.ebi.spot.goci.model.Locus;
  *         <p>
  *         Repository accessing Locus entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface LocusRepository extends JpaRepository<Locus, Long> {
 }

@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Ignore
+@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -156,7 +157,7 @@ public class ApiDocumentation {
                               linkWithRel("ensemblGenes").description("Link to all the Ensembl gene IDs in the GWAS Catalog"),
                               linkWithRel("mappingMetadatas").description("Link to the genomic mapping metadata in the GWAS Catalog"),
                               linkWithRel("platforms").description("Link to all the sequencing platforms in the GWAS Catalog"),
-                              linkWithRel("genomicContexts").description("Link to all the genomic contexts in the GWAS Catalog"),
+//                              linkWithRel("genomicContexts").description("Link to all the genomic contexts in the GWAS Catalog"),
                               linkWithRel("riskAlleles").description("Link to all the risk alleles in the GWAS Catalog"),
                               linkWithRel("diseaseTraits").description("Link to all the disease traits in the GWAS Catalog"),
                               linkWithRel("locations").description("Link to all the bp locations in the GWAS Catalog"),
@@ -323,25 +324,25 @@ public class ApiDocumentation {
 
 
 
-    @Test
-    public void genomicContextsExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/genomicContexts/{genomicContext_id}", "20777953").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
-                .andDo( this.restDocumentationResultHandler.document(
-                        pathParameters(
-                                parameterWithName("genomicContext_id").description("The id of the genomic context in the GWAS Catalog")),
-                        responseFields(
-                                fieldWithPath("_links").description("Links to other resources"),
-                                fieldWithPath("isIntergenic").description("Whether the SNP is intergenic"),
-                                fieldWithPath("isUpstream").description("Whether the linked gene is upstream to the SNP"),
-                                fieldWithPath("isDownstream").description("Whether the linked gene is downstream to the SNP"),
-                                fieldWithPath("distance").description("The distance between the current SNP and gene"),
-                                fieldWithPath("source").description("NCBI or Ensembl gene"),
-                                fieldWithPath("mappingMethod").description("How the mapping was obtained"),
-                                fieldWithPath("isClosestGene").description("Whether gene is the closest one to the current SNP")
-                        )
-                ))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    public void genomicContextsExample() throws Exception {
+//        this.mockMvc.perform(get("/gwas/rest/api/genomicContexts/{genomicContext_id}", "20777953").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+//                .andDo( this.restDocumentationResultHandler.document(
+//                        pathParameters(
+//                                parameterWithName("genomicContext_id").description("The id of the genomic context in the GWAS Catalog")),
+//                        responseFields(
+//                                fieldWithPath("_links").description("Links to other resources"),
+//                                fieldWithPath("isIntergenic").description("Whether the SNP is intergenic"),
+//                                fieldWithPath("isUpstream").description("Whether the linked gene is upstream to the SNP"),
+//                                fieldWithPath("isDownstream").description("Whether the linked gene is downstream to the SNP"),
+//                                fieldWithPath("distance").description("The distance between the current SNP and gene"),
+//                                fieldWithPath("source").description("NCBI or Ensembl gene"),
+//                                fieldWithPath("mappingMethod").description("How the mapping was obtained"),
+//                                fieldWithPath("isClosestGene").description("Whether gene is the closest one to the current SNP")
+//                        )
+//                ))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     public void singleNucleotidePolymorphismsListExample () throws Exception {
@@ -382,8 +383,8 @@ public class ApiDocumentation {
                               linkWithRel("currentSnp").description("Current rsId in case of a merged SNP"),
                               linkWithRel("genes").description("Genes this SNP is located in or near"),
                               linkWithRel("riskAlleles").description("Risk alleles for this SNP"),
-                              linkWithRel("associations").description("Associations this SNP is found in"),
-                              linkWithRel("genomicContexts").description("This SNP's genomic context")
+                              linkWithRel("associations").description("Associations this SNP is found in")//,
+//                              linkWithRel("genomicContexts").description("This SNP's genomic context")
                               )
                 ))
                 .andExpect(status().isOk());
@@ -430,24 +431,24 @@ public class ApiDocumentation {
     }
 
 
-    @Test
-    public void snpLocationExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/snpLocation/{range}", "10:95000000-96000000").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
-                .andDo( this.restDocumentationResultHandler.document(
-                        pathParameters(
-                                parameterWithName("range").description("The range of interest, in format chr:bpLocationStart-bpLocationEnd")),
-
-                        responseFields(
-                                fieldWithPath("content").description("The rs Id of this variant")
-
-                                //                                fieldWithPath("rsId").description("The rs Id of this variant"),
-//                                fieldWithPath("merged").description("Whether this variant has been merged in a newer genome assembly since it was first used"),
+//    @Test
+//    public void snpLocationExample() throws Exception {
+//        this.mockMvc.perform(get("/gwas/rest/api/snpLocation/{range}", "10:95000000-96000000").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+//                .andDo( this.restDocumentationResultHandler.document(
+//                        pathParameters(
+//                                parameterWithName("range").description("The range of interest, in format chr:bpLocationStart-bpLocationEnd")),
 //
-//                                fieldWithPath("functionalClass").description("The functional class this variant belong to"),
-//                                fieldWithPath("lastUpdateDate").description("The last time this variant was updated in the Catalogf")
-                )))
-                .andExpect(status().isOk());
-    }
+//                        responseFields(
+//                                fieldWithPath("content").description("The rs Id of this variant")
+//
+//                                //                                fieldWithPath("rsId").description("The rs Id of this variant"),
+////                                fieldWithPath("merged").description("Whether this variant has been merged in a newer genome assembly since it was first used"),
+////
+////                                fieldWithPath("functionalClass").description("The functional class this variant belong to"),
+////                                fieldWithPath("lastUpdateDate").description("The last time this variant was updated in the Catalogf")
+//                )))
+//                .andExpect(status().isOk());
+//    }
 
 
 }
