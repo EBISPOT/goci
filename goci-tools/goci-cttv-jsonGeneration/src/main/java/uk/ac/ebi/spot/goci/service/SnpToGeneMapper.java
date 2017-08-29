@@ -1,12 +1,15 @@
 package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.service.model.ols.SearchQuery;
 import uk.ac.ebi.spot.goci.service.model.SnpInfo;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +20,6 @@ import java.util.Map;
  */
 @Service
 public class SnpToGeneMapper {
-//    //rs10011926       intron_variant          ENSG00000170522         ELOVL6          0
-//    rs10012307       nearest_gene_five_prime_end     ENSG00000189184         PCDH18          -927065
-//    rs10012750       nearest_gene_five_prime_end     ENSG00000179059         ZFP42   -301812
-//    rs10777332       nearest_gene_five_prime_end     ENSG00000257242,ENSG00000279037,ENSG00000257242,ENSG00000280112,ENSG00000280112,ENSG00000279037         C12orf79,C12orf79,C12orf79,C12orf79,C12orf79,C12o
 
     private Map<String,SnpInfo> snp2snpInfo = new HashMap<>();
 
@@ -28,9 +27,11 @@ public class SnpToGeneMapper {
 
     }
 
+    private RestTemplate restTemplate;
+
     public SnpToGeneMapper(String snp2geneFilePath) throws IOException {
 
-//        rs8050187       1       ENSG00000186153 WWOX    intron_variant  0
+        this.restTemplate = new RestTemplate();
 
         Map<String, String> soTermToSoTerm = new HashMap<>();
         soTermToSoTerm.put("3_prime_UTR_variant","http://purl.obolibrary.org/obo/SO_0001624");
@@ -50,7 +51,8 @@ public class SnpToGeneMapper {
         soTermToSoTerm.put("synonymous_variant","http://purl.obolibrary.org/obo/SO_0001819");
         soTermToSoTerm.put("upstream_gene_variant","http://purl.obolibrary.org/obo/SO_0001631");
         soTermToSoTerm.put("start_lost","http://purl.obolibrary.org/obo/SO_0002012");
-        soTermToSoTerm.put("non_coding_transcript_exon_variant","http://purl.obolibrary.org/obo/SO_0001792");
+        soTermToSoTerm.put("inframe_deletion","http://purl.obolibrary.org/obo/SO_0001822");
+        soTermToSoTerm.put("inframe_insertion","http://purl.obolibrary.org/obo/SO_0001821");
 
 
         String line;
@@ -66,6 +68,10 @@ public class SnpToGeneMapper {
                 snpInfo.setRsId(array[0]);
 
                 snpInfo.setIsInEnsmbl(array[1]);
+
+                if(soTermToSoTerm.get(array[4]) == null ){
+                    soTermToSoTerm.put(array[4], findNewSoTerm(array[4]));
+                }
 
                 snpInfo.setSoTerm(soTermToSoTerm.get(array[4]));
 
@@ -100,23 +106,8 @@ public class SnpToGeneMapper {
 
                 snpInfo.setDistance(array[5]);
 
-                if(array[6].equals("0")) {
-                    snpInfo.setTargetArray(false);
-                } else {
-                    snpInfo.setTargetArray(true);
-                }
-
-                if (snpInfo.isTargetArray()){
-                    snpInfo.setPubMedId(array[7]);
-                    snpInfo.setEfoTrait(array[8]);
-                    snpInfo.setPval(array[9]);
-                    snpInfo.setSampleSize(Integer.valueOf(array[10]));
-                    snpInfo.setSnpCount(Long.valueOf(array[11]));
-                }
-
                 snp2snpInfo.put(snpInfo.getRsId(),snpInfo );
 
-//                System.out.println(line);
             }
         }
     }
@@ -126,16 +117,20 @@ public class SnpToGeneMapper {
     }
 
 
-//    public static void main(String[] args) throws IOException {
-//        SnpToGeneMapper mapper = new SnpToGeneMapper("/Users/catherineleroy/Documents/cttv_gwas_releases/sept_2016/snp_2_gene_mapping.tab");
-//        SnpInfo snpInfo = mapper.get("rs10043775");
-//        System.out.println("getRsId " + snpInfo.getRsId());
-//        System.out.println("getDistance getEnsemblName" + snpInfo.getDistance());
-//        System.out.println("getIsInEnsmbl " + snpInfo.getIsInEnsmbl());
-//        System.out.println("getSoTerm " + snpInfo.getSoTerm());
-//        System.out.println("getEnsemblId " + snpInfo.getEnsemblIds());
-//        System.out.println("getEnsemblName " + snpInfo.getEnsemblName());
-//
-//    }
+    private String findNewSoTerm(String soTerm) {
+        URI uri = null;
+        try {
+            uri = new URI("http", "www.ebi.ac.uk", "/" + "ols/api/search", "queryFields=label&fieldList=iri&exact=true&ontology=so&q=" + soTerm, null);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Could not query OLS: " + e);
+        }
+
+        SearchQuery response = this.restTemplate.getForObject(uri, SearchQuery.class);
+        if (response.getResponse().getNumFound() != 1){
+            throw new RuntimeException("Could not retrive SO Term from OLS: " + soTerm);
+        }
+        return response.getResponse().getSearchResults()[0].getIri();
+    }
+
 
 }
