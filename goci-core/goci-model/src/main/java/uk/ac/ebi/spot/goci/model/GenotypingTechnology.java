@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -26,7 +25,7 @@ public class GenotypingTechnology {
 
     @ManyToMany(mappedBy = "genotypingTechnologies")
     @JsonBackReference
-    @JsonIgnore
+//    @JsonIgnore
     private Collection<Study> studies;
 
     // JPA no-args constructor
@@ -56,7 +55,7 @@ public class GenotypingTechnology {
         this.genotypingTechnology = genotypingTechnology;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public Collection<Study> getStudies() {
         return studies;
     }

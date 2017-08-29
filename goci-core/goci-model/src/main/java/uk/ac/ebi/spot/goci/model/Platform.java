@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -14,6 +13,7 @@ import java.util.Collection;
 * Created by dwelter on 08/03/16.
 */
 @Entity
+//@JsonIgnoreProperties({"studies"})
 public class Platform {
 
     @Id
@@ -23,7 +23,7 @@ public class Platform {
     @NotBlank
     private String manufacturer;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToMany(mappedBy = "platforms")
     @JsonBackReference
     private Collection<Study> studies;
@@ -54,7 +54,7 @@ public class Platform {
         this.manufacturer = manufacturer;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public Collection<Study> getStudies() {
         return studies;
     }
