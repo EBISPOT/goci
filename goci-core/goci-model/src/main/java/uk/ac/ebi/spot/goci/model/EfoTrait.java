@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,8 +22,10 @@ public class EfoTrait {
     @GeneratedValue
     private Long id;
 
+    @NotBlank
     private String trait;
 
+    @NotBlank
     private String uri;
 
     @ManyToMany(mappedBy = "efoTraits")
