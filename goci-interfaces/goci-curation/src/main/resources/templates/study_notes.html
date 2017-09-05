@@ -6,10 +6,10 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!--Select2: http://ivaynberg.github.io/select2/-->
     <!-- Include Select2 CSS -->
@@ -63,6 +63,11 @@
     <script th:src="@{/js/bootstrap-confirmation.min.js}"></script>
     <script th:src="@{/js/goci-study-note.js}"></script>
     <script th:src="@{/js/goci-print-page.js}"></script>
+    <script th:src="@{/js/goci-curation-utli.js}"></script>
+
+    <!-- loading overlay
+================================================== -->
+    <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
 
 </head>
 <body>
@@ -96,6 +101,7 @@
     <label for="publish_flag" class="control-label col-md-2"></label>
     <div class="col-md-6">
         <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
+        <input type="hidden" th:field="${multiStudyNoteForm.editingMode}" class="form-control" id="editing_flag"/>
     </div>
 
 
@@ -152,6 +158,16 @@
         <li>Note can be deleted by clicking <span class="glyphicon glyphicon-trash btn btn-primary btn-sm" aria-hidden="true" title="Delete note" data-toggle="confirmation" data-popout="true"></span>
             followed by a popup box to comfirm the deletion. Click no or anywhere on the screen to cancel the deletion.
         </li>
+        <li>Note can be duplicated across all studies with the same pubmedid of the current one, by clicking
+            <button class="btn btn-primary btn-sm"
+                    data-toggle="confirmation"
+                    data-popout="true"
+                    data-title="Are you sure you want to duplicate this study note to all studies with the same pubmed id?">
+                                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"
+                                          title="Duplicate note to all studies with the same pubmed id"></span>
+                                </button>
+            followed by a popup box to comfirm the duplication. Click no or anywhere on the screen to cancel the deletion.
+        </li>
     </ul>
 </div>
 </div>
@@ -163,14 +179,13 @@
         <thead>
         <tr>
             <!--<th style="font-size: small">Index</th>-->
-            <th class="col-md-5">System Note(s)</th>
+            <th class="col-md-8">System Note(s)</th>
             <th class="col-md-1">NoteSubject</th>
             <th class="col-md-1">Status</th>
             <th class="col-md-1">Curator</th>
-            <th class="col-md-1">Published</th>
             <th class="col-md-1">createdDate</th>
             <th class="col-md-1">updatedDate</th>
-            <th class="col-md-2">Action</th>
+            <!--<th class="col-md-2">Action</th>-->
         </tr>
         </thead>
 
@@ -188,17 +203,17 @@
             <td th:text="${note.curator.lastName}"></td>
 
             <!--Published-->
-            <td>
-                <div th:switch="${study.housekeeping.isPublished}">
-                    <span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-                    <span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                </div>
-            </td>
+            <!--<td>-->
+                <!--<div th:switch="${study.housekeeping.isPublished}">-->
+                    <!--<span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>-->
+                    <!--<span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>-->
+                <!--</div>-->
+            <!--</td>-->
             <!--created date-->
             <td th:text="${note.createdAt} ? ${#dates.format(note.createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></td>
             <!--update date-->
             <td th:text="${note.updatedAt} ? ${#dates.format(note.updatedAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></td>
-            <td>-</td>
+            <!--<td>-</td>-->
         </tr>
         </tbody>
     </table>
@@ -209,7 +224,7 @@
 
 
 <div class="container-fluid">
-<form class="form-horizontal" method="post" name="study-note-form" th:object="${multiStudyNoteForm}">
+<form class="form-horizontal" method="post" name="study-note-form" th:object="${multiStudyNoteForm}" onsubmit="setFormSubmitting()">
     <!--<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">-->
     <!--<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>-->
     <!--</div>-->
@@ -220,17 +235,20 @@
             <thead>
             <tr>
                 <!--<th style="font-size: small">Index</th>-->
-                <th class="col-md-5">Note(s)</th>
+                <th class="col-md-8">Note(s)</th>
+                <th class="col-md-1">
+                    <!--<button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>-->
+                    <!-- logic changed. New note is allowed for published paper -->
+                    <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode}">Add note</button>
+                    <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
+                </th>
                 <th class="col-md-1">NoteSubject</th>
                 <th class="col-md-1">Status</th>
                 <th class="col-md-1">Curator</th>
-                <th class="col-md-1">Published</th>
+                <!--<th class="col-md-1">Published</th>-->
                 <th class="col-md-1">createdDate</th>
                 <th class="col-md-1">updatedDate</th>
-                <th class="col-md-2">
-                    <button type="submit" class="btn btn-default btn-sm" name="addNote" th:disabled="*{editingMode} or not *{canEdit}">Add note</button>
-                    <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Notes become readonly when published."></span>-->
-                </th>
+
 
             </tr>
             </thead>
@@ -250,8 +268,8 @@
                                <!--th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"/>-->
 
                         <!--<div class="form-group">-->
-                            <textarea style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
-                                    rows="5" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
+                            <textarea class="noteText" style="border: none; width: 99%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"
+                                    rows="10" cols="60" th:field="*{nomalNoteForms[__${rowStat.index}__].textNote}"
                                       th:readonly="not *{nomalNoteForms[__${rowStat.index}__].editing}"
                                       placeholder="Please enter note here" ></textarea>
                         <!--</div>-->
@@ -270,6 +288,68 @@
 
 
                 </td>
+
+
+                <!--actions-->
+                <td>
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
+                                    <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
+                                             type="submit" name="editNote" th:value="${rowStat.index}"
+                                             class="btn btn-primary btn-sm">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"
+                                          title="Edit note"></span>
+                                </button>
+                    </div>
+
+
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canSave}" th:remove="tag">
+                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canSave}"
+                                         type="submit" name="saveNote" th:value="${rowStat.index}"
+                                         class="btn btn-primary btn-sm btn-save-note" >
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"
+                                          title="Save note"></span>
+                                </button>
+                    </div>
+
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canDiscard}" th:remove="tag">
+                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canDiscard}"
+                                         type="submit" name="discardsEditNote" th:value="${rowStat.index}"
+                                         class="btn btn-primary btn-sm">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                                          title="Discard change"></span>
+                                </button>
+                    </div>
+
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canRemove}" th:remove="tag">
+                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canRemove}"
+                                         type="submit" name="removeNote" th:value="${rowStat.index}"
+                                         class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true" data-title="Are you sure? Deleting a note is irreversible!">
+                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"
+                                           title="Delete note"></span>
+                                </button>
+                    </div>
+
+                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
+                                    <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
+                                             type="submit" name="duplicateNote" th:value="*{nomalNoteForms[__${rowStat.index}__].id}"
+                                             class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true" data-title="Are you sure you want to duplicate this study note to all studies with the same pubmed id?">
+                                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"
+                                          title="Duplicate note to all studies with the same pubmed id"></span>
+                                </button>
+                    </div>
+
+
+
+
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].id}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].genericId}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canEdit}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canRemove}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canSave}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canDiscard}"/>
+                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].editing}"/>
+                </td>
+
                 <!--NoteSubject-->
                 <td>
                     <div th:if="not *{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
@@ -278,7 +358,7 @@
                         <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.subject}"/>
                     </div>
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                        <select th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"
+                        <select class="noteSubjectSelect" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"
                                 th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
                             <option th:each="noteSubject : ${availableNoteSubject}" th:value="${noteSubject.id}"
                                     th:text="${noteSubject.subject}"
@@ -306,7 +386,7 @@
                     </div>
 
                     <div th:if="*{nomalNoteForms[__${rowStat.index}__].editing}" th:remove="tag">
-                    <select th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
+                    <select class="noteStatus" th:field="*{nomalNoteForms[__${rowStat.index}__].status}"
                             th:disabled="not *{nomalNoteForms[__${rowStat.index}__].editing}">
 
                         <option th:value="1" th:text="Public"
@@ -327,12 +407,12 @@
                     <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].curator.id}"/>
                 </td>
                 <!--Published-->
-                <td>
-                    <div th:switch="${study.housekeeping.isPublished}">
-                        <span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-                        <span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-                    </div>
-                </td>
+                <!--<td>-->
+                    <!--<div th:switch="${study.housekeeping.isPublished}">-->
+                        <!--<span th:case="true" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>-->
+                        <!--<span th:case="false" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>-->
+                    <!--</div>-->
+                <!--</td>-->
 
                 <td>
                     <p th:text="*{nomalNoteForms[__${rowStat.index}__].createdAt} ? *{#dates.format(nomalNoteForms[__${rowStat.index}__].createdAt, 'YYYY-MM-dd HH:mm:ss')} :'-'"></p>
@@ -344,55 +424,6 @@
                     <input type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].updatedAt}"/>
                 </td>
 
-                <td>
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canEdit}" th:remove="tag">
-                                    <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canEdit}"
-                                             type="submit" name="editNote" th:value="${rowStat.index}"
-                                             class="btn btn-primary btn-sm">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"
-                                          title="Edit note"></span>
-                                </button>
-                    </div>
-
-
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canSave}" th:remove="tag">
-                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canSave}"
-                                         type="submit" name="saveNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm">
-                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"
-                                          title="Save note"></span>
-                                </button>
-                    </div>
-
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canDiscard}" th:remove="tag">
-                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canDiscard}"
-                                         type="submit" name="discardsEditNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"
-                                          title="Discard change"></span>
-                                </button>
-                    </div>
-
-                    <div th:if="*{nomalNoteForms[__${rowStat.index}__].canRemove}" th:remove="tag">
-                                <button  th:disabled="*{not nomalNoteForms[__${rowStat.index}__].canRemove}"
-                                         type="submit" name="removeNote" th:value="${rowStat.index}"
-                                         class="btn btn-primary btn-sm" data-toggle="confirmation" data-popout="true">
-                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"
-                                           title="Delete note"></span>
-                                </button>
-                    </div>
-
-
-
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].id}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].genericId}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].noteSubject.id}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canEdit}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canRemove}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canSave}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].canDiscard}"/>
-                    <input  type="hidden" th:field="*{nomalNoteForms[__${rowStat.index}__].editing}"/>
-                </td>
 
             </tr>
             </tbody>

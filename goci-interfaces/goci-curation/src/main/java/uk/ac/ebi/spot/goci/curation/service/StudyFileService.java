@@ -141,6 +141,7 @@ public class StudyFileService {
             }
             catch (IOException e) {
                 getLog().error("Unable to copy file: " + fileFromUpload.getName() + " to study dir");
+                getLog().error(e.getMessage().toString());
                 throw new FileUploadException("Unable to copy file");
             }
         }
@@ -202,6 +203,8 @@ public class StudyFileService {
 
         // Check study dir exists, if not create it
         File studyDirPath = getStudyDirPath(id);
+
+        getLog().error("Debug hotfix: " + studyDirPath.toString());
         if (!studyDirPath.exists()) {
             createStudyDir(id);
         }

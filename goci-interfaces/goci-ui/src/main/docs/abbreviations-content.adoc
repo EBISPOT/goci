@@ -279,6 +279,9 @@ CEU: CEPH (Centre d'Etude du Polymorphisme Humain) from Utah
 CF-PWVLTA: carotid-femoral pulse wave velocity, long-term average
 
 
+CGI: Clinical Global Impressions-Severity
+
+
 CHS1: 1st principal component on transformed hue and saturation values
 
 
@@ -563,6 +566,9 @@ GSE: general side effect burden
 
 === H
 
+HAM-A: Hamilton Anxiety Scale
+
+
 HbA1C: hemoglobin A1c
 
 
@@ -789,6 +795,9 @@ meanratio: mean FEV1/FVC from 2 exams
 METH: Methamphetamine
 
 
+MHBMA: 2-(N-acetyl-L-cystein-S-yl)-1-hydroxybut-3-ene and 1-(N-acetyl-L-cystein-S-yl)-1-hydroxybut-3-ene
+
+
 M-HDL-L: Total lipids in medium HDL
 
 
@@ -1013,6 +1022,9 @@ PT: prothrombin time
 
 PUFA: polyunsaturated fatty acids
 
+
+pvRSA/HF: peak-valley respiratory sinus arrhythmia or high frequency power
+
 === Q
 
 QC: quality control
@@ -1040,6 +1052,9 @@ RBCC: red blood cell count
 RDW: red cell distribution width
 
 
+RMSSD: root mean square of the successive differences of inter beat intervals
+
+
 RQmax: maximum respiratory quotient during treadmill fitness test
 
 
@@ -1057,6 +1072,9 @@ S2EHR: Stage 2 exercise heart rate
 
 
 S2ESBP: stage 2 exercise systolic blood pressure
+
+
+SDNN: standard deviation of the normal-to-normal inter beat intervals
 
 
 serum TG: serum total triglyceride content

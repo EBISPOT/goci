@@ -26,6 +26,8 @@ public class NoteSubject {
     @Column(name="LAST_UPDATE_TIME")
     private Date lastUpdateTime;
 
+    private String template;
+
 
     @PrePersist
     protected void onCreate() {
@@ -51,5 +53,13 @@ public class NoteSubject {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
     }
 }

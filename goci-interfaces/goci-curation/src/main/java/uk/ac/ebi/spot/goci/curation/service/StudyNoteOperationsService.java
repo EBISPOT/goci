@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 /**
  * Created by xinhe on 04/04/2017.
  * This is a serive to convert studyNoteForm from/back the studyNote data object.
@@ -27,6 +28,7 @@ public class StudyNoteOperationsService {
     CuratorService curatorService;
     NoteSubjectService noteSubjectService;
     StudyNoteService studyNoteService;
+
 
     public StudyNoteOperationsService() {
     }
@@ -69,23 +71,36 @@ public class StudyNoteOperationsService {
     }
 
 
-    public MultiStudyNoteForm generateMultiStudyNoteForm(Collection<StudyNote> notes, Study study){
+    public MultiStudyNoteForm generateMultiStudyNoteForm(Collection<StudyNote> notes, Study study,SecureUser user){
         MultiStudyNoteForm msnf = new MultiStudyNoteForm();
         if(!notes.isEmpty()){
             notes.forEach(studyNote -> {
                 StudyNoteForm row = convertToStudyNoteForm(studyNote);
+                //user can only edit there own note
+                if(!canEdit(row,user))
+                    row.makeNotEditable();
                 if(isSystemNote(studyNote))
                     msnf.getSystemNoteForms().add(row);
                 else
                     msnf.getNomalNoteForms().add(row);
             });
         }
+
         //if study is published, disable all edit
         if(study.getHousekeeping().getIsPublished()){
             msnf.makeNotEditable();
         }
+
+
         return msnf;
     }
+
+
+    public boolean canEdit(StudyNoteForm studyNoteForm, SecureUser user){
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
+        return studyNoteForm.getCurator().getId() == curator.getId();
+    }
+
 
 
     public List<StudyNoteForm> generateSystemNoteForms(Collection<StudyNote> notes){
@@ -110,7 +125,12 @@ public class StudyNoteOperationsService {
         return sysNoteForms;
     }
 
-
+    /**
+     * Creat empty study note and set its subject base on the publish status of the study
+     * @param study
+     * @param user
+     * @return
+     */
     public StudyNote createEmptyStudyNote(Study study, SecureUser user){
         StudyNote note = new StudyNote();
         note.setStudy(study);
@@ -122,6 +142,14 @@ public class StudyNoteOperationsService {
 
         note.setStatus(false);
         note.setGenericId(study.getId());
+
+        if(study.getHousekeeping().getIsPublished()){
+            // general note subject
+            note.setNoteSubject(noteSubjectService.findBySubject("Post-publishing review"));
+        }else{
+            note.setNoteSubject(noteSubjectService.findGeneralNote());
+
+        }
         return note;
     }
 
@@ -142,9 +170,16 @@ public class StudyNoteOperationsService {
         return note;
     }
 
+
+
     public Boolean isSystemNote(StudyNote note){
         return noteSubjectService.isSystemNoteSubject(note.getNoteSubject());
     }
+
+    public Boolean isPublicNote(StudyNote note){
+        return note.getStatus();
+    }
+
 
 
     public Collection<StudyNote> filterSystemNote(Collection<StudyNote> notes){
@@ -169,8 +204,33 @@ public class StudyNoteOperationsService {
         return nomalNote;
     }
 
+    public StudyNote duplicateNote(Study targetStudy, StudyNote noteToDuplicate, SecureUser user){
+        Study sourceStudy = noteToDuplicate.getStudy();
+        StudyNote note = createEmptyStudyNote(targetStudy,user);
+        note.setCurator(noteToDuplicate.getCurator());
+        note.setNoteSubject(noteToDuplicate.getNoteSubject());
+
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
+        note.setCurator(curator);
+
+        //we added some text to indicate that this is a duplicated note.
+        //This is just a hack to distinguish dulicated note since we have study-note one to many as out note model atm
+        note.setTextNote("Duplicated from study: ".concat(sourceStudy.getId().toString()).concat(" by ").concat(curator.getLastName()).concat("\n").concat(noteToDuplicate.getTextNote()));
+        note.setStatus(noteToDuplicate.getStatus());
+        return note;
+    }
 
 
+    public void updateDuplicatedNote(StudyNote copiedNote, SecureUser user) {
 
+        String body = copiedNote.getTextNote();
+        Curator curator = curatorService.getCuratorIdByEmail(user.getEmail());
 
+        Study sourceStudy = copiedNote.getStudy();
+
+        copiedNote.setTextNote(body.concat("\n").concat("Duplicated to other studies with Pubmed ID ").concat(sourceStudy.getPubmedId()).concat(" by ").concat(curator.getLastName()));
+
+        studyNoteService.saveStudyNote(copiedNote);
+
+    }
 }

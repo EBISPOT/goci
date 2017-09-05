@@ -30,11 +30,11 @@ public class SVGDocument {
                     "<stop style='stop-color:black;stop-opacity:1' offset='100%' />" +
                     "</linearGradient>" +
                     "<mask width='" + SVGCanvas.canvasWidth + "' maskUnits='userSpaceOnUse' " +
-                    "x='0' height='" + SVGCanvas.canvasHeight + "' y='-200' " +
+                    "x='0' height='" + SVGCanvas.canvasHeight + "' y='-300' " +
                     "id='traitMask'>" +
                     "<rect fill='grey' x='0' width='" + SVGCanvas.canvasWidth + "' " +
                     "height='" + SVGCanvas.canvasHeight + "' " +
-                    "y='-200' " +
+                    "y='-300' " +
                     "opacity='" +
                     ".25' />" +
                     "</mask>" +

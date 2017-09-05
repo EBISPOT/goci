@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
-import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
+import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
 import uk.ac.ebi.spot.goci.curation.model.errors.StudyIsLockedError;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.CurationStatus;
 import uk.ac.ebi.spot.goci.model.Curator;
@@ -31,6 +31,7 @@ import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 22/10/2015.
@@ -363,10 +364,16 @@ public class StudyOperationsService {
             notification.addError(new NoteIsLockedError());
         }
 
+        //published study can only have private note added to it
+        //This is comment out because curators want to add public note to published studies.
+//        if(isPublished(study) & studyNoteOperationsService.isPublicNote(studyNote)){
+//            notification.addError(new PublicNoteIsNotAllowedForPublishedStudyError());
+//        }
+
         //check if study is published
-        if(isPublished(study)){
-            notification.addError(new StudyIsLockedError());
-        }
+//        if(isPublished(study)){
+//            notification.addError(new StudyIsLockedError());
+//        }
 
         if(!notification.hasErrors()){
             studyNoteService.saveStudyNote(studyNote);
@@ -392,6 +399,30 @@ public class StudyOperationsService {
             studyNoteService.deleteStudyNote(studyNote);
         }
 
+        return notification;
+    }
+
+    public ErrorNotification duplicateStudyNoteToSiblingStudies(Study sourceStudy,Long nodeId,SecureUser user){
+        //find all studies with the same pubmed id
+        Collection<Study> studies = studyRepository.findByPubmedId(sourceStudy.getPubmedId());
+        //remove the source study
+        studies = studies.stream().filter(targetStudy -> sourceStudy.getId() != targetStudy.getId()).collect(Collectors.toList());
+
+        //find the note
+        StudyNote noteToCopy = studyNoteService.findOne(nodeId);
+
+        ErrorNotification notification = new ErrorNotification();
+
+
+        //copy note to studies
+        studies.stream().forEach(targetStudy -> {
+            ErrorNotification en = addStudyNote(targetStudy, studyNoteOperationsService.duplicateNote(targetStudy, noteToCopy, user), user);
+            if(en.hasErrors()){
+                notification.addError(en.getErrors());
+            }
+        });
+
+        studyNoteOperationsService.updateDuplicatedNote(noteToCopy, user);
         return notification;
     }
 
