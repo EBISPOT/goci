@@ -1,80 +1,91 @@
 [source,http,options="nowrap"]
 ----
 HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-Content-Length: 2475
+Content-Type: application/hal+json;charset=UTF-8
+Content-Length: 2709
 
 {
-  "links" : [ {
-    "rel" : "first",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=1"
-  }, {
-    "rel" : "prev",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=1"
-  }, {
-    "rel" : "self",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies"
-  }, {
-    "rel" : "next",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=2&size=1"
-  }, {
-    "rel" : "last",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4619&size=1"
-  }, {
-    "rel" : "profile",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
-  }, {
-    "rel" : "search",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
-  } ],
-  "content" : [ {
-    "author" : "Ojwang JO",
-    "publicationDate" : "2010-10-21T23:00:00.000+0000",
-    "publication" : "J Hand Surg Am",
-    "title" : "Genome-wide association scan of Dupuytren's disease.",
-    "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
-    "replicateSampleSize" : "NA",
-    "pubmedId" : "20971583",
-    "gxe" : false,
-    "gxg" : false,
-    "snpCount" : 251837,
-    "qualifier" : null,
-    "imputed" : false,
-    "pooled" : false,
-    "studyDesignComment" : null,
-    "accessionId" : "GCST000841",
-    "fullPvalueSet" : false,
-    "userRequested" : false,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
-    }, {
-      "rel" : "associations",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
-    }, {
-      "rel" : "ancestries",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-    }, {
-      "rel" : "diseaseTrait",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-    }, {
-      "rel" : "platforms",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/platforms"
-    }, {
-      "rel" : "genotypingTechnologies",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/genotypingTechnologies"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+  "_embedded" : {
+    "studies" : [ {
+      "qualifier" : null,
+      "author" : "Ojwang JO",
+      "publicationDate" : "2010-10-21T23:00:00.000+0000",
+      "publication" : "J Hand Surg Am",
+      "title" : "Genome-wide association scan of Dupuytren's disease.",
+      "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
+      "replicateSampleSize" : "NA",
+      "platforms" : [ {
+        "manufacturer" : "Illumina"
+      } ],
+      "genotypingTechnologies" : [ {
+        "genotypingTechnology" : "Genome-wide genotyping array"
+      } ],
+      "pubmedId" : "20971583",
+      "gxe" : false,
+      "gxg" : false,
+      "diseaseTrait" : {
+        "trait" : "Dupuytren's disease"
+      },
+      "efoTraits" : [ {
+        "trait" : "dupuytren contracture",
+        "uri" : "http://www.ebi.ac.uk/efo/EFO_0004229"
+      } ],
+      "snpCount" : 251837,
+      "imputed" : false,
+      "pooled" : false,
+      "studyDesignComment" : null,
+      "accessionId" : "GCST000841",
+      "fullPvalueSet" : false,
+      "userRequested" : false,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
+          "templated" : true
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+        },
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+        }
+      }
     } ]
-  } ],
+  },
+  "_links" : {
+    "first" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=1"
+    },
+    "prev" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=1"
+    },
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies"
+    },
+    "next" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=2&size=1"
+    },
+    "last" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4619&size=1"
+    },
+    "profile" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
+    },
+    "search" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
+    }
+  },
   "page" : {
     "size" : 1,
     "totalElements" : 4620,

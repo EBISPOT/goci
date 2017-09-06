@@ -2,849 +2,2294 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 27608
+Content-Length: 80696
 
 {
-  "links" : [ {
-    "rel" : "first",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=0&size=20"
-  }, {
-    "rel" : "self",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations"
-  }, {
-    "rel" : "next",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
-  }, {
-    "rel" : "last",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=2739&size=20"
-  }, {
-    "rel" : "profile",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
-  }, {
-    "rel" : "search",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
-  } ],
-  "content" : [ {
-    "riskFrequency" : "NR",
-    "pvalueDescription" : "(progression)",
-    "pvalueMantissa" : 7,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : null,
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:01:53.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:01:53.000+0000",
-    "pvalue" : 7.0E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+  "_embedded" : {
+    "associations" : [ {
+      "riskFrequency" : "NR",
+      "pvalueDescription" : "(progression)",
+      "pvalueMantissa" : 7,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : null,
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs9497975-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11931"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:01:53.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:01:53.000+0000",
+      "pvalue" : 7.0E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Fellay J",
+          "publicationDate" : "2009-12-24T00:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Common genetic variation and the control of HIV-1 in humans.",
+          "initialSampleSize" : "2,362 European ancestry cases",
+          "replicateSampleSize" : "NA",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20041166",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "HIV-1 control"
+          },
+          "efoTraits" : [ {
+            "trait" : "HIV-1 infection",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0000180"
+          } ],
+          "snpCount" : null,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000549",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
+        }
+      }
     }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+      "riskFrequency" : "NR",
+      "pvalueDescription" : "(progression)",
+      "pvalueMantissa" : 8,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : null,
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs3815087-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11934"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:16.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:16.000+0000",
+      "pvalue" : 8.0E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Fellay J",
+          "publicationDate" : "2009-12-24T00:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Common genetic variation and the control of HIV-1 in humans.",
+          "initialSampleSize" : "2,362 European ancestry cases",
+          "replicateSampleSize" : "NA",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20041166",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "HIV-1 control"
+          },
+          "efoTraits" : [ {
+            "trait" : "HIV-1 infection",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0000180"
+          } ],
+          "snpCount" : null,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000549",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
+        }
+      }
     }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
+      "riskFrequency" : "NR",
+      "pvalueDescription" : "(progression)",
+      "pvalueMantissa" : 2,
+      "pvalueExponent" : -7,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : null,
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs17324272-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11936"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:18.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:18.000+0000",
+      "pvalue" : 2.0E-7,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Fellay J",
+          "publicationDate" : "2009-12-24T00:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Common genetic variation and the control of HIV-1 in humans.",
+          "initialSampleSize" : "2,362 European ancestry cases",
+          "replicateSampleSize" : "NA",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20041166",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "HIV-1 control"
+          },
+          "efoTraits" : [ {
+            "trait" : "HIV-1 infection",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0000180"
+          } ],
+          "snpCount" : null,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000549",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5664/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
+        }
+      }
     }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/loci"
+      "riskFrequency" : "0.41",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 3,
+      "pvalueExponent" : -14,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[1.069-1.141]",
+      "description" : null,
+      "orPerCopyNum" : 1.105,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs212388-C",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16881"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-04T01:02:43.000+0000",
+      "lastUpdateDate" : "2017-06-04T01:02:43.000+0000",
+      "pvalue" : 3.0E-14,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Jostins L",
+          "publicationDate" : "2012-11-01T00:00:00.000+0000",
+          "publication" : "Nature",
+          "title" : "Host-microbe interactions have shaped the genetic architecture of inflammatory bowel disease.",
+          "initialSampleSize" : "Up to 12,924 European ancestry cases, up to 21,442 European ancestry controls ",
+          "replicateSampleSize" : "Up to 25,683 European ancestry cases, up to 17,015 European ancestry controls ",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          }, {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "23128233",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Crohn's disease"
+          },
+          "efoTraits" : [ {
+            "trait" : "crohn's disease",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0000384"
+          } ],
+          "snpCount" : 1230000,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST001729",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7056/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
+        }
+      }
     }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
+      "riskFrequency" : "0.52",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 9,
+      "pvalueExponent" : -22,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[1.30-1.54]",
+      "description" : null,
+      "orPerCopyNum" : 1.41,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs4654925-G",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/13587"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:20.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:20.000+0000",
+      "pvalue" : 9.0E-22,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Franke A",
+          "publicationDate" : "2010-03-14T00:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "Genome-wide association study for ulcerative colitis identifies risk loci at 7q22 and 22q13 (IL17REL).",
+          "initialSampleSize" : "1,043 European ancestry cases, 1,703 European ancestry controls",
+          "replicateSampleSize" : "2,539 European ancestry cases, 5,428 European ancestry controls",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20228798",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Ulcerative colitis"
+          },
+          "efoTraits" : [ {
+            "trait" : "ulcerative colitis",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0000729"
+          } ],
+          "snpCount" : 1897764,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000623",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5737/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
+        }
+      }
     }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/genes"
+      "riskFrequency" : "0.47",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 7,
+      "pvalueExponent" : -28,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.01-0.02]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.02,
+      "betaUnit" : "per log fl",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs2138852-C",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8624"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:23.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:23.000+0000",
+      "pvalue" : 7.0E-28,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Meisinger C",
+          "publicationDate" : "2008-12-24T00:00:00.000+0000",
+          "publication" : "Am J Hum Genet",
+          "title" : "A genome-wide association study identifies three loci associated with mean platelet volume.",
+          "initialSampleSize" : "1,606 European ancestry individuals",
+          "replicateSampleSize" : "8,617 European ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19110211",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Mean platelet volume"
+          },
+          "efoTraits" : [ {
+            "trait" : "mean platelet volume",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004584"
+          } ],
+          "snpCount" : 335152,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000305",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5317/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
+        }
+      }
     }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
+      "riskFrequency" : "0.14",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 6,
+      "pvalueExponent" : -6,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : null,
+      "description" : null,
+      "orPerCopyNum" : 1.44,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs12049330-G",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/12282"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:27.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:27.000+0000",
+      "pvalue" : 6.0E-6,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Shi J",
+          "publicationDate" : "2010-02-02T00:00:00.000+0000",
+          "publication" : "Mol Psychiatry",
+          "title" : "Genome-wide association study of recurrent early-onset major depressive disorder.",
+          "initialSampleSize" : "1,020 European ancestry cases, 1,636 European ancestry controls",
+          "replicateSampleSize" : "NA",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20125088",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Major depressive disorder"
+          },
+          "efoTraits" : [ {
+            "trait" : "unipolar depression",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0003761"
+          } ],
+          "snpCount" : 671424,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000578",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5693/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.35",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 2,
+      "pvalueExponent" : -11,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[1.20-1.39]",
+      "description" : null,
+      "orPerCopyNum" : 1.29,
+      "betaNum" : null,
+      "betaUnit" : null,
+      "betaDirection" : null,
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs1128334-A",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/12421"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:29.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:29.000+0000",
+      "pvalue" : 2.0E-11,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Yang W",
+          "publicationDate" : "2010-02-12T00:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Genome-wide association study in Asian populations identifies variants in ETS1 and WDFY4 associated with systemic lupus erythematosus.",
+          "initialSampleSize" : "314 Chinese ancestry cases, 1,484 Chinese ancestry controls",
+          "replicateSampleSize" : "2,630 Chinese ancestry cases, 2,155 Chinese ancestry controls, 314 Thai ancestry cases, 519 Thai ancestry controls",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "20169177",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Systemic lupus erythematosus"
+          },
+          "efoTraits" : [ {
+            "trait" : "systemic lupus erythematosus",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0002690"
+          } ],
+          "snpCount" : 514221,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000592",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5720/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.15",
+      "pvalueDescription" : "(waist-hip ratio)",
+      "pvalueMantissa" : 8,
+      "pvalueExponent" : -12,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.004-0.008]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.01,
+      "betaUnit" : null,
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs2074356-T",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9375"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:31.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:31.000+0000",
+      "pvalue" : 8.0E-12,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Biomedical quantitative traits"
+          },
+          "efoTraits" : [ {
+            "trait" : "bone density",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0003923"
+          }, {
+            "trait" : "diastolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006336"
+          }, {
+            "trait" : "heart rate",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004326"
+          }, {
+            "trait" : "body mass index",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004340"
+          }, {
+            "trait" : "waist-hip ratio",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004343"
+          }, {
+            "trait" : "systolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006335"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000381",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.10",
+      "pvalueDescription" : "(pulse rate)",
+      "pvalueMantissa" : 3,
+      "pvalueExponent" : -9,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.72-1.44]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 1.09,
+      "betaUnit" : "beats per minute",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs12731740-T",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9374"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:34.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:34.000+0000",
+      "pvalue" : 3.0000000000000004E-9,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Biomedical quantitative traits"
+          },
+          "efoTraits" : [ {
+            "trait" : "bone density",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0003923"
+          }, {
+            "trait" : "diastolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006336"
+          }, {
+            "trait" : "heart rate",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004326"
+          }, {
+            "trait" : "body mass index",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004340"
+          }, {
+            "trait" : "waist-hip ratio",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004343"
+          }, {
+            "trait" : "systolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006335"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000381",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.21",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 3,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.26-0.54]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.4,
+      "betaUnit" : "cm",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs6918981-G",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9377"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:37.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:37.000+0000",
+      "pvalue" : 3.0000000000000004E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000380",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.26",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 6,
+      "pvalueExponent" : -12,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.33-0.59]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.46,
+      "betaUnit" : "cm",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs10513137-A",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9379"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:39.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:39.000+0000",
+      "pvalue" : 6.0E-12,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000380",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.07",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 1,
+      "pvalueExponent" : -9,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.48-0.94]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.71,
+      "betaUnit" : "cm",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs13273123-G",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9711"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:42.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:42.000+0000",
+      "pvalue" : 1.0E-9,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000380",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.22",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 2,
+      "pvalueExponent" : -9,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.28-0.56]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.42,
+      "betaUnit" : "cm",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs3791675-G",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8354"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:44.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:44.000+0000",
+      "pvalue" : 2.0E-9,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000380",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5448/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.37",
+      "pvalueDescription" : "(SBP)",
+      "pvalueMantissa" : 1,
+      "pvalueExponent" : -7,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.67-1.45]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 1.06,
+      "betaUnit" : "mm Hg",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs17249754-A",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9373"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:47.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:47.000+0000",
+      "pvalue" : 1.0E-7,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Biomedical quantitative traits"
+          },
+          "efoTraits" : [ {
+            "trait" : "bone density",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0003923"
+          }, {
+            "trait" : "diastolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006336"
+          }, {
+            "trait" : "heart rate",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004326"
+          }, {
+            "trait" : "body mass index",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004340"
+          }, {
+            "trait" : "waist-hip ratio",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004343"
+          }, {
+            "trait" : "systolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006335"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000381",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.37",
+      "pvalueDescription" : "(DBP)",
+      "pvalueMantissa" : 3,
+      "pvalueExponent" : -6,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.37-0.89]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.63,
+      "betaUnit" : "mm Hg",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs17249754-A",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9373"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:49.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:49.000+0000",
+      "pvalue" : 3.0E-6,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Cho YS",
+          "publicationDate" : "2009-04-25T23:00:00.000+0000",
+          "publication" : "Nat Genet",
+          "title" : "A large-scale genome-wide association study of Asian populations uncovers genetic factors influencing eight quantitative traits.",
+          "initialSampleSize" : "8,842 Korean ancestry individuals",
+          "replicateSampleSize" : "7,861 Korean ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Affymetrix"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19396169",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Biomedical quantitative traits"
+          },
+          "efoTraits" : [ {
+            "trait" : "bone density",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0003923"
+          }, {
+            "trait" : "diastolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006336"
+          }, {
+            "trait" : "heart rate",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004326"
+          }, {
+            "trait" : "body mass index",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004340"
+          }, {
+            "trait" : "waist-hip ratio",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004343"
+          }, {
+            "trait" : "systolic blood pressure",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0006335"
+          } ],
+          "snpCount" : 2156535,
+          "imputed" : true,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000381",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5446/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.23",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 6,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "novel",
+      "standardError" : null,
+      "range" : "[0.04-0.10]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.07,
+      "betaUnit" : "s.d.",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs11809207-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14053"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:02:53.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:02:53.000+0000",
+      "pvalue" : 6.000000000000001E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Soranzo N",
+          "publicationDate" : "2009-04-02T23:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Meta-analysis of genome-wide scans for human adult stature identifies novel Loci and associations with measures of skeletal frame size.",
+          "initialSampleSize" : "12,611 European ancestry individuals",
+          "replicateSampleSize" : "7,187 European ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19343178",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 229216,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000372",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.13",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 5,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.04-0.10]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.07,
+      "betaUnit" : "s.d.",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs13437082-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14054"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:03:11.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:11.000+0000",
+      "pvalue" : 5.0E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Soranzo N",
+          "publicationDate" : "2009-04-02T23:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Meta-analysis of genome-wide scans for human adult stature identifies novel Loci and associations with measures of skeletal frame size.",
+          "initialSampleSize" : "12,611 European ancestry individuals",
+          "replicateSampleSize" : "7,187 European ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19343178",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 229216,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000372",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.27",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 3,
+      "pvalueExponent" : -9,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.04-0.10]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.07,
+      "betaUnit" : "s.d.",
+      "betaDirection" : "increase",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs1182188-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14055"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:03:13.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:13.000+0000",
+      "pvalue" : 3.0000000000000004E-9,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Soranzo N",
+          "publicationDate" : "2009-04-02T23:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Meta-analysis of genome-wide scans for human adult stature identifies novel Loci and associations with measures of skeletal frame size.",
+          "initialSampleSize" : "12,611 European ancestry individuals",
+          "replicateSampleSize" : "7,187 European ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19343178",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 229216,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000372",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
+        }
+      }
+    }, {
+      "riskFrequency" : "0.08",
+      "pvalueDescription" : null,
+      "pvalueMantissa" : 1,
+      "pvalueExponent" : -8,
+      "multiSnpHaplotype" : false,
+      "snpInteraction" : false,
+      "snpType" : "known",
+      "standardError" : null,
+      "range" : "[0.04-0.08]",
+      "description" : null,
+      "orPerCopyNum" : null,
+      "betaNum" : 0.06,
+      "betaUnit" : "s.d.",
+      "betaDirection" : "decrease",
+      "loci" : [ {
+        "haplotypeSnpCount" : null,
+        "description" : "Single variant",
+        "strongestRiskAlleles" : [ {
+          "riskAlleleName" : "rs2282978-?",
+          "riskFrequency" : null,
+          "genomeWide" : null,
+          "limitedList" : null,
+          "_links" : {
+            "snp" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/290"
+            }
+          }
+        } ],
+        "_links" : {
+          "association" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
+          }
+        }
+      } ],
+      "lastMappingDate" : "2017-06-03T01:03:15.000+0000",
+      "lastUpdateDate" : "2017-06-03T01:03:15.000+0000",
+      "pvalue" : 1.0E-8,
+      "_embedded" : {
+        "study" : {
+          "qualifier" : null,
+          "author" : "Soranzo N",
+          "publicationDate" : "2009-04-02T23:00:00.000+0000",
+          "publication" : "PLoS Genet",
+          "title" : "Meta-analysis of genome-wide scans for human adult stature identifies novel Loci and associations with measures of skeletal frame size.",
+          "initialSampleSize" : "12,611 European ancestry individuals",
+          "replicateSampleSize" : "7,187 European ancestry individuals",
+          "platforms" : [ {
+            "manufacturer" : "Illumina"
+          } ],
+          "genotypingTechnologies" : [ {
+            "genotypingTechnology" : "Genome-wide genotyping array"
+          } ],
+          "pubmedId" : "19343178",
+          "gxe" : false,
+          "gxg" : false,
+          "diseaseTrait" : {
+            "trait" : "Height"
+          },
+          "efoTraits" : [ {
+            "trait" : "body height",
+            "uri" : "http://www.ebi.ac.uk/efo/EFO_0004339"
+          } ],
+          "snpCount" : 229216,
+          "imputed" : false,
+          "pooled" : false,
+          "studyDesignComment" : null,
+          "accessionId" : "GCST000372",
+          "fullPvalueSet" : false,
+          "userRequested" : false,
+          "_links" : {
+            "self" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440{?projection}",
+              "templated" : true
+            },
+            "efoTraits" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/efoTraits"
+            },
+            "associations" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/associations"
+            },
+            "ancestries" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/ancestries"
+            },
+            "diseaseTrait" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/diseaseTrait"
+            },
+            "snps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5440/snps"
+            }
+          }
+        }
+      },
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
+        },
+        "association" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
+        },
+        "study" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
+        }
+      }
     } ]
-  }, {
-    "riskFrequency" : "NR",
-    "pvalueDescription" : "(progression)",
-    "pvalueMantissa" : 8,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : null,
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:02:16.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:16.000+0000",
-    "pvalue" : 8.0E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
-    } ]
-  }, {
-    "riskFrequency" : "NR",
-    "pvalueDescription" : "(progression)",
-    "pvalueMantissa" : 2,
-    "pvalueExponent" : -7,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : null,
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:02:18.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:18.000+0000",
-    "pvalue" : 2.0E-7,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.41",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 3,
-    "pvalueExponent" : -14,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[1.069-1.141]",
-    "description" : null,
-    "orPerCopyNum" : 1.105,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-04T01:02:43.000+0000",
-    "lastUpdateDate" : "2017-06-04T01:02:43.000+0000",
-    "pvalue" : 3.0E-14,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.52",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 9,
-    "pvalueExponent" : -22,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[1.30-1.54]",
-    "description" : null,
-    "orPerCopyNum" : 1.41,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:02:20.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:20.000+0000",
-    "pvalue" : 9.0E-22,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.47",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 7,
-    "pvalueExponent" : -28,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.01-0.02]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.02,
-    "betaUnit" : "per log fl",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:02:23.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:23.000+0000",
-    "pvalue" : 7.0E-28,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.14",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 6,
-    "pvalueExponent" : -6,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : null,
-    "description" : null,
-    "orPerCopyNum" : 1.44,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:02:27.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:27.000+0000",
-    "pvalue" : 6.0E-6,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.35",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 2,
-    "pvalueExponent" : -11,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[1.20-1.39]",
-    "description" : null,
-    "orPerCopyNum" : 1.29,
-    "betaNum" : null,
-    "betaUnit" : null,
-    "betaDirection" : null,
-    "lastMappingDate" : "2017-06-03T01:02:29.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:29.000+0000",
-    "pvalue" : 2.0E-11,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.15",
-    "pvalueDescription" : "(waist-hip ratio)",
-    "pvalueMantissa" : 8,
-    "pvalueExponent" : -12,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.004-0.008]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.01,
-    "betaUnit" : null,
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:02:31.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:31.000+0000",
-    "pvalue" : 8.0E-12,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.10",
-    "pvalueDescription" : "(pulse rate)",
-    "pvalueMantissa" : 3,
-    "pvalueExponent" : -9,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.72-1.44]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 1.09,
-    "betaUnit" : "beats per minute",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:02:34.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:34.000+0000",
-    "pvalue" : 3.0000000000000004E-9,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.21",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 3,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.26-0.54]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.4,
-    "betaUnit" : "cm",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:02:37.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:37.000+0000",
-    "pvalue" : 3.0000000000000004E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.26",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 6,
-    "pvalueExponent" : -12,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.33-0.59]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.46,
-    "betaUnit" : "cm",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:02:39.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:39.000+0000",
-    "pvalue" : 6.0E-12,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.07",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 1,
-    "pvalueExponent" : -9,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.48-0.94]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.71,
-    "betaUnit" : "cm",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:02:42.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:42.000+0000",
-    "pvalue" : 1.0E-9,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.22",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 2,
-    "pvalueExponent" : -9,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.28-0.56]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.42,
-    "betaUnit" : "cm",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:02:44.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:44.000+0000",
-    "pvalue" : 2.0E-9,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.37",
-    "pvalueDescription" : "(SBP)",
-    "pvalueMantissa" : 1,
-    "pvalueExponent" : -7,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.67-1.45]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 1.06,
-    "betaUnit" : "mm Hg",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:02:47.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:47.000+0000",
-    "pvalue" : 1.0E-7,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.37",
-    "pvalueDescription" : "(DBP)",
-    "pvalueMantissa" : 3,
-    "pvalueExponent" : -6,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.37-0.89]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.63,
-    "betaUnit" : "mm Hg",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:02:49.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:49.000+0000",
-    "pvalue" : 3.0E-6,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.23",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 6,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "novel",
-    "standardError" : null,
-    "range" : "[0.04-0.10]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.07,
-    "betaUnit" : "s.d.",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:02:53.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:02:53.000+0000",
-    "pvalue" : 6.000000000000001E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.13",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 5,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.04-0.10]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.07,
-    "betaUnit" : "s.d.",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:03:11.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:03:11.000+0000",
-    "pvalue" : 5.0E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.27",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 3,
-    "pvalueExponent" : -9,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.04-0.10]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.07,
-    "betaUnit" : "s.d.",
-    "betaDirection" : "increase",
-    "lastMappingDate" : "2017-06-03T01:03:13.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:03:13.000+0000",
-    "pvalue" : 3.0000000000000004E-9,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
-    } ]
-  }, {
-    "riskFrequency" : "0.08",
-    "pvalueDescription" : null,
-    "pvalueMantissa" : 1,
-    "pvalueExponent" : -8,
-    "multiSnpHaplotype" : false,
-    "snpInteraction" : false,
-    "snpType" : "known",
-    "standardError" : null,
-    "range" : "[0.04-0.08]",
-    "description" : null,
-    "orPerCopyNum" : null,
-    "betaNum" : 0.06,
-    "betaUnit" : "s.d.",
-    "betaDirection" : "decrease",
-    "lastMappingDate" : "2017-06-03T01:03:15.000+0000",
-    "lastUpdateDate" : "2017-06-03T01:03:15.000+0000",
-    "pvalue" : 1.0E-8,
-    "content" : [ ],
-    "links" : [ {
-      "rel" : "self",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
-    }, {
-      "rel" : "association",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
-    }, {
-      "rel" : "study",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
-    }, {
-      "rel" : "loci",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/loci"
-    }, {
-      "rel" : "efoTraits",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
-    }, {
-      "rel" : "genes",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/genes"
-    }, {
-      "rel" : "snps",
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
-    } ]
-  } ],
+  },
+  "_links" : {
+    "first" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=0&size=20"
+    },
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations"
+    },
+    "next" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
+    },
+    "last" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=2739&size=20"
+    },
+    "profile" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
+    },
+    "search" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
+    }
+  },
   "page" : {
     "size" : 20,
     "totalElements" : 54798,

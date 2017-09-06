@@ -2,21 +2,25 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 564
+Content-Length: 633
 
 {
-  "links" : [ {
-    "rel" : "findByLociStrongestRiskAllelesSnpId",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByLociStrongestRiskAllelesSnpId{?snpId}"
-  }, {
-    "rel" : "findByStudyPubmedId",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyPubmedId{?pubmedId}"
-  }, {
-    "rel" : "findByStudyId",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyId{?studyId}"
-  }, {
-    "rel" : "self",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
-  } ]
+  "_links" : {
+    "findByStudyId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyId{?studyId}",
+      "templated" : true
+    },
+    "findByStudyPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyPubmedId{?pubmedId}",
+      "templated" : true
+    },
+    "findByLociStrongestRiskAllelesSnpId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByLociStrongestRiskAllelesSnpId{?snpId}",
+      "templated" : true
+    },
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
+    }
+  }
 }
 ----

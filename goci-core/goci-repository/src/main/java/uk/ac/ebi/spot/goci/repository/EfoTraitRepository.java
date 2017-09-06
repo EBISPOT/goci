@@ -29,6 +29,7 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
             Sort sort,
             Long studyId);
 
+    @RestResource(exported = false)
     Page<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long studyId);
@@ -48,6 +49,8 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     List<EfoTrait> findByUri(Sort sort, String uri);
 
     Page<EfoTrait> findByUri(Pageable pageable, String uri);
+
+    Page<EfoTrait> findByStudiesPubmedId(String pubmedId, Pageable pageable);
 
 }
 

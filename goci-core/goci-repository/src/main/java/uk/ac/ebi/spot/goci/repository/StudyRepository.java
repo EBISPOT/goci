@@ -131,6 +131,12 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
 
+    Page<Study> findByEfoTraitsUri(String uri, Pageable pageable);
+
+    Page<Study> findByEfoTraitsTrait(String trait, Pageable pageable);
+
+    Page<Study> findByDiseaseTraitTrait(String trait, Pageable pageable);
+
 
 
 }

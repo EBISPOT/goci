@@ -31,6 +31,7 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             Sort sort,
             Long studyId);
 
+    @RestResource(exported = false)
     Page<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long studyId);
@@ -44,7 +45,10 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             Sort sort,
             Long associationId);
 
+    @RestResource(exported = false)
     Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long associationId);
+
+    Page<DiseaseTrait> findByStudiesPubmedId(String pubmedId, Pageable pageable);
 }

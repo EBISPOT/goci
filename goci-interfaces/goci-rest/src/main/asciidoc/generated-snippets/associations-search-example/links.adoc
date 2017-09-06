@@ -1,0 +1,16 @@
+|===
+|Relation|Description
+
+|`self`
+|This association
+
+|`findByStudyId`
+|Search for an association via a study using parameter studyId
+
+|`findByStudyPubmedId`
+|Search for an association via a study using parameter pubmedId
+
+|`findByLociStrongestRiskAllelesSnpId`
+|Search for an association via a its strongest risk alleles using parameter snpId
+
+|===

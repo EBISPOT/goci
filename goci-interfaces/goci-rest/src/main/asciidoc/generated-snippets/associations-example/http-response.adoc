@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1295
+Content-Length: 3647
 
 {
   "riskFrequency" : "NR",
@@ -19,31 +19,103 @@ Content-Length: 1295
   "betaNum" : 16.01,
   "betaUnit" : "unit",
   "betaDirection" : "decrease",
+  "loci" : [ {
+    "haplotypeSnpCount" : null,
+    "description" : "Single variant",
+    "strongestRiskAlleles" : [ {
+      "riskAlleleName" : "rs16890979-A",
+      "riskFrequency" : "NR",
+      "genomeWide" : false,
+      "limitedList" : false,
+      "_links" : {
+        "proxySnps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
+        },
+        "snp" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/6924"
+        }
+      }
+    } ],
+    "_links" : {
+      "association" : {
+        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+      }
+    }
+  } ],
   "lastMappingDate" : "2017-06-09T01:13:39.000+0000",
   "lastUpdateDate" : "2017-06-09T01:13:39.000+0000",
   "pvalue" : 3.0000000000000002E-18,
-  "content" : [ ],
-  "links" : [ {
-    "rel" : "self",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
-  }, {
-    "rel" : "association",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
-  }, {
-    "rel" : "study",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
-  }, {
-    "rel" : "loci",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
-  }, {
-    "rel" : "efoTraits",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
-  }, {
-    "rel" : "genes",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/genes"
-  }, {
-    "rel" : "snps",
-    "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-  } ]
+  "_embedded" : {
+    "study" : {
+      "qualifier" : null,
+      "author" : "Giri AK",
+      "publicationDate" : "2016-02-23T00:00:00.000+0000",
+      "publication" : "Sci Rep",
+      "title" : "Genome wide association study of uric acid in Indian population and interaction of identified variants with Type 2 diabetes.",
+      "initialSampleSize" : "1,109 Indo-European ancestry individuals",
+      "replicateSampleSize" : "3,725 Indo-European ancestry individuals",
+      "platforms" : [ {
+        "manufacturer" : "Illumina"
+      } ],
+      "genotypingTechnologies" : [ {
+        "genotypingTechnology" : "Genome-wide genotyping array"
+      } ],
+      "pubmedId" : "26902266",
+      "gxe" : false,
+      "gxg" : false,
+      "diseaseTrait" : {
+        "trait" : "Serum uric acid levels"
+      },
+      "efoTraits" : [ {
+        "trait" : "uric acid measurement",
+        "uri" : "http://www.ebi.ac.uk/efo/EFO_0004761"
+      } ],
+      "snpCount" : 539662,
+      "imputed" : false,
+      "pooled" : false,
+      "studyDesignComment" : null,
+      "accessionId" : "GCST003359",
+      "fullPvalueSet" : false,
+      "userRequested" : false,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570{?projection}",
+          "templated" : true
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570/associations"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570/ancestries"
+        },
+        "diseaseTrait" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570/diseaseTrait"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/14765570/snps"
+        }
+      }
+    }
+  },
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+    },
+    "association" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+    },
+    "study" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
+    },
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
+    }
+  }
 }
 ----

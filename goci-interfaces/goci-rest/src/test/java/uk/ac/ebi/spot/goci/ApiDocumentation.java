@@ -77,12 +77,12 @@ public class ApiDocumentation {
     }
 
 
-    @Test
-    public void index() throws Exception {
-        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(document("index"));
-    }
+//    @Test
+//    public void index() throws Exception {
+//        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(document("docs/helindex"));
+//    }
 
     @Test
     public void pageExample () throws Exception {

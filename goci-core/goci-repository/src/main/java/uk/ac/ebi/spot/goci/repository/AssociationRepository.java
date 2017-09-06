@@ -25,7 +25,7 @@ import java.util.List;
 public interface AssociationRepository extends JpaRepository<Association, Long> {
     Collection<Association> findByStudyId(long studyId);
 
-    Collection<Association> findByStudyPubmedId(Long pubmedId);
+    Collection<Association> findByStudyPubmedId(String pubmedId);
 
     @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId, Sort sort);
@@ -97,4 +97,6 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     @RestResource(exported = false)
     Collection<Association> findBylastMappingDateIsNull();
+
+    Collection<Association> findBySnpsRsId(String rsId);
 }
