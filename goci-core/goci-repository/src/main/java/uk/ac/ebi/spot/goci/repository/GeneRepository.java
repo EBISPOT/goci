@@ -13,7 +13,7 @@ import java.util.Collection;
  *         <p>
  *         Repository accessing Gene entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface GeneRepository extends JpaRepository<Gene, Long> {
     Gene findByGeneNameIgnoreCase(String geneName);
 

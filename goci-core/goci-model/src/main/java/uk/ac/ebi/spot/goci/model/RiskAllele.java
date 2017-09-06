@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +34,8 @@ public class RiskAllele {
     @JoinTable(name = "RISK_ALLELE_SNP",
                joinColumns = @JoinColumn(name = "RISK_ALLELE_ID"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
-    @JsonManagedReference
+//    @JsonManagedReference
+    @JsonBackReference
     private SingleNucleotidePolymorphism snp;
 
     @ManyToMany

@@ -23,7 +23,6 @@ public class Platform {
     @NotBlank
     private String manufacturer;
 
-//    @JsonIgnore
     @ManyToMany(mappedBy = "platforms")
     @JsonBackReference
     private Collection<Study> studies;

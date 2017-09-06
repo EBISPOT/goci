@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.Location;
  * <p>
  * Repository accessing Location entity object
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Location findByChromosomeNameAndChromosomePositionAndRegionName(String chromosomeName,

@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,18 +33,22 @@ public class Gene {
     @JoinTable(name = "GENE_ENTREZ_GENE",
                joinColumns = @JoinColumn(name = "GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "ENTREZ_GENE_ID"))
+    @JsonManagedReference
     private Collection<EntrezGene> entrezGeneIds = new ArrayList<>();
 
     @OneToMany
     @JoinTable(name = "GENE_ENSEMBL_GENE",
                joinColumns = @JoinColumn(name = "GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "ENSEMBL_GENE_ID"))
+    @JsonManagedReference
     private Collection<EnsemblGene> ensemblGeneIds = new ArrayList<>();
 
     @ManyToMany(mappedBy = "authorReportedGenes")
+    @JsonManagedReference
     private Collection<Locus> authorReportedFromLoci;
 
     @OneToMany(mappedBy = "gene")
+    @JsonBackReference
     private Collection<GenomicContext> genomicContexts;
 
 //    @ManyToMany(mappedBy = "genes")

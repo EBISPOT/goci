@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -21,13 +20,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .allowCredentials(false).maxAge(3600);
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // core pages
-        registry.addViewController("/").setViewName("index");
-//        registry.addViewController("/docs/index").setViewName("docs-template");
-//        registry.addViewController("/docs/api").setViewName("docs-template");
-
-
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        // core pages
+//        registry.addViewController("/").setViewName("index");
+////        registry.addViewController("/docs/index").setViewName("docs-template");
+////        registry.addViewController("/docs/api").setViewName("docs-template");
+//
+//
+//    }
 }

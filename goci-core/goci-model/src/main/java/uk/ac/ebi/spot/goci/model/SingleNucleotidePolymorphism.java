@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,13 +40,16 @@ public class SingleNucleotidePolymorphism {
     @JoinTable(name = "SNP_LOCATION",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "LOCATION_ID"))
+    @JsonManagedReference
     private Collection<Location> locations;
 
     @OneToMany(mappedBy = "snp")
+    @JsonManagedReference
     private Collection<GenomicContext> genomicContexts;
 
     @OneToMany(mappedBy = "snp")
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonManagedReference
     private Collection<RiskAllele> riskAlleles;
 
     @ManyToOne

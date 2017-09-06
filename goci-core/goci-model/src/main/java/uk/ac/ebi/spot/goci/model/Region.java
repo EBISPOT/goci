@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,6 +24,7 @@ public class Region {
     private String name;
 
     @OneToMany(mappedBy = "region")
+    @JsonBackReference
     private Collection<Location> locations;
 
 

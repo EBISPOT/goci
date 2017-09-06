@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.projection.StudyProjection;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = StudyProjection.class)
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)

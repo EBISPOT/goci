@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,11 +41,13 @@ public class Ancestry implements Trackable {
     private String description;
 
     // In database but not available in curation interface forms as no longer used
+    @JsonIgnore
     private String previouslyReported;
 
     @JsonIgnore
     private String sampleSizesMatch;
 
+    @JsonIgnore
     private String notes;
 
     @OneToOne
@@ -54,18 +57,21 @@ public class Ancestry implements Trackable {
     @JoinTable(name = "ANCESTRY_ANCESTRAL_GROUP",
                joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
                inverseJoinColumns = @JoinColumn(name = "ANCESTRAL_GROUP_ID"))
+    @JsonManagedReference
     private Collection<AncestralGroup> ancestralGroups;
 
     @ManyToMany
     @JoinTable(name = "ANCESTRY_COUNTRY_OF_ORIGIN",
                joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
                inverseJoinColumns = @JoinColumn(name = "COUNTRY_ID"))
+    @JsonManagedReference
     private Collection<Country> countryOfOrigin;
 
     @ManyToMany
     @JoinTable(name = "ANCESTRY_COUNTRY_RECRUITMENT",
                joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
                inverseJoinColumns = @JoinColumn(name = "COUNTRY_ID"))
+    @JsonManagedReference
     private Collection<Country> countryOfRecruitment;
 
 

@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Entity;
@@ -40,6 +41,7 @@ public class Locus {
     @JoinTable(name = "AUTHOR_REPORTED_GENE",
                joinColumns = @JoinColumn(name = "LOCUS_ID"),
                inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
+    @JsonBackReference
     private Collection<Gene> authorReportedGenes = new ArrayList<>();
 
     @ManyToOne

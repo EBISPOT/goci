@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,9 +26,11 @@ public class Location {
     private Integer chromosomePosition;
 
     @ManyToOne
+    @JsonManagedReference
     private Region region;
 
     @ManyToMany(mappedBy = "locations")
+    @JsonBackReference
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
     // JPA no-args constructor

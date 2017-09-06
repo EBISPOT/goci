@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -24,7 +24,8 @@ public class AncestralGroup {
     private String ancestralGroup;
 
     @ManyToMany(mappedBy = "ancestralGroups")
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonBackReference
     private Collection<Ancestry> ancestries;
 
     // JPA no-args constructor

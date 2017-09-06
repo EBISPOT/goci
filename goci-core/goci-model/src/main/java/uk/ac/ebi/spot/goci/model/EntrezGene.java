@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,6 +29,7 @@ public class EntrezGene {
     @JoinTable(name = "GENE_ENTREZ_GENE",
                joinColumns = @JoinColumn(name = "ENTREZ_GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    @JsonBackReference
     private Gene gene;
 
     // JPA no-args constructor

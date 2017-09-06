@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,9 +29,11 @@ public class GenomicContext {
     private Long distance;
 
     @ManyToOne
+    @JsonBackReference
     private SingleNucleotidePolymorphism snp;
 
     @ManyToOne
+    @JsonManagedReference
     private Gene gene;
 
     @ManyToOne

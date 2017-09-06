@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.model.Region;
  *         Repository accessing Region entity object
  */
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
     Region findByName(String regionName);

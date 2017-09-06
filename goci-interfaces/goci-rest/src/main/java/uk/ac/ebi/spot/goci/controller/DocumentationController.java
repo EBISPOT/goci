@@ -10,15 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-//@RequestMapping("")
 public class DocumentationController {
 
-//    @RequestMapping({""})
-//    public String showHomeIndex(Model model) {
-//        return "redirect:docs/index";
-//    }
-
-    @RequestMapping(value = {"docs"})
+    @RequestMapping(value = {"docs", "/", ""})
     public String showDocsIndex(Model model) {
         return "redirect:docs/index";
     }
