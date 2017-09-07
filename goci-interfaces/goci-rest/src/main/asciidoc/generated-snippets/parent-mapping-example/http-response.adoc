@@ -1,0 +1,16 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 237
+
+{
+  "uri" : "http://www.ebi.ac.uk/efo/EFO_0000305",
+  "trait" : "breast carcinoma",
+  "parentUri" : "http://www.ebi.ac.uk/efo/EFO_0000616",
+  "parent" : "neoplasm",
+  "colour" : "#BC80BD",
+  "colourLabel" : "Cancer",
+  "message" : null
+}
+----

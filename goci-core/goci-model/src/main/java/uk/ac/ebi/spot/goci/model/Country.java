@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,10 +30,12 @@ public class Country {
 
     @ManyToMany(mappedBy = "countryOfOrigin")
     @JsonBackReference
+    @RestResource(exported = false)
     private Collection<Ancestry> ancestriesOrigin;
 
     @ManyToMany(mappedBy = "countryOfRecruitment")
     @JsonBackReference
+    @RestResource(exported = false)
     private Collection<Ancestry> ancestriesRecruitment;
 
 

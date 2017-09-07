@@ -56,6 +56,7 @@ public class SingleNucleotidePolymorphism {
     @JoinTable(name = "SNP_MERGED_SNP",
                joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
+    @JsonManagedReference
     private SingleNucleotidePolymorphism currentSnp;
 
 //    @ManyToMany(mappedBy = "snps")
@@ -69,6 +70,7 @@ public class SingleNucleotidePolymorphism {
     @JoinTable(name = "SNP_GENE_VIEW",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+    @JsonManagedReference
     private Collection<Gene> genes = new ArrayList<>();
 
 //    @ManyToMany(mappedBy = "snps")

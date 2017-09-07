@@ -11,6 +11,9 @@
 |Search for an association via a study using parameter pubmedId
 
 |`findByLociStrongestRiskAllelesSnpId`
-|Search for an association via a its strongest risk alleles using parameter snpId
+|Search for an association via its strongest risk alleles using parameter snpId
+
+|`findBySnpsRsId`
+|Search for an association via a SNP using parameter rsId
 
 |===

@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 
-@RepositoryRestResource(excerptProjection = StudyProjection.class)
+@RepositoryRestResource//(excerptProjection = StudyProjection.class)
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)

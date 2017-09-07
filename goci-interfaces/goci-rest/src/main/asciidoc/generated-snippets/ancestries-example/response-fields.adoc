@@ -1,0 +1,32 @@
+|===
+|Path|Type|Description
+
+|`_links`
+|`Object`
+|<<ancestries-links,Links>> to other resources
+
+|`type`
+|`String`
+|The stage this ancestry entry applies to
+
+|`numberOfIndividuals`
+|`Number`
+|The number of individuals in this sample
+
+|`description`
+|`String`
+|Additional sample information such as recruitment information
+
+|`ancestralGroups`
+|`Array`
+|Wider ancestral categories the individuals in this sample belonged to
+
+|`countryOfOrigin`
+|`Array`
+|Country of origin of the individuals in this sample
+
+|`countryOfRecruitment`
+|`Array`
+|Country of recruitment of the individuals in this sample
+
+|===

@@ -1,4 +1,0 @@
-[source,bash]
-----
-$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/genomicContexts/20777953' 'Accept:application/json'
-----

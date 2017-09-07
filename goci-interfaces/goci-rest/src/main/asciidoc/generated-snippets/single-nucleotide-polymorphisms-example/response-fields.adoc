@@ -1,0 +1,40 @@
+|===
+|Path|Type|Description
+
+|`rsId`
+|`String`
+|The SNP's rs Id
+
+|`merged`
+|`Number`
+|Whether this SNP has been merged with another SNP in a newer genome build
+
+|`functionalClass`
+|`String`
+|The SNP's functional class
+
+|`lastUpdateDate`
+|`String`
+|The last date this SNP's mapping information was updated
+
+|`locations`
+|`Array`
+|The SNP's genomic locations
+
+|`genomicContexts`
+|`Array`
+|The genomic contexts for this SNP, incl upstream, downstream and mapped genes
+
+|`riskAlleles`
+|`Array`
+|A list of the risk alleles identified for this SNP
+
+|`genes`
+|`Array`
+|A list of the genes that this SNP is located in or near
+
+|`_links`
+|`Object`
+|<<snp-links,Links>> to other resources
+
+|===

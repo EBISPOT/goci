@@ -1,0 +1,32 @@
+|===
+|Path|Type|Description
+
+|`uri`
+|`String`
+|The full URI of the requested term
+
+|`trait`
+|`String`
+|The label of the requested term
+
+|`parentUri`
+|`String`
+|The URI of the mapped parent term
+
+|`parent`
+|`String`
+|The label of the mapped parent term
+
+|`colour`
+|`String`
+|The hex code of the colour associated with the mapped parent
+
+|`colourLabel`
+|`String`
+|The convenience label for the colour
+
+|`message`
+|`Null`
+|Error message if the trait could not be mapped
+
+|===

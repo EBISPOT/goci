@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.projection.AncestryProjection;
 
 import java.util.Collection;
 
@@ -14,7 +13,7 @@ import java.util.Collection;
  *         <p>
  *         Repository accessing Ancestry entity object
  */
-@RepositoryRestResource(excerptProjection = AncestryProjection.class)
+@RepositoryRestResource//(excerptProjection = AncestryProjection.class)
 public interface AncestryRepository extends JpaRepository<Ancestry, Long> {
     Collection<Ancestry> findByStudyIdAndType(Long studyId, String type);
 

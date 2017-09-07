@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -49,6 +50,7 @@ public class Gene {
 
     @OneToMany(mappedBy = "gene")
     @JsonBackReference
+    @RestResource(exported = false)
     private Collection<GenomicContext> genomicContexts;
 
 //    @ManyToMany(mappedBy = "genes")
@@ -56,10 +58,14 @@ public class Gene {
     @JoinTable(name = "ASSOCIATION_GENE_VIEW",
                joinColumns = @JoinColumn(name = "GENE_ID"),
                inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+    @RestResource(exported = false)
+    @JsonBackReference
     private Collection<Association> associations;
 
 
     @ManyToMany(mappedBy = "genes")
+    @JsonBackReference
+    @RestResource(exported = false)
     private Collection<SingleNucleotidePolymorphism> snps;
 
     // JPA no-args constructor

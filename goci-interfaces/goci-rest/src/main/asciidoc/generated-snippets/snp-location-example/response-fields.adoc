@@ -1,0 +1,28 @@
+|===
+|Path|Type|Description
+
+|`_embedded`
+|`Object`
+|The main content. See <<resources-single-nucleotide-polymorphism,SNP resource specification>> for details
+
+|`_links`
+|`Object`
+|<<snp-links,Links>> to other resources
+
+|`page.size`
+|`Number`
+|The number of resources in this page
+
+|`page.totalElements`
+|`Number`
+|The total number of resources
+
+|`page.totalPages`
+|`Number`
+|The total number of pages
+
+|`page.number`
+|`Number`
+|The page number
+
+|===

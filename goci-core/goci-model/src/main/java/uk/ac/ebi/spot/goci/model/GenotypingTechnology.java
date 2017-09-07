@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +26,7 @@ public class GenotypingTechnology {
 
     @ManyToMany(mappedBy = "genotypingTechnologies")
     @JsonBackReference
-//    @JsonIgnore
+    @RestResource(exported = false)
     private Collection<Study> studies;
 
     // JPA no-args constructor

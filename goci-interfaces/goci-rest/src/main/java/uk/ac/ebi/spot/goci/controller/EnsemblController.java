@@ -9,18 +9,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.EfoColourMap;
@@ -40,7 +40,7 @@ import java.util.Set;
  * Created by dwelter on 03/02/17.
  */
 
-@Controller
+@RestController
 public class EnsemblController {
 
     @Value("${ols.server}")
@@ -61,19 +61,21 @@ public class EnsemblController {
         return log;
     }
 
+    private PagedResourcesAssembler<SingleNucleotidePolymorphism> snpAssembler;
 
     private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
 
     @Autowired
-    public EnsemblController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository){
+    public EnsemblController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, PagedResourcesAssembler snpAssembler){
         this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
+        this.snpAssembler = snpAssembler;
     }
 
     @CrossOrigin
     @RequestMapping(value = "/api/snpLocation/{range}",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<PagedResources<SingleNucleotidePolymorphism>> search(@PathVariable String range,
+    public ResponseEntity<PagedResources<SingleNucleotidePolymorphism>> search(@PathVariable String range,
                                                                            @PageableDefault(size = 20, page = 0) Pageable pageable) {
 
         String chrom = range.split(":")[0];
@@ -90,10 +92,11 @@ public class EnsemblController {
                         end,
                         pageable);
 
-        Resource<SingleNucleotidePolymorphism> snpResource = new Resource(snps);
+//        Resource<SingleNucleotidePolymorphism> snpResource = new Resource(snps);
 
-        return new ResponseEntity(snpResource, HttpStatus.OK);
+        return new ResponseEntity(snpAssembler.toResource(snps), HttpStatus.OK);
     }
+
 
     @CrossOrigin
     @RequestMapping(value = "/api/parentMapping/{efoTerm}",

@@ -1,0 +1,19 @@
+|===
+|Relation|Description
+
+|`self`
+|This SNP
+
+|`singleNucleotidePolymorphism`
+|This SNP
+
+|`studies`
+|Link to the <<studies-resources,studies>> this SNP is identified in
+
+|`currentSnp`
+|Current rsId in case of a merged SNP
+
+|`associations`
+|Associations this SNP is found in
+
+|===

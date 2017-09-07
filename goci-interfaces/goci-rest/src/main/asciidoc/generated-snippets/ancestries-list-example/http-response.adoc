@@ -7,18 +7,18 @@ Content-Length: 17250
 {
   "_embedded" : {
     "ancestries" : [ {
-      "description" : "Minneapolis, MN; Salt Lake City, UT;",
+      "type" : "replication",
       "numberOfIndividuals" : 8100,
+      "description" : "Minneapolis, MN; Salt Lake City, UT;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
         "region" : null,
         "countryName" : "U.S."
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "replication",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363"
@@ -32,14 +32,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 981,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "NR"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365"
@@ -53,14 +53,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 822,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "NR"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366"
@@ -74,14 +74,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 883,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "NR"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367"
@@ -95,14 +95,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 738,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "NR"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368"
@@ -116,18 +116,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Columbia, MO;",
+      "type" : "initial",
       "numberOfIndividuals" : 165,
+      "description" : "Columbia, MO;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
         "region" : null,
         "countryName" : "U.S."
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370"
@@ -141,18 +141,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Lanusei Valley, Sardinia, Italy;",
+      "type" : "initial",
       "numberOfIndividuals" : 4305,
+      "description" : "Lanusei Valley, Sardinia, Italy;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Europe",
         "region" : "Southern Europe",
         "countryName" : "Italy"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381"
@@ -166,18 +166,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 1489,
+      "description" : null,
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
         "region" : null,
         "countryName" : "Canada"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383"
@@ -191,18 +191,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "replication",
       "numberOfIndividuals" : 23684,
+      "description" : null,
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Europe",
         "region" : "Northern Europe",
         "countryName" : "Finland"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "replication",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386"
@@ -216,8 +216,12 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Barcelona, Spain; Pamplona, Spain; Toulouse, France; Malaga, Spain;",
+      "type" : "initial",
       "numberOfIndividuals" : 206,
+      "description" : "Barcelona, Spain; Pamplona, Spain; Toulouse, France; Malaga, Spain;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Europe",
@@ -228,10 +232,6 @@ Content-Length: 17250
         "region" : "Western Europe",
         "countryName" : "France"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388"
@@ -245,8 +245,12 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Dublin, Ireland; Utrecht, Netherlands; Nijmegen, Netherlands; Evry, France; Krakow, Poland; Ulm, Germany; Berlin, Germany;",
+      "type" : "replication",
       "numberOfIndividuals" : 8472,
+      "description" : "Dublin, Ireland; Utrecht, Netherlands; Nijmegen, Netherlands; Evry, France; Krakow, Poland; Ulm, Germany; Berlin, Germany;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
@@ -273,10 +277,6 @@ Content-Length: 17250
         "region" : "Western Europe",
         "countryName" : "France"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "replication",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401"
@@ -290,14 +290,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 1087,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "European"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423"
@@ -311,14 +311,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "replication",
       "numberOfIndividuals" : 4815,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "European"
       } ],
-      "type" : "replication",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424"
@@ -332,18 +332,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Starr County, TX, US;",
+      "type" : "initial",
       "numberOfIndividuals" : 561,
+      "description" : "Starr County, TX, US;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "Hispanic or Latin American"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
         "region" : null,
         "countryName" : "U.S."
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "Hispanic or Latin American"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425"
@@ -357,18 +357,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "replication",
       "numberOfIndividuals" : 1437,
+      "description" : null,
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "East Asian"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Asia",
         "region" : "Eastern Asia",
         "countryName" : "Republic of Korea"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "East Asian"
-      } ],
-      "type" : "replication",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627"
@@ -382,8 +382,12 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Norfolk, UK; Turin, Italy;",
+      "type" : "initial",
       "numberOfIndividuals" : 26316,
+      "description" : "Norfolk, UK; Turin, Italy;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Europe",
@@ -414,10 +418,6 @@ Content-Length: 17250
         "region" : "Western Europe",
         "countryName" : "France"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675"
@@ -431,18 +431,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Beijing, China;",
+      "type" : "initial",
       "numberOfIndividuals" : 2096,
+      "description" : "Beijing, China;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "East Asian"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Asia",
         "region" : "Eastern Asia",
         "countryName" : "China"
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "East Asian"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541"
@@ -456,8 +456,12 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Cambridgeshire, UK;",
+      "type" : "replication",
       "numberOfIndividuals" : 21185,
+      "description" : "Cambridgeshire, UK;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "European"
+      } ],
       "countryOfOrigin" : [ {
         "majorArea" : "Europe",
         "region" : "Southern Europe",
@@ -480,10 +484,6 @@ Content-Length: 17250
         "countryName" : "France"
       } ],
       "countryOfRecruitment" : [ ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "European"
-      } ],
-      "type" : "replication",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676"
@@ -497,14 +497,14 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : null,
+      "type" : "initial",
       "numberOfIndividuals" : 86995,
-      "countryOfOrigin" : [ ],
-      "countryOfRecruitment" : [ ],
+      "description" : null,
       "ancestralGroups" : [ {
         "ancestralGroup" : "European"
       } ],
-      "type" : "initial",
+      "countryOfOrigin" : [ ],
+      "countryOfRecruitment" : [ ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506"
@@ -518,18 +518,18 @@ Content-Length: 17250
         }
       }
     }, {
-      "description" : "Jackson, MI; Forsyth County, NC; Sacramento County, CA; Washington County, MD; Pittsurgh, PA; Birmingham, AL; Chicago, IL; Minneapolis, MN; Oakland, CA; Baltimore, MD; Los Angeles County, CA; Manhattan, NY; St. Paul, MN;",
+      "type" : "initial",
       "numberOfIndividuals" : 7473,
+      "description" : "Jackson, MI; Forsyth County, NC; Sacramento County, CA; Washington County, MD; Pittsurgh, PA; Birmingham, AL; Chicago, IL; Minneapolis, MN; Oakland, CA; Baltimore, MD; Los Angeles County, CA; Manhattan, NY; St. Paul, MN;",
+      "ancestralGroups" : [ {
+        "ancestralGroup" : "African American or Afro-Caribbean"
+      } ],
       "countryOfOrigin" : [ ],
       "countryOfRecruitment" : [ {
         "majorArea" : "Northern America",
         "region" : null,
         "countryName" : "U.S."
       } ],
-      "ancestralGroups" : [ {
-        "ancestralGroup" : "African American or Afro-Caribbean"
-      } ],
-      "type" : "initial",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508"

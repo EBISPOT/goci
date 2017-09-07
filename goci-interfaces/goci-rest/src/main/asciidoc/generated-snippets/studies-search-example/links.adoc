@@ -38,6 +38,15 @@
 |Search for a study by its first author using the parameter authorContainingIgnoreCase
 
 |`findByDiseaseTraitId`
-|Search for a study via the annotated EFO terms using the parameter diseaseTraitId
+|Search for a study via the annotated disease term using the parameter diseaseTraitId
+
+|`findByEfoTraitsTrait`
+|Search for a study via the annotated EFO term using the parameter efoTraitsTrait
+
+|`findByEfoTraitsUri`
+|Search for a study via the annotated EFO term using the parameter efoTraitsURI
+
+|`findByDiseaseTraitTrait`
+|Search for a study via the annotated disease term using the parameter diseaseTraitTrait
 
 |===

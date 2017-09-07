@@ -1,0 +1,8 @@
+./gwas/rest/api/parentMapping/{ontologyTermId}
+|===
+|Parameter|Description
+
+|`ontologyTermId`
+|The ontology term ID (in shortform or full URI)
+
+|===

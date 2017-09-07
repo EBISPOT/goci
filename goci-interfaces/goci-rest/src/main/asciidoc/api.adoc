@@ -166,6 +166,8 @@ include::{snippets}/studies-search-example/links.adoc[]
 
 === Retrieve a study
 
+It is recommended to retrieve studies using the "study" projection for better formatted results.
+
 include::{snippets}/studies-example/path-parameters.adoc[]
 
 ==== Example request
@@ -247,6 +249,65 @@ include::{snippets}/associations-example/response-fields.adoc[]
 
 include::{snippets}/associations-example/links.adoc[]
 
+[[resources-single-nucleotide-polymorphisms]]
+== Single nucleotide polymorphisms
+
+The SingleNucleotidePolymorphisms resources is used to list SNPs in the GWAS Catalog
+
+[[resources-single-nucleotide-polymorphisms-list]]
+=== Listing SNPs
+
+A `GET` request will list all of the Catalog SNPs.
+
+==== Example request
+
+include::{snippets}/single-nucleotide-polymorphisms-list-example/curl-request.adoc[]
+
+==== Response structure
+
+The response is <<overview-pagination,paginated>> where the individual <<resources-single-nucleotide-polymorphism,single-nucleotide-polymorphism resources>>  are in the `_embedded.singleNucleotidePolymorphisms` field.
+
+[[resources-single-nucleotide-polymorphisms-search]]
+=== Searching SNPs
+
+A `GET` request will list all of the Catalog SNP search endpoints.
+
+==== Example request
+
+include::{snippets}/single-nucleotide-polymorphisms-search-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/single-nucleotide-polymorphisms-search-example/http-response.adoc[]
+
+[[resources-study-links]]
+==== Links
+
+include::{snippets}/single-nucleotide-polymorphisms-search-example/links.adoc[]
+
+[[resources-single-nucleotide-polymorphism]]
+== Single Nucleotide Polymorphism
+
+=== Retrieve a SNP
+
+include::{snippets}/single-nucleotide-polymorphisms-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/single-nucleotide-polymorphisms-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/single-nucleotide-polymorphisms-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/single-nucleotide-polymorphisms-example/response-fields.adoc[]
+
+[[resources-single-nucleotide-polymorphism-links]]
+==== Links
+
+include::{snippets}/single-nucleotide-polymorphisms-example/links.adoc[]
 
 [[resources-ancestries]]
 == Ancestries
@@ -271,6 +332,8 @@ The response is <<overview-pagination,paginated>> where the individual <<resourc
 
 === Retrieve an ancestry
 
+It is recommended to retrieve ancestries using the "ancestry" projection for better formatted results.
+
 include::{snippets}/ancestries-example/path-parameters.adoc[]
 
 ==== Example request
@@ -290,27 +353,6 @@ include::{snippets}/ancestries-example/response-fields.adoc[]
 
 include::{snippets}/ancestries-example/links.adoc[]
 
-
-[[resources-genomic-context]]
-== Genomic context
-
-A genomic context is a convenience model to link a SNP to a gene. It details some additional information about the relationship between that specific SNP and gene.
-
-=== Retrieve a genomic context
-
-include::{snippets}/genomic-contexts-example/path-parameters.adoc[]
-
-==== Example request
-
-include::{snippets}/genomic-contexts-example/curl-request.adoc[]
-
-==== Example response
-
-include::{snippets}/genomic-contexts-example/http-response.adoc[]
-
-==== Response structure
-
-include::{snippets}/genomic-contexts-example/response-fields.adoc[]
 
 
 [[custom]]
@@ -338,3 +380,22 @@ include::{snippets}/snp-location-example/http-response.adoc[]
 
 include::{snippets}/snp-location-example/response-fields.adoc[]
 
+[[custom-parent]]
+== Parent mapping
+The parent mapping endpoint provides a convenient way of retrieving the mapped parent and associated colour of ontology terms of interest, as used in the GWAS diagram.
+
+=== Retrieve the mapped parent and colour of a trait of interest
+
+include::{snippets}/parent-mapping-example/path-parameters.adoc[]
+
+==== Example request
+
+include::{snippets}/parent-mapping-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/parent-mapping-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/parent-mapping-example/response-fields.adoc[]

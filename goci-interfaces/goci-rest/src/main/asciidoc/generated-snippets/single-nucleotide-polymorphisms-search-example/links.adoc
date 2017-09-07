@@ -1,0 +1,37 @@
+|===
+|Relation|Description
+
+|`self`
+|This association
+
+|`findByRiskAllelesLociAssociationId`
+|Search for SNPs via an association using parameter associationId
+
+|`findByRiskAllelesLociId`
+|Search for SNPs via a locus using parameter lociId
+
+|`findByRiskAllelesLociAssociationStudyId`
+|Search for SNPs via a study using parameter studyId
+
+|`findByLocationsId`
+|Search for SNPs via a lociation using parameter locationId
+
+|`findByRsId`
+|Search for SNPs using parameter rsId
+
+|`findByLocationsChromosomePosition`
+|Search for SNPs via their base pair location
+
+|`findByRiskAllelesLociAssociationStudyDiseaseTraitId`
+|Search for SNPs via a study using parameter diseaseTraitId
+
+|`findByLocationsChromosomeNameAndLocationsChromosomePositionBetween`
+|Search for SNPs on a certain chromosome and within a given base pair location range
+
+|`findByRiskAllelesLociAssociationStudyPubmedId`
+|Search for SNPs via a study using parameter pubmedId
+
+|`findByRsIdIgnoreCase`
+|Search for SNPs using parameter rsId (case-insensitive)
+
+|===

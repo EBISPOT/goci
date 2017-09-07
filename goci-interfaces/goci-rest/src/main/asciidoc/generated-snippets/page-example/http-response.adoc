@@ -2,41 +2,34 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2709
+Content-Length: 2502
 
 {
   "_embedded" : {
     "studies" : [ {
-      "qualifier" : null,
       "author" : "Ojwang JO",
       "publicationDate" : "2010-10-21T23:00:00.000+0000",
       "publication" : "J Hand Surg Am",
       "title" : "Genome-wide association scan of Dupuytren's disease.",
       "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
       "replicateSampleSize" : "NA",
-      "platforms" : [ {
-        "manufacturer" : "Illumina"
-      } ],
-      "genotypingTechnologies" : [ {
-        "genotypingTechnology" : "Genome-wide genotyping array"
-      } ],
       "pubmedId" : "20971583",
       "gxe" : false,
       "gxg" : false,
-      "diseaseTrait" : {
-        "trait" : "Dupuytren's disease"
-      },
-      "efoTraits" : [ {
-        "trait" : "dupuytren contracture",
-        "uri" : "http://www.ebi.ac.uk/efo/EFO_0004229"
-      } ],
       "snpCount" : 251837,
+      "qualifier" : null,
       "imputed" : false,
       "pooled" : false,
       "studyDesignComment" : null,
       "accessionId" : "GCST000841",
       "fullPvalueSet" : false,
       "userRequested" : false,
+      "platforms" : [ {
+        "manufacturer" : "Illumina"
+      } ],
+      "genotypingTechnologies" : [ {
+        "genotypingTechnology" : "Genome-wide genotyping array"
+      } ],
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
@@ -45,20 +38,20 @@ Content-Length: 2709
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
+        },
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
         }
       }
     } ]

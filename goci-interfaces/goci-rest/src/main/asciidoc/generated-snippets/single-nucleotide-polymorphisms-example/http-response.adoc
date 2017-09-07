@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 50710
+Content-Length: 37175
 
 {
   "rsId" : "rs490608",
@@ -34,15 +34,7 @@ Content-Length: 50710
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000203761"
       } ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -115,15 +107,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -158,15 +142,7 @@ Content-Length: 50710
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000203761"
       } ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -199,19 +175,7 @@ Content-Length: 50710
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000246203"
       } ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14217948"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        } ],
-        "associations" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14218237"
-        } ]
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -244,15 +208,7 @@ Content-Length: 50710
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000227673"
       } ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -285,15 +241,7 @@ Content-Length: 50710
         "entrezGeneId" : "100419798"
       } ],
       "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -326,15 +274,7 @@ Content-Length: 50710
         "entrezGeneId" : "100419799"
       } ],
       "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -378,11 +318,11 @@ Content-Length: 50710
           "genomeWide" : false,
           "limitedList" : false,
           "_links" : {
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            },
             "snp" : {
               "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
+            },
+            "proxySnps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
             }
           }
         } ],
@@ -429,19 +369,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14217948"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        } ],
-        "associations" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14218237"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        } ]
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -514,15 +442,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -566,11 +486,11 @@ Content-Length: 50710
           "genomeWide" : false,
           "limitedList" : false,
           "_links" : {
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            },
             "snp" : {
               "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
+            },
+            "proxySnps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
             }
           }
         } ],
@@ -617,19 +537,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14217948"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        } ],
-        "associations" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14218237"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        } ]
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -662,15 +570,7 @@ Content-Length: 50710
         "entrezGeneId" : "106633810"
       } ],
       "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -703,15 +603,7 @@ Content-Length: 50710
         "entrezGeneId" : "106633816"
       } ],
       "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -755,11 +647,11 @@ Content-Length: 50710
           "genomeWide" : false,
           "limitedList" : false,
           "_links" : {
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            },
             "snp" : {
               "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
+            },
+            "proxySnps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
             }
           }
         } ],
@@ -806,33 +698,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8547"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/29280"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11747847"
-        } ],
-        "associations" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/24902"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12148"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15059666"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15075343"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        } ]
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -865,15 +731,7 @@ Content-Length: 50710
         "entrezGeneId" : "100505728"
       } ],
       "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      "authorReportedFromLoci" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -946,15 +804,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -998,11 +848,11 @@ Content-Length: 50710
           "genomeWide" : false,
           "limitedList" : false,
           "_links" : {
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            },
             "snp" : {
               "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
+            },
+            "proxySnps" : {
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
             }
           }
         } ],
@@ -1049,33 +899,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8547"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/29280"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11747847"
-        } ],
-        "associations" : [ {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/24902"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12148"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15059666"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15075343"
-        }, {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        } ]
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -1148,15 +972,7 @@ Content-Length: 50710
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
           }
         }
-      } ],
-      "_links" : {
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-        }
-      }
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -1185,11 +1001,11 @@ Content-Length: 50710
     "genomeWide" : false,
     "limitedList" : false,
     "_links" : {
-      "proxySnps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-      },
       "snp" : {
         "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
+      },
+      "proxySnps" : {
+        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
       }
     }
   } ],
@@ -1199,30 +1015,14 @@ Content-Length: 50710
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000227673"
     } ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "LOC100505728",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100505728"
     } ],
     "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "MSTO1",
     "entrezGeneIds" : [ {
@@ -1240,11 +1040,11 @@ Content-Length: 50710
         "genomeWide" : false,
         "limitedList" : false,
         "_links" : {
-          "proxySnps" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-          },
           "snp" : {
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
+          },
+          "proxySnps" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
           }
         }
       } ],
@@ -1291,19 +1091,7 @@ Content-Length: 50710
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
         }
       }
-    } ],
-    "_links" : {
-      "snps" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14217948"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      } ],
-      "associations" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14218237"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      } ]
-    }
+    } ]
   }, {
     "geneName" : "GON4L",
     "entrezGeneIds" : [ {
@@ -1321,11 +1109,11 @@ Content-Length: 50710
         "genomeWide" : false,
         "limitedList" : false,
         "_links" : {
-          "proxySnps" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-          },
           "snp" : {
             "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
+          },
+          "proxySnps" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
           }
         }
       } ],
@@ -1372,63 +1160,21 @@ Content-Length: 50710
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
         }
       }
-    } ],
-    "_links" : {
-      "snps" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8547"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/29280"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11747847"
-      } ],
-      "associations" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/24902"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12148"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15059666"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15075343"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      } ]
-    }
+    } ]
   }, {
     "geneName" : "SCARNA26B",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "106633816"
     } ],
     "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "LOC100419799",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100419799"
     } ],
     "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "DAP3",
     "entrezGeneIds" : [ {
@@ -1475,49 +1221,21 @@ Content-Length: 50710
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
         }
       }
-    } ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    } ]
   }, {
     "geneName" : "SCARNA26A",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "106633810"
     } ],
     "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "AL353807.3",
     "entrezGeneIds" : [ ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000246203"
     } ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14217948"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      } ],
-      "associations" : [ {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }, {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14218237"
-      } ]
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "MSTO2P",
     "entrezGeneIds" : [ {
@@ -1526,15 +1244,7 @@ Content-Length: 50710
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000203761"
     } ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   }, {
     "geneName" : "YY1AP1",
     "entrezGeneIds" : [ {
@@ -1581,88 +1291,15 @@ Content-Length: 50710
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
         }
       }
-    } ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    } ]
   }, {
     "geneName" : "LOC100419798",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100419798"
     } ],
     "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ],
-    "_links" : {
-      "snps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "associations" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/15079031"
-      }
-    }
+    "authorReportedFromLoci" : [ ]
   } ],
-  "_embedded" : {
-    "studies" : [ {
-      "qualifier" : "~",
-      "author" : "Liu JZ",
-      "publicationDate" : "2015-07-19T23:00:00.000+0000",
-      "publication" : "Nat Genet",
-      "title" : "Association analyses identify 38 susceptibility loci for inflammatory bowel disease and highlight shared genetic risk across populations.",
-      "initialSampleSize" : "12,882 European ancestry cases, 21,770 European ancestry controls",
-      "replicateSampleSize" : "25,273 European ancestry cases, 26,715 European ancestry controls, 548 Iranian ancestry cases, 342 Iranian ancestry control, 1,423 Indian ancestry cases, 990 Indian ancestry controls, 2,824 East Asian ancestry cases, 3,719 East Asian ancestry controls",
-      "platforms" : [ {
-        "manufacturer" : "Affymetrix"
-      }, {
-        "manufacturer" : "Illumina"
-      } ],
-      "genotypingTechnologies" : [ {
-        "genotypingTechnology" : "Genome-wide genotyping array"
-      } ],
-      "pubmedId" : "26192919",
-      "gxe" : false,
-      "gxg" : false,
-      "diseaseTrait" : {
-        "trait" : "Inflammatory bowel disease"
-      },
-      "efoTraits" : [ {
-        "trait" : "inflammatory bowel disease",
-        "uri" : "http://www.ebi.ac.uk/efo/EFO_0003767"
-      } ],
-      "snpCount" : 9000000,
-      "imputed" : true,
-      "pooled" : false,
-      "studyDesignComment" : null,
-      "accessionId" : "GCST003043",
-      "fullPvalueSet" : false,
-      "userRequested" : false,
-      "_links" : {
-        "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979{?projection}",
-          "templated" : true
-        },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979/efoTraits"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979/associations"
-        },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979/diseaseTrait"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/12260979/snps"
-        }
-      }
-    } ]
-  },
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
@@ -1670,11 +1307,11 @@ Content-Length: 50710
     "singleNucleotidePolymorphism" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
     },
-    "studies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"
-    },
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/associations"
+    },
+    "studies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"
     },
     "currentSnp" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/currentSnp"

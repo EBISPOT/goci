@@ -48,6 +48,7 @@ public class Locus {
     @JoinTable(name = "ASSOCIATION_LOCUS",
                joinColumns = @JoinColumn(name = "LOCUS_ID"),
                inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+    @JsonBackReference
     private Association association;
 
     // JPA no-args constructor

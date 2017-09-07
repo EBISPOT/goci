@@ -10,13 +10,4 @@
 |`study`
 |Link to the <<studies-resources,studies>> for this ancestry entry
 
-|`ancestralGroups`
-|Link to the <<ancestralGroups-resources,ancestral groups>> for this ancestry entry
-
-|`countryOfOrigin`
-|Link to the <<countryOfOrigin-resources,countries of origin>> for this ancestry entry
-
-|`countryOfRecruitment`
-|Link to the <<countryOfRecruitment-resources,countries of recruitment>> for this ancestry entry
-
 |===
