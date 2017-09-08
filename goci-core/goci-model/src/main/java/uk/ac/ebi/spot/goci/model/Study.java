@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -52,6 +53,7 @@ public class Study implements Trackable {
 
     private String initialSampleSize;
 
+    @JsonProperty("replicationSampleSize")
     private String replicateSampleSize;
 
     @NotBlank(message = "Please enter a pubmed id")
@@ -96,6 +98,7 @@ public class Study implements Trackable {
     private Collection<Association> associations;
 
     @OneToMany(mappedBy = "study")
+    @JsonManagedReference
     private Collection<Ancestry> ancestries;
 
     @ManyToOne

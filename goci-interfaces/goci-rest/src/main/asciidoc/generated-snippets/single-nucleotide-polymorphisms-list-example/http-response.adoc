@@ -1066,11 +1066,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52538/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52538/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52538/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52538/studies"
         }
       }
     }, {
@@ -6161,11 +6161,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52392/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52392/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52392/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52392/studies"
         }
       }
     }, {
@@ -8606,11 +8606,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52389/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52389/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52389/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/52389/studies"
         }
       }
     }, {
@@ -8935,11 +8935,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46762/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46762/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46762/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46762/studies"
         }
       }
     }, {
@@ -10810,11 +10810,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46776/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46776/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46776/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46776/studies"
         }
       }
     }, {
@@ -11255,11 +11255,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46788/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46788/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46788/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46788/studies"
         }
       }
     }, {
@@ -11900,11 +11900,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46815/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46815/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46815/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46815/studies"
         }
       }
     }, {
@@ -12483,11 +12483,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46822/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46822/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46822/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46822/studies"
         }
       }
     }, {
@@ -13522,11 +13522,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46831/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46831/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46831/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46831/studies"
         }
       }
     }, {
@@ -13825,11 +13825,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46836/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46836/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46836/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46836/studies"
         }
       }
     }, {
@@ -14115,11 +14115,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46847/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46847/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46847/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46847/studies"
         }
       }
     }, {
@@ -15230,11 +15230,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46750/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46750/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46750/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46750/studies"
         }
       }
     }, {
@@ -15845,11 +15845,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46850/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46850/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46850/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46850/studies"
         }
       }
     }, {
@@ -16584,11 +16584,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46852/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46852/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46852/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46852/studies"
         }
       }
     }, {
@@ -16790,11 +16790,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46861/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46861/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46861/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46861/studies"
         }
       }
     }, {
@@ -17557,11 +17557,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46866/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46866/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46866/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46866/studies"
         }
       }
     }, {
@@ -18180,11 +18180,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46885/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46885/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46885/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46885/studies"
         }
       }
     }, {
@@ -19145,11 +19145,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46890/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46890/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46890/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46890/studies"
         }
       }
     }, {
@@ -20049,11 +20049,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46901/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46901/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46901/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/46901/studies"
         }
       }
     }, {
@@ -28115,11 +28115,11 @@ Content-Length: 951127
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16234/associations"
         },
-        "studies" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16234/studies"
-        },
         "currentSnp" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16234/currentSnp"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16234/studies"
         }
       }
     } ]

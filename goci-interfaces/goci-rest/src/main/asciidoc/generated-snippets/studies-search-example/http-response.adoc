@@ -6,64 +6,64 @@ Content-Length: 3058
 
 {
   "_links" : {
-    "findStudyDistinctByAssociationsMultiSnpHaplotypeTrue" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsMultiSnpHaplotypeTrue{?sort,projection}",
-      "templated" : true
-    },
-    "findByFullPvalueSet" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByFullPvalueSet{?fullPvalueSet,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByDiseaseTraitTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByDiseaseTraitTrait{?trait,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByUserRequested" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByUserRequested{?userRequested,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByEfoTraitsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsId{?efoTraitId,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByEfoTraitsTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsTrait{?trait,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByDiseaseTraitId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByDiseaseTraitId{?diseaseTraitId,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByGenotypingTechnologiesGenotypingTechnology" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGenotypingTechnologiesGenotypingTechnology{?genotypingTechnology,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByAuthorContainingIgnoreCase" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByAuthorContainingIgnoreCase{?author,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByEfoTraitsUri" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsUri{?uri,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findByPubmedId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByPubmedId{?pubmedId,page,size,sort,projection}",
-      "templated" : true
-    },
-    "findStudyDistinctByAssociationsSnpInteractionTrue" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsSnpInteractionTrue{?sort,projection}",
-      "templated" : true
-    },
     "findByGxe" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGxe{?gxe,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findStudyDistinctByAssociationsMultiSnpHaplotypeTrue" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsMultiSnpHaplotypeTrue{?sort,projection}",
       "templated" : true
     },
     "findByGxg" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGxg{?gxg,page,size,sort,projection}",
       "templated" : true
     },
+    "findByDiseaseTraitId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByDiseaseTraitId{?diseaseTraitId,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByUserRequested" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByUserRequested{?userRequested,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByAuthorContainingIgnoreCase" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByAuthorContainingIgnoreCase{?author,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByDiseaseTraitTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByDiseaseTraitTrait{?trait,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByFullPvalueSet" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByFullPvalueSet{?fullPvalueSet,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByPubmedId{?pubmedId,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByEfoTraitsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsId{?efoTraitId,page,size,sort,projection}",
+      "templated" : true
+    },
     "findByAssociationsId" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByAssociationsId{?associationId,projection}",
+      "templated" : true
+    },
+    "findByEfoTraitsTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsTrait{?trait,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findStudyDistinctByAssociationsSnpInteractionTrue" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findStudyDistinctByAssociationsSnpInteractionTrue{?sort,projection}",
+      "templated" : true
+    },
+    "findByGenotypingTechnologiesGenotypingTechnology" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByGenotypingTechnologiesGenotypingTechnology{?genotypingTechnology,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByEfoTraitsUri" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search/findByEfoTraitsUri{?uri,page,size,sort,projection}",
       "templated" : true
     },
     "self" : {

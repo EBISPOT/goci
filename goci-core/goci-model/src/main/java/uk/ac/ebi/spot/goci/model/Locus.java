@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,6 +43,7 @@ public class Locus {
                joinColumns = @JoinColumn(name = "LOCUS_ID"),
                inverseJoinColumns = @JoinColumn(name = "REPORTED_GENE_ID"))
     @JsonBackReference
+    @RestResource(exported = false)
     private Collection<Gene> authorReportedGenes = new ArrayList<>();
 
     @ManyToOne

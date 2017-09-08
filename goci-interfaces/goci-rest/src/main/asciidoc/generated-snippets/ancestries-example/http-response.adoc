@@ -5,7 +5,6 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 747
 
 {
-  "type" : "initial",
   "description" : "Indo-European",
   "numberOfIndividuals" : 1109,
   "countryOfOrigin" : [ {
@@ -21,6 +20,7 @@ Content-Length: 747
   "ancestralGroups" : [ {
     "ancestralGroup" : "South Asian"
   } ],
+  "type" : "initial",
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643"

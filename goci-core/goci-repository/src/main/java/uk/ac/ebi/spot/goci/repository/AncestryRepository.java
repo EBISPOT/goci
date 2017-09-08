@@ -13,7 +13,7 @@ import java.util.Collection;
  *         <p>
  *         Repository accessing Ancestry entity object
  */
-@RepositoryRestResource//(excerptProjection = AncestryProjection.class)
+@RepositoryRestResource(exported = false)
 public interface AncestryRepository extends JpaRepository<Ancestry, Long> {
     Collection<Ancestry> findByStudyIdAndType(Long studyId, String type);
 

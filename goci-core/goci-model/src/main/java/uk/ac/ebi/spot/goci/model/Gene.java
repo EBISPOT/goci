@@ -46,6 +46,7 @@ public class Gene {
 
     @ManyToMany(mappedBy = "authorReportedGenes")
     @JsonManagedReference
+    @RestResource(exported = false)
     private Collection<Locus> authorReportedFromLoci;
 
     @OneToMany(mappedBy = "gene")

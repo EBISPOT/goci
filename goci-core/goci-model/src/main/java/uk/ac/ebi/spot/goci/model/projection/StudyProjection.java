@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.model.projection;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.rest.core.config.Projection;
+import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
@@ -26,6 +28,7 @@ public interface StudyProjection {
 
     String getInitialSampleSize();
 
+    @JsonProperty("replicationSampleSize")
     String getReplicateSampleSize();
 
     Collection<Platform> getPlatforms() ;
@@ -37,7 +40,7 @@ public interface StudyProjection {
 
     Boolean getGxg() ;
 
-//    Collection<Ancestry> getAncestries();
+    Collection<Ancestry> getAncestries();
 
 //    Collection<Association> getAssociations() ;
     DiseaseTrait getDiseaseTrait() ;

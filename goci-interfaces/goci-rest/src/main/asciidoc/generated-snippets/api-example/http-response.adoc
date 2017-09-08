@@ -6,20 +6,16 @@ Content-Length: 1126
 
 {
   "_links" : {
-    "singleNucleotidePolymorphisms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
-      "templated" : true
-    },
-    "diseaseTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
       "templated" : true
     },
     "ancestries" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries{?page,size,sort,projection}",
       "templated" : true
     },
-    "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
+    "diseaseTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
       "templated" : true
     },
     "mappingMetadatas" : {
@@ -28,6 +24,10 @@ Content-Length: 1126
     },
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort}",
+      "templated" : true
+    },
+    "singleNucleotidePolymorphisms" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
       "templated" : true
     },
     "studies" : {

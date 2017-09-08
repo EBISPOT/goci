@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2502
+Content-Length: 2504
 
 {
   "_embedded" : {
@@ -12,7 +12,6 @@ Content-Length: 2502
       "publication" : "J Hand Surg Am",
       "title" : "Genome-wide association scan of Dupuytren's disease.",
       "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
-      "replicateSampleSize" : "NA",
       "pubmedId" : "20971583",
       "gxe" : false,
       "gxg" : false,
@@ -30,6 +29,7 @@ Content-Length: 2502
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
+      "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
@@ -41,8 +41,8 @@ Content-Length: 2502
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+        "ancestries" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
         },
         "diseaseTrait" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
@@ -50,8 +50,8 @@ Content-Length: 2502
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         }
       }
     } ]

@@ -6,8 +6,8 @@ Content-Length: 786
 
 {
   "_links" : {
-    "findBySnpsRsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findBySnpsRsId{?rsId}",
+    "findByLociStrongestRiskAllelesSnpId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByLociStrongestRiskAllelesSnpId{?snpId}",
       "templated" : true
     },
     "findByStudyPubmedId" : {
@@ -18,8 +18,8 @@ Content-Length: 786
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyId{?studyId}",
       "templated" : true
     },
-    "findByLociStrongestRiskAllelesSnpId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByLociStrongestRiskAllelesSnpId{?snpId}",
+    "findBySnpsRsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findBySnpsRsId{?rsId}",
       "templated" : true
     },
     "self" : {

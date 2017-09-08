@@ -6,24 +6,8 @@ Content-Length: 2293
 
 {
   "_links" : {
-    "findByRiskAllelesLociAssociationStudyPubmedId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyPubmedId{?pubmedId}",
-      "templated" : true
-    },
-    "findByLocationsChromosomeNameAndLocationsChromosomePositionBetween" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByLocationsChromosomeNameAndLocationsChromosomePositionBetween{?chrom,bpStart,bpEnd,page,size,sort}",
-      "templated" : true
-    },
-    "findByRiskAllelesLociAssociationStudyDiseaseTraitId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyDiseaseTraitId{?traitId}",
-      "templated" : true
-    },
-    "findByRsIdIgnoreCase" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRsIdIgnoreCase{?rsId}",
-      "templated" : true
-    },
-    "findByRiskAllelesLociId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociId{?locusId}",
+    "findByRiskAllelesLociAssociationStudyId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyId{?studyId}",
       "templated" : true
     },
     "findByLocationsChromosomePosition" : {
@@ -34,16 +18,32 @@ Content-Length: 2293
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByLocationsId{?locationId}",
       "templated" : true
     },
-    "findByRiskAllelesLociAssociationId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationId{?associationId}",
+    "findByRiskAllelesLociId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociId{?locusId}",
+      "templated" : true
+    },
+    "findByRiskAllelesLociAssociationStudyPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyPubmedId{?pubmedId}",
+      "templated" : true
+    },
+    "findByLocationsChromosomeNameAndLocationsChromosomePositionBetween" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByLocationsChromosomeNameAndLocationsChromosomePositionBetween{?chrom,bpStart,bpEnd,page,size,sort}",
       "templated" : true
     },
     "findByRsId" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRsId{?rsId}",
       "templated" : true
     },
-    "findByRiskAllelesLociAssociationStudyId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyId{?studyId}",
+    "findByRiskAllelesLociAssociationStudyDiseaseTraitId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationStudyDiseaseTraitId{?traitId}",
+      "templated" : true
+    },
+    "findByRsIdIgnoreCase" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRsIdIgnoreCase{?rsId}",
+      "templated" : true
+    },
+    "findByRiskAllelesLociAssociationId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRiskAllelesLociAssociationId{?associationId}",
       "templated" : true
     },
     "self" : {

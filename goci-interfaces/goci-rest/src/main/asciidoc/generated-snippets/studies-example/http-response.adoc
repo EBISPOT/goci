@@ -49,8 +49,8 @@ Content-Length: 1910
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+    "ancestries" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
     },
     "diseaseTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
@@ -58,8 +58,8 @@ Content-Length: 1910
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
     },
-    "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
     }
   }
 }

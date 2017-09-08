@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +52,9 @@ public class Ancestry implements Trackable {
     @JsonIgnore
     private String notes;
 
+    @RestResource(exported = false)
     @OneToOne
+    @JsonBackReference
     private Study study;
 
     @ManyToMany

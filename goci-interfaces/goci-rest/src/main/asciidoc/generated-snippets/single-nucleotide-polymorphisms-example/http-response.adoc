@@ -1310,11 +1310,11 @@ Content-Length: 37175
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/associations"
     },
-    "studies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"
-    },
     "currentSnp" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/currentSnp"
+    },
+    "studies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"
     }
   }
 }

@@ -1033,11 +1033,11 @@ Content-Length: 31205
     "association" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-    },
     "study" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
     },
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
