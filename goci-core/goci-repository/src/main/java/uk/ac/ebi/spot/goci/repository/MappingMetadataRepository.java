@@ -11,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.MappingMetadata;
  *         <p>
  *         Repository for searching the mapping metadata table
  */
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface MappingMetadataRepository extends JpaRepository<MappingMetadata, Long> {
 
 }
