@@ -45,6 +45,8 @@
 
 16. <<faq-A16,Where can I find the GWAS Catalog infrastructure code?>>
 
+17. <<faq-A17,How can I identify variants in linkage disequilibrium (LD) with a variant?>>
+
 === B. Searching
 
 1. <<faq-B1,How do I do a search?>>
@@ -75,6 +77,9 @@
 
 
 10. <<faq-B10,Can I search by genomic region?>>
+
+
+11. <<faq-B11,How do I identify interaction studies in the GWAS Catalog?>>
 
 
 === C. Filters
@@ -195,6 +200,11 @@ Due to the considerable manual curation effort that goes into each study in the 
 
 All our code is freely available from https://github.com/EBISPOT/goci[our Github repository].
 
+=== [[faq-A17]]17. How can I identify variants in linkage disequilibrium (LD) with a variant?
+
+LD calculation between a variant of interest and its surrounding variants can be accessed programmatically using the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) where you can specify a variant ID, a window size of the region surrounding the variant, a population and a cut-off for the calculation results.
+In case of a dataset with more than 1 variant of interest, several independant calls to the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) can be done. Variants in LD with a specific GWAS Catalog variant can also be visualised on our new prototype variant page http://www.ebi.ac.uk/gwas/beta/variants.
+
 
 == B. Searching
 
@@ -228,10 +238,14 @@ Our search functionality is currently unable to allow for typos or term variatio
 
 Ancestry data can be searched by entering relevant text in the search bar, including ancestry category, country or ancestry identifier (e.g. “European”, “South Africa”, “Ashkenazi Jewish”). Any exact string match to the entered text will be returned. Ancestry data can be found in the expanded information in the “Studies” table, accessible by clicking the little "+" icon at the end of each row.
 
-
 ==== [[faq-B10]]10.,Can I search by genomic region?
 
 You can search by genomic region using the format chromNumber:bpLocation-bpLocation, for example 6:16000000-25000000. Please note that this search returns only results of type "Association".
+
+=== [[faq-B11]]11.,How do I identify interaction studies in the GWAS Catalog?
+
+The GWAS Catalog contains SNP-by-SNP and SNP-by-environment interaction studies as long as the SNPs analysed meet our criteria of being genome-wide (see www.ebi.ac.uk/gwas/docs/methods). For both types of study, the term “interaction” is added in parenthesis to the reported trait. For SNP-by-environment interaction studies, the environmental component is also included in the reported trait e.g. “Lung cancer (smoking interaction)” or “Bone mineral density (gender interaction)”. For SNP-by-SNP interaction studies the term “SNP x SNP interaction” is added in parenthesis.
+To identify interaction studies, you can search for “interaction” in both the GWAS Catalog search and the download spreadsheet.
 
 
 == C. Filters
