@@ -1074,6 +1074,9 @@ S2EHR: Stage 2 exercise heart rate
 S2ESBP: stage 2 exercise systolic blood pressure
 
 
+SBM: subset-based meta-analysis approach
+
+
 SDNN: standard deviation of the normal-to-normal inter beat intervals
 
 
