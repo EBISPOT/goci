@@ -34,6 +34,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Collection<Study> findByPubmedId(String pubmedId);
 
+    @RestResource(path = "pubmedId", rel = "pubmedId")
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
 
     // Pageable queries for filtering main page
@@ -99,6 +100,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
+    @RestResource(path = "author", rel = "author")
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
     @RestResource(exported = false)
@@ -131,10 +133,13 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
 
+    @RestResource(path = "efoUri", rel = "efoUri")
     Page<Study> findByEfoTraitsUri(String uri, Pageable pageable);
 
+    @RestResource(path = "efoTrait", rel = "efoTrait")
     Page<Study> findByEfoTraitsTrait(String trait, Pageable pageable);
 
+    @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
     Page<Study> findByDiseaseTraitTrait(String trait, Pageable pageable);
 
 

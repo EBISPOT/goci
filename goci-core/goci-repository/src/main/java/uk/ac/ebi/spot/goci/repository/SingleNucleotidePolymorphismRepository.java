@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.Collection;
@@ -23,11 +24,13 @@ import java.util.List;
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
     SingleNucleotidePolymorphism findByRsId(@Param("rsId") String rsId);
 
+    @RestResource(path = "rsId", rel = "rsId")
     SingleNucleotidePolymorphism findByRsIdIgnoreCase(@Param("rsId") String rsId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyId(Long studyId);
 
-    Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyPubmedId(String pubmedId);
+    @RestResource(path = "pubmedId", rel = "pubmedId")
+    Page<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyPubmedId(String pubmedId, Pageable pageable);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
 
@@ -35,6 +38,7 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
 
     List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
 
+    @RestResource(path = "bpLocation", rel = "bpLocation")
     List<SingleNucleotidePolymorphism> findByLocationsChromosomePosition(@Param("bpLocation") int chromosomePosition);
 
 //    List<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end);

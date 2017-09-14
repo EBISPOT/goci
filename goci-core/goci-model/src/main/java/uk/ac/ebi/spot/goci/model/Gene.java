@@ -45,7 +45,7 @@ public class Gene {
     private Collection<EnsemblGene> ensemblGeneIds = new ArrayList<>();
 
     @ManyToMany(mappedBy = "authorReportedGenes")
-    @JsonManagedReference
+    @JsonBackReference
     @RestResource(exported = false)
     private Collection<Locus> authorReportedFromLoci;
 

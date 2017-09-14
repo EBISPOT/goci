@@ -20,6 +20,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
+    @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
     DiseaseTrait findByTraitIgnoreCase(String trait);
 
     @RestResource(exported = false)
@@ -50,5 +51,7 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             Pageable pageable,
             Long associationId);
 
+    @RestResource(path = "pubmedId", rel = "pubmedID")
     Page<DiseaseTrait> findByStudiesPubmedId(String pubmedId, Pageable pageable);
+
 }

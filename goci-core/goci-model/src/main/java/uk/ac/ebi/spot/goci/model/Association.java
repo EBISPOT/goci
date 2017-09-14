@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -73,7 +72,7 @@ public class Association implements Trackable {
 
     private String betaDirection;
 
-    @ManyToOne
+    @OneToOne
     private Study study;
 
     // Association can have a number of loci attached depending on whether its a multi-snp haplotype
@@ -128,6 +127,7 @@ public class Association implements Trackable {
 //               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
 //               inverseJoinColumns = @JoinColumn(name = "SNP_ID"))
     @ManyToMany(mappedBy = "associations")
+    @JsonManagedReference
     private Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
 
 //    @ManyToMany

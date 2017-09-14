@@ -1,6 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,22 +51,23 @@ public class SingleNucleotidePolymorphism {
     private Collection<GenomicContext> genomicContexts;
 
     @OneToMany(mappedBy = "snp")
-//    @JsonBackReference
-    @JsonManagedReference
+    @JsonBackReference
+    @RestResource(exported = false)
     private Collection<RiskAllele> riskAlleles;
 
+    @JsonProperty("mergedInto")
     @ManyToOne
     @JoinTable(name = "SNP_MERGED_SNP",
                joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
-    @JsonManagedReference
+    @RestResource(exported = false)
     private SingleNucleotidePolymorphism currentSnp;
 
-//    @ManyToMany(mappedBy = "snps")
     @ManyToMany
     @JoinTable(name = "ASSOCIATION_SNP_VIEW",
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+    @JsonBackReference
     private Collection<Association> associations;
 
     @ManyToMany
@@ -71,9 +75,9 @@ public class SingleNucleotidePolymorphism {
                joinColumns = @JoinColumn(name = "SNP_ID"),
                inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
     @JsonManagedReference
+    @RestResource(exported = false)
     private Collection<Gene> genes = new ArrayList<>();
 
-//    @ManyToMany(mappedBy = "snps")
     @ManyToMany
     @JoinTable(name = "STUDY_SNP_VIEW",
                joinColumns = @JoinColumn(name = "SNP_ID"),

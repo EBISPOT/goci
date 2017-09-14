@@ -48,9 +48,14 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     @RestResource(exported = false)
     List<EfoTrait> findByUri(Sort sort, String uri);
 
+    @RestResource(path = "efoUri", rel = "efoUri")
     Page<EfoTrait> findByUri(Pageable pageable, String uri);
 
+    @RestResource(path = "pubmedId", rel = "pubmedId")
     Page<EfoTrait> findByStudiesPubmedId(String pubmedId, Pageable pageable);
+
+    @RestResource(path = "efoTrait", rel = "efoTrait")
+    Page<EfoTrait> findByTraitIgnoreCase(String trait, Pageable pageable);
 
 }
 

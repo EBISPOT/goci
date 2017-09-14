@@ -40,6 +40,7 @@ public class Ancestry implements Trackable {
 
 //    private String countryOfRecruitment;
 
+    @JsonIgnore
     private String description;
 
     // In database but not available in curation interface forms as no longer used
