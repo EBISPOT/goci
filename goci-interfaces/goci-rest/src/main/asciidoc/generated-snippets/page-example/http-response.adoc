@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2504
+Content-Length: 2876
 
 {
   "_embedded" : {
@@ -26,6 +26,22 @@ Content-Length: 2504
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 73,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Dupuytren's disease"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -38,20 +54,17 @@ Content-Length: 2504
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         }
       }
     } ]

@@ -250,7 +250,7 @@ include::{snippets}/associations-example/response-fields.adoc[]
 include::{snippets}/associations-example/links.adoc[]
 
 [[resources-single-nucleotide-polymorphisms]]
-== Single nucleotide polymorphisms
+== Single Nucleotide Polymorphisms
 
 The SingleNucleotidePolymorphisms resources is used to list SNPs in the GWAS Catalog
 
@@ -309,49 +309,49 @@ include::{snippets}/single-nucleotide-polymorphisms-example/response-fields.adoc
 
 include::{snippets}/single-nucleotide-polymorphisms-example/links.adoc[]
 
-[[resources-ancestries]]
-== Ancestries
-
-The Ancestries resource is used to list ancestries in the GWAS Catalog
-
-[[resources-ancestries-list]]
-=== Listing ancestries
-
-A `GET` request will list all of the Catalog ancestries.
-
-==== Example request
-
-include::{snippets}/ancestries-list-example/curl-request.adoc[]
-
-==== Response structure
-
-The response is <<overview-pagination,paginated>> where the individual <<resources-ancestry,ancestry resources>>  are in the `_embedded.ancestries` field.
-
-[[resources-ancestry]]
-== Ancestry
-
-=== Retrieve an ancestry
-
-It is recommended to retrieve ancestries using the "ancestry" projection for better formatted results.
-
-include::{snippets}/ancestries-example/path-parameters.adoc[]
-
-==== Example request
-
-include::{snippets}/ancestries-example/curl-request.adoc[]
-
-==== Example response
-
-include::{snippets}/ancestries-example/http-response.adoc[]
-
-==== Response structure
-
-include::{snippets}/ancestries-example/response-fields.adoc[]
-
-[[resources-ancestry-links]]
-==== Links
-
-include::{snippets}/ancestries-example/links.adoc[]
+//[[resources-ancestries]]
+//== Ancestries
+//
+//The Ancestries resource is used to list ancestries in the GWAS Catalog
+//
+//[[resources-ancestries-list]]
+//=== Listing ancestries
+//
+//A `GET` request will list all of the Catalog ancestries.
+//
+//==== Example request
+//
+//include::{snippets}/ancestries-list-example/curl-request.adoc[]
+//
+//==== Response structure
+//
+//The response is <<overview-pagination,paginated>> where the individual <<resources-ancestry,ancestry resources>>  are in the `_embedded.ancestries` field.
+//
+//[[resources-ancestry]]
+//== Ancestry
+//
+//=== Retrieve an ancestry
+//
+//It is recommended to retrieve ancestries using the "ancestry" projection for better formatted results.
+//
+//include::{snippets}/ancestries-example/path-parameters.adoc[]
+//
+//==== Example request
+//
+//include::{snippets}/ancestries-example/curl-request.adoc[]
+//
+//==== Example response
+//
+//include::{snippets}/ancestries-example/http-response.adoc[]
+//
+//==== Response structure
+//
+//include::{snippets}/ancestries-example/response-fields.adoc[]
+//
+//[[resources-ancestry-links]]
+//==== Links
+//
+//include::{snippets}/ancestries-example/links.adoc[]
 
 
 

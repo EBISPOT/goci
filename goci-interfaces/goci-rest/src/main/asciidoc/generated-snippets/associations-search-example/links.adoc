@@ -7,13 +7,13 @@
 |`findByStudyId`
 |Search for an association via a study using parameter studyId
 
-|`findByStudyPubmedId`
+|`findByPubmedId`
 |Search for an association via a study using parameter pubmedId
 
 |`findByLociStrongestRiskAllelesSnpId`
 |Search for an association via its strongest risk alleles using parameter snpId
 
-|`findBySnpsRsId`
+|`findByRsId`
 |Search for an association via a SNP using parameter rsId
 
 |===

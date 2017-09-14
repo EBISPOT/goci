@@ -7,17 +7,8 @@
 |`associations`
 |Link to all the associations in the GWAS Catalog
 
-|`ancestries`
-|Link to all the ancestry entries in the GWAS Catalog
-
 |`efoTraits`
 |Link to all the EFO traits in the GWAS Catalog
-
-|`mappingMetadatas`
-|Link to the genomic mapping metadata in the GWAS Catalog
-
-|`diseaseTraits`
-|Link to all the disease traits in the GWAS Catalog
 
 |`singleNucleotidePolymorphisms`
 |Link to all the SNPs in the GWAS Catalog

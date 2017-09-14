@@ -1,14 +1,17 @@
-base_url = "http://www.ebi.ac.uk/gwas/beta/rest/api/"
+# base_url = "http://www.ebi.ac.uk/gwas/beta/rest/api/"
+base_url = "http://localhost:8089/gwas/rest/api/"
 
-associations = "associations/"
 studies = "studies/"
 pmidSearch = "search/findByPubmedId?pubmedId="
+studyAssociations = "associations?projection=associationsByStudySummary"
 
 snps = "singleNucleotidePolymorphisms/"
-rsidSearch = "search/findByRsIdIgnoreCase?rsId="
+rsidSearch = "search/findByRsId?rsId="
+snpAssociations = "associations?projection=associationsBySnpSummary"
 
 efoTraits = "efoTraits/"
-uriSearch = "search/findByUri?uri="
+uriSearch = "search/findByEfoUri?uri="
+efoAssociations = "associations?projection=associationsByEfoTraitSummary"
 
 
 

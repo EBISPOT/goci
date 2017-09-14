@@ -20,6 +20,7 @@ public interface AssociationByEfoTraitProjection {
     String getPvalueDescription();
     Integer getPvalueMantissa();
     Integer getPvalueExponent();
+    double getPvalue();
     Boolean getMultiSnpHaplotype();
     Boolean getSnpInteraction();
     String getSnpType();
@@ -33,7 +34,7 @@ public interface AssociationByEfoTraitProjection {
     String getBetaDirection();
 
     Study getStudy();
-
+    
     Collection<Locus> getLoci();
 
 

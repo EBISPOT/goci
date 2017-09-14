@@ -37,7 +37,7 @@
 |`String`
 |Initial sample description
 
-|`replicateSampleSize`
+|`replicationSampleSize`
 |`String`
 |Replication sample description
 
@@ -85,8 +85,8 @@
 |`Object`
 |Free text description of the trait investigated in this study
 
-|`efoTraits`
+|`ancestries`
 |`Array`
-|EFO traits annotated to this study
+|Ancestry entries for this study
 
 |===

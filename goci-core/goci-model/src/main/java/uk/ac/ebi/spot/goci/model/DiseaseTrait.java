@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +29,8 @@ public class DiseaseTrait {
     private String trait;
 
     @OneToMany(mappedBy = "diseaseTrait")
+    @JsonBackReference
+    @RestResource(exported = false)
     private Collection<Study> studies;
 
     // JPA no-args constructor

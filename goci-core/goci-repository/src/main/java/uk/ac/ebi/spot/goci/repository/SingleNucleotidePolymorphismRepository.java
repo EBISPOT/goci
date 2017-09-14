@@ -22,14 +22,15 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface SingleNucleotidePolymorphismRepository extends JpaRepository<SingleNucleotidePolymorphism, Long> {
+    @RestResource(exported = false)
     SingleNucleotidePolymorphism findByRsId(@Param("rsId") String rsId);
 
-    @RestResource(path = "rsId", rel = "rsId")
+    @RestResource(path = "findByRsId", rel = "findByRsId")
     SingleNucleotidePolymorphism findByRsIdIgnoreCase(@Param("rsId") String rsId);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyId(Long studyId);
 
-    @RestResource(path = "pubmedId", rel = "pubmedId")
+    @RestResource(path = "findByPubmedId", rel = "findByPubmedId")
     Page<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyPubmedId(String pubmedId, Pageable pageable);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
@@ -38,13 +39,17 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
 
     List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
 
-    @RestResource(path = "bpLocation", rel = "bpLocation")
+    @RestResource(path = "findByBpLocation", rel = "findByBpLocation")
     List<SingleNucleotidePolymorphism> findByLocationsChromosomePosition(@Param("bpLocation") int chromosomePosition);
 
 //    List<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end);
 
+    @RestResource(path = "findByChromBpLocation", rel = "findByChromBpLocation")
     Page<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end, Pageable pageable);
 
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId);
+
+    @RestResource(path = "findByGene", rel = "findByGene")
+    Page<SingleNucleotidePolymorphism> findByGenesGeneName(String geneName, Pageable pageable);
 }
 

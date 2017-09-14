@@ -105,12 +105,14 @@ public class Study implements Trackable {
     @JoinTable(name = "STUDY_DISEASE_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+    @JsonManagedReference
     private DiseaseTrait diseaseTrait;
 
     @ManyToMany
     @JoinTable(name = "STUDY_EFO_TRAIT",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    @JsonManagedReference
     private Collection<EfoTrait> efoTraits;
 
     @OneToOne(orphanRemoval = true)

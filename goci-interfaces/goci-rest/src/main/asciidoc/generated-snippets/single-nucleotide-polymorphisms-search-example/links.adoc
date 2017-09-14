@@ -19,19 +19,19 @@
 |`findByRsId`
 |Search for SNPs using parameter rsId
 
-|`findByLocationsChromosomePosition`
+|`findByBpLocation`
 |Search for SNPs via their base pair location
 
 |`findByRiskAllelesLociAssociationStudyDiseaseTraitId`
 |Search for SNPs via a study using parameter diseaseTraitId
 
-|`findByLocationsChromosomeNameAndLocationsChromosomePositionBetween`
+|`findByChromBpLocation`
 |Search for SNPs on a certain chromosome and within a given base pair location range
 
-|`findByRiskAllelesLociAssociationStudyPubmedId`
+|`findByPubmedId`
 |Search for SNPs via a study using parameter pubmedId
 
-|`findByRsIdIgnoreCase`
-|Search for SNPs using parameter rsId (case-insensitive)
+|`findByGene`
+|Search for SNPs via a gene using parameter geneName
 
 |===

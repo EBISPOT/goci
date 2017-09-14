@@ -34,19 +34,19 @@
 |`findByUserRequested`
 |Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested 
 
-|`findByAuthorContainingIgnoreCase`
+|`findByAuthor`
 |Search for a study by its first author using the parameter authorContainingIgnoreCase
 
 |`findByDiseaseTraitId`
 |Search for a study via the annotated disease term using the parameter diseaseTraitId
 
-|`findByEfoTraitsTrait`
+|`findByEfoTrait`
 |Search for a study via the annotated EFO term using the parameter efoTraitsTrait
 
-|`findByEfoTraitsUri`
+|`findByEfoUri`
 |Search for a study via the annotated EFO term using the parameter efoTraitsURI
 
-|`findByDiseaseTraitTrait`
+|`findByDiseaseTrait`
 |Search for a study via the annotated disease term using the parameter diseaseTraitTrait
 
 |===

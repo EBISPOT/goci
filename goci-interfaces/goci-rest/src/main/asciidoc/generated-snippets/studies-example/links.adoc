@@ -7,12 +7,6 @@
 |`study`
 |This study
 
-|`ancestries`
-|<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study
-
-|`diseaseTrait`
-|<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study
-
 |`efoTraits`
 |<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study
 
@@ -21,5 +15,8 @@
 
 |`snps`
 |<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study
+
+|`associationsByStudySummary`
+|Convenience representation of associations with all trait and SNP information not present in the study
 
 |===

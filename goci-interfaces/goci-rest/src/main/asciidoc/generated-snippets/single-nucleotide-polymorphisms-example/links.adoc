@@ -10,10 +10,10 @@
 |`studies`
 |Link to the <<studies-resources,studies>> this SNP is identified in
 
-|`currentSnp`
-|Current rsId in case of a merged SNP
-
 |`associations`
 |Associations this SNP is found in
+
+|`associationsBySnpSummary`
+|A convenience projection of associations for this SNP with all the information not found in the SNP endpoint
 
 |===

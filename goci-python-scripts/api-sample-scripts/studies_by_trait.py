@@ -1,11 +1,11 @@
-import argparse
+import requests, argparse
 import json
-import requests
 
 import properties
 
 
-def retrieve_data(pubmedIds):
+
+def retrieve_data(uris):
 
     base_url = properties.base_url
     efoTraits = properties.efoTraits
@@ -15,7 +15,7 @@ def retrieve_data(pubmedIds):
     print("EFO trait, URI")
     print(" Author, publication date, title, journal, pubmed Id, accession Id, initial sample size, replication sample size")
   
-    for id in pubmedIds:
+    for id in uris:
         url = base_url+efoTraits+search+id
 
         # It is a good practice not to hardcode the credentials. So ask the user to enter credentials at runtime
@@ -48,7 +48,7 @@ def retrieve_data(pubmedIds):
 
                         # Print study data summary
                         print(" " + s["author"] + "; "+  s["publicationDate"] + "; "+ s["title"] + "; "+ s["publication"]
-                          + "; "+  s["pubmedId"] + "; "+ s["accessionId"] + "; "+  str(s["initialSampleSize"])+ "; "+ str(s["replicateSampleSize"]))
+                          + "; "+  s["pubmedId"] + "; "+ s["accessionId"] + "; "+  str(s["initialSampleSize"])+ "; "+ str(s["replicationSampleSize"]))
             print("")
             print("")
     else:

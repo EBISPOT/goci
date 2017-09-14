@@ -1,6 +1,5 @@
-import argparse
+import requests, argparse
 import json
-import requests
 
 import properties
 
@@ -12,11 +11,15 @@ def retrieve_data(pubmedIds):
     search = properties.pmidSearch
 
     # Header
-    print("Author, publication date, title, journal, pubmed Id, accession Id, initial sample size, replication sample size")
+    print("Author, publication date, title, journal, pubmed Id, accession Id, initial sample size, replication sample size, disease trait")
+    print("Efo trait, Efo URI")
     print(" pvalue, pvalue description, risk frequency, odds ratio, beta coefficient, beta unit, beta direction, range, SE, SNP type")
-    print("  rs ID, risk allele, risk allele frequency, functional class")
-    print("   gene names")
-    print("    chromosome number, bp location, chromosome region")
+    print("   haplotypeSnoCunt, description")
+    print("    risk allele, risk allele frequency, description")
+    print("   author-reported genes")
+    print("  rsId, functional class, merged, mergedInto")
+    print("   chromosome number, bp location, chromosome region")
+    print("   gene name, isIntergenic, isUpstream, isDownstream, distanceToSnp")
 
     for id in pubmedIds:
         url = base_url+studies+search+id
@@ -37,11 +40,20 @@ def retrieve_data(pubmedIds):
                 s = data[x]
                 # Print study data summary
                 print(s["author"] + "; "+  s["publicationDate"] + "; "+ s["title"] + "; "+ s["publication"]
-                       + "; "+  s["pubmedId"] + "; "+ s["accessionId"] + "; "+  s["initialSampleSize"]+ "; "+ s["replicateSampleSize"])
+                       + "; "+  s["pubmedId"] + "; "+ s["accessionId"] + "; "+  s["initialSampleSize"]+ "; "+ str(s["replicationSampleSize"]) + "; "+ s["diseaseTrait"]["trait"])
+
+                efo = s["_links"]["efoTraits"]["href"]
+                traitResp = requests.get(efo)
+
+                if(traitResp.ok):
+                    efoData = json.loads(traitResp.content)["_embedded"]["efoTraits"]
+
+                    for t in range(len(efoData)):
+                        print(efoData[t]["trait"] + ", " + efoData[t]["uri"])
 
 
                 # Get all associations for this study
-                assocs = s["_links"]["associations"]["href"]
+                assocs = s["_links"]["associationsByStudySummary"]["href"]
 
                 assocResp = requests.get(assocs)
 
@@ -54,65 +66,41 @@ def retrieve_data(pubmedIds):
                                + ", "+ str(a["betaUnit"])  + ", "+ str(a["betaDirection"])  + ", "+ str(a["range"])  + ", "+ str(a["standardError"])  + ", "+ a["snpType"])
 
                         # Get all loci for this association & downstream data
-                        loci = a["_links"]["loci"]["href"]
-                        getLoci(loci)
-    else:
+                        loci = a["loci"]
+                        snps = a["snps"]
+
+
+                        for l in range(len(loci)):
+                              print("   " + str(loci[l]["haplotypeSnpCount"]) + ", " + loci[l]["description"])
+
+                              for s in range(len(loci[l]["strongestRiskAlleles"])):
+                                print("    " + loci[l]["strongestRiskAlleles"][s]["riskAlleleName"] + ", "+ str(loci[l]["strongestRiskAlleles"][s]["riskFrequency"]))
+
+                              for a in range(len(loci[l]["authorReportedGenes"])):
+                                 print("    " + loci[l]["authorReportedGenes"][a]["geneName"])
+
+
+                        for p in range(len(snps)):
+                            print("  "+ snps[p]["rsId"]  + ", "+ snps[p]["functionalClass"] + ", " + str(snps[p]["merged"]) + ", " + str(snps[p]["mergedInto"]))
+
+                            loc = snps[p]["locations"]
+                            gc = snps[p]["genomicContexts"]
+
+                            for f in range(len(loc)):
+                                print("    " + str(loc[f]["chromosomeName"]) + ", " + str(loc[f]["chromosomePosition"]) + ", " + str(loc[f]["region"]["name"]))
+
+                            for g in range(len(gc)):
+                                print("    " + str(gc[g]["gene"]["geneName"]) + ", " + str(gc[g]["isIntergenic"]) + ", " + str(gc[g]["isUpstream"]) + ", " + str(gc[g]["isDownstream"]) + ", " + str(gc[g]["distance"]))
+
+
+
+
+
+
+
+        else:
             # If response code is not ok (200), print the resulting http error code with description
             studyResponse.raise_for_status()
-
-
-
-def getLoci(url):
-    lociResp = requests.get(url)
-
-    if(lociResp.ok):
-        lData = json.loads(lociResp.content)["_embedded"]["loci"]
-
-        for l in range(len(lData)):
-            ras = lData[l]["_links"]["strongestRiskAlleles"]["href"]
-
-            rasResp = requests.get(ras)
-
-            if(rasResp.ok):
-                rData = json.loads(rasResp.content)["_embedded"]["riskAlleles"]
-
-                for r in range(len(rData)):
-
-                    snpResp = requests.get(rData[r]["_links"]["snp"]["href"])
-
-                    if(snpResp.ok):
-                        # As there is only one SNP object associated with a risk allele, the result of this call is not _embedded
-                        snpData = json.loads(snpResp.content)
-                        print("  "+ snpData["rsId"]  + ", "+ rData[r]["riskAlleleName"] + ", "+ str(rData[r]["riskFrequency"])  + ", "+ snpData["functionalClass"])
-
-
-                        geneLink = snpData["_links"]["genes"]["href"]
-                        locationsLink = snpData["_links"]["locations"]["href"]
-
-                        geneResp = requests.get(geneLink)
-                        locResp = requests.get(locationsLink)
-
-                        if(geneResp.ok):
-                            geneData = json.loads(geneResp.content)["_embedded"]["genes"]
-
-                            geneNames = str()
-                            for g in range(len(geneData)):
-                                geneNames = geneNames+geneData[g]["geneName"]+", "
-
-                            print("  " + geneNames)
-
-                        if(lociResp.ok):
-                            locData = json.loads(locResp.content)["_embedded"]["locations"]
-
-                            for l in range(len(locData)):
-                                chromLink = locData[l]["_links"]["region"]["href"]
-
-                                chromResp = requests.get(chromLink)
-
-                                if(chromResp.ok):
-                                    region = json.loads(chromResp.content)
-
-                                    print("    " + str(locData[l]["chromosomeName"]) + ", " + str(locData[l]["chromosomePosition"]) + ", " + region["name"])
 
 
 

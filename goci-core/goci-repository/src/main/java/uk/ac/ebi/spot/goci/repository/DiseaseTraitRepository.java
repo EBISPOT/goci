@@ -18,7 +18,7 @@ import java.util.List;
  *         Repository accessing DiseaseTrait entity object
  */
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
     @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
     DiseaseTrait findByTraitIgnoreCase(String trait);

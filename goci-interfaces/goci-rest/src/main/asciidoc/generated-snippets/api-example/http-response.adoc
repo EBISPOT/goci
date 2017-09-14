@@ -2,28 +2,12 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 1126
+Content-Length: 703
 
 {
   "_links" : {
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
-      "templated" : true
-    },
-    "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries{?page,size,sort,projection}",
-      "templated" : true
-    },
-    "diseaseTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
-      "templated" : true
-    },
-    "mappingMetadatas" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/mappingMetadatas{?page,size,sort}",
-      "templated" : true
-    },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort}",
       "templated" : true
     },
     "singleNucleotidePolymorphisms" : {
@@ -32,6 +16,10 @@ Content-Length: 1126
     },
     "studies" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies{?page,size,sort,projection}",
+      "templated" : true
+    },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort,projection}",
       "templated" : true
     },
     "profile" : {

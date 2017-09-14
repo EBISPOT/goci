@@ -33,7 +33,7 @@ public interface StudyProjection {
 
     Collection<Platform> getPlatforms() ;
     Collection<GenotypingTechnology> getGenotypingTechnologies();
-    
+
     String getPubmedId() ;
 
     Boolean getGxe() ;
@@ -42,12 +42,9 @@ public interface StudyProjection {
 
     Collection<Ancestry> getAncestries();
 
-//    Collection<Association> getAssociations() ;
     DiseaseTrait getDiseaseTrait() ;
 
     Collection<EfoTrait> getEfoTraits();
-
-
 
     Integer getSnpCount();
     String getQualifier() ;
@@ -62,9 +59,6 @@ public interface StudyProjection {
     String getAccessionId() ;
 
     Boolean getFullPvalueSet() ;
-//    Collection<SingleNucleotidePolymorphism> getSnps() ;
-
-
 
 
     Boolean getUserRequested() ;

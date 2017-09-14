@@ -25,13 +25,13 @@
 |`Array`
 |The genomic contexts for this SNP, incl upstream, downstream and mapped genes
 
-|`riskAlleles`
-|`Array`
-|A list of the risk alleles identified for this SNP
-
 |`genes`
 |`Array`
 |A list of the genes that this SNP is located in or near
+
+|`mergedInto`
+|`Null`
+|SNP the present SNP was merged with as part of a more recent genome build
 
 |`_links`
 |`Object`

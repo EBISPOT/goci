@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 37175
+Content-Length: 17223
 
 {
   "rsId" : "rs490608",
@@ -33,8 +33,7 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000203761"
-      } ],
-      "authorReportedFromLoci" : [ ]
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -68,45 +67,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000132676"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -141,8 +101,7 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000203761"
-      } ],
-      "authorReportedFromLoci" : [ ]
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -174,8 +133,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000246203"
-      } ],
-      "authorReportedFromLoci" : [ ]
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -207,8 +165,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000227673"
-      } ],
-      "authorReportedFromLoci" : [ ]
+      } ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -240,8 +197,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ {
         "entrezGeneId" : "100419798"
       } ],
-      "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ]
+      "ensemblGeneIds" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -273,8 +229,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ {
         "entrezGeneId" : "100419799"
       } ],
-      "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ]
+      "ensemblGeneIds" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -308,67 +263,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000125459"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs670523-A",
-          "riskFrequency" : "0.324",
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-            },
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -403,45 +297,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000163374"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -476,67 +331,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000125459"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs670523-A",
-          "riskFrequency" : "0.324",
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-            },
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -569,8 +363,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ {
         "entrezGeneId" : "106633810"
       } ],
-      "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ]
+      "ensemblGeneIds" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -602,8 +395,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ {
         "entrezGeneId" : "106633816"
       } ],
-      "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ]
+      "ensemblGeneIds" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -637,67 +429,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000116580"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "chr1:155733245-T",
-          "riskFrequency" : "0.0602",
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
-            },
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/10080277"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -730,8 +461,7 @@ Content-Length: 37175
       "entrezGeneIds" : [ {
         "entrezGeneId" : "100505728"
       } ],
-      "ensemblGeneIds" : [ ],
-      "authorReportedFromLoci" : [ ]
+      "ensemblGeneIds" : [ ]
     },
     "location" : {
       "chromosomeName" : "1",
@@ -765,45 +495,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000163374"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -838,67 +529,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000116580"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "chr1:155733245-T",
-          "riskFrequency" : "0.0602",
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
-            },
-            "proxySnps" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/10080277"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -933,45 +563,6 @@ Content-Length: 37175
       } ],
       "ensemblGeneIds" : [ {
         "ensemblGeneId" : "ENSG00000132676"
-      } ],
-      "authorReportedFromLoci" : [ {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-          }
-        }
-      }, {
-        "haplotypeSnpCount" : null,
-        "description" : "Single variant",
-        "strongestRiskAlleles" : [ {
-          "riskAlleleName" : "rs3180018-?",
-          "riskFrequency" : null,
-          "genomeWide" : false,
-          "limitedList" : false,
-          "_links" : {
-            "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-            }
-          }
-        } ],
-        "_links" : {
-          "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-          }
-        }
       } ]
     },
     "location" : {
@@ -995,34 +586,18 @@ Content-Length: 37175
       }
     }
   } ],
-  "riskAlleles" : [ {
-    "riskAlleleName" : "rs490608-?",
-    "riskFrequency" : "NR",
-    "genomeWide" : false,
-    "limitedList" : false,
-    "_links" : {
-      "snp" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
-      },
-      "proxySnps" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-      }
-    }
-  } ],
   "genes" : [ {
     "geneName" : "AL162734.1",
     "entrezGeneIds" : [ ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000227673"
-    } ],
-    "authorReportedFromLoci" : [ ]
+    } ]
   }, {
     "geneName" : "LOC100505728",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100505728"
     } ],
-    "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ]
+    "ensemblGeneIds" : [ ]
   }, {
     "geneName" : "MSTO1",
     "entrezGeneIds" : [ {
@@ -1030,67 +605,6 @@ Content-Length: 37175
     } ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000125459"
-    } ],
-    "authorReportedFromLoci" : [ {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs670523-A",
-        "riskFrequency" : "0.324",
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/30163"
-          },
-          "proxySnps" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12719932"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-        }
-      }
     } ]
   }, {
     "geneName" : "GON4L",
@@ -1099,82 +613,19 @@ Content-Length: 37175
     } ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000116580"
-    } ],
-    "authorReportedFromLoci" : [ {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "chr1:155733245-T",
-        "riskFrequency" : "0.0602",
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/10080245"
-          },
-          "proxySnps" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/7851"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/10080277"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-        }
-      }
     } ]
   }, {
     "geneName" : "SCARNA26B",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "106633816"
     } ],
-    "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ]
+    "ensemblGeneIds" : [ ]
   }, {
     "geneName" : "LOC100419799",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100419799"
     } ],
-    "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ]
+    "ensemblGeneIds" : [ ]
   }, {
     "geneName" : "DAP3",
     "entrezGeneIds" : [ {
@@ -1182,60 +633,19 @@ Content-Length: 37175
     } ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000132676"
-    } ],
-    "authorReportedFromLoci" : [ {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-        }
-      }
     } ]
   }, {
     "geneName" : "SCARNA26A",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "106633810"
     } ],
-    "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ]
+    "ensemblGeneIds" : [ ]
   }, {
     "geneName" : "AL353807.3",
     "entrezGeneIds" : [ ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000246203"
-    } ],
-    "authorReportedFromLoci" : [ ]
+    } ]
   }, {
     "geneName" : "MSTO2P",
     "entrezGeneIds" : [ {
@@ -1243,8 +653,7 @@ Content-Length: 37175
     } ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000203761"
-    } ],
-    "authorReportedFromLoci" : [ ]
+    } ]
   }, {
     "geneName" : "YY1AP1",
     "entrezGeneIds" : [ {
@@ -1252,54 +661,15 @@ Content-Length: 37175
     } ],
     "ensemblGeneIds" : [ {
       "ensemblGeneId" : "ENSG00000163374"
-    } ],
-    "authorReportedFromLoci" : [ {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19715644"
-        }
-      }
-    }, {
-      "haplotypeSnpCount" : null,
-      "description" : "Single variant",
-      "strongestRiskAlleles" : [ {
-        "riskAlleleName" : "rs3180018-?",
-        "riskFrequency" : null,
-        "genomeWide" : false,
-        "limitedList" : false,
-        "_links" : {
-          "snp" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16866"
-          }
-        }
-      } ],
-      "_links" : {
-        "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/19714062"
-        }
-      }
     } ]
   }, {
     "geneName" : "LOC100419798",
     "entrezGeneIds" : [ {
       "entrezGeneId" : "100419798"
     } ],
-    "ensemblGeneIds" : [ ],
-    "authorReportedFromLoci" : [ ]
+    "ensemblGeneIds" : [ ]
   } ],
+  "mergedInto" : null,
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
@@ -1307,11 +677,11 @@ Content-Length: 37175
     "singleNucleotidePolymorphism" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813"
     },
+    "associationsBySnpSummary" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/associations?projection=associationBySnp"
+    },
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/associations"
-    },
-    "currentSnp" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/currentSnp"
     },
     "studies" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/15078813/studies"

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 36956
+Content-Length: 55324
 
 {
   "_embedded" : {
@@ -26,6 +26,42 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 4390,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 2698,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Germany"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 1649,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "NR"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Suicide risk"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -38,20 +74,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
         }
       }
     }, {
@@ -74,6 +107,22 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 73,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Dupuytren's disease"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -86,20 +135,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
         }
       }
     }, {
@@ -126,6 +172,66 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 17723,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "Finland"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Southern Europe",
+          "countryName" : "Italy"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Switzerland"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 37774,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "Finland"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Netherlands"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 9665,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "South Asian"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Triglycerides"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -138,20 +244,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
         }
       }
     }, {
@@ -176,6 +279,42 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "replication",
+        "numberOfIndividuals" : 6652,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Oceania",
+          "region" : "Australia/New Zealand",
+          "countryName" : "Australia"
+        } ]
+      }, {
+        "type" : "initial",
+        "numberOfIndividuals" : 15358,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Netherlands"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Retinal vascular caliber"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -188,20 +327,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
         }
       }
     }, {
@@ -224,6 +360,22 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 105,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "East Asian"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "Japan"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Non-small cell lung cancer (survival)"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -236,20 +388,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
         }
       }
     }, {
@@ -274,6 +423,42 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "replication",
+        "numberOfIndividuals" : 5548,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Netherlands"
+        } ]
+      }, {
+        "type" : "initial",
+        "numberOfIndividuals" : 12441,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Oceania",
+          "region" : "Australia/New Zealand",
+          "countryName" : "Australia"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Intelligence (childhood)"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -286,20 +471,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
         }
       }
     }, {
@@ -322,6 +504,58 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 2313,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "South East Asian"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Asia",
+          "region" : "South-eastern Asia",
+          "countryName" : "Singapore"
+        } ]
+      }, {
+        "type" : "initial",
+        "numberOfIndividuals" : 2132,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "South Asian"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Asia",
+          "region" : "South-eastern Asia",
+          "countryName" : "Singapore"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 9326,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Netherlands"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Optic disc area"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -334,20 +568,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
         }
       }
     }, {
@@ -370,6 +601,26 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 1339,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 677,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Vitiligo"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -382,20 +633,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
         }
       }
     }, {
@@ -420,6 +668,62 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 31580,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Southern Europe",
+          "countryName" : "Italy"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Germany"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Switzerland"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 31277,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "Iceland"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Western Europe",
+          "countryName" : "Germany"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Southern Europe",
+          "countryName" : "Croatia"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Urinary albumin excretion"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -432,20 +736,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
         }
       }
     }, {
@@ -468,6 +769,70 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 7473,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "African American or Afro-Caribbean"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 10694,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "African American or Afro-Caribbean"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 69899,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 1188,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "Sub-Saharan African"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Africa",
+          "region" : "Western Africa",
+          "countryName" : "Nigeria"
+        }, {
+          "majorArea" : "Africa",
+          "region" : "Western Africa",
+          "countryName" : "Niger"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Blood pressure"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -480,20 +845,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
         }
       }
     }, {
@@ -516,6 +878,22 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 6530,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Systemic lupus erythematosus"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -528,20 +906,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
         }
       }
     }, {
@@ -566,6 +941,26 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 3595,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 1502,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "NR"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Alzheimer's disease (late onset)"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -578,20 +973,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
         }
       }
     }, {
@@ -616,6 +1008,38 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 7176,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "Iceland"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 1997,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Nonalcoholic fatty liver disease"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -628,20 +1052,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
         }
       }
     }, {
@@ -664,6 +1085,34 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 229,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "Hispanic or Latin American"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 961,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "Hispanic or Latin American"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Vitamin D levels"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -676,20 +1125,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
         }
       }
     }, {
@@ -712,6 +1158,34 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 156,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 590,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "HIV-1 progression"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -724,20 +1198,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
         }
       }
     }, {
@@ -762,6 +1233,62 @@ Content-Length: 36956
       }, {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 7827,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "East Asian"
+        } ],
+        "countryOfOrigin" : [ {
+          "majorArea" : "NR",
+          "region" : "NR",
+          "countryName" : "NR"
+        } ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "Republic of Korea"
+        }, {
+          "majorArea" : "Asia",
+          "region" : "South-eastern Asia",
+          "countryName" : "Singapore"
+        }, {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "China"
+        }, {
+          "majorArea" : "Asia",
+          "region" : "South-eastern Asia",
+          "countryName" : "Philippines"
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 10250,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "East Asian"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        }, {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "Republic of Korea"
+        }, {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "China"
+        }, {
+          "majorArea" : "Asia",
+          "region" : "Eastern Asia",
+          "countryName" : "Japan"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Adiponectin levels"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -774,20 +1301,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
         }
       }
     }, {
@@ -810,6 +1334,42 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 840,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 7623,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 1251,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "African American or Afro-Caribbean"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Northern America",
+          "region" : null,
+          "countryName" : "U.S."
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Smoking behavior"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -822,20 +1382,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
         }
       }
     }, {
@@ -858,6 +1415,30 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Illumina"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 2247,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "Sweden"
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Northern Europe",
+          "countryName" : "U.K."
+        }, {
+          "majorArea" : "Europe",
+          "region" : "Southern Europe",
+          "countryName" : "Croatia"
+        } ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "IgG glycosylation"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -870,20 +1451,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
         }
       }
     }, {
@@ -906,6 +1484,18 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 886,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Factor VII"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -918,20 +1508,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
         }
       }
     }, {
@@ -954,6 +1541,42 @@ Content-Length: 36956
       "platforms" : [ {
         "manufacturer" : "Affymetrix"
       } ],
+      "ancestries" : [ {
+        "type" : "initial",
+        "numberOfIndividuals" : 1087,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 4815,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "European"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 634,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "Native American"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      }, {
+        "type" : "replication",
+        "numberOfIndividuals" : 603,
+        "ancestralGroups" : [ {
+          "ancestralGroup" : "Hispanic or Latin American"
+        } ],
+        "countryOfOrigin" : [ ],
+        "countryOfRecruitment" : [ ]
+      } ],
+      "diseaseTrait" : {
+        "trait" : "Type 2 diabetes and 6 quantitative traits"
+      },
       "genotypingTechnologies" : [ {
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
@@ -966,20 +1589,17 @@ Content-Length: 36956
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57{?projection}",
           "templated" : true
         },
+        "associationsByStudySummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations?projection=associationByStudy"
+        },
         "associations" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
         },
-        "ancestries" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/ancestries"
-        },
-        "diseaseTrait" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/diseaseTrait"
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/efoTraits"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
         }
       }
     } ]

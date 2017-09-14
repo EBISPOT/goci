@@ -19,6 +19,7 @@ public interface AssociationBySNPProjection {
       String getPvalueDescription();
       Integer getPvalueMantissa();
       Integer getPvalueExponent();
+      double getPvalue();
       Boolean getMultiSnpHaplotype();
       Boolean getSnpInteraction();
       String getSnpType();

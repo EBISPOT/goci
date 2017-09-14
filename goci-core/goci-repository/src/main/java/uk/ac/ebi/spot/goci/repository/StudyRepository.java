@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.projection.StudyProjection;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 
 
-@RepositoryRestResource(excerptProjection = StudyProjection.class)
+@RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)
@@ -34,7 +33,6 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Collection<Study> findByPubmedId(String pubmedId);
 
-    @RestResource(path = "pubmedId", rel = "pubmedId")
     Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
 
     // Pageable queries for filtering main page
@@ -100,7 +98,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
-    @RestResource(path = "author", rel = "author")
+    @RestResource(path = "findByAuthor", rel = "findByAuthor")
     Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
 
     @RestResource(exported = false)
@@ -133,13 +131,13 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
 
-    @RestResource(path = "efoUri", rel = "efoUri")
+    @RestResource(path = "findByEfoUri", rel = "findByEfoUri")
     Page<Study> findByEfoTraitsUri(String uri, Pageable pageable);
 
-    @RestResource(path = "efoTrait", rel = "efoTrait")
+    @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
     Page<Study> findByEfoTraitsTrait(String trait, Pageable pageable);
 
-    @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
+    @RestResource(path = "findByDiseaseTrait", rel = "findByDiseaseTrait")
     Page<Study> findByDiseaseTraitTrait(String trait, Pageable pageable);
 
 
