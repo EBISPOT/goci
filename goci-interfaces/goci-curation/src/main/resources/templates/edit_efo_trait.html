@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <div id="editEfoTraitForm">
+                    <form class="form-horizontal" name="editEfoTraitForm" method="post" th:object="${efoTrait}">
+
+                        <div class="form-group">
+                            <label for="id" class="control-label col-md-2"></label>
+
+                            <div>
+                                <input type="hidden" id="id" th:field="*{id}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trait" class="control-label">Edit EFO trait:</label>
+
+                            <div class="col-md-10 col-md-offset-2">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>EFO trait</th>
+                                        <th>URI</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
+                                            <!--Catch an empty value being added-->
+                                            <p th:if="${#fields.hasErrors('trait')}" class="label label-danger"
+                                               th:errors="*{trait}"></p>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" id="uri" th:field="*{uri}"/>
+                                            <!--Catch an empty value being added-->
+                                            <p th:if="${#fields.hasErrors('uri')}" class="label label-danger"
+                                               th:errors="*{uri}"></p>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-2">
+                                <button type="Save" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+</body>
+
+</html>
