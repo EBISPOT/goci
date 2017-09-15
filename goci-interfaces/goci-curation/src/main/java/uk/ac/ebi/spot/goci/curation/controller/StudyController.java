@@ -291,6 +291,11 @@ public class StudyController {
                         sort));
             }
 
+            if (studyType.equals("Open Targets")) {
+                studyPage = studyRepository.findByOpenTargets(true,constructPageSpecification(page - 1,
+                        sort));
+            }
+
             if (studyType.equals("Multi-SNP haplotype studies")) {
                 studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(sort);
                 pagination = false;
@@ -859,6 +864,8 @@ public class StudyController {
         sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
         sortTypeMap.put("userrequestedsortasc", sortByUserRequestedAsc());
         sortTypeMap.put("userrequestedsortdesc", sortByUserRequestedDesc());
+        sortTypeMap.put("opentargetssortasc", sortByOpenTargetsAsc());
+        sortTypeMap.put("opentargetssortdesc", sortByOpenTargetsDesc());
         sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
         sortTypeMap.put("publicationsortdesc", sortByPublicationDesc());
         sortTypeMap.put("efotraitsortasc", sortByEfoTraitAsc());
@@ -1098,6 +1105,14 @@ public class StudyController {
 
     private Sort sortByUserRequestedDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC, "userRequested"));
+    }
+
+    private Sort sortByOpenTargetsAsc() {
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "openTargets"));
+    }
+
+    private Sort sortByOpenTargetsDesc() {
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "openTargets"));
     }
 
     private Sort sortByPubmedIdDesc() {

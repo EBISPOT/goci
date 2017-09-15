@@ -133,5 +133,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
 
+    @RestResource(exported = false)
+    Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
 }
 

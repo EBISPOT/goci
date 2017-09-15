@@ -84,6 +84,8 @@ public class Study implements Trackable {
 
     private Boolean userRequested = false;
 
+    private Boolean openTargets = false;
+
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
                joinColumns = @JoinColumn(name = "STUDY_ID"),
@@ -180,6 +182,7 @@ public class Study implements Trackable {
                  String accessionId,
                  Boolean fullPvalueSet,
                  Boolean userRequested,
+                 Boolean openTargets,
                  Collection<Platform> platforms,
                  Collection<Association> associations,
                  Collection<Ancestry> ancestries,
@@ -209,6 +212,7 @@ public class Study implements Trackable {
         this.accessionId = accessionId;
         this.fullPvalueSet = fullPvalueSet;
         this.userRequested = userRequested;
+        this.openTargets = openTargets;
         this.platforms = platforms;
         this.associations = associations;
         this.ancestries = ancestries;
@@ -482,5 +486,13 @@ public class Study implements Trackable {
 
     public void setUserRequested(Boolean userRequested) {
         this.userRequested = userRequested;
+    }
+
+    public Boolean getOpenTargets() {
+        return openTargets;
+    }
+
+    public void setOpenTargets(Boolean openTargets) {
+        this.openTargets = openTargets;
     }
 }
