@@ -9,6 +9,8 @@ link:../api[REST API]:: The GWAS Catalog REST API endpoints portal
 
 link:api[API documentation]:: Documentation for developers on how to use the GWAS Catlaog REST API
 
+link:sample-scripts[API usage examples]:: Sample scripts for users and developers for common use cases for the GWAS Catlaog REST API
+
 
 http://www.ebi.ac.uk/gwas/docs[Website documentation]:: Documentation on the GWAS Catalog and how to use it
 

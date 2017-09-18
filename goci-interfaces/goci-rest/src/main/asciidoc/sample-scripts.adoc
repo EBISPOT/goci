@@ -1,0 +1,16 @@
+= GWAS CATALOG API use examples
+:doctype: book
+:toc: left
+:toc-title: GWAS Catalog API
+:sectanchors:
+:sectlinks:
+:toclevels: 4
+:source-highlighter: highlightjs
+
+[[overview]]
+= Overview
+
+[[overview-search-endpoints]]
+== Search endpoints
+
+
