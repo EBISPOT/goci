@@ -104,6 +104,13 @@ public class EfoTraitController {
 
         // Save EFO trait
         else {
+            String[] elements = efoTrait.getUri().split("/");
+            int last = elements.length-1;
+            String shortForm = elements[last];
+
+            efoTrait.setShortForm(shortForm);
+
+
             efoTraitRepository.save(efoTrait);
             String message = "Trait " + efoTrait.getTrait() + " with URI " + efoTrait.getUri() + " added to database";
             redirectAttributes.addFlashAttribute("efoTraitSaved", message);
