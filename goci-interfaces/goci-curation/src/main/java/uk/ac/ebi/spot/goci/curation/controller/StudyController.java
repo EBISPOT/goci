@@ -1027,6 +1027,7 @@ public class StudyController {
         studyTypesOptions.add("SNP Interaction studies");
         studyTypesOptions.add("p-Value Set");
         studyTypesOptions.add("User Requested");
+        studyTypesOptions.add("Open Targets");
         return studyTypesOptions;
     }
 
