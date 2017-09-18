@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2876
+Content-Length: 2912
 
 {
   "_embedded" : {
@@ -48,23 +48,23 @@ Content-Length: 2876
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/snps"
         }
       }
     } ]
@@ -83,7 +83,7 @@ Content-Length: 2876
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=2&size=1"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4619&size=1"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4774&size=1"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
@@ -94,8 +94,8 @@ Content-Length: 2876
   },
   "page" : {
     "size" : 1,
-    "totalElements" : 4620,
-    "totalPages" : 4620,
+    "totalElements" : 4775,
+    "totalPages" : 4775,
     "number" : 1
   }
 }

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2463
+Content-Length: 2499
 
 {
   "author" : "Perlis RH",
@@ -66,23 +66,23 @@ Content-Length: 2463
   "replicationSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
   "_links" : {
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854"
     },
     "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993{?projection}",
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
       "templated" : true
     },
     "associationsByStudySummary" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations?projection=associationByStudy"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
     },
     "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
-    },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
     },
     "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
     }
   }
 }

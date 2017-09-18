@@ -4,17 +4,8 @@
 |`self`
 |This association
 
-|`findByRiskAllelesLociAssociationId`
+|`findByAssociationId`
 |Search for SNPs via an association using parameter associationId
-
-|`findByRiskAllelesLociId`
-|Search for SNPs via a locus using parameter lociId
-
-|`findByRiskAllelesLociAssociationStudyId`
-|Search for SNPs via a study using parameter studyId
-
-|`findByLocationsId`
-|Search for SNPs via a lociation using parameter locationId
 
 |`findByRsId`
 |Search for SNPs using parameter rsId
@@ -22,10 +13,13 @@
 |`findByBpLocation`
 |Search for SNPs via their base pair location
 
-|`findByRiskAllelesLociAssociationStudyDiseaseTraitId`
-|Search for SNPs via a study using parameter diseaseTraitId
+|`findByDiseaseTrait`
+|Search for SNPs via a study using parameter diseaseTrait
 
-|`findByChromBpLocation`
+|`findByEfoTrait`
+|Search for SNPs via a study using parameter efoTrait
+
+|`findByChromBpLocationRange`
 |Search for SNPs on a certain chromosome and within a given base pair location range
 
 |`findByPubmedId`

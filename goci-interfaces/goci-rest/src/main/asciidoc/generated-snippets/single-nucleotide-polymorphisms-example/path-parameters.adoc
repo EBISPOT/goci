@@ -1,0 +1,8 @@
+./gwas/rest/api/singleNucleotidePolymorphisms/{rs_id}
+|===
+|Parameter|Description
+
+|`rs_id`
+|The rs Id of the SNP
+
+|===

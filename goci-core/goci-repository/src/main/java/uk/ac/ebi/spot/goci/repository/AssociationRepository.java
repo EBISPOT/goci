@@ -23,7 +23,10 @@ import java.util.List;
  */
 @RepositoryRestResource
 public interface AssociationRepository extends JpaRepository<Association, Long> {
+    @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId);
+
+    Collection<Association> findByStudyAccessionId(String accessionId);
 
     @RestResource(path = "findByPubmedId", rel = "findByPubmedId")
     Collection<Association> findByStudyPubmedId(String pubmedId);
@@ -34,6 +37,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     @RestResource(exported = false)
     List<Association> findByStudyIdAndLastUpdateDateIsNotNullOrderByLastUpdateDateDesc(Long studyId);
 
+    @RestResource(exported = false)
     Collection<Association> findByLociStrongestRiskAllelesSnpId(long snpId);
 
     @RestResource(exported = false)
@@ -101,4 +105,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     @RestResource(path = "findByRsId", rel = "findByRsId")
     Collection<Association> findBySnpsRsId(String rsId);
+
+    @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
+    Collection<Association> findByEfoTraitsTrait(@Param("efoTrait") String trait);
 }

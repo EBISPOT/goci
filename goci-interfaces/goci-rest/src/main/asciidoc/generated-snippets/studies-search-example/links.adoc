@@ -10,9 +10,6 @@
 |`findByGenotypingTechnologiesGenotypingTechnology`
 |Search for a study via the genotyping technology used using parameter genotypingTechnology
 
-|`findByEfoTraitsId`
-|Search for a study via the annotated EFO terms using the parameter efoTraitId
-
 |`findByGxg`
 |Search for a study via whether it is a gene-gene interaction study, using the parameter gxg
 
@@ -37,16 +34,13 @@
 |`findByAuthor`
 |Search for a study by its first author using the parameter authorContainingIgnoreCase
 
-|`findByDiseaseTraitId`
-|Search for a study via the annotated disease term using the parameter diseaseTraitId
-
 |`findByEfoTrait`
-|Search for a study via the annotated EFO term using the parameter efoTraitsTrait
+|Search for a study via the annotated EFO term using the parameter efTrait
 
 |`findByEfoUri`
-|Search for a study via the annotated EFO term using the parameter efoTraitsURI
+|Search for a study via the annotated EFO term using the parameter uri
 
 |`findByDiseaseTrait`
-|Search for a study via the annotated disease term using the parameter diseaseTraitTrait
+|Search for a study via the annotated disease term using the parameter diseaseTrait
 
 |===

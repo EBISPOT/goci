@@ -1,7 +1,7 @@
 = GWAS CATALOG API use examples
 :doctype: book
 :toc: left
-:toc-title: GWAS Catalog API
+:toc-title: GWAS CATALOG API use examples
 :sectanchors:
 :sectlinks:
 :toclevels: 4

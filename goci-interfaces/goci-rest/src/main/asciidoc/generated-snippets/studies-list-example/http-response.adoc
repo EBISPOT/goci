@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 55324
+Content-Length: 56068
 
 {
   "_embedded" : {
@@ -68,23 +68,23 @@ Content-Length: 55324
       "replicationSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
         }
       }
     }, {
@@ -129,23 +129,23 @@ Content-Length: 55324
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5996/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/snps"
         }
       }
     }, {
@@ -238,23 +238,23 @@ Content-Length: 55324
       "replicationSampleSize" : "up to 37,774 European ancestry individuals, up to 9,665 Indian Asian ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5979/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/snps"
         }
       }
     }, {
@@ -321,23 +321,23 @@ Content-Length: 55324
       "replicationSampleSize" : "6,652 European ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6007/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/snps"
         }
       }
     }, {
@@ -382,23 +382,23 @@ Content-Length: 55324
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6017/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/snps"
         }
       }
     }, {
@@ -465,23 +465,23 @@ Content-Length: 55324
       "replicationSampleSize" : "5,548 European ancestry children",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7089/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/snps"
         }
       }
     }, {
@@ -562,23 +562,23 @@ Content-Length: 55324
       "replicationSampleSize" : "9,326 European ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6161/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/snps"
         }
       }
     }, {
@@ -627,23 +627,23 @@ Content-Length: 55324
       "replicationSampleSize" : "677 European ancestry cases",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6168/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/snps"
         }
       }
     }, {
@@ -730,23 +730,23 @@ Content-Length: 55324
       "replicationSampleSize" : "31,277 European ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6181/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/snps"
         }
       }
     }, {
@@ -839,23 +839,23 @@ Content-Length: 55324
       "replicationSampleSize" : "1,188 Sub-Saharan African individuals, 10,694 African American individuals, 69,899 European ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6191/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/snps"
         }
       }
     }, {
@@ -900,23 +900,23 @@ Content-Length: 55324
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6203/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/snps"
         }
       }
     }, {
@@ -967,23 +967,23 @@ Content-Length: 55324
       "replicationSampleSize" : "751 cases, 751 controls",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6204/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/snps"
         }
       }
     }, {
@@ -1046,23 +1046,23 @@ Content-Length: 55324
       "replicationSampleSize" : "592 European ancestry cases, 1,405 European ancestry controls",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6209/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/snps"
         }
       }
     }, {
@@ -1119,23 +1119,23 @@ Content-Length: 55324
       "replicationSampleSize" : "961 Hispanic individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6099/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/snps"
         }
       }
     }, {
@@ -1192,23 +1192,23 @@ Content-Length: 55324
       "replicationSampleSize" : "590 European ancestry seroconverter male cases",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/6100/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/snps"
         }
       }
     }, {
@@ -1295,23 +1295,23 @@ Content-Length: 55324
       "replicationSampleSize" : "10,252 East Asian ancestry individuals",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7494/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/snps"
         }
       }
     }, {
@@ -1376,23 +1376,23 @@ Content-Length: 55324
       "replicationSampleSize" : "412 African American male individuals and 839 African American female individuals from 402 families, 3,491 European ancestry male individuals and 4,132 European ancestry female individuals from 1,731 families",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5374/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/snps"
         }
       }
     }, {
@@ -1445,23 +1445,23 @@ Content-Length: 55324
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/7295/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/snps"
         }
       }
     }, {
@@ -1502,23 +1502,23 @@ Content-Length: 55324
       "replicationSampleSize" : "NA",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/56/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/snps"
         }
       }
     }, {
@@ -1583,23 +1583,23 @@ Content-Length: 55324
       "replicationSampleSize" : "1,465 European ancestry individuals, 1,464 European ancestry cases, 1,467 European ancestry controls, 300 Pima Indian ancestry cases, 334 Pima Indian ancestry controls, 287 Mexican American cases, 316 Mexican American controls, 124 Old Order Amish cases, 295 Old Order Amish controls",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations?projection=associationByStudy"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/associations?projection=associationByStudy"
         },
         "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/associations"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/57/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/snps"
         }
       }
     } ]
@@ -1615,7 +1615,7 @@ Content-Length: 55324
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=230&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=238&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
@@ -1626,8 +1626,8 @@ Content-Length: 55324
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 4620,
-    "totalPages" : 231,
+    "totalElements" : 4775,
+    "totalPages" : 239,
     "number" : 0
   }
 }

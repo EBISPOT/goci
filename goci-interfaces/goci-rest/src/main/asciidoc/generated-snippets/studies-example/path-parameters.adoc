@@ -1,0 +1,8 @@
+./gwas/rest/api/studies/{study_accession_id}
+|===
+|Parameter|Description
+
+|`study_accession_id`
+|The accession id of the study in the GWAS Catalog
+
+|===

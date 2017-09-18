@@ -28,15 +28,26 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     @RestResource(path = "findByRsId", rel = "findByRsId")
     SingleNucleotidePolymorphism findByRsIdIgnoreCase(@Param("rsId") String rsId);
 
+    @RestResource(exported = false)
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyId(Long studyId);
 
     @RestResource(path = "findByPubmedId", rel = "findByPubmedId")
     Page<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyPubmedId(String pubmedId, Pageable pageable);
 
+
+    @RestResource(path = "findByAssociationId", rel = "findByAssociationId")
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
 
+    @RestResource(exported = false)
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
 
+    @RestResource(path = "findByDiseaseTrait", rel = "findByDiseaseTrait")
+    Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitTrait(String diseaseTrait);
+
+    @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
+    Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationEfoTraitsTrait(String efoTrait);
+
+    @RestResource(exported = false)
     List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
 
     @RestResource(path = "findByBpLocation", rel = "findByBpLocation")
@@ -44,9 +55,10 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
 
 //    List<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end);
 
-    @RestResource(path = "findByChromBpLocation", rel = "findByChromBpLocation")
+    @RestResource(path = "findByChromBpLocationRange", rel = "findByChromBpLocationRange")
     Page<SingleNucleotidePolymorphism> findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(@Param("chrom") String chromosomeName, @Param("bpStart") int start, @Param("bpEnd") int end, Pageable pageable);
 
+    @RestResource(exported = false)
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId);
 
     @RestResource(path = "findByGene", rel = "findByGene")

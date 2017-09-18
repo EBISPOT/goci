@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7329174' 'Accept:application/json'
+----

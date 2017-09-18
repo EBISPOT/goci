@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854' 'Accept:application/json'
+----

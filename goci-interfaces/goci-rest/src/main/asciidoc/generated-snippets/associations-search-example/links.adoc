@@ -4,14 +4,14 @@
 |`self`
 |This association
 
-|`findByStudyId`
-|Search for an association via a study using parameter studyId
+|`findByStudyAccessionId`
+|Search for an association via a study using parameter accessionId
 
 |`findByPubmedId`
 |Search for an association via a study using parameter pubmedId
 
-|`findByLociStrongestRiskAllelesSnpId`
-|Search for an association via its strongest risk alleles using parameter snpId
+|`findByEfoTrait`
+|Search for an association via its annotated EFO traits using parameter efoTrait
 
 |`findByRsId`
 |Search for an association via a SNP using parameter rsId

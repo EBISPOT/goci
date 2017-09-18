@@ -20,7 +20,7 @@ import java.util.List;
 
 @RepositoryRestResource(exported = false)
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
-    @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
+//    @RestResource(path = "diseaseTrait", rel = "diseaseTrait")
     DiseaseTrait findByTraitIgnoreCase(String trait);
 
     @RestResource(exported = false)

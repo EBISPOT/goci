@@ -21,7 +21,7 @@ public class SnpResourceProcessor implements ResourceProcessor<Resource<SingleNu
     @Override
     public Resource<SingleNucleotidePolymorphism> process(Resource<SingleNucleotidePolymorphism> resource) {
 
-        LinkBuilder link = configuration.entityLinks().linkForSingleResource(SingleNucleotidePolymorphism.class, resource.getContent().getId());
+        LinkBuilder link = configuration.entityLinks().linkForSingleResource(SingleNucleotidePolymorphism.class, resource.getContent().getRsId());
         resource.add(link.slash("/associations?projection=associationBySnp").withRel("associationsBySnpSummary"));
 
         return resource;

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 88687
+Content-Length: 89034
 
 {
   "_embedded" : {
@@ -31,7 +31,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11931"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs9497975"
             }
           }
         } ],
@@ -47,8 +47,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:01:53.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:01:53.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:01.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:01.000+0000",
       "genes" : [ {
         "geneName" : "SAMD5",
         "entrezGeneIds" : [ {
@@ -58,18 +58,18 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000203727"
         } ]
       }, {
+        "geneName" : "AL513164.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000224658"
+        } ]
+      }, {
         "geneName" : "RNU6-1222P",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "106480100"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000207345"
-        } ]
-      }, {
-        "geneName" : "AL513164.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000224658"
         } ]
       }, {
         "geneName" : "SASH1",
@@ -130,7 +130,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11934"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs3815087"
             }
           }
         } ],
@@ -160,37 +160,25 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:16.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:16.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:30.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:31.000+0000",
       "genes" : [ {
-        "geneName" : "POLR2LP1",
+        "geneName" : "PSORS1C3",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "493825"
+          "entrezGeneId" : "100130889"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000226993"
+          "ensemblGeneId" : "ENSG00000223364"
         }, {
-          "ensemblGeneId" : "ENSG00000237545"
+          "ensemblGeneId" : "ENSG00000226422"
         }, {
-          "ensemblGeneId" : "ENSG00000233504"
+          "ensemblGeneId" : "ENSG00000230983"
         }, {
-          "ensemblGeneId" : "ENSG00000232007"
+          "ensemblGeneId" : "ENSG00000224744"
         }, {
-          "ensemblGeneId" : "ENSG00000225714"
+          "ensemblGeneId" : "ENSG00000231450"
         }, {
-          "ensemblGeneId" : "ENSG00000238211"
-        } ]
-      }, {
-        "geneName" : "U6",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000263701"
-        }, {
-          "ensemblGeneId" : "ENSG00000264185"
-        }, {
-          "ensemblGeneId" : "ENSG00000266886"
-        }, {
-          "ensemblGeneId" : "ENSG00000266784"
+          "ensemblGeneId" : "ENSG00000204528"
         } ]
       }, {
         "geneName" : "PSORS1C1",
@@ -211,6 +199,24 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000235487"
         } ]
       }, {
+        "geneName" : "POLR2LP1",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "493825"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000226993"
+        }, {
+          "ensemblGeneId" : "ENSG00000237545"
+        }, {
+          "ensemblGeneId" : "ENSG00000233504"
+        }, {
+          "ensemblGeneId" : "ENSG00000232007"
+        }, {
+          "ensemblGeneId" : "ENSG00000225714"
+        }, {
+          "ensemblGeneId" : "ENSG00000238211"
+        } ]
+      }, {
         "geneName" : "CDSN",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "1041"
@@ -229,28 +235,16 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000206460"
         } ]
       }, {
-        "geneName" : "PSORS1C3",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "100130889"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000224056"
-        }, {
-          "ensemblGeneId" : "ENSG00000226422"
-        }, {
-          "ensemblGeneId" : "ENSG00000230983"
-        }, {
-          "ensemblGeneId" : "ENSG00000224744"
-        }, {
-          "ensemblGeneId" : "ENSG00000231450"
-        }, {
-          "ensemblGeneId" : "ENSG00000204528"
-        } ]
-      }, {
         "geneName" : "CR759815.2",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000258002"
+        } ]
+      }, {
+        "geneName" : "AL805909.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000229199"
         } ]
       }, {
         "geneName" : "AL662844.2",
@@ -259,16 +253,16 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000255899"
         } ]
       }, {
+        "geneName" : "U6",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000252379"
+        } ]
+      }, {
         "geneName" : "CR847794.1",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000229823"
-        } ]
-      }, {
-        "geneName" : "AL805909.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000229199"
         } ]
       }, {
         "geneName" : "TCF19",
@@ -289,16 +283,16 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000224472"
         } ]
       }, {
-        "geneName" : "AL662844.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000255726"
-        } ]
-      }, {
         "geneName" : "AL662844.3",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000271821"
+        } ]
+      }, {
+        "geneName" : "AL662844.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000255726"
         } ]
       }, {
         "geneName" : "C6orf15",
@@ -334,6 +328,8 @@ Content-Length: 88687
         }, {
           "ensemblGeneId" : "ENSG00000231281"
         }, {
+          "ensemblGeneId" : "ENSG00000232758"
+        }, {
           "ensemblGeneId" : "ENSG00000223577"
         }, {
           "ensemblGeneId" : "ENSG00000206344"
@@ -349,6 +345,12 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000228469"
         } ]
       }, {
+        "geneName" : "CR759815.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000226408"
+        } ]
+      }, {
         "geneName" : "RNU6-1133P",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
@@ -359,12 +361,6 @@ Content-Length: 88687
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000272501"
-        } ]
-      }, {
-        "geneName" : "CR759815.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000226408"
         } ]
       }, {
         "geneName" : "CCHCR1",
@@ -427,12 +423,28 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000234461"
         } ]
       }, {
+        "geneName" : "CR847794.2",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000257215"
+        } ]
+      }, {
         "geneName" : "POU5F1",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "5460"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000204531"
+        }, {
+          "ensemblGeneId" : "ENSG00000233911"
+        }, {
+          "ensemblGeneId" : "ENSG00000229094"
+        }, {
+          "ensemblGeneId" : "ENSG00000230336"
+        }, {
+          "ensemblGeneId" : "ENSG00000206454"
+        }, {
+          "ensemblGeneId" : "ENSG00000235068"
         } ]
       }, {
         "geneName" : "AL662833.2",
@@ -441,28 +453,12 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000228583"
         } ]
       }, {
-        "geneName" : "CR847794.2",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000257215"
-        } ]
-      }, {
         "geneName" : "HCG22",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "285834"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000228789"
-        }, {
-          "ensemblGeneId" : "ENSG00000237894"
-        }, {
-          "ensemblGeneId" : "ENSG00000227974"
-        }, {
-          "ensemblGeneId" : "ENSG00000229501"
-        }, {
-          "ensemblGeneId" : "ENSG00000225629"
-        }, {
-          "ensemblGeneId" : "ENSG00000238234"
+          "ensemblGeneId" : "ENSG00000228147"
         } ]
       }, {
         "geneName" : "MUC22",
@@ -517,7 +513,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/11936"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17324272"
             }
           }
         } ],
@@ -533,8 +529,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:18.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:18.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:33.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:33.000+0000",
       "genes" : [ {
         "geneName" : "Z82205.1",
         "entrezGeneIds" : [ ],
@@ -556,6 +552,12 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
+        "geneName" : "LOC107983959",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "107983959"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
         "geneName" : "HS6ST2",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "90161"
@@ -563,12 +565,6 @@ Content-Length: 88687
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000171004"
         } ]
-      }, {
-        "geneName" : "LOC107983959",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "107983959"
-        } ],
-        "ensemblGeneIds" : [ ]
       } ],
       "pvalue" : 2.0E-7,
       "_links" : {
@@ -614,7 +610,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/16881"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs212388"
             }
           }
         } ],
@@ -634,8 +630,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-04T01:02:43.000+0000",
-      "lastUpdateDate" : "2017-06-04T01:02:43.000+0000",
+      "lastMappingDate" : "2017-08-24T00:07:38.000+0000",
+      "lastUpdateDate" : "2017-08-24T00:07:38.000+0000",
       "genes" : [ {
         "geneName" : "AL356417.2",
         "entrezGeneIds" : [ ],
@@ -669,24 +665,18 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
-        "geneName" : "AL035530.2",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000271913"
-        } ]
-      }, {
-        "geneName" : "LOC105378083",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "105378083"
-        } ],
-        "ensemblGeneIds" : [ ]
-      }, {
         "geneName" : "TAGAP",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "117289"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000164691"
+        } ]
+      }, {
+        "geneName" : "AL035530.2",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000271913"
         } ]
       }, {
         "geneName" : "RSPH3",
@@ -696,6 +686,12 @@ Content-Length: 88687
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000130363"
         } ]
+      }, {
+        "geneName" : "LOC105378083",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "105378083"
+        } ],
+        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "AL035530.1",
         "entrezGeneIds" : [ ],
@@ -747,7 +743,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/13587"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4654925"
             }
           }
         } ],
@@ -767,8 +763,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:20.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:20.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:36.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:36.000+0000",
       "genes" : [ {
         "geneName" : "RNF186",
         "entrezGeneIds" : [ {
@@ -786,20 +782,20 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000169914"
         } ]
       }, {
-        "geneName" : "PLA2G2A",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "5320"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000188257"
-        } ]
-      }, {
         "geneName" : "RN7SL304P",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "106479333"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000242688"
+        } ]
+      }, {
+        "geneName" : "PLA2G2A",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "5320"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000188257"
         } ]
       }, {
         "geneName" : "PLA2G2E",
@@ -866,7 +862,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8624"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2138852"
             }
           }
         } ],
@@ -886,8 +882,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:23.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:23.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:39.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:39.000+0000",
       "genes" : [ {
         "geneName" : "RNU4-34P",
         "entrezGeneIds" : [ {
@@ -911,18 +907,12 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000266111"
         } ]
       }, {
-        "geneName" : "NUFIP2",
+        "geneName" : "TAOK1",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "57532"
+          "entrezGeneId" : "57551"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000108256"
-        } ]
-      }, {
-        "geneName" : "AC068025.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000264808"
+          "ensemblGeneId" : "ENSG00000160551"
         } ]
       }, {
         "geneName" : "RNU6-711P",
@@ -933,12 +923,18 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000253064"
         } ]
       }, {
-        "geneName" : "TAOK1",
+        "geneName" : "AC068025.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000264808"
+        } ]
+      }, {
+        "geneName" : "NUFIP2",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "57551"
+          "entrezGeneId" : "57532"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000160551"
+          "ensemblGeneId" : "ENSG00000108256"
         } ]
       }, {
         "geneName" : "AC005412.2",
@@ -1005,7 +1001,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/12282"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12049330"
             }
           }
         } ],
@@ -1041,8 +1037,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:27.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:27.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:43.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:43.000+0000",
       "genes" : [ {
         "geneName" : "CYB561D1",
         "entrezGeneIds" : [ {
@@ -1082,20 +1078,20 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000156097"
         } ]
       }, {
-        "geneName" : "ATXN7L2",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "127002"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000162650"
-        } ]
-      }, {
         "geneName" : "GNAI3",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "2773"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000065135"
+        } ]
+      }, {
+        "geneName" : "ATXN7L2",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "127002"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000162650"
         } ]
       }, {
         "geneName" : "LOC105378893",
@@ -1164,7 +1160,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/12421"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1128334"
             }
           }
         } ],
@@ -1184,18 +1180,18 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:29.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:29.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:46.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:46.000+0000",
       "genes" : [ {
-        "geneName" : "LOC105369566",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "105369566"
-        } ],
-        "ensemblGeneIds" : [ ]
-      }, {
         "geneName" : "LOC107984408",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "107984408"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
+        "geneName" : "LOC105369566",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "105369566"
         } ],
         "ensemblGeneIds" : [ ]
       }, {
@@ -1277,7 +1273,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9375"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2074356"
             }
           }
         } ],
@@ -1293,8 +1289,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:31.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:31.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:49.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:49.000+0000",
       "genes" : [ {
         "geneName" : "MIR6861",
         "entrezGeneIds" : [ {
@@ -1310,18 +1306,18 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
-        "geneName" : "AC004217.2",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000257494"
-        } ]
-      }, {
         "geneName" : "RN7SKP71",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "106479126"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000201428"
+        } ]
+      }, {
+        "geneName" : "AC004217.2",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000257494"
         } ]
       }, {
         "geneName" : "HECTD4",
@@ -1357,7 +1353,7 @@ Content-Length: 88687
         "geneName" : "Y_RNA",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000200630"
+          "ensemblGeneId" : "ENSG00000200397"
         } ]
       } ],
       "pvalue" : 8.0E-12,
@@ -1404,7 +1400,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9374"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12731740"
             }
           }
         } ],
@@ -1430,8 +1426,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:34.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:34.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:53.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:53.000+0000",
       "genes" : [ {
         "geneName" : "LOC107985253",
         "entrezGeneIds" : [ {
@@ -1463,6 +1459,12 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000174059"
         } ]
       }, {
+        "geneName" : "LOC148696",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "148696"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
         "geneName" : "C1orf132",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "100128537"
@@ -1470,12 +1472,6 @@ Content-Length: 88687
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000203709"
         } ]
-      }, {
-        "geneName" : "LOC148696",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "148696"
-        } ],
-        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "CDCA4P4",
         "entrezGeneIds" : [ {
@@ -1537,7 +1533,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9377"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs6918981"
             }
           }
         } ],
@@ -1557,8 +1553,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:37.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:37.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:56.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:56.000+0000",
       "genes" : [ {
         "geneName" : "RPS10-NUDT3",
         "entrezGeneIds" : [ {
@@ -1618,20 +1614,20 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000186577"
         } ]
       }, {
-        "geneName" : "NUDT3",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "11165"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000272325"
-        } ]
-      }, {
         "geneName" : "KRT18P9",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "442205"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000271231"
+        } ]
+      }, {
+        "geneName" : "NUDT3",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "11165"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000272325"
         } ]
       } ],
       "pvalue" : 3.0000000000000004E-8,
@@ -1678,7 +1674,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9379"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10513137"
             }
           }
         } ],
@@ -1698,8 +1694,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:39.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:39.000+0000",
+      "lastMappingDate" : "2017-08-23T00:08:59.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:08:59.000+0000",
       "genes" : [ {
         "geneName" : "PXYLP1",
         "entrezGeneIds" : [ {
@@ -1789,7 +1785,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9711"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs13273123"
             }
           }
         } ],
@@ -1809,8 +1805,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:42.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:42.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:02.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:02.000+0000",
       "genes" : [ {
         "geneName" : "PLAG1",
         "entrezGeneIds" : [ {
@@ -1906,7 +1902,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/8354"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs3791675"
             }
           }
         } ],
@@ -1926,8 +1922,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:44.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:44.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:05.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:05.000+0000",
       "genes" : [ {
         "geneName" : "LOC105374690",
         "entrezGeneIds" : [ {
@@ -2031,7 +2027,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9373"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17249754"
             }
           }
         } ],
@@ -2051,8 +2047,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:47.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:47.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:08.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:08.000+0000",
       "genes" : [ {
         "geneName" : "RNU6-148P",
         "entrezGeneIds" : [ {
@@ -2070,20 +2066,20 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000252207"
         } ]
       }, {
-        "geneName" : "MRPL2P1",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "347894"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000257480"
-        } ]
-      }, {
         "geneName" : "POC1B",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "282809"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000139323"
+        } ]
+      }, {
+        "geneName" : "MRPL2P1",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "347894"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000257480"
         } ]
       }, {
         "geneName" : "ATP2B1-AS1",
@@ -2098,17 +2094,17 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
-        "geneName" : "LINC00936",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "338758"
-        } ],
-        "ensemblGeneIds" : [ ]
-      }, {
         "geneName" : "AC025034.1",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000258302"
         } ]
+      }, {
+        "geneName" : "LINC00936",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "338758"
+        } ],
+        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "ATP2B1",
         "entrezGeneIds" : [ {
@@ -2162,7 +2158,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/9373"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17249754"
             }
           }
         } ],
@@ -2182,9 +2178,15 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:49.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:49.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:10.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:10.000+0000",
       "genes" : [ {
+        "geneName" : "LINC00936",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "338758"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
         "geneName" : "MRPL2P1",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "347894"
@@ -2192,12 +2194,6 @@ Content-Length: 88687
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000257480"
         } ]
-      }, {
-        "geneName" : "LINC00936",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "338758"
-        } ],
-        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "POC1B",
         "entrezGeneIds" : [ {
@@ -2233,20 +2229,20 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000252823"
         } ]
       }, {
-        "geneName" : "RNA5SP365",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "100873624"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000252207"
-        } ]
-      }, {
         "geneName" : "ATP2B1",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "490"
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000070961"
+        } ]
+      }, {
+        "geneName" : "RNA5SP365",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "100873624"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000252207"
         } ]
       } ],
       "pvalue" : 3.0E-6,
@@ -2293,7 +2289,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14053"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11809207"
             }
           }
         } ],
@@ -2313,8 +2309,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:02:53.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:02:53.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:15.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:15.000+0000",
       "genes" : [ {
         "geneName" : "AL355877.2",
         "entrezGeneIds" : [ ],
@@ -2322,19 +2318,13 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000270733"
         } ]
       }, {
-        "geneName" : "CEP85",
+        "geneName" : "SH3BGRL3",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "64793"
+          "entrezGeneId" : "83442"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000130695"
+          "ensemblGeneId" : "ENSG00000142669"
         } ]
-      }, {
-        "geneName" : "LOC101928303",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "101928303"
-        } ],
-        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "CNKSR1",
         "entrezGeneIds" : [ {
@@ -2350,13 +2340,19 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000278572"
         } ]
       }, {
-        "geneName" : "SH3BGRL3",
+        "geneName" : "CEP85",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "83442"
+          "entrezGeneId" : "64793"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000142669"
+          "ensemblGeneId" : "ENSG00000130695"
         } ]
+      }, {
+        "geneName" : "LOC101928303",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "101928303"
+        } ],
+        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "ZNF593",
         "entrezGeneIds" : [ {
@@ -2380,6 +2376,12 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000236782"
         } ]
       }, {
+        "geneName" : "AL355877.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000236155"
+        } ]
+      }, {
         "geneName" : "UBXN11",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "91544"
@@ -2388,11 +2390,11 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000158062"
         } ]
       }, {
-        "geneName" : "AL355877.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000236155"
-        } ]
+        "geneName" : "LOC105376886",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "105376886"
+        } ],
+        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "PDIK1L",
         "entrezGeneIds" : [ {
@@ -2402,27 +2404,21 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000175087"
         } ]
       }, {
-        "geneName" : "LOC105376886",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "105376886"
-        } ],
-        "ensemblGeneIds" : [ ]
-      }, {
         "geneName" : "C1orf232",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000282872"
         } ]
       }, {
-        "geneName" : "LOC100420494",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "100420494"
-        } ],
-        "ensemblGeneIds" : [ ]
-      }, {
         "geneName" : "MRPS6P1",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "359780"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
+        "geneName" : "LOC100420494",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "100420494"
         } ],
         "ensemblGeneIds" : [ ]
       }, {
@@ -2478,7 +2474,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14054"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs13437082"
             }
           }
         } ],
@@ -2488,7 +2484,13 @@ Content-Length: 88687
             "entrezGeneId" : "3106"
           } ],
           "ensemblGeneIds" : [ {
-            "ensemblGeneId" : "ENSG00000232126"
+            "ensemblGeneId" : "ENSG00000228964"
+          }, {
+            "ensemblGeneId" : "ENSG00000223532"
+          }, {
+            "ensemblGeneId" : "ENSG00000234745"
+          }, {
+            "ensemblGeneId" : "ENSG00000224608"
           } ]
         } ],
         "_links" : {
@@ -2498,15 +2500,9 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:03:11.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:03:11.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:39.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:39.000+0000",
       "genes" : [ {
-        "geneName" : "AL645933.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000233902"
-        } ]
-      }, {
         "geneName" : "HLA-S",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "267015"
@@ -2518,19 +2514,7 @@ Content-Length: 88687
         }, {
           "ensemblGeneId" : "ENSG00000225851"
         }, {
-          "ensemblGeneId" : "ENSG00000237559"
-        } ]
-      }, {
-        "geneName" : "BX248310.2",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000232244"
-        } ]
-      }, {
-        "geneName" : "BX927178.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000228954"
+          "ensemblGeneId" : "ENSG00000228179"
         } ]
       }, {
         "geneName" : "LOC105375015",
@@ -2539,27 +2523,23 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
-        "geneName" : "DHFRP2",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "729816"
-        } ],
+        "geneName" : "AL645933.1",
+        "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000233161"
-        }, {
-          "ensemblGeneId" : "ENSG00000236851"
-        }, {
-          "ensemblGeneId" : "ENSG00000230016"
-        }, {
-          "ensemblGeneId" : "ENSG00000233604"
-        }, {
-          "ensemblGeneId" : "ENSG00000228432"
+          "ensemblGeneId" : "ENSG00000233902"
         } ]
       }, {
-        "geneName" : "LOC101929072",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "101929072"
-        } ],
-        "ensemblGeneIds" : [ ]
+        "geneName" : "BX927178.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000228954"
+        } ]
+      }, {
+        "geneName" : "BX248310.2",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000232244"
+        } ]
       }, {
         "geneName" : "HCG26",
         "entrezGeneIds" : [ {
@@ -2570,7 +2550,21 @@ Content-Length: 88687
         "geneName" : "Y_RNA",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000200630"
+          "ensemblGeneId" : "ENSG00000200397"
+        } ]
+      }, {
+        "geneName" : "DHFRP2",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "729816"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000233161"
+        }, {
+          "ensemblGeneId" : "ENSG00000230016"
+        }, {
+          "ensemblGeneId" : "ENSG00000233604"
+        }, {
+          "ensemblGeneId" : "ENSG00000228432"
         } ]
       }, {
         "geneName" : "LOC107984145",
@@ -2579,15 +2573,9 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ ]
       }, {
-        "geneName" : "AL662833.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000225939"
-        } ]
-      }, {
-        "geneName" : "LOC102725068",
+        "geneName" : "LOC101929072",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "102725068"
+          "entrezGeneId" : "101929072"
         } ],
         "ensemblGeneIds" : [ ]
       }, {
@@ -2597,10 +2585,16 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000271581"
         } ]
       }, {
-        "geneName" : "AL845443.1",
+        "geneName" : "LOC102725068",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "102725068"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
+        "geneName" : "AL662833.1",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000225571"
+          "ensemblGeneId" : "ENSG00000225939"
         } ]
       }, {
         "geneName" : "RNU6-283P",
@@ -2609,6 +2603,12 @@ Content-Length: 88687
         } ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000201658"
+        } ]
+      }, {
+        "geneName" : "AL845443.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000225571"
         } ]
       }, {
         "geneName" : "AL669854.1",
@@ -2620,13 +2620,7 @@ Content-Length: 88687
         "geneName" : "U6",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000263701"
-        }, {
-          "ensemblGeneId" : "ENSG00000264185"
-        }, {
-          "ensemblGeneId" : "ENSG00000266886"
-        }, {
-          "ensemblGeneId" : "ENSG00000266784"
+          "ensemblGeneId" : "ENSG00000252379"
         } ]
       }, {
         "geneName" : "AL671883.2",
@@ -2646,7 +2640,13 @@ Content-Length: 88687
           "entrezGeneId" : "3106"
         } ],
         "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000232126"
+          "ensemblGeneId" : "ENSG00000228964"
+        }, {
+          "ensemblGeneId" : "ENSG00000223532"
+        }, {
+          "ensemblGeneId" : "ENSG00000234745"
+        }, {
+          "ensemblGeneId" : "ENSG00000224608"
         } ]
       }, {
         "geneName" : "ZDHHC20P2",
@@ -2654,25 +2654,19 @@ Content-Length: 88687
           "entrezGeneId" : "100048908"
         } ],
         "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000226732"
+        }, {
           "ensemblGeneId" : "ENSG00000232659"
         }, {
           "ensemblGeneId" : "ENSG00000227405"
         }, {
           "ensemblGeneId" : "ENSG00000223702"
-        }, {
-          "ensemblGeneId" : "ENSG00000231773"
         } ]
       }, {
         "geneName" : "AL845443.2",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000232276"
-        } ]
-      }, {
-        "geneName" : "AL671883.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000229836"
         } ]
       }, {
         "geneName" : "WASF5P",
@@ -2690,22 +2684,36 @@ Content-Length: 88687
         }, {
           "ensemblGeneId" : "ENSG00000231433"
         }, {
+          "ensemblGeneId" : "ENSG00000229103"
+        }, {
           "ensemblGeneId" : "ENSG00000234980"
         } ]
-      }, {
-        "geneName" : "HLA-X",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "267016"
-        } ],
-        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "HCP5",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "10866"
         } ],
         "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000237105"
+        }, {
           "ensemblGeneId" : "ENSG00000206337"
+        }, {
+          "ensemblGeneId" : "ENSG00000227429"
+        }, {
+          "ensemblGeneId" : "ENSG00000230389"
         } ]
+      }, {
+        "geneName" : "LOC105379664",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "105379664"
+        } ],
+        "ensemblGeneIds" : [ ]
+      }, {
+        "geneName" : "HLA-X",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "267016"
+        } ],
+        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "LINC01149",
         "entrezGeneIds" : [ {
@@ -2733,19 +2741,17 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000277402"
         } ]
       }, {
-        "geneName" : "LOC105379664",
+        "geneName" : "AL671883.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000229836"
+        } ]
+      }, {
+        "geneName" : "LOC105379656",
         "entrezGeneIds" : [ {
-          "entrezGeneId" : "105379664"
+          "entrezGeneId" : "105379656"
         } ],
         "ensemblGeneIds" : [ ]
-      }, {
-        "geneName" : "FGFR3P1",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "100462812"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000230994"
-        } ]
       }, {
         "geneName" : "MICA",
         "entrezGeneIds" : [ {
@@ -2761,17 +2767,19 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000183214"
         } ]
       }, {
+        "geneName" : "FGFR3P1",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "100462812"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000230994"
+        } ]
+      }, {
         "geneName" : "CR318637.1",
         "entrezGeneIds" : [ ],
         "ensemblGeneIds" : [ {
           "ensemblGeneId" : "ENSG00000224131"
         } ]
-      }, {
-        "geneName" : "LOC105379656",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "105379656"
-        } ],
-        "ensemblGeneIds" : [ ]
       }, {
         "geneName" : "BX248310.1",
         "entrezGeneIds" : [ ],
@@ -2823,7 +2831,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/14055"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1182188"
             }
           }
         } ],
@@ -2843,8 +2851,8 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:03:13.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:03:13.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:41.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:41.000+0000",
       "genes" : [ {
         "geneName" : "CARD11",
         "entrezGeneIds" : [ {
@@ -2854,17 +2862,17 @@ Content-Length: 88687
           "ensemblGeneId" : "ENSG00000198286"
         } ]
       }, {
-        "geneName" : "AC006028.1",
-        "entrezGeneIds" : [ ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000231357"
-        } ]
-      }, {
         "geneName" : "LOC100131264",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "100131264"
         } ],
         "ensemblGeneIds" : [ ]
+      }, {
+        "geneName" : "AC006028.1",
+        "entrezGeneIds" : [ ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000231357"
+        } ]
       }, {
         "geneName" : "GNA12",
         "entrezGeneIds" : [ {
@@ -2926,7 +2934,7 @@ Content-Length: 88687
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/290"
+              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2282978"
             }
           }
         } ],
@@ -2946,9 +2954,17 @@ Content-Length: 88687
           }
         }
       } ],
-      "lastMappingDate" : "2017-06-03T01:03:15.000+0000",
-      "lastUpdateDate" : "2017-06-03T01:03:15.000+0000",
+      "lastMappingDate" : "2017-08-23T00:09:43.000+0000",
+      "lastUpdateDate" : "2017-08-23T00:09:43.000+0000",
       "genes" : [ {
+        "geneName" : "RNU6-10P",
+        "entrezGeneIds" : [ {
+          "entrezGeneId" : "100873745"
+        } ],
+        "ensemblGeneIds" : [ {
+          "ensemblGeneId" : "ENSG00000206763"
+        } ]
+      }, {
         "geneName" : "CDK6",
         "entrezGeneIds" : [ {
           "entrezGeneId" : "1021"
@@ -2962,14 +2978,6 @@ Content-Length: 88687
           "entrezGeneId" : "105375397"
         } ],
         "ensemblGeneIds" : [ ]
-      }, {
-        "geneName" : "RNU6-10P",
-        "entrezGeneIds" : [ {
-          "entrezGeneId" : "100873745"
-        } ],
-        "ensemblGeneIds" : [ {
-          "ensemblGeneId" : "ENSG00000206763"
-        } ]
       }, {
         "geneName" : "RBM48",
         "entrezGeneIds" : [ {
@@ -3025,7 +3033,7 @@ Content-Length: 88687
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=2739&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=3244&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
@@ -3036,8 +3044,8 @@ Content-Length: 88687
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 54798,
-    "totalPages" : 2740,
+    "totalElements" : 64892,
+    "totalPages" : 3245,
     "number" : 0
   }
 }

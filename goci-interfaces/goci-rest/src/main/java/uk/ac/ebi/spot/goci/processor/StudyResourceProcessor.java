@@ -21,7 +21,7 @@ public class StudyResourceProcessor implements ResourceProcessor<Resource<Study>
     @Override
     public Resource<Study> process(Resource<Study> resource) {
 
-        LinkBuilder link = configuration.entityLinks().linkForSingleResource(Study.class, resource.getContent().getId());
+        LinkBuilder link = configuration.entityLinks().linkForSingleResource(Study.class, resource.getContent().getAccessionId());
         resource.add(link.slash("/associations?projection=associationByStudy").withRel("associationsByStudySummary"));
 
         return resource;

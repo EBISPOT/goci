@@ -28,6 +28,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
+    @RestResource(exported = false)
     Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);
 
     @RestResource(exported = false)
@@ -87,6 +88,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
 
     // EFO trait query
+    @RestResource(exported = false)
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
     // Query housekeeping notes field
@@ -139,12 +141,13 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findByEfoTraitsUri(String uri, Pageable pageable);
 
     @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
-    Page<Study> findByEfoTraitsTrait(String trait, Pageable pageable);
+    Page<Study> findByEfoTraitsTraitIgnoreCase(@Param("efoTrait") String trait, Pageable pageable);
 
     @RestResource(path = "findByDiseaseTrait", rel = "findByDiseaseTrait")
-    Page<Study> findByDiseaseTraitTrait(String trait, Pageable pageable);
+    Page<Study> findByDiseaseTraitTraitIgnoreCase(@Param("diseaseTrait") String trait, Pageable pageable);
 
-
+    @RestResource(exported = false)
+    Study findByAccessionId(String accessionId);
 
 }
 

@@ -2,20 +2,20 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 812
+Content-Length: 795
 
 {
   "_links" : {
-    "findByLociStrongestRiskAllelesSnpId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByLociStrongestRiskAllelesSnpId{?snpId,projection}",
-      "templated" : true
-    },
-    "findByStudyId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyId{?studyId,projection}",
+    "findByStudyAccessionId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyAccessionId{?accessionId,projection}",
       "templated" : true
     },
     "findByRsId" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByRsId{?rsId,projection}",
+      "templated" : true
+    },
+    "findByEfoTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByEfoTrait{?efoTrait,projection}",
       "templated" : true
     },
     "findByPubmedId" : {

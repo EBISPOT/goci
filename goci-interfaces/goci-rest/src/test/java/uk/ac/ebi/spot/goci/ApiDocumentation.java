@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -200,7 +199,7 @@ public class ApiDocumentation {
                               linkWithRel("self").description("This study"),
                               linkWithRel("findByAssociationsId").description("Search for a study via an association using parameter associationId"),
                               linkWithRel("findByGenotypingTechnologiesGenotypingTechnology").description("Search for a study via the genotyping technology used using parameter genotypingTechnology"),
-                              linkWithRel("findByEfoTraitsId").description("Search for a study via the annotated EFO terms using the parameter efoTraitId"),
+//                              linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
                               linkWithRel("findByGxg").description("Search for a study via whether it is a gene-gene interaction study, using the parameter gxg"),
                               linkWithRel("findStudyDistinctByAssociationsSnpInteractionTrue").description("Search for studies that have associations that are SNP-SNP interactions "),
                               linkWithRel("findByPubmedId").description("Search for a study using the parameter pubmedId"),
@@ -209,10 +208,10 @@ public class ApiDocumentation {
                               linkWithRel("findStudyDistinctByAssociationsMultiSnpHaplotypeTrue").description("Search for studies that have associations that are multi-SNP haplotypes"),
                               linkWithRel("findByUserRequested").description("Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested "),
                               linkWithRel("findByAuthor").description("Search for a study by its first author using the parameter authorContainingIgnoreCase"),
-                              linkWithRel("findByDiseaseTraitId").description("Search for a study via the annotated disease term using the parameter diseaseTraitId"),
-                              linkWithRel("findByEfoTrait").description("Search for a study via the annotated EFO term using the parameter efoTraitsTrait"),
-                              linkWithRel("findByEfoUri").description("Search for a study via the annotated EFO term using the parameter efoTraitsURI"),
-                              linkWithRel("findByDiseaseTrait").description("Search for a study via the annotated disease term using the parameter diseaseTraitTrait")
+//                              linkWithRel("findByDiseaseTraitId").description("Search for a study via the annotated disease term using the parameter diseaseTraitId"),
+                              linkWithRel("findByEfoTrait").description("Search for a study via the annotated EFO term using the parameter efTrait"),
+                              linkWithRel("findByEfoUri").description("Search for a study via the annotated EFO term using the parameter uri"),
+                              linkWithRel("findByDiseaseTrait").description("Search for a study via the annotated disease term using the parameter diseaseTrait")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -221,10 +220,10 @@ public class ApiDocumentation {
     @Test
     public void studiesExample() throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/studies/{study_id}", "5993").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/studies/{study_accession_id}", "GCST000854").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
-                                parameterWithName("study_id").description("The id of the study in the GWAS Catalog")
+                                parameterWithName("study_accession_id").description("The accession id of the study in the GWAS Catalog")
 //                                parameterWithName("projection_name").optional().description("Optional projection for more convenient display of results")
                                 ),
                         responseFields(
@@ -287,9 +286,9 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
-                              linkWithRel("findByStudyId").description("Search for an association via a study using parameter studyId"),
+                              linkWithRel("findByStudyAccessionId").description("Search for an association via a study using parameter accessionId"),
                               linkWithRel("findByPubmedId").description("Search for an association via a study using parameter pubmedId"),
-                              linkWithRel("findByLociStrongestRiskAllelesSnpId").description("Search for an association via its strongest risk alleles using parameter snpId"),
+                              linkWithRel("findByEfoTrait").description("Search for an association via its annotated EFO traits using parameter efoTrait"),
                               linkWithRel("findByRsId").description("Search for an association via a SNP using parameter rsId")
                         )
                 ))
@@ -384,14 +383,15 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
-                              linkWithRel("findByRiskAllelesLociAssociationId").description("Search for SNPs via an association using parameter associationId"),
-                              linkWithRel("findByRiskAllelesLociId").description("Search for SNPs via a locus using parameter lociId"),
-                              linkWithRel("findByRiskAllelesLociAssociationStudyId").description("Search for SNPs via a study using parameter studyId"),
-                              linkWithRel("findByLocationsId").description("Search for SNPs via a lociation using parameter locationId"),
+//                              linkWithRel("findByRiskAllelesLociAssociationId").description("Search for SNPs via an association using parameter associationId"),
+//                              linkWithRel("findByRiskAllelesLociId").description("Search for SNPs via a locus using parameter lociId"),
+//                              linkWithRel("findByRiskAllelesLociAssociationStudyId").description("Search for SNPs via a study using parameter studyId"),
+                              linkWithRel("findByAssociationId").description("Search for SNPs via an association using parameter associationId"),
                               linkWithRel("findByRsId").description("Search for SNPs using parameter rsId"),
                               linkWithRel("findByBpLocation").description("Search for SNPs via their base pair location"),
-                              linkWithRel("findByRiskAllelesLociAssociationStudyDiseaseTraitId").description("Search for SNPs via a study using parameter diseaseTraitId"),
-                              linkWithRel("findByChromBpLocation").description("Search for SNPs on a certain chromosome and within a given base pair location range"),
+                              linkWithRel("findByDiseaseTrait").description("Search for SNPs via a study using parameter diseaseTrait"),
+                              linkWithRel("findByEfoTrait").description("Search for SNPs via a study using parameter efoTrait"),
+                              linkWithRel("findByChromBpLocationRange").description("Search for SNPs on a certain chromosome and within a given base pair location range"),
                               linkWithRel("findByPubmedId").description("Search for SNPs via a study using parameter pubmedId"),
                               linkWithRel("findByGene").description("Search for SNPs via a gene using parameter geneName")
                         )
@@ -401,10 +401,10 @@ public class ApiDocumentation {
 
     @Test
     public void singleNucleotidePolymorphismsExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms/{snp_id}", "15078813").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms/{rs_id}", "rs7329174").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
-                                parameterWithName("snp_id").description("The id of the SNP in the GWAS Catalog")),
+                                parameterWithName("rs_id").description("The rs Id of the SNP")),
                         responseFields(
                             fieldWithPath("rsId").description("The SNP's rs Id"),
                             fieldWithPath("merged").description("Whether this SNP has been merged with another SNP in a newer genome build"),
