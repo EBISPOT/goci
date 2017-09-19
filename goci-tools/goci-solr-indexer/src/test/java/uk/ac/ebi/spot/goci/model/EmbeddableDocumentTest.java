@@ -56,6 +56,7 @@ public class EmbeddableDocumentTest {
                                "GCST999999",
                                false,
                                false,
+                               false,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST,

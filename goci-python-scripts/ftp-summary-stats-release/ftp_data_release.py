@@ -68,6 +68,13 @@ def cleanFTP():
 
     for dir in ftpDirs:
             if dir not in stagingDirs:
+                files = os.listdir(ftpPath +'/' +dir)
+                if not files:
+                    print("Directory " + dir + " is empty")
+                else:
+                    print("Directory " + dir + " is not empty. Removing files.")
+                    for f in files:
+                        os.remove(ftpPath +'/' +dir + '/' + f)
                 print("Removing directory " + dir + " from the FTP as it is no longer present in staging")
                 os.removedirs(ftpPath +'/' +dir)
     return

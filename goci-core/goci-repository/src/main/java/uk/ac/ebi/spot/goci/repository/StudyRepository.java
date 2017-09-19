@@ -149,5 +149,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Study findByAccessionId(String accessionId);
 
+    @RestResource(exported = false)
+    Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
 }
 
