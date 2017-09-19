@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Ignore
+@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -158,23 +159,8 @@ public class ApiDocumentation {
                         links(halLinks(),
                               linkWithRel("studies").description("Link to the studies in the GWAS Catalog"),
                               linkWithRel("associations").description("Link to all the associations in the GWAS Catalog"),
-//                              linkWithRel("ancestries").description("Link to all the ancestry entries in the GWAS Catalog"),
                               linkWithRel("efoTraits").description("Link to all the EFO traits in the GWAS Catalog"),
-//                              linkWithRel("genes").description("Link to all the genes in the GWAS Catalog"),
-//                              linkWithRel("regions").description("Link to all the chromsome regions in the GWAS Catalog"),
-//                              linkWithRel("countries").description("Link to all the countries in the GWAS Catalog"),
-//                              linkWithRel("entrezGenes").description("Link to all the Entrez gene IDs in the GWAS Catalog"),
-//                              linkWithRel("ensemblGenes").description("Link to all the Ensembl gene IDs in the GWAS Catalog"),
-//                              linkWithRel("mappingMetadatas").description("Link to the genomic mapping metadata in the GWAS Catalog"),
-//                              linkWithRel("platforms").description("Link to all the sequencing platforms in the GWAS Catalog"),
-//                              linkWithRel("genomicContexts").description("Link to all the genomic contexts in the GWAS Catalog"),
-//                              linkWithRel("riskAlleles").description("Link to all the risk alleles in the GWAS Catalog"),
-//                              linkWithRel("diseaseTraits").description("Link to all the disease traits in the GWAS Catalog"),
-//                              linkWithRel("locations").description("Link to all the bp locations in the GWAS Catalog"),
-//                              linkWithRel("loci").description("Link to all the association-risk allele locus link objects in the GWAS Catalog"),
                               linkWithRel("singleNucleotidePolymorphisms").description("Link to all the SNPs in the GWAS Catalog"),
-//                              linkWithRel("ancestralGroups").description("Link to all the ancestral groups in the GWAS Catalog"),
-//                              linkWithRel("genotypingTechnologies").description("Link to all the genotyping technologies in the GWAS Catalog"),
                               linkWithRel("profile").description("Link to the API profile")
                               )))
                 .andExpect(status().isOk());
@@ -347,25 +333,6 @@ public class ApiDocumentation {
 
 
 
-//    @Test
-//    public void genomicContextsExample() throws Exception {
-//        this.mockMvc.perform(get("/gwas/rest/api/genomicContexts/{genomicContext_id}", "20777953").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
-//                .andDo( this.restDocumentationResultHandler.document(
-//                        pathParameters(
-//                                parameterWithName("genomicContext_id").description("The id of the genomic context in the GWAS Catalog")),
-//                        responseFields(
-//                                fieldWithPath("_links").description("Links to other resources"),
-//                                fieldWithPath("isIntergenic").description("Whether the SNP is intergenic"),
-//                                fieldWithPath("isUpstream").description("Whether the linked gene is upstream to the SNP"),
-//                                fieldWithPath("isDownstream").description("Whether the linked gene is downstream to the SNP"),
-//                                fieldWithPath("distance").description("The distance between the current SNP and gene"),
-//                                fieldWithPath("source").description("NCBI or Ensembl gene"),
-//                                fieldWithPath("mappingMethod").description("How the mapping was obtained"),
-//                                fieldWithPath("isClosestGene").description("Whether gene is the closest one to the current SNP")
-//                        )
-//                ))
-//                .andExpect(status().isOk());
-//    }
 
     @Test
     public void singleNucleotidePolymorphismsListExample () throws Exception {
@@ -383,9 +350,6 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
-//                              linkWithRel("findByRiskAllelesLociAssociationId").description("Search for SNPs via an association using parameter associationId"),
-//                              linkWithRel("findByRiskAllelesLociId").description("Search for SNPs via a locus using parameter lociId"),
-//                              linkWithRel("findByRiskAllelesLociAssociationStudyId").description("Search for SNPs via a study using parameter studyId"),
                               linkWithRel("findByAssociationId").description("Search for SNPs via an association using parameter associationId"),
                               linkWithRel("findByRsId").description("Search for SNPs using parameter rsId"),
                               linkWithRel("findByBpLocation").description("Search for SNPs via their base pair location"),
@@ -412,20 +376,14 @@ public class ApiDocumentation {
                             fieldWithPath("lastUpdateDate").description("The last date this SNP's mapping information was updated"),
                             fieldWithPath("locations").description("The SNP's genomic locations"),
                             fieldWithPath("genomicContexts").description("The genomic contexts for this SNP, incl upstream, downstream and mapped genes"),
-//                            fieldWithPath("riskAlleles").description("A list of the risk alleles identified for this SNP"),
                             fieldWithPath("genes").description("A list of the genes that this SNP is located in or near"),
                             fieldWithPath("mergedInto").description("SNP the present SNP was merged with as part of a more recent genome build"),
-//                            fieldWithPath("_embedded").description("Embedded information"),
                             fieldWithPath("_links").description("<<snp-links,Links>> to other resources")
                             ),
                         links(halLinks(),
                               linkWithRel("self").description("This SNP"),
                               linkWithRel("singleNucleotidePolymorphism").description("This SNP"),
                               linkWithRel("studies").description("Link to the <<studies-resources,studies>> this SNP is identified in"),
-//                              linkWithRel("locations").description("This SNP's chromosomal location(s)"),
-//                              linkWithRel("currentSnp").description("Current rsId in case of a merged SNP"),
-//                              linkWithRel("genes").description("Genes this SNP is located in or near"),
-//                              linkWithRel("riskAlleles").description("Risk alleles for this SNP"),
                               linkWithRel("associations").description("Associations this SNP is found in"),
                               linkWithRel("associationsBySnpSummary").description("A convenience projection of associations for this SNP with all the information not found in the SNP endpoint")
                               )
@@ -433,49 +391,52 @@ public class ApiDocumentation {
                 .andExpect(status().isOk());
     }
 
-//    @Test
-//    public void ancestriesListExample () throws Exception {
-//
-//        this.mockMvc.perform(get("/gwas/rest/api/ancestries").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void efoTraitsListExample () throws Exception {
 
-//    @Test
-//    public void ancestriesExample() throws Exception {
-//        this.mockMvc.perform(get("/gwas/rest/api/ancestries/{ancestry_id}?projection={projection_name}", "14852643", "ancestry").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
-//                .andDo( this.restDocumentationResultHandler.document(
-//                        pathParameters(
-//                                parameterWithName("ancestry_id").description("The id of the ancestry entry in the GWAS Catalog"),
-//                                parameterWithName("projection_name").optional().description("Optional projection for more convenient display of results")),
-//                        responseFields(
-//                                fieldWithPath("_links").description("<<ancestries-links,Links>> to other resources"),
-//                                fieldWithPath("type").description("The stage this ancestry entry applies to"),
-//                                fieldWithPath("numberOfIndividuals").description("The number of individuals in this sample"),
-////                                fieldWithPath("ancestralGroup").description("The wider ancestral group(s) this sample belongs to"),
-////                                fieldWithPath("countryOfOrigin").description("The countries of origin of the sample"),
-////                                fieldWithPath("countryOfRecruitment").description("The countries of recruitment of the sample"),
-//                                fieldWithPath("description").description("Additional sample information such as recruitment information"),
-////                                fieldWithPath("previouslyReported").description("Whether this cohort was previously reported"),
-////                                fieldWithPath("notes").description("Any other relevant ancestry-related information")
-//                                fieldWithPath("ancestralGroups").description("Wider ancestral categories the individuals in this sample belonged to"),
-//                                fieldWithPath("countryOfOrigin").description("Country of origin of the individuals in this sample"),
-//                                fieldWithPath("countryOfRecruitment").description("Country of recruitment of the individuals in this sample")
-//                        ),
-//                        links(halLinks(),
-//                              linkWithRel("self").description("This ancestry entry"),
-//                              linkWithRel("ancestry").description("This ancestry entry"),
-//                              linkWithRel("study").description("Link to the <<studies-resources,studies>> for this ancestry entry")
-////                              linkWithRel("ancestralGroups").description("Link to the <<ancestralGroups-resources,ancestral groups>> for this ancestry entry"),
-////                              linkWithRel("countryOfOrigin").description("Link to the <<countryOfOrigin-resources,countries of origin>> for this ancestry entry"),
-////                              linkWithRel("countryOfRecruitment").description("Link to the <<countryOfRecruitment-resources,countries of recruitment>> for this ancestry entry")
-//                        )
-//
-//                ))
-//                .andExpect(status().isOk());
-//    }
+        this.mockMvc.perform(get("/gwas/rest/api/efoTraits").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void efoTraitsSearchExample () throws Exception {
+
+        this.mockMvc.perform(get("/gwas/rest/api/efoTraits/search").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+                .andDo(this.restDocumentationResultHandler.document(
+                        links(halLinks(),
+                              linkWithRel("self").description("This endpoint"),
+                              linkWithRel("findByAssociationsId").description("Search for EFO traits via an association using parameter associationId"),
+                              linkWithRel("findByEfoUri").description("Search for EFO traits using parameter URI"),
+                              linkWithRel("findByEfoTrait").description("Search for EFO traits using parameter trait"),
+                              linkWithRel("findByPubmedId").description("Search for EFO traits via a study using parameter pubmedId"))
+                ))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void efoTraitsExample() throws Exception {
+        this.mockMvc.perform(get("/gwas/rest/api/efoTraits/{short_form}", "EFO_0001060").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        pathParameters(
+                                parameterWithName("short_form").description("The URI short form of this EFO trait")),
+                        responseFields(
+                                fieldWithPath("trait").description("The trait name or label"),
+                                fieldWithPath("uri").description("The trait URI or unique identifier"),
+                                fieldWithPath("shortForm").description("The URI shortform"),
+                                 fieldWithPath("_links").description("<<trait-links,Links>> to other resources")
+                        ),
+                        links(halLinks(),
+                              linkWithRel("self").description("This EFO trait"),
+                              linkWithRel("efoTrait").description("This EFO trait"),
+                              linkWithRel("studies").description("Link to the <<studies-resources,studies>> this SNP is identified in"),
+                              linkWithRel("associations").description("Associations this SNP is found in"),
+                              linkWithRel("associationsByTraitSummary").description("A convenience projection of associations for this trait with all the information not found in the trait endpoint")
+                        )
+                ))
+                .andExpect(status().isOk());
+    }
 
     @Test
     public void snpLocationExample() throws Exception {

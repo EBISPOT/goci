@@ -24,6 +24,6 @@ public class SpringDataRestCustomisation extends RepositoryRestConfigurerAdapter
 
         config.withEntityLookup().forRepository(SingleNucleotidePolymorphismRepository.class, SingleNucleotidePolymorphism::getRsId, SingleNucleotidePolymorphismRepository::findByRsId);
 
-        config.withEntityLookup().forRepository(EfoTraitRepository.class, EfoTrait::getTrait, EfoTraitRepository::findByTraitIgnoreCase);
+        config.withEntityLookup().forRepository(EfoTraitRepository.class, EfoTrait::getShortForm, EfoTraitRepository::findByShortForm);
     }
 }

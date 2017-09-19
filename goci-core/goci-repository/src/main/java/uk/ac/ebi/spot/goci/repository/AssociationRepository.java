@@ -108,4 +108,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
     Collection<Association> findByEfoTraitsTrait(@Param("efoTrait") String trait);
+
+
+    //find by rsid and accessionid
 }

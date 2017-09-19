@@ -87,6 +87,7 @@ public class Study implements Trackable {
 
     private Boolean userRequested = false;
 
+    @JsonIgnore
     private Boolean openTargets = false;
 
     @ManyToMany
