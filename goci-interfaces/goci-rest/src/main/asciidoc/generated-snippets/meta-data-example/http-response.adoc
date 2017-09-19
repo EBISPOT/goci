@@ -1,0 +1,17 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 224
+
+{
+  "_embedded" : {
+    "mappingMetadatas" : [ {
+      "ensemblReleaseNumber" : 90,
+      "genomeBuildVersion" : "GRCh38.p10",
+      "dbsnpVersion" : 150,
+      "usageStartDate" : "2017-08-22T13:00:01.562+0000"
+    } ]
+  }
+}
+----

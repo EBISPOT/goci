@@ -379,7 +379,7 @@ These are convenience endpoints created as a response to common user requests
 == SNP location
 The SNP location endpoint provides a convenient way of retrieving all variants in the GWAS Catalog within a genomic region of interest.
 
-=== Retrieve a SNPs by location
+=== Retrieve a SNP by location
 
 include::{snippets}/snp-location-example/path-parameters.adoc[]
 
@@ -414,3 +414,21 @@ include::{snippets}/parent-mapping-example/http-response.adoc[]
 ==== Response structure
 
 include::{snippets}/parent-mapping-example/response-fields.adoc[]
+
+[[custom-parent]]
+== Meta data
+The metadata endpoint provides a list of the resources the GWAS Catalog data is currently mapped against.
+
+=== Retrieve latest metadata
+
+==== Example request
+
+include::{snippets}/meta-data-example/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/meta-data-example/http-response.adoc[]
+
+==== Response structure
+
+include::{snippets}/meta-data-example/response-fields.adoc[]

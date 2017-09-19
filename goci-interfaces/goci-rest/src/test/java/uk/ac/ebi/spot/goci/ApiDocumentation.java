@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -481,4 +480,19 @@ public class ApiDocumentation {
     }
 
 
+    @Test
+    public void metaDataExample() throws Exception {
+        this.mockMvc.perform(get("/gwas/rest/api/metadata").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+                .andDo( this.restDocumentationResultHandler.document(
+                        responseFields(
+                                fieldWithPath("_embedded").description("The main content. See <<resources-single-nucleotide-polymorphism,SNP resource specification>> for details"),
+                                fieldWithPath("_embedded.mappingMetadatas").description("The set of resources the GWAS Catalog is mapped against"),
+                                fieldWithPath("_embedded.mappingMetadatas.[0].ensemblReleaseNumber").description("The Ensembl release version the Catalog is currently mapped to"),
+                                fieldWithPath("_embedded.mappingMetadatas.[0].genomeBuildVersion").description("The genome build the Catalog data is currently mapped against"),
+                                fieldWithPath("_embedded.mappingMetadatas.[0].dbsnpVersion").description("The dbSNP version the Catalog data is currently mapped against"),
+                                fieldWithPath("_embedded.mappingMetadatas.[0].usageStartDate").description("The date since which this combination of resource version has been in used")
+                           )
+                ))
+                .andExpect(status().isOk());
+    }
 }

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 216330
+Content-Length: 231150
 
 {
   "_embedded" : {
@@ -557,7 +557,24 @@ Content-Length: 216330
         } ],
         "ensemblGeneIds" : [ ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934951"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934951"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934951/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934951/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934951/studies"
+        }
+      }
     }, {
       "rsId" : "rs12772243",
       "merged" : 0,
@@ -881,7 +898,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000107438"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12772243"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12772243"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12772243/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12772243/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12772243/studies"
+        }
+      }
     }, {
       "rsId" : "rs579342",
       "merged" : 0,
@@ -1129,7 +1163,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000107438"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs579342"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs579342"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs579342/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs579342/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs579342/studies"
+        }
+      }
     }, {
       "rsId" : "rs1326934",
       "merged" : 0,
@@ -1453,7 +1504,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000059573"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1326934"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1326934"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1326934/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1326934/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1326934/studies"
+        }
+      }
     }, {
       "rsId" : "rs56322409",
       "merged" : 0,
@@ -1853,7 +1921,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000138185"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs56322409"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs56322409"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs56322409/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs56322409/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs56322409/studies"
+        }
+      }
     }, {
       "rsId" : "rs72820627",
       "merged" : 0,
@@ -2405,7 +2490,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000237885"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs72820627"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs72820627"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs72820627/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs72820627/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs72820627/studies"
+        }
+      }
     }, {
       "rsId" : "rs4918947",
       "merged" : 0,
@@ -2729,7 +2831,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000059573"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918947"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918947"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918947/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918947/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918947/studies"
+        }
+      }
     }, {
       "rsId" : "rs10786213",
       "merged" : 0,
@@ -2977,7 +3096,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000214362"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10786213"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10786213"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10786213/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10786213/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10786213/studies"
+        }
+      }
     }, {
       "rsId" : "rs2274491",
       "merged" : 0,
@@ -3225,7 +3361,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000095637"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2274491"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2274491"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2274491/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2274491/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2274491/studies"
+        }
+      }
     }, {
       "rsId" : "rs4918918",
       "merged" : 0,
@@ -3473,7 +3626,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000214362"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918918"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918918"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918918/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918918/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4918918/studies"
+        }
+      }
     }, {
       "rsId" : "rs1934954",
       "merged" : 0,
@@ -3987,7 +4157,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000228460"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934954"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934954"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934954/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934954/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934954/studies"
+        }
+      }
     }, {
       "rsId" : "rs2275620",
       "merged" : 0,
@@ -4501,7 +4688,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000237885"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2275620"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2275620"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2275620/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2275620/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2275620/studies"
+        }
+      }
     }, {
       "rsId" : "rs2071426",
       "merged" : 0,
@@ -5015,7 +5219,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000237885"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2071426"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2071426"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2071426/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2071426/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2071426/studies"
+        }
+      }
     }, {
       "rsId" : "rs7074761",
       "merged" : 0,
@@ -5263,7 +5484,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000095637"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7074761"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7074761"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7074761/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7074761/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs7074761/studies"
+        }
+      }
     }, {
       "rsId" : "rs1934955",
       "merged" : 0,
@@ -5777,7 +6015,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000138115"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934955"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934955"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934955/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934955/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934955/studies"
+        }
+      }
     }, {
       "rsId" : "rs1328599",
       "merged" : 0,
@@ -6063,7 +6318,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000107438"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1328599"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1328599"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1328599/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1328599/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1328599/studies"
+        }
+      }
     }, {
       "rsId" : "rs11188352",
       "merged" : 0,
@@ -6387,7 +6659,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000214362"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11188352"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11188352"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11188352/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11188352/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11188352/studies"
+        }
+      }
     }, {
       "rsId" : "rs2860975",
       "merged" : 0,
@@ -6901,7 +7190,24 @@ Content-Length: 216330
           "ensemblGeneId" : "ENSG00000237885"
         } ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2860975"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2860975"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2860975/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2860975/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2860975/studies"
+        }
+      }
     }, {
       "rsId" : "rs1934953",
       "merged" : 0,
@@ -7453,7 +7759,24 @@ Content-Length: 216330
         } ],
         "ensemblGeneIds" : [ ]
       } ],
-      "mergedInto" : null
+      "mergedInto" : null,
+      "_links" : {
+        "self" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934953"
+        },
+        "singleNucleotidePolymorphism" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934953"
+        },
+        "associationsBySnpSummary" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934953/associations?projection=associationBySnp"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934953/associations"
+        },
+        "studies" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1934953/studies"
+        }
+      }
     } ]
   },
   "_links" : {
@@ -7462,7 +7785,7 @@ Content-Length: 216330
     }
   },
   "page" : {
-    "size" : 20,
+    "size" : 0,
     "totalElements" : 19,
     "totalPages" : 1,
     "number" : 0

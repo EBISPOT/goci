@@ -1,0 +1,28 @@
+|===
+|Path|Type|Description
+
+|`_embedded`
+|`Object`
+|The main content. See <<resources-single-nucleotide-polymorphism,SNP resource specification>> for details
+
+|`_embedded.mappingMetadatas`
+|`Array`
+|The set of resources the GWAS Catalog is mapped against
+
+|`_embedded.mappingMetadatas.[0].ensemblReleaseNumber`
+|`Number`
+|The Ensembl release version the Catalog is currently mapped to
+
+|`_embedded.mappingMetadatas.[0].genomeBuildVersion`
+|`String`
+|The genome build the Catalog data is currently mapped against
+
+|`_embedded.mappingMetadatas.[0].dbsnpVersion`
+|`Number`
+|The dbSNP version the Catalog data is currently mapped against
+
+|`_embedded.mappingMetadatas.[0].usageStartDate`
+|`String`
+|The date since which this combination of resource version has been in used
+
+|===

@@ -3,8 +3,13 @@ package uk.ac.ebi.spot.goci.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.LinkBuilder;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,28 +26,26 @@ import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
  * Created by dwelter on 19/09/17.
  */
 
-//@RepositoryRestController
 @RestController
 public class SnpLocationController {
 
 
-    private final PagedResourcesAssembler snpAssembler;
-
-    private final SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-
+    @Autowired
+    private PagedResourcesAssembler snpAssembler;
 
     @Autowired
-    public SnpLocationController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, PagedResourcesAssembler snpAssembler){
-        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
-        this.snpAssembler = snpAssembler;
-    }
+    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
+
+    @Autowired
+    private RepositoryRestMvcConfiguration configuration;
 
     @CrossOrigin
     @RequestMapping(value = "/api/snpLocation/{range}",
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> search(@PathVariable String range,
-                                    @PageableDefault(size = 20, page = 0) Pageable pageable) {
+                                    @PageableDefault(size = 20, page = 0) Pageable pageable,
+                                    final PersistentEntityResourceAssembler entityAssembler) {
 
         String chrom = range.split(":")[0];
         String locs = range.split(":")[1];
@@ -58,10 +61,15 @@ public class SnpLocationController {
                         end,
                         pageable);
 
-        return new ResponseEntity(snpAssembler.toResource(snps), HttpStatus.OK);
+        Resources<Resource<SingleNucleotidePolymorphism>> resource = snpAssembler.toResource(snps, entityAssembler);
 
-//        PagedResources<Resource<SingleNucleotidePolymorphism>> resource = snpAssembler.toResource(snps, (ResourceAssembler) resourceAssembler);
-//        return new ResponseEntity(resource, HttpStatus.OK);
+        for(Resource<SingleNucleotidePolymorphism> snpres : resource.getContent())  {
+            LinkBuilder link = configuration.entityLinks().linkForSingleResource(SingleNucleotidePolymorphism.class, snpres.getContent().getRsId());
+            snpres.add(link.slash("/associations?projection=associationBySnp").withRel("associationsBySnpSummary"));
+        }
+
+
+        return new ResponseEntity(resource, HttpStatus.OK);
 
     }
 }
