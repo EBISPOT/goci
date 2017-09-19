@@ -104,6 +104,8 @@ public class EfoTraitController {
 
         // Save EFO trait
         else {
+            efoTrait.setShortForm(deriveShortForm(efoTrait.getUri()));
+
             efoTraitRepository.save(efoTrait);
             String message = "Trait " + efoTrait.getTrait() + " with URI " + efoTrait.getUri() + " added to database";
             redirectAttributes.addFlashAttribute("efoTraitSaved", message);
@@ -132,6 +134,9 @@ public class EfoTraitController {
 
         // Save edited EFO trait
         else {
+            if(!efoTrait.getUri().contains(efoTrait.getShortForm())){
+                efoTrait.setShortForm(deriveShortForm(efoTrait.getUri()));
+            }
             efoTraitRepository.save(efoTrait);
             return "redirect:/efotraits";
         }
@@ -190,6 +195,15 @@ public class EfoTraitController {
     // Returns a Sort object which sorts EFO traits in ascending order by trait
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
+    }
+
+
+    private String deriveShortForm(String uri){
+        String[] elements = uri.split("/");
+        int last = elements.length-1;
+        String shortForm = elements[last];
+
+        return shortForm;
     }
 
 

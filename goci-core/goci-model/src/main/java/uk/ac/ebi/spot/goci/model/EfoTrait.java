@@ -28,6 +28,8 @@ public class EfoTrait {
     @NotBlank
     private String uri;
 
+    private String shortForm;
+
     @ManyToMany(mappedBy = "efoTraits")
     private Collection<Study> studies;
 
@@ -40,10 +42,12 @@ public class EfoTrait {
 
     public EfoTrait(String trait,
                     String uri,
+                    String shortForm,
                     Collection<Study> studies,
                     Collection<Association> associations) {
         this.trait = trait;
         this.uri = uri;
+        this.shortForm = shortForm;
         this.studies = studies;
         this.associations = associations;
     }
@@ -86,5 +90,13 @@ public class EfoTrait {
 
     public void setAssociations(Collection<Association> associations) {
         this.associations = associations;
+    }
+
+    public String getShortForm() {
+        return shortForm;
+    }
+
+    public void setShortForm(String shortForm) {
+        this.shortForm = shortForm;
     }
 }

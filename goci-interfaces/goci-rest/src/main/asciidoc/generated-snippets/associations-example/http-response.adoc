@@ -28,11 +28,11 @@ Content-Length: 2827
       "genomeWide" : false,
       "limitedList" : false,
       "_links" : {
-        "snp" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs16890979"
-        },
         "proxySnps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/NR"
+        },
+        "snp" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs16890979"
         }
       }
     } ],
@@ -98,14 +98,14 @@ Content-Length: 2827
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553{?projection}",
       "templated" : true
     },
-    "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
     },
     "study" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
+    "efoTraits" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
     }
   }
 }
