@@ -53,44 +53,6 @@ public class ParentMappingController {
         return log;
     }
 
-//    private PagedResourcesAssembler snpAssembler;
-//
-//    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-
-//    @Autowired
-//    public EnsemblController(SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository, PagedResourcesAssembler snpAssembler){
-//        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
-//        this.snpAssembler = snpAssembler;
-//    }
-
-//    @CrossOrigin
-//    @RequestMapping(value = "/api/snpLocation/{range}",
-//                    method = RequestMethod.GET,
-//                    produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> search(@PathVariable String range,
-//                                    @PageableDefault(size = 20, page = 0) Pageable pageable,
-//                                    final PersistentEntityResourceAssembler resourceAssembler) {
-//
-//        String chrom = range.split(":")[0];
-//        String locs = range.split(":")[1];
-//
-//        int start = Integer.parseInt(locs.split("-")[0]);
-//        int end = Integer.parseInt(locs.split("-")[1]);
-//
-//        Page<SingleNucleotidePolymorphism>
-//                snps =
-//                singleNucleotidePolymorphismRepository.findByLocationsChromosomeNameAndLocationsChromosomePositionBetween(
-//                        chrom,
-//                        start,
-//                        end,
-//                        pageable);
-//
-////        Resource<SingleNucleotidePolymorphism> snpResource = new Resource(snps);
-//
-////        return new ResponseEntity(snpAssembler.toResource(snps), HttpStatus.OK);
-//        return ResponseEntity.ok(snpAssembler.toResource(snps, resourceAssembler));
-//    }
-
 
     @CrossOrigin
     @RequestMapping(value = "/api/parentMapping/{efoTerm}",
