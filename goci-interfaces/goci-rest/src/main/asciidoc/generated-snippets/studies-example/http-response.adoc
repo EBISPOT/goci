@@ -75,14 +75,14 @@ Content-Length: 2499
     "associationsByStudySummary" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
     },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
     },
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
     }
   }
 }

@@ -29,9 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ParentMappingControllerTest {
 
 
-//    @Mock
-//    private SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository;
-
     private MockMvc mockMvc;
 
     @Autowired
@@ -40,7 +37,6 @@ public class ParentMappingControllerTest {
 
     @Before
     public void setUp() throws Exception {
-//        EnsemblController ensemblController = new EnsemblController(singleNucleotidePolymorphismRepository);
         mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
     }
 

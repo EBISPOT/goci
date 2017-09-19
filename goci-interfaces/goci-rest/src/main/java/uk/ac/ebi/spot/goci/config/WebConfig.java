@@ -25,6 +25,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .allowCredentials(false).maxAge(3600);
     }
 
+/*** The config below is needed in order for PersistentEntityResourceAssembler to work in a @RestController
+ * Otherwise it works only with a @RepositoryRestController
+    ***/
+
     @Autowired
     @Qualifier("repositoryExporterHandlerAdapter")
     RequestMappingHandlerAdapter repositoryExporterHandlerAdapter;

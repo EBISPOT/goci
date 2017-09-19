@@ -6,10 +6,6 @@ Content-Length: 765
 
 {
   "_links" : {
-    "findByEfoUri" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/search/findByEfoUri{?uri,page,size,sort}",
-      "templated" : true
-    },
     "findByPubmedId" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/search/findByPubmedId{?pubmedId,page,size,sort}",
       "templated" : true
@@ -20,6 +16,10 @@ Content-Length: 765
     },
     "findByEfoTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/search/findByEfoTrait{?trait,page,size,sort}",
+      "templated" : true
+    },
+    "findByEfoUri" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/search/findByEfoUri{?uri,page,size,sort}",
       "templated" : true
     },
     "self" : {

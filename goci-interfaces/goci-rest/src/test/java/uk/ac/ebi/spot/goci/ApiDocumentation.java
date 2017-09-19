@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Ignore
+@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -85,14 +86,6 @@ public class ApiDocumentation {
                 .alwaysDo(this.restDocumentationResultHandler)
                 .build();
     }
-
-
-//    @Test
-//    public void index() throws Exception {
-//        this.mockMvc.perform(get("/").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andDo(document("docs/helindex"));
-//    }
 
     @Test
     public void pageExample () throws Exception {
@@ -190,10 +183,8 @@ public class ApiDocumentation {
                               linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
 //                              linkWithRel("findByGxe").description("Search for a study by whether it is a gene-environment interaction study, using the parameter gxe"),
                               linkWithRel("findByFullPvalueSet").description("Search for a study by whether full summary statistics are available, using the parameter fullPvalueSet"),
-//                              linkWithRel("findStudyDistinctByAssociationsMultiSnpHaplotypeTrue").description("Search for studies that have associations that are multi-SNP haplotypes"),
                               linkWithRel("findByUserRequested").description("Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested "),
                               linkWithRel("findByAuthor").description("Search for a study by its first author using the parameter authorContainingIgnoreCase"),
-//                              linkWithRel("findByDiseaseTraitId").description("Search for a study via the annotated disease term using the parameter diseaseTraitId"),
                               linkWithRel("findByEfoTrait").description("Search for a study via the annotated EFO term using the parameter efTrait"),
                               linkWithRel("findByEfoUri").description("Search for a study via the annotated EFO term using the parameter uri"),
                               linkWithRel("findByDiseaseTrait").description("Search for a study via the annotated disease term using the parameter diseaseTrait")
@@ -209,7 +200,6 @@ public class ApiDocumentation {
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("study_accession_id").description("The accession id of the study in the GWAS Catalog")
-//                                parameterWithName("projection_name").optional().description("Optional projection for more convenient display of results")
                                 ),
                         responseFields(
                                 fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
@@ -224,8 +214,6 @@ public class ApiDocumentation {
                                 fieldWithPath("replicationSampleSize").description("Replication sample description"),
                                 fieldWithPath("gxe").description("Whether the study investigates a gene-environment interaction"),
                                 fieldWithPath("gxg").description("Whether the study investigates a gene-gene interaction"),
-//                                fieldWithPath("genomewideArray").description("Whether a genome-wide array was used"),
-//                                fieldWithPath("targetedArray").description("Whether a targted array was used"),
                                 fieldWithPath("snpCount").description("Number of SNPs passing QC"),
                                 fieldWithPath("qualifier").description("Qualifier of number of SNPs passing QC (eg >)"),
                                 fieldWithPath("imputed").description("Whether SNPs were imputed"),
@@ -235,20 +223,15 @@ public class ApiDocumentation {
                                 fieldWithPath("platforms").description("Genotyping platform(s) used in this study"),
                                 fieldWithPath("genotypingTechnologies").description("Genotyping technology used in this study"),
                                 fieldWithPath("diseaseTrait").description("Free text description of the trait investigated in this study"),
-//                                fieldWithPath("efoTraits").description("EFO traits annotated to this study"),
                                 fieldWithPath("ancestries").description("Ancestry entries for this study")
                                 ),
                         links(halLinks(),
                               linkWithRel("self").description("This study"),
                               linkWithRel("study").description("This study"),
-//                              linkWithRel("ancestries").description("<<overview-pagination,Paginated>> list of <<ancestries-resources,ancestries>> in this study"),
-//                              linkWithRel("diseaseTrait").description("<<overview-pagination,Paginated>> list of <<diseaseTrait-resources,disease traits>> in this study"),
                               linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this study"),
-//                              linkWithRel("platforms").description("<<overview-pagination,Paginated>> list of <<platforms-resources,platforms>> in this study"),
                               linkWithRel("associations").description("<<overview-pagination,Paginated>> list of <<associations-resources,associations>> in this study"),
                               linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this study"),
                               linkWithRel("associationsByStudySummary").description("Convenience representation of associations with all trait and SNP information not present in the study")
-//                              linkWithRel("genotypingTechnologies").description("<<overview-pagination,Paginated>> list of <<genotypingTechnologies-resources,genotyping technologies>> in this study")
                         )
 
                 ))
@@ -297,13 +280,10 @@ public class ApiDocumentation {
                                 fieldWithPath("pvalueDescription").description("Information describing context of p-value"),
                                 fieldWithPath("multiSnpHaplotype").description("Whether the association is for a multi-SNP haplotype"),
                                 fieldWithPath("snpInteraction").description("Whether the association is for a SNP-SNP interaction"),
-//                                fieldWithPath("snpApproved").description("The study title"),
                                 fieldWithPath("snpType").description("Whether a SNP has previously been reported"),
                                 fieldWithPath("standardError").description("Standard error of the effect size"),
                                 fieldWithPath("range").description("95% confidence interval"),
                                 fieldWithPath("orPerCopyNum").description("Odds ratio"),
-//                                fieldWithPath("orPerCopyRecip").description("Whether a targted array was used"),
-//                                fieldWithPath("orPerCopyRecipRange").description("Number of SNPs passing QC"),
                                 fieldWithPath("betaNum").description("Beta coefficient"),
                                 fieldWithPath("betaUnit").description("Beta coefficient unit"),
                                 fieldWithPath("betaDirection").description("Beta coefficient direction"),
@@ -312,15 +292,12 @@ public class ApiDocumentation {
                                 fieldWithPath("lastMappingDate").description("Last time this association was mapped to Ensembl"),
                                 fieldWithPath("lastUpdateDate").description("Last time this association was updated"),
                                 fieldWithPath("loci").description("A convenience concept linking associations to one or more risk alleles"),
-//                                fieldWithPath("_embedded").description("Embedded information including the study this association belongs to"),
                                 fieldWithPath("genes").description("Genes that the SNPs for this association are annotated to")
                         ),
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
                               linkWithRel("association").description("This association"),
-//                              linkWithRel("loci").description("<<overview-pagination,Paginated>> list of <<loci-resources,locis>> in this association"),
                               linkWithRel("snps").description("<<overview-pagination,Paginated>> list of <<snps-resources,SNPs>> in this association"),
-//                              linkWithRel("genes").description("<<overview-pagination,Paginated>> list of <<genes-resources,genes>> in this association"),
                               linkWithRel("efoTraits").description("<<overview-pagination,Paginated>> list of <<efoTraits-resources,EFO traits>> in this association"),
                               linkWithRel("study").description("Link to the <<studies-resources,study>> for this association")
 

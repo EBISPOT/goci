@@ -7,11 +7,36 @@
 :toclevels: 4
 :source-highlighter: highlightjs
 
-[[overview]]
-= Overview
 
-[[overview-search-endpoints]]
-== Search endpoints
+[[overview-access-points]]
+== Catalog access points
+
+In the link:api[technical API documentation], we present the available resource endpoints for the GWAS Catalog REST API, including available search methods for each endpoint. The resource endpoints and search methods have been designed to address the most common use cases of our user community. All endpoints are fully interlinked and HAL-compliant.
+
+[[overview-projections]]
+=== Searching and projections
+For your convenience, we have also provided a number of "projections" or custom views to make it easier to retrieve all relevant data in a limited number of API calls.
+
+If for example you want to use the REST API to retrieve all association data for a number of studies given a list of Pubmed IDs, you would first search the Study endpoint for each ID using link:../api/studies/search/findByPubmedId?pubmedId=17463246[api/studies/search/findByPubmedId?pubmedId=17463246].
+
+The resulting JSON document contains all the studies for this publication, including publication information, sample descriptions, ancestry information and trait description. In order to retrieve the related associations, further API calls to associations, EFO traits and SNPs would normally be required for each study.
+
+As a simplification, we provide for each study a link to an link:../api/studies/GCST000028/associations?projection=associationByStudy["associationByStudy" projection], which presents a view of all the associations for this and their dependent information including traits and SNPs with genomic mappings.
+
+Similar projections, "associationBySNP" and "associationByEfoTrait", are available for the SingleNucleotidePolymorphism and EfoTrait resources, respectively. Each of these projections includes all the information that may be of interest to users and that is not directly available in the entry endpoint.
+
+For users interested primarily in the Study endpoint, we also provide a link:../api/studies/GCST000028?projection=study["study" projection], which has all EFO trait information embedded directly in the Study json rather than requiring an additional API call.
+
+[[overview-sample-scripts]]
+== Sample scripts
+
+A number of example Python scripts are available in the https://github.com/EBISPOT/goci/tree/2.x-beta/goci-python-scripts/api-sample-scripts[GWAS Catalog Github repository]. The scripts are designed to give you an idea of how to query the GWAS Catalog REST API. Feel free to reuse and adapt the code to meet your requirements.
+
+Examples include retrieving association data by searching the Study endpoint for pubmedIds, the SingleNucleotidePolymorphism endpoint for rs Ids and the EfoTraits endpoint using ontology URIs, as well as retrieving studies from the EfoTraits endpoint using ontology URIs.
+
+_Please note that these scripts are for demonstration purposes only; we do not provide customised data retrieval scripts for individual users._
+
+
 
 
 
