@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Ignore
+//@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -183,15 +182,14 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This study"),
-                              linkWithRel("findByAssociationsId").description("Search for a study via an association using parameter associationId"),
-                              linkWithRel("findByGenotypingTechnologiesGenotypingTechnology").description("Search for a study via the genotyping technology used using parameter genotypingTechnology"),
+//                              linkWithRel("findByGenotypingTechnologiesGenotypingTechnology").description("Search for a study via the genotyping technology used using parameter genotypingTechnology"),
 //                              linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
-                              linkWithRel("findByGxg").description("Search for a study via whether it is a gene-gene interaction study, using the parameter gxg"),
-                              linkWithRel("findStudyDistinctByAssociationsSnpInteractionTrue").description("Search for studies that have associations that are SNP-SNP interactions "),
+//                              linkWithRel("findByGxg").description("Search for a study via whether it is a gene-gene interaction study, using the parameter gxg"),
+//                              linkWithRel("findStudyDistinctByAssociationsSnpInteractionTrue").description("Search for studies that have associations that are SNP-SNP interactions "),
                               linkWithRel("findByPubmedId").description("Search for a study using the parameter pubmedId"),
-                              linkWithRel("findByGxe").description("Search for a study by whether it is a gene-environment interaction study, using the parameter gxe"),
+//                              linkWithRel("findByGxe").description("Search for a study by whether it is a gene-environment interaction study, using the parameter gxe"),
                               linkWithRel("findByFullPvalueSet").description("Search for a study by whether full summary statistics are available, using the parameter fullPvalueSet"),
-                              linkWithRel("findStudyDistinctByAssociationsMultiSnpHaplotypeTrue").description("Search for studies that have associations that are multi-SNP haplotypes"),
+//                              linkWithRel("findStudyDistinctByAssociationsMultiSnpHaplotypeTrue").description("Search for studies that have associations that are multi-SNP haplotypes"),
                               linkWithRel("findByUserRequested").description("Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested "),
                               linkWithRel("findByAuthor").description("Search for a study by its first author using the parameter authorContainingIgnoreCase"),
 //                              linkWithRel("findByDiseaseTraitId").description("Search for a study via the annotated disease term using the parameter diseaseTraitId"),
@@ -275,7 +273,8 @@ public class ApiDocumentation {
                               linkWithRel("findByStudyAccessionId").description("Search for an association via a study using parameter accessionId"),
                               linkWithRel("findByPubmedId").description("Search for an association via a study using parameter pubmedId"),
                               linkWithRel("findByEfoTrait").description("Search for an association via its annotated EFO traits using parameter efoTrait"),
-                              linkWithRel("findByRsId").description("Search for an association via a SNP using parameter rsId")
+                              linkWithRel("findByRsId").description("Search for an association via a SNP using parameter rsId"),
+                              linkWithRel("findByRsIdAndAccessionId").description("Search for an association via a SNP and study using the parameters rsId and accessionId")
                         )
                 ))
                 .andExpect(status().isOk());
@@ -350,7 +349,6 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
-                              linkWithRel("findByAssociationId").description("Search for SNPs via an association using parameter associationId"),
                               linkWithRel("findByRsId").description("Search for SNPs using parameter rsId"),
                               linkWithRel("findByBpLocation").description("Search for SNPs via their base pair location"),
                               linkWithRel("findByDiseaseTrait").description("Search for SNPs via a study using parameter diseaseTrait"),
@@ -407,7 +405,6 @@ public class ApiDocumentation {
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This endpoint"),
-                              linkWithRel("findByAssociationsId").description("Search for EFO traits via an association using parameter associationId"),
                               linkWithRel("findByEfoUri").description("Search for EFO traits using parameter URI"),
                               linkWithRel("findByEfoTrait").description("Search for EFO traits using parameter trait"),
                               linkWithRel("findByPubmedId").description("Search for EFO traits via a study using parameter pubmedId"))

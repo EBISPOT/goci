@@ -4,9 +4,6 @@
 |`self`
 |This association
 
-|`findByAssociationId`
-|Search for SNPs via an association using parameter associationId
-
 |`findByRsId`
 |Search for SNPs using parameter rsId
 

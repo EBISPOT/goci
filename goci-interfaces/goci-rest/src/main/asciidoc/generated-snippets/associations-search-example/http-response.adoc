@@ -2,24 +2,28 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 769
+Content-Length: 1006
 
 {
   "_links" : {
-    "findByStudyAccessionId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyAccessionId{?projection}",
+    "findByPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByPubmedId{?pubmedId,projection}",
       "templated" : true
     },
     "findByEfoTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByEfoTrait{?efoTrait,projection}",
       "templated" : true
     },
-    "findByPubmedId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByPubmedId{?projection}",
+    "findByRsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByRsId{?rsId,projection}",
       "templated" : true
     },
-    "findByRsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByRsId{?projection}",
+    "findByRsIdAndAccessionId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByRsIdAndAccessionId{?rsId,accessionId,page,size,sort,projection}",
+      "templated" : true
+    },
+    "findByStudyAccessionId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search/findByStudyAccessionId{?accessionId,projection}",
       "templated" : true
     },
     "self" : {

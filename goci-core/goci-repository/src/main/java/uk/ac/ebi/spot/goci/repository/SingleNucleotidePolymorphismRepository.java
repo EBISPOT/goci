@@ -35,7 +35,7 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     Page<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyPubmedId(String pubmedId, Pageable pageable);
 
 
-    @RestResource(path = "findByAssociationId", rel = "findByAssociationId")
+    @RestResource(exported = false)
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationId(Long associationId);
 
     @RestResource(exported = false)

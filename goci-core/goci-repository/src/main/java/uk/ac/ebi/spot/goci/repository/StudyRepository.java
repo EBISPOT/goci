@@ -58,8 +58,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                                          @Param("month") Integer month, Pageable pageable);
 
     // Queries for study types
+    @RestResource(exported = false)
     Page<Study> findByGxe(Boolean gxe, Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByGxg(Boolean gxg, Pageable pageable);
 
     @RestResource(exported = false)
@@ -76,11 +78,14 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
                                                                                     Long status,
                                                                                     Pageable pageable);
 
+    @RestResource(exported = false)
     Page<Study> findByGenotypingTechnologiesGenotypingTechnology(String genotypingTechnology, Pageable pageable);
 
 
+    @RestResource(exported = false)
     List<Study> findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(Sort sort);
 
+    @RestResource(exported = false)
     List<Study> findStudyDistinctByAssociationsSnpInteractionTrue(Sort sort);
 
     @RestResource(exported = false)
@@ -131,6 +136,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     List<Study> findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
 
+    @RestResource(exported = false)
     Study findByAssociationsId(Long associationId);
 
     Page<Study> findByFullPvalueSet(Boolean fullPvalueSet, Pageable pageable);

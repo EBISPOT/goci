@@ -16,4 +16,7 @@
 |`findByRsId`
 |Search for an association via a SNP using parameter rsId
 
+|`findByRsIdAndAccessionId`
+|Search for an association via a SNP and study using the parameters rsId and accessionId
+
 |===

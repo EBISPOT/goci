@@ -109,6 +109,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     @RestResource(path = "findByEfoTrait", rel = "findByEfoTrait")
     Collection<Association> findByEfoTraitsTrait(@Param("efoTrait") String trait);
 
+    @RestResource(path = "findByRsIdAndAccessionId", rel = "findByRsIdAndAccessionId")
+    Page<Association> findBySnpsRsIdAndStudyAccessionId(String rsId, String accessionId, Pageable pageable);
 
-    //find by rsid and accessionid
 }

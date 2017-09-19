@@ -40,6 +40,7 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     @RestResource(exported = false)
     List<EfoTrait> findByAssociationsId(Sort sort, Long associationId);
 
+    @RestResource(exported = false)
     Page<EfoTrait> findByAssociationsId(Pageable pageable, Long associationId);
 
     @RestResource(exported = false)
