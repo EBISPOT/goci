@@ -1,5 +1,5 @@
-# base_url = "http://www.ebi.ac.uk/gwas/beta/rest/api/"
-base_url = "http://localhost:8089/gwas/rest/api/"
+base_url = "http://www.ebi.ac.uk/gwas/beta/rest/api/"
+# base_url = "http://localhost:8089/gwas/rest/api/"
 
 studies = "studies/"
 pmidSearch = "search/findByPubmedId?pubmedId="

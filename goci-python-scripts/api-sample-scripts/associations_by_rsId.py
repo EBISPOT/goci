@@ -58,7 +58,7 @@ def retrieve_data(rsIds):
                     a = aData[y]
 
                     print(" " + str(a["pvalue"]) + ", "+  str(a["pvalueDescription"]) + ", "+ a["riskFrequency"]  + ", "+ str(a["orPerCopyNum"])  + ", "+ str(a["betaNum"])
-                          + ", "+ str(a["betaUnit"])  + ", "+ str(a["betaDirection"])  + ", "+ str(a["range"])  + ", "+ str(a["standardError"])  + ", "+ a["snpType"])
+                          + ", "+ str(a["betaUnit"])  + ", "+ str(a["betaDirection"])  + ", "+ str(a["range"])  + ", "+ str(a["standardError"])  + ", "+ str(a["snpType"]))
 
                     # Get all loci for this association & downstream data
                     loci = a["loci"]
