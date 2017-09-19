@@ -1,0 +1,19 @@
+|===
+|Relation|Description
+
+|`self`
+|This EFO trait
+
+|`efoTrait`
+|This EFO trait
+
+|`studies`
+|Link to the <<studies-resources,studies>> this SNP is identified in
+
+|`associations`
+|Associations this SNP is found in
+
+|`associationsByTraitSummary`
+|A convenience projection of associations for this trait with all the information not found in the trait endpoint
+
+|===

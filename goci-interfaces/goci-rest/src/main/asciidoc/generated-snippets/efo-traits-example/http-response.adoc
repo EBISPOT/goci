@@ -1,0 +1,29 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Content-Length: 721
+
+{
+  "trait" : "celiac disease",
+  "uri" : "http://www.ebi.ac.uk/efo/EFO_0001060",
+  "shortForm" : "EFO_0001060",
+  "_links" : {
+    "self" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060"
+    },
+    "efoTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060"
+    },
+    "associationsByTraitSummary" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/associations?projection=associationByEfoTrait"
+    },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/associations"
+    },
+    "studies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/studies"
+    }
+  }
+}
+----

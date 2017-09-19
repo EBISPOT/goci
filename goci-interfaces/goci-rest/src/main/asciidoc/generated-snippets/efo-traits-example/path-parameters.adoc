@@ -1,0 +1,8 @@
+./gwas/rest/api/efoTraits/{short_form}
+|===
+|Parameter|Description
+
+|`short_form`
+|The URI short form of this EFO trait
+
+|===

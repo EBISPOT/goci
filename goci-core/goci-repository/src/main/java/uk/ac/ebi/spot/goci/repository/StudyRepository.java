@@ -152,7 +152,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(path = "findByDiseaseTrait", rel = "findByDiseaseTrait")
     Page<Study> findByDiseaseTraitTraitIgnoreCase(@Param("diseaseTrait") String trait, Pageable pageable);
 
-    @RestResource(exported = false)
+    @RestResource
     Study findByAccessionId(String accessionId);
 
     @RestResource(exported = false)

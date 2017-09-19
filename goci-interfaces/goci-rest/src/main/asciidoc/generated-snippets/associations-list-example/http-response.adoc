@@ -98,11 +98,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
         }
       }
     }, {
@@ -481,11 +481,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
         }
       }
     }, {
@@ -578,11 +578,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
         }
       }
     }, {
@@ -711,11 +711,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
         }
       }
     }, {
@@ -830,11 +830,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
         }
       }
     }, {
@@ -969,11 +969,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
         }
       }
     }, {
@@ -1128,11 +1128,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
         }
       }
     }, {
@@ -1241,11 +1241,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
         }
       }
     }, {
@@ -1368,11 +1368,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
         }
       }
     }, {
@@ -1501,11 +1501,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
         }
       }
     }, {
@@ -1642,11 +1642,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
         }
       }
     }, {
@@ -1753,11 +1753,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
         }
       }
     }, {
@@ -1870,11 +1870,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
         }
       }
     }, {
@@ -1995,11 +1995,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
         }
       }
     }, {
@@ -2126,11 +2126,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
         }
       }
     }, {
@@ -2257,11 +2257,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
         }
       }
     }, {
@@ -2442,11 +2442,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
         }
       }
     }, {
@@ -2799,11 +2799,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
         }
       }
     }, {
@@ -2902,11 +2902,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
         }
       }
     }, {
@@ -3013,11 +3013,11 @@ Content-Length: 89034
         "study" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
         },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
-        },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
         }
       }
     } ]

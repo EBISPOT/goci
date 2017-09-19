@@ -101,11 +101,11 @@ Content-Length: 2827
     "study" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-    },
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
     }
   }
 }

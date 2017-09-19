@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Ignore
+@Ignore
 public class ApiDocumentation {
 
     @Rule
@@ -187,6 +188,7 @@ public class ApiDocumentation {
 //                              linkWithRel("findByGxg").description("Search for a study via whether it is a gene-gene interaction study, using the parameter gxg"),
 //                              linkWithRel("findStudyDistinctByAssociationsSnpInteractionTrue").description("Search for studies that have associations that are SNP-SNP interactions "),
                               linkWithRel("findByPubmedId").description("Search for a study using the parameter pubmedId"),
+                              linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
 //                              linkWithRel("findByGxe").description("Search for a study by whether it is a gene-environment interaction study, using the parameter gxe"),
                               linkWithRel("findByFullPvalueSet").description("Search for a study by whether full summary statistics are available, using the parameter fullPvalueSet"),
 //                              linkWithRel("findStudyDistinctByAssociationsMultiSnpHaplotypeTrue").description("Search for studies that have associations that are multi-SNP haplotypes"),
@@ -407,7 +409,8 @@ public class ApiDocumentation {
                               linkWithRel("self").description("This endpoint"),
                               linkWithRel("findByEfoUri").description("Search for EFO traits using parameter URI"),
                               linkWithRel("findByEfoTrait").description("Search for EFO traits using parameter trait"),
-                              linkWithRel("findByPubmedId").description("Search for EFO traits via a study using parameter pubmedId"))
+                              linkWithRel("findByPubmedId").description("Search for EFO traits via a study using parameter pubmedId"),
+                              linkWithRel("findByShortForm").description("Search for EFO traits using parameter shortForm"))
                 ))
                 .andExpect(status().isOk());
     }

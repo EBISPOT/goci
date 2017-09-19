@@ -1,0 +1,20 @@
+|===
+|Path|Type|Description
+
+|`trait`
+|`String`
+|The trait name or label
+
+|`uri`
+|`String`
+|The trait URI or unique identifier
+
+|`shortForm`
+|`String`
+|The URI shortform
+
+|`_links`
+|`Object`
+|<<trait-links,Links>> to other resources
+
+|===

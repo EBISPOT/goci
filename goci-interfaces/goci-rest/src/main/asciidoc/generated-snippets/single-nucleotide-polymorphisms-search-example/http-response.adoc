@@ -6,32 +6,32 @@ Content-Length: 1429
 
 {
   "_links" : {
-    "findByGene" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByGene{?geneName,page,size,sort}",
+    "findByPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByPubmedId{?pubmedId,page,size,sort}",
       "templated" : true
     },
-    "findByBpLocation" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByBpLocation{?bpLocation}",
-      "templated" : true
-    },
-    "findByRsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRsId{?rsId}",
+    "findByEfoTrait" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByEfoTrait{?efoTrait}",
       "templated" : true
     },
     "findByChromBpLocationRange" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByChromBpLocationRange{?chrom,bpStart,bpEnd,page,size,sort}",
       "templated" : true
     },
-    "findByPubmedId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByPubmedId{?pubmedId,page,size,sort}",
+    "findByRsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByRsId{?rsId}",
       "templated" : true
     },
     "findByDiseaseTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByDiseaseTrait{?diseaseTrait}",
       "templated" : true
     },
-    "findByEfoTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByEfoTrait{?efoTrait}",
+    "findByGene" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByGene{?geneName,page,size,sort}",
+      "templated" : true
+    },
+    "findByBpLocation" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/search/findByBpLocation{?bpLocation}",
       "templated" : true
     },
     "self" : {

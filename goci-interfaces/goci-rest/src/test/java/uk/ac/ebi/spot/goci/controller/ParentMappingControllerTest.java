@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EnsemblControllerTest {
+public class ParentMappingControllerTest {
 
 
 //    @Mock

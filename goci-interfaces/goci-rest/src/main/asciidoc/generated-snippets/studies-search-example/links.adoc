@@ -7,6 +7,9 @@
 |`findByPubmedId`
 |Search for a study using the parameter pubmedId
 
+|`findByAccessionId`
+|Search for a study using the parameter accessionId
+
 |`findByFullPvalueSet`
 |Search for a study by whether full summary statistics are available, using the parameter fullPvalueSet
 

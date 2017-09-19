@@ -1,0 +1,19 @@
+|===
+|Relation|Description
+
+|`self`
+|This endpoint
+
+|`findByEfoUri`
+|Search for EFO traits using parameter URI
+
+|`findByEfoTrait`
+|Search for EFO traits using parameter trait
+
+|`findByPubmedId`
+|Search for EFO traits via a study using parameter pubmedId
+
+|`findByShortForm`
+|Search for EFO traits using parameter shortForm
+
+|===
