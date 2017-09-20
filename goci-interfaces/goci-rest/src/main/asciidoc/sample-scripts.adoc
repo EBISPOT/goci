@@ -17,15 +17,15 @@ In the link:api[technical API documentation], we present the available resource 
 === Searching and projections
 For your convenience, we have also provided a number of "projections" or custom views to make it easier to retrieve all relevant data in a limited number of API calls.
 
-If for example you want to use the REST API to retrieve all association data for a number of studies given a list of Pubmed IDs, you would first search the Study endpoint for each ID using link:../api/studies/search/findByPubmedId?pubmedId=17463246[api/studies/search/findByPubmedId?pubmedId=17463246].
+If for example you want to use the REST API to retrieve all association data for a number of studies given a list of Pubmed IDs, you would first search the Study endpoint for each ID using link:../api/studies/search/findByPubmedId?pubmedId=28530673[api/studies/search/findByPubmedId?pubmedId=28530673].
 
 The resulting JSON document contains all the studies for this publication, including publication information, sample descriptions, ancestry information and trait description. In order to retrieve the related associations, further API calls to associations, EFO traits and SNPs would normally be required for each study.
 
-As a simplification, we provide for each study a link to an link:../api/studies/GCST000028/associations?projection=associationByStudy["associationByStudy" projection], which presents a view of all the associations for this and their dependent information including traits and SNPs with genomic mappings.
+As a simplification, we provide for each study a link to an link:../api/studies/GCST004364/associations?projection=associationByStudy["associationByStudy" projection], which presents a view of all the associations for this and their dependent information including traits and SNPs with genomic mappings.
 
 Similar projections, "associationBySNP" and "associationByEfoTrait", are available for the SingleNucleotidePolymorphism and EfoTrait resources, respectively. Each of these projections includes all the information that may be of interest to users and that is not directly available in the entry endpoint.
 
-For users interested primarily in the Study endpoint, we also provide a link:../api/studies/GCST000028?projection=study["study" projection], which has all EFO trait information embedded directly in the Study json rather than requiring an additional API call.
+For users interested primarily in the Study endpoint, we also provide a link:../api/studies/GCST004364?projection=study["study" projection], which has all EFO trait information embedded directly in the Study json rather than requiring an additional API call.
 
 [[overview-sample-scripts]]
 == Sample scripts
