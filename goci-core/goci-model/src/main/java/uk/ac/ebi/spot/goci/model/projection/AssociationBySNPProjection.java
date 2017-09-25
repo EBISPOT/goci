@@ -3,7 +3,6 @@ package uk.ac.ebi.spot.goci.model.projection;
 import org.springframework.data.rest.core.config.Projection;
 import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Gene;
 import uk.ac.ebi.spot.goci.model.Locus;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -38,7 +37,7 @@ public interface AssociationBySNPProjection {
 
       Collection<EfoTrait> getEfoTraits();
 
-      Collection<Gene> getGenes();
+//      Collection<Gene> getGenes();
 
       
 }

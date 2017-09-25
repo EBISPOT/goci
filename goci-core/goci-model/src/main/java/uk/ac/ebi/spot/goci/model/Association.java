@@ -134,9 +134,9 @@ public class Association implements Trackable {
 //    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
 //               joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
 //               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
-    @ManyToMany(mappedBy = "associations")
-    @JsonManagedReference
-    private Collection<Gene> genes = new ArrayList<>();
+//    @ManyToMany(mappedBy = "associations")
+//    @JsonManagedReference
+//    private Collection<Gene> genes = new ArrayList<>();
 
 
     @PrePersist
@@ -175,8 +175,7 @@ public class Association implements Trackable {
                        String lastMappingPerformedBy,
                        Date lastUpdateDate,
                        Collection<Event> events,
-                       Collection<SingleNucleotidePolymorphism> snps,
-                        Collection<Gene> genes) {
+                       Collection<SingleNucleotidePolymorphism> snps) {
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -204,7 +203,7 @@ public class Association implements Trackable {
         this.lastUpdateDate = lastUpdateDate;
         this.events = events;
         this.snps = snps;
-        this.genes = genes;
+//        this.genes = genes;
     }
 
     public Long getId() {

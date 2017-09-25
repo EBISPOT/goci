@@ -291,8 +291,8 @@ public class ApiDocumentation {
 
                                 fieldWithPath("lastMappingDate").description("Last time this association was mapped to Ensembl"),
                                 fieldWithPath("lastUpdateDate").description("Last time this association was updated"),
-                                fieldWithPath("loci").description("A convenience concept linking associations to one or more risk alleles"),
-                                fieldWithPath("genes").description("Genes that the SNPs for this association are annotated to")
+                                fieldWithPath("loci").description("A convenience concept linking associations to one or more risk alleles")//,
+//                                fieldWithPath("genes").description("Genes that the SNPs for this association are annotated to")
                         ),
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
@@ -352,7 +352,7 @@ public class ApiDocumentation {
                             fieldWithPath("lastUpdateDate").description("The last date this SNP's mapping information was updated"),
                             fieldWithPath("locations").description("The SNP's genomic locations"),
                             fieldWithPath("genomicContexts").description("The genomic contexts for this SNP, incl upstream, downstream and mapped genes"),
-                            fieldWithPath("genes").description("A list of the genes that this SNP is located in or near"),
+//                            fieldWithPath("genes").description("A list of the genes that this SNP is located in or near"),
                             fieldWithPath("mergedInto").description("SNP the present SNP was merged with as part of a more recent genome build"),
                             fieldWithPath("_links").description("<<snp-links,Links>> to other resources")
                             ),

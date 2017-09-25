@@ -37,7 +37,7 @@ public interface AssociationByStudyProjection {
 
     Collection<EfoTrait> getEfoTraits();
 
-    Collection<Gene> getGenes();
+//    Collection<Gene> getGenes();
 
     Collection<SingleNucleotidePolymorphism> getSnps();
 }

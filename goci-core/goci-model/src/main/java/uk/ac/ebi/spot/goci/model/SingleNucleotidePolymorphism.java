@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -70,13 +69,13 @@ public class SingleNucleotidePolymorphism {
     @JsonBackReference
     private Collection<Association> associations;
 
-    @ManyToMany
-    @JoinTable(name = "SNP_GENE_VIEW",
-               joinColumns = @JoinColumn(name = "SNP_ID"),
-               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
-    @JsonManagedReference
-    @RestResource(exported = false)
-    private Collection<Gene> genes = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(name = "SNP_GENE_VIEW",
+//               joinColumns = @JoinColumn(name = "SNP_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "GENE_ID"))
+//    @JsonManagedReference
+//    @RestResource(exported = false)
+//    private Collection<Gene> genes = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "STUDY_SNP_VIEW",
@@ -98,7 +97,7 @@ public class SingleNucleotidePolymorphism {
                                         Collection<RiskAllele> riskAlleles,
                                         SingleNucleotidePolymorphism currentSnp,
                                         Collection<Association> associations,
-                                        Collection<Gene> genes,
+//                                        Collection<Gene> genes,
                                         Collection<Study> studies) {
         this.rsId = rsId;
         this.merged = merged;
@@ -109,7 +108,7 @@ public class SingleNucleotidePolymorphism {
         this.riskAlleles = riskAlleles;
         this.currentSnp = currentSnp;
         this.associations = associations;
-        this.genes = genes;
+//        this.genes = genes;
         this.studies = studies;
     }
 
@@ -187,13 +186,13 @@ public class SingleNucleotidePolymorphism {
         this.associations = associations;
     }
 
-    public Collection<Gene> getGenes() {
-        return genes;
-    }
-
-    public void setGenes(Collection<Gene> genes) {
-        this.genes = genes;
-    }
+//    public Collection<Gene> getGenes() {
+//        return genes;
+//    }
+//
+//    public void setGenes(Collection<Gene> genes) {
+//        this.genes = genes;
+//    }
 
     public Collection<Study> getStudies() {
         return studies;

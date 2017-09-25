@@ -62,6 +62,8 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociId(Long locusId);
 
     @RestResource(path = "findByGene", rel = "findByGene")
-    Page<SingleNucleotidePolymorphism> findByGenesGeneName(String geneName, Pageable pageable);
+//    Page<SingleNucleotidePolymorphism> findByGenesGeneName(String geneName, Pageable pageable);
+    Page<SingleNucleotidePolymorphism> findByGenomicContextsGeneGeneName(String geneName, Pageable pageable);
+
 }
 

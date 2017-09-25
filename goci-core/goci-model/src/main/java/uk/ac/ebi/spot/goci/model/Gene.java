@@ -55,19 +55,19 @@ public class Gene {
     private Collection<GenomicContext> genomicContexts;
 
 //    @ManyToMany(mappedBy = "genes")
-    @ManyToMany
-    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
-               joinColumns = @JoinColumn(name = "GENE_ID"),
-               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
-    @RestResource(exported = false)
-    @JsonBackReference
-    private Collection<Association> associations;
+//    @ManyToMany
+//    @JoinTable(name = "ASSOCIATION_GENE_VIEW",
+//               joinColumns = @JoinColumn(name = "GENE_ID"),
+//               inverseJoinColumns = @JoinColumn(name = "ASSOCIATION_ID"))
+//    @RestResource(exported = false)
+//    @JsonBackReference
+//    private Collection<Association> associations;
 
 
-    @ManyToMany(mappedBy = "genes")
-    @JsonBackReference
-    @RestResource(exported = false)
-    private Collection<SingleNucleotidePolymorphism> snps;
+//    @ManyToMany(mappedBy = "genes")
+//    @JsonBackReference
+//    @RestResource(exported = false)
+//    private Collection<SingleNucleotidePolymorphism> snps;
 
     // JPA no-args constructor
     public Gene() {
@@ -146,19 +146,19 @@ public class Gene {
         this.genomicContexts = genomicContexts;
     }
 
-    public Collection<Association> getAssociations() {
-        return associations;
-    }
-
-    public void setAssociations(Collection<Association> associations) {
-        this.associations = associations;
-    }
-
-    public Collection<SingleNucleotidePolymorphism> getSnps() {
-        return snps;
-    }
-
-    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
-        this.snps = snps;
-    }
+//    public Collection<Association> getAssociations() {
+//        return associations;
+//    }
+//
+//    public void setAssociations(Collection<Association> associations) {
+//        this.associations = associations;
+//    }
+//
+//    public Collection<SingleNucleotidePolymorphism> getSnps() {
+//        return snps;
+//    }
+//
+//    public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
+//        this.snps = snps;
+//    }
 }

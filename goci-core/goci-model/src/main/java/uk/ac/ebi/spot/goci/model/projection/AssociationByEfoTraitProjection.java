@@ -38,7 +38,7 @@ public interface AssociationByEfoTraitProjection {
     Collection<Locus> getLoci();
 
 
-    Collection<Gene> getGenes();
+//    Collection<Gene> getGenes();
 
     Collection<SingleNucleotidePolymorphism> getSnps();
 
