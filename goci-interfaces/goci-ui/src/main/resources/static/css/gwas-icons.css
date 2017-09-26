@@ -1,0 +1,44 @@
+@font-face {
+  font-family: 'GWAS_iconfont_2017';
+  src:  url('../fonts/GWAS_iconfont_2017.eot?sccfhh');
+  src:  url('../fonts/GWAS_iconfont_2017.eot?sccfhh#iefix') format('embedded-opentype'),
+    url('../fonts/GWAS_iconfont_2017.ttf?sccfhh') format('truetype'),
+    url('../fonts/GWAS_iconfont_2017.woff?sccfhh') format('woff'),
+    url('../fonts/GWAS_iconfont_2017.svg?sccfhh#GWAS_iconfont_2017') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'GWAS_iconfont_2017' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-GWAS_API_2017:before {
+  content: "\41";
+}
+.icon-GWAS_GWAS_2017:before {
+  content: "\47";
+}
+.icon-GWAS_Publication_2017:before {
+  content: "\50";
+}
+.icon-GWAS_Study_2017:before {
+  content: "\53";
+}
+.icon-GWAS_Trait_2017:before {
+  content: "\54";
+}
+.icon-GWAS_Variant_2017:before {
+  content: "\56";
+}
