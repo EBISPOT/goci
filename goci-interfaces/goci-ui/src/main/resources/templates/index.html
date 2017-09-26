@@ -24,6 +24,9 @@
 
     <!-- Custom styles for this template -->
     <link href="../static/css/jumbotron.css" th:href="@{css/jumbotron.css}" rel="stylesheet"/>
+    <link href="../static/css/beta-news.css" th:href="@{css/beta-news.css}" rel="stylesheet"/>
+    <link href="../static/css/gwas-icons" th:href="@{css/gwas-icons.css}" rel="stylesheet"/>
+
     <link href="../static/css/sticky-footer-navbar.css" th:href="@{css/sticky-footer-navbar.css}" rel="stylesheet"/>
 
     <!-- Additional styling on top of bootstrap -->
@@ -187,5 +190,61 @@
     ga('send', 'pageview');
 </script>
 
+<script type="text/javascript">
+    function changeReadmeButtonLink(link) {
+        console.log(link);
+        var newPage = contextPath + link;
+        window.location = newPage;
+    }
+
+    function changeAPIBetaLink() {
+        var newPage = 'http://www.ebi.ac.uk/gwas/beta/rest';
+        window.location = newPage;
+    }
+</script>
+<script type="text/javascript">
+    var rotate = 0;
+
+    function setbackground() {
+        window.setTimeout("setbackground()", 5000);
+        rotate = rotate + 1;
+
+        if (rotate == 1) {
+            $("#news_image").attr({
+                "src": contextPath + "icons/GWAS_trait_2017.png",
+                "width": "24",
+                "height": "24"
+            });
+            $("#titleNews").html('<h3><span id="item" class="breaking-small-black">Trait</span> page</h3>');
+            $("#news_description").html('Investigate and combine EFO trait focused GWAS Catalog data');
+            $("#readmorebutton").attr('onclick', 'changeReadmeButtonLink("efotraits")');
+        } else if (rotate == 2) {
+            $("#news_image").attr({
+                "src": contextPath + "icons/GWAS_variant_2017.png",
+                "width": "24",
+                "height": "24"
+            });
+            $("#titleNews").html('<h3><span id="item" class="breaking-small-black">Variant</span> page</h3>');
+            $("#news_description").html('Summarise and visualise data for each variant in the GWAS Catalog');
+            $("#readmorebutton").attr('onclick', 'changeReadmeButtonLink("variants")');
+
+        } else {
+            $("#news_image").attr({
+                "src": contextPath + "icons/GWAS_API_2017.png",
+                "width": "24",
+                "height": "24"
+            });
+            $("#titleNews").html('<h3><span id="item" class="breaking-small-black">REST API</span> page</h3>');
+            $("#news_description").html('Access GWAS Catalog data using your favourite programming language');
+            $("#readmorebutton").attr('onclick', 'changeAPIBetaLink()');
+
+        }
+        if (rotate == 3) {
+            rotate = 0;
+        }
+    }
+
+    setbackground();
+</script>
 </body>
 </html>
