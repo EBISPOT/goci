@@ -667,14 +667,18 @@
                     </div>
                 </div>
 
-                <!-- Associations table -->
-                <div class="row" id="association-table-loading" style="margin-top:20px">
-                    <div id="association_panel" class="panel panel-default">
-                        <div class="panel-heading background-color-primary-accent">
-                            <h3 class="panel-title">
-                                <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
-                            </h3>
-                            <span class="pull-right">
+                </div>
+        </div>
+
+        <div class="row search-results-container" >
+            <!-- Associations table -->
+            <div class="row" id="association-table-loading" style="margin-top:20px">
+                <div id="association_panel" class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">
+                            <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
+                        </h3>
+                        <span class="pull-right">
                         <!--<button type="button" class="btn btn-default btn-xs" id="download_data">-->
                         <!--<span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>-->
                         <!--<span>Download association data</span>-->
@@ -685,51 +689,50 @@
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </span>
                     </span>
-                        </div>
-
-                        <div class="panel-body" style="display:none">
-                            <table id="association-table" class="table table-striped borderless "
-                                   data-flat="true"
-                                   data-show-export="true"
-                                   data-search="true"
-                                   data-show-columns="true"
-                                   data-show-multi-sort="true">
-                            </table>
-                        </div>
                     </div>
-                </div>
 
-
-
-
-                <!-- Studies table -->
-                <div class="row" id="study-table-loading" style="margin-top:20px">
-                    <div id="study_panel" class="panel panel-default">
-                        <div class="panel-heading background-color-primary-accent">
-                            <h3 class="panel-title">
-                                <span class="study_label">Studies</span><span class="study_count badge available-data-btn-badge"></span>
-                            </h3>
-
-                            <span class="pull-right clickable panel-collapsed"
-                                  onclick="toggleSidebar('#study_panel span.clickable')">
-                                 <span class="glyphicon glyphicon-chevron-down"></span>
-                            </span>
-                        </div>
-
-                        <div class="panel-body" style="display:none">
-                            <table id="study-table" class="table table-striped borderless"
-                                   data-flat="true"
-                                   data-show-export="true"
-                                   data-search="true"
-                                   data-show-columns="true"
-                                   data-show-multi-sort="true">
-                            </table>
-                        </div>
+                    <div class="panel-body" style="display:none">
+                        <table id="association-table" class="table table-striped borderless "
+                               data-flat="true"
+                               data-show-export="true"
+                               data-search="true"
+                               data-show-columns="true"
+                               data-show-multi-sort="true">
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
 
+
+
+
+            <!-- Studies table -->
+            <div class="row" id="study-table-loading" style="margin-top:20px">
+                <div id="study_panel" class="panel panel-default">
+                    <div class="panel-heading background-color-primary-accent">
+                        <h3 class="panel-title">
+                            <span class="study_label">Studies</span><span class="study_count badge available-data-btn-badge"></span>
+                        </h3>
+
+                        <span class="pull-right clickable panel-collapsed"
+                              onclick="toggleSidebar('#study_panel span.clickable')">
+                                 <span class="glyphicon glyphicon-chevron-down"></span>
+                            </span>
+                    </div>
+
+                    <div class="panel-body" style="display:none">
+                        <table id="study-table" class="table table-striped borderless"
+                               data-flat="true"
+                               data-show-export="true"
+                               data-search="true"
+                               data-show-columns="true"
+                               data-show-multi-sort="true">
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
 
 
