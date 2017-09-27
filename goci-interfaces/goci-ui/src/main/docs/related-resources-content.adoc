@@ -8,6 +8,14 @@ On Thursday, July 18th, 2013, the Division of Genomic Medicine held http://www.g
 
 
 === GWAS Catalog training materials
+
+==== EBI Train online
+
+The EBI Train online platform provides an easily accessible interactive tutorial to allow users to explore the full range of features the GWAS Catalog has to offer. Check out link:http://www.ebi.ac.uk/training/online/course/gwas-catalog-exploring-snp-trait-associations[ GWAS Catalog - Exploring SNP-trait associations] to find out more.
+
+
+==== Other training materials
+
 Training materials from workshops held by the GWAS Catalog team are available on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/training_materials/[ our FTP server]. If you would like to make use of these slides, please cite the GWAS Catalog as detailed on the link:about[About] page.
 
 
