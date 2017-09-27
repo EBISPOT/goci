@@ -54,7 +54,7 @@
                 <img alt="externalLink"
                      style="width: 1em; height: auto;"
                      src="../static/icons/GWAS_trait_2017.png"
-                     th:src="@{/icons/GWAS_trait_2017.png}"/><span style="padding-left:10px">EFO traits</span><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
+                     th:src="@{/icons/GWAS_trait_2017.png}"/><span id="top-panel-trait-label" th:text="${result.query}" style="padding-left:15px"></span>
             </h2>
         </div>
     </div>
@@ -76,9 +76,12 @@
 
 <!--readme-->
 <div class="container-fluid">
-    <h4 class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo">&nbsp;Help</h4>
+    <div class="pull-right">
+    <h4 class="glyphicon glyphicon-question-sign col-md-12" data-toggle="collapse" data-target="#demo">Help</h4>
+    </div>
     <div id="demo" class="collapse">
     <!--<div id="demo">-->
+        <br/>
         <p>This readme button will be removed in production unless required.</p>
         <p>The trait page is designed to integrate/visualize information about a specific triat (refered as <b>mainEFO</b> in the rest of this document).
            The mainEFO is defined by the URL and can not be changed once the page is loaded.
@@ -566,7 +569,7 @@
                         </div>
                         <!--</div>-->
 
-                        <div class="container row col-xs-12 ">
+                        <!--div class="container row col-xs-12 ">
                             <a class="btn btn-default"
                                type="button"
                                data-toggle="collapse"
@@ -579,7 +582,7 @@
                                       title="show beta functions"
                                       style="margin-left:2px;font-size:smaller"></span>
                             </a>
-                        </div>
+                        <div-->
 
                         <div id="beta-functions" class="container row col-xs-12 collapse" style="margin-top: 10px">
                             <div id="filters">
