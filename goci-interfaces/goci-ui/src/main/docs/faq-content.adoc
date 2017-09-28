@@ -131,6 +131,13 @@
 
 3. <<faq-F3,How are SNP-SNP interactions and multi-SNP haplotypes displayed?>>
 
+
+=== G. Programmatic access
+
+1. <<faq-G1,Is there a way of programmatically retrieving data from the GWAS Catalog?>>
+
+2. <<faq-G2,How do I use the GWAS Catalog REST API?>>
+
 '''
 == A. General
 
@@ -392,6 +399,19 @@ While we do provide the mapped gene and position information in this format in b
 Please note that there is no loss of information in the new representation compared to the old one. Previously, haplotypes and interactions were either not mapped at all or only the first SNP in the sequence was mapped.
 
 
+== G. Programmatic access
+
+
+==== [[faq-G1]]1. Is there a way of programmatically retrieving data from the GWAS Catalog?
+
+The GWAS Catalog REST API is now available for beta testing at http://www.ebi.ac.uk/gwas/beta/rest/. Please note that as this is only a beta release, we do not guarantee the stability of the endpoints. We make every effort to group major changes into a single software release, which we communicate to users via our \gwas-announce@ebi.ac.uk mailing list. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Subscribe here].
+
+
+==== [[faq-G2]]2. How do I use the GWAS Catalog REST API?
+
+link:http://www.ebi.ac.uk/gwas/beta/rest/docs/api[Full technical documentation] for the GWAS Catalog REST API as well as link:http://www.ebi.ac.uk/gwas/beta/rest/docs/sample-scripts[usage examples] are available on the REST API beta site.
+
+
 '''
 
 
@@ -401,4 +421,4 @@ Email us at gwas-info@ebi.ac.uk.
 
 '''
 
-_Last updated: 23 August 2016_
+_Last updated: 19 September 2017_

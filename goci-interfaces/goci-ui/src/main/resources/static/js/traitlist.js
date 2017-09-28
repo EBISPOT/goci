@@ -35,7 +35,7 @@ function loadTraitList() {
                 'max': 1,
                 'facet': facet,
                 'facet.sort': sort,
-                'facet.limit': 2000
+                'facet.limit': 4000
             })
             .done(function(data) {
                 displayTraits(data);
@@ -100,7 +100,7 @@ function getCheckedTraits() {
     }
     console.log(traits);
 
-    if (traits.length > 2000) {
+    if (traits.length > 4000) {
         console.log("Your query is a bit too long.");
     }
 

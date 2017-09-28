@@ -725,6 +725,9 @@ LTG: lamotrigine-induced hypersensitivity
 LTL: leukocyte telomere length
 
 
+LVEF: Left ventricular ejection fraction
+
+
 LVD: large-vessel disease
 
 
@@ -1236,6 +1239,12 @@ SWM: spatial working memory
 === T
 
 TAT: Total adipose tissue area
+
+
+TBLH-BMD: total-body less head bone mineral density
+
+
+TB-LM: total-body lean mass
 
 
 TC: total cholesterol
