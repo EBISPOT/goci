@@ -16,14 +16,14 @@
  */
 var global_color_url = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
 var global_color_url_batch = 'http://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMappings';
-var global_ols_api = 'http://www.ebi.ac.uk/ols/api/';
-var global_ols = 'http://www.ebi.ac.uk/ols/';
+var global_ols_api = 'https://www.ebi.ac.uk/ols/api/';
+var global_ols = 'https://www.ebi.ac.uk/ols/';
 var global_ols_seach_api =  global_ols_api + 'search';
 var global_ols_restful_api_ontology =  global_ols_api + 'ontologies';
 
 var global_efo_info_tag_id = '#efo-info';
-var global_epmc_api = 'http://www.ebi.ac.uk/europepmc/webservices/rest/search';
-var global_oxo_api = 'http://www.ebi.ac.uk/spot/oxo/api/';
+var global_epmc_api = 'https://www.ebi.ac.uk/europepmc/webservices/rest/search';
+var global_oxo_api = 'https://www.ebi.ac.uk/spot/oxo/api/';
 
 var global_solr_url = 'http://localhost:8983/solr/gwas/select';
 // var global_solr_url = 'http://ves-oy-7f.ebi.ac.uk:8983/solr/gwas/select'; //Not working  cross origin problem
@@ -153,7 +153,7 @@ $('#ols-link').click(() => {
  * Linkout to oxo page of the main EFO term
  */
 $('#oxo-link').click(() => {
-    window.open("http://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
+    window.open("https://www.ebi.ac.uk/spot/oxo/terms/" + getMainEFO() , '_blank');
 });
 
 /**
@@ -1092,8 +1092,8 @@ initOLS_TreeWiget = function(initTerm,showSibblings=false,olsontology='efo'){
                   showSibblings,
                   olsontology,
                   "terms",
-                  "http://www.ebi.ac.uk/efo/" + initTerm,
-                  "http://www.ebi.ac.uk/ols/",
+                  "https://www.ebi.ac.uk/efo/" + initTerm,
+                  "https://www.ebi.ac.uk/ols/",
                   options);
 }
 

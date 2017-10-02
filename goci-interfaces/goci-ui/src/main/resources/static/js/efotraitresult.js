@@ -9,8 +9,8 @@
  */
 var list_min = 2;
 var EPMC_URL = "http://www.europepmc.org/abstract/MED/";
-var OLS  = "http://www.ebi.ac.uk/ols/search?q=";
-var ENSVAR = "http://www.ensembl.org/Homo_sapiens/Variation/";
+var OLS  = "https://www.ebi.ac.uk/ols/search?q=";
+var ENSVAR = "https://www.ensembl.org/Homo_sapiens/Variation/";
 var DBSNP  = "http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs=";
 var UCSC   = "https://genome.ucsc.edu/cgi-bin/hgTracks?hgFind.matches=";
 var ENS_SHARE_LINK = 'Variant_specific_location_link/97NKbgkp09vPRy1xXwnqG1x6KGgQ8s7S';
@@ -144,7 +144,7 @@ function getLinkButtons (data,rsId) {
     }
     var pos_end = pos + CONTEXT_RANGE;
     var location = chr+':'+pos_start+'-'+pos_end;
-    var ens_g_context = 'http://www.ensembl.org/Homo_sapiens/Location/View?db=core;r='+location+';v='+rsId+';share_config='+ENS_SHARE_LINK;
+    var ens_g_context = 'https://www.ensembl.org/Homo_sapiens/Location/View?db=core;r='+location+';v='+rsId+';share_config='+ENS_SHARE_LINK;
 
     // Summary panel
     $("#ensembl_button").attr('onclick',     "window.open('"+ENSVAR+"Explore?v="+rsId+"',    '_blank')");
