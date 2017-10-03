@@ -40,29 +40,12 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.CurationStatus;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.Platform;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.UnpublishReason;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.AncestryRepository;
-import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
-import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.repository.PlatformRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
+import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
+import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
+import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,6 +84,8 @@ public class StudyController {
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
+    private PublicationRepository publicationRepository;
+    private AuthorRepository authorRepository;
 
     // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -112,6 +97,7 @@ public class StudyController {
     private StudyDeletionService studyDeletionService;
     private EventsViewService eventsViewService;
     private StudyUpdateService studyUpdateService;
+    private EuropepmcPubMedSearchService europepmcPubMedSearchService;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -141,7 +127,10 @@ public class StudyController {
                            StudyDuplicationService studyDuplicationService,
                            StudyDeletionService studyDeletionService,
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
-                           StudyUpdateService studyUpdateService) {
+                           StudyUpdateService studyUpdateService,
+                           EuropepmcPubMedSearchService europepmcPubMedSearchService,
+                           PublicationRepository publicationRepository,
+                           AuthorRepository authorRepository) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -162,6 +151,9 @@ public class StudyController {
         this.studyDeletionService = studyDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
+        this.europepmcPubMedSearchService = europepmcPubMedSearchService;
+        this.publicationRepository = publicationRepository;
+        this.authorRepository = authorRepository;
     }
 
     /* All studies and various filtered lists */
@@ -572,6 +564,7 @@ public class StudyController {
 
         else {
             // Pass to importer
+
             Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
             Study savedStudy = studyOperationsService.createStudy(importedStudy,
                                                                   currentUserDetailsService.getUserFromRequest(request));
@@ -588,6 +581,48 @@ public class StudyController {
 
             return "redirect:/studies/" + savedStudy.getId();
         }
+    }
+
+    @RequestMapping(value = "/new/importAll", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
+    public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
+                                           HttpServletRequest request,
+                                           Model model)
+            throws PubmedImportException, NoStudyDirectoryException {
+
+        List<Publication> allPublications = publicationRepository.findAll(sortByPubmedIdAsc());
+        System.out.println(String.valueOf(allPublications.size()));
+        //Study importedStudy = europepmcPubMedSearchService.findPublicationSummary("");
+        String pubmedId;
+        for (Publication temp : allPublications) {
+            pubmedId = temp.getPubmedId();
+        //pubmedId = "27927641";
+            System.out.println("Pubmed "+pubmedId+"---");
+
+        EuropePMCData createdStudyByPubmedId = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
+        Publication chi = publicationRepository.findByPubmedId(pubmedId);
+        chi.setPublication(createdStudyByPubmedId.getPublication().getPublication());
+        chi.setPublicationDate(createdStudyByPubmedId.getPublication().getPublicationDate());
+        chi.setTitle(createdStudyByPubmedId.getPublication().getTitle());
+        chi.setListAuthors(createdStudyByPubmedId.getPublication().getListAuthors());
+        publicationRepository.save(chi);
+        Collection<Author> authorList = createdStudyByPubmedId.getAuthors();
+        for (Author author : authorList){
+            Author authorDB = authorRepository.findByFullname(author.getFullname());
+            //System.out.println(author.getFullname());
+            if (authorDB == null) {
+                author.setPublication(chi);
+                authorRepository.save(author);
+            }
+            else {
+                authorDB.setPublication(chi);
+                authorRepository.save(authorDB);
+            }
+        }
+        System.out.println("=======");
+        }
+        System.out.println("End Import All");
+        return "redirect:/studies/";
+
     }
 
 

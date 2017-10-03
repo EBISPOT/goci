@@ -27,18 +27,9 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.repository.AncestryRepository;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
-import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.repository.PlatformRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
+import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
+import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -124,6 +115,15 @@ public class StudyControllerTest {
     @Mock
     private StudyUpdateService studyUpdateService;
 
+    @Mock
+    private EuropepmcPubMedSearchService europepmcPubMedSearchService;
+
+    @Mock
+    private PublicationRepository publicationRepository;
+
+    @Mock
+    private AuthorRepository authorRepository;
+
     private MockMvc mockMvc;
 
     private static final Housekeeping HOUSEKEEPING_PUBLISHED =
@@ -186,7 +186,9 @@ public class StudyControllerTest {
                                                               studyFileService,
                                                               studyDuplicationService,
                                                               studyDeletionService,
-                                                              eventsViewService, studyUpdateService);
+                                                              eventsViewService, studyUpdateService,
+                                                              europepmcPubMedSearchService,
+                                                              publicationRepository,authorRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 
