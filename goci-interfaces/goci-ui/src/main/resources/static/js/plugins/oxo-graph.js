@@ -20,7 +20,7 @@ $('#btn-toggle-oxo').click(function() {
 
 function drawGraph (curie,distance) {
 
-    var relativePath = 'http://www.ebi.ac.uk/spot/oxo/'
+    var relativePath = 'https://www.ebi.ac.uk/spot/oxo/'
     $.getJSON(relativePath+"api/terms/"+curie+"/graph?distance="+distance, function(json) {})
             .success(function(json){
                 var container = document.getElementById('oxo-vis');

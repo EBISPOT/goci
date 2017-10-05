@@ -97,7 +97,7 @@ function processAssociationSummary(data, name) {
             //build SNP search and Ensembl link
             var rsidsearch = "<span><a href='search?query=".concat(summary.rsId[0]).concat("'  target='_blank'>").concat(
                     summary.rsId[0]).concat("</a></span>");
-            var dbsnp = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.rsId[0]).concat(
+            var dbsnp = "<span><a href='https://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(summary.rsId[0]).concat(
                     "'  target='_blank'>").concat(
                     "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
             row.append($("<td>").html(rsidsearch.concat('&nbsp;&nbsp;').concat(dbsnp)));
