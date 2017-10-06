@@ -71,8 +71,32 @@ function processVariantData(data,rsId) {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
+// Patch: To remove ASAP. Solr index issue.
+function getSolrProperty(data, property) {
+    var property_value = '';
+    var index = 0;
+    var valid_index = 0;
+    var data_size = data.length;
+
+    if (data_size > 0) {
+        while (index < data_size) {
+            if (data[index].hasOwnProperty(property)) {
+                valid_index = index;
+                //property_value = data[index][property];
+                index = data_size + 1;
+            }
+            else { index = index + 1; }
+        }
+    }
+
+    return valid_index;
+
+}
+
+
 function getVariantInfo(data,rsId) {
-    var data_sample = data[0];
+    var valid_index = getSolrProperty(data,'context');
+    var data_sample = data[valid_index];
     var location = data_sample.chromLocation[0];
     var region = data_sample.region[0];
     var func = data_sample.context[0];
@@ -82,22 +106,27 @@ function getVariantInfo(data,rsId) {
     var traits_reported = [];
     var traits_reported_url = [];
     $.each(data, function (index, doc) {
+        console.log('doc ...');
         // Mapped genes
-        $.each(doc.entrezMappedGenes, function (index, gene) {
-            if (jQuery.inArray(gene, genes_mapped) == -1) {
-                genes_mapped.push(gene);
-                genes_mapped_url.push(setQueryUrl(gene));
-            }
-        });
+        if (doc.hasOwnProperty('entrezMappedGenes')) {
+            $.each(doc.entrezMappedGenes, function(index, gene) {
+                if (jQuery.inArray(gene, genes_mapped) == -1) {
+                    genes_mapped.push(gene);
+                    genes_mapped_url.push(setQueryUrl(gene));
+                }
+            });
+        }
 
         // Reported traits
         var traits = [];
-        $.each(doc.traitName, function(index, trait) {
-            if (jQuery.inArray(trait, traits_reported) == -1) {
-                traits_reported.push(trait);
-                traits_reported_url.push(setQueryUrl(trait));
-            }
-        });
+        if (doc.hasOwnProperty('entrezMappedGenes')) {
+            $.each(doc.traitName, function(index, trait) {
+                if (jQuery.inArray(trait, traits_reported) == -1) {
+                    traits_reported.push(trait);
+                    traits_reported_url.push(setQueryUrl(trait));
+                }
+            });
+        }
     });
     genes_mapped_url.sort();
     traits_reported_url.sort();
@@ -425,7 +454,8 @@ function getSummary(data) {
 
 // Create external link buttons
 function getLinkButtons (data,rsId) {
-    var data_sample = data[0];
+    var valid_index = getSolrProperty(data,'chromosomeName');
+    var data_sample = data[valid_index];
     var chr = data_sample.chromosomeName[0];
     var pos = data_sample.chromosomePosition[0];
     var pos_start = pos - CONTEXT_RANGE;
