@@ -106,7 +106,6 @@ function getVariantInfo(data,rsId) {
     var traits_reported = [];
     var traits_reported_url = [];
     $.each(data, function (index, doc) {
-        console.log('doc ...');
         // Mapped genes
         if (doc.hasOwnProperty('entrezMappedGenes')) {
             $.each(doc.entrezMappedGenes, function(index, gene) {
