@@ -85,7 +85,7 @@
         <p>This readme button will be removed in production unless required.</p>
         <p>The trait page is designed to integrate/visualize information about a specific triat (refered as <b>mainEFO</b> in the rest of this document).
            The mainEFO is defined by the URL and can not be changed once the page is loaded.
-           Methods are provides to add/remove additional interesting EFO traits on top of the mainEFO. The Manhattan plot/association table/study table will be dynamically updated as new EFO traits are added.
+           Methods are provides to add/remove additional interesting EFO traits on top of the mainEFO. The plot/association table/study table will be dynamically updated as new EFO traits are added.
             Most of the page elements have popout tooltips when mouseover for a second.
            The page consists of 5 panel boxes:</p>
         <ul>
@@ -170,7 +170,7 @@
                                 <input type="checkbox" checked="checked"></input><label>  Always include trait subtypes</label>: If check, trait subtypes will always be included. The individual checkbox and in the selected trait list will be disable. This is by default checked.
                             </li>
                             <li>
-                                EFO trait can be toggled hightligh by single clicking it. The Manhattan will highlight the associations that annotated with the highlight triat.
+                                EFO trait can be toggled hightligh by single clicking it. The plot will highlight the associations that annotated with the highlight triat.
                                 <div>
                                     <a class="list-group-item cart-item col-xs-6 highlight" style="float: none;"><span class="badge cart-item-category-badge" title="Other measurement" style="background-color: rgb(0, 102, 153);">O</span><span class="badge">  X  </span><span class="badge cart-item-number-badge" title="Number of study" text="6">6</span><span  class="badge cart-item-number-badge" title="Number of association" text="12">12</span>[EFO_0004467] insulin measurement</a>
                                 </div>
@@ -190,7 +190,7 @@
                 </ul>
             </li>
             <li><h3>Plot of Catalog associations for selected trait(s):</h3>
-                <a href="https://en.wikipedia.org/wiki/Manhattan_plot">Manhattan plot</a> implemented using Locus Zoom. This plot will be dynamically updated as new EFO traits are added to the page.
+                Plot implemented using Locus Zoom. This plot will be dynamically updated as new EFO traits are added to the page.
                 Each data point in the plot represents an association the annotated with an EFO trait selected in the page.
                 <ul>
                     <li>a popup containing association information will be acticated when mouseover the data point in the plot</li>
@@ -408,7 +408,7 @@
                         <h3 class="panel-title">Expand search
                             <span class="glyphicon glyphicon-question-sign"
                                   data-toggle="tooltip"
-                                  title="Specify additional EFO traits to expand search. The Manhattan plot, association and study tables will be dynamically updated to reflect the traits selected here."
+                                  title="Specify additional EFO traits to expand search. The plot, association and study tables will be dynamically updated to reflect the traits selected here."
                                   style="margin-left:2px;font-size:smaller"></span>
                         </h3>
                         <span class="pull-right clickable"
@@ -646,11 +646,11 @@
                     <div id="locus_panel" class="panel panel-default">
                         <div class="panel-heading background-color-primary-accent">
                             <h3 class="panel-title">
-                                <span class="locus_label">Manhattan plot (plot of Catalog associations for selected trait(s))</span>
+                                <span class="locus_label">Plot of Catalog associations for selected trait(s)</span>
                                 <span class="glyphicon glyphicon-stats manhattan-plot-badge"></span>
                                 <span class="glyphicon glyphicon-question-sign"
                                       data-toggle="tooltip"
-                                      title="Manhattan plot includes all traits selected in the expanded search."
+                                      title="Plot includes all traits selected in the expanded search."
                                       style="margin-left:2px;font-size:smaller"></span>
                             </h3>
                             <span class="pull-right">
