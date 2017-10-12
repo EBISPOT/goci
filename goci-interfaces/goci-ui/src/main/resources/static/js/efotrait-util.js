@@ -1092,7 +1092,7 @@ initOLS_TreeWiget = function(initTerm,showSibblings=false,olsontology='efo'){
                   showSibblings,
                   olsontology,
                   "terms",
-                  "https://www.ebi.ac.uk/efo/" + initTerm,
+                  "http://www.ebi.ac.uk/efo/" + initTerm,
                   "https://www.ebi.ac.uk/ols/",
                   options);
 }
