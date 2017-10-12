@@ -3206,7 +3206,6 @@ buildLocusPlotPopoverHTML = function(association){
     }
     var text = $('<div/>');
     text.append(_addNameValuePairHTML('rsid',association.rsId==undefined? '' : association.rsId[0]));
-    text.append(_addNameValuePairHTML('pValue in the study',association.pval));
     text.append(_addNameValuePairHTML('Catalog Publish Date',new Date(association.catalogPublishDate).toLocaleDateString()));
     text.append(_addNameValuePairHTML('Author(s)',association.author_s));
     text.append(_addNameValuePairHTML('Chromosome',association.chromLocation));
@@ -3214,6 +3213,7 @@ buildLocusPlotPopoverHTML = function(association){
     text.append(_addNameValuePairHTML('Initial Sample Description',association.initialSampleDescription));
     text.append(_addNameValuePairHTML('Mapped Entrez Genes',association.entrezMappedGenes));
     text.append(_addNameValuePairHTML('Mapped EFO Trait',association.mappedLabel));
+    text.append(_addNameValuePairHTML('pValue Mantissa',association.pValueMantissa));
     text.append(_addNameValuePairHTML('pValue Exponent',association.pValueExponent));
     text.append(_addNameValuePairHTML('Author Reported Gene',association.reportedGene));
     text.append(_addNameValuePairHTML('PubmedId',association.pubmedId));
