@@ -100,7 +100,7 @@ public class ParentMappingController {
         String uri = olsServer.concat(olsEfoTerms);
 
 
-        if(efoTerm.contains("http") || efoTerm.contains("https")){
+        if(efoTerm.contains("http")){
             uri = uri.concat(olsFullIri).concat(efoTerm);
         }
         else {
