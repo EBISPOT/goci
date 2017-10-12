@@ -3141,12 +3141,14 @@ var studySorting = {
     // },
 
 
+    // CM Patch: To remove ASAP. Data issue. Eg. study 15 ancestry
     sortByInitialSampleSize : function(array){
         // "initial|NR|NR|European|11522|NA"
         // "replication|NR|NR|European|4955|NA"
         var sampleSize = {};
 
         var isInitial = function(ancestryLinkString){
+            console.log(ancestryLinkString);
             return ancestryLinkString.match(/^initial/) != null
         }
         var InitialSampleSize = function(ancestryLinkString){
@@ -3156,10 +3158,14 @@ var studySorting = {
 
 
         $.each(array, function(index, value) {
-            var init = value.ancestryLinks
-            var total = init.filter(isInitial)
-                    .map(InitialSampleSize)
-                    .reduce(studySorting.add,0)
+            var total = 0;
+            var init = value.ancestryLinks;
+
+            if (init != undefined ) {
+                total = init.filter(isInitial)
+                        .map(InitialSampleSize)
+                        .reduce(studySorting.add, 0);
+            }
             sampleSize[index] = total;
         })
 

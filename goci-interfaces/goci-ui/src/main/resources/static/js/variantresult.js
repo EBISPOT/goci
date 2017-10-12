@@ -71,7 +71,7 @@ function processVariantData(data,rsId) {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-// Patch: To remove ASAP. Solr index issue.
+// CM Patch: To remove ASAP. Solr index issue.
 function getSolrProperty(data, property) {
     var property_value = '';
     var index = 0;
