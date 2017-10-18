@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -36,8 +37,13 @@ public class Publication {
     @NotBlank(message = "Please enter a title")
     private String title;
 
-    //@NotBlank
-    private String listAuthors;
+    @OneToMany(mappedBy = "publicationId")
+    private Collection<Study> studies;
+
+    @OneToOne
+    @JsonIgnore
+    //@JoinColumn(name = "first_author_id")
+    private Author firstAuthor;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED", updatable = false)
@@ -76,6 +82,8 @@ public class Publication {
         this.title = title;
     }
 
+    public void setId(Long id) {this.id = id;}
+
     public String getPubmedId() {
         return pubmedId;
     }
@@ -108,16 +116,16 @@ public class Publication {
         this.title = title;
     }
 
-    public String getListAuthors() {
-        return listAuthors;
-    }
-
-    public void setListAuthors(String listAuthors) {
-        this.listAuthors = listAuthors;
-    }
-
     public Collection<Author> getAuthors() { return authors; }
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
+
+    public Collection<Study> getStudies() { return studies; }
+
+    public void setStudies(Collection<Study> studies) { this.studies = studies; }
+
+    public void setFirstAuthor(Author firstAuthor) { this.firstAuthor =firstAuthor; }
+
+    public Author getFirstAuthor() { return firstAuthor; }
 
 }

@@ -50,7 +50,7 @@ public class EuropepmcPubMedSearchService implements PubMedSearchService {
 
     public EuropePMCData createStudyByPubmed(String pubmedId) throws PubmedLookupException {
         EuropePMCData europePMCData = new EuropePMCData();
-        //pubmedId = "111111128199698";
+
         String urlRequest;
         if (europepmcRoot != null && europepmcSearch != null) {
             urlRequest = europepmcRoot.concat(europepmcSearch);

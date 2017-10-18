@@ -24,10 +24,7 @@ import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.CuratorService;
-import uk.ac.ebi.spot.goci.service.EventTypeService;
-import uk.ac.ebi.spot.goci.service.StudyNoteService;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
+import uk.ac.ebi.spot.goci.service.*;
 
 import java.util.Collection;
 import java.util.Date;
@@ -56,6 +53,7 @@ public class StudyOperationsService {
     private StudyNoteService studyNoteService;
     private StudyNoteOperationsService studyNoteOperationsService;
     private CuratorService curatorService;
+    private PublicationService publicationService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -70,7 +68,8 @@ public class StudyOperationsService {
                                   HousekeepingOperationsService housekeepingOperationsService,
                                   StudyNoteService studyNoteService,
                                   StudyNoteOperationsService studyNoteOperationsService,
-                                  CuratorService curatorService
+                                  CuratorService curatorService,
+                                  PublicationService publicationService
     ) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
@@ -85,6 +84,7 @@ public class StudyOperationsService {
         this.studyNoteService = studyNoteService;
         this.studyNoteOperationsService=studyNoteOperationsService;
         this.curatorService=curatorService;
+        this.publicationService = publicationService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -404,7 +404,8 @@ public class StudyOperationsService {
 
     public ErrorNotification duplicateStudyNoteToSiblingStudies(Study sourceStudy,Long nodeId,SecureUser user){
         //find all studies with the same pubmed id
-        Collection<Study> studies = studyRepository.findByPubmedId(sourceStudy.getPubmedId());
+        // THOR
+        Collection<Study> studies = publicationService.findStudiesByPubmedId(sourceStudy.getPublicationId().getPubmedId());
         //remove the source study
         studies = studies.stream().filter(targetStudy -> sourceStudy.getId() != targetStudy.getId()).collect(Collectors.toList());
 

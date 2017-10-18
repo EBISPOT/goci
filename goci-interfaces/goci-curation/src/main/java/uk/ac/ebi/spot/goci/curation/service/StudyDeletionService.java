@@ -78,6 +78,8 @@ public class StudyDeletionService {
         trackingOperationService.delete(study, user);
         DeletedStudy deletedStudy = createDeletedStudy(study);
 
+        // THOR - Don't delete the publication and Author - OR check if there is just a publication.
+
         // Delete study
         studyRepository.delete(study);
 
@@ -95,8 +97,9 @@ public class StudyDeletionService {
     private DeletedStudy createDeletedStudy(Study study) {
         Collection<Event> events = study.getEvents();
         Long id = study.getId();
-        String pubmed = study.getPubmedId();
-        String title = study.getTitle();
+        // THOR
+        String pubmed = study.getPublicationId().getPubmedId();
+        String title = study.getPublicationId().getTitle();
         return new DeletedStudy(id, title, pubmed, events);
     }
 }

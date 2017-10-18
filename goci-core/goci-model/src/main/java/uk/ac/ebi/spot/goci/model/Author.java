@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by cinzia on 22/09/2017.
@@ -78,4 +79,12 @@ public class Author {
     public Publication getPublication() { return publication; }
 
     public void setPublication(Publication publication) { this.publication = publication; }
+
+
+    // Use Optional for Default value.
+
+    public String getFullnameShort(int  lenghtFullname) {
+        return fullname.substring(0, Math.min(fullname.length(), lenghtFullname));
+    }
+
 }

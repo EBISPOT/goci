@@ -136,11 +136,12 @@ public class DefaultPubMedSearchService implements PubMedSearchService {
 
                     if (author != null && pubDate != null && publication != null && title != null) {
 
-                        newStudy.setAuthor(author);
-                        newStudy.setPubmedId(pmid);
-                        newStudy.setPublication(publication);
-                        newStudy.setTitle(title);
-                        newStudy.setPublicationDate(pubDate);
+                        // THOR
+                        //newStudy.setAuthor(author);
+                        //newStudy.setPubmedId(pmid);
+                        //newStudy.setPublication(publication);
+                        //newStudy.setTitle(title);
+                        //newStudy.setPublicationDate(pubDate);
                     }
                 }
 

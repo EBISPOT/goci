@@ -94,7 +94,10 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
         if (node.get("resultList").get("result").size() > 0) {
             record.setError(false);
             record.setPublication(getPublicatonInfo(node));
-            record.setAuthors(getAuthorsInfo(node));
+            ArrayList<Author> listAuthors = getAuthorsInfo(node);
+            record.setAuthors(listAuthors);
+            Author firstAuthor = listAuthors.get(0);
+            record.setFirstAuthor(firstAuthor);
         }
         else { record.setError(true);}
 

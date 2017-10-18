@@ -42,11 +42,17 @@ public class V2_2_0_040__Study_To_Publication implements SpringJdbcMigration {
         for(String pubmedId: pubmedIdStudies.keySet()){
             System.out.println(pubmedId);
             System.out.println(String.valueOf(pubmedId.length()));
-            Map<String, Object> newPublication = pubmedIdStudies.get(pubmedId);
-            Number publicationID = insertPublication.executeAndReturnKey(newPublication);
-            jdbcTemplate.update(UPDATE_STUDY_PUBLICATION_ID,
-                    publicationID,
-                    pubmedId);
+            try {
+                Map<String, Object> newPublication = pubmedIdStudies.get(pubmedId);
+                System.out.println("after get!");
+                Number publicationID = insertPublication.executeAndReturnKey(newPublication);
+                jdbcTemplate.update(UPDATE_STUDY_PUBLICATION_ID,
+                        publicationID,
+                        pubmedId);
+            } catch (Exception exception) {
+                System.out.print("Skipping: ");
+                System.out.println(pubmedId);
+            }
         }
 
 

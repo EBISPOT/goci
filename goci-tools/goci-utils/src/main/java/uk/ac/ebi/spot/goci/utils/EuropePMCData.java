@@ -18,6 +18,8 @@ public class EuropePMCData {
 
     private Collection<Author> authors = null;
 
+    private Author firstAuthor = null;
+
     public Boolean getError() { return error; }
 
     public void setError(Boolean error) { this.error = error; }
@@ -36,4 +38,7 @@ public class EuropePMCData {
         this.authors = authors;
     }
 
+    public void setFirstAuthor(Author firstAuthor) { this.firstAuthor = firstAuthor; }
+
+    public Author getFirstAuthor() { return firstAuthor; }
 }

@@ -11,10 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
-import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
+import uk.ac.ebi.spot.goci.builder.*;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
@@ -23,13 +20,11 @@ import uk.ac.ebi.spot.goci.curation.service.StudyEventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
+import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -124,6 +119,9 @@ public class StudyControllerTest {
     @Mock
     private AuthorRepository authorRepository;
 
+    @Mock
+    private PublicationService publicationService;
+
     private MockMvc mockMvc;
 
     private static final Housekeeping HOUSEKEEPING_PUBLISHED =
@@ -132,8 +130,22 @@ public class StudyControllerTest {
                     .setCatalogPublishDate(new Date())
                     .build();
 
+
+    // THOR
+    private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
+            .setOrcid("0000-0002-0002-003").build();
+
+    // THOR
+    private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
+            .setPubmedId("1234569")
+            .setPublication("Testiing is Awesome")
+            .setTitle("I like to test")
+            .setPublicationDate(new Date())
+            .setFirstAuthor(AUTHOR)
+            .build();
+
     private static final Study PUBLISHED_STUDY =
-            new StudyBuilder().setId(1234L).setPublicationDate(new Date()).setHousekeeping(
+            new StudyBuilder().setId(1234L).setPublication(PUBLICATION).setHousekeeping(
                     HOUSEKEEPING_PUBLISHED).build();
 
     private static final Association ASSOCIATION_01 =
@@ -188,7 +200,7 @@ public class StudyControllerTest {
                                                               studyDeletionService,
                                                               eventsViewService, studyUpdateService,
                                                               europepmcPubMedSearchService,
-                                                              publicationRepository,authorRepository);
+                                                              publicationRepository,authorRepository, publicationService);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 

@@ -28,25 +28,26 @@ public class Study implements Trackable {
     @GeneratedValue
     private Long id;
 
-    @NotBlank(message = "Please enter an author")
-    private String author;
+    // THOR - Orcid task
+    //@NotBlank(message = "Please enter an author")
+    //private String author;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Please enter a study date in format YYYY-MM-DD")
-    private Date publicationDate;
+    //@DateTimeFormat(pattern = "yyyy-MM-dd")
+    //@NotNull(message = "Please enter a study date in format YYYY-MM-DD")
+    //private Date publicationDate;
 
-    @NotBlank(message = "Please enter a publication")
-    private String publication;
+    //@NotBlank(message = "Please enter a publication")
+    //private String publication;
 
-    @NotBlank(message = "Please enter a title")
-    private String title;
+    //@NotBlank(message = "Please enter a title")
+    //private String title;
 
     private String initialSampleSize;
 
     private String replicateSampleSize;
 
-    @NotBlank(message = "Please enter a pubmed id")
-    private String pubmedId;
+    //@NotBlank(message = "Please enter a pubmed id")
+    //private String pubmedId;
 
     // Defaults set as false
     @JsonIgnore
@@ -133,6 +134,8 @@ public class Study implements Trackable {
     private Publication publicationId;
 
 
+
+
     /**REST API fix: reversal of control of study-SNP relationship from study to SNP to fix deletion issues with respect to
      * the study-SNP view table. Works but not optimal, improve solution if possible**/
 //    @ManyToMany
@@ -160,13 +163,8 @@ public class Study implements Trackable {
     public Study() {
     }
 
-    public Study(String author,
-                 Date publicationDate,
-                 String publication,
-                 String title,
-                 String initialSampleSize,
+    public Study(String initialSampleSize,
                  String replicateSampleSize,
-                 String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
@@ -190,13 +188,8 @@ public class Study implements Trackable {
                  StudyReport studyReport, Collection<Event> events,
                  Collection<SingleNucleotidePolymorphism> snps,
                  Collection<GenotypingTechnology> genotypingTechnologies) {
-        this.author = author;
-        this.publicationDate = publicationDate;
-        this.publication = publication;
-        this.title = title;
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
@@ -231,38 +224,6 @@ public class Study implements Trackable {
         this.id = id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getInitialSampleSize() {
         return initialSampleSize;
     }
@@ -285,14 +246,6 @@ public class Study implements Trackable {
 
     public void setPlatforms(Collection<Platform> platforms) {
         this.platforms = platforms;
-    }
-
-    public String getPubmedId() {
-        return pubmedId;
-    }
-
-    public void setPubmedId(String pubmedId) {
-        this.pubmedId = pubmedId;
     }
 
     public Boolean getCnv() {
@@ -493,4 +446,8 @@ public class Study implements Trackable {
     public void setOpenTargets(Boolean openTargets) {
         this.openTargets = openTargets;
     }
+
+    public Publication getPublicationId() { return publicationId; }
+
+    public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
 }

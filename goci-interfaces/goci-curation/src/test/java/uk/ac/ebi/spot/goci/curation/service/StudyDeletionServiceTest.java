@@ -6,17 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.builder.AncestralGroupBuilder;
-import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
-import uk.ac.ebi.spot.goci.builder.CountryBuilder;
-import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.model.AncestralGroup;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Country;
-import uk.ac.ebi.spot.goci.model.DeletedStudy;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -87,12 +78,23 @@ public class StudyDeletionServiceTest {
     private static final SecureUser SECURE_USER =
             new SecureUserBuilder().setId(564L).setEmail("test@test.com").setPasswordHash("738274$$").build();
 
-    private static final Study STUDY = new StudyBuilder().setId(112L)
-            .setAuthor("MacTest T")
+
+    // THOR
+    private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
+            .setOrcid("0000-0002-0002-003").build();
+
+    // THOR
+    private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
             .setPubmedId("1234569")
             .setPublication("Testiing is Awesome")
             .setTitle("I like to test")
             .setPublicationDate(new Date())
+            .setFirstAuthor(AUTHOR)
+            .build();
+
+
+    private static final Study STUDY = new StudyBuilder().setId(112L)
+            .setPublication(PUBLICATION)
             .setStudyDesignComment("comment")
             .setInitialSampleSize("initial")
             .setReplicateSampleSize("rep")

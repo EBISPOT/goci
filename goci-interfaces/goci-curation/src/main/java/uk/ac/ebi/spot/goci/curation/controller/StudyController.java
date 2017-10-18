@@ -44,6 +44,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
+import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
@@ -86,6 +87,7 @@ public class StudyController {
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
     private PublicationRepository publicationRepository;
     private AuthorRepository authorRepository;
+    private PublicationService publicationService;
 
     // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -130,7 +132,8 @@ public class StudyController {
                            StudyUpdateService studyUpdateService,
                            EuropepmcPubMedSearchService europepmcPubMedSearchService,
                            PublicationRepository publicationRepository,
-                           AuthorRepository authorRepository) {
+                           AuthorRepository authorRepository,
+                           PublicationService publicationService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -154,6 +157,7 @@ public class StudyController {
         this.europepmcPubMedSearchService = europepmcPubMedSearchService;
         this.publicationRepository = publicationRepository;
         this.authorRepository = authorRepository;
+        this.publicationService = publicationService;
     }
 
     /* All studies and various filtered lists */
@@ -175,6 +179,7 @@ public class StudyController {
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
+
 
         // Return all studies ordered by date if no page number given
         if (page == null) {
@@ -201,19 +206,20 @@ public class StudyController {
         // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
         List<Study> studies = null;
 
-
+        // THOR
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
             studyPage =
-                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
+                    studyRepository.findByPublicationIdPubmedId(pubmed, constructPageSpecification(page - 1, sort));
             filters = filters + "&pubmed=" + pubmed;
             studySearchFilter.setPubmedId(pubmed);
         }
 
         // Search by author option available from landing page
+        // THOR
         if (author != null && !author.isEmpty()) {
-            studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
-                                                                                                            sort));
+            studyPage = studyRepository.findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(author,
+                            constructPageSpecification(page - 1, sort));
             filters = filters + "&author=" + author;
             studySearchFilter.setAuthor(author);
         }
@@ -556,8 +562,9 @@ public class StudyController {
         // Remove whitespace
         String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
+        // THOR
         // Check if there is an existing study with the same pubmed id
-        Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
+        Collection<Study> existingStudies = publicationService.findStudiesByPubmedId(pubmedId);
         if (existingStudies.size() > 0) {
             throw new PubmedImportException();
         }
@@ -595,7 +602,7 @@ public class StudyController {
         String pubmedId;
         for (Publication temp : allPublications) {
             pubmedId = temp.getPubmedId();
-        //pubmedId = "27927641";
+            //pubmedId = "27927641";
             System.out.println("Pubmed "+pubmedId+"---");
 
         EuropePMCData createdStudyByPubmedId = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
@@ -603,7 +610,6 @@ public class StudyController {
         chi.setPublication(createdStudyByPubmedId.getPublication().getPublication());
         chi.setPublicationDate(createdStudyByPubmedId.getPublication().getPublicationDate());
         chi.setTitle(createdStudyByPubmedId.getPublication().getTitle());
-        chi.setListAuthors(createdStudyByPubmedId.getPublication().getListAuthors());
         publicationRepository.save(chi);
         Collection<Author> authorList = createdStudyByPubmedId.getAuthors();
         for (Author author : authorList){
@@ -618,6 +624,10 @@ public class StudyController {
                 authorRepository.save(authorDB);
             }
         }
+        Author firstAuthor = createdStudyByPubmedId.getFirstAuthor();
+        Author firstAuthorDB = authorRepository.findByFullname(firstAuthor.getFullname());
+        chi.setFirstAuthor(firstAuthorDB);
+        publicationRepository.save(chi);
         System.out.println("=======");
         }
         System.out.println("End Import All");
@@ -733,7 +743,7 @@ public class StudyController {
 
         // Add duplicate message
         String message =
-                "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+                "Study is a duplicate of " + studyToDuplicate.getPublicationId().getFirstAuthor().getFullname() + ", PMID: " + studyToDuplicate.getPublicationId().getPubmedId();
         redirectAttributes.addFlashAttribute("duplicateMessage", message);
 
         return "redirect:/studies/" + duplicateStudy.getId();
@@ -750,8 +760,8 @@ public class StudyController {
 
         if (assignee.getCuratorId() == null) {
             String blankAssignee =
-                    "Cannot assign a blank value as a curator for study: " + study.getAuthor() + ", " + " pubmed = " +
-                            study.getPubmedId();
+                    "Cannot assign a blank value as a curator for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
+                            study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
         }
         else {
@@ -775,8 +785,8 @@ public class StudyController {
 
         if (statusAssignment.getStatusId() == null) {
             String blankStatus =
-                    "Cannot assign a blank value as a status for study: " + study.getAuthor() + ", " + " pubmed = " +
-                            study.getPubmedId();
+                    "Cannot assign a blank value as a status for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
+                            study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
         }
         else {
@@ -1078,9 +1088,10 @@ public class StudyController {
     }
 
     // Authors
+    // THOR
     @ModelAttribute("authors")
     public List<String> populateAuthors() {
-        return studyRepository.findAllStudyAuthors(sortByAuthorAsc());
+        return publicationService.findAllStudyAuthors();
     }
 
 
@@ -1100,39 +1111,39 @@ public class StudyController {
     }
 
     private Sort sortByPublicationDateAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationDate"));
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publicationDate"));
     }
 
     private Sort sortByPublicationDateDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
     }
 
     private Sort sortByAuthorAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "author").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.firstAuthor.fullname").ignoreCase());
     }
 
     private Sort sortByAuthorDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "author").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.firstAuthor.fullname").ignoreCase());
     }
 
     private Sort sortByTitleAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "title").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.title").ignoreCase());
     }
 
     private Sort sortByTitleDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "title").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.title").ignoreCase());
     }
 
     private Sort sortByPublicationAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publication").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publication").ignoreCase());
     }
 
     private Sort sortByPublicationDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publication").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publication").ignoreCase());
     }
 
     private Sort sortByPubmedIdAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.pubmedId"));
     }
 
     private Sort sortByUserRequestedAsc() {
@@ -1152,7 +1163,7 @@ public class StudyController {
     }
 
     private Sort sortByPubmedIdDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.pubmedId"));
     }
 
     private Sort sortByDiseaseTraitAsc() {

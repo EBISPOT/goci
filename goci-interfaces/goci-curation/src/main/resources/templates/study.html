@@ -44,7 +44,7 @@
     <ol class="breadcrumb pull-right">
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>
@@ -146,7 +146,7 @@
 
                     <div class="col-md-10">
                         <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
-                        <input type="text" th:field="*{author}" class="form-control" id="author"/>
+                        <input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author"/>
 
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                     <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" th:field="*{title}"/>
+                        <input type="text" class="form-control" id="title" th:field="*{publicationId.title}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -163,7 +163,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="publication"
-                               th:field="*{publication}"/>
+                               th:field="*{publicationId.publication}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -171,7 +171,7 @@
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
+                        <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}"/>
 
                         <div class="btn-group pull-right">
                             <button type="button" data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle always-clickable">
@@ -179,10 +179,10 @@
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=*{pubmedId})}"
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=*{publicationId.pubmedId})}"
                                        target="_blank">View in Europe PMC</a></li>
                                 <li>
-                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=*{pubmedId})}"
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=*{publicationId.pubmedId})}"
                                        target="_blank">View in PubMed</a></li>
 
                             </ul>
@@ -193,7 +193,7 @@
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationDate}"/>
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}"/>
                     </div>
                 </div>
 

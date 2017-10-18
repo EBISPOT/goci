@@ -6,28 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.builder.AncestralGroupBuilder;
-import uk.ac.ebi.spot.goci.builder.CountryBuilder;
-import uk.ac.ebi.spot.goci.model.AncestralGroup;
-import uk.ac.ebi.spot.goci.model.Country;
+import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.service.StudyNoteService;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
-import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
-import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
-import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
-import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
-import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.model.CurationStatus;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
@@ -118,12 +100,22 @@ public class StudyDuplicationServiceTest {
     private static final CurationStatus STATUS =
             new CurationStatusBuilder().setId(804L).setStatus("Awaiting Curation").build();
 
-    private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
-            .setAuthor("MacTest T")
+    // THOR
+    private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
+            .setOrcid("0000-0002-0002-003").build();
+
+    // THOR
+    private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
             .setPubmedId("1234569")
             .setPublication("Testiing is Awesome")
             .setTitle("I like to test")
             .setPublicationDate(new Date())
+            .setFirstAuthor(AUTHOR)
+            .build();
+
+
+    private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
+            .setPublication(PUBLICATION)
             .setDiseaseTrait(DISEASE_TRAIT)
             .setEfoTraits(Collections.singletonList(EFO1))
             .setStudyDesignComment("comment")
@@ -178,10 +170,13 @@ public class StudyDuplicationServiceTest {
                                                                 "housekeeping",
                                                                 "ancestries",
                                                                 "id",
-                                                                "author",
+                                                                "publication_id",
                                                                 "notes");
         assertEquals(duplicateStudy.getNotes().size(), 1);
-        assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
+
+        // THOR
+        // assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
+
         assertThat(duplicateStudy.getId()).isNotEqualTo(STUDY_TO_DUPLICATE.getId());
         assertThat(duplicateStudy.getHousekeeping().getStudyAddedDate()).isToday();
 
