@@ -40,6 +40,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
+import uk.ac.ebi.spot.goci.curation.service.reports.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -53,11 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -85,9 +82,7 @@ public class StudyController {
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
-    private PublicationRepository publicationRepository;
-    private AuthorRepository authorRepository;
-    private PublicationService publicationService;
+    private PublicationOperationsService publicationOperationsServiceService;
 
     // Services
     private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -99,7 +94,6 @@ public class StudyController {
     private StudyDeletionService studyDeletionService;
     private EventsViewService eventsViewService;
     private StudyUpdateService studyUpdateService;
-    private EuropepmcPubMedSearchService europepmcPubMedSearchService;
 
     private static final int MAX_PAGE_ITEM_DISPLAY = 25;
 
@@ -130,10 +124,7 @@ public class StudyController {
                            StudyDeletionService studyDeletionService,
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
                            StudyUpdateService studyUpdateService,
-                           EuropepmcPubMedSearchService europepmcPubMedSearchService,
-                           PublicationRepository publicationRepository,
-                           AuthorRepository authorRepository,
-                           PublicationService publicationService) {
+                           PublicationOperationsService publicationOperationsService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -154,10 +145,7 @@ public class StudyController {
         this.studyDeletionService = studyDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
-        this.europepmcPubMedSearchService = europepmcPubMedSearchService;
-        this.publicationRepository = publicationRepository;
-        this.authorRepository = authorRepository;
-        this.publicationService = publicationService;
+        this.publicationOperationsServiceService = publicationOperationsService;
     }
 
     /* All studies and various filtered lists */
@@ -558,36 +546,57 @@ public class StudyController {
                                            HttpServletRequest request,
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
+        ArrayList<HashMap<String,String>> result = new ArrayList<>();
+
+        String regex = "[0-9,/,]+";
 
         // Remove whitespace
-        String pubmedId = pubmedIdForImport.getPubmedId().trim();
+        String pubmedIds = pubmedIdForImport.getPubmedId().trim();
 
-        // THOR
-        // Check if there is an existing study with the same pubmed id
-        Collection<Study> existingStudies = publicationService.findStudiesByPubmedId(pubmedId);
-        if (existingStudies.size() > 0) {
-            throw new PubmedImportException();
+        if (!pubmedIds.matches(regex)) {
+            model.addAttribute("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
+            return "add_study";
         }
 
-        else {
-            // Pass to importer
 
-            Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-            Study savedStudy = studyOperationsService.createStudy(importedStudy,
-                                                                  currentUserDetailsService.getUserFromRequest(request));
+        List<String> pubmedIdList = Arrays.asList(pubmedIds.split("\\s*,\\s*"));
 
-            // Create directory to store associated files
-            try {
-                studyFileService.createStudyDir(savedStudy.getId());
-            }
-            catch (NoStudyDirectoryException e) {
-                getLog().error("No study directory exception");
-                model.addAttribute("study", savedStudy);
-                return "error_pages/study_dir_failure";
+        for (String pubmedId: pubmedIdList){
+            HashMap<String, String> pubmedResult = new HashMap<String, String>();
+            if (pubmedId == "") {
+                pubmedResult.put("Empty pubmed id","The pubmedId is mandatory");
             }
 
-            return "redirect:/studies/" + savedStudy.getId();
+            // THOR
+            // Check if there is an existing study with the same pubmed id
+            // PublicationService.... tanto cambia!
+            Collection<Study> existingStudies = publicationOperationsServiceService.getStudiesByPubmedId(pubmedId);
+            if (existingStudies != null) {
+                pubmedResult.put(pubmedId,"Pubmed "+pubmedId+ " already exist");
+            }
+
+            else {
+                // Pass to importer
+
+                Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+                Study savedStudy = studyOperationsService.createStudy(importedStudy,
+                        currentUserDetailsService.getUserFromRequest(request));
+
+                // Create directory to store associated files
+                try {
+                    studyFileService.createStudyDir(savedStudy.getId());
+                } catch (NoStudyDirectoryException e) {
+                    getLog().error("No study directory exception");
+                    pubmedResult.put(pubmedId,"No study directory exception");
+                } catch (Exception e) {
+                    getLog().error("Something went wrong quering EuropePMC.");
+                    pubmedResult.put(pubmedId,"Something went wrong usign EuropePMC service");
+                }
+                result.add(pubmedResult);
+            }
+
         }
+        return "add_study";
     }
 
     @RequestMapping(value = "/new/importAll", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
@@ -596,40 +605,7 @@ public class StudyController {
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
-        List<Publication> allPublications = publicationRepository.findAll(sortByPubmedIdAsc());
-        System.out.println(String.valueOf(allPublications.size()));
-        //Study importedStudy = europepmcPubMedSearchService.findPublicationSummary("");
-        String pubmedId;
-        for (Publication temp : allPublications) {
-            pubmedId = temp.getPubmedId();
-            //pubmedId = "27927641";
-            System.out.println("Pubmed "+pubmedId+"---");
-
-        EuropePMCData createdStudyByPubmedId = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
-        Publication chi = publicationRepository.findByPubmedId(pubmedId);
-        chi.setPublication(createdStudyByPubmedId.getPublication().getPublication());
-        chi.setPublicationDate(createdStudyByPubmedId.getPublication().getPublicationDate());
-        chi.setTitle(createdStudyByPubmedId.getPublication().getTitle());
-        publicationRepository.save(chi);
-        Collection<Author> authorList = createdStudyByPubmedId.getAuthors();
-        for (Author author : authorList){
-            Author authorDB = authorRepository.findByFullname(author.getFullname());
-            //System.out.println(author.getFullname());
-            if (authorDB == null) {
-                author.setPublication(chi);
-                authorRepository.save(author);
-            }
-            else {
-                authorDB.setPublication(chi);
-                authorRepository.save(authorDB);
-            }
-        }
-        Author firstAuthor = createdStudyByPubmedId.getFirstAuthor();
-        Author firstAuthorDB = authorRepository.findByFullname(firstAuthor.getFullname());
-        chi.setFirstAuthor(firstAuthorDB);
-        publicationRepository.save(chi);
-        System.out.println("=======");
-        }
+        publicationOperationsServiceService.importAll();
         System.out.println("End Import All");
         return "redirect:/studies/";
 
@@ -1091,7 +1067,7 @@ public class StudyController {
     // THOR
     @ModelAttribute("authors")
     public List<String> populateAuthors() {
-        return publicationService.findAllStudyAuthors();
+        return publicationOperationsServiceService.listFirstAuthors();
     }
 
 

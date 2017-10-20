@@ -30,7 +30,15 @@ public class PublicationService {
     }
 
 
-    public Optional<Collection<Study>> getStudiesByPubmedId(String pubmedId) {
+    public Optional<Publication> findOptionalByPubmedId(String pubmedId) {
+        Publication publication = publicationRepository.findByPubmedId(pubmedId);
+        if (publication != null) {
+            return Optional.of(publication);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Collection<Study>> findOptionalStudiesByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
         if (publication != null) {
             return Optional.of(publication.getStudies());
@@ -38,12 +46,43 @@ public class PublicationService {
         return Optional.empty();
     }
 
+
+    public Publication findByPumedId(String pubmedId) {
+        Optional<Publication> publication= findOptionalByPubmedId(pubmedId);
+        if (publication.isPresent()){
+            return publication.get();
+        }
+        return null;
+    }
+
+    public Publication createOrFindByPumedId(String pubmedId) {
+        Optional<Publication> publication= findOptionalByPubmedId(pubmedId);
+        if (publication.isPresent()){
+            return publication.get();
+        }
+        return new Publication();
+    }
+
     public Collection<Study> findStudiesByPubmedId(String pubmedId) {
-        return publicationRepository.findByPubmedId(pubmedId).getStudies();
+        Optional<Collection<Study>> listStudies= findOptionalStudiesByPubmedId(pubmedId);
+        if (listStudies.isPresent()){
+            return listStudies.get();
+        }
+        return null;
+    }
+
+    public List<Publication> findAll() {
+        Sort ascPubmedId = new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));
+        return publicationRepository.findAll(ascPubmedId);
     }
 
     public List<String> findAllStudyAuthors() {
         return publicationRepository.findAllStudyAuthors();
+    }
+
+
+    public void save(Publication publication) {
+        publicationRepository.save(publication);
     }
 
 }

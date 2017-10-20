@@ -42,7 +42,6 @@ public class Publication {
 
     @OneToOne
     @JsonIgnore
-    //@JoinColumn(name = "first_author_id")
     private Author firstAuthor;
 
     @Temporal(TemporalType.TIMESTAMP)

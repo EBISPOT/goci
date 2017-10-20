@@ -47,6 +47,12 @@
         <div class="col-md-8">
             <form id="addStudyWithPubmed" class="form-horizontal" role="form" method="post"
                   th:object="${pubmedIdForImport}" th:action="@{/studies/new/import}">
+                <div class="alert alert-danger col-md-offset-2 col-md-10" th:if="${error}">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+
+                    <p th:each="err : ${error}" th:text="${err}"></p>
+                </div>
+
                 <div class="form-group">
                     <label class="control-label col-md-2" for="inputPubmedAdd">Add using Pubmed ID</label>
 
@@ -66,73 +72,15 @@
     </div>
 </div>
 
-
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <form id="addStudyForm" class="form-horizontal" method="post" th:object="${study}" name="addStudyForm"
-                  th:action="@{/studies/new}">
+        <div class="col-md-12">
+          <table>
+              <tr th:each="item  : ${pubmedListResult}">
+                  <td th:text="${item.id}">001</td>
 
-
-                <div class="alert alert-danger col-md-offset-2 col-md-10" th:if="${#fields.hasErrors('*')}">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-
-                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="pubmedId" class="control-label col-md-2">Pubmed ID</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmedId" placeholder="Pubmed ID"
-                               th:field="*{publicationId.pubmedId}"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="author" class="control-label col-md-2">Author</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="author"
-                               placeholder="last name of first author" th:field="*{publicationId.firstAuthor.fullname}"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="title" class="control-label col-md-2">Title</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" placeholder="Title of paper"
-                               th:field="*{publicationId.title}"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="publication" class="control-label col-md-2">Publication</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="publication"
-                               placeholder="Publishing journal name" th:field="*{publicationId.publication}"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" placeholder="YYYY-MM-DD"
-                               th:field="*{publicationId.publicationDate}"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </form>
+              </tr>
+          </table>
         </div>
     </div>
 </div>

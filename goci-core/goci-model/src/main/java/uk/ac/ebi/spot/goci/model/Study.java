@@ -128,7 +128,7 @@ public class Study implements Trackable {
     @OneToMany(mappedBy = "study")
     private Collection<WeeklyTracking> weeklyTrackings;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne
     @JsonIgnore
     @JoinColumn(name = "publication_id")
     private Publication publicationId;

@@ -73,10 +73,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public StudyDocument(Study study) {
         super(study);
-        this.pubmedId = study.getPubmedId();
-        this.title = study.getTitle();
-        this.author = study.getAuthor();
-        this.publication = study.getPublication();
+        this.pubmedId = study.getPublicationId().getPubmedId();
+        this.title = study.getPublicationId().getTitle();
+        this.author = study.getPublicationId().getFirstAuthor().getFullname();
+        this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
 
@@ -85,17 +85,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 //        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (study.getPublicationDate() != null) {
-            this.publicationDate = df.format(study.getPublicationDate());
+        if (study.getPublicationId().getPublicationDate() != null) {
+            this.publicationDate = df.format(study.getPublicationId().getPublicationDate());
         }
         if (study.getHousekeeping().getCatalogPublishDate() != null) {
             this.catalogPublishDate = df.format(study.getHousekeeping().getCatalogPublishDate());
         }
 
         String year;
-        if (study.getPublicationDate() != null) {
+        if (study.getPublicationId().getPublicationDate() != null) {
             Calendar studyCal = Calendar.getInstance();
-            studyCal.setTime(study.getPublicationDate());
+            studyCal.setTime(study.getPublicationId().getPublicationDate());
             year = String.valueOf(studyCal.get(Calendar.YEAR));
         }
         else {
