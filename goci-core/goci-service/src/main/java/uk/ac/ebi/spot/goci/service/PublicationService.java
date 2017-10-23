@@ -15,8 +15,8 @@ import org.springframework.data.domain.Sort;
 /**
  * PublicationService provides a list of methods to query the Repository
  *
- * @author Tony Burdett
- * @date 16/01/15
+ * @author Cinzia
+ * @date 16/10/17
  */
 
 @Service

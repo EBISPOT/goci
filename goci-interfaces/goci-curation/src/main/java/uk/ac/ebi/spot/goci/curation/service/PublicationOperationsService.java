@@ -1,18 +1,25 @@
-package uk.ac.ebi.spot.goci.curation.service.reports;
+package uk.ac.ebi.spot.goci.curation.service;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
-import javax.swing.text.html.Option;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * PublicationOperationService provides a list of methods to add/update the publication and the relative authors.
+ *
+ * @author Cinzia
+ * @date 23/10/17
+ */
+
 
 @Service
 public class PublicationOperationsService {
@@ -20,10 +27,13 @@ public class PublicationOperationsService {
 
     private PublicationService publicationService;
 
+    private AuthorOperationsService authorOperationsService;
+
     private EuropepmcPubMedSearchService europepmcPubMedSearchService;
 
     @Autowired
     public PublicationOperationsService(PublicationService publicationService,
+                                        AuthorOperationsService authorOperationsService,
                                         EuropepmcPubMedSearchService europepmcPubMedSearchService){
         this.publicationService = publicationService;
         this.europepmcPubMedSearchService = europepmcPubMedSearchService;
@@ -35,6 +45,13 @@ public class PublicationOperationsService {
     }
 
 
+    public void addFirstAuthorToPublication(Publication publication, EuropePMCData europePMCResult) {
+        Author firstAuthor = europePMCResult.getFirstAuthor();
+        Author firstAuthorDB = authorOperationsService.findByFullname(firstAuthor.getFullname());
+        publication.setFirstAuthor(firstAuthorDB);
+        publicationService.save(publication);
+    }
+
     public Publication addPublication(String pubmedId, EuropePMCData europePMCResult) throws Exception {
 
         Publication publication = publicationService.createOrFindByPumedId(pubmedId);
@@ -42,26 +59,10 @@ public class PublicationOperationsService {
         publication.setPublicationDate(europePMCResult.getPublication().getPublicationDate());
         publication.setTitle(europePMCResult.getPublication().getTitle());
 
-        // Can be an exist publication or a new. Id needed.
         publicationService.save(publication);
+        authorOperationsService.addAuthorsToPublication(publication, europePMCResult);
 
-        Collection<Author> authorList = europePMCResult.getAuthors();
-        for (Author author : authorList){
-            Author authorDB = authorRepository.findByFullname(author.getFullname());
-            //System.out.println(author.getFullname());
-            if (authorDB == null) {
-                author.setPublication(chi);
-                authorRepository.save(author);
-            }
-            else {
-                authorDB.setPublication(chi);
-                authorRepository.save(authorDB);
-            }
-        }
-        Author firstAuthor = createdStudyByPubmedId.getFirstAuthor();
-        Author firstAuthorDB = authorRepository.findByFullname(firstAuthor.getFullname());
-        chi.setFirstAuthor(firstAuthorDB);
-        publicationRepository.save(chi);
+
         System.out.println("=======");
 
         return publication;

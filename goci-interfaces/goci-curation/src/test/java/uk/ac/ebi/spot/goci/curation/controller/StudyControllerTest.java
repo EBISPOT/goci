@@ -20,12 +20,11 @@ import uk.ac.ebi.spot.goci.curation.service.StudyEventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.curation.service.reports.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
-import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;

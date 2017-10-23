@@ -40,14 +40,11 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.curation.service.reports.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
-import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
-import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
-import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
