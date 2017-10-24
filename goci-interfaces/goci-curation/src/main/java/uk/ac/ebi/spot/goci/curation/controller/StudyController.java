@@ -602,7 +602,7 @@ public class StudyController {
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
-        publicationOperationsServiceService.importAll();
+        publicationOperationsServiceService.reImportAllPublication();
         System.out.println("End Import All");
         return "redirect:/studies/";
 

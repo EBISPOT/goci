@@ -37,6 +37,7 @@ public class PublicationOperationsService {
                                         EuropepmcPubMedSearchService europepmcPubMedSearchService){
         this.publicationService = publicationService;
         this.europepmcPubMedSearchService = europepmcPubMedSearchService;
+        this.authorOperationsService = authorOperationsService;
     }
 
 
@@ -45,9 +46,10 @@ public class PublicationOperationsService {
     }
 
 
+
     public void addFirstAuthorToPublication(Publication publication, EuropePMCData europePMCResult) {
         Author firstAuthor = europePMCResult.getFirstAuthor();
-        Author firstAuthorDB = authorOperationsService.findByFullname(firstAuthor.getFullname());
+        Author firstAuthorDB = authorOperationsService.findAuthorByFullname(firstAuthor.getFullname());
         publication.setFirstAuthor(firstAuthorDB);
         publicationService.save(publication);
     }
@@ -61,7 +63,7 @@ public class PublicationOperationsService {
 
         publicationService.save(publication);
         authorOperationsService.addAuthorsToPublication(publication, europePMCResult);
-
+        addFirstAuthorToPublication(publication,europePMCResult);
 
         System.out.println("=======");
 
