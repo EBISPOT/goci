@@ -25,8 +25,6 @@ http://www.ensembl.org[Ensembl Genome Browser]
 
 http://geneticassociationdb.nih.gov/[Genetic Association Database]
 
-http://www.geneticsofgeneexpression.org/network/[Human Gene Coexpression Database]
-
 http://www.hapmap.org/[International HapMap Project]
 
 http://www.phenxtoolkit.org[PhenX Toolkit (consensus measures of Phenotypes and eXposures)]
@@ -35,11 +33,11 @@ http://genome.ucsc.edu/cgi-bin/hgGateway[Genome Browser Gateway]
 
 
 === HuGE Navigator (Centers for Disease Control and Prevention)
-https://phgkb.cdc.gov/HuGENavigator/gWAHitStartPage.do[GWAS Integrator]
+https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[GWAS Integrator]
 
-https://phgkb.cdc.gov/HuGENavigator/startPagePubLit.do[HuGE Literature Finder]
+https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[HuGE Literature Finder]
 
-https://phgkb.cdc.gov/HuGENavigator/startPageMapper.do[Variant Name Mapper]
+https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[Variant Name Mapper]
 
 
 === National Center for Biotechnology Information (NCBI) Links
