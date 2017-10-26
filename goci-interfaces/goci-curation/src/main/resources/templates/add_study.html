@@ -45,26 +45,23 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <form id="addStudyWithPubmed" class="form-horizontal" role="form" method="post"
-                  th:object="${pubmedIdForImport}" th:action="@{/studies/new/import}">
-                <div class="alert alert-danger col-md-offset-2 col-md-10" th:if="${error}">
+            <form class="form-horizontal" role="form">
+                <div class="alert alert-danger col-md-offset-2 col-md-10">
                     <a href="#" class="close" data-dismiss="alert">&times;</a>
 
-                    <p th:each="err : ${error}" th:text="${err}"></p>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-2" for="inputPubmedAdd">Add using Pubmed ID</label>
+                    <label class="control-label col-md-2">Add using Pubmed ID</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPubmedAdd"
-                               th:field="*{pubmedId}" placeholder="Add using Pubmed ID"/>
+                        <input type="text" class="form-control" id="pubmedId" placeholder="Add using Pubmed ID"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Import</button>
+                        <button id="add_study" type="submit" class="btn btn-primary">Import</button>
                     </div>
                 </div>
             </form>
@@ -86,6 +83,41 @@
 </div>
 
 <div th:include="fragments/footer :: page_footer"></div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var contextPath = /*[[@{/}]]*/'';
+    console.log(contextPath);
+
+    /*]]>*/
+</script>
+<script>
+
+        $("#add_study").click(function() {
+            console.log("button pressed");
+            console.log(contextPath);
+            var action = contextPath+"studies/new/import";
+            var data = $("#pubmedId").val();
+            $.ajax({
+                headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json; charset=utf-8'
+                },
+                type: "POST",
+                url: action,
+                data: JSON.stringify(data),
+                success:function (data, textStatus, jqXHR) {
+                    console.log(data);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Status: " + textStatus);
+                    alert("Error: " + errorThrown);
+                    console.log(errorThrown)
+                },
+                dataType: 'json'
+            });
+        //console.log("cchime");
+        });
+</script>
 
 </body>
 

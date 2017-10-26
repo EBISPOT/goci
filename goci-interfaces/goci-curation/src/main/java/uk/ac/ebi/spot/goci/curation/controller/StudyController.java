@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +13,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
@@ -53,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.Map.Entry.*;
 
 /**
  * Created by emma on 20/11/14.
@@ -82,7 +78,7 @@ public class StudyController {
     private PublicationOperationsService publicationOperationsServiceService;
 
     // Services
-    private DefaultPubMedSearchService defaultPubMedSearchService;
+    //private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
     private CurrentUserDetailsService currentUserDetailsService;
@@ -112,7 +108,6 @@ public class StudyController {
                            AncestryRepository ancestryRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
                            GenotypingTechnologyRepository genotypingTechnologyRepository,
-                           DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
                            CurrentUserDetailsService currentUserDetailsService,
@@ -133,7 +128,6 @@ public class StudyController {
         this.ancestryRepository = ancestryRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.genotypingTechnologyRepository = genotypingTechnologyRepository;
-        this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
         this.currentUserDetailsService = currentUserDetailsService;
@@ -536,23 +530,59 @@ public class StudyController {
     }
 
 
+    public JSONObject orgjson1() throws Exception {
+        HashMap<String, HashMap<String, String>> parentMap =
+                new HashMap<String, HashMap<String, String>>();
+        HashMap<String, String> child = new HashMap<String, String>();
+        child.put("key1", "value1");
+        child.put("key2", "value2");
+        child.put("key3", "value3");
+        child.put("key4", "value4");
+        child.put("key5", "value5");
+
+        parentMap.put("parentMap", child);
+        org.json.JSONObject parent = new org.json.JSONObject();
+        for (Map.Entry<String, HashMap<String, String>> entry : parentMap.entrySet()) {
+            org.json.JSONObject childa = new org.json.JSONObject();
+            for (Map.Entry<String, String> entryChild : entry.getValue().entrySet()) {
+                childa.accumulate(entryChild.getKey(),
+                        entryChild.getValue());
+            }
+            parent.accumulate(entry.getKey(), childa);
+        }
+        System.out.println("orgjson2()");
+        System.out.println(parent);
+        return parent;
+    }
+
+
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
-                                           HttpServletRequest request,
-                                           Model model)
-            throws PubmedImportException, NoStudyDirectoryException {
+    //@RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @CrossOrigin
+    @RequestMapping(value = "/new/import", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> importStudy(@RequestBody String pubmedIdForImport,
+                               HttpServletRequest request) {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
 
         String regex = "[0-9,/,]+";
 
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        JSONObject response = new JSONObject();
+        response.put("id", 555);
+        response.put("message", "Provision successful!");
+
         // Remove whitespace
-        String pubmedIds = pubmedIdForImport.getPubmedId().trim();
+        String pubmedIds = pubmedIdForImport.trim();
 
         if (!pubmedIds.matches(regex)) {
-            model.addAttribute("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
-            return "add_study";
+            //model.addAttribute("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
+            //return  ResponseEntity.ok(response);
+            return new ResponseEntity<String>("\"This is a String\"",responseHeaders,HttpStatus.OK);
+            //return ResponseEntity.ok("\"This is a String\"");
+            //return "add_study";
         }
 
 
@@ -567,7 +597,7 @@ public class StudyController {
             // THOR
             // Check if there is an existing study with the same pubmed id
             // PublicationService.... tanto cambia!
-            Collection<Study> existingStudies = publicationOperationsServiceService.getStudiesByPubmedId(pubmedId);
+            Collection<Study> existingStudies = publicationOperationsServiceService.findStudiesByPubmedId(pubmedId);
             if (existingStudies != null) {
                 pubmedResult.put(pubmedId,"Pubmed "+pubmedId+ " already exist");
             }
@@ -575,7 +605,11 @@ public class StudyController {
             else {
                 // Pass to importer
 
-                Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+                //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+                Publication publication =publicationOperationsServiceService.importPublication(pubmedId);
+                Study importedStudy = new Study();
+                importedStudy.setPublicationId(publication);
+                studyRepository.save(importedStudy);
                 Study savedStudy = studyOperationsService.createStudy(importedStudy,
                         currentUserDetailsService.getUserFromRequest(request));
 
@@ -593,7 +627,9 @@ public class StudyController {
             }
 
         }
-        return "add_study";
+        return new ResponseEntity<String>("\"This is a String\"",responseHeaders,HttpStatus.OK);
+        //return "add_study";
+
     }
 
     @RequestMapping(value = "/new/importAll", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
@@ -602,8 +638,9 @@ public class StudyController {
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
+
         publicationOperationsServiceService.reImportAllPublication();
-        System.out.println("End Import All");
+
         return "redirect:/studies/";
 
     }

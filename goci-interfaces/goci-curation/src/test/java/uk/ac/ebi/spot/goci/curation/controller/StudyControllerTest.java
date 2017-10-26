@@ -111,15 +111,6 @@ public class StudyControllerTest {
     private StudyUpdateService studyUpdateService;
 
     @Mock
-    private EuropepmcPubMedSearchService europepmcPubMedSearchService;
-
-    @Mock
-    private PublicationRepository publicationRepository;
-
-    @Mock
-    private AuthorRepository authorRepository;
-
-    @Mock
     private PublicationOperationsService publicationOperationsService;
 
     private MockMvc mockMvc;
@@ -191,7 +182,6 @@ public class StudyControllerTest {
                                                               ancestryRepository,
                                                               unpublishReasonRepository,
                                                               genotypingTechnologyRepository,
-                                                              defaultPubMedSearchService,
                                                               studyOperationsService,
                                                               mappingDetailsService,
                                                               currentUserDetailsService,
@@ -199,8 +189,7 @@ public class StudyControllerTest {
                                                               studyDuplicationService,
                                                               studyDeletionService,
                                                               eventsViewService, studyUpdateService,
-                                                              europepmcPubMedSearchService,
-                                                              publicationRepository,authorRepository, publicationOperationsService);
+                                                              publicationOperationsService);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 

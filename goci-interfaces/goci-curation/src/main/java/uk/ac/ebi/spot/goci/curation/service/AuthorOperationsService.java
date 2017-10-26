@@ -39,12 +39,12 @@ public class AuthorOperationsService {
         Collection<Author> authorList = europePMCResult.getAuthors();
         for (Author author : authorList) {
             Author authorDB = findAuthorByFullname(author.getFullname());
-            author.setPublication(publication);
             if (authorDB == null) {
-
-                authorRepository.save(author);
+                author.setPublication(publication);
+                authorService.save(author);
             } else {
-                authorRepository.save(authorDB);
+                authorDB.setPublication(publication);
+                authorService.save(authorDB);
             }
         }
     }

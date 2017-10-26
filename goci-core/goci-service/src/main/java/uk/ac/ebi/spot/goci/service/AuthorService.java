@@ -43,6 +43,9 @@ public class AuthorService {
         return null;
     }
 
+    public void save(Author author) {
+        authorRepository.save(author);
+    }
 
 
 }

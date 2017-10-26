@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.StudyService;
+import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,10 +69,22 @@ public class PublicationOperationsService {
         authorOperationsService.addAuthorsToPublication(publication, europePMCResult);
         addFirstAuthorToPublication(publication,europePMCResult);
 
-        System.out.println("=======");
-
         return publication;
     }
+
+
+    public Publication importPublication(String pubmedId) throws PubmedLookupException {
+        Publication addedPublication = null;
+        try {
+            EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
+            addedPublication = addPublication(pubmedId, europePMCResult);
+        } catch(Exception e) {
+            throw new PubmedLookupException("importPublication");
+
+        }
+        return addedPublication;
+    }
+
 
     public Boolean reImportAllPublication() {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
@@ -82,8 +98,7 @@ public class PublicationOperationsService {
             System.out.println("Retriving Pubmed: "+pubmedId+"---");
 
             try {
-                EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
-                Publication addedPublication = addPublication(pubmedId, europePMCResult);
+                    Publication importedPublication = importPublication(pubmedId);
             } catch (Exception exception) {
                 HashMap<String, String> pubmedResult = new HashMap<String, String>();
                 pubmedResult.put(pubmedId,"Something happend. TO DO imporve");
@@ -92,5 +107,11 @@ public class PublicationOperationsService {
         }
         return true;
 
+    }
+
+
+    public Collection<Study> findStudiesByPubmedId(String pubmedId) {
+        Collection<Study> studies = publicationService.findStudiesByPubmedId(pubmedId);
+        return studies;
     }
 }
