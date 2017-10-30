@@ -401,6 +401,9 @@ EBV: Epstein-Barr virus
 EDS: excessive daytime sleepiness
 
 
+EEG: electroencephalography
+
+
 EER: estimated energy requirement
 
 
