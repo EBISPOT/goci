@@ -40,6 +40,9 @@ Ab: Amyloid-beta
 ABI: ankle brachial index
 
 
+ACA: anti-centromere antibodies
+
+
 ACE: Angiotensin-converting enzyme
 
 
@@ -140,6 +143,9 @@ AST: aspartate aminotransferase
 
 
 At: antithrombin
+
+
+ATA: anti-topoisomerase antibodies
 
 
 ATBV: temporal brain volume
