@@ -529,83 +529,62 @@ public class StudyController {
         return "add_study";
     }
 
-
-    public JSONObject orgjson1() throws Exception {
-        HashMap<String, HashMap<String, String>> parentMap =
-                new HashMap<String, HashMap<String, String>>();
-        HashMap<String, String> child = new HashMap<String, String>();
-        child.put("key1", "value1");
-        child.put("key2", "value2");
-        child.put("key3", "value3");
-        child.put("key4", "value4");
-        child.put("key5", "value5");
-
-        parentMap.put("parentMap", child);
-        org.json.JSONObject parent = new org.json.JSONObject();
-        for (Map.Entry<String, HashMap<String, String>> entry : parentMap.entrySet()) {
-            org.json.JSONObject childa = new org.json.JSONObject();
-            for (Map.Entry<String, String> entryChild : entry.getValue().entrySet()) {
-                childa.accumulate(entryChild.getKey(),
-                        entryChild.getValue());
-            }
-            parent.accumulate(entry.getKey(), childa);
-        }
-        System.out.println("orgjson2()");
-        System.out.println(parent);
-        return parent;
-    }
-
-
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    //@RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     @CrossOrigin
     @RequestMapping(value = "/new/import", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> importStudy(@RequestBody String pubmedIdForImport,
+    public @ResponseBody ResponseEntity<ArrayList<HashMap<String,String>>> importStudy(@RequestBody String pubmedIdForImport,
                                HttpServletRequest request) {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
+        String regex = "[0-9, /,]+";
 
-        String regex = "[0-9,/,]+";
+
+        //HashMap<String, String> child = new HashMap<String, String>();
+        //child.put("key1", "value1");
+
+        //result.add(child);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
-        JSONObject response = new JSONObject();
-        response.put("id", 555);
-        response.put("message", "Provision successful!");
 
         // Remove whitespace
         String pubmedIds = pubmedIdForImport.trim();
 
         if (!pubmedIds.matches(regex)) {
-            //model.addAttribute("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
-            //return  ResponseEntity.ok(response);
-            return new ResponseEntity<String>("\"This is a String\"",responseHeaders,HttpStatus.OK);
-            //return ResponseEntity.ok("\"This is a String\"");
-            //return "add_study";
+            HashMap<String, String> error = new HashMap<String, String>();
+            error.put("pubmedId", "general");
+            error.put("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
+            result.add(error);
+            return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
         }
 
 
         List<String> pubmedIdList = Arrays.asList(pubmedIds.split("\\s*,\\s*"));
 
+
         for (String pubmedId: pubmedIdList){
             HashMap<String, String> pubmedResult = new HashMap<String, String>();
+            pubmedId = pubmedId.trim();
             if (pubmedId == "") {
-                pubmedResult.put("Empty pubmed id","The pubmedId is mandatory");
+                pubmedResult.put("pubmedId", "Empty");
+                pubmedResult.put("error", "Empty pubmed id - The pubmedId is mandatory");
+                result.add(pubmedResult);
             }
 
-            // THOR
             // Check if there is an existing study with the same pubmed id
-            // PublicationService.... tanto cambia!
             Collection<Study> existingStudies = publicationOperationsServiceService.findStudiesByPubmedId(pubmedId);
             if (existingStudies != null) {
-                pubmedResult.put(pubmedId,"Pubmed "+pubmedId+ " already exist");
+                pubmedResult.put("pubmedId", pubmedId);
+                pubmedResult.put("error", "This pubmed already exists.");
+                result.add(pubmedResult);
             }
 
             else {
                 // Pass to importer
 
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
+                try {
                 Publication publication =publicationOperationsServiceService.importPublication(pubmedId);
                 Study importedStudy = new Study();
                 importedStudy.setPublicationId(publication);
@@ -613,21 +592,35 @@ public class StudyController {
                 Study savedStudy = studyOperationsService.createStudy(importedStudy,
                         currentUserDetailsService.getUserFromRequest(request));
 
+                    pubmedResult.put("pubmedId", pubmedId);
+                    pubmedResult.put("Author", savedStudy.getPublicationId().getFirstAuthor().getFullname());
+                    result.add(pubmedResult);
                 // Create directory to store associated files
-                try {
+
                     studyFileService.createStudyDir(savedStudy.getId());
                 } catch (NoStudyDirectoryException e) {
                     getLog().error("No study directory exception");
-                    pubmedResult.put(pubmedId,"No study directory exception");
+                    pubmedResult.put("pubmedId", pubmedId);
+                    pubmedResult.put("error", "No study directory exception");
+                    result.add(pubmedResult);
+                } catch (PubmedLookupException ple) {
+                    getLog().error("Something went wrong quering EuropePMC.");
+                    pubmedResult.put("pubmedId", pubmedId);
+                    pubmedResult.put("error", ple.getMessage());
+                    result.add(pubmedResult);
+
                 } catch (Exception e) {
                     getLog().error("Something went wrong quering EuropePMC.");
-                    pubmedResult.put(pubmedId,"Something went wrong usign EuropePMC service");
+                    pubmedResult.put("pubmedId", pubmedId);
+                    pubmedResult.put("error", "Something went wrong usign EuropePMC service");
+                    result.add(pubmedResult);
                 }
-                result.add(pubmedResult);
+
+
             }
 
         }
-        return new ResponseEntity<String>("\"This is a String\"",responseHeaders,HttpStatus.OK);
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
         //return "add_study";
 
     }

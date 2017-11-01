@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.service.StudyService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,9 +59,11 @@ public class PublicationOperationsService {
         publicationService.save(publication);
     }
 
+    @Transactional
     public Publication addPublication(String pubmedId, EuropePMCData europePMCResult) throws Exception {
 
         Publication publication = publicationService.createOrFindByPumedId(pubmedId);
+        publication.setPubmedId(pubmedId);
         publication.setPublication(europePMCResult.getPublication().getPublication());
         publication.setPublicationDate(europePMCResult.getPublication().getPublicationDate());
         publication.setTitle(europePMCResult.getPublication().getTitle());
@@ -78,8 +81,8 @@ public class PublicationOperationsService {
         try {
             EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
             addedPublication = addPublication(pubmedId, europePMCResult);
-        } catch(Exception e) {
-            throw new PubmedLookupException("importPublication");
+        } catch(Exception exception) {
+            throw new PubmedLookupException(exception.getCause().getMessage());
 
         }
         return addedPublication;
@@ -95,14 +98,15 @@ public class PublicationOperationsService {
         for (Publication publication : allPublications) {
             pubmedId = publication.getPubmedId();
             //pubmedId = "27927641";
-            System.out.println("Retriving Pubmed: "+pubmedId+"---");
+            System.out.println("Retriving Pubmed: "+pubmedId);
 
             try {
                     Publication importedPublication = importPublication(pubmedId);
             } catch (Exception exception) {
-                HashMap<String, String> pubmedResult = new HashMap<String, String>();
-                pubmedResult.put(pubmedId,"Something happend. TO DO imporve");
-                result.add(pubmedResult);
+                //HashMap<String, String> pubmedResult = new HashMap<String, String>();
+                //pubmedResult.put(pubmedId,"Something happend. TO DO imporve");
+                //result.add(pubmedResult);
+                System.out.println("Something went wrong "+pubmedId );
             }
         }
         return true;
