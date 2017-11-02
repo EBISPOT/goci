@@ -40,11 +40,9 @@ public class AuthorOperationsService {
         for (Author author : authorList) {
             Author authorDB = findAuthorByFullname(author.getFullname());
             if (authorDB == null) {
-                author.setPublication(publication);
-                authorService.save(author);
+                authorService.addPublication(author, publication);
             } else {
-                authorDB.setPublication(publication);
-                authorService.save(authorDB);
+                authorService.addPublication(authorDB, publication);
             }
         }
     }

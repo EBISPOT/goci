@@ -97,7 +97,7 @@ public class PublicationOperationsService {
 
         for (Publication publication : allPublications) {
             pubmedId = publication.getPubmedId();
-            //pubmedId = "27927641";
+            //pubmedId = "28991256";
             System.out.println("Retriving Pubmed: "+pubmedId);
 
             try {

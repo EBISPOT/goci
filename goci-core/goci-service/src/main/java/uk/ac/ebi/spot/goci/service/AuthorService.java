@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.repository.AuthorRepository;
 
 import java.util.Collection;
@@ -47,5 +48,12 @@ public class AuthorService {
         authorRepository.save(author);
     }
 
+
+    public void addPublication(Author author, Publication publication) {
+        Collection<Publication> publications = author.getPublications();
+        publications.add(publication);
+        author.setPublication(publications);
+        save(author);
+    }
 
 }

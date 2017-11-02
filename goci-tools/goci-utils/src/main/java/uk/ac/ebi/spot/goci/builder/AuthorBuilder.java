@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.builder;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
 
+import java.util.Collection;
+
 /**
  * Created by cinzia on 17/10/2017.
  *
@@ -20,7 +22,7 @@ public class AuthorBuilder {
         return this;
     }
 
-    public AuthorBuilder setPublication(Publication publication) {
+    public AuthorBuilder setPublication(Collection<Publication> publication) {
         author.setPublication(publication);
         return this;
     }

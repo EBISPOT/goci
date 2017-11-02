@@ -90,6 +90,7 @@ public class EuropepmcPubMedSearchService implements PubMedSearchService {
             out = restTemplate.exchange(queryUrl, HttpMethod.GET, entity, String.class);
             result.setStatus(out.getStatusCode().value());
             result.setUrl(queryUrl);
+            System.out.println(queryUrl);
             JsonNode body = new JsonNode(out.getBody().toString());
             result.setRestResult(body);
             getLog().debug("Response: 200");
@@ -99,22 +100,23 @@ public class EuropepmcPubMedSearchService implements PubMedSearchService {
             throw new PubmedLookupException("EuropePMC : REST API Failed");
         }
 
-        System.out.println("S express");
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(EuropePMCData.class, new EuropePMCDeserializer());
         mapper.registerModule(module);
 
-try {
-    europePMCData = mapper.readValue(result.getRestResult().toString(), EuropePMCData.class);
+        try {
+            europePMCData = mapper.readValue(result.getRestResult().toString(), EuropePMCData.class);
 
-} catch (IOException ioe) {
-    System.out.println("ohi");
+        } catch (IOException ioe) {
+            System.out.println("EuropePMC : IO Exception - JSON conversion");
+            throw new PubmedLookupException("EuropePMC : IO Exception - JSON conversion");
 
-}
- catch (Exception e) {
-    System.out.println("failed");
- }
+        }
+        catch (Exception e) {
+            System.out.println("EuropePMC : Generic Error conversion JSON");
+            throw new PubmedLookupException("EuropePMC : Generic Error conversion JSON");
+        }
         return europePMCData;
     }
 

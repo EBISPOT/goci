@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -42,11 +43,11 @@ public class Author {
     }
 
 
-    @ManyToOne
+    @OneToMany
     @JoinTable(name = "PUBLICATION_AUTHORS",
             joinColumns = @JoinColumn(name = "AUTHOR_ID"),
             inverseJoinColumns = @JoinColumn(name = "PUBLICATION_ID"))
-    private Publication publication;
+    private Collection<Publication> publications = new ArrayList<>();;
 
     //JPA Constructor
     public Author() {}
@@ -76,10 +77,9 @@ public class Author {
         this.orcid = orcid;
     }
 
-    public Publication getPublication() { return publication; }
+    public Collection<Publication> getPublications() { return publications; }
 
-    public void setPublication(Publication publication) { this.publication = publication; }
-
+    public void setPublication(Collection<Publication> publications) { this.publications = publications; }
 
     // Use Optional for Default value.
 
