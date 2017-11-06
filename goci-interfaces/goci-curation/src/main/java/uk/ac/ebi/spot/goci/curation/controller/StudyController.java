@@ -510,8 +510,6 @@ public class StudyController {
 
     }
 
-
-
    /* New Study:
    *
    * Adding a study is synchronised to ensure the method can only be accessed once.
@@ -536,25 +534,20 @@ public class StudyController {
     public @ResponseBody ResponseEntity<ArrayList<HashMap<String,String>>> importStudy(@RequestBody String pubmedIdForImport,
                                HttpServletRequest request) {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
-        String regex = "[0-9, /,]+";
 
-
-        //HashMap<String, String> child = new HashMap<String, String>();
-        //child.put("key1", "value1");
-
-        //result.add(child);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
 
+        String regex = "[0-9, /,]+";
         // Remove whitespace
         String pubmedIds = pubmedIdForImport.trim();
 
         if (!pubmedIds.matches(regex)) {
             HashMap<String, String> error = new HashMap<String, String>();
             error.put("pubmedId", "general");
-            error.put("error", "Pubmed List must be number comma bla bla [29292,39329,0234329] - no space");
+            error.put("error", "Pubmed List must be number follow by comma");
             result.add(error);
             return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
         }
@@ -593,7 +586,10 @@ public class StudyController {
                         currentUserDetailsService.getUserFromRequest(request));
 
                     pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("Author", savedStudy.getPublicationId().getFirstAuthor().getFullname());
+                    pubmedResult.put("author", savedStudy.getPublicationId().getFirstAuthor().getFullname());
+                    pubmedResult.put("title", savedStudy.getPublicationId().getTitle());
+                    pubmedResult.put("study_id", "studies/"+savedStudy.getId().toString());
+
                     result.add(pubmedResult);
                 // Create directory to store associated files
 
@@ -608,11 +604,10 @@ public class StudyController {
                     pubmedResult.put("pubmedId", pubmedId);
                     pubmedResult.put("error", ple.getMessage());
                     result.add(pubmedResult);
-
                 } catch (Exception e) {
-                    getLog().error("Something went wrong quering EuropePMC.");
+                    getLog().error("Something went wrong. Please, contact the helpdesk.");
                     pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", "Something went wrong usign EuropePMC service");
+                    pubmedResult.put("error", "Something went wrong. Please, contact the helpdesk.");
                     result.add(pubmedResult);
                 }
 
@@ -679,6 +674,7 @@ public class StudyController {
     public String viewStudy(Model model, @PathVariable Long studyId) {
 
         Study studyToView = studyRepository.findOne(studyId);
+        System.out.println("ciao");
         model.addAttribute("study", studyToView);
         return "study";
     }

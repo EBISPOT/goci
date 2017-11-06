@@ -234,7 +234,7 @@ public class StudyOperationServiceTest {
         //        .contains("Smith X", "Test", "Nature", "1001002");
 
         assertThat(study.getPublicationId().getFirstAuthor()).extracting("fullname").contains("Smith X");
-        assertThat(study.getPublicationId()).extracting("title").contains("Smith X");
+        assertThat(study.getPublicationId()).extracting("title").contains("Test");
         assertThat(study.getPublicationId().getPublicationDate()).isToday();
         assertThat(study.getHousekeeping().getStudyAddedDate()).isToday();
         assertThat(study.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");

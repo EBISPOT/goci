@@ -56,10 +56,10 @@ public class DataDeletionService {
     }
 
     private void deleteStudy(Study study) {
-        System.out.println("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ") with \t"
+        System.out.println("Removing study \t" + study.getPublicationId().getFirstAuthor().getFullname() + "\t (ID:" + study.getId() + ") with \t"
                                + study.getAssociations().size() + "\t association and \t"
                                + study.getAncestries().size() + "\t ancestries");
-        getLog().debug("Removing study \t" + study.getAuthor() + "\t (ID:" + study.getId() + ") with \t"
+        getLog().debug("Removing study \t" + study.getPublicationId().getFirstAuthor().getFullname() + "\t (ID:" + study.getId() + ") with \t"
                                + study.getAssociations().size() + "\t association and \t"
                                 + study.getAncestries().size() + "\t ancestries");
 

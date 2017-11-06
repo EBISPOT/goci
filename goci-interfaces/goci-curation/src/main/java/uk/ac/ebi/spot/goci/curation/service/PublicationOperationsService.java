@@ -97,16 +97,10 @@ public class PublicationOperationsService {
 
         for (Publication publication : allPublications) {
             pubmedId = publication.getPubmedId();
-            //pubmedId = "28991256";
-            System.out.println("Retriving Pubmed: "+pubmedId);
-
             try {
                     Publication importedPublication = importPublication(pubmedId);
             } catch (Exception exception) {
-                //HashMap<String, String> pubmedResult = new HashMap<String, String>();
-                //pubmedResult.put(pubmedId,"Something happend. TO DO imporve");
-                //result.add(pubmedResult);
-                System.out.println("Something went wrong "+pubmedId );
+                System.out.println("Something went wrong "+ pubmedId );
             }
         }
         return true;
@@ -118,4 +112,7 @@ public class PublicationOperationsService {
         Collection<Study> studies = publicationService.findStudiesByPubmedId(pubmedId);
         return studies;
     }
+
+
+
 }

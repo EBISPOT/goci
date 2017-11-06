@@ -273,7 +273,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
             //only process a study if no date filter has been provided or if the study's publication date is smaller than the filter date
             if (FilterProperties.getDateFilter() == null ||
-                    nextStudy.getPublicationDate().before(FilterProperties.getDateFilter())) {
+                    nextStudy.getPublicationId().getPublicationDate().before(FilterProperties.getDateFilter())) {
                 System.out.println("Qualifying study");
                 for (Association nextTA : nextStudy.getAssociations()) {
                     float filter = 0;
@@ -410,7 +410,7 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         for (Study study : studies) {
             //            try {
             Collection<Association> associations = study.getAssociations();
-            getLog().debug("Study (PubMed ID '" + study.getPubmedId() + "') had " + associations.size() +
+            getLog().debug("Study (PubMed ID '" + study.getPublicationId().getPubmedId() + "') had " + associations.size() +
                                    " associations");
             if (associations.size() > 0) {
                 for (Association association : associations) {

@@ -4,13 +4,19 @@ $(document).ready(function() {
     
     
     $('#pubmedIdDatatable').DataTable({
-        'aoColumnDefs': [
-            { "sTitle": "pubmedId", "aTargets": [0] },
-            { "sTitle": "error", "aTargets": [1] }
-        ],
-        "aoColumns": [
-            { "mData": "pubmedId" }, // <-- which values to use inside object
-            { "mData": "error" }
+        "columns": [
+            { "mData": "pubmedId","sTitle": "pubmed ID" },
+            { "mData": "study_id", "sDefaultContent": "", "sTitle": "Study",
+                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                    if (sData != "") {
+                        $(nTd).html("<a href='" + contextPath + sData + "'>Edit Study</a>");
+                    }
+                }
+            },
+            { "mData": "author", "sDefaultContent": "", "sTitle":"Author" },
+            { "mData": "title", "sDefaultContent": "", "sTitle": "Title"   }, // <-- which values to use inside object
+            { "mData": "error", "sDefaultContent": "", "sTitle": "Error" },
+            
         ],
         "aLengthMenu": [
             [5,10,25, 50, 100, -1],
@@ -41,23 +47,18 @@ $(document).ready(function() {
                     $("#main_error").show();
                 }
                 else {
-                    console.log("show results");
                     var table = $('#pubmedIdDatatable').dataTable();
                     var oSettings = table.fnSettings();
                     table.fnClearTable(this);
                     data.forEach(function(entry) {
-                        console.log(entry);
                         table.oApi._fnAddData(oSettings, entry);
-                        console.log(entry);
-                        
                     });
                     oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
                     table.fnDraw();
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(errorThrown);
-                $("#error_text").html("Something went wrong. Please contact the helpdesk");
+                $("#error_text").html("Something went wrong. Please, contact the helpdesk.");
                 $("#main_error").show();
             },
             dataType: 'json'

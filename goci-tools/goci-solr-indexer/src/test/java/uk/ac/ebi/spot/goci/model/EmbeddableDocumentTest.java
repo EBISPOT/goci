@@ -32,17 +32,20 @@ public class EmbeddableDocumentTest {
 
     @Before
     public void setUp() {
+        Author firstAuthor = new Author();
+        firstAuthor.setFullname("author");
+        firstAuthor.setOrcid("0000-0000-0000-0001");
+        Publication publication = new Publication();
+        publication.setPubmedId("123456");
+        publication.setFirstAuthor(firstAuthor);
+        publication.setTitle("title");
+        publication.setPublication("publication");
         Housekeeping h = new Housekeeping();
         h.setLastUpdateDate(new Date());
         h.setCatalogPublishDate(new Date());
 
-        this.study = new Study("author",
-                               new Date(),
-                               "publication",
-                               "title",
-                               "initial sample size",
+        this.study = new Study("initial sample size",
                                "replicate sample size",
-                               "123456",
 //                               false,
 //                               false,
                                false,
@@ -65,6 +68,7 @@ public class EmbeddableDocumentTest {
                                h, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
                                Collections.EMPTY_LIST);
 
+        study.setPublicationId(publication);
         study.setId(1l);
         this.studyDoc = new StudyDocument(study);
 
