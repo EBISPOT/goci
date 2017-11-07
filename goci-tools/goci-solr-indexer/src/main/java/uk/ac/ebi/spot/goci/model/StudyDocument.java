@@ -23,6 +23,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
+    @Field private String orcid;
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
@@ -76,6 +77,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.pubmedId = study.getPublicationId().getPubmedId();
         this.title = study.getPublicationId().getTitle();
         this.author = study.getPublicationId().getFirstAuthor().getFullname();
+        this.orcid = study.getPublicationId().getFirstAuthor().getOrcid();
         this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
@@ -144,9 +146,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
+
+    public String getOrcid() { return orcid; }
 
     public String getPublication() {
         return publication;

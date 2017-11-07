@@ -72,6 +72,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
+    @Field private String orcid;
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
@@ -243,9 +244,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.title = title;
     }
 
-    public void addAuthor(String author) {
-        this.author = author;
-    }
+    public void addAuthor(String author) { this.author = author; }
+
+    public void addOrcid(String orcid) { this.orcid = orcid; }
 
     public void addPublication(String publication) {
         this.publication = publication;
