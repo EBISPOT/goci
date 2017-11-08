@@ -60,6 +60,10 @@ public class EfoTraitController {
                                   BindingResult bindingResult,
                                   Model model, RedirectAttributes redirectAttributes) {
 
+        // Trim whitespace from form input
+        efoTrait.setTrait(efoTrait.getTrait().trim());
+        efoTrait.setUri(efoTrait.getUri().trim());
+
         // Check if it exists already
         EfoTrait existingEfoTrait = efoTraitRepository.findByTraitIgnoreCase(efoTrait.getTrait());
         List<EfoTrait> existingEfoUri = efoTraitRepository.findByUri(efoTrait.getUri());
