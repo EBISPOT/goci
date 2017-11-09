@@ -33,11 +33,11 @@ http://genome.ucsc.edu/cgi-bin/hgGateway[Genome Browser Gateway]
 
 
 === HuGE Navigator (Centers for Disease Control and Prevention)
-https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[GWAS Integrator]
+https://phgkb.cdc.gov/PHGKB/hNHome.action[GWAS Integrator]
 
-https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[HuGE Literature Finder]
+https://phgkb.cdc.gov/PHGKB/startPagePubLit.action[HuGE Literature Finder]
 
-https://www.cdc.gov/genomics/hugenet/hugenavigator.htm[Variant Name Mapper]
+https://phgkb.cdc.gov/PHGKB/startPageMapper.action[Variant Name Mapper]
 
 
 === National Center for Biotechnology Information (NCBI) Links
