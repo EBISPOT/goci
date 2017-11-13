@@ -101,6 +101,7 @@ public class PublicationOperationsService {
                     Publication importedPublication = importPublication(pubmedId);
             } catch (Exception exception) {
                 System.out.println("Something went wrong "+ pubmedId );
+                
             }
         }
         return true;

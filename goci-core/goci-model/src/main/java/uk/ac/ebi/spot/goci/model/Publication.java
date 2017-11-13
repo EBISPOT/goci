@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * Created by emma on 03/12/14.
+ * Created by Cinzia 11/2017
  *
  * @author Cinzia
  *         <p>
@@ -81,6 +81,7 @@ public class Publication {
         this.title = title;
     }
 
+    public Long getId() { return id; }
     public void setId(Long id) {this.id = id;}
 
     public String getPubmedId() {

@@ -76,7 +76,9 @@ ALTER TRIGGER PUBLICATION_TRG ENABLE;
 --------------------------------------------------------
  CREATE TABLE "PUBLICATION_AUTHORS" (
       "PUBLICATION_ID" NUMBER(19,0) NOT NULL,
-      "AUTHOR_ID" NUMBER(19,0) NOT NULL);
+      "AUTHOR_ID" NUMBER(19,0) NOT NULL,
+      -- ORDER is a reserved word.
+      "SORT" NUMBER(3,0) DEFAULT 0);
 
 
 --------------------------------------------------------
@@ -100,3 +102,7 @@ ALTER TABLE "STUDY" ADD "PUBLICATION_ID" NUMBER(19,0);
   ALTER TABLE "STUDY" ADD CONSTRAINT "STUDY_PUBLICATION_ID_FK" FOREIGN KEY ("PUBLICATION_ID")
 	  REFERENCES "PUBLICATION" ("ID") ENABLE;
 
+--------------------------------------------------------
+--  New note for duplication STUDY
+--------------------------------------------------------
+INSERT INTO NOTE_SUBJECT(id,subject) VALUES (9,'Duplication TAG');

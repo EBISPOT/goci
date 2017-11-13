@@ -36,13 +36,16 @@ public class AuthorOperationsService {
     }
 
     public void addAuthorsToPublication(Publication publication, EuropePMCData europePMCResult) {
+        System.out.println("publication id" + publication.getId().toString());
         Collection<Author> authorList = europePMCResult.getAuthors();
+        Integer order = 0;
         for (Author author : authorList) {
             Author authorDB = findAuthorByFullname(author.getFullname());
+            order+=1;
             if (authorDB == null) {
-                authorService.addPublication(author, publication);
+                authorService.addPublication(author, publication, order);
             } else {
-                authorService.addPublication(authorDB, publication);
+                authorService.addPublication(authorDB, publication, order);
             }
         }
     }

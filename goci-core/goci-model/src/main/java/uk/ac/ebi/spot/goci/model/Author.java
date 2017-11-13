@@ -6,13 +6,16 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by cinzia on 22/09/2017.
  */
 @Entity
 public class Author {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -47,7 +50,8 @@ public class Author {
     @JoinTable(name = "PUBLICATION_AUTHORS",
             joinColumns = @JoinColumn(name = "AUTHOR_ID"),
             inverseJoinColumns = @JoinColumn(name = "PUBLICATION_ID"))
-    private Collection<Publication> publications = new ArrayList<>();;
+    private Collection<Publication> publications = new ArrayList<>();
+
 
     //JPA Constructor
     public Author() {}

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
+import uk.ac.ebi.spot.goci.model.PublicationAuthors;
 import uk.ac.ebi.spot.goci.repository.AuthorRepository;
 
 import java.util.Collection;
@@ -22,8 +23,12 @@ public class AuthorService {
 
     private AuthorRepository authorRepository;
 
+    private PublicationAuthorsService publicationAuthorsService;
+
     @Autowired
-    public AuthorService(AuthorRepository authorRepository){
+    public AuthorService(AuthorRepository authorRepository,
+                         PublicationAuthorsService publicationAuthorsService){
+        this.publicationAuthorsService = publicationAuthorsService;
         this.authorRepository = authorRepository;
     }
 
@@ -49,11 +54,13 @@ public class AuthorService {
     }
 
 
-    public void addPublication(Author author, Publication publication) {
-        Collection<Publication> publications = author.getPublications();
-        publications.add(publication);
-        author.setPublication(publications);
+    public void addPublication(Author author, Publication publication, Integer sort) {
+        // DO NOT DO THIS EVER! SORT IS RESET.
+        //Collection<Publication> publications = author.getPublications();
+        //publications.add(publication);
+        //author.setPublication(publications);
         save(author);
+        publicationAuthorsService.setSort(author.getId(), publication.getId(), sort);
     }
 
 }
