@@ -40,6 +40,9 @@ Ab: Amyloid-beta
 ABI: ankle brachial index
 
 
+ACA: anti-centromere antibodies
+
+
 ACE: Angiotensin-converting enzyme
 
 
@@ -140,6 +143,9 @@ AST: aspartate aminotransferase
 
 
 At: antithrombin
+
+
+ATA: anti-topoisomerase antibodies
 
 
 ATBV: temporal brain volume
@@ -399,6 +405,9 @@ EBV: Epstein-Barr virus
 
 
 EDS: excessive daytime sleepiness
+
+
+EEG: electroencephalography
 
 
 EER: estimated energy requirement
@@ -723,6 +732,9 @@ LTG: lamotrigine-induced hypersensitivity
 
 
 LTL: leukocyte telomere length
+
+
+LVEF: Left ventricular ejection fraction
 
 
 LVD: large-vessel disease
@@ -1074,6 +1086,9 @@ S2EHR: Stage 2 exercise heart rate
 S2ESBP: stage 2 exercise systolic blood pressure
 
 
+SBM: subset-based meta-analysis approach
+
+
 SDNN: standard deviation of the normal-to-normal inter beat intervals
 
 
@@ -1233,6 +1248,12 @@ SWM: spatial working memory
 === T
 
 TAT: Total adipose tissue area
+
+
+TBLH-BMD: total-body less head bone mineral density
+
+
+TB-LM: total-body lean mass
 
 
 TC: total cholesterol

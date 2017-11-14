@@ -126,6 +126,7 @@ public class StudyDuplicationService {
         duplicateStudy.setPooled(studyToDuplicate.getPooled());
         duplicateStudy.setFullPvalueSet(studyToDuplicate.getFullPvalueSet()); 
         duplicateStudy.setUserRequested(studyToDuplicate.getUserRequested());
+        duplicateStudy.setOpenTargets(studyToDuplicate.getOpenTargets());
         duplicateStudy.setStudyDesignComment(studyToDuplicate.getStudyDesignComment());
 
         // Deal with EFO traits

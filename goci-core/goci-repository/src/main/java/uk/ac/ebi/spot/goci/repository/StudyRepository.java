@@ -82,6 +82,10 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     List<Study> findStudyDistinctByAssociationsSnpInteractionTrue(Sort sort);
 
+    @RestResource(exported = false)
+    Collection<Study> findByEfoTraitsId(Long efoTraitId);
+
+
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
 
@@ -129,7 +133,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     Page<Study> findByUserRequested(Boolean userRequested, Pageable pageable);
 
-
-
+    @RestResource(exported = false)
+    Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
 }
 

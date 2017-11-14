@@ -37,7 +37,7 @@ image::author_sub_associations.png[Associations,500,500,align="center"]
 {empty} +
 
 
-Data submitted as part of the author deposition pilot can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/2016/08/19/[on our FTP server].
+Data submitted as part of the author deposition pilot can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/author_submission_201608/[on our FTP server].
 
 
 
@@ -51,4 +51,20 @@ Association studies using large-scale targeted/non-genome-wide arrays, including
 * This identified approximately 150 targeted array studies that have been published up to June 2016 (including 62 Immunochip, 40 Metabochip and 36 exome arrays)
 * Curation of a representative set of these studies indicated that inclusion would require minimal changes to Catalog infrastructure and has enabled us to estimate the additional curation resources required to include these in the future.
 
-Data from the studies curated as part of the targeted array can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/2016/07/28/[on our FTP server].
+Data from the studies curated as part of the targeted array can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/targeted_array_201607/[on our FTP server].
+
+
+=== Sequencing-based association studies
+
+To ensure we keep up with the most current research, technologies and meets the needs of the user community we are investigating expanding the scope of the Catalog to include sequencing-based association studies. Currently the Catalog only includes studies which use array-based genotyping technologies.
+Ten studies which include sequencing-based association analyses were curated as part of a pilot on expanding the scope of the NHGRI-EBI GWAS Catalog. Study level and association data are provided in the standard GWAS Catalog download format with additional columns for sequencing specific data.
+
+Data is available on our FTP server link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/sequencing_pilot_201710/[on our FTP server]
+
+Study level and association data are provided in the standard GWAS Catalog download format. (gwas_catalog_v1.0.1-studies_r2017-10-09_Sequencing_pilot, gwas_catalog_v1.0.1-associations_r2017-10-09_Sequencing_pilot).
+
+Additional study level data fields, specific to sequencing associations are provided as additional columns in gwas_catalog_v1.0.1-studies_r2017-10-09_Sequencing_pilot.  
+These additional fields are: Genotyping technology (discovery/initial), Sequencing platform, Array platform, Sequencing coverage, Number of variants analysed, Genome build, Analysis level, For multiple variants - number of variants per test, Statistical tests used to generate reported p-values, Statistical test used for extracted p-values, Why this test was chosen for extraction, Types of variant included in analysis, P-value threshold stated by author.
+Single variant/multi-variant analysis is indicated after the author name.  The absence of either indicates that entry is currently eligible and published in the standard GWAS Catalog.
+
+Additional association level data is provided in the P-VALUE (TEXT) field of gwas_catalog_v1.0.1-associations_r2017-10-09_Sequencing_pilot, where 'TEST'=statistical test and 'NUM_VAR'=number of variants analysed.

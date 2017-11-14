@@ -11,3 +11,10 @@
 # never commit application properties files
 application.properties
 
+*.iml
+.idea
+# Maven
+**/target/**
+
+# Mac specific files
+.DS_Store

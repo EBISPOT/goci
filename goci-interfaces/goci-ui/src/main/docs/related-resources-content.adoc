@@ -1,14 +1,21 @@
 = Related resources
 
+=== GWAS Catalog training materials
+
+==== EBI Train online
+
+The EBI Train online platform provides an easily accessible interactive tutorial to allow users to explore the full range of features the GWAS Catalog has to offer. Check out link:http://www.ebi.ac.uk/training/online/course/gwas-catalog-exploring-snp-trait-associations[ GWAS Catalog - Exploring SNP-trait associations] to find out more.
+
+
+==== Other training materials
+
+Training materials from workshops held by the GWAS Catalog team are available on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/training_materials/[ our FTP server]. If you would like to make use of these slides, please cite the GWAS Catalog as detailed on the link:about[About] page.
+
 === GWAS Webinars
 
 On Wednesday, June 28th, 2017, the GWAS Catalog team at EMBL-EBI held http://www.ebi.ac.uk/training/online/course/nhgri-ebi-gwas-catalog-curated-resource-snp-trait-associations[a webinar] to provide a background to genome-wide association study design and introduce users to the GWAS Catalog. Topics such as Catalog content, data availability and access, search capability, and interoperability with other resources were discussed.
 
 On Thursday, July 18th, 2013, the Division of Genomic Medicine held http://www.genome.gov/27554296[a webinar] to highlight current uses and explore  priorities and future directions for the GWAS catalog.
-
-
-=== GWAS Catalog training materials
-Training materials from workshops held by the GWAS Catalog team are available on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/training_materials/[ our FTP server]. If you would like to make use of these slides, please cite the GWAS Catalog as detailed on the link:about[About] page.
 
 
 === Various resources & projects
@@ -18,8 +25,6 @@ http://www.ensembl.org[Ensembl Genome Browser]
 
 http://geneticassociationdb.nih.gov/[Genetic Association Database]
 
-http://www.geneticsofgeneexpression.org/network/[Human Gene Coexpression Database]
-
 http://www.hapmap.org/[International HapMap Project]
 
 http://www.phenxtoolkit.org[PhenX Toolkit (consensus measures of Phenotypes and eXposures)]
@@ -28,11 +33,11 @@ http://genome.ucsc.edu/cgi-bin/hgGateway[Genome Browser Gateway]
 
 
 === HuGE Navigator (Centers for Disease Control and Prevention)
-https://phgkb.cdc.gov/HuGENavigator/gWAHitStartPage.do[GWAS Integrator]
+https://phgkb.cdc.gov/PHGKB/hNHome.action[GWAS Integrator]
 
-https://phgkb.cdc.gov/HuGENavigator/startPagePubLit.do[HuGE Literature Finder]
+https://phgkb.cdc.gov/PHGKB/startPagePubLit.action[HuGE Literature Finder]
 
-https://phgkb.cdc.gov/HuGENavigator/startPageMapper.do[Variant Name Mapper]
+https://phgkb.cdc.gov/PHGKB/startPageMapper.action[Variant Name Mapper]
 
 
 === National Center for Biotechnology Information (NCBI) Links

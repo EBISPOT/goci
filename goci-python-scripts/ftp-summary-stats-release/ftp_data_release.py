@@ -4,6 +4,10 @@ import shutil
 
 import db_properties
 
+from glob import glob
+from os import remove
+from os.path import isfile
+
 ip = db_properties.ip
 port = db_properties.port
 SID = db_properties.SID
@@ -14,6 +18,14 @@ stagingPath = db_properties.pathSummaryStats
 
 ftpPath = db_properties.pathFTP
 
+
+def removeHiddenFiles(directoryName):
+    path = directoryName + "/._*"
+    for f in glob(path):
+        if isfile(f):
+            remove(f)
+            print("Removed " + f)
+    return
 
 def performFTPCopy(directoryName):
      ftpDir = ftpPath + '/' + directoryName
@@ -56,6 +68,13 @@ def cleanFTP():
 
     for dir in ftpDirs:
             if dir not in stagingDirs:
+                files = os.listdir(ftpPath +'/' +dir)
+                if not files:
+                    print("Directory " + dir + " is empty")
+                else:
+                    print("Directory " + dir + " is not empty. Removing files.")
+                    for f in files:
+                        os.remove(ftpPath +'/' +dir + '/' + f)
                 print("Removing directory " + dir + " from the FTP as it is no longer present in staging")
                 os.removedirs(ftpPath +'/' +dir)
     return
@@ -92,7 +111,7 @@ if __name__ == '__main__':
         fullpath = stagingPath + '/' + directoryName
 
         if not os.path.exists(fullpath):
-            prePublicationDirectory = author+'_'+pubmedId+'_'+studyId
+            prePublicationDirectory = stagingPath + '/' + author+'_'+pubmedId+'_'+studyId
 
             if os.path.exists(prePublicationDirectory):
                  print('Pre-publication directory ' + prePublicationDirectory + ' has not yet been renamed for the FTP')
@@ -100,6 +119,7 @@ if __name__ == '__main__':
                 print('Warning! Directory ' + fullpath + ' does not exist')
 
         else:
+            removeHiddenFiles(fullpath)
             performFTPCopy(directoryName)
 
 
