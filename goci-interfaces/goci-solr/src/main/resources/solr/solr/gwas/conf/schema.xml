@@ -147,6 +147,7 @@
     <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="authorsList" type="string" indexed="false" stored="true" multiValued="true" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
 

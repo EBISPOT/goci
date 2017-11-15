@@ -217,7 +217,12 @@ public class StudyService {
                                            + cor + " countries of recruitment");
                 }
         );
-        
+
+        Collection<Author> authorArrayList = new ArrayList<>();
+        study.getPublicationId().getAuthors().forEach( author ->{
+            authorArrayList.add(author);
+        });
+
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {

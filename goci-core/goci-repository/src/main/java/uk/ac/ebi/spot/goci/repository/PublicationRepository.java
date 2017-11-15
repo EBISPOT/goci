@@ -27,4 +27,6 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
             nativeQuery = true) List<String> findAllStudyAuthors();
 
 
+    @RestResource(exported = false)
+    List<Publication> findByFirstAuthorIsNull();
 }

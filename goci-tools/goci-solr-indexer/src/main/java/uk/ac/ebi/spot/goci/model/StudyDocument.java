@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import javax.persistence.CollectionTable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    @Field private Collection<String> authorsList;
     @Field private Collection<String> ancestralGroups;
     @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
@@ -105,6 +107,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
 
+        this.authorsList = new LinkedHashSet<>();
+        embedAuthors(study);
         this.platform = embedPlatformField(study);
 
         this.ancestralGroups = new LinkedHashSet<>();
@@ -277,6 +281,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return ancestryLinks;
     }
 
+
+    private void embedAuthors(Study study) {
+        Collection<Author> authors = study.getPublicationId().getAuthors();
+        for (Author author : authors) {
+            String authorLink = author.getFullname();
+            if (author.getOrcid() != null) {
+                authorLink = authorLink.concat(" | ").concat(author.getOrcid());
+            }
+            authorsList.add(authorLink);
+        }
+
+    }
 
     private void embedAncestryData(Study study) {
         study.getAncestries().forEach(

@@ -32,7 +32,14 @@
 
     <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
     <script th:src="@{/js/goci-print-page.js}"></script>
+    <script th:src="@{/js/goci-authors.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
 
+        /*]]>*/
+    </script>
 </head>
 <body>
 
@@ -154,11 +161,24 @@
                 <div class="form-group">
                     <label for="author" class="control-label col-md-2">Author</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-3">
                         <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
                         <input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author" readonly="readonly" />
 
                     </div>
+                    <div class="col-md-5">
+                        <select name="authorsList" th:field="*{publicationId.authors}" class="form-control select2-select"
+                                id="authorsList">
+                            <option value=""></option>
+                            <option th:each="autore : *{publicationId.authors}"
+                                    th:value="${autore.id}"
+                                    th:text="${autore.fullname}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" id="change_first_author" class="btn btn-primary">Change First Author</button>
+                    </div>
+
                 </div>
 
                 <div class="form-group">
@@ -203,7 +223,7 @@
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}" readonly="readonly" />
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}" />
                     </div>
                 </div>
 
