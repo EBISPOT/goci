@@ -25,6 +25,8 @@ import java.util.List;
 public interface AssociationRepository extends JpaRepository<Association, Long> {
     Collection<Association> findByStudyId(long studyId);
 
+    Page<Association> findByStudyId(long studyId, Pageable pageable);
+
     @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId, Sort sort);
 
