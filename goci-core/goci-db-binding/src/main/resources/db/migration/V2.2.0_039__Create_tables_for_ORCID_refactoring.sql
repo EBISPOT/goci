@@ -29,6 +29,11 @@ version: 2.2.0.039
 
   ALTER TABLE "AUTHOR" ADD PRIMARY KEY ("ID") ENABLE;
 
+    CREATE SEQUENCE AUTHOR_TYPE_SEQ
+     START WITH 1
+     INCREMENT BY 1
+     CACHE 1000;
+
 --------------------------------------------------------
 --  CREATE TABLE, FOREIGN KEY PUBLICATION
 --------------------------------------------------------
