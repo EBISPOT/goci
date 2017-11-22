@@ -198,15 +198,13 @@ public class AssociationControllerTest {
 
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
         LastViewedAssociation lastViewedAssociation = new LastViewedAssociation();
-        // For TW
+
         Pageable pagination = new PageRequest(0,100);
         List<Association> list = new ArrayList<Association>();
         list.add(ASSOCIATION);
         Page<Association> returnPage = new PageImpl<Association>(list, pagination, list.size());
 
         when(associationRepository.findByStudyId(STUDY.getId(), pagination )).thenReturn(returnPage);
-        // end tw
-
         when(snpAssociationTableViewService.createSnpAssociationTableView(ASSOCIATION)).thenReturn(
                 snpAssociationTableView);
         when(associationOperationsService.getLastViewedAssociation(Matchers.anyLong())).thenReturn(lastViewedAssociation);
@@ -217,12 +215,10 @@ public class AssociationControllerTest {
                 .andExpect(model().attribute("snpAssociationTableViews", hasSize(1)))
                 .andExpect(model().attribute("snpAssociationTableViews", instanceOf(Collection.class)))
                 .andExpect(model().attribute("lastViewedAssociation", instanceOf(LastViewedAssociation.class)))
-                // TO CHECK for TW
-                //.andExpect(model().attribute("totalAssociations", 1))
+                .andExpect(model().attribute("totalAssociations", 1L))
                 .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("study_association"));
-
-        // Changed here x TW
+        
         verify(associationRepository, times(1)).findByStudyId(STUDY.getId(), pagination);
         verify(snpAssociationTableViewService, times(1)).createSnpAssociationTableView(ASSOCIATION);
         verify(associationOperationsService, times(1)).getLastViewedAssociation(Matchers.anyLong());
