@@ -218,7 +218,7 @@ public class AssociationControllerTest {
                 .andExpect(model().attribute("totalAssociations", 1L))
                 .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("study_association"));
-        
+
         verify(associationRepository, times(1)).findByStudyId(STUDY.getId(), pagination);
         verify(snpAssociationTableViewService, times(1)).createSnpAssociationTableView(ASSOCIATION);
         verify(associationOperationsService, times(1)).getLastViewedAssociation(Matchers.anyLong());
