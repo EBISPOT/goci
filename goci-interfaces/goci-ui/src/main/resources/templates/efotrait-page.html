@@ -675,65 +675,14 @@
 
         <div class="row search-results-container" >
             <!-- Associations table -->
-            <div class="row" id="association-table-loading" style="margin-top:20px">
-                <div id="association_panel" class="panel panel-default">
-                    <div class="panel-heading background-color-primary-accent">
-                        <h3 class="panel-title">
-                            <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
-                        </h3>
-                        <span class="pull-right">
-                        <!--<button type="button" class="btn btn-default btn-xs" id="download_data">-->
-                        <!--<span class="glyphicon glyphicon-download-alt" style="padding-right:2px"></span>-->
-                        <!--<span>Download association data</span>-->
-                        <!--</button>-->
-                        <span class="clickable panel-collapsed"
-                              style="margin-left:25px"
-                              onclick="toggleSidebar('#association_panel span.clickable')">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </span>
-                    </span>
-                    </div>
-
-                    <div class="panel-body" style="display:none">
-                        <table id="association-table" class="table table-striped borderless "
-                               data-flat="true"
-                               data-show-export="true"
-                               data-search="true"
-                               data-show-columns="true"
-                               data-show-multi-sort="true">
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <div th:include="fragments/association-datatable :: associations_datatable"></div>
 
 
 
 
             <!-- Studies table -->
-            <div class="row" id="study-table-loading" style="margin-top:20px">
-                <div id="study_panel" class="panel panel-default">
-                    <div class="panel-heading background-color-primary-accent">
-                        <h3 class="panel-title">
-                            <span class="study_label">Studies</span><span class="study_count badge available-data-btn-badge"></span>
-                        </h3>
+            <div th:include="fragments/study-datatable :: studies_datatable"></div>
 
-                        <span class="pull-right clickable panel-collapsed"
-                              onclick="toggleSidebar('#study_panel span.clickable')">
-                                 <span class="glyphicon glyphicon-chevron-down"></span>
-                            </span>
-                    </div>
-
-                    <div class="panel-body" style="display:none">
-                        <table id="study-table" class="table table-striped borderless"
-                               data-flat="true"
-                               data-show-export="true"
-                               data-search="true"
-                               data-show-columns="true"
-                               data-show-multi-sort="true">
-                        </table>
-                    </div>
-                </div>
-            </div>
 
         </div>
 
@@ -871,7 +820,11 @@
 <!-- trait page
 ================================================== -->
 <script src="../static/js/efotrait-locuszoom.js" th:src="@{../js/efotrait-locuszoom.js}"></script>
+<script src="../static/js/helpers/promise-helper.js" th:src="@{../js/helpers/promise-helper.js}"></script>
+<script src="../static/js/helpers/utils-helper.js" th:src="@{../js/helpers/utils-helper.js}"></script>
+<script src="../static/js/common-datatables/associations-datatable.js" th:src="@{../js/common-datatables/associations-datatable.js}"></script>
 <script src="../static/js/efotrait-util.js" th:src="@{../js/efotrait-util.js}"></script>
+
 <!--this come last to make sure trait page specific style is not overwritten by othe css.-->
 <link rel="stylesheet" href="../static/css/goci-efotrait-page.css" th:href="@{../css/goci-efotrait-page.css}"/>
 

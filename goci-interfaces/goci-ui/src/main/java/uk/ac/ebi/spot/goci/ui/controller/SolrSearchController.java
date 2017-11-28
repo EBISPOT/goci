@@ -94,7 +94,9 @@ public class SolrSearchController {
         dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
     }
 
-    @RequestMapping(value = "api/search/efotrait", produces = MediaType.APPLICATION_JSON_VALUE,method = {RequestMethod.GET,RequestMethod.POST})
+    // Renamed the method. It is a generic and useful method.
+    // Todo: change the name of the method. doEfoSorlSearch.
+    @RequestMapping(value = "api/search/advancefilter", produces = MediaType.APPLICATION_JSON_VALUE,method = {RequestMethod.GET,RequestMethod.POST})
     public void doEfoSolrSearch(
             @RequestParam("q") String query,
             @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
