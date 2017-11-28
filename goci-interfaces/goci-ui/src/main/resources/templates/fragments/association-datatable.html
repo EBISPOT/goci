@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="associations_datatable">
+<!-- Associations table: it should be the future STANDARD -->
+<div class="row" id="association-table-loading" style="margin-top:20px">
+    <div id="association_panel" class="panel panel-default">
+        <div class="panel-heading background-color-primary-accent">
+            <h3 class="panel-title">
+                <span class="association_label">Associations</span><span class="association_count badge available-data-btn-badge"></span>
+            </h3>
+            <span class="pull-right">
+                        <span class="clickable panel-collapsed"
+                              style="margin-left:25px"
+                              onclick="toggleSidebar('#association_panel span.clickable')">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </span>
+        </div>
+
+        <div class="panel-body" style="display:none">
+            <table id="association-table" class="table table-striped borderless "
+                   data-flat="true"
+                   data-show-export="true"
+                   data-search="true"
+                   data-show-columns="true"
+                   data-show-multi-sort="true">
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
