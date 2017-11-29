@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
@@ -121,7 +124,11 @@ public class AssociationController {
     private CheckMappingService checkMappingService;
     private MapCatalogService mapCatalogService;
 
+    private static final int MAX_PAGE_ITEM_DISPLAY = 100;
 
+//<<<<<<< Temporary merge branch 1
+//    private final ExecutorService uploadExecutorService;
+//=======
     @Value("${collection.sizelimit}")
     private int collectionLimit;
 
@@ -191,10 +198,15 @@ public class AssociationController {
             method = RequestMethod.GET)
     public String viewStudySnps(Model model,
                                 @PathVariable Long studyId,
-                                @RequestParam(required = false) Long associationId) {
+                                @RequestParam(required = false) Long associationId,
+                                @RequestParam(defaultValue = "1", required = false) Integer page) {
 
-        // Get all associations for a study
-        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+        // Get all associations for a study - ORIGINAL
+//        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+
+        // Get pages of associations
+        Page<Association> associations = associationRepository.findByStudyId(studyId, constructPageSpecification(page - 1));
+
 
         // For our associations create a table view object and return
         Collection<SnpAssociationTableView> snpAssociationTableViews = new ArrayList<SnpAssociationTableView>();
@@ -211,13 +223,28 @@ public class AssociationController {
         model.addAttribute("lastViewedAssociation", lastViewedAssociation);
 
         // Pass back count of associations
-        Integer totalAssociations = associations.size();
+//        Integer totalAssociations = associations.size();
+        long totalAssociations;
+        totalAssociations = associations.getTotalElements();
         model.addAttribute("totalAssociations", totalAssociations);
 
         // Also passes back study object to view so we can create links back to main study page
         model.addAttribute("study", studyRepository.findOne(studyId));
-        return "study_association";
+
+        if (page == 1) {
+            return "study_association";
+        }
+        else {
+            return "study_association_by_page";
+        }
     }
+
+    /* Pagination */
+    // Pagination, method passed page index and includes max number of associations to return
+    private Pageable constructPageSpecification(int pageIndex) {
+        return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY);
+    }
+
 
 
     @RequestMapping(value = "studies/{studyId}/association_tracking",
@@ -255,6 +282,7 @@ public class AssociationController {
         model.addAttribute("study", study);
 
         session.setAttribute("done", false);
+
 
         SecureUser user =  currentUserDetailsService.getUserFromRequest(request);
 
@@ -1251,7 +1279,6 @@ public class AssociationController {
 
               return "association_upload_progress";
           };
-
     }
 
     @RequestMapping(value = "/studies/{studyId}/associations/download",

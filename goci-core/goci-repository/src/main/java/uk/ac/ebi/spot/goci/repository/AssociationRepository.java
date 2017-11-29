@@ -26,6 +26,8 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId);
 
+    Page<Association> findByStudyId(long studyId, Pageable pageable);
+
     Collection<Association> findByStudyAccessionId(String accessionId);
 
     @RestResource(path = "findByPubmedId", rel = "findByPubmedId")
