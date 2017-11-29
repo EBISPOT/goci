@@ -182,38 +182,38 @@ function processSolrData(data, initLoad = false) {
 function initOrchidClaimData(study_info) {
    // var global --- TO REFACTOR
    
-   //orcidClaimData = {
-   //     title : study_info[0].title,
-   //     workType: 'data-set',
-   //     publicationYear: '2016',
-   //     url : 'http://www.ebi.ac.uk/'+contextPath+'study/'+study_info[0].accessionId,
-   //     workExternalIdentifiers : [ {
-   //         workExternalIdentifierType : "gwas",
-   //         workExternalIdentifierId : study_info[0].accessionId,
-   //     }],
-   //     shortDescription: 'To confirm',
-   //     clientDbName : 'PDB'
-   // }
-    
-    //ORCID Data Object
-    var orchidDescriptionArr = [
-        "Experimental Method: X-ray diffraction",
-        "Deposited: 09 Feb 2015",
-        "Released: 27 Jan 2016"
-    ]
-    
-     orcidClaimData = {
+   orcidClaimData = {
         title : study_info[0].title,
         workType: 'data-set',
         publicationYear: '2016',
-        url : 'https://pdbe.org/GCST004864',
+        url : 'http://www.ebi.ac.uk/'+contextPath+'study/'+study_info[0].accessionId,
         workExternalIdentifiers : [ {
-            workExternalIdentifierType : "pdb",
-            workExternalIdentifierId : "GCST004864"
+            workExternalIdentifierType : "other-id",
+            workExternalIdentifierId : study_info[0].accessionId,
         }],
-        shortDescription: orchidDescriptionArr.join(", "),
-        clientDbName : 'PDB'
-    }
+        shortDescription: 'To confirm',
+        clientDbName : 'GWAS-CATALOG'
+   }
+    
+    //ORCID Data Object
+    //var orchidDescriptionArr = [
+    //    "Experimental Method: X-ray diffraction",
+    //    "Deposited: 09 Feb 2015",
+     //   "Released: 27 Jan 2016"
+    //]
+    
+     //orcidClaimData = {
+     //   title : study_info[0].title,
+     //   workType: 'data-set',
+     //   publicationYear: '2016',
+     //   url : 'https://pdbe.org/GCST004864',
+     //   workExternalIdentifiers : [ {
+     //       workExternalIdentifierType : "other-id",
+     //       workExternalIdentifierId : "GCST004864"
+     //   }],
+     //   shortDescription: orchidDescriptionArr.join(", "),
+     //   clientDbName : 'PDB'
+    //}
 
 }
 /**
