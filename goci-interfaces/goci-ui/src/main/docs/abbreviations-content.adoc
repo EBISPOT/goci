@@ -13,6 +13,9 @@
 
 === A
 
+A2: Biantennary nogalactosylated glycans
+
+
 AA: African ancestry
 
 
@@ -528,6 +531,9 @@ FTD: frontotemporal dementia
 FUC-A: Antennary fucosylated glycans
 
 
+FUC-C: Core fucosylated glycans
+
+
 funcPS: functional Protein S
 
 
@@ -563,6 +569,9 @@ GluCer: glucosylceramide
 
 
 GOT (AST): Glutamyl oxaloacetic transaminase, Aspartate aminotransferase
+
+
+GP: Glycan peak
 
 
 GPT (ALT): glutamate pyruvate transaminase, alanine aminotransferase
@@ -1246,6 +1255,9 @@ SVD: small-vessel disease
 SWM: spatial working memory
 
 === T
+
+TA: Tetra-antennary glycans
+
 
 TAT: Total adipose tissue area
 
