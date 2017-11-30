@@ -578,7 +578,7 @@ public class StudyController {
 
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
                 try {
-                Publication publication =publicationOperationsServiceService.importPublication(pubmedId);
+                Publication publication =publicationOperationsServiceService.importSinglePublication(pubmedId);
                 Study importedStudy = new Study();
                 importedStudy.setPublicationId(publication);
                 studyRepository.save(importedStudy);
@@ -620,14 +620,14 @@ public class StudyController {
 
     }
 
-    @RequestMapping(value = "/new/importAll", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
     public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
                                            HttpServletRequest request,
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
 
-        publicationOperationsServiceService.reImportAllPublication();
+        publicationOperationsServiceService.importPublicationsWithoutFirstAuthor();
 
         return "redirect:/studies/";
 
@@ -674,7 +674,7 @@ public class StudyController {
     public String viewStudy(Model model, @PathVariable Long studyId) {
 
         Study studyToView = studyRepository.findOne(studyId);
-        System.out.println("ciao");
+
         model.addAttribute("study", studyToView);
         return "study";
     }

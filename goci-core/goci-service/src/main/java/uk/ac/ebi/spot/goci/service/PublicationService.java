@@ -80,6 +80,9 @@ public class PublicationService {
         return publicationRepository.findAllStudyAuthors();
     }
 
+    public List<Publication> findByFirstAuthorIsNull() {
+        return  publicationRepository.findByFirstAuthorIsNull();
+    }
 
     public void save(Publication publication) {
         publicationRepository.save(publication);

@@ -76,7 +76,7 @@ public class PublicationOperationsService {
     }
 
 
-    public Publication importPublication(String pubmedId) throws PubmedLookupException {
+    public Publication importSinglePublication(String pubmedId) throws PubmedLookupException {
         Publication addedPublication = null;
         try {
             EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
@@ -89,16 +89,16 @@ public class PublicationOperationsService {
     }
 
 
-    public Boolean reImportAllPublication() {
+    public Boolean importPublicationsWithoutFirstAuthor() {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
         String pubmedId;
 
-        List<Publication> allPublications = publicationService.findAll();
+        List<Publication> listPublications = publicationService.findByFirstAuthorIsNull();
 
-        for (Publication publication : allPublications) {
+        for (Publication publication : listPublications) {
             pubmedId = publication.getPubmedId();
             try {
-                    Publication importedPublication = importPublication(pubmedId);
+                    Publication importedPublication = importSinglePublication(pubmedId);
             } catch (Exception exception) {
                 System.out.println("Something went wrong "+ pubmedId );
                 
