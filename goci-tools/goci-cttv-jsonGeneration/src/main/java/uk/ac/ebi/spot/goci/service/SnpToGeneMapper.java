@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class SnpToGeneMapper {
 
-    private Map<String,SnpInfo> snp2snpInfo = new HashMap<>();
+    private Map<String, List<SnpInfo>> snp2snpInfo = new HashMap<>();
 
     public SnpToGeneMapper(){
 
@@ -106,13 +106,15 @@ public class SnpToGeneMapper {
 
                 snpInfo.setDistance(array[5]);
 
-                snp2snpInfo.put(snpInfo.getRsId(),snpInfo );
+                snp2snpInfo.computeIfAbsent(snpInfo.getRsId(), k -> new ArrayList<>());
 
+                List<SnpInfo> list = snp2snpInfo.get(snpInfo.getRsId());
+                list.add(snpInfo);
             }
         }
     }
 
-    public SnpInfo get(String rsId){
+    public List<SnpInfo> get(String rsId){
         return snp2snpInfo.get(rsId);
     }
 
@@ -120,7 +122,7 @@ public class SnpToGeneMapper {
     private String findNewSoTerm(String soTerm) {
         URI uri = null;
         try {
-            uri = new URI("http", "www.ebi.ac.uk", "/" + "ols/api/search", "queryFields=label&fieldList=iri&exact=true&ontology=so&q=" + soTerm, null);
+            uri = new URI("https", "www.ebi.ac.uk", "/" + "ols/api/search", "queryFields=label&fieldList=iri&exact=true&ontology=so&q=" + soTerm, null);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Could not query OLS: " + e);
         }

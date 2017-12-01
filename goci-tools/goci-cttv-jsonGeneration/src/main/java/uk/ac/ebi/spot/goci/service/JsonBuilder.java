@@ -105,6 +105,11 @@ public class JsonBuilder {
         Collection<Ancestry> ancestries = association.getStudy().getAncestries();
         int sampleSize = 0;
 
+        if (association.getStudy().getPubmedId().equals("25673412")) {
+            System.out.println();
+        } else {
+            System.out.println();
+        }
         System.out.println("\n\nancestry size = " + ancestries.size());
         for (Ancestry ancestry : ancestries) {
 //            if("initial".equals(ancestry.getType())) {
@@ -126,30 +131,31 @@ public class JsonBuilder {
 
                     for (EfoTrait efoTrait : efoTraits) {
 
-                        SnpInfo snpInfo = snpToGeneMapper.get(riskAllele.getSnp().getRsId());
-                        if (snpInfo != null) {
-
-                            List<String> ensemblIds = snpInfo.getEnsemblIds();
-                            String soTerm = snpInfo.getSoTerm();
-                            //If the study is in gwas then it means, the author looked at at least 100 000 snps.
-                            //If the number exact of snp is not specified then we put 100000.
-                            long snpCount = 100000;
-                            if (association.getStudy().getSnpCount() != null) {
-                                snpCount = association.getStudy().getSnpCount();
-                            }
-                            if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
-                                for (String ensemblId : ensemblIds) {
-                                    jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
-                                            efoTrait.getUri(),
-                                            riskAllele.getSnp().getRsId(),
-                                            association.getStudy().getPubmedId(),
-                                            sampleSize,
-                                            snpCount,
-                                            ensemblId,
-                                            soTerm,
-                                            oddRatio,
-                                            range)
-                                    );
+                        List<SnpInfo> snpInfoList = snpToGeneMapper.get(riskAllele.getSnp().getRsId());
+                        if (snpInfoList != null) {
+                            for (SnpInfo snpInfo : snpInfoList) {
+                                List<String> ensemblIds = snpInfo.getEnsemblIds();
+                                String soTerm = snpInfo.getSoTerm();
+                                //If the study is in gwas then it means, the author looked at at least 100 000 snps.
+                                //If the number exact of snp is not specified then we put 100000.
+                                long snpCount = 100000;
+                                if (association.getStudy().getSnpCount() != null) {
+                                    snpCount = association.getStudy().getSnpCount();
+                                }
+                                if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
+                                    for (String ensemblId : ensemblIds) {
+                                        jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
+                                                efoTrait.getUri(),
+                                                riskAllele.getSnp().getRsId(),
+                                                association.getStudy().getPubmedId(),
+                                                sampleSize,
+                                                snpCount,
+                                                ensemblId,
+                                                soTerm,
+                                                oddRatio,
+                                                range)
+                                        );
+                                    }
                                 }
                             }
                         }
