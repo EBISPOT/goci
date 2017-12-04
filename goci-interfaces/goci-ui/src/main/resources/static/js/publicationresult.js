@@ -132,6 +132,12 @@ function getDataSolr(main, initLoad=false) {
  */
 function processSolrData(data, initLoad=false) {
     var isInCatalog=true;
+    
+    data_association = [];
+    data_study = [];
+    data_association.docs = [];
+    data_study.docs = [];
+    
     if (data.grouped.resourcename.matches == 0) {
         isInCatalog = false;
     }

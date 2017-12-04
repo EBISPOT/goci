@@ -91,7 +91,6 @@ function getDataSolr(main, initLoad = false) {
     // or just reload the tables(adding another efo term)
     
     var searchQuery = main;
-    
     console.log("Solr research request received for " + searchQuery);
     return promisePost(window.location.pathname.split('/study/')[0] + '/api/search/advancefilter', {
         'q': searchQuery,
@@ -109,7 +108,7 @@ function getDataSolr(main, initLoad = false) {
     
         displayDatatableAssociations(data_association.docs);
         displaySummaryStudy(data_study.docs);
-    
+
         //work out highlight study
         //var highlightedStudy = findHighlightedStudiesForEFO(getMainEFO());
         //displayHighlightedStudy(highlightedStudy);
@@ -138,6 +137,12 @@ function getDataSolr(main, initLoad = false) {
  */
 function processSolrData(data, initLoad = false) {
     var isInCatalog = true;
+    
+    data_association = [];
+    data_study = [];
+    data_association.docs = [];
+    data_study.docs = [];
+    
     if (data.grouped.resourcename.matches == 0) {
         isInCatalog = false;
     }
@@ -181,39 +186,33 @@ function processSolrData(data, initLoad = false) {
 
 function initOrchidClaimData(study_info) {
    // var global --- TO REFACTOR
-   
-   orcidClaimData = {
+    
+    //ORCID Data Object
+    //var orchidDescriptionArr = [
+    //    "Method: ",
+    //    "Deposited: 09 Feb 2015",
+    //   "Released: 27 Jan 2016"
+    //]
+    var year_publication = "";
+    if (study_info[0] != undefined) {
+        year_publication = study_info[0].publicationDate.substring(0, 4);
+    }
+    orcidClaimData = {
         title : study_info[0].title,
         workType: 'data-set',
-        publicationYear: '2016',
-        url : 'http://www.ebi.ac.uk/'+contextPath+'study/'+study_info[0].accessionId,
+        publicationYear: year_publication,
+        url : 'http://www.ebi.ac.uk'+contextPath+'study/'+study_info[0].accessionId,
         workExternalIdentifiers : [ {
             workExternalIdentifierType : "other-id",
             workExternalIdentifierId : study_info[0].accessionId,
         }],
-        shortDescription: 'To confirm',
+        shortDescription: 'Approved by user using GWAS CATALOG',
+        //   shortDescription: orchidDescriptionArr.join(", "),
         clientDbName : 'GWAS-CATALOG'
    }
     
-    //ORCID Data Object
-    //var orchidDescriptionArr = [
-    //    "Experimental Method: X-ray diffraction",
-    //    "Deposited: 09 Feb 2015",
-     //   "Released: 27 Jan 2016"
-    //]
-    
-     //orcidClaimData = {
-     //   title : study_info[0].title,
-     //   workType: 'data-set',
-     //   publicationYear: '2016',
-     //   url : 'https://pdbe.org/GCST004864',
-     //   workExternalIdentifiers : [ {
-     //       workExternalIdentifierType : "other-id",
-     //       workExternalIdentifierId : "GCST004864"
-     //   }],
-     //   shortDescription: orchidDescriptionArr.join(", "),
-     //   clientDbName : 'PDB'
-    //}
+
+   
 
 }
 /**
