@@ -12,7 +12,7 @@
     var getOrcidClaimList = function(){
         $.ajax({
             cache: false,
-            url: "https://www.ebi.ac.uk/europepmc/hubthor/api/orcid/find/other-identifier-type:"+orcidClaimData.workExternalIdentifiers[0].workExternalIdentifierId,
+            url: "https://www.ebi.ac.uk/europepmc/hubthor/api/orcid/find/other-id-self:"+orcidClaimData.workExternalIdentifiers[0].workExternalIdentifierId,
             dataType: "json",
             success: function(orchidRespData) {
                 var claimListText = "";
