@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -49,6 +50,7 @@ import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.MappingService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -75,6 +77,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * Created by emma on 11/07/2016.
@@ -193,7 +199,12 @@ public class AssociationControllerTest {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
         LastViewedAssociation lastViewedAssociation = new LastViewedAssociation();
 
-        when(associationRepository.findByStudyId(STUDY.getId())).thenReturn(Collections.singletonList(ASSOCIATION));
+        Pageable pagination = new PageRequest(0,100);
+        List<Association> list = new ArrayList<Association>();
+        list.add(ASSOCIATION);
+        Page<Association> returnPage = new PageImpl<Association>(list, pagination, list.size());
+
+        when(associationRepository.findByStudyId(STUDY.getId(), pagination )).thenReturn(returnPage);
         when(snpAssociationTableViewService.createSnpAssociationTableView(ASSOCIATION)).thenReturn(
                 snpAssociationTableView);
         when(associationOperationsService.getLastViewedAssociation(Matchers.anyLong())).thenReturn(lastViewedAssociation);
@@ -204,11 +215,11 @@ public class AssociationControllerTest {
                 .andExpect(model().attribute("snpAssociationTableViews", hasSize(1)))
                 .andExpect(model().attribute("snpAssociationTableViews", instanceOf(Collection.class)))
                 .andExpect(model().attribute("lastViewedAssociation", instanceOf(LastViewedAssociation.class)))
-                .andExpect(model().attribute("totalAssociations", 1))
+                .andExpect(model().attribute("totalAssociations", 1L))
                 .andExpect(model().attributeExists("study"))
                 .andExpect(view().name("study_association"));
 
-        verify(associationRepository, times(1)).findByStudyId(STUDY.getId());
+        verify(associationRepository, times(1)).findByStudyId(STUDY.getId(), pagination);
         verify(snpAssociationTableViewService, times(1)).createSnpAssociationTableView(ASSOCIATION);
         verify(associationOperationsService, times(1)).getLastViewedAssociation(Matchers.anyLong());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
