@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 //@Embeddable
 @Entity
-@IdClass(MyKey.class)
+@IdClass(PublicationAuthors.class)
 public class PublicationAuthors implements Serializable {
 
     @Id
@@ -74,8 +74,7 @@ public class PublicationAuthors implements Serializable {
 }
 
 
-class MyKey implements Serializable {
+class PublicationAuthorsKey implements Serializable {
     private Long publicationId;
-
     private Long authorId;
 }

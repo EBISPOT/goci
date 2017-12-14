@@ -51,7 +51,6 @@ public class PublicationOperationsService {
     }
 
 
-
     public void addFirstAuthorToPublication(Publication publication, EuropePMCData europePMCResult) {
         Author firstAuthor = europePMCResult.getFirstAuthor();
         Author firstAuthorDB = authorOperationsService.findAuthorByFullname(firstAuthor.getFullname());
@@ -108,12 +107,22 @@ public class PublicationOperationsService {
 
     }
 
-
     public Collection<Study> findStudiesByPubmedId(String pubmedId) {
         Collection<Study> studies = publicationService.findStudiesByPubmedId(pubmedId);
         return studies;
     }
 
-
+    public Boolean changeFirstAuthorByStudyId(Long studyId, Long authorId) {
+        Boolean success = false;
+        Publication publication = publicationService.findByStudyId(studyId);
+        if (publication != null) {
+            Author author = authorOperationsService.findAuthorById(authorId);
+            if (author != null) {
+                publicationService.updatePublicationFirstAuthor(publication, author);
+                success = true;
+            }
+        }
+        return success;
+    }
 
 }

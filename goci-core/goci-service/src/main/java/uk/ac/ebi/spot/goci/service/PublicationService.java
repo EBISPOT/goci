@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.PublicationRepository;
@@ -23,53 +24,46 @@ import org.springframework.data.domain.Sort;
 public class PublicationService {
 
     private PublicationRepository publicationRepository;
+    private StudyService studyService;
 
     @Autowired
-    public PublicationService(PublicationRepository publicationRepository) {
+    public PublicationService(PublicationRepository publicationRepository,
+                              StudyService studyService) {
         this.publicationRepository = publicationRepository;
+        this.studyService = studyService;
+    }
+
+    private Optional<Publication> getValue(Publication publication) {
+        return (publication != null) ? Optional.of(publication) : Optional.empty();
     }
 
 
     public Optional<Publication> findOptionalByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
-        if (publication != null) {
-            return Optional.of(publication);
-        }
-        return Optional.empty();
+        return getValue(publication);
     }
 
     public Optional<Collection<Study>> findOptionalStudiesByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
-        if (publication != null) {
-            return Optional.of(publication.getStudies());
-        }
-        return Optional.empty();
+        return (publication != null) ? Optional.of(publication.getStudies()) : Optional.empty();
     }
 
 
     public Publication findByPumedId(String pubmedId) {
         Optional<Publication> publication= findOptionalByPubmedId(pubmedId);
-        if (publication.isPresent()){
-            return publication.get();
-        }
-        return null;
+        return (publication.isPresent()) ? publication.get() : null;
     }
 
     public Publication createOrFindByPumedId(String pubmedId) {
         Optional<Publication> publication= findOptionalByPubmedId(pubmedId);
-        if (publication.isPresent()){
-            return publication.get();
-        }
-        return new Publication();
+        return (publication.isPresent()) ? publication.get() : new Publication();
     }
 
     public Collection<Study> findStudiesByPubmedId(String pubmedId) {
         Optional<Collection<Study>> listStudies= findOptionalStudiesByPubmedId(pubmedId);
-        if (listStudies.isPresent()){
-            return listStudies.get();
-        }
-        return null;
+        return (listStudies.isPresent())? listStudies.get() : null;
     }
+
 
     public List<Publication> findAll() {
         Sort ascPubmedId = new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));
@@ -84,8 +78,19 @@ public class PublicationService {
         return  publicationRepository.findByFirstAuthorIsNull();
     }
 
+    public Publication findByStudyId(Long studyId) {
+        Study study = studyService.findOne(studyId);
+        return (study != null) ? study.getPublicationId() : null;
+    }
+
     public void save(Publication publication) {
         publicationRepository.save(publication);
+    }
+
+
+    public void updatePublicationFirstAuthor(Publication publication, Author firstAuthor) {
+        publication.setFirstAuthor(firstAuthor);
+        save(publication);
     }
 
 }

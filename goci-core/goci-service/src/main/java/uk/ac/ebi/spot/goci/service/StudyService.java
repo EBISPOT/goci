@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -340,9 +337,22 @@ public class StudyService {
         studyRepository.delete(studyId);
     }
 
-    public Study findOne(Long id){
-        //#xintodo this could be the place to add exception if a study is null
-        return studyRepository.findOne(id);
+
+    public Optional<Study> getValue(Study study) {
+        return (study != null) ? Optional.of(study) : Optional.empty();
+    }
+
+
+    public Optional<Study> findOptionalByStudyId(Long studyId) {
+        Study study = studyRepository.findOne(studyId);
+        return getValue(study);
+    }
+
+    //#xintodo this could be the place to add exception if a study is null
+    // CM: to avoid any exception and return NULL I use Optional
+    public Study findOne(Long id) {
+        Optional<Study> study = findOptionalByStudyId(id);
+        return (study.isPresent()) ? study.get(): null;
     }
 
 }

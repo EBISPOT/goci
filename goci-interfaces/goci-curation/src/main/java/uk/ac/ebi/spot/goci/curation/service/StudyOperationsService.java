@@ -422,6 +422,8 @@ public class StudyOperationsService {
     }
 
 
+
+
     //#xintodo refactor needed
     public Boolean isPublished(Study study){
         return study.getHousekeeping().getIsPublished();

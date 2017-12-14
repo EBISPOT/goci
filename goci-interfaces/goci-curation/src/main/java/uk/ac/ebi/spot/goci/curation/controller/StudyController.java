@@ -75,7 +75,7 @@ public class StudyController {
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
-    private PublicationOperationsService publicationOperationsServiceService;
+    private PublicationOperationsService publicationOperationsService;
 
     // Services
     //private DefaultPubMedSearchService defaultPubMedSearchService;
@@ -136,7 +136,7 @@ public class StudyController {
         this.studyDeletionService = studyDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
-        this.publicationOperationsServiceService = publicationOperationsService;
+        this.publicationOperationsService = publicationOperationsService;
     }
 
     /* All studies and various filtered lists */
@@ -566,7 +566,7 @@ public class StudyController {
             }
 
             // Check if there is an existing study with the same pubmed id
-            Collection<Study> existingStudies = publicationOperationsServiceService.findStudiesByPubmedId(pubmedId);
+            Collection<Study> existingStudies = publicationOperationsService.findStudiesByPubmedId(pubmedId);
             if (existingStudies != null) {
                 pubmedResult.put("pubmedId", pubmedId);
                 pubmedResult.put("error", "This pubmed already exists.");
@@ -574,11 +574,9 @@ public class StudyController {
             }
 
             else {
-                // Pass to importer
-
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
                 try {
-                Publication publication =publicationOperationsServiceService.importSinglePublication(pubmedId);
+                Publication publication =publicationOperationsService.importSinglePublication(pubmedId);
                 Study importedStudy = new Study();
                 importedStudy.setPublicationId(publication);
                 studyRepository.save(importedStudy);
@@ -616,8 +614,6 @@ public class StudyController {
 
         }
         return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
-        //return "add_study";
-
     }
 
     @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
@@ -627,7 +623,7 @@ public class StudyController {
             throws PubmedImportException, NoStudyDirectoryException {
 
 
-        publicationOperationsServiceService.importPublicationsWithoutFirstAuthor();
+        publicationOperationsService.importPublicationsWithoutFirstAuthor();
 
         return "redirect:/studies/";
 
@@ -692,6 +688,23 @@ public class StudyController {
         redirectAttributes.addFlashAttribute("changesSaved", message);
         return "redirect:/studies/" + study.getId();
     }
+
+    //For @RequestParam we can use, @RequestParam(value="somevalue", required=false) and for optional params rather than a pathVariable
+    @CrossOrigin
+    @RequestMapping(value = "/{studyId}/changeFirstAuthor/{authorId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<HashMap<String,String>> changeFirstAuthor(@PathVariable(value="studyId") Long studyId,
+                                                                                  @PathVariable(value="authorId") Long authorId) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        HashMap<String, String> result = new HashMap<String, String>();
+        Boolean isChangeAuthor = publicationOperationsService.changeFirstAuthorByStudyId(studyId,authorId);
+        String key = (isChangeAuthor) ? "success": "error";
+        result.put(key, "");
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+    }
+
+
 
 
     // Delete an existing study
@@ -1090,7 +1103,7 @@ public class StudyController {
     // THOR
     @ModelAttribute("authors")
     public List<String> populateAuthors() {
-        return publicationOperationsServiceService.listFirstAuthors();
+        return publicationOperationsService.listFirstAuthors();
     }
 
 

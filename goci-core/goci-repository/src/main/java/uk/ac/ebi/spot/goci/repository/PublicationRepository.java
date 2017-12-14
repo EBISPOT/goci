@@ -16,8 +16,6 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
     @RestResource(exported = false)
     Publication findByPubmedId(String pubmedId);
 
-    //@Query("select distinct a.fullname from publication p, author a where a.id = p.first_author_id order by a.fullname")
-    //Collection<Publication> findDistinctByFirstAuthor();
 
     // THOR to change
     // Custom query to get list of study authors

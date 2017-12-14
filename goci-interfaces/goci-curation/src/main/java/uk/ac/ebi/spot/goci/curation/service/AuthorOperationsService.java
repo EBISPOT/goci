@@ -29,6 +29,10 @@ public class AuthorOperationsService {
         this.authorService = authorService;
     }
 
+    public Author findAuthorById(Long authorId) {
+        Author author = authorService.findById(authorId);
+        return author;
+    }
 
     public Author findAuthorByFullname(String fullname) {
         Author author = authorService.findByFullname(fullname);
@@ -36,7 +40,6 @@ public class AuthorOperationsService {
     }
 
     public void addAuthorsToPublication(Publication publication, EuropePMCData europePMCResult) {
-        System.out.println("publication id" + publication.getId().toString());
         Collection<Author> authorList = europePMCResult.getAuthors();
         Integer order = 0;
         for (Author author : authorList) {

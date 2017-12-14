@@ -32,21 +32,25 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    private Optional<Author> findOptionalByFullname(String fullname) {
-        Author author = authorRepository.findByFullname(fullname);
-        if (author != null) {
-            return Optional.of(author);
-        }
-        return Optional.empty();
+    private Optional<Author> findOptionalById(Long authorId) {
+        Author author = authorRepository.findOne(authorId);
+        return (author != null) ? Optional.of(author) : Optional.empty();
+    }
+
+    public Author findById(Long authorId) {
+        Optional<Author> author= findOptionalById(authorId);
+        return (author.isPresent()) ? author.get() : null;
     }
 
 
+    private Optional<Author> findOptionalByFullname(String fullname) {
+        Author author = authorRepository.findByFullname(fullname);
+        return (author != null) ? Optional.of(author) : Optional.empty();
+    }
+
     public Author findByFullname(String fullname) {
         Optional<Author> author= findOptionalByFullname(fullname);
-        if (author.isPresent()){
-            return author.get();
-        }
-        return null;
+        return (author.isPresent()) ? author.get() : null;
     }
 
     public void save(Author author) {

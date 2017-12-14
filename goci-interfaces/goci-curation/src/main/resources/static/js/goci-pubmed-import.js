@@ -37,6 +37,7 @@ $(document).ready(function() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json; charset=utf-8'
             },
+            dataType: 'json',
             type: "POST",
             url: action,
             data: listPubmeds,
@@ -60,8 +61,7 @@ $(document).ready(function() {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 $("#error_text").html("Something went wrong. Please, contact the helpdesk.");
                 $("#main_error").show();
-            },
-            dataType: 'json'
+            }
         });
         
     });
