@@ -25,7 +25,7 @@ Morales et al, 2017 link:https://www.biorxiv.org/content/early/2017/10/02/129395
 
 MacArthur et al, 2017. link:https://academic.oup.com/nar/article/45/D1/D896/2605751[The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog)]. Nucleic Acids Research, Vol. 45 (Database issue): D896-D901.
 
-Welter D et al, 2014 link:https://academic.oup.com/nar/article/42/D1/D1001/1062755[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations].Nucleic Acids Research, Vol. 42 (Database issue): D1001-D1006.
+Welter D et al, 2014 link:https://academic.oup.com/nar/article/42/D1/D1001/1062755[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations]. Nucleic Acids Research, Vol. 42 (Database issue): D1001-D1006.
 
 Hindorff LA, et al 2009 link:http://www.genome.gov/Pages/About/OD/NewsAndFeatures/PNASGWASOnlineCatalog.pdf[Potential etiologic and functional implications of genome-wide association loci for human diseases and traits]. Proc. Natl. Acad. Sci. USA, 2009, 106, 9362–9367
 
@@ -103,7 +103,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 // end::b-col-indv[]
 
 
-=== GWAS tools & data services
+=== Useful tools & data services
 
 
 // tag::b-col-indv[]
@@ -111,7 +111,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |===
 
 |https://www.ensembl.org/info/docs/tools/vep/index.html[Variant Effect Predictor]
-|Determines the effect of your variants (SNPs, insertions, deletions, CNVs or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions
+|Determines the effect of variants (SNPs, insertions, deletions, CNVs or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions
 
 |http://www.phenoscanner.medschl.cam.ac.uk/phenoscanner[Phenoscanner]
 |Tool to facilitate “phenome scans”, the cross-referencing of genetic variants with a broad range of phenotypes, using a range of data sources including GWAS, eQTL and metabolite.
@@ -120,7 +120,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |Knowledge base in human genome epidemiology, including information on population prevalence of genetic variants, gene-disease associations, gene-gene and gene- environment interactions
 
 |http://www.ncbi.nlm.nih.gov/gap/PheGenIUCSC[Phenotype-Genotype Integrator]
-|Merges GWAS Catalog Data with other NCBI databases to facilitate prioritization of GWAS hits for followup
+|Merges GWAS Catalog Data with other NCBI databases to facilitate prioritization of GWAS hits for follow-up
 
 |http://targetvalidation.org[OpenTargets platform]
 |Platform for the identification of drug targets using multiple data types including GWAS
