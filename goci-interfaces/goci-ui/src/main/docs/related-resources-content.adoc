@@ -42,6 +42,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 
 === Resources used within the GWAS Catalog
 
+For more information on how we use these resources, see our link:methods[Methods page]
 
 // tag::b-col-indv[]
 [cols="1,2"]
@@ -51,7 +52,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |The ontology used for trait mapping in the GWAS Catalog
 
 |link:http://www.ensembl.org/[Ensembl Genome Browser]
-|Genome browser for vertebrate genomes, used in our variant mapping pipeline. Ensembl annotates genes, computes multiple alignments, predicts regulatory function and collects disease data.
+|Genome browser for vertebrate genomes, used in our variant mapping pipeline. Ensembl annotates genes, computes multiple alignments, predicts regulatory function and collects disease data
 
 |link:https://www.ncbi.nlm.nih.gov/pubmed[PubMed]
 |Literature search and citation annotation
@@ -61,9 +62,6 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 
 |link:https://www.cia.gov/library/publications/the-world-factbook/geos/lg.html[CIA Factbook]
 |A rich source of population demographic data, used by curators
-
-|link:http://locuszoom.org/[LocusZoom]
-|A suite of software for creating regional association plots from GWAS data
 
 |link:https://www.ncbi.nlm.nih.gov/[NCBI]
 |Used for variant mapping in older versions of the Catalog
@@ -114,7 +112,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |Determines the effect of variants (SNPs, insertions, deletions, CNVs or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions
 
 |http://www.phenoscanner.medschl.cam.ac.uk/phenoscanner[Phenoscanner]
-|Tool to facilitate “phenome scans”, the cross-referencing of genetic variants with a broad range of phenotypes, using a range of data sources including GWAS, eQTL and metabolite.
+|Tool to facilitate “phenome scans”, the cross-referencing of genetic variants with a broad range of phenotypes, using a range of data sources including GWAS, eQTL and metabolite data
 
 |https://phgkb.cdc.gov/PHGKB/hNHome.action[HuGE Navigator]
 |Knowledge base in human genome epidemiology, including information on population prevalence of genetic variants, gene-disease associations, gene-gene and gene- environment interactions
@@ -124,6 +122,9 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 
 |http://targetvalidation.org[OpenTargets platform]
 |Platform for the identification of drug targets using multiple data types including GWAS
+
+|link:http://locuszoom.org/[LocusZoom]
+|A suite of software for creating regional association plots from GWAS data
 
 |https://bio.tools/?page=1&q=GWAS%20study&sort=score&ord=desc[Elixir Tools and Data Services Registry]
 |A registry of GWAS-related resources and tools
