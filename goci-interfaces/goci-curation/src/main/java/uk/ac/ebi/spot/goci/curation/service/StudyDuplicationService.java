@@ -72,8 +72,13 @@ public class StudyDuplicationService {
         StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", PMID: " + studyToDuplicate.getPublicationId().getPubmedId(),duplicateStudy,user);
 
+        // type of note to help the curator to tag a duplicated study
+        StudyNote tagNote = studyNoteOperationsService.createTagDuplicateNote("DUP TAG",duplicateStudy,user);
+
+
         // The note is properly created. We don't need to check any business logic. Just link to the study.
         studyNoteService.saveStudyNote(note);
+        studyNoteService.saveStudyNote(tagNote);
 
         duplicateStudy.addNote(note);
 
