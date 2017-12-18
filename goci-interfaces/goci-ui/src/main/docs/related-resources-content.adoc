@@ -47,7 +47,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 [cols="1,2"]
 |===
 
-|link:https://www.ebi.ac.uk/ols/ontologies/efo[Experimental Factor Ontology]
+|link:https://www.ebi.ac.uk/efo/[Experimental Factor Ontology]
 |The ontology used for trait mapping in the GWAS Catalog
 
 |link:http://www.ensembl.org/[Ensembl Genome Browser]
