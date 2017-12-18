@@ -94,7 +94,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |Database of human single nucleotide polymorphisms
 
 |https://www.ncbi.nlm.nih.gov/[National Centre for Biotechnology Information]
-|A wide range of resources including Entrez gene, GenBank, PubMed, ClinVar
+|A wide range of resources including Entrez gene, GenBank, PubMed and ClinVar
 
 |http://geneticassociationdb.nih.gov/[Genetic Association Database]
 |Database of genetic association data from complex diseases and disorders, retired in 2014
