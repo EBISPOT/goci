@@ -24,9 +24,9 @@ A 2013 http://www.genome.gov/27554296[webinar] hosted by the NHGRI Division of G
 Morales et al, 2017 link:https://www.biorxiv.org/content/early/2017/10/02/129395[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog] (pre-print). 
 
 MacArthur et al, 2017. link:https://academic.oup.com/nar/article/45/D1/D896/2605751[The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog)]. Nucleic Acids Research, Vol. 45 (Database issue): D896-D901.
-Welter D et al, 2014 link:https://academic.oup.com/nar/article/42/D1/D1001/1062755[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations].
 
-Nucleic Acids Research, Vol. 42 (Database issue): D1001-D1006.
+Welter D et al, 2014 link:https://academic.oup.com/nar/article/42/D1/D1001/1062755[The NHGRI GWAS Catalog, a curated resource of SNP-trait associations].Nucleic Acids Research, Vol. 42 (Database issue): D1001-D1006.
+
 Hindorff LA, et al 2009 link:http://www.genome.gov/Pages/About/OD/NewsAndFeatures/PNASGWASOnlineCatalog.pdf[Potential etiologic and functional implications of genome-wide association loci for human diseases and traits]. Proc. Natl. Acad. Sci. USA, 2009, 106, 9362–9367
 
 ==== Other background reading
