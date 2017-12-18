@@ -16,7 +16,7 @@ A 2017 link:http://www.ebi.ac.uk/training/online/course/nhgri-ebi-gwas-catalog-c
 
 A 2013 http://www.genome.gov/27554296[webinar] hosted by the NHGRI Division of Genomic Medicine, to highlight the utility and impact of the GWAS Catalog.
 
-
+ +
 === Publications
 
 ==== GWAS Catalog publications
