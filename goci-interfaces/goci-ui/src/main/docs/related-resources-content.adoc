@@ -79,7 +79,7 @@ Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide
 |===
 
 |link:http://www.internationalgenome.org/[1000 Genomes]
-|The largest public catalogue of human variation and genotype data
+|The largest public reference catalogue of worldwide human variation and genotype data
 
 |http://www.hapmap.org/[International HapMap Project]
 |The first public catalogue of human variation data, now superseded by 1000Genomes
