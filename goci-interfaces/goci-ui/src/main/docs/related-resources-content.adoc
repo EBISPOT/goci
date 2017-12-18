@@ -39,10 +39,11 @@ Visscher et al, 2017 link:http://www.sciencedirect.com/science/article/pii/S0002
 
 Manolio, 2010 link:http://www.nejm.org/doi/full/10.1056/NEJMra0905980[Genomewide Association Studies and assessment of the risk of disease] NEJM 363:166-176
 
+|===
 
 === Resources used within the GWAS Catalog
 
-For more information on how we use these resources, see our link:methods[Methods page]
+For more information on how we use these resources, see our link:https://www.ebi.ac.uk/gwas/docs/methods[Methods page]
 
 // tag::b-col-indv[]
 [cols="1,2"]
