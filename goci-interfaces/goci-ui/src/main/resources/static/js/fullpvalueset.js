@@ -29,7 +29,8 @@ function loadStudiesList() {
 
     $.getJSON('../api/search/summaryStatistics', {
                 'q': searchTerm,
-                'max': 100,
+                'max': 200,
+                'fl': 'author,publicationDate,pubmedId,publication,title,traitName,associationCount,author_s,accessionId',
             })
             .done(function(data) {
                 displayStudies(data);
