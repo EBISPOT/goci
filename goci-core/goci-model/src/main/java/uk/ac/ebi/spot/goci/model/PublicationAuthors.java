@@ -42,8 +42,8 @@ public class PublicationAuthors {
         this.sort = sort;
         this.author = author;
         this.publication = publication;
-        PublicationAuthorsPk publicationAuthorsPk = new PublicationAuthorsPk(author.getId(), publication.getId());
-        publicationAuthorsPk = publicationAuthorsPk;
+        PublicationAuthorsPk primaryKey = new PublicationAuthorsPk(author.getId(), publication.getId());
+        publicationAuthorsPk = primaryKey;
     }
 
     public Publication getPublication() {
