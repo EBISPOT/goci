@@ -202,11 +202,10 @@
                     <label for="list_authors" class="control-label col-md-2">List of Authors</label>
 
                     <div class="col-md-10 static-field">
-
-                        <p th:inline="text" th:each="eAuthor : *{publicationId.authors}" th:remove="tag">
-                            <a th:onclick="'javascript:changeFirstAuthor('+${study.id}+','+ ${eAuthor.id} +',\''+${eAuthor.fullname}+'\');'" th:title="'Change First Author to '+${eAuthor.fullname}">
+                        <p th:inline="text" th:each="orderedAuthor : *{publicationId.publicationAuthors}" th:remove="tag">
+                            <a th:onclick="'javascript:changeFirstAuthor('+${study.id}+','+ ${orderedAuthor.author.id} +',\''+${orderedAuthor.author.fullname}+'\');'" th:title="'Change First Author to '+${orderedAuthor.author.fullname}">
                                 <span class="glyphicon glyphicon-pencil color-primary-bold"></span>
-                            </a>&nbsp;[[${eAuthor.fullname}]],&nbsp;
+                            </a>&nbsp;[[${orderedAuthor.author.fullname}]] <small>([[${orderedAuthor.sort}]])</small>,&nbsp;
                         </p>
                     </div>
                 </div>

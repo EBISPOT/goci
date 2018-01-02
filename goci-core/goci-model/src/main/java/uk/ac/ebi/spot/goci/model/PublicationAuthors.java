@@ -2,15 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -25,16 +17,17 @@ import java.io.Serializable;
 
 //@Embeddable
 @Entity
-@IdClass(PublicationAuthors.class)
-public class PublicationAuthors implements Serializable {
+public class PublicationAuthors {
+    @EmbeddedId
+    protected PublicationAuthorsPk publicationAuthorsPk;
 
-    @Id
-    @Column(name = "publication_id", nullable = false)
-    private Long publicationId;
+    @ManyToOne
+    @JoinColumn(name = "publication_id", insertable = false, updatable = false)
+    private Publication publication;
 
-    @Id
-    @Column(name = "author_id", nullable = false)
-    private Long authorId;
+    @ManyToOne
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
+    private Author author;
 
     private Integer sort;
 
@@ -45,26 +38,28 @@ public class PublicationAuthors implements Serializable {
     // Constructor JPA
     public PublicationAuthors() {}
 
-    public PublicationAuthors(Long authorId, Long publicationId, Integer sort) {
+    public PublicationAuthors(Author author, Publication publication, Integer sort) {
         this.sort = sort;
-        this.authorId = authorId;
-        this.publicationId = publicationId;
+        this.author = author;
+        this.publication = publication;
+        PublicationAuthorsPk publicationAuthorsPk = new PublicationAuthorsPk(author.getId(), publication.getId());
+        publicationAuthorsPk = publicationAuthorsPk;
     }
 
-    public Long getPublicationId() {
-        return publicationId;
+    public Publication getPublication() {
+        return publication;
     }
 
-    public void setPublicationId(Long publicationId) {
-        this.publicationId = publicationId;
+    public void setPublication(Publication publication) {
+        this.publication = publication;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public void setSort(Integer sort) {
@@ -74,7 +69,28 @@ public class PublicationAuthors implements Serializable {
 }
 
 
-class PublicationAuthorsKey implements Serializable {
-    private Long publicationId;
-    private Long authorId;
+@Embeddable
+class PublicationAuthorsPk implements Serializable {
+
+    @Column(name = "publication_id")
+    protected Long publicationId;
+
+    @Column(name = "author_id")
+    protected Long authorId;
+
+    public PublicationAuthorsPk() {}
+
+    public PublicationAuthorsPk(Long authorId, Long publication_id) {
+        this.authorId = authorId;
+        this.publicationId = publication_id;
+    }
+
+    public Long getPublicationId() { return publicationId; }
+
+    public void setPublicationId(Long publicationId) { this.publicationId = publicationId; }
+
+    public Long getAuthorId() { return authorId;}
+
+    public void setAuthorId(Long authorId) { this.authorId = authorId; }
+
 }

@@ -64,7 +64,7 @@ public class AuthorService {
         //publications.add(publication);
         //author.setPublication(publications);
         save(author);
-        publicationAuthorsService.setSort(author.getId(), publication.getId(), sort);
+        publicationAuthorsService.setSort(author, publication, sort);
     }
 
 }

@@ -1,8 +1,10 @@
 package uk.ac.ebi.spot.goci.service;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.PublicationAuthors;
 import uk.ac.ebi.spot.goci.repository.PublicationAuthorsRepository;
 
@@ -18,8 +20,9 @@ public class PublicationAuthorsService {
         this.publicationAuthorsRepository = publicationAuthorsRepository;
     }
 
-    private Optional<PublicationAuthors> findOptionalByPrimaryKey(Long author_id, Long publication_id) {
-        PublicationAuthors entry = publicationAuthorsRepository.findByAuthorIdAndPublicationId(author_id, publication_id);
+    private Optional<PublicationAuthors> findOptionalByPrimaryKey(Author author, Publication publication) {
+        PublicationAuthors entry = publicationAuthorsRepository.findByAuthorIdAndPublicationId(author.getId(),
+                                   publication.getId());
         if (entry != null) {
             return Optional.of(entry);
         }
@@ -27,18 +30,18 @@ public class PublicationAuthorsService {
     }
 
 
-    public PublicationAuthors findByPrimaryKey(Long author_id, Long publication_id) {
-        Optional<PublicationAuthors> entry = findOptionalByPrimaryKey(author_id, publication_id);
+    public PublicationAuthors findByPrimaryKey(Author author, Publication publication) {
+        Optional<PublicationAuthors> entry = findOptionalByPrimaryKey(author, publication);
         if (entry.isPresent()){
             return entry.get();
         }
         return null;
     }
 
-    public PublicationAuthors createOrFindByPrimaryKey(Long author_id, Long publication_id) {
-        PublicationAuthors entry = findByPrimaryKey(author_id, publication_id);
+    public PublicationAuthors createOrFindByPrimaryKey(Author author, Publication publication) {
+        PublicationAuthors entry = findByPrimaryKey(author, publication);
         if (entry == null) {
-            entry = new PublicationAuthors(author_id,publication_id, 0);
+            entry = new PublicationAuthors(author,publication, 0);
         }
         return entry;
     }
@@ -48,8 +51,8 @@ public class PublicationAuthorsService {
         publicationAuthorsRepository.save(entry);
     }
 
-    public void setSort(Long author_id, Long publication_id, Integer sort) {
-        PublicationAuthors entry = createOrFindByPrimaryKey(author_id, publication_id);
+    public void setSort(Author author, Publication publication, Integer sort) {
+        PublicationAuthors entry = createOrFindByPrimaryKey(author, publication);
         entry.setSort(sort);
         save(entry);
     }

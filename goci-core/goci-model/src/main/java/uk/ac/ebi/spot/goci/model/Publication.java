@@ -7,9 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by Cinzia 11/2017
@@ -70,6 +68,10 @@ public class Publication {
             inverseJoinColumns = @JoinColumn(name = "AUTHOR_ID"))
     private Collection<Author> authors = new ArrayList<>();
 
+
+    @OneToMany(mappedBy="publication",cascade = CascadeType.ALL)
+    private List<PublicationAuthors> publicationAuthors;
+
     // JPA no-args constructor
     public Publication() {
     }
@@ -128,4 +130,17 @@ public class Publication {
 
     public Author getFirstAuthor() { return firstAuthor; }
 
+    public List<PublicationAuthors> getPublicationAuthors() {
+        Collections.sort(publicationAuthors, new Comparator<PublicationAuthors>(){
+            public int compare(PublicationAuthors author1, PublicationAuthors author2){
+                return author1.getSort() - author2.getSort();
+            }
+        });
+
+        return publicationAuthors;
+    }
+
+    public void setPublicationAuthors(List<PublicationAuthors> publicationAuthors) {
+        this.publicationAuthors = publicationAuthors;
+    }
 }

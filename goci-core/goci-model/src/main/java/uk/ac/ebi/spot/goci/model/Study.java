@@ -28,26 +28,9 @@ public class Study implements Trackable {
     @GeneratedValue
     private Long id;
 
-    // THOR - Orcid task
-    //@NotBlank(message = "Please enter an author")
-    //private String author;
-
-    //@DateTimeFormat(pattern = "yyyy-MM-dd")
-    //@NotNull(message = "Please enter a study date in format YYYY-MM-DD")
-    //private Date publicationDate;
-
-    //@NotBlank(message = "Please enter a publication")
-    //private String publication;
-
-    //@NotBlank(message = "Please enter a title")
-    //private String title;
-
     private String initialSampleSize;
 
     private String replicateSampleSize;
-
-    //@NotBlank(message = "Please enter a pubmed id")
-    //private String pubmedId;
 
     // Defaults set as false
     @JsonIgnore
