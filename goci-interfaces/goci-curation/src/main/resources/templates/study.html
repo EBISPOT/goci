@@ -205,7 +205,7 @@
                         <p th:inline="text" th:each="orderedAuthor : *{publicationId.publicationAuthors}" th:remove="tag">
                             <a th:onclick="'javascript:changeFirstAuthor('+${study.id}+','+ ${orderedAuthor.author.id} +',\''+${orderedAuthor.author.fullname}+'\');'" th:title="'Change First Author to '+${orderedAuthor.author.fullname}">
                                 <span class="glyphicon glyphicon-pencil color-primary-bold"></span>
-                            </a>&nbsp;[[${orderedAuthor.author.fullname}]] <small>([[${orderedAuthor.sort}]])</small>,&nbsp;
+                            </a>[[${orderedAuthor.author.fullname}]]<sup>&nbsp;[[${orderedAuthor.sort}]]</sup>,&nbsp;
                         </p>
                     </div>
                 </div>
