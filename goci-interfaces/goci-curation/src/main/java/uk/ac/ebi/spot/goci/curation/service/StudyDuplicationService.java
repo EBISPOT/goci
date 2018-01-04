@@ -72,10 +72,15 @@ public class StudyDuplicationService {
         StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
+        // type of note to help the curator to tag a duplicated study
+        StudyNote tagNote = studyNoteOperationsService.createTagDuplicateNote("DUP TAG",duplicateStudy,user);
+
         // The note is properly created. We don't need to check any business logic. Just link to the study.
         studyNoteService.saveStudyNote(note);
+        studyNoteService.saveStudyNote(tagNote);
 
         duplicateStudy.addNote(note);
+        duplicateStudy.addNote(tagNote);
 
         // Copy existing ancestry
         Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());
@@ -106,7 +111,7 @@ public class StudyDuplicationService {
     private Study copyStudy(Study studyToDuplicate) {
 
         Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
         duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());

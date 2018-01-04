@@ -44,7 +44,8 @@
     <ol class="breadcrumb pull-right">
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>

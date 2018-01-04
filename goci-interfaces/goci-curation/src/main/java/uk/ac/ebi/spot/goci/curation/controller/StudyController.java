@@ -685,6 +685,7 @@ public class StudyController {
     }
 
     // Duplicate a study
+    /*
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String duplicateStudy(@PathVariable Long studyId,
                                  RedirectAttributes redirectAttributes,
@@ -703,6 +704,20 @@ public class StudyController {
 
         return "redirect:/studies/" + duplicateStudy.getId();
     }
+    */
+
+    // Duplicate a study
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String duplicateStudy(Model model, @PathVariable Long studyId,
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) {
+
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+        model.addAttribute("study", studyToDuplicate);
+
+        return "study_duplication";
+    }
+
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
