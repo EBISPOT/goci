@@ -95,9 +95,6 @@ For more information on how we use these resources, see our link:https://www.ebi
 |https://www.ncbi.nlm.nih.gov/[National Centre for Biotechnology Information]
 |Provides wide range of resources including Entrez gene, GenBank, PubMed and ClinVar
 
-|http://geneticassociationdb.nih.gov/[Genetic Association Database]
-|Database of genetic association data from complex diseases and disorders, retired in 2014
-
 |===
 // end::b-col-indv[]
 
