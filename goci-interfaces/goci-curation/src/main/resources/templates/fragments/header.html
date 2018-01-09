@@ -3,6 +3,9 @@
       xmlns="http://www.w3.org/1999/xhtml">
 
 <body th:fragment="navbar">
+
+<div th:remove="tag" th:replace="fragments/contextPath :: contextPath"></div>
+
 <div>
     <nav class="navbar navbar-fixed-top navbar-default">
         <!--<div class="container">-->

@@ -12,17 +12,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
@@ -40,16 +34,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.CurationStatus;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.Platform;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.UnpublishReason;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -706,9 +691,9 @@ public class StudyController {
     }
     */
 
-    // Duplicate a study
+    // Duplicate a study GET form
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String duplicateStudy(Model model, @PathVariable Long studyId,
+    public String duplicateStudyGet(Model model, @PathVariable Long studyId,
                                  RedirectAttributes redirectAttributes,
                                  HttpServletRequest request) {
 
@@ -717,6 +702,30 @@ public class StudyController {
 
         return "study_duplication";
     }
+
+    // Duplication a study POST form
+    @RequestMapping(value = "/{studyId}/duplicate",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> duplicateStudyPost(@PathVariable Long studyId,
+            @RequestBody String tagsNoteList, HttpServletRequest request) {
+
+        String result = "";
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        // Find study user wants to duplicate, based on the ID
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+        SecureUser secureUser = currentUserDetailsService.getUserFromRequest(request);
+        result = studyDuplicationService.create(studyToDuplicate,tagsNoteList, secureUser);
+
+        if (result == "") {
+            result =  new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPubmedId()).append("\"}").toString();
+        }
+
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+    }
+
 
 
     // Assign a curator to a study
