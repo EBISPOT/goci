@@ -69,6 +69,7 @@ public class StudyDuplicationService {
 
         // Create housekeeping object and add duplicate message
         Housekeeping duplicateStudyHousekeeping = housekeepingOperationsService.createHousekeeping();
+        duplicateStudyHousekeeping.setCurator(studyToDuplicate.getHousekeeping().getCurator());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
         studyRepository.save(duplicateStudy);

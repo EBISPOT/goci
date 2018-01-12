@@ -105,6 +105,17 @@ public class StudyDuplicationServiceTest {
     private static final CurationStatus STATUS =
             new CurationStatusBuilder().setId(804L).setStatus("Awaiting Curation").build();
 
+
+
+    private static final Housekeeping HOUSEKEEPING_TO_DUPLICATE =
+            new HousekeepingBuilder()
+                    .setId(799L)
+                    .setCurationStatus(STATUS)
+                    .setCurator(CURATOR)
+                    .setStudyAddedDate(new Date())
+                    .setNotes("")
+                    .build();
+
     private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
             .setAuthor("MacTest T")
             .setPubmedId("1234569")
@@ -112,6 +123,7 @@ public class StudyDuplicationServiceTest {
             .setTitle("I like to test")
             .setPublicationDate(new Date())
             .setDiseaseTrait(DISEASE_TRAIT)
+            .setHousekeeping(HOUSEKEEPING_TO_DUPLICATE)
             .setEfoTraits(Collections.singletonList(EFO1))
             .setStudyDesignComment("comment")
             .setInitialSampleSize("initial")
