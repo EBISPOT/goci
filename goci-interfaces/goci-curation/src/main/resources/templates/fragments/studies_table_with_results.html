@@ -117,7 +117,7 @@
         <!-- Using thymeleaf elvis operator for string, date attributes-->
 
         <td><p>
-            <span th:text="${study.author} ?: ''"></span>&nbsp;&nbsp;
+            <span th:text="${study.author} ?: ''"></span> &nbsp;<span th:text="${study.getTagDuplicatedNote()} != '' ? '['+${study.getTagDuplicatedNote()}+']' : ''"></span>&nbsp;
             <a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'" title="Print single GWA study">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a></p>

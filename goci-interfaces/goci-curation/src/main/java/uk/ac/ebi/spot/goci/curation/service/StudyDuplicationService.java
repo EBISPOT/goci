@@ -1,7 +1,10 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.service.StudyNoteService;
@@ -9,6 +12,7 @@ import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,7 +55,7 @@ public class StudyDuplicationService {
      * @param studyToDuplicate Study to duplicate
      * @return ID of newly created duplicate study
      */
-    public Study duplicateStudy(Study studyToDuplicate, SecureUser user) {
+    public Study duplicateStudy(Study studyToDuplicate, String tagDuplication, SecureUser user) {
 
         // Record duplication event
         trackingOperationService.update(studyToDuplicate, user, "STUDY_DUPLICATION");
@@ -65,6 +69,7 @@ public class StudyDuplicationService {
 
         // Create housekeeping object and add duplicate message
         Housekeeping duplicateStudyHousekeeping = housekeepingOperationsService.createHousekeeping();
+        duplicateStudyHousekeeping.setCurator(studyToDuplicate.getHousekeeping().getCurator());
         duplicateStudy.setHousekeeping(duplicateStudyHousekeeping);
 
         studyRepository.save(duplicateStudy);
@@ -72,10 +77,15 @@ public class StudyDuplicationService {
         StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
                 + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
 
+        // type of note to help the curator to tag a duplicated study
+        StudyNote tagNote = studyNoteOperationsService.createTagDuplicateNote(tagDuplication,duplicateStudy,user);
+
         // The note is properly created. We don't need to check any business logic. Just link to the study.
         studyNoteService.saveStudyNote(note);
+        studyNoteService.saveStudyNote(tagNote);
 
         duplicateStudy.addNote(note);
+        duplicateStudy.addNote(tagNote);
 
         // Copy existing ancestry
         Collection<Ancestry> studyToDuplicateAncestries = ancestryRepository.findByStudyId(studyToDuplicate.getId());
@@ -106,7 +116,7 @@ public class StudyDuplicationService {
     private Study copyStudy(Study studyToDuplicate) {
 
         Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
+        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
         duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
         duplicateStudy.setPublication(studyToDuplicate.getPublication());
         duplicateStudy.setTitle(studyToDuplicate.getTitle());
@@ -200,4 +210,43 @@ public class StudyDuplicationService {
 
         return duplicateAncestry;
     }
+
+    /**
+     * Create duplication study with specific tag
+     *
+     * @param studyToDuplicate
+     *        tagsNoteList
+     * @return empty string if no error is raised
+     */
+    public String create(Study studyToDuplicate, String tagsNoteList, SecureUser secureUser ) {
+
+        String result = "";
+
+        ArrayList<String> tagsNoteToAdd = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = mapper.readTree(tagsNoteList);
+            Integer numStudyToDuplicate = 0;
+            for (JsonNode node : jsonNode) {
+                numStudyToDuplicate += 1;
+                if (node.asText().length() > 1) {
+                    tagsNoteToAdd.add(node.asText());
+                } else {
+                    tagsNoteToAdd.add("Dup " + numStudyToDuplicate.toString());
+                }
+            }
+        } catch (IOException ioe) {
+            result = "{\"failed\":\"Something went wrong with the tags to add.\"}";
+        }
+
+        for (String tagDuplication : tagsNoteToAdd) {
+            try {
+                Study duplicateStudy = duplicateStudy(studyToDuplicate, tagDuplication, secureUser);
+            } catch (Exception e) {
+                result = "{\"failed\":\"Something went wrong during the creation of the duplication!\"}";
+            }
+        }
+        return result;
+    }
+
 }

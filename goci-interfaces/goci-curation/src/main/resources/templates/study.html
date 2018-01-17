@@ -44,7 +44,8 @@
     <ol class="breadcrumb pull-right">
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>
@@ -134,10 +135,15 @@
                 <div class="form-group">
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
 
-                    <div class="col-md-10 static-field">
+                    <div class="col-md-5 static-field">
                         <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
                         <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
                     </div>
+
+                    <div class="col-md-5">
+                        <button id="duplicateStudy" type="button" class="btn btn-primary pull-right" th:onclick="|window.location.href='@{/studies/{studyId}/duplicate(studyId=${study.id})}'|"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Duplicate Study</button>
+                    </div>
+
                 </div>
 
 
