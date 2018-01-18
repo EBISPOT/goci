@@ -472,6 +472,16 @@ public class Study implements Trackable {
         setNotes((currentNotes));
     }
 
+    public String getTagDuplicatedNote() {
+        Collection<StudyNote> currentNotes = getNotes();
+        for  (Note note:currentNotes) {
+            if (note.getNoteSubject().getSubject().compareToIgnoreCase("Duplication TAG") == 0) {
+                return note.getTextNote();
+            }
+        }
+        return "";
+    }
+
     public Collection<GenotypingTechnology> getGenotypingTechnologies() {
         return genotypingTechnologies;
     }
