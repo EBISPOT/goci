@@ -48,10 +48,32 @@ public class FtpFileService {
 
     // Upload file to NCBI
     public void ftpFileUpload(File outputFile) throws IOException {
+        int maxAttempt = 7;
+        boolean connected = false;
+        int attempt =0;
 
-        // Connect to FTP
-        connect();
+        while (attempt < maxAttempt && !connected) {
+            // Connect to FTP
+            try {
+                connected = connect();
+                getLog().info("*** Connection: success ***");
+            } catch (Exception exception) {
+                attempt = attempt + 1;
+                getLog().error("Attempt number " + Integer.toString(attempt) + " failed.");
+                try {
+                    Thread.sleep(1500); //delay
+                } catch (Exception exceptionDelay) {
+                }
+            }
+        }
 
+        // Max attempt exceeded- Throw an exception.
+        if (!connected) {
+            throw new RuntimeException(
+                    "Unable to connect to FTP. Max attempts exceeded.");
+        }
+
+        /*
         InputStream inputStream = new FileInputStream(outputFile);
         String remoteFile = "gwas.txt";
 
@@ -65,17 +87,18 @@ public class FtpFileService {
             getLog().error("Failed to upload file " + remoteFile + " to FTP");
         }
 
-
+        */
         // Close FTP connection
         disconnect();
     }
 
     // Connect to FTP server
-    public void connect() throws IOException {
+    public Boolean connect() throws IOException {
 
         // Connect to server
         int reply;
         try {
+
             ftpClient.connect(server);
             getLog().info("Connecting to " + server);
 
@@ -91,10 +114,12 @@ public class FtpFileService {
             }
 
         }
-        catch (IOException e) {
+        catch (Exception exception){
             throw new RuntimeException(
-                    "Unable to connect to FTP ", e);
+                    "Unable to connect to FTP ", exception);
         }
+
+        return true;
     }
 
 
