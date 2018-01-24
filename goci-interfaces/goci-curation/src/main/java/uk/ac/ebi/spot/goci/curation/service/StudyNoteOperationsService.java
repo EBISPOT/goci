@@ -162,6 +162,15 @@ public class StudyNoteOperationsService {
         return note;
     }
 
+    public StudyNote createTagDuplicateNote(String textNote, Study study, SecureUser user) {
+        StudyNote note = createEmptyStudyNote(study, user);
+        note.setTextNote(textNote);
+        NoteSubject subject = noteSubjectService.findTagDuplicateNote();
+        note.setNoteSubject(subject);
+        return note;
+    }
+
+
     public StudyNote createGeneralNote( Study study, SecureUser user) {
         StudyNote note = createEmptyStudyNote(study, user);
         // general note subject

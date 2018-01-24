@@ -1,203 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>GWAS Curation Tool</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
-    <!--Select2: http://ivaynberg.github.io/select2/-->
-    <!-- Include Select2 CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
-
-    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
-
-    <!-- Custom styles for this template -->
-    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
-    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
-
-    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
-    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
-    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
-
-    <!-- Include Select2 JS -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
-
-    <!--Tags input http://timschlechter.github.io/bootstrap-tagsinput/examples/-->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
-    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-
-    <!--Handles checkbox in table -->
-    <script th:src="@{/js/goci-study-association.js}"></script>
-
-    <!--https://www.datatables.net/-->
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"/>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.js"></script>
-    <script type="text/javascript"
-            charset="utf8"
-            src="//cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript"
-            charset="utf8"
-            src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css"/>
-
-    <script type="text/javascript"
-            charset="utf8"
-            src="//cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript"
-            charset="utf8"
-            src="//cdn.datatables.net/buttons/1.1.2/js/buttons.colVis.min.js"></script>
-
-    <script th:src="@{/js/goci-editing.js}"></script>
-    <script th:src="@{/js/goci-print-page.js}"></script>
-
-</head>
-<body>
-
-<!--Include header-->
-<div th:include="fragments/header :: navbar"></div>
-
-<div>
-    <ol class="breadcrumb pull-right">
-        <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
-        <li class="active">SNP Associations</li>
-    </ol>
-</div>
-
-<!--Include study navigation tabs-->
-<div th:include="fragments/study_navigation_tabs :: tabs"></div>
-
-<!--Alert if data is saved-->
-<div class="container-fluid" th:if="${!#strings.isEmpty(mappingComplete)}">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="alert alert-success">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${mappingComplete}">Success!</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Alert if errors not checked before approving-->
-<div class="container-fluid" th:if="${!#strings.isEmpty(efoMessage)}">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="alert alert-danger">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${efoMessage}">Warning!</strong>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid" th:if="${!#strings.isEmpty(mappingMessage)}">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="alert alert-danger">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${mappingMessage}">Warning!</strong>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Top level buttons and modals-->
-<div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"
-     th:if="*{#bools.isTrue(study.housekeeping.isPublished)}"></div>
-
-<div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"
-     th:if="*{#bools.isFalse(study.housekeeping.isPublished)}"></div>
-
-<!--<div th:switch="${study.housekeeping.isPublished}">-->
-    <!--<div th:case="false">-->
-        <!--<div th:include="fragments/association_table_top_level_buttons_and_modals :: top_level"></div>-->
-    <!--</div>-->
-    <!--<div th:case="true">-->
-        <!--<div th:include="fragments/association_table_top_level_buttons_published_study :: top_level_published"></div>-->
-    <!--</div>-->
-<!--</div>-->
-<br/>
-
-<div class="form-group"  style="display: none">
-    <label for="publish_flag" class="control-label col-md-2"></label>
-
-    <div class="col-md-10">
-        <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
-    </div>
-</div>
-
-<!-- Add spinner -->
-<div id="loadingResults" class="container">
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <button class="btn btn-lg">
-                <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
-                <span>Loading...</span>
-            </button>
-        </div>
-        <div class="col-md-4"></div>
-    </div>
-</div>
 
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12 dataForm">
-            <div class="well well-sm" th:if="${#lists.isEmpty(snpAssociationTableViews)}">
-                <p style="color:grey">No snp associations to display for this study</p>
-            </div>
-
-            <table id="mainTable"
-                   class="table table-hover table-bordered"
-                   th:if="${not #lists.isEmpty(snpAssociationTableViews)}" cellspacing="0" width="100%">
-                <br/>
-                <caption id="total" th:text="'Total number of SNP associations = '+ ${totalAssociations}"></caption>
-                <thead>
-                <tr>
-                    <th style="font-size: small">Edit</th>
-                    <th style="font-size: small">Mapping</th>
-                    <th style="font-size: small">Gene(s)</th>
-                    <th style="font-size: small">Strongest SNP-Risk Allele</th>
-                    <th style="font-size: small">SNP</th>
-                    <th style="font-size: small">Proxy SNP</th>
-                    <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
-                    <th style="font-size: small; width: 5%">Risk element (allele, haplotype or SNPxSNP interaction)
-                                                            frequency in
-                                                            controls
-                    </th>
-                    <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
-                    <th style="font-size: small">p-Value Description</th>
-                    <th style="font-size: small">EFO trait</th>
-                    <th style="font-size: small">OR</th>
-                    <th style="font-size: small">OR reciprocal</th>
-                    <th style="font-size: small">Beta</th>
-                    <th style="font-size: small">Beta unit</th>
-                    <th style="font-size: small">Beta direction</th>
-                    <th style="font-size: small">Range (OR/Beta)</th>
-                    <th style="font-size: small">OR reciprocal range</th>
-                    <th style="font-size: small">Std Error (OR/Beta)</th>
-                    <th style="font-size: small">Description (OR/Beta)</th>
-                    <th style="font-size: small">SNP Type</th>
-                    <th style="font-size: small">SNP Status</th>
-                    <th style="font-size: small">Multi-SNP haplotype</th>
-                    <th style="font-size: small">SNP:SNP interaction</th>
-                    <th style="font-size: small">Warnings</th>
-                    <th style="font-size: small">SNP Approved</th>
-                    <th style="font-size: small">Approve / Unapprove / Delete</th>
-                </tr>
-                </thead>
-                <tbody>
                 <tr th:each="snpAssociationTableView: ${snpAssociationTableViews}">
                     <div th:switch="${snpAssociationTableView.snpApproved}">
                         <div th:case="Yes">
@@ -246,9 +48,9 @@
                             <!--EFO traits-->
                             <td style="background-color: darkgrey">
                                 <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
-                                 <span style="font-style: italic; color:red; font-size: small"
-                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
-                                       th:text="'Warning: EFO trait not assigned'"></span>
+                                <span style="font-style: italic; color:red; font-size: small"
+                                      th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                      th:text="'Warning: EFO trait not assigned'"></span>
                             </td>
 
                             <td style="background-color: darkgrey"
@@ -359,9 +161,9 @@
                                 <!--EFO traits-->
                                 <td style="background-color: lightyellow">
                                     <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
-                                 <span style="font-style: italic; color:red; font-size: small"
-                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
-                                       th:text="'Warning: EFO trait not assigned'"></span>
+                                    <span style="font-style: italic; color:red; font-size: small"
+                                          th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                          th:text="'Warning: EFO trait not assigned'"></span>
                                 </td>
 
                                 <td style="background-color: lightyellow"
@@ -464,9 +266,9 @@
                                 <!--EFO traits-->
                                 <td>
                                     <p th:text="${snpAssociationTableView.efoTraits} ?: ''"></p>
-                                 <span style="font-style: italic; color:red; font-size: small"
-                                       th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
-                                       th:text="'Warning: EFO trait not assigned'"></span>
+                                    <span style="font-style: italic; color:red; font-size: small"
+                                          th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
+                                          th:text="'Warning: EFO trait not assigned'"></span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
@@ -510,90 +312,3 @@
                         </div>
                     </div>
                 </tr>
-                </tbody>
-            </table>
-        </div>
-        </div>
-    </div>
-<br/>
-
-<!--Bottom level buttons and modals-->
-<!--<div th:if="(${study.housekeeping.isPublished} == false)">-->
-    <!--<div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"></div>-->
-<!--</div>-->
-<div th:include="fragments/association_table_bottom_level_buttons_and_modals :: bottom_level"
-     th:if="*{#bools.isFalse(study.housekeeping.isPublished)}"></div>
-
-<div th:include="fragments/footer :: page_footer"></div>
-
-
-<script th:inline="javascript">
-    $(document).ready(function() {
-        $("#loadingResults").show();
-        var page_size = 100;
-        /*<![CDATA[*/
-        var total_associations = /*[[${totalAssociations}]]*/;
-        /*]]>*/
-        var total_pages = total_associations/page_size + 1;
-
-        /*<![CDATA[*/
-        var page_number = 1;
-        while(page_number < total_pages) {
-            page_number++;
-            appendData(page_number);
-        }
-        /*]]>*/
-
-
-        var table = $('#mainTable').DataTable({
-                                                  info: false,
-                                                  paging: false,
-                                                  dom: 'Bfrtip',
-                                                  buttons: [
-                                                      {
-                                                          extend: 'colvis',
-                                                          columns: ':gt(0)',
-                                                          postfixButtons: ['colvisRestore']
-                                                      }
-                                                  ]
-                                              });
-    });
-
-    function appendData(page_number) {
-        /*<![CDATA[*/
-        var studyid = /*[[${study.id}]]*/;
-        var contextPath = /*[[@{/}]]*/'';
-        /*]]>*/
-        $.ajax({
-            type: "GET",
-            url: contextPath+"/studies/"+studyid+"/associations",
-            data: {
-                page: page_number,
-            },
-            success: function (data) {
-                var newRows = data;
-                $("#mainTable").DataTable().rows.add($(newRows)).draw();
-                checkRowCount();
-            },
-            error: function (e) {
-                console.log("ERROR : ", e);
-            }
-        });
-    }
-
-
-    function checkRowCount() {
-        // Check number of rows, if equal to total_associations then hide spinner
-        /*<![CDATA[*/
-        var total_associations = /*[[${totalAssociations}]]*/;
-        /*]]>*/
-        var table = $('#mainTable').DataTable();
-        var row_count = table.rows().count();
-        if(row_count == total_associations) {
-            $("#loadingResults").hide();
-        }
-    }
-</script>
-
-</body>
-</html>

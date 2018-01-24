@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToDevelopers;
+import uk.ac.ebi.spot.goci.curation.model.mail.NcbiExportEmailToDevelopers;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.GOCIMailService;
 
@@ -103,5 +104,15 @@ public class MailService extends GOCIMailService {
         email.setFrom(this.getFrom());
         email.createEnsemblPingFailureMail();
         sendEmail(email);
+    }
+
+    public void sendNcbiFTPUploadEmail(String subject) {
+        NcbiExportEmailToDevelopers email = new NcbiExportEmailToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.getFrom());
+        email.createNCBIFTPEmail(subject);
+        sendEmail(email);
+
     }
 }
