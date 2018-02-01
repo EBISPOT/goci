@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<div th:fragment="contextPath" xmlns:th="http://www.thymeleaf.org">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        //console.log(contextPath);
+        /*]]>*/
+    </script>
+
+</div>
+</body>
+</html>

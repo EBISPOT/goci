@@ -576,7 +576,7 @@ public class StudyController {
             else {
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
                 try {
-                Publication publication =publicationOperationsService.importSinglePublication(pubmedId);
+                Publication publication =publicationOperationsService.importSinglePublication(pubmedId, true);
                 Study importedStudy = new Study();
                 importedStudy.setPublicationId(publication);
                 studyRepository.save(importedStudy);
@@ -741,24 +741,39 @@ public class StudyController {
         return "redirect:/studies";
     }
 
-    // Duplicate a study
+    // Duplicate a study GET form
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String duplicateStudy(@PathVariable Long studyId,
-                                 RedirectAttributes redirectAttributes,
-                                 HttpServletRequest request) {
+    public String duplicateStudyGet(Model model, @PathVariable Long studyId,
+                                    RedirectAttributes redirectAttributes,
+                                    HttpServletRequest request) {
+
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+        model.addAttribute("study", studyToDuplicate);
+
+        return "study_duplication";
+    }
+
+    // Duplication a study POST form
+    @RequestMapping(value = "/{studyId}/duplicate",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> duplicateStudyPost(@PathVariable Long studyId,
+                                                                   @RequestBody String tagsNoteList, HttpServletRequest request) {
+
+        String result = "";
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
-        Study duplicateStudy = studyDuplicationService.duplicateStudy(studyToDuplicate,
-                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                              request));
+        SecureUser secureUser = currentUserDetailsService.getUserFromRequest(request);
+        result = studyDuplicationService.create(studyToDuplicate,tagsNoteList, secureUser);
 
-        // Add duplicate message
-        String message =
-                "Study is a duplicate of " + studyToDuplicate.getPublicationId().getFirstAuthor().getFullname() + ", PMID: " + studyToDuplicate.getPublicationId().getPubmedId();
-        redirectAttributes.addFlashAttribute("duplicateMessage", message);
+        if (result == "") {
+            result =  new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPublicationId().getPubmedId()).append("\"}").toString();
+        }
 
-        return "redirect:/studies/" + duplicateStudy.getId();
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
     }
 
     // Assign a curator to a study

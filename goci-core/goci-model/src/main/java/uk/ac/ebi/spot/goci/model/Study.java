@@ -4,7 +4,6 @@ package uk.ac.ebi.spot.goci.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
-import org.jboss.logging.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

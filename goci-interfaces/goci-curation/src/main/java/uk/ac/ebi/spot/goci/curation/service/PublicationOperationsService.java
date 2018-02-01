@@ -59,27 +59,33 @@ public class PublicationOperationsService {
     }
 
     @Transactional
-    public Publication addPublication(String pubmedId, EuropePMCData europePMCResult) throws Exception {
+    public Publication addPublication(String pubmedId, EuropePMCData europePMCResult, Boolean newImport)
+            throws Exception {
 
         Publication publication = publicationService.createOrFindByPumedId(pubmedId);
         publication.setPubmedId(pubmedId);
         publication.setPublication(europePMCResult.getPublication().getPublication());
-        publication.setPublicationDate(europePMCResult.getPublication().getPublicationDate());
         publication.setTitle(europePMCResult.getPublication().getTitle());
+
+        // The date was already curated. So we don't want to import again this data
+        if (newImport) {
+            publication.setPublicationDate(europePMCResult.getPublication().getPublicationDate());
+        }
 
         publicationService.save(publication);
         authorOperationsService.addAuthorsToPublication(publication, europePMCResult);
-        addFirstAuthorToPublication(publication,europePMCResult);
+
+        addFirstAuthorToPublication(publication, europePMCResult);
 
         return publication;
     }
 
 
-    public Publication importSinglePublication(String pubmedId) throws PubmedLookupException {
+    public Publication importSinglePublication(String pubmedId, Boolean newImport) throws PubmedLookupException {
         Publication addedPublication = null;
         try {
             EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
-            addedPublication = addPublication(pubmedId, europePMCResult);
+            addedPublication = addPublication(pubmedId, europePMCResult, newImport);
         } catch(Exception exception) {
             throw new PubmedLookupException(exception.getCause().getMessage());
 
@@ -97,7 +103,7 @@ public class PublicationOperationsService {
         for (Publication publication : listPublications) {
             pubmedId = publication.getPubmedId();
             try {
-                    Publication importedPublication = importSinglePublication(pubmedId);
+                    Publication importedPublication = importSinglePublication(pubmedId, false);
             } catch (Exception exception) {
                 System.out.println("Something went wrong "+ pubmedId );
                 

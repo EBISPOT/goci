@@ -11,8 +11,8 @@ Migration script to create the table
 Add column publication_id to the table Study
 
 author: Cinzia Malangone
-date:    11 Sept 2017
-version: 2.2.0.039
+date:    Feb 2018
+version: 2.2.0.040
 ################################################################################
 */
 
@@ -110,7 +110,3 @@ ALTER TABLE "STUDY" ADD "PUBLICATION_ID" NUMBER(19,0);
   ALTER TABLE "STUDY" ADD CONSTRAINT "STUDY_PUBLICATION_ID_FK" FOREIGN KEY ("PUBLICATION_ID")
 	  REFERENCES "PUBLICATION" ("ID") ENABLE;
 
---------------------------------------------------------
---  New note for duplication STUDY
---------------------------------------------------------
-INSERT INTO NOTE_SUBJECT(id,subject) VALUES (9,'Duplication TAG');

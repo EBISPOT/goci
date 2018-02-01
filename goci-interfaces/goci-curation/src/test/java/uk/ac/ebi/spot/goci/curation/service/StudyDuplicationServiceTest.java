@@ -114,16 +114,6 @@ public class StudyDuplicationServiceTest {
             .build();
 
 
-    private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
-            .setPublication(PUBLICATION)
-            .setDiseaseTrait(DISEASE_TRAIT)
-            .setEfoTraits(Collections.singletonList(EFO1))
-            .setStudyDesignComment("comment")
-            .setInitialSampleSize("initial")
-            .setReplicateSampleSize("rep")
-            .setAncestries(Arrays.asList(ETH1, ETH2))
-            .build();
-
     private static final Housekeeping NEW_HOUSEKEEPING =
             new HousekeepingBuilder()
                     .setId(799L)
@@ -133,14 +123,25 @@ public class StudyDuplicationServiceTest {
                     .setNotes("")
                     .build();
 
+    private static final Study STUDY_TO_DUPLICATE = new StudyBuilder().setId(112L)
+            .setPublication(PUBLICATION)
+            .setDiseaseTrait(DISEASE_TRAIT)
+            .setHousekeeping(NEW_HOUSEKEEPING)
+            .setEfoTraits(Collections.singletonList(EFO1))
+            .setStudyDesignComment("comment")
+            .setInitialSampleSize("initial")
+            .setReplicateSampleSize("rep")
+            .setAncestries(Arrays.asList(ETH1, ETH2))
+            .build();
+
     @Before
     public void setUp() throws Exception {
         studyDuplicationService = new StudyDuplicationService(ancestryRepository,
-                                                              housekeepingOperationsService,
-                                                              studyTrackingOperationService,
-                                                              studyRepository,
-                                                              studyNoteOperationsService,
-                                                              studyNoteService);
+                housekeepingOperationsService,
+                studyTrackingOperationService,
+                studyRepository,
+                studyNoteOperationsService,
+                studyNoteService);
     }
 
     @Test
@@ -150,29 +151,29 @@ public class StudyDuplicationServiceTest {
         when(housekeepingOperationsService.createHousekeeping()).thenReturn(NEW_HOUSEKEEPING);
         when(ancestryRepository.findByStudyId(STUDY_TO_DUPLICATE.getId())).thenReturn(Arrays.asList(ETH1, ETH2));
 
-        Study duplicateStudy = studyDuplicationService.duplicateStudy(STUDY_TO_DUPLICATE, SECURE_USER);
+        Study duplicateStudy = studyDuplicationService.duplicateStudy(STUDY_TO_DUPLICATE, "new tag",SECURE_USER);
 
         // Verification
         verify(studyTrackingOperationService, times(1)).update(STUDY_TO_DUPLICATE,
-                                                               SECURE_USER,
-                                                              "STUDY_DUPLICATION");
+                SECURE_USER,
+                "STUDY_DUPLICATION");
         verify(studyRepository, times(1)).save(STUDY_TO_DUPLICATE);
         verify(studyTrackingOperationService, times(1)).create(duplicateStudy, SECURE_USER);
         verify(housekeepingOperationsService, times(1)).createHousekeeping();
         verify(ancestryRepository, times(1)).findByStudyId(STUDY_TO_DUPLICATE.getId());
         verify(ancestryRepository, times(2)).save(Matchers.any(Ancestry.class));
         verify(housekeepingOperationsService, times(1)).saveHousekeeping(duplicateStudy,
-                                                                         duplicateStudy.getHousekeeping());
+                duplicateStudy.getHousekeeping());
 
 
         // Assertions;
         assertThat(duplicateStudy).isEqualToIgnoringGivenFields(STUDY_TO_DUPLICATE,
-                                                                "housekeeping",
-                                                                "ancestries",
-                                                                "id",
-                                                                "publication_id",
-                                                                "notes");
-        assertEquals(duplicateStudy.getNotes().size(), 1);
+                "housekeeping",
+                "ancestries",
+                "id",
+                "publication_id",
+                "notes");
+        assertEquals(duplicateStudy.getNotes().size(), 2);
 
         // THOR
         // assertThat(duplicateStudy.getAuthor()).isEqualTo(STUDY_TO_DUPLICATE.getAuthor().concat(" DUP"));
@@ -183,16 +184,16 @@ public class StudyDuplicationServiceTest {
         /// Check ancestry
         assertThat(duplicateStudy.getAncestries()).extracting("id", "numberOfIndividuals",
 //                                                              "ancestralGroup",
-                                                               "description",
+                "description",
 //                                                               "countryOfOrigin",
 //                                                               "countryOfRecruitment",
-                                                              "type")
+                "type")
                 .contains(tuple(null, 100,
 //                                "European",
-                                "ETH1 description",
+                        "ETH1 description",
 //                                "Ireland", "Ireland",
-                                "initial"),
-                          tuple(null, 200,
+                        "initial"),
+                        tuple(null, 200,
 //                                "European",
                                 "ETH2 description",
 //                                "U.K.", "U.K.",

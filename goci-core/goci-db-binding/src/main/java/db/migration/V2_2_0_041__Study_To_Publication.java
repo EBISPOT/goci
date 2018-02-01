@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by dwelter on 18/09/17.
  */
-public class V2_2_0_040__Study_To_Publication implements SpringJdbcMigration {
+public class V2_2_0_041__Study_To_Publication implements SpringJdbcMigration {
 
 
     private static final String SELECT_STUDY =
