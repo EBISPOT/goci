@@ -14,16 +14,30 @@ function processStudy(study, table) {
     //    row.addClass('collapse');
     //    row.addClass('hidden-resource');
     //}
+    
+    
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
+    var ncbi="https://www.ncbi.nlm.nih.gov/pubmed/?term=".concat(study.pubmedId);
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
             "</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
+    
+    var epmclink = "<span><a href='".concat(europepmc).concat("' title='Go to EuropePMC' target='_blank'>").concat(
+            "<img alt='externalLink' class='link-icon' src='icons/europepmcx20.png' th:src='@{icons/europepmcx20.png}'/></a></span>");
+    var ncbilink = "<span><a href='".concat(ncbi).concat("' title='Go to NCBI' target='_blank'>").concat(
+       "<img alt='externalLink' class='link-icon' src='icons/ncbix20.png' th:src='@{icons/ncbix20.png}'/></a></span>");
+    
+    
     var pubdate = study.publicationDate.substring(0, 10);
+    
+    // To change
     row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(
-            epmclink)));
-    row.append($("<td>").html(pubdate));
+            ncbilink).concat('&nbsp;&nbsp;').concat(epmclink)));
+    // GOCI-2138
+    //var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    //row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(viewPapers)));
+        
+        
+        row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
