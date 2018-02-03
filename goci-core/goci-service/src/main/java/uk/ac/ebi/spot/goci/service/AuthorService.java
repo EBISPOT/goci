@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
-import uk.ac.ebi.spot.goci.model.PublicationAuthors;
 import uk.ac.ebi.spot.goci.repository.AuthorRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -52,6 +51,11 @@ public class AuthorService {
         Optional<Author> author= findOptionalByFullname(fullname);
         return (author.isPresent()) ? author.get() : null;
     }
+
+    public List<Author> findAll() {
+        return authorRepository.findAll();
+    }
+
 
     public void save(Author author) {
         authorRepository.save(author);

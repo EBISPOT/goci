@@ -119,6 +119,7 @@
     <field name="description" type="text_general" indexed="true" stored="true" />
     <field name="comments" type="text_general" indexed="true" stored="true" />
     <field name="author" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="authorAscii" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="orcid" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="keywords" type="text_general" indexed="true" stored="true" />
     <field name="category" type="text_general" indexed="true" stored="true" />
@@ -147,7 +148,7 @@
     <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <field name="authorsList" type="string" indexed="false" stored="true" multiValued="true" />
+    <field name="authorsList" type="string" indexed="true" stored="true" multiValued="true" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
 
@@ -332,6 +333,8 @@
     <!-- Text fields from SolrCell to search by default in our catch-all field -->
     <copyField source="title" dest="text" />
     <copyField source="author" dest="text" />
+    <copyField source="authorAscii" dest="text" />
+    <copyField source="authorsList" dest="text" />
     <copyField source="orcid" dest="text" />
     <copyField source="description" dest="text" />
     <copyField source="keywords" dest="text" />
@@ -342,6 +345,8 @@
 
     <!-- Create a string version of author for faceting -->
     <copyField source="author" dest="author_s" />
+    <copyField source="authorAscii" dest="authorAscii_s" />
+
     <copyField source="orcid" dest="orcid_s" />
     <copyField source="traitName" dest="traitName_s" />
 

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import uk.ac.ebi.spot.goci.service.junidecode.Junidecode;
 
 /**
  * Javadocs go here!
@@ -24,6 +25,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
+    @Field private String authorAscii;
     @Field private String orcid;
     @Field private String publication;
     @Field private String publicationDate;
@@ -79,6 +81,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.pubmedId = study.getPublicationId().getPubmedId();
         this.title = study.getPublicationId().getTitle();
         this.author = study.getPublicationId().getFirstAuthor().getFullname();
+        this.authorAscii = Junidecode.unidecode(study.getPublicationId().getFirstAuthor().getFullname());
         this.orcid = study.getPublicationId().getFirstAuthor().getOrcid();
         this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
@@ -285,7 +288,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     private void embedAuthors(Study study) {
         Collection<Author> authors = study.getPublicationId().getAuthors();
         for (Author author : authors) {
-            String authorLink = author.getFullname();
+            String authorLink = author.getFullname().concat(" | ").concat(Junidecode.unidecode(author.getFullname()));
             if (author.getOrcid() != null) {
                 authorLink = authorLink.concat(" | ").concat(author.getOrcid());
             }
