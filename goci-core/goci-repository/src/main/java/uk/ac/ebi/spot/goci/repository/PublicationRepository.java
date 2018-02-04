@@ -13,7 +13,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
 
-    @RestResource(exported = false)
+    @RestResource
     Publication findByPubmedId(String pubmedId);
 
 
