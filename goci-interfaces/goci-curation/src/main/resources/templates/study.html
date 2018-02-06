@@ -171,7 +171,7 @@
                 <div class="form-group">
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
 
-                    <div class="col-md-10 static-field">
+                    <div class="col-md-5 static-field">
                         <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
                         <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
                     </div>
@@ -193,7 +193,7 @@
 
 
                 <div class="form-group">
-                    <label for="author" class="control-label col-md-2">Author</label>
+                    <label for="firstAuthorStatic" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10 static-field">
                         <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
@@ -204,7 +204,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="list_authors" class="control-label col-md-2">List of Authors</label>
+                    <label class="control-label col-md-2">List of Authors</label>
 
                     <div class="col-md-10 static-field">
                         <p th:inline="text" th:each="orderedAuthor,iter : *{publicationId.publicationAuthors}" th:remove="tag">
