@@ -368,10 +368,16 @@
                     <input id="openTargets" type="checkbox" th:field="*{openTargets}"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>
+                <!--<div class="form-group">-->
+                    <!--<label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>-->
 
-                    <input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>
+                    <!--<input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>-->
+                <!--</div>-->
+
+                <div class="form-group">
+                    <label th:for="fullPvalueSet" class="col-md-2">Full p-Value Set</label>
+                    <input type="radio" th:name="fullPvalueSet" th:field="*{fullPvalueSet}" th:value="1" /> Yes
+                    <input type="radio" th:name="fullPvalueSet" th:field="*{fullPvalueSet}" th:value="0" /> No
                 </div>
 
 
