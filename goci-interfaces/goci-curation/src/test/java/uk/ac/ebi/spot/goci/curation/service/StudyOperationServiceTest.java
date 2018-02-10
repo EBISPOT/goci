@@ -86,7 +86,7 @@ public class StudyOperationServiceTest {
     private CuratorService curatorService;
 
     @Mock
-    private PublicationOperationsService publicationOperationsService;
+    private PublicationService publicationService;
 
     // Class under test
     private StudyOperationsService studyOperationsService;
@@ -208,7 +208,7 @@ public class StudyOperationServiceTest {
                                                             studyNoteService,
                                                             studyNoteOperationsService,
                                                             curatorService,
-                                                            publicationOperationsService);
+                                                            publicationService);
         // Create these objects before each test
         Housekeeping CURRENT_HOUSEKEEPING = new HousekeepingBuilder().setId(799L)
                 .setCurationStatus(AWAITING_CURATION)

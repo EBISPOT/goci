@@ -23,6 +23,9 @@ public class Author {
     @NotBlank(message = "Fullname is missing")
     private String fullname;
 
+    //Converted fullname with standard char
+    private String fullnameStandard;
+
     private String orcid;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,8 +59,9 @@ public class Author {
     //JPA Constructor
     public Author() {}
 
-    public Author(String fullname, String orcid) {
+    public Author(String fullname, String fullnameStandard, String orcid) {
         this.fullname = fullname;
+        this.fullnameStandard = fullnameStandard;
         this.orcid = orcid;
     }
 
@@ -91,4 +95,7 @@ public class Author {
         return fullname.substring(0, Math.min(fullname.length(), lenghtFullname));
     }
 
+    public void setFullnameStandart(String fullnameStandard) { this.fullnameStandard = fullnameStandard; }
+
+    public String getFullnameStandard() { return this.fullnameStandard; }
 }

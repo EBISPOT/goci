@@ -47,7 +47,7 @@ public class StudyOperationsService {
     private StudyNoteService studyNoteService;
     private StudyNoteOperationsService studyNoteOperationsService;
     private CuratorService curatorService;
-    private PublicationOperationsService publicationOperationsService;
+    private PublicationService publicationService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -63,7 +63,7 @@ public class StudyOperationsService {
                                   StudyNoteService studyNoteService,
                                   StudyNoteOperationsService studyNoteOperationsService,
                                   CuratorService curatorService,
-                                  PublicationOperationsService publicationOperationsService
+                                  PublicationService publicationService
     ) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
@@ -78,7 +78,7 @@ public class StudyOperationsService {
         this.studyNoteService = studyNoteService;
         this.studyNoteOperationsService=studyNoteOperationsService;
         this.curatorService=curatorService;
-        this.publicationOperationsService = publicationOperationsService;
+        this.publicationService = publicationService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -399,7 +399,7 @@ public class StudyOperationsService {
     public ErrorNotification duplicateStudyNoteToSiblingStudies(Study sourceStudy,Long nodeId,SecureUser user){
         //find all studies with the same pubmed id
         // THOR
-        Collection<Study> studies = publicationOperationsService.findStudiesByPubmedId(sourceStudy.getPublicationId().getPubmedId());
+        Collection<Study> studies = publicationService.findStudiesByPubmedId(sourceStudy.getPublicationId().getPubmedId());
         //remove the source study
         studies = studies.stream().filter(targetStudy -> sourceStudy.getId() != targetStudy.getId()).collect(Collectors.toList());
 

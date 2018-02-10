@@ -93,10 +93,8 @@ public class EuropepmcPubMedSearchService implements PubMedSearchService {
             System.out.println(queryUrl);
             JsonNode body = new JsonNode(out.getBody().toString());
             result.setRestResult(body);
-            getLog().debug("Response: 200");
         }
         catch (Exception e) {
-            getLog().debug("Exception not managed");
             throw new PubmedLookupException("EuropePMC : REST API Failed");
         }
 

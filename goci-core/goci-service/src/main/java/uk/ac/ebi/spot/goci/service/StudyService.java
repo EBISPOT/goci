@@ -355,4 +355,8 @@ public class StudyService {
         return (study.isPresent()) ? study.get(): null;
     }
 
+    public void save(Study study) {
+        save(study);
+    }
+
 }

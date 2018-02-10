@@ -534,88 +534,17 @@ public class StudyController {
     public @ResponseBody ResponseEntity<ArrayList<HashMap<String,String>>> importStudy(@RequestBody String pubmedIdForImport,
                                HttpServletRequest request) {
         ArrayList<HashMap<String,String>> result = new ArrayList<>();
-
+        SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
+        result = publicationOperationsService.importNewPublications(pubmedIdForImport, currentUser);
 
-        String regex = "[0-9, /,]+";
-        // Remove whitespace
-        String pubmedIds = pubmedIdForImport.trim();
-
-        if (!pubmedIds.matches(regex)) {
-            HashMap<String, String> error = new HashMap<String, String>();
-            error.put("pubmedId", "general");
-            error.put("error", "Pubmed List must be number follow by comma");
-            result.add(error);
-            return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
-        }
-
-
-        List<String> pubmedIdList = Arrays.asList(pubmedIds.split("\\s*,\\s*"));
-
-
-        for (String pubmedId: pubmedIdList){
-            HashMap<String, String> pubmedResult = new HashMap<String, String>();
-            pubmedId = pubmedId.trim();
-            if (pubmedId == "") {
-                pubmedResult.put("pubmedId", "Empty");
-                pubmedResult.put("error", "Empty pubmed id - The pubmedId is mandatory");
-                result.add(pubmedResult);
-            }
-
-            // Check if there is an existing study with the same pubmed id
-            Collection<Study> existingStudies = publicationOperationsService.findStudiesByPubmedId(pubmedId);
-            if (existingStudies != null) {
-                pubmedResult.put("pubmedId", pubmedId);
-                pubmedResult.put("error", "This pubmed already exists.");
-                result.add(pubmedResult);
-            }
-
-            else {
-                //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-                try {
-                Publication publication =publicationOperationsService.importSinglePublication(pubmedId, true);
-                Study importedStudy = new Study();
-                importedStudy.setPublicationId(publication);
-                studyRepository.save(importedStudy);
-                Study savedStudy = studyOperationsService.createStudy(importedStudy,
-                        currentUserDetailsService.getUserFromRequest(request));
-
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("author", savedStudy.getPublicationId().getFirstAuthor().getFullname());
-                    pubmedResult.put("title", savedStudy.getPublicationId().getTitle());
-                    pubmedResult.put("study_id", "studies/"+savedStudy.getId().toString());
-
-                    result.add(pubmedResult);
-                // Create directory to store associated files
-
-                    studyFileService.createStudyDir(savedStudy.getId());
-                } catch (NoStudyDirectoryException e) {
-                    getLog().error("No study directory exception");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", "No study directory exception");
-                    result.add(pubmedResult);
-                } catch (PubmedLookupException ple) {
-                    getLog().error("Something went wrong quering EuropePMC.");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", ple.getMessage());
-                    result.add(pubmedResult);
-                } catch (Exception e) {
-                    getLog().error("Something went wrong. Please, contact the helpdesk.");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", "Something went wrong. Please, contact the helpdesk.");
-                    result.add(pubmedResult);
-                }
-
-
-            }
-
-        }
         return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
     }
 
+    // Option 2: move this functionality as JAVA migration.
     @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
     public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
                                            HttpServletRequest request,
