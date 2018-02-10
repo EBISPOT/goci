@@ -42,7 +42,7 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
     public ArrayList<Author> getAuthorsInfo(JsonNode info) {
         ArrayList<Author> authors = new ArrayList<Author>();
         JsonNode root = info.get("resultList").get("result").get(0);
-        System.out.println("Authors");
+        getLog().debug("Authors: ");
         ArrayNode authorList = (ArrayNode) root.get("authorList").get("author");
         for (JsonNode author : authorList) {
             Author newAuthor = new Author();

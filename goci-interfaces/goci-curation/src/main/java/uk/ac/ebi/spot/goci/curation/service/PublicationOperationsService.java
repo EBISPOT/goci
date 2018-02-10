@@ -171,6 +171,8 @@ public class PublicationOperationsService {
             } else {
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
                 try {
+                    getLog().debug("Publication ");
+                    getLog().debug(pubmedId);
                     Publication publication = importSinglePublication(pubmedId, true);
                     Study importedStudy = new Study();
                     importedStudy.setPublicationId(publication);
