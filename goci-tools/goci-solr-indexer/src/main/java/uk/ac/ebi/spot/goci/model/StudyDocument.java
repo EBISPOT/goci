@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
-import uk.ac.ebi.spot.goci.service.junidecode.Junidecode;
 
 /**
  * Javadocs go here!
@@ -32,6 +31,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
     @Field private String platform;
+    @Field private String genotypingTechnologies;
     @Field private String accessionId;
     @Field @NonEmbeddableField private Boolean fullPvalueSet;
 
@@ -81,7 +81,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.pubmedId = study.getPublicationId().getPubmedId();
         this.title = study.getPublicationId().getTitle();
         this.author = study.getPublicationId().getFirstAuthor().getFullname();
-        this.authorAscii = Junidecode.unidecode(study.getPublicationId().getFirstAuthor().getFullname());
+        this.authorAscii = study.getPublicationId().getFirstAuthor().getFullnameStandard();
         this.orcid = study.getPublicationId().getFirstAuthor().getOrcid();
         this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
@@ -113,6 +113,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.authorsList = new LinkedHashSet<>();
         embedAuthors(study);
         this.platform = embedPlatformField(study);
+
+        embedgenotypingTechnologies(study);
 
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
@@ -285,10 +287,16 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
 
+    private void embedgenotypingTechnologies(Study study) {
+        study.getGenotypingTechnologies().forEach(
+                genotyping -> {
+                  this.genotypingTechnologies = genotypingTechnologies.concat(" | ").concat(genotyping.getGenotypingTechnology());
+                });
+    }
     private void embedAuthors(Study study) {
         Collection<Author> authors = study.getPublicationId().getAuthors();
         for (Author author : authors) {
-            String authorLink = author.getFullname().concat(" | ").concat(Junidecode.unidecode(author.getFullname()));
+            String authorLink = author.getFullname().concat(" | ").concat(author.getFullnameStandard());
             if (author.getOrcid() != null) {
                 authorLink = authorLink.concat(" | ").concat(author.getOrcid());
             }
