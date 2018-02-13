@@ -31,7 +31,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String catalogPublishDate;
     @Field private String publicationLink;
     @Field private String platform;
-    @Field private String genotypingTechnologies;
     @Field private String accessionId;
     @Field @NonEmbeddableField private Boolean fullPvalueSet;
 
@@ -113,9 +112,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.authorsList = new LinkedHashSet<>();
         embedAuthors(study);
         this.platform = embedPlatformField(study);
-
-        embedgenotypingTechnologies(study);
-
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
@@ -158,6 +154,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     public String getAuthor() { return author; }
 
     public String getOrcid() { return orcid; }
+
+    public String getAuthorAscii() { return authorAscii; }
+
+    public Collection<String> getAuthorsList() { return authorsList; }
 
     public String getPublication() {
         return publication;
@@ -286,13 +286,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return ancestryLinks;
     }
 
-
-    private void embedgenotypingTechnologies(Study study) {
-        study.getGenotypingTechnologies().forEach(
-                genotyping -> {
-                  this.genotypingTechnologies = genotypingTechnologies.concat(" | ").concat(genotyping.getGenotypingTechnology());
-                });
-    }
     private void embedAuthors(Study study) {
         Collection<Author> authors = study.getPublicationId().getAuthors();
         for (Author author : authors) {
