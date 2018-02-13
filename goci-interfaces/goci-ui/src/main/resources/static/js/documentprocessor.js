@@ -19,7 +19,7 @@ function processStudy(study, table) {
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
     var ncbi="https://www.ncbi.nlm.nih.gov/pubmed/?term=".concat(study.pubmedId);
     var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
-            "</a></span>");
+            " et Al.</a></span>");
     
     var epmclink = "<span><a href='".concat(europepmc).concat("' title='Go to EuropePMC' target='_blank'>").concat(
             "<img alt='externalLink' class='link-icon' src='icons/europepmcx20.png' th:src='@{icons/europepmcx20.png}'/></a></span>");
@@ -28,17 +28,18 @@ function processStudy(study, table) {
     
     
     var pubdate = study.publicationDate.substring(0, 10);
-    
+    var pubmed = study.pubmedId;
     // To change
     //row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(
     //        ncbilink).concat('&nbsp;&nbsp;').concat(epmclink)));
     
     // GOCI-2138
     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
-    row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(viewPapers)));
-        
-        
-        row.append($("<td>").html(pubdate));
+    row.append($("<td>").html(authorsearch));
+    
+    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(study.accessionId));
+    row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
     var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
@@ -55,7 +56,7 @@ function processStudy(study, table) {
     if(fullpvalset == 1) {
 
 
-        var a = (study.author_s).replace(/\s/g,"");
+        var a = (study.authorAscii_s).replace(/\s/g,"");
         var dir = a.concat("_").concat(study.pubmedId).concat("_").concat(study.accessionId);
 
         var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/"
