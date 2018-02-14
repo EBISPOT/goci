@@ -216,9 +216,12 @@ public class StudyService {
         );
 
         Collection<Author> authorArrayList = new ArrayList<>();
-        study.getPublicationId().getAuthors().forEach( author ->{
-            authorArrayList.add(author);
+        // Extract the author in order
+        study.getPublicationId().getPublicationAuthors().forEach(publicationAuthor ->{
+            authorArrayList.add(publicationAuthor.getAuthor());
         });
+
+
 
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();

@@ -42,6 +42,8 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
     public ArrayList<Author> getAuthorsInfo(JsonNode info) {
         ArrayList<Author> authors = new ArrayList<Author>();
         JsonNode root = info.get("resultList").get("result").get(0);
+        Boolean noAuthor = true;
+
         getLog().debug("Authors: ");
         ArrayNode authorList = (ArrayNode) root.get("authorList").get("author");
         for (JsonNode author : authorList) {
@@ -52,6 +54,7 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                 newAuthor.setFullname(fullname);
                 newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
             } else {
+                noAuthor = true;
                 fullname = author.get("fullName").asText();
                 newAuthor.setFullname(fullname);
                 newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
@@ -63,19 +66,21 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
             authors.add(newAuthor);
         }
         // investigatorList
-        if (root.has("investigatorList")) {
-            getLog().debug("Investigator: ");
-            ArrayNode investigatorList = (ArrayNode) root.get("investigatorList").get("investigator");
-            for (JsonNode author : investigatorList) {
-                Author newAuthor = new Author();
-                String fullname = author.get("fullName").asText();
-                newAuthor.setFullname(fullname);
-                newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
-                getLog().debug(newAuthor.getFullname());
-                if (author.has("authorId")) {
-                    newAuthor.setOrcid(author.get("authorId").get("value").asText());
+        if (noAuthor) {
+            if (root.has("investigatorList")) {
+                getLog().debug("Investigator: ");
+                ArrayNode investigatorList = (ArrayNode) root.get("investigatorList").get("investigator");
+                for (JsonNode author : investigatorList) {
+                    Author newAuthor = new Author();
+                    String fullname = author.get("fullName").asText();
+                    newAuthor.setFullname(fullname);
+                    newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
+                    getLog().debug(newAuthor.getFullname());
+                    if (author.has("authorId")) {
+                        newAuthor.setOrcid(author.get("authorId").get("value").asText());
+                    }
+                    authors.add(newAuthor);
                 }
-                authors.add(newAuthor);
             }
         }
 

@@ -18,9 +18,12 @@ function processStudy(study, table) {
     
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
     var ncbi="https://www.ncbi.nlm.nih.gov/pubmed/?term=".concat(study.pubmedId);
-    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
-            " et Al.</a></span>");
     
+    var authorsList = study.authorsList.map( collaborator => { return collaborator.split(" | ")[0];}).toString();
+
+    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("' rel=\"tooltip\" title=\"").concat(authorsList).concat("\">").concat(study.author).concat(
+            " et al.</a></span>");
+
     var epmclink = "<span><a href='".concat(europepmc).concat("' title='Go to EuropePMC' target='_blank'>").concat(
             "<img alt='externalLink' class='link-icon' src='icons/europepmcx20.png' th:src='@{icons/europepmcx20.png}'/></a></span>");
     var ncbilink = "<span><a href='".concat(ncbi).concat("' title='Go to NCBI' target='_blank'>").concat(
@@ -46,6 +49,7 @@ function processStudy(study, table) {
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
+    
     //TO DO - uncomment once FTP structure & Solr variable are available
 
     var fullpvalset = study.fullPvalueSet;
