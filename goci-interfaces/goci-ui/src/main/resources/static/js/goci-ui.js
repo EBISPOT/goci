@@ -29,7 +29,7 @@ $(document).ready(function() {
     }
 
     if($("#homepageStats")){
-        $.getJSON('api/search/stats')
+        $.getJSON(contextPath+'api/search/stats')
                 .done(function(stats) {
                           setStats(stats);
                       });

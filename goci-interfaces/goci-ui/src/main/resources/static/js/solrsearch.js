@@ -18,7 +18,7 @@ $(document).ready(function() {
 
     });
 
-    $.getJSON('api/search/stats')
+    $.getJSON(contextPath+'api/search/stats')
             .done(function(data) {
                 setStats(data);
             });
