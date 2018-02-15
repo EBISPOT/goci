@@ -42,14 +42,19 @@ public class AuthorService {
     }
 
 
-    private Optional<Author> findOptionalByFullname(String fullname) {
-        Author author = authorRepository.findByFullname(fullname);
+    private Optional<Author> findOptionalUniqueAuthor(String fullname, String firstName, String lastName,
+                                                    String initial) {
+        Author author = authorRepository.findByFullnameAndFirstNameAndLastNameAndInitials(fullname, firstName,
+                lastName, initial);
         return (author != null) ? Optional.of(author) : Optional.empty();
     }
 
-    public Author findByFullname(String fullname) {
-        Optional<Author> author= findOptionalByFullname(fullname);
+
+    public Author findUniqueAuthor(String fullname, String firstName, String lastName,
+                                   String initial){
+        Optional<Author> author= findOptionalUniqueAuthor(fullname, firstName, lastName, initial);
         return (author.isPresent()) ? author.get() : null;
+
     }
 
     public List<Author> findAll() {

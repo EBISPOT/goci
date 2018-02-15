@@ -11,5 +11,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     @RestResource(exported = false)
     Author findByFullname(String fullname);
+
+    @RestResource(exported = false)
+    Author findByFullnameAndFirstNameAndLastNameAndInitials(String fullname, String firstName, String lastName,
+                                                                    String initial);
+
 }
 

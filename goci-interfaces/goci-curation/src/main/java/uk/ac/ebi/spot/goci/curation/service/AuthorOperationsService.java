@@ -29,21 +29,15 @@ public class AuthorOperationsService {
         this.authorService = authorService;
     }
 
-    public Author findAuthorById(Long authorId) {
-        Author author = authorService.findById(authorId);
-        return author;
-    }
 
-    public Author findAuthorByFullname(String fullname) {
-        Author author = authorService.findByFullname(fullname);
-        return author;
-    }
+
 
     public void addAuthorsToPublication(Publication publication, EuropePMCData europePMCResult) {
         Collection<Author> authorList = europePMCResult.getAuthors();
         Integer order = 0;
         for (Author author : authorList) {
-            Author authorDB = findAuthorByFullname(author.getFullname());
+            Author authorDB = authorService.findUniqueAuthor(author.getFullname(), author.getFirstName(),
+                    author.getLastName(),author.getInitials());
             order+=1;
             if (authorDB == null) {
                 authorService.addPublication(author, publication, order);

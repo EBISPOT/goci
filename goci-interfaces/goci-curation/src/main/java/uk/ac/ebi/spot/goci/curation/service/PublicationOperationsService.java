@@ -4,14 +4,14 @@ package uk.ac.ebi.spot.goci.curation.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.service.AuthorService;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -37,6 +37,8 @@ public class PublicationOperationsService {
 
     private StudyService studyService;
 
+    private AuthorService authorService;
+
     private AuthorOperationsService authorOperationsService;
 
     private EuropepmcPubMedSearchService europepmcPubMedSearchService;
@@ -53,6 +55,7 @@ public class PublicationOperationsService {
 
     @Autowired
     public PublicationOperationsService(PublicationService publicationService,
+                                        AuthorService authorService,
                                         AuthorOperationsService authorOperationsService,
                                         EuropepmcPubMedSearchService europepmcPubMedSearchService,
                                         StudyService studyService,
@@ -60,6 +63,7 @@ public class PublicationOperationsService {
                                         StudyFileService studyFileService){
         this.publicationService = publicationService;
         this.europepmcPubMedSearchService = europepmcPubMedSearchService;
+        this.authorService = authorService;
         this.authorOperationsService = authorOperationsService;
         this.studyService = studyService;
         this.studyFileService = studyFileService;
@@ -74,7 +78,8 @@ public class PublicationOperationsService {
 
     public void addFirstAuthorToPublication(Publication publication, EuropePMCData europePMCResult) {
         Author firstAuthor = europePMCResult.getFirstAuthor();
-        Author firstAuthorDB = authorOperationsService.findAuthorByFullname(firstAuthor.getFullname());
+        Author firstAuthorDB = authorService.findUniqueAuthor(firstAuthor.getFullname(),firstAuthor.getFirstName(),
+                                             firstAuthor.getLastName(),firstAuthor.getInitials());
         publication.setFirstAuthor(firstAuthorDB);
         publicationService.save(publication);
     }
@@ -216,7 +221,7 @@ public class PublicationOperationsService {
         Boolean success = false;
         Publication publication = publicationService.findByStudyId(studyId);
         if (publication != null) {
-            Author author = authorOperationsService.findAuthorById(authorId);
+            Author author = authorService.findById(authorId);
             if (author != null) {
                 publicationService.updatePublicationFirstAuthor(publication, author);
                 success = true;

@@ -26,6 +26,12 @@ public class Author {
     //Converted fullname with standard char
     private String fullnameStandard;
 
+    private String firstName;
+
+    private String lastName;
+
+    private String initials;
+
     private String orcid;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -59,9 +65,12 @@ public class Author {
     //JPA Constructor
     public Author() {}
 
-    public Author(String fullname, String fullnameStandard, String orcid) {
+    public Author(String fullname, String fullnameStandard, String lastName, String firstName, String initials,String orcid) {
         this.fullname = fullname;
         this.fullnameStandard = fullnameStandard;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.initials = initials;
         this.orcid = orcid;
     }
 
@@ -98,4 +107,18 @@ public class Author {
     public void setFullnameStandart(String fullnameStandard) { this.fullnameStandard = fullnameStandard; }
 
     public String getFullnameStandard() { return this.fullnameStandard; }
+
+    public void setFullnameStandard(String fullnameStandard) { this.fullnameStandard = fullnameStandard; }
+
+    public String getFirstName() { return firstName; }
+
+    public void setFirstName(String firstName) { this.firstName = firstName;    }
+
+    public String getLastName() { return lastName; }
+
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getInitials() { return initials; }
+
+    public void setInitials(String initials) { this.initials = initials; }
 }

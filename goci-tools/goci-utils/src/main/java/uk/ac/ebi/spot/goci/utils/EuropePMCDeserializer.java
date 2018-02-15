@@ -54,15 +54,19 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                 newAuthor.setFullname(fullname);
                 newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
             } else {
-                noAuthor = true;
+                noAuthor = false;
                 fullname = author.get("fullName").asText();
                 newAuthor.setFullname(fullname);
                 newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
+                newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
+                newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
+                newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
             }
 
             if (author.has("authorId")){
                 newAuthor.setOrcid(author.get("authorId").get("value").asText());
             }
+
             authors.add(newAuthor);
         }
         // investigatorList
@@ -75,6 +79,9 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                     String fullname = author.get("fullName").asText();
                     newAuthor.setFullname(fullname);
                     newAuthor.setFullnameStandart(Junidecode.unidecode(fullname));
+                    newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
+                    newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
+                    newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
                     getLog().debug(newAuthor.getFullname());
                     if (author.has("authorId")) {
                         newAuthor.setOrcid(author.get("authorId").get("value").asText());
