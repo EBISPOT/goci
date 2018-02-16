@@ -61,7 +61,12 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                 newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
                 newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
                 newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
-                newAuthor.setAffiliation(author.has("affiliation") ? author.get("affiliation").asText() : null);
+                if (author.has("affiliation")){
+                    if (author.get("affiliation").asText().length() > 700) {
+                        newAuthor.setAffiliation(author.get("affiliation").asText().substring(0,699));
+                    }
+                    else { newAuthor.setAffiliation(author.get("affiliation").asText());}
+                }
             }
 
             if (author.has("authorId")){
@@ -83,7 +88,12 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                     newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
                     newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
                     newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
-                    newAuthor.setAffiliation(author.has("affiliation") ? author.get("affiliation").asText() : null);
+                    if (author.has("affiliation")){
+                        if (author.get("affiliation").asText().length() > 700) {
+                            newAuthor.setAffiliation(author.get("affiliation").asText().substring(0,699));
+                        }
+                        else { newAuthor.setAffiliation(author.get("affiliation").asText());}
+                    }
                     getLog().debug(newAuthor.getFullname());
                     if (author.has("authorId")) {
                         newAuthor.setOrcid(author.get("authorId").get("value").asText());
