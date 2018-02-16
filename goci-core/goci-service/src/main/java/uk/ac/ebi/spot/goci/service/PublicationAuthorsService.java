@@ -20,9 +20,9 @@ public class PublicationAuthorsService {
         this.publicationAuthorsRepository = publicationAuthorsRepository;
     }
 
-    private Optional<PublicationAuthors> findOptionalByPrimaryKey(Author author, Publication publication) {
-        PublicationAuthors entry = publicationAuthorsRepository.findByAuthorIdAndPublicationId(author.getId(),
-                                   publication.getId());
+    private Optional<PublicationAuthors> findOptionalByPrimaryKey(Author author, Publication publication, Integer sort) {
+        PublicationAuthors entry = publicationAuthorsRepository.findByAuthorIdAndPublicationIdAndSort(author.getId(),
+                                   publication.getId(), sort);
         if (entry != null) {
             return Optional.of(entry);
         }
@@ -30,18 +30,18 @@ public class PublicationAuthorsService {
     }
 
 
-    public PublicationAuthors findByPrimaryKey(Author author, Publication publication) {
-        Optional<PublicationAuthors> entry = findOptionalByPrimaryKey(author, publication);
+    public PublicationAuthors findByPrimaryKey(Author author, Publication publication, Integer sort) {
+        Optional<PublicationAuthors> entry = findOptionalByPrimaryKey(author, publication, sort);
         if (entry.isPresent()){
             return entry.get();
         }
         return null;
     }
 
-    public PublicationAuthors createOrFindByPrimaryKey(Author author, Publication publication) {
-        PublicationAuthors entry = findByPrimaryKey(author, publication);
+    public PublicationAuthors createOrFindByPrimaryKey(Author author, Publication publication, Integer sort) {
+        PublicationAuthors entry = findByPrimaryKey(author, publication, sort);
         if (entry == null) {
-            entry = new PublicationAuthors(author,publication, 0);
+            entry = new PublicationAuthors(author,publication, sort);
         }
         return entry;
     }
@@ -52,8 +52,8 @@ public class PublicationAuthorsService {
     }
 
     public void setSort(Author author, Publication publication, Integer sort) {
-        PublicationAuthors entry = createOrFindByPrimaryKey(author, publication);
-        entry.setSort(sort);
+        PublicationAuthors entry = createOrFindByPrimaryKey(author, publication, sort);
         save(entry);
+
     }
 }

@@ -29,12 +29,9 @@ public class PublicationAuthors {
     @JoinColumn(name = "author_id", insertable = false, updatable = false)
     private Author author;
 
+    @Column(name = "sort",insertable = false, updatable = false )
     private Integer sort;
 
-    @Column(name = "sort")
-    public Integer getSort() {
-        return sort;
-    }
     // Constructor JPA
     public PublicationAuthors() {}
 
@@ -42,7 +39,7 @@ public class PublicationAuthors {
         this.sort = sort;
         this.author = author;
         this.publication = publication;
-        PublicationAuthorsPk primaryKey = new PublicationAuthorsPk(author.getId(), publication.getId());
+        PublicationAuthorsPk primaryKey = new PublicationAuthorsPk(author.getId(), publication.getId(), sort);
         publicationAuthorsPk = primaryKey;
     }
 
@@ -66,6 +63,7 @@ public class PublicationAuthors {
         this.sort = sort;
     }
 
+    public Integer getSort() { return sort; }
 }
 
 
@@ -78,11 +76,16 @@ class PublicationAuthorsPk implements Serializable {
     @Column(name = "author_id")
     protected Long authorId;
 
+    @Column(name = "sort")
+    protected Integer sort;
+
+
     public PublicationAuthorsPk() {}
 
-    public PublicationAuthorsPk(Long authorId, Long publication_id) {
+    public PublicationAuthorsPk(Long authorId, Long publication_id, Integer sort) {
         this.authorId = authorId;
         this.publicationId = publication_id;
+        this.sort = sort;
     }
 
     public Long getPublicationId() { return publicationId; }
@@ -92,5 +95,9 @@ class PublicationAuthorsPk implements Serializable {
     public Long getAuthorId() { return authorId;}
 
     public void setAuthorId(Long authorId) { this.authorId = authorId; }
+
+    public Integer getSort() { return sort; }
+
+    public void setSort(Integer sort) { this.sort = sort; }
 
 }

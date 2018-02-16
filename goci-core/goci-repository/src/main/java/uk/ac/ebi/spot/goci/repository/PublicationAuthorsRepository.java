@@ -9,6 +9,6 @@ import uk.ac.ebi.spot.goci.model.PublicationAuthors;
 public interface PublicationAuthorsRepository extends JpaRepository<PublicationAuthors, Long> {
 
     @RestResource(exported = false)
-    PublicationAuthors findByAuthorIdAndPublicationId(Long author_id, Long publication_id);
+    PublicationAuthors findByAuthorIdAndPublicationIdAndSort(Long author_id, Long publication_id, Integer sort);
 
 }
