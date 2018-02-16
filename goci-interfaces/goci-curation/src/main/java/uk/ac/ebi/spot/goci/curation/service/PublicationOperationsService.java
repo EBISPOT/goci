@@ -79,7 +79,8 @@ public class PublicationOperationsService {
     public void addFirstAuthorToPublication(Publication publication, EuropePMCData europePMCResult) {
         Author firstAuthor = europePMCResult.getFirstAuthor();
         Author firstAuthorDB = authorService.findUniqueAuthor(firstAuthor.getFullname(),firstAuthor.getFirstName(),
-                                             firstAuthor.getLastName(),firstAuthor.getInitials());
+                                             firstAuthor.getLastName(),firstAuthor.getInitials(),
+                                             firstAuthor.getAffiliation());
         publication.setFirstAuthor(firstAuthorDB);
         publicationService.save(publication);
     }

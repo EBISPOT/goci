@@ -61,6 +61,7 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                 newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
                 newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
                 newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
+                newAuthor.setAffiliation(author.has("affiliation") ? author.get("affiliation").asText() : null);
             }
 
             if (author.has("authorId")){
@@ -82,6 +83,7 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
                     newAuthor.setLastName(author.has("lastName") ? author.get("lastName").asText() : null);
                     newAuthor.setFirstName(author.has("firstName") ? author.get("firstName").asText() : null);
                     newAuthor.setInitials(author.has("initials") ? author.get("initials").asText() : null);
+                    newAuthor.setAffiliation(author.has("affiliation") ? author.get("affiliation").asText() : null);
                     getLog().debug(newAuthor.getFullname());
                     if (author.has("authorId")) {
                         newAuthor.setOrcid(author.get("authorId").get("value").asText());

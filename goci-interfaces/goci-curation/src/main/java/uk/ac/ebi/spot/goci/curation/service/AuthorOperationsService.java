@@ -37,7 +37,7 @@ public class AuthorOperationsService {
         Integer order = 0;
         for (Author author : authorList) {
             Author authorDB = authorService.findUniqueAuthor(author.getFullname(), author.getFirstName(),
-                    author.getLastName(),author.getInitials());
+                    author.getLastName(),author.getInitials(), author.getAffiliation());
             order+=1;
             if (authorDB == null) {
                 authorService.addPublication(author, publication, order);

@@ -13,8 +13,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     Author findByFullname(String fullname);
 
     @RestResource(exported = false)
-    Author findByFullnameAndFirstNameAndLastNameAndInitials(String fullname, String firstName, String lastName,
-                                                                    String initial);
+    Author findByFullnameAndFirstNameAndLastNameAndInitialsAndAffiliation(String fullname, String firstName, String lastName,
+                                                                    String initial, String affiliation);
 
 }
 

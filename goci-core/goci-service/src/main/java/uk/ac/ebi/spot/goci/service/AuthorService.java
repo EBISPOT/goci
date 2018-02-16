@@ -43,16 +43,16 @@ public class AuthorService {
 
 
     private Optional<Author> findOptionalUniqueAuthor(String fullname, String firstName, String lastName,
-                                                    String initial) {
-        Author author = authorRepository.findByFullnameAndFirstNameAndLastNameAndInitials(fullname, firstName,
-                lastName, initial);
+                                                    String initial, String affiliation) {
+        Author author = authorRepository.findByFullnameAndFirstNameAndLastNameAndInitialsAndAffiliation(fullname, firstName,
+                lastName, initial, affiliation);
         return (author != null) ? Optional.of(author) : Optional.empty();
     }
 
 
     public Author findUniqueAuthor(String fullname, String firstName, String lastName,
-                                   String initial){
-        Optional<Author> author= findOptionalUniqueAuthor(fullname, firstName, lastName, initial);
+                                   String initial, String affiliation){
+        Optional<Author> author= findOptionalUniqueAuthor(fullname, firstName, lastName, initial, affiliation);
         return (author.isPresent()) ? author.get() : null;
 
     }

@@ -32,6 +32,8 @@ public class Author {
 
     private String initials;
 
+    private String affiliation;
+
     private String orcid;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -121,4 +123,8 @@ public class Author {
     public String getInitials() { return initials; }
 
     public void setInitials(String initials) { this.initials = initials; }
+
+    public String getAffiliation() { return affiliation; }
+
+    public void setAffiliation(String affiliation) { this.affiliation = affiliation; }
 }
