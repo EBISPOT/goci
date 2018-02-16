@@ -5,7 +5,11 @@
 <body>
 
 <div th:fragment="navbar">
-<nav class="navbar navbar-inverse navbar-fixed-top" >
+
+    <div th:remove="tag" th:replace="fragments/scripts :: contextPath"></div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+
 
     <div class="container">
         <div id="beta-icon" style="display: none">
