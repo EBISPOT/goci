@@ -290,7 +290,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         //Collection<Author> authors = study.getPublicationId().getAuthors();
         Collection<PublicationAuthors> authors = study.getPublicationId().getPublicationAuthors();
         for (PublicationAuthors author : authors) {
-            String authorLink = author.getAuthor().getFullname().concat(" | ").concat(author.getAuthor().getFullnameStandard()).concat(author.getSort().toString());
+            String authorLink = author.getAuthor().getFullname().concat(" | ").concat(author.getAuthor().getFullnameStandard()).concat(" | ").concat(author.getSort().toString());
             if (author.getAuthor().getOrcid() != null) {
                 authorLink = authorLink.concat(" | ").concat(author.getAuthor().getOrcid());
             }
