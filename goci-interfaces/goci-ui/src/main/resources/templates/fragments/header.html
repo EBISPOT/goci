@@ -104,7 +104,28 @@
         </div>
     </div>
 </div>
-
+    <div th:if="${newsDiv == '1'}">
+        <div class="container">
+            <div class="row">
+                <div id="breakingNews" class="breaking-news mocked">
+                    <div class="col-lg-4 text-right breaking-left">
+                        <h2 class="responsive">
+                            <span class="breaking-small">New</span><br/>
+                            <span class="breaking-large">Features</span>
+                        </h2>
+                    </div>
+                    <div class="col-lg-8 breaking-right">
+                        <img id="news_image" th:src="@{/icons/GWAS_trait_2017.png}" style="vertical-align:middle" th:width="24" th:height="24"/>
+                        <h3 id="titleNews"><span id="item" class="breaking-small-black">Trait</span> page</h3>
+                        <p id="news_description">Investigate and combine EFO trait focused GWAS Catalog data</p>
+                        <button id="readmorebutton" type="gwasbutton" class="btn btn-default btn-xs"  value="Input Button" onclick="return changeReadmeButtonLink('efotraits');">Read More
+                            <i class="glyphicon glyphicon-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /row -->
+        </div>
+    </div>
 </div>
 
 <!--<label>-->
