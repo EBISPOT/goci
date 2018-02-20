@@ -12,6 +12,10 @@ Full details of the framework used to represent ancestry data in the GWAS Catalo
 === References
 The following publications include analysis of the GWAS Catalog ancestry data.
 
+_Morales et al._ +
+http://rdcu.be/G6Fv[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog] +
+Genome Biology (2018) 19:21 +
+
 _Popejoy AB and Fullerton SM._ +
 http://www.nature.com/news/genomics-is-failing-on-diversity-1.20759[Genomics is failing on diversity] +
 Nature. 2016, 538 (7624), 161-164. +
