@@ -14,6 +14,8 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
 
     private Integer monthlyTotal;
 
+    private Integer pubmedTotal;
+
     // JPA no-args constructor
     public MonthlyTotalsSummaryView() {
     }
@@ -23,10 +25,12 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
                                     Integer curatorTotal,
                                     String curationStatus,
                                     Integer month,
-                                    Integer monthlyTotal) {
+                                    Integer monthlyTotal,
+                                    Integer pubmedTotal) {
         super(year, curator, curatorTotal, curationStatus);
         this.month = month;
         this.monthlyTotal = monthlyTotal;
+        this.pubmedTotal = pubmedTotal;
     }
 
     public Integer getMonth() {
@@ -43,5 +47,13 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
 
     public void setMonthlyTotal(Integer monthlyTotal) {
         this.monthlyTotal = monthlyTotal;
+    }
+
+    public Integer getPubmedTotal() {
+        return pubmedTotal;
+    }
+
+    public void setPubmedTotal() {
+        this.pubmedTotal = pubmedTotal;
     }
 }

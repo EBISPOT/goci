@@ -74,6 +74,8 @@
                     <th class="col-md-1" data-field="year" data-sortable="true">Year</th>
                     <th class="col-md-1" data-field="month" data-sortable="true" data-sorter="monthSorter">Month</th>
                     <th class="col-md-2" data-field="curator" data-sortable="true">Curator</th>
+                    <!-- NEW -->
+                    <th class="col-md-2" data-field="pubmedTotal" data-sortable="true">Unique Publications</th>
                     <th class="col-md-2" data-field="numberPerCurator" data-sortable="true">Total number per curator</th>
                     <th class="col-md-2" data-field="curationstatus" data-sortable="true">Curation Status</th>
                     <th class="col-md-2">Link to studies</th>
@@ -86,6 +88,9 @@
                     <!--Some thymeleaf wrangling to get the month name for a date-->
                     <td th:text="${#dates.monthName(#dates.create(monthlyTotalsSummaryView.year,monthlyTotalsSummaryView.month, '01'))} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curator} ?: 'null'"></td>
+                    <!-- NEW -->
+                    <td th:text="${monthlyTotalsSummaryView.pubmedTotal}"></td>
+
                     <td th:text="${monthlyTotalsSummaryView.curatorTotal} ?: 'null'"></td>
                     <td th:text="${monthlyTotalsSummaryView.curationStatus} ?: 'null'"></td>
                     <td><a th:href="@{/reports/monthly/{reportId}(reportId=${monthlyTotalsSummaryView.id})}"
