@@ -45,6 +45,8 @@ public class StudyDeletionServiceTest {
     @Mock
     private StudyService studyService;
 
+    @Mock
+    private PublicationOperationsService publicationOperationsService;
 
     private StudyDeletionService studyDeletionService;
 
@@ -83,6 +85,10 @@ public class StudyDeletionServiceTest {
     private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
             .setOrcid("0000-0002-0002-003").build();
 
+    private static final Author AUTHOR_2 = new AuthorBuilder().setFullname("John Doe").build();
+
+    private static final Author AUTHOR_3 = new AuthorBuilder().setFullname("Joanne Doe").build();
+
     // THOR
     private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
             .setPubmedId("1234569")
@@ -90,6 +96,23 @@ public class StudyDeletionServiceTest {
             .setTitle("I like to test")
             .setPublicationDate(new Date())
             .setFirstAuthor(AUTHOR)
+            .build();
+
+    // THOR
+    private static final PublicationAuthors PUBLICATION_AUTHORS = new PublicationAuthorsBuilder().setAuthor(AUTHOR)
+            .setPublication(PUBLICATION)
+            .setSort(1)
+            .build();
+
+
+    private static final PublicationAuthors PUBLICATION_AUTHORS_2 = new PublicationAuthorsBuilder().setAuthor(AUTHOR_2)
+            .setPublication(PUBLICATION)
+            .setSort(2)
+            .build();
+
+    private static final PublicationAuthors PUBLICATION_AUTHORS_3 = new PublicationAuthorsBuilder().setAuthor(AUTHOR_3)
+            .setPublication(PUBLICATION)
+            .setSort(3)
             .build();
 
 
@@ -106,7 +129,8 @@ public class StudyDeletionServiceTest {
                                                         trackingOperationService,
                                                         studyRepository,
                                                         deletedStudyRepository,
-                                                        studyService
+                                                        studyService,
+                                                        publicationOperationsService
                                                         );
     }
 

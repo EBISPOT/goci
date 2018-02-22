@@ -33,6 +33,7 @@ public class StudyDeletionService {
     private StudyRepository studyRepository;
     private DeletedStudyRepository deletedStudyRepository;
     private StudyService studyService;
+    private PublicationOperationsService publicationOperationsService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,12 +46,14 @@ public class StudyDeletionService {
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
                                 DeletedStudyRepository deletedStudyRepository,
-                                StudyService studyService) {
+                                StudyService studyService,
+                                PublicationOperationsService publicationOperationsService) {
         this.ancestryRepository = ancestryRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
         this.studyService = studyService;
+        this.publicationOperationsService = publicationOperationsService;
     }
     /**
      * Delete a study
@@ -61,31 +64,37 @@ public class StudyDeletionService {
     public void deleteStudy(Study study, SecureUser user) {
 
         getLog().warn("Deleting study: ".concat(String.valueOf(study.getId())));
+        try {
+            publicationOperationsService.deletePublication(study.getPublicationId());
 
-        // Before we delete the study get its associated ancestry
-        Collection<Ancestry> ancestriesAttachedToStudy = ancestryRepository.findByStudyId(study.getId());
+            // Before we delete the study get its associated ancestry
+            Collection<Ancestry> ancestriesAttachedToStudy = ancestryRepository.findByStudyId(study.getId());
 
-        // Delete ancestry information linked to this study
-        for (Ancestry ancestry : ancestriesAttachedToStudy) {
-            ancestryRepository.delete(ancestry);
+            // Delete ancestry information linked to this study
+            for (Ancestry ancestry : ancestriesAttachedToStudy) {
+                ancestryRepository.delete(ancestry);
+            }
+
+            // WeeklyTracking, CuratorTracking and Note. Please use this method!
+            // Shared with === DataDeletionService ===
+            studyService.deleteRelatedInfoByStudy(study);
+
+            // Add deletion event
+            trackingOperationService.delete(study, user);
+            DeletedStudy deletedStudy = createDeletedStudy(study);
+
+            // THOR - Don't delete the publication and Author - OR check if there is just a publication.
+
+            // Delete study
+            studyRepository.delete(study);
+
+            // Save deleted study details
+            getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
+            deletedStudyRepository.save(deletedStudy);
         }
-
-        // WeeklyTracking, CuratorTracking and Note. Please use this method!
-        // Shared with === DataDeletionService ===
-        studyService.deleteRelatedInfoByStudy(study);
-
-        // Add deletion event
-        trackingOperationService.delete(study, user);
-        DeletedStudy deletedStudy = createDeletedStudy(study);
-
-        // THOR - Don't delete the publication and Author - OR check if there is just a publication.
-
-        // Delete study
-        studyRepository.delete(study);
-
-        // Save deleted study details
-        getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
-        deletedStudyRepository.save(deletedStudy);
+        catch (Exception e) {
+            getLog().error(e.getMessage());
+        }
     }
 
     /**

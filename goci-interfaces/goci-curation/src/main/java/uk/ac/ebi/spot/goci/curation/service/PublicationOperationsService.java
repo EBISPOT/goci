@@ -11,10 +11,7 @@ import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.service.AuthorService;
-import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
-import uk.ac.ebi.spot.goci.service.PublicationService;
-import uk.ac.ebi.spot.goci.service.StudyService;
+import uk.ac.ebi.spot.goci.service.*;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
@@ -47,6 +44,8 @@ public class PublicationOperationsService {
 
     private StudyFileService studyFileService;
 
+    private PublicationAuthorsService publicationAuthorsService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -60,7 +59,8 @@ public class PublicationOperationsService {
                                         EuropepmcPubMedSearchService europepmcPubMedSearchService,
                                         StudyService studyService,
                                         StudyOperationsService studyOperationsService,
-                                        StudyFileService studyFileService){
+                                        StudyFileService studyFileService,
+                                        PublicationAuthorsService publicationAuthorsService){
         this.publicationService = publicationService;
         this.europepmcPubMedSearchService = europepmcPubMedSearchService;
         this.authorService = authorService;
@@ -68,6 +68,7 @@ public class PublicationOperationsService {
         this.studyService = studyService;
         this.studyFileService = studyFileService;
         this.studyOperationsService = studyOperationsService;
+        this.publicationAuthorsService = publicationAuthorsService;
     }
 
 
@@ -227,6 +228,14 @@ public class PublicationOperationsService {
             }
         }
         return success;
+    }
+
+    public void deletePublication(Publication publication) throws Exception{
+        publicationAuthorsService.deleteByPublication(publication);
+        Boolean delete = publicationService.deletePublication(publication);
+        if (!delete) {
+            throw new Exception("Publication not deleted.");
+        }
     }
 
 }

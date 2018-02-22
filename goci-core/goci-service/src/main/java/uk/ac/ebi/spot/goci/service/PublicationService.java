@@ -38,6 +38,17 @@ public class PublicationService {
     }
 
 
+    public Optional<Publication> findOptionalById(Long id) {
+        Publication publication = publicationRepository.findOne(id);
+        return getValue(publication);
+    }
+
+    public Publication findById(Long id) {
+        Optional<Publication> publication= findOptionalById(id);
+        return (publication.isPresent()) ? publication.get() : null;
+    }
+
+
     public Optional<Publication> findOptionalByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
         return getValue(publication);
@@ -91,6 +102,16 @@ public class PublicationService {
     public void updatePublicationFirstAuthor(Publication publication, Author firstAuthor) {
         publication.setFirstAuthor(firstAuthor);
         save(publication);
+    }
+
+    public Boolean deletePublication(Publication publication) {
+        if (publication.getPublicationAuthors() == null) {
+            publicationRepository.delete(publication);
+        }
+        else {
+            return false;
+        }
+        return true;
     }
 
 }
