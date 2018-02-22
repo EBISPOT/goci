@@ -105,7 +105,7 @@ public class PublicationService {
     }
 
     public Boolean deletePublication(Publication publication) {
-        if (publication.getPublicationAuthors() == null) {
+        if (publication.getPublicationAuthors().size() == 0) {
             publicationRepository.delete(publication);
         }
         else {

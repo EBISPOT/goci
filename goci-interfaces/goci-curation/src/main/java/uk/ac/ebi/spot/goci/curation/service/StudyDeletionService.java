@@ -5,12 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.service.*;
-import uk.ac.ebi.spot.goci.model.DeletedStudy;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Event;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -64,37 +60,37 @@ public class StudyDeletionService {
     public void deleteStudy(Study study, SecureUser user) {
 
         getLog().warn("Deleting study: ".concat(String.valueOf(study.getId())));
-        try {
-            publicationOperationsService.deletePublication(study.getPublicationId());
 
-            // Before we delete the study get its associated ancestry
-            Collection<Ancestry> ancestriesAttachedToStudy = ancestryRepository.findByStudyId(study.getId());
+        // Before we delete the study get its associated ancestry
+        Collection<Ancestry> ancestriesAttachedToStudy = ancestryRepository.findByStudyId(study.getId());
 
-            // Delete ancestry information linked to this study
-            for (Ancestry ancestry : ancestriesAttachedToStudy) {
-                ancestryRepository.delete(ancestry);
-            }
-
-            // WeeklyTracking, CuratorTracking and Note. Please use this method!
-            // Shared with === DataDeletionService ===
-            studyService.deleteRelatedInfoByStudy(study);
-
-            // Add deletion event
-            trackingOperationService.delete(study, user);
-            DeletedStudy deletedStudy = createDeletedStudy(study);
-
-            // THOR - Don't delete the publication and Author - OR check if there is just a publication.
-
-            // Delete study
-            studyRepository.delete(study);
-
-            // Save deleted study details
-            getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
-            deletedStudyRepository.save(deletedStudy);
+        // Delete ancestry information linked to this study
+        for (Ancestry ancestry : ancestriesAttachedToStudy) {
+            ancestryRepository.delete(ancestry);
         }
-        catch (Exception e) {
-            getLog().error(e.getMessage());
-        }
+
+        // WeeklyTracking, CuratorTracking and Note. Please use this method!
+        // Shared with === DataDeletionService ===
+        studyService.deleteRelatedInfoByStudy(study);
+
+        // Add deletion event
+        trackingOperationService.delete(study, user);
+        DeletedStudy deletedStudy = createDeletedStudy(study);
+
+        // THOR - Don't delete the publication and Author - OR check if there is just a publication.
+        Publication publication = study.getPublicationId();
+        study.setPublicationId(null);
+        studyRepository.save(study);
+        // Delete study
+        studyRepository.delete(study);
+
+
+        publicationOperationsService.deletePublicationWithNoStudies(publication);
+
+        // Save deleted study details
+        getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
+        deletedStudyRepository.save(deletedStudy);
+
     }
 
     /**

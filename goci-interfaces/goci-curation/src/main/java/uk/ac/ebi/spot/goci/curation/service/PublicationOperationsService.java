@@ -230,12 +230,12 @@ public class PublicationOperationsService {
         return success;
     }
 
-    public void deletePublication(Publication publication) throws Exception{
-        publicationAuthorsService.deleteByPublication(publication);
-        Boolean delete = publicationService.deletePublication(publication);
-        if (!delete) {
-            throw new Exception("Publication not deleted.");
+    // Delete the publication if there are no studies linked.
+    // Other issue you can import it again or duplicate it.
+    public void deletePublicationWithNoStudies(Publication publication) {
+        if (publication.getStudies().size() == 0) {
+            publicationAuthorsService.deleteByPublication(publication);
+            Boolean delete = publicationService.deletePublication(publication);
         }
     }
-
 }

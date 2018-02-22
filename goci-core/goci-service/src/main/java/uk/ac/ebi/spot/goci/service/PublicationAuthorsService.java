@@ -8,6 +8,7 @@ import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.PublicationAuthors;
 import uk.ac.ebi.spot.goci.repository.PublicationAuthorsRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -53,10 +54,8 @@ public class PublicationAuthorsService {
     }
 
     public void deleteByPublication(Publication publication) {
-        Collection<PublicationAuthors> listOfAuthors = publication.getPublicationAuthors();
-        for (PublicationAuthors publicationAuthor: listOfAuthors) {
-            publicationAuthorsRepository.delete(publicationAuthor);
-        }
+        publicationAuthorsRepository.deleteByPublicationId(publication.getId());
+        publication.setPublicationAuthors(new ArrayList<PublicationAuthors>());
     }
 
     public void setSort(Author author, Publication publication, Integer sort) {

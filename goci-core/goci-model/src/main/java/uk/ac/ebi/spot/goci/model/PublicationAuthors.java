@@ -64,6 +64,8 @@ public class PublicationAuthors {
     }
 
     public Integer getSort() { return sort; }
+
+    public PublicationAuthorsPk getPublicationAuthorsPk() { return publicationAuthorsPk; }
 }
 
 
