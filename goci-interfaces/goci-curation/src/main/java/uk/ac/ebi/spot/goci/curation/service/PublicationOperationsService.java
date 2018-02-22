@@ -182,9 +182,7 @@ public class PublicationOperationsService {
                     Publication publication = importSinglePublication(pubmedId, true);
                     Study importedStudy = new Study();
                     importedStudy.setPublicationId(publication);
-                    studyService.save(importedStudy);
                     Study savedStudy = studyOperationsService.createStudy(importedStudy,currentUser);
-
 
                     pubmedResult.put("pubmedId", pubmedId);
                     pubmedResult.put("author", savedStudy.getPublicationId().getFirstAuthor().getFullname());

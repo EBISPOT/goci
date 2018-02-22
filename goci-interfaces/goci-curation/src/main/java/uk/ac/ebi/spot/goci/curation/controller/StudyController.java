@@ -670,11 +670,33 @@ public class StudyController {
         return "redirect:/studies";
     }
 
+    // Duplicate a study
+    /*
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String duplicateStudy(@PathVariable Long studyId,
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) {
+
+        // Find study user wants to duplicate, based on the ID
+        Study studyToDuplicate = studyRepository.findOne(studyId);
+        Study duplicateStudy = studyDuplicationService.duplicateStudy(studyToDuplicate,
+                                                                      currentUserDetailsService.getUserFromRequest(
+                                                                              request));
+
+        // Add duplicate message
+        String message =
+                "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
+        redirectAttributes.addFlashAttribute("duplicateMessage", message);
+
+        return "redirect:/studies/" + duplicateStudy.getId();
+    }
+    */
+
     // Duplicate a study GET form
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String duplicateStudyGet(Model model, @PathVariable Long studyId,
-                                    RedirectAttributes redirectAttributes,
-                                    HttpServletRequest request) {
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) {
 
         Study studyToDuplicate = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToDuplicate);
@@ -687,7 +709,7 @@ public class StudyController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<String> duplicateStudyPost(@PathVariable Long studyId,
-                                                                   @RequestBody String tagsNoteList, HttpServletRequest request) {
+            @RequestBody String tagsNoteList, HttpServletRequest request) {
 
         String result = "";
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -704,6 +726,8 @@ public class StudyController {
 
         return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
     }
+
+
 
     // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
