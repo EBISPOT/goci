@@ -197,7 +197,7 @@ public class StudyController {
         // Search by author option available from landing page
         // THOR
         if (author != null && !author.isEmpty()) {
-            studyPage = studyRepository.findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(author,
+            studyPage = studyRepository.findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(author,
                             constructPageSpecification(page - 1, sort));
             filters = filters + "&author=" + author;
             studySearchFilter.setAuthor(author);

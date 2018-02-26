@@ -20,8 +20,8 @@ public interface PublicationRepository extends JpaRepository<Publication, Long> 
     // THOR to change
     // Custom query to get list of study authors
     @RestResource(exported = false)
-    @Query(value ="select distinct a.fullname from Publication p, Author a where a.id=p.first_author_id " +
-            "order by a.fullname asc",
+    @Query(value ="select distinct a.fullname_standard from Publication p, Author a where a.id=p.first_author_id " +
+            "order by a.fullname_standard asc",
             nativeQuery = true) List<String> findAllStudyAuthors();
 
 

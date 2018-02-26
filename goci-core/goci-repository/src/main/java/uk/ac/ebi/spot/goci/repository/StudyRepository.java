@@ -109,6 +109,8 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     //Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
     Page<Study> findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(String author, Pageable pageable);
 
+    @RestResource(exported = false)
+    Page<Study> findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(String author, Pageable pageable);
 
     @RestResource(exported = false)
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();

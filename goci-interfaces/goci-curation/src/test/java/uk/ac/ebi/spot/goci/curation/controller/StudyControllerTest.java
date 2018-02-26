@@ -24,7 +24,6 @@ import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
-import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;

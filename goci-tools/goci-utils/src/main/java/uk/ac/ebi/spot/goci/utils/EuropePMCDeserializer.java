@@ -115,11 +115,19 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
         //publication.setPublicationDate(root.get("firstPublicationDate").asText());
         publication.setPublication(root.get("journalInfo").get("journal").get("medlineAbbreviation").asText());
         publication.setTitle(root.get("title").asText());
-        //publication.setListAuthors(root.get("authorString").asText());
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        String datePublication = root.get("firstPublicationDate").asText();
+        /** Priority to eletronicDate. **/
+        String datePublication="";
+        if (root.has("electronicPublicationDate")) {
+            datePublication = root.get("electronicPublicationDate").asText();
+        }
+        else {
+            if (root.get("journalInfo").has("printPublicationDate")) {
+                datePublication = root.get("journalInfo").get("printPublicationDate").asText();
+            }
+        }
 
         if (datePublication.contains("/")) {
             datePublication = datePublication.replace("/", "-");
@@ -132,6 +140,7 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
         catch (ParseException e1) {
             e1.printStackTrace();
         }
+
         publication.setPublicationDate(new Date(studyDate.getTime()));
 
         return publication;
