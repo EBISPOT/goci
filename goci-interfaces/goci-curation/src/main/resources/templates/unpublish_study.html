@@ -77,7 +77,7 @@
                     <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
-                        <input type="text" th:field="*{author}" class="form-control" id="author"/>
+                        <input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author"/>
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                     <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" th:field="*{title}"/>
+                        <input type="text" class="form-control" id="title" th:field="*{publicationId.title}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -93,21 +93,21 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="publication"
-                               th:field="*{publication}"/>
+                               th:field="*{publicationId.publication}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
+                        <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationDate}"/>
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}"/>
                     </div>
                 </div>
 
