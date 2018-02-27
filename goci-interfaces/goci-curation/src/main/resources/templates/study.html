@@ -207,12 +207,17 @@
                     <label class="control-label col-md-2">List of Authors</label>
 
                     <div class="col-md-10 static-field">
+
                         <p th:inline="text" th:each="orderedAuthor,iter : *{publicationId.publicationAuthors}" th:remove="tag">
+                        <div th:unless="${study.housekeeping.isPublished}" th:remove="tag">
                             <a th:onclick="'javascript:changeFirstAuthor('+${study.id}+','+ ${orderedAuthor.author.id} +',\''+${orderedAuthor.author.fullname}+'\');'" th:title="'Change First Author to '+${orderedAuthor.author.fullname}">
                                 <span class="glyphicon glyphicon-pencil color-primary-bold"></span>
-                            </a>[[${orderedAuthor.author.fullname}]]<sup>&nbsp;[[${orderedAuthor.sort}]]</sup>
+                            </a>
+                        </div>
+                            [[${orderedAuthor.author.fullname}]]<sup>&nbsp;[[${orderedAuthor.sort}]]</sup>
                             <span th:unless="${iter.last}" th:remove="tag">,&nbsp;</span>
                         </p>
+
                     </div>
                 </div>
 
