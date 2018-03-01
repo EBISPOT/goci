@@ -93,34 +93,34 @@ $(document).ready(function() {
         }
     });
 
-    $('.diseasetrait-toggle').click(function() {
-        if ($('#diseasetrait-summaries').hasClass('more-results')) {
+    $('.efotrait-toggle').click(function() {
+        if ($('#efotrait-summaries').hasClass('more-results')) {
             console.log("More results to load");
-            loadAdditionalResults("diseasetrait", false);
+            loadAdditionalResults("efotrait", false);
             $(this).empty().text("Show fewer results");
 
         }
         else {
             $(this).empty().text("Show more results");
-            $('#diseasetrait-summaries').addClass('more-results');
+            $('#efotrait-summaries').addClass('more-results');
             if ($('#filter-form').hasClass('in-use')) {
                 doFiltering();
             }
-            else if ($('#diseasetrait-summaries').find('th').find('span.sorted').length != 0) {
-                var id = $('#diseasetrait-summaries').find('span.sorted').parent('th').attr('id');
+            else if ($('#efotrait-summaries').find('th').find('span.sorted').length != 0) {
+                var id = $('#efotrait-summaries').find('span.sorted').parent('th').attr('id');
                 var field = id;
 
                 if (id.indexOf('-') != -1) {
                     field = id.split('-')[0];
                 }
 
-                if ($('#diseasetrait-summaries').find('span.sorted').hasClass('asc')) {
+                if ($('#efotrait-summaries').find('span.sorted').hasClass('asc')) {
                     field = field.concat('+asc');
                 }
                 else {
                     field = field.concat('+desc');
                 }
-                doSortingSearch("diseasetrait", field, id);
+                doSortingSearch("efotrait", field, id);
             }
             else {
                 loadResults();
@@ -257,11 +257,11 @@ function addResults(data, expand, id) {
             }
         }
 
-        else if (data.responseHeader.params.fq == "resourcename:diseasetrait" ||
-                $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1) {
-            console.log("Processing diseasetraits");
-            var traitTable = $('#diseasetrait-table-body').empty();
-            $('#diseasetrait-summaries').removeClass('more-results');
+        else if (data.responseHeader.params.fq == "resourcename:efotrait" ||
+                $.inArray("resourcename:efotrait", data.responseHeader.params.fq) != -1) {
+            console.log("Processing efotrait");
+            var traitTable = $('#efotrait-table-body').empty();
+            $('#efotrait-summaries').removeClass('more-results');
 
             for (var j = 0; j < documents.length; j++) {
                 try {

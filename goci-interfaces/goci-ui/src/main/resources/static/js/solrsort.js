@@ -189,8 +189,8 @@ function processSortedData(data, id) {
 
                 }
             }
-            else if (group.groupValue == "diseasetrait") {
-                var traitTable = $('#diseasetrait-table-body').empty();
+            else if (group.groupValue == "efotrait") {
+                var traitTable = $('#efotrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
                     try {
                         var doc = group.doclist.docs[k];
@@ -201,9 +201,9 @@ function processSortedData(data, id) {
                     }
                 }
                 if (group.doclist.numFound > 5) {
-                    $('#diseasetrait-summaries .table-toggle').show();
-                    $('#diseasetrait-summaries').addClass("more-results");
-                    $('.diseasetrait-toggle').empty().text("Show more results");
+                    $('#efotrait-summaries .table-toggle').show();
+                    $('#efotrait-summaries').addClass("more-results");
+                    $('.efotrait-toggle').empty().text("Show more results");
 
                 }
             }

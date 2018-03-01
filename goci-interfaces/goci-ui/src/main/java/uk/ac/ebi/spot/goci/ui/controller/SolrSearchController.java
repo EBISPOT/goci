@@ -354,8 +354,8 @@ public class SolrSearchController {
         }
         if (traits != null && traits.length != 0) {
             getLog().trace(String.valueOf(traits));
-
-            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+            addFilterQuery(solrSearchBuilder, "mappedLabel", traits);
+            //addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
         addDefaultSort(solrSearchBuilder);
@@ -1029,6 +1029,34 @@ public class SolrSearchController {
 
         outputWriter.write(file);
         outputWriter.flush();
+    }
+
+    @RequestMapping(value = "api/search/parentSearch", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public void doParentSearchSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "sort", required = false) String sort,
+            HttpServletResponse response) throws IOException {
+
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        //fq=-resourcename%3AefoTrait&fl=groupValue&wt=json&indent=true&group=true&group.field=traitName_s&fl=mappedUri,synonym
+        //fq=-resourcename%3AefoTrait&rows=10000&group=true&group.limit=1000&group.field=traitName_s&q=soranzo
+        addFilterQuery(solrSearchBuilder, "-resourcename", "efoTrait");
+        addGrouping(solrSearchBuilder, "traitName_s", 1000);
+        addQuery(solrSearchBuilder, "fl=mappedUri,synonym");
+        addQuery(solrSearchBuilder, query);
+
+        System.out.println(solrSearchBuilder.toString());
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
     }
 
 
