@@ -745,6 +745,11 @@ public class SolrSearchController {
                 .append("&group.field=").append(groupBy);
     }
 
+    private void addFields(StringBuilder solrSearchBuilder, String fields) {
+        solrSearchBuilder.append("&fl=").append(fields);
+    }
+
+
     private void addRowsAndPage(StringBuilder solrSearchBuilder, int maxResults, int page) {
         solrSearchBuilder.append("&rows=").append(maxResults)
                 .append("&start=").append((page - 1) * maxResults);
@@ -1047,10 +1052,10 @@ public class SolrSearchController {
             addJsonpCallback(solrSearchBuilder, callbackFunction);
         }
         //fq=-resourcename%3AefoTrait&fl=groupValue&wt=json&indent=true&group=true&group.field=traitName_s&fl=mappedUri,synonym
-        //fq=-resourcename%3AefoTrait&rows=10000&group=true&group.limit=1000&group.field=traitName_s&q=soranzo
+        //q=text%3ASoranzo&fq=-resourcename%3AefoTrait&fl=groupValue&wt=json&indent=true&group=true&group.field=traitName_s&fl=mappedUri,synonym
         addFilterQuery(solrSearchBuilder, "-resourcename", "efoTrait");
-        addGrouping(solrSearchBuilder, "traitName_s", 1000);
-        addQuery(solrSearchBuilder, "fl=mappedUri,synonym");
+        addGrouping(solrSearchBuilder, "traitName_s", 1);
+        addFields(solrSearchBuilder, "efoLink,mappedUri,synonym,groupValue,parent,mappedLabel");
         addQuery(solrSearchBuilder, query);
 
         System.out.println(solrSearchBuilder.toString());

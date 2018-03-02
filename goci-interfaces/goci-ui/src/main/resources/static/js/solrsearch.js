@@ -333,7 +333,6 @@ function processData(data) {
     
     $('#loadingResults').hide();
     if (!efoTraitsExists) {
-        console.log("seconda query");
         addTraits();
     }
     console.log("Data display complete");
