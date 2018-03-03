@@ -11,7 +11,7 @@ function addTraits() {
     $.getJSON('api/search/parentSearch',
         {
             'q': searchTerm,
-            'max': 1000
+            'max': 5
         })
         .done(function (data) {
             addResultsToTrait(data, id);
@@ -31,27 +31,32 @@ function addResultsToTrait(data, id) {
            console.log("Processing efotrait");
             var traitTable = $('#efotrait-table-body').empty();
             $('#efotrait-summaries').removeClass('more-results');
+    
+            var countArray = ["efotrait", documents.length];
+            updateCountBadges(countArray);
             
             for (var j = 0; j < documents.length; j++) {
-                try {
-                    var doc = documents[j];
-                    processTraitNoEFODocs(doc, traitTable);
-                }
-                catch (ex) {
-                    console.log("Failure to process document " + ex);
+                if (j<5) {
+                    try {
+                        var doc = documents[j];
+                        processTraitNoEFODocs(doc, traitTable);
+                    }
+                    catch (ex) {
+                        console.log("Failure to process document " + ex);
+                    }
                 }
             }
+            $('#efotrait-summaries .table-toggle').show();
+            $('#efotrait-summaries').addClass("more-results");
+            $('.efotrait-toggle').empty().text("Show more results");
     }
-    $('#efotrait-summaries').show();
 }
 
 
 function processTraitNoEFODocs(doc, table) {
     var row = $("<tr>");
+    
     if (doc.doclist.docs.length > 0 ) {
-        var traitsearch = "<span><a href='search?query=".concat(doc.groupValue).concat("'>").concat(doc.groupValue).concat(
-            "</a></span>");
-        row.append($("<td>").html(traitsearch));
     
         var elem = doc.doclist.docs[0]
         var efo = '';
@@ -76,9 +81,35 @@ function processTraitNoEFODocs(doc, table) {
             efo = "N/A";
         }
         row.append($("<td>").html(efo));
-
-    }
     
+        var traitsearch = "<span><a href='search?query=".concat(doc.groupValue).concat("'>").concat(doc.groupValue).concat(
+            "</a></span>");
+        row.append($("<td>").html(traitsearch));
+    
+        var syns = '';
+        if (elem.synonym != null) {
+            for (var j = 0; j < elem.synonym.length; j++) {
+                var synonymsearch = "<span><a href='search?query=".concat(elem.synonym[j]).concat("'>").concat(
+                    elem.synonym[j]).concat("</a></span>");
+                if (syns == '') {
+                    syns = synonymsearch;
+                }
+                else if (j > 4) {
+                    syns = syns.concat(", [...]");
+                    break;
+                }
+                else {
+                    syns = syns.concat(", ").concat(synonymsearch);
+                }
+            }
+        }
+    
+        row.append($("<td>").html(syns));
+    
+    
+    }
     table.append(row);
+    
+    
 }
 
