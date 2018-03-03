@@ -709,9 +709,6 @@ function processTrait(efotrait, table) {
     //    row.addClass('collapse');
     //    row.addClass('hidden-resource');
     //}
-    var traitsearch = "<span><a href='search?query=".concat(efotrait.mappedLabel[0]).concat("'>").concat(efotrait.mappedLabel[0]).concat(
-            "</a></span>");
-    row.append($("<td>").html(traitsearch));
 
     var efo = '';
     if (efotrait.efoLink != null) {
@@ -734,7 +731,11 @@ function processTrait(efotrait, table) {
         efo = "N/A";
     }
     row.append($("<td>").html(efo));
-
+    
+    var traitsearch = "<span><a href='search?query=".concat(efotrait.mappedLabel[0]).concat("'>").concat(efotrait.mappedLabel[0]).concat(
+        "</a></span>");
+    row.append($("<td>").html(traitsearch));
+    
     var syns = '';
     if (efotrait.synonym != null) {
         for (var j = 0; j < efotrait.synonym.length; j++) {
@@ -754,35 +755,6 @@ function processTrait(efotrait, table) {
     }
 
     row.append($("<td>").html(syns));
-
-    var studies = '';
-
-    if (efotrait.study_publicationLink != null) {
-        for (var d = 0; d < efotrait.study_publicationLink.length; d++) {
-            var data = efotrait.study_publicationLink[d].split("|");
-            var author = data[0];
-            var authorLabel = author.concat(", ").concat(data[1]);
-            var pubmedid = data[2];
-
-            var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
-            var searchlink = "<span><a href='search?query=".concat(author).concat("'>").concat(authorLabel).concat(
-                    "</a></span>");
-            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-                    "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-            if (studies == '') {
-                studies = studies.concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
-            }
-            else {
-                studies = studies.concat(",<br>").concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
-            }
-        }
-    }
-    else {
-        studies = 'N/A';
-    }
-
-    row.append($("<td>").html(studies));
 
     table.append(row);
 }
