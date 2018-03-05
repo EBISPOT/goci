@@ -699,7 +699,9 @@ function processAssociation(association, table) {
             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
-
+    var accessionId = association.accessionId;
+    row.append($("<td>").html(accessionId));
+    
     table.append(row);
 }
 
