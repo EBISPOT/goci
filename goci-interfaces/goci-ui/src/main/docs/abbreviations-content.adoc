@@ -553,6 +553,9 @@ G3D: grade 3 diarrhea
 GBA: glucocerebrosiadase
 
 
+GFR: glomerular filtration rate
+
+
 GGT: glutamyltranspeptidase
 
 
