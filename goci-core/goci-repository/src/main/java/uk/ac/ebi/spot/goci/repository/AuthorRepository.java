@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.stereotype.Repository;
 import uk.ac.ebi.spot.goci.model.Author;
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     @RestResource(exported = false)

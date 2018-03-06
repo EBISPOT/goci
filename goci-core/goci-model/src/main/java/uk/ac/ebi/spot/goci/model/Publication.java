@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,6 +29,7 @@ public class Publication {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Please enter a study date in format YYYY-MM-DD")
+    @JsonFormat(pattern="YYYY-MM-dd")
     private Date publicationDate;
 
     @NotBlank(message = "Please enter a publication")
@@ -36,19 +39,22 @@ public class Publication {
     private String title;
 
     @OneToMany(mappedBy = "publicationId")
+    @JsonIgnore
     private Collection<Study> studies;
 
     @OneToOne
-    @JsonIgnore
+    @JsonProperty("author")
     private Author firstAuthor;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED", updatable = false)
+    @JsonIgnore
     private Date createdAt;
 
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED")
+    @JsonIgnore
     private Date updatedAt;
 
     @PrePersist
@@ -66,10 +72,12 @@ public class Publication {
     @JoinTable(name = "PUBLICATION_AUTHORS",
             joinColumns = @JoinColumn(name = "PUBLICATION_ID"),
             inverseJoinColumns = @JoinColumn(name = "AUTHOR_ID"))
+    @JsonIgnore
     private Collection<Author> authors = new ArrayList<>();
 
 
     @OneToMany(mappedBy="publication",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PublicationAuthors> publicationAuthors;
 
     // JPA no-args constructor
@@ -126,8 +134,10 @@ public class Publication {
 
     public void setStudies(Collection<Study> studies) { this.studies = studies; }
 
+    @JsonProperty("author")
     public void setFirstAuthor(Author firstAuthor) { this.firstAuthor =firstAuthor; }
 
+    @JsonProperty("author")
     public Author getFirstAuthor() { return firstAuthor; }
 
     public List<PublicationAuthors> getPublicationAuthors() {

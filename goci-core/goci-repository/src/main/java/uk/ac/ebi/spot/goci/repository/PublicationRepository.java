@@ -10,10 +10,10 @@ import uk.ac.ebi.spot.goci.model.Publication;
 import java.util.Collection;
 import java.util.List;
 
-@RepositoryRestResource
+@RepositoryRestResource(exported = false)
 public interface PublicationRepository extends JpaRepository<Publication, Long> {
 
-    @RestResource
+    @RestResource(exported = false)
     Publication findByPubmedId(String pubmedId);
 
 

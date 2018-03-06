@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -111,7 +113,7 @@ public class Study implements Trackable {
     private Collection<WeeklyTracking> weeklyTrackings;
 
     @OneToOne(cascade = {CascadeType.ALL})
-    @JsonIgnore
+    @JsonManagedReference("publicationInfo")
     @JoinColumn(name = "publication_id")
     private Publication publicationId;
 
@@ -438,7 +440,9 @@ public class Study implements Trackable {
         this.openTargets = openTargets;
     }
 
+    @JsonProperty("publicationInfo")
     public Publication getPublicationId() { return publicationId; }
 
+    @JsonProperty("publicationInfo")
     public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
 }
