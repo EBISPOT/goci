@@ -81,10 +81,10 @@
                     <!-- Use a conditional here as a study can have a null attributes-->
                     <!-- Using thymeleaf elvis operator for string, date attributes-->
 
-                    <td th:text="${study.author} ?: '' "></td>
-                    <td th:text="${study.title} ?: ''"></td>
-                    <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
-                    <td><p th:text="${study.pubmedId} ?: ''"></p>
+                    <td th:text="${study.publicationId.firstAuthor.fullname} ?: '' "></td>
+                    <td th:text="${study.publicationId.title} ?: ''"></td>
+                    <td th:text="${study.publicationId.publicationDate != null } ? ${#dates.format(study.publicationId.publicationDate,'yyyy-MM-dd')} : ''"></td>
+                    <td><p th:text="${study.publicationId.pubmedId} ?: ''"></p>
 
                         <div class="btn-group">
                             <button type="button"
@@ -94,17 +94,17 @@
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.publicationId.pubmedId})}"
                                        target="_blank">View in Europe PMC</a></li>
                                 <li>
-                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.pubmedId})}"
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.publicationId.pubmedId})}"
                                        target="_blank">View in PubMed</a></li>
 
                             </ul>
                         </div>
                     </td>
 
-                    <td th:text="${study.publication} ?: ''"></td>
+                    <td th:text="${study.publicationId.publication} ?: ''"></td>
                     <td th:text="${study.studyDiseaseTrait} ?: ''"></td>
                     <td>
                         <span th:utext="'Study: '+ ${study.studyEfoTrait} ?: ''"></span>

@@ -154,20 +154,21 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
                 getDataFactory().getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 
         // assert author relation
-        OWLLiteral author = getDataFactory().getOWLLiteral(study.getAuthor());
+        // THOR
+        OWLLiteral author = getDataFactory().getOWLLiteral(study.getPublicationId().getFirstAuthor().getFullname());
         OWLDataPropertyAssertionAxiom author_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_author, studyIndiv, author);
         AddAxiom add_author = new AddAxiom(ontology, author_relation);
         getManager().applyChange(add_author);
 
         // assert publication_date relation
-        if (study.getPublicationDate() != null) {
+        if (study.getPublicationId().getPublicationDate() != null) {
             String rfcTimezone =
-                    new SimpleDateFormat("Z").format(study.getPublicationDate());
+                    new SimpleDateFormat("Z").format(study.getPublicationId().getPublicationDate());
             String xsdTimezone =
                     rfcTimezone.substring(0, 3).concat(":").concat(rfcTimezone.substring(3, rfcTimezone.length()));
             String xmlDatetimeStr =
-                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(study.getPublicationDate()) + xsdTimezone;
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(study.getPublicationId().getPublicationDate()) + xsdTimezone;
             OWLLiteral publication_date = getDataFactory().getOWLLiteral(xmlDatetimeStr, OWL2Datatype.XSD_DATE_TIME);
             OWLDataPropertyAssertionAxiom publication_date_relation =
                     getDataFactory().getOWLDataPropertyAssertionAxiom(has_publication_date,
@@ -178,7 +179,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
         }
 
         // assert pubmed_id relation
-        OWLLiteral pubmed_id = getDataFactory().getOWLLiteral(study.getPubmedId());
+        OWLLiteral pubmed_id = getDataFactory().getOWLLiteral(study.getPublicationId().getPubmedId());
         OWLDataPropertyAssertionAxiom pubmed_id_relation =
                 getDataFactory().getOWLDataPropertyAssertionAxiom(has_pubmed_id, studyIndiv, pubmed_id);
         AddAxiom add_pubmed_id = new AddAxiom(ontology, pubmed_id_relation);

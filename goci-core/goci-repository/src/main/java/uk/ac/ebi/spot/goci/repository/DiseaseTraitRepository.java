@@ -52,6 +52,6 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             Long associationId);
 
     @RestResource(path = "pubmedId", rel = "pubmedID")
-    Page<DiseaseTrait> findByStudiesPubmedId(String pubmedId, Pageable pageable);
+    Page<DiseaseTrait> findByStudiesPublicationIdPubmedId(String pubmedId, Pageable pageable);
 
 }

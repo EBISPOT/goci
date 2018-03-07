@@ -4,6 +4,15 @@ $(document).ready(function() {
     //    $('#beta-icon').show();
     //}
 
+    
+    $("a").tooltip({
+        'selector': '',
+        'placement': 'top',
+        'container':'body'
+    });
+    
+    $('.auto-tooltip').tooltip();
+    
     $('#search-box').change(function() {
         doSearch();
     });

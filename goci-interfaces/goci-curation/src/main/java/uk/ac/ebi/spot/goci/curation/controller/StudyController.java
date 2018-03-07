@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +35,9 @@ import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
+import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
-import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
-import uk.ac.ebi.spot.goci.repository.AncestryRepository;
-import uk.ac.ebi.spot.goci.repository.GenotypingTechnologyRepository;
-import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
-import uk.ac.ebi.spot.goci.repository.PlatformRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.repository.UnpublishReasonRepository;
+import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
@@ -54,12 +46,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.Map.Entry.*;
 
 /**
  * Created by emma on 20/11/14.
@@ -86,9 +75,10 @@ public class StudyController {
     private AncestryRepository ancestryRepository;
     private UnpublishReasonRepository unpublishReasonRepository;
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
+    private PublicationOperationsService publicationOperationsService;
 
     // Services
-    private DefaultPubMedSearchService defaultPubMedSearchService;
+    //private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
     private CurrentUserDetailsService currentUserDetailsService;
@@ -118,7 +108,6 @@ public class StudyController {
                            AncestryRepository ancestryRepository,
                            UnpublishReasonRepository unpublishReasonRepository,
                            GenotypingTechnologyRepository genotypingTechnologyRepository,
-                           DefaultPubMedSearchService defaultPubMedSearchService,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
                            CurrentUserDetailsService currentUserDetailsService,
@@ -126,7 +115,8 @@ public class StudyController {
                            StudyDuplicationService studyDuplicationService,
                            StudyDeletionService studyDeletionService,
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
-                           StudyUpdateService studyUpdateService) {
+                           StudyUpdateService studyUpdateService,
+                           PublicationOperationsService publicationOperationsService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -138,7 +128,6 @@ public class StudyController {
         this.ancestryRepository = ancestryRepository;
         this.unpublishReasonRepository = unpublishReasonRepository;
         this.genotypingTechnologyRepository = genotypingTechnologyRepository;
-        this.defaultPubMedSearchService = defaultPubMedSearchService;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
         this.currentUserDetailsService = currentUserDetailsService;
@@ -147,6 +136,7 @@ public class StudyController {
         this.studyDeletionService = studyDeletionService;
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
+        this.publicationOperationsService = publicationOperationsService;
     }
 
     /* All studies and various filtered lists */
@@ -168,6 +158,7 @@ public class StudyController {
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
+
 
         // Return all studies ordered by date if no page number given
         if (page == null) {
@@ -194,19 +185,20 @@ public class StudyController {
         // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
         List<Study> studies = null;
 
-
+        // THOR
         // Search by pubmed ID option available from landing page
         if (pubmed != null && !pubmed.isEmpty()) {
             studyPage =
-                    studyRepository.findByPubmedId(pubmed, constructPageSpecification(page - 1, sort));
+                    studyRepository.findByPublicationIdPubmedId(pubmed, constructPageSpecification(page - 1, sort));
             filters = filters + "&pubmed=" + pubmed;
             studySearchFilter.setPubmedId(pubmed);
         }
 
         // Search by author option available from landing page
+        // THOR
         if (author != null && !author.isEmpty()) {
-            studyPage = studyRepository.findByAuthorContainingIgnoreCase(author, constructPageSpecification(page - 1,
-                                                                                                            sort));
+            studyPage = studyRepository.findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(author,
+                            constructPageSpecification(page - 1, sort));
             filters = filters + "&author=" + author;
             studySearchFilter.setAuthor(author);
         }
@@ -518,8 +510,6 @@ public class StudyController {
 
     }
 
-
-
    /* New Study:
    *
    * Adding a study is synchronised to ensure the method can only be accessed once.
@@ -537,42 +527,35 @@ public class StudyController {
         return "add_study";
     }
 
-
     // Save study found by Pubmed Id
     // @ModelAttribute is a reference to the object holding the data entered in the form
-    @RequestMapping(value = "/new/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String importStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
+    @CrossOrigin
+    @RequestMapping(value = "/new/import", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<ArrayList<HashMap<String,String>>> importStudy(@RequestBody String pubmedIdForImport,
+                               HttpServletRequest request) {
+        ArrayList<HashMap<String,String>> result = new ArrayList<>();
+        SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        result = publicationOperationsService.importNewPublications(pubmedIdForImport, currentUser);
+
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+    }
+
+    // Option 2: move this functionality as JAVA migration.
+    @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
+    public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
                                            HttpServletRequest request,
                                            Model model)
             throws PubmedImportException, NoStudyDirectoryException {
 
-        // Remove whitespace
-        String pubmedId = pubmedIdForImport.getPubmedId().trim();
 
-        // Check if there is an existing study with the same pubmed id
-        Collection<Study> existingStudies = studyRepository.findByPubmedId(pubmedId);
-        if (existingStudies.size() > 0) {
-            throw new PubmedImportException();
-        }
+        publicationOperationsService.importPublicationsWithoutFirstAuthor();
 
-        else {
-            // Pass to importer
-            Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
-            Study savedStudy = studyOperationsService.createStudy(importedStudy,
-                                                                  currentUserDetailsService.getUserFromRequest(request));
+        return "redirect:/studies/";
 
-            // Create directory to store associated files
-            try {
-                studyFileService.createStudyDir(savedStudy.getId());
-            }
-            catch (NoStudyDirectoryException e) {
-                getLog().error("No study directory exception");
-                model.addAttribute("study", savedStudy);
-                return "error_pages/study_dir_failure";
-            }
-
-            return "redirect:/studies/" + savedStudy.getId();
-        }
     }
 
 
@@ -617,6 +600,7 @@ public class StudyController {
 
         Study studyToView = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToView);
+
         return "study";
     }
 
@@ -633,6 +617,23 @@ public class StudyController {
         redirectAttributes.addFlashAttribute("changesSaved", message);
         return "redirect:/studies/" + study.getId();
     }
+
+    //For @RequestParam we can use, @RequestParam(value="somevalue", required=false) and for optional params rather than a pathVariable
+    @CrossOrigin
+    @RequestMapping(value = "/{studyId}/changeFirstAuthor/{authorId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<HashMap<String,String>> changeFirstAuthor(@PathVariable(value="studyId") Long studyId,
+                                                                                  @PathVariable(value="authorId") Long authorId) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        HashMap<String, String> result = new HashMap<String, String>();
+        Boolean isChangeAuthor = publicationOperationsService.changeFirstAuthorByStudyId(studyId,authorId);
+        String key = (isChangeAuthor) ? "success": "error";
+        result.put(key, "");
+        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+    }
+
+
 
 
     // Delete an existing study
@@ -720,7 +721,7 @@ public class StudyController {
         result = studyDuplicationService.create(studyToDuplicate,tagsNoteList, secureUser);
 
         if (result == "") {
-            result =  new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPubmedId()).append("\"}").toString();
+            result =  new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPublicationId().getPubmedId()).append("\"}").toString();
         }
 
         return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
@@ -739,8 +740,8 @@ public class StudyController {
 
         if (assignee.getCuratorId() == null) {
             String blankAssignee =
-                    "Cannot assign a blank value as a curator for study: " + study.getAuthor() + ", " + " pubmed = " +
-                            study.getPubmedId();
+                    "Cannot assign a blank value as a curator for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
+                            study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
         }
         else {
@@ -764,8 +765,8 @@ public class StudyController {
 
         if (statusAssignment.getStatusId() == null) {
             String blankStatus =
-                    "Cannot assign a blank value as a status for study: " + study.getAuthor() + ", " + " pubmed = " +
-                            study.getPubmedId();
+                    "Cannot assign a blank value as a status for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
+                            study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
         }
         else {
@@ -1067,9 +1068,10 @@ public class StudyController {
     }
 
     // Authors
+    // THOR
     @ModelAttribute("authors")
     public List<String> populateAuthors() {
-        return studyRepository.findAllStudyAuthors(sortByAuthorAsc());
+        return publicationOperationsService.listFirstAuthors();
     }
 
 
@@ -1089,39 +1091,39 @@ public class StudyController {
     }
 
     private Sort sortByPublicationDateAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationDate"));
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publicationDate"));
     }
 
     private Sort sortByPublicationDateDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
     }
 
     private Sort sortByAuthorAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "author").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.firstAuthor.fullname").ignoreCase());
     }
 
     private Sort sortByAuthorDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "author").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.firstAuthor.fullname").ignoreCase());
     }
 
     private Sort sortByTitleAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "title").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.title").ignoreCase());
     }
 
     private Sort sortByTitleDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "title").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.title").ignoreCase());
     }
 
     private Sort sortByPublicationAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publication").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publication").ignoreCase());
     }
 
     private Sort sortByPublicationDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publication").ignoreCase());
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publication").ignoreCase());
     }
 
     private Sort sortByPubmedIdAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "pubmedId"));
+        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.pubmedId"));
     }
 
     private Sort sortByUserRequestedAsc() {
@@ -1141,7 +1143,7 @@ public class StudyController {
     }
 
     private Sort sortByPubmedIdDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.pubmedId"));
     }
 
     private Sort sortByDiseaseTraitAsc() {

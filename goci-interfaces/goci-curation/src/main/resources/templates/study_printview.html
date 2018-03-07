@@ -31,25 +31,25 @@
                         <tbody>
                         <tr>
                             <th>Author</th>
-                            <td th:text="${study.author} ?: '' "></td>
+                            <td th:text="${study.publicationId.firstAuthor.fullname} ?: '' "></td>
                         </tr>
                         <tr>
                             <th>Title</th>
-                            <td th:text="${study.title} ?: ''"></td>
+                            <td th:text="${study.publicationId.title} ?: ''"></td>
                         </tr>
 
                         <tr>
                             <th>Publication</th>
-                            <td th:text="${study.publication} ?: ''"></td>
+                            <td th:text="${study.publicationId.publication} ?: ''"></td>
                         </tr>
                         <tr>
                             <th>Pubmed Id</th>
-                            <td th:text="${study.pubmedId} ?: ''"></td>
+                            <td th:text="${study.publicationId.pubmedId} ?: ''"></td>
                         </tr>
 
                         <tr>
                             <th>Publication Date</th>
-                            <td th:text="${#calendars.format(study.publicationDate,'yyyy-MM-dd')} ?: ''"></td>
+                            <td th:text="${#calendars.format(study.publicationId.publicationDate,'yyyy-MM-dd')} ?: ''"></td>
                         </tr>
 
                         <tr>

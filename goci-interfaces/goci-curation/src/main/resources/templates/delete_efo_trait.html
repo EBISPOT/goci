@@ -107,9 +107,9 @@
                         <tbody>
                             <tr th:each="study : ${studies}">
                                 <td th:text="${study.id} ?: '' "></td>
-                                <td th:text="${study.author} ?: '' "></td>
-                                <td th:text="${study.title} ?: ''"></td>
-                                <td th:text="${study.pubmedId} ?: ''"></td>
+                                <td th:text="${study.publicationId.firstAuthor.fullname} ?: '' "></td>
+                                <td th:text="${study.publicationId.title} ?: ''"></td>
+                                <td th:text="${study.publicationId.pubmedId} ?: ''"></td>
                                 <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
                                           th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait} ) ?: ''"></span>
                                 </td>

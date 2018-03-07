@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -23,7 +24,7 @@ import java.util.List;
 
 
 @RepositoryRestResource
-public interface StudyRepository extends JpaRepository<Study, Long> {
+public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecificationExecutor {
 
     @RestResource(exported = false)
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
@@ -31,10 +32,12 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     @RestResource(exported = false)
     Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);
 
+    // THOR
     @RestResource(exported = false)
-    Collection<Study> findByPubmedId(String pubmedId);
+    Collection<Study> findByPublicationIdPubmedId(String pubmedId);
 
-    Page<Study> findByPubmedId(String pubmedId, Pageable pageable);
+    Page<Study> findByPublicationIdPubmedId(String pubmedId, Pageable pageable);
+
 
     // Pageable queries for filtering main page
     @RestResource(exported = false)
@@ -52,7 +55,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)
     // Custom query to find studies in reports table
-    @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationDate), 'MONTH'))) = :month")
+    @Query("select s from Study s where s.housekeeping.curator.id like :curator and s.housekeeping.curationStatus.id like :status and EXTRACT(YEAR FROM (TRUNC(TO_DATE(s.publicationId.publicationDate), 'YEAR'))) = :year and EXTRACT(MONTH FROM (TRUNC(TO_DATE(s.publicationId.publicationDate), 'MONTH'))) = :month")
     Page<Study> findByPublicationDateAndCuratorAndStatus(@Param("curator") Long curator, @Param("status") Long status,
                                                          @Param("year") Integer year,
                                                          @Param("month") Integer month, Pageable pageable);
@@ -105,12 +108,16 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
     Page<Study> findDistinctByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
 
 
+    // THOR to change
     // Custom query to get list of study authors
-    @RestResource(exported = false)
-    @Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
+    //@Query("select distinct s.author from Study s") List<String> findAllStudyAuthors(Sort sort);
 
-    @RestResource(path = "findByAuthor", rel = "findByAuthor")
-    Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
+    // THOR
+    //Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
+    Page<Study> findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(String author, Pageable pageable);
+
+    @RestResource(exported = false)
+    Page<Study> findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(String author, Pageable pageable);
 
     @RestResource(exported = false)
     List<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
@@ -157,5 +164,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @RestResource(exported = false)
     Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
+
+
 }
 

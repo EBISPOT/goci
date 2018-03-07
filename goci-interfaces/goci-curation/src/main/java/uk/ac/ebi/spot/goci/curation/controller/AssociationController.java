@@ -52,11 +52,7 @@ import uk.ac.ebi.spot.goci.curation.service.SnpInteractionAssociationService;
 import uk.ac.ebi.spot.goci.curation.service.StudyAssociationBatchDeletionEventService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.exception.SheetProcessingException;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationReport;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -73,14 +69,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -1295,10 +1284,13 @@ public class AssociationController {
             Date date = new Date();
             String now = dateFormat.format(date);
 
+            // THOR - A first authour might be a collective name (more 255chr)
+            Publication publication = study.getPublicationId();
+
             String fileName =
-                    study.getAuthor()
+                    publication.getFirstAuthor().getFullnameShort(30)
                             .concat("-")
-                            .concat(study.getPubmedId())
+                            .concat(publication.getPubmedId())
                             .concat("-")
                             .concat(now)
                             .concat(".tsv");

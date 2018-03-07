@@ -5,21 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
-import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.builder.CountryBuilder;
-import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.builder.GenotypingTechnologyBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Country;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.model.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -44,6 +35,21 @@ public class PublishStudyCheckServiceTest {
 
     @Mock
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
+
+
+    // THOR
+    private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
+            .setOrcid("0000-0002-0002-003").build();
+
+
+    // THOR
+    private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
+            .setPubmedId("1234569")
+            .setPublication("Testing is Awesome")
+            .setTitle("Pubmed TEST")
+            .setPublicationDate(new Date())
+            .setFirstAuthor(AUTHOR)
+            .build();
 
     private static final EfoTrait EFO1 =
             new EfoTraitBuilder().setId(987L)
@@ -90,6 +96,7 @@ public class PublishStudyCheckServiceTest {
 
     private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR =
             new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setAssociations(Collections.singletonList(ASS_APPROVED))
                     .setAncestries(Collections.singleton(AN_WITH_COR))
@@ -98,6 +105,7 @@ public class PublishStudyCheckServiceTest {
 
     private static final Study STUDY_NO_EFO_TRAIT =
             new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
                     .setAssociations(Collections.singletonList(ASS_NOT_APPROVED))
                     .setAncestries(Collections.singleton(AN_NO_COR))
                     .setGenotypingTechnologies(Collections.singleton(GT_GENOMWIDE_ARRAY))
@@ -105,6 +113,7 @@ public class PublishStudyCheckServiceTest {
 
     private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY =
             new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setAssociations(Collections.singletonList(ASS_APPROVED))
                     .setAncestries(Collections.singleton(AN_WITH_COR))

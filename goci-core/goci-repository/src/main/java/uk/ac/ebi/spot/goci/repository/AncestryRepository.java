@@ -19,9 +19,9 @@ public interface AncestryRepository extends JpaRepository<Ancestry, Long> {
 
     Collection<Ancestry> findByStudyId(Long studyId);
 
-    Collection<Ancestry> findByStudyPubmedIdAndType(String pubmedId, String type);
+    Collection<Ancestry> findByStudyPublicationIdPubmedIdAndType(String pubmedId, String type);
 
-    Collection<Ancestry> findByStudyPubmedId(String pubmedId);
+    Collection<Ancestry> findByStudyPublicationIdPubmedId(String pubmedId);
 
     Collection<Ancestry> findByAncestralGroupsAncestralGroup(String ancestralGroup);
 }

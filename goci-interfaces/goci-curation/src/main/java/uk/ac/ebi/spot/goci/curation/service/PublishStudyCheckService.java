@@ -61,15 +61,15 @@ public class PublishStudyCheckService {
 
         if (targetedArrayStudy) {
             message = "Study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
+                    + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", "
+                    + " pubmed = " + study.getPublicationId().getPubmedId()
                     + ", is a targeted array, other non-genome-wide or sequencing study and should not be published.";
         }
 
         else if(snpNotApproved == 1 || !efoTermsAssigned || missingCoR || missingGenotypingTechnology){
             message = "Study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
+                    + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", "
+                    + " pubmed = " + study.getPublicationId().getPubmedId()
                     + " requires review before publication because ";
 
             if(snpNotApproved == 1){

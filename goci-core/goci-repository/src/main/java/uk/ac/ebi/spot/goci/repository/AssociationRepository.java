@@ -32,7 +32,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     Collection<Association> findByStudyAccessionId(String accessionId);
 
     @RestResource(path = "findByPubmedId", rel = "findByPubmedId")
-    Collection<Association> findByStudyPubmedId(String pubmedId);
+    Collection<Association> findByStudyPublicationIdPubmedId(String pubmedId);
 
     @RestResource(exported = false)
     Collection<Association> findByStudyId(long studyId, Sort sort);

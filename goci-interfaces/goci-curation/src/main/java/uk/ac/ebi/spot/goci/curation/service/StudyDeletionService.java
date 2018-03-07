@@ -5,12 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.service.*;
-import uk.ac.ebi.spot.goci.model.DeletedStudy;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Event;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -33,6 +29,7 @@ public class StudyDeletionService {
     private StudyRepository studyRepository;
     private DeletedStudyRepository deletedStudyRepository;
     private StudyService studyService;
+    private PublicationOperationsService publicationOperationsService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,12 +42,14 @@ public class StudyDeletionService {
                                 @Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                                 StudyRepository studyRepository,
                                 DeletedStudyRepository deletedStudyRepository,
-                                StudyService studyService) {
+                                StudyService studyService,
+                                PublicationOperationsService publicationOperationsService) {
         this.ancestryRepository = ancestryRepository;
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.deletedStudyRepository = deletedStudyRepository;
         this.studyService = studyService;
+        this.publicationOperationsService = publicationOperationsService;
     }
     /**
      * Delete a study
@@ -78,12 +77,20 @@ public class StudyDeletionService {
         trackingOperationService.delete(study, user);
         DeletedStudy deletedStudy = createDeletedStudy(study);
 
+        // THOR - Don't delete the publication and Author - OR check if there is just a publication.
+        Publication publication = study.getPublicationId();
+        study.setPublicationId(null);
+        studyRepository.save(study);
         // Delete study
         studyRepository.delete(study);
+
+
+        publicationOperationsService.deletePublicationWithNoStudies(publication);
 
         // Save deleted study details
         getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
         deletedStudyRepository.save(deletedStudy);
+
     }
 
     /**
@@ -95,8 +102,9 @@ public class StudyDeletionService {
     private DeletedStudy createDeletedStudy(Study study) {
         Collection<Event> events = study.getEvents();
         Long id = study.getId();
-        String pubmed = study.getPubmedId();
-        String title = study.getTitle();
+        // THOR
+        String pubmed = study.getPublicationId().getPubmedId();
+        String title = study.getPublicationId().getTitle();
         return new DeletedStudy(id, title, pubmed, events);
     }
 }

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import javax.persistence.CollectionTable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
+    @Field private String authorAscii;
+    @Field private String orcid;
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
@@ -34,6 +37,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    @Field private Collection<String> authorsList;
     @Field private Collection<String> ancestralGroups;
     @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
@@ -73,10 +77,12 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public StudyDocument(Study study) {
         super(study);
-        this.pubmedId = study.getPubmedId();
-        this.title = study.getTitle();
-        this.author = study.getAuthor();
-        this.publication = study.getPublication();
+        this.pubmedId = study.getPublicationId().getPubmedId();
+        this.title = study.getPublicationId().getTitle();
+        this.author = study.getPublicationId().getFirstAuthor().getFullname();
+        this.authorAscii = study.getPublicationId().getFirstAuthor().getFullnameStandard();
+        this.orcid = study.getPublicationId().getFirstAuthor().getOrcid();
+        this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
 
@@ -85,17 +91,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 //        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (study.getPublicationDate() != null) {
-            this.publicationDate = df.format(study.getPublicationDate());
+        if (study.getPublicationId().getPublicationDate() != null) {
+            this.publicationDate = df.format(study.getPublicationId().getPublicationDate());
         }
         if (study.getHousekeeping().getCatalogPublishDate() != null) {
             this.catalogPublishDate = df.format(study.getHousekeeping().getCatalogPublishDate());
         }
 
         String year;
-        if (study.getPublicationDate() != null) {
+        if (study.getPublicationId().getPublicationDate() != null) {
             Calendar studyCal = Calendar.getInstance();
-            studyCal.setTime(study.getPublicationDate());
+            studyCal.setTime(study.getPublicationId().getPublicationDate());
             year = String.valueOf(studyCal.get(Calendar.YEAR));
         }
         else {
@@ -103,8 +109,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
 
+        this.authorsList = new LinkedHashSet<>();
+        embedAuthors(study);
         this.platform = embedPlatformField(study);
-
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
@@ -144,9 +151,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
+
+    public String getOrcid() { return orcid; }
+
+    public String getAuthorAscii() { return authorAscii; }
+
+    public Collection<String> getAuthorsList() { return authorsList; }
 
     public String getPublication() {
         return publication;
@@ -275,6 +286,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return ancestryLinks;
     }
 
+    private void embedAuthors(Study study) {
+        //Collection<Author> authors = study.getPublicationId().getAuthors();
+        Collection<PublicationAuthors> authors = study.getPublicationId().getPublicationAuthors();
+        for (PublicationAuthors author : authors) {
+            String authorLink = author.getAuthor().getFullname().concat(" | ").concat(author.getAuthor().getFullnameStandard()).concat(" | ").concat(author.getSort().toString());
+            if (author.getAuthor().getOrcid() != null) {
+                authorLink = authorLink.concat(" | ").concat(author.getAuthor().getOrcid());
+            }
+            authorsList.add(authorLink);
+        }
+
+    }
 
     private void embedAncestryData(Study study) {
         study.getAncestries().forEach(
