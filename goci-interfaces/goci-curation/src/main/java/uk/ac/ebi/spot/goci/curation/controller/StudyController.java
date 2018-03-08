@@ -304,9 +304,9 @@ public class StudyController {
         }
 
 
-        // Search by notes for entered string
+        // Search by notes for entered string -- Removed Distinct because publicationDate is another table
         if (notesQuery != null && !notesQuery.isEmpty()) {
-            studyPage = studyRepository.findDistinctByNotesTextNoteContainingIgnoreCase(notesQuery,
+            studyPage = studyRepository.findByNotesTextNoteContainingIgnoreCase(notesQuery,
                     constructPageSpecification(page - 1,
                             sort));
 

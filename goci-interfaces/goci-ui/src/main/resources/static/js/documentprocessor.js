@@ -281,7 +281,7 @@ function processStudy(study, table) {
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append(
             $("<td>").html(study.platform)));
 
-    hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
+    hiddenrow.append($('<td>').attr('colspan', 9).attr('style', 'border-top: none').append(innerTable));
 
     table.append(hiddenrow);
 }
