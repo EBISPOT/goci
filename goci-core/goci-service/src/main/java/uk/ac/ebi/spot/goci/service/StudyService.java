@@ -150,9 +150,11 @@ public class StudyService {
 
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
-        Page<Study> studies =
+        /*Page<Study> studies =
                 studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
                         pageable);
+                        */
+        Page<Study> studies = studyRepository.findByOpenTargets(true,pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
@@ -222,7 +224,13 @@ public class StudyService {
         });
 
 
+        int genotypingCount = study.getGenotypingTechnologies().size();
 
+        Collection<GenotypingTechnology> genotypingTechnologiesList = new ArrayList<>();
+        study.getGenotypingTechnologies().forEach( genotypingTechnology ->{
+            genotypingTechnologiesList.add(genotypingTechnology);
+        });
+        
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
