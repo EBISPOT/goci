@@ -8,6 +8,7 @@ $(document).ready(function() {
     
     $('.auto-tooltip').tooltip();
     
+    displayGenotyping();
 
     $('#search-button').click(function() {
         doSearch();
@@ -54,6 +55,17 @@ $(document).ready(function() {
                                          });
 
 });
+
+function displayGenotyping() {
+    if($("#genotyping-dropdown").length > 0) {
+        $('#genotyping-dropdown ul').empty();
+        $('#genotyping-dropdown ul').append($("<li>").html('<input type="checkbox" class="genotyping-check" value="Exome genotyping array"/>&nbsp;Exome genotyping array'));
+        $('#genotyping-dropdown ul').append($("<li>").html('<input type="checkbox" class="genotyping-check" value="Exome-wide sequencing" />&nbsp;Exome-wide sequencing'));
+        $('#genotyping-dropdown ul').append($("<li>").html('<input type="checkbox" class="genotyping-check" value="Genome-wide genotyping array"/>&nbsp;Genome-wide genotyping array'));
+        $('#genotyping-dropdown ul').append($("<li>").html('<input type="checkbox" class="genotyping-check" value="Genome-wide sequencing" />&nbsp;Genome-wide sequencing'));
+        $('#genotyping-dropdown ul').append($("<li>").html('<input type="checkbox" class="genotyping-check" value="Targeted genotyping array"/>&nbsp;Targeted genotyping array'));
+    }
+}
 
 function useAutoCompleteInput(){
     if(window.location.pathname.indexOf("/diagram") > -1){

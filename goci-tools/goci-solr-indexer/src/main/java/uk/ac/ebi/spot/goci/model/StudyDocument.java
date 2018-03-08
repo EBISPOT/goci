@@ -44,7 +44,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<Integer> numberOfIndividuals;
     @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
-
+    @Field private Collection<String> genotypingTechnologies;
+    @Field private String studyDesignComment;
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -119,6 +120,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
         embedAncestryData(study);
+
+        this.genotypingTechnologies = new LinkedHashSet<>();
+        embedGenotypingTechnologiesData(study);
+        this.studyDesignComment = study.getStudyDesignComment();
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -282,9 +287,16 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
 
-    public Collection<String> getAncestryLinks() {
-        return ancestryLinks;
+    public Collection<String> getGenotypingTechnologies() {return genotypingTechnologies; }
+
+
+    private void embedGenotypingTechnologiesData(Study study){
+        Collection<GenotypingTechnology> genotypingTechnologiesCollection = study.getGenotypingTechnologies();
+        for (GenotypingTechnology genotypingTechnology: genotypingTechnologiesCollection) {
+            genotypingTechnologies.add(genotypingTechnology.getGenotypingTechnology());
+        }
     }
+
 
     private void embedAuthors(Study study) {
         //Collection<Author> authors = study.getPublicationId().getAuthors();
@@ -297,6 +309,11 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
             authorsList.add(authorLink);
         }
 
+    }
+
+
+    public Collection<String> getAncestryLinks() {
+        return ancestryLinks;
     }
 
     private void embedAncestryData(Study study) {
@@ -467,6 +484,6 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public Boolean getFullPvalueSet() { return fullPvalueSet; }
 
-
+    public String getStudyDesignComment() { return studyDesignComment; }
 
 }
