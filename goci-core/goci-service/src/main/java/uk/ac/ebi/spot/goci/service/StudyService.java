@@ -230,7 +230,7 @@ public class StudyService {
         study.getGenotypingTechnologies().forEach( genotypingTechnology ->{
             genotypingTechnologiesList.add(genotypingTechnology);
         });
-        
+
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
