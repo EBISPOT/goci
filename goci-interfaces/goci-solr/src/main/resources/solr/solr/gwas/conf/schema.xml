@@ -149,6 +149,8 @@
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="authorsList" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="genotypingTechnologies" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="studyDesignComment" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
 
@@ -157,6 +159,8 @@
     <field name="study_orcid" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_authorAscii" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_authorsList" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="study_genotypingTechnologies" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_studyDesignComment" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="study_title" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_publication" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -372,6 +376,8 @@
     <copyField source="numberOfIndividuals" dest="text" />
     <copyField source="additionalAncestryDescription" dest="text" />
     <copyField source="accessionId" dest="text" />
+    <copyField source="genotypingTechnologies" dest="text" />
+    <copyField source="study_genotypingTechnologies" dest="text" />
     <copyField source="fullPvalueSet" dest="text" />
     <copyField source="study_author" dest="text" />
     <copyField source="study_orcid" dest="text" />

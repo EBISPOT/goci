@@ -304,6 +304,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -357,6 +358,13 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
 
         addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
