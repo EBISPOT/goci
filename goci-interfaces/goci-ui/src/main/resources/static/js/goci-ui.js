@@ -32,7 +32,8 @@ $(document).ready(function() {
         }
     }
 
-    if($("#homepageStats")){
+    // Bug change column with id=associationID
+    if($("#homepageStats").length){
         $.getJSON(contextPath+'api/search/stats')
                 .done(function(stats) {
                           setStats(stats);

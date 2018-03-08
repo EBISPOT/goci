@@ -29,7 +29,7 @@ function loadStudiesList() {
 
     $.getJSON('../api/search/summaryStatistics', {
                 'q': searchTerm,
-                'max': 200,
+                'max': 250,
                 'fl': 'author,publicationDate,pubmedId,publication,title,traitName,associationCount,author_s,accessionId',
             })
             .done(function(data) {
@@ -144,7 +144,7 @@ function doSummaryStatsSort(field, id) {
 
     $.getJSON('../api/search/summaryStatistics', {
         'q': searchTerm,
-        'max': 100,
+        'max': 250,
         'sort': field
     })
             .done(function(data) {
