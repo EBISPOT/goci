@@ -100,6 +100,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @RestResource(exported = false)
     Page<Study> findDistinctByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
 
+    @RestResource(exported = false)
+    //Removed Distinct because publicationDate is another table. With distinct returns just the Study attributes
+    Page<Study> findByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
 
     // THOR to change
     // Custom query to get list of study authors
