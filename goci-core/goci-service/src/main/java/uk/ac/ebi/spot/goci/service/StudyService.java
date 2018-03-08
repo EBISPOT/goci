@@ -150,9 +150,11 @@ public class StudyService {
 
     @Transactional(readOnly = true)
     public Page<Study> findPublishedStudies(Pageable pageable) {
-        Page<Study> studies =
+        /*Page<Study> studies =
                 studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
                         pageable);
+                        */
+        Page<Study> studies = studyRepository.findByOpenTargets(true,pageable);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }
