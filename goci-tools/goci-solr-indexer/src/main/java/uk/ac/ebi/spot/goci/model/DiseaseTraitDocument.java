@@ -36,6 +36,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_numberOfIndividuals") private Collection<Integer> numberOfIndividuals;
     @Field("study_additionalAncestryDescription") private Collection<String> additionalAncestryDescription;
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
+    @Field("study_authorAscii") private Collection<String> authorsAscii;
+    @Field("study_authorsList") private Collection<String> authorsList;
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
@@ -83,6 +85,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.numberOfIndividuals = new LinkedHashSet<>();
         this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
+        this.authorsAscii = new LinkedHashSet<>();
+        this.authorsList = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -121,6 +125,10 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public void addOrcid(String orcid) {
         this.orcids.add(orcid);
     }
+
+    public void addAuthorAscii(String authorAscii) { this.authorsAscii.add(authorAscii); }
+
+    public void addAuthorsList(Collection<String> authorsList) {this.authorsList = authorsList;}
 
     public void addPublication(String publication) {
         this.publications.add(publication);
