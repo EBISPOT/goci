@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'TargetArray';
+  src:  url('../fonts/TargetArray.eot?zect82');
+  src:  url('../fonts/TargetArray.eot?zect82#iefix') format('embedded-opentype'),
+    url('../fonts/TargetArray.ttf?zect82') format('truetype'),
+    url('../fonts/TargetArray.woff?zect82') format('woff'),
+    url('../fonts/TargetArray.svg?zect82#TargetArray') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'TargetArray' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-target-center:before {
+  content: "\e904";
+}
+.icon-target-gun:before {
+  content: "\e905";
+}
+.icon-target-game:before {
+  content: "\e906";
+}
+.icon-target-hunting:before {
+  content: "\e907";
+}
+.icon-target-huntig-black:before {
+  content: "\e908";
+}
+.icon-target-gun-tick:before {
+  content: "\e909";
+}
+.icon-target-cross:before {
+  content: "\e90a";
+  color: #4e4e50;
+}
+.icon-target-cross-2:before {
+  content: "\e90b";
+}
+.icon-target-empty:before {
+  content: "\e903";
+}
+.icon-target-single:before {
+  content: "\e900";
+}
+.icon-target:before {
+  content: "\e901";
+}
+.icon-target-smaller:before {
+  content: "\e902";
+}

@@ -71,10 +71,38 @@ function processStudy(study, table) {
                          "data-original-title='Click for summary statistics'></span></a>");
 
     }
-
+    
+    // below the details of the study
+    var genotypingTechnologiesList = "";
+    var genotypingIcon= "";
+    if (study.genotypingTechnologies != null) {
+        var priorityGenotypingTech = "";
+        for (var i = 0; i < study.genotypingTechnologies.length; i++) {
+            if (study.genotypingTechnologies[i] == 'Genome-wide genotyping array') {
+                priorityGenotypingTech = study.genotypingTechnologies[i] + ", ";
+            }
+            else {
+                hasTargetArrayIcon = true;
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
+                if (study.studyDesignComment != null) {
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment).concat("]");
+                }
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
+            }
+        }
+        
+        genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
+        
+        genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
+        genotypingIcon = "<a href='#'><span class='glyphicon icon-target clickable context-help'" +
+            " data-toggle='tooltip'" +
+            "data-original-title='----'></span></a>";
+    }
+    
+    
     var count = study.associationCount;
     //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
-    var associationLink = (count + " ").concat(pvalueflag);
+    var associationLink = (count + " ").concat(pvalueflag).concat(" ").concat(genotypingIcon);
     row.append($("<td>").html(associationLink));
 
     //row.append($("<td>").html(study.associationCount));
@@ -278,34 +306,11 @@ function processStudy(study, table) {
 
     }
     
-    var hasTargetArrayIcon = false;
-    if (study.genotypingTechnologies != null) {
-        var genotypingTechnologiesList = "";
-        var priorityGenotypingTech = "";
-        for (var i = 0; i < study.genotypingTechnologies.length; i++) {
-            if (study.genotypingTechnologies[i] == 'Genome-wide genotyping array') {
-                priorityGenotypingTech = study.genotypingTechnologies[i] + ", ";
-            }
-            else {
-                hasTargetArrayIcon = true;
-                genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
-                if (study.studyDesignComment != null) {
-                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment).concat("]");
-                }
-                genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
-            }
-        }
-    
-        genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
-    
-        genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
-    
+    // above build the value
+    if (genotypingTechnologiesList != "") {
+   
         innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Genotyping technology")).append(
             $("<td>").html(genotypingTechnologiesList)));
-    }
-    
-    if (hasTargetArrayIcon) {
-        console.log("add icon to the row");
     }
     
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append(
