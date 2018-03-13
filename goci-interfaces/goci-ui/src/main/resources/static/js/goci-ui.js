@@ -13,9 +13,6 @@ $(document).ready(function() {
     
     $('.auto-tooltip').tooltip();
     
-    $('#search-box').change(function() {
-        doSearch();
-    });
 
     $('#search-button').click(function() {
         doSearch();
@@ -55,7 +52,7 @@ $(document).ready(function() {
 });
 
 function useAutoCompleteInput(){
-    if(window.location.pathname.indexOf("/diagram")){
+    if(window.location.pathname.indexOf("/diagram") > -1){
         doFilter();
     }
     else{

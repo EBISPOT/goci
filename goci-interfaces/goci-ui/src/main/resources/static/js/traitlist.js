@@ -3,7 +3,7 @@
  */
 
 /**
- * Created by dwelter on 04/02/15.
+ * Created by dwelter on 04/02/15. 
  */
 
 
@@ -73,8 +73,8 @@ function processTraitDocument(trait, traitList) {
     var row = $("<li>");
 
     //var trait = doc.traitName_s;
-    var input = "<input type='checkbox' class='trait-check' value='".concat(trait).concat("'/>&nbsp;").concat(trait);
-
+    var input = '<input type="checkbox" class="trait-check" value="'.concat(trait).concat('"/>&nbsp;').concat(trait);
+    
     row.html(input);
     row.attr('id', trait);
 
