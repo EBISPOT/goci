@@ -40,7 +40,7 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
     private EfoMapper efoMapper;
 
-    private int pageSize = 10;
+    private int pageSize = 1000;
     private int maxPages = -1;
     private boolean sysOutLogging = false;
 
@@ -89,16 +89,16 @@ public class SolrIndexer {
         ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
 
         Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
-        //Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
-        //Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
-        //Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
+        Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
+        Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
+        Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
 
         try {
             int studyCount = studyCountFuture.get();
-            //int associationCount = associationCountFuture.get();
-            //int traitCount = traitCountFuture.get();
-            //int efoCount = efoCountFuture.get();
-            return studyCount;
+            int associationCount = associationCountFuture.get();
+            int traitCount = traitCountFuture.get();
+            int efoCount = efoCountFuture.get();
+            return studyCount + associationCount + traitCount + efoCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
