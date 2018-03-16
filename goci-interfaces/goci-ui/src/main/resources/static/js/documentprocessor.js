@@ -96,12 +96,13 @@ function processStudy(study, table) {
         genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
         
         genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
+    }
+    
+    if (hasTargetArrayIcon) {
         genotypingIcon = "<a href='#'><span class='glyphicon icon-target-tick clickable context-help'" +
             " data-toggle='tooltip'" +
             "data-original-title='Targeted or exome array study'></span></a>";
     }
-    
-    
     var count = study.associationCount;
     //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
     var associationLink = (count + " ").concat(pvalueflag).concat(" ").concat(genotypingIcon);
