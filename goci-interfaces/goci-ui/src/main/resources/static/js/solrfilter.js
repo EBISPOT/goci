@@ -119,7 +119,16 @@ $(document).ready(function() {
             $('#trait-dropdown').removeClass("open");
         }
     });
-
+    
+    //if there is a click anywhere in the page body and the trait selector is open but the click was in the dropdown, close the dropdown
+    $('body').on('click', function(e) {
+        if ($('#genotyping-dropdown').hasClass('open') && !$('#genotyping-dropdown').is(e.target) &&
+            !$('#genotyping-dropdown').children().is(e.target) &&
+            !$('#genotyping-dropdown').children().find('input').is(e.target)) {
+            $('#genotyping-dropdown').removeClass("open");
+        }
+    });
+    
 });
 
 function doFiltering() {
