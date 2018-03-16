@@ -75,6 +75,7 @@ function processStudy(study, table) {
     // below the details of the study
     var genotypingTechnologiesList = "";
     var genotypingIcon= "";
+    var hasTargetArrayIcon = false;
     if (study.genotypingTechnologies != null) {
         var priorityGenotypingTech = "";
         for (var i = 0; i < study.genotypingTechnologies.length; i++) {
@@ -85,7 +86,8 @@ function processStudy(study, table) {
                 hasTargetArrayIcon = true;
                 genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
                 if (study.studyDesignComment != null) {
-                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment).concat("]");
+                    
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment.trim()).concat("]");
                 }
                 genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
             }
@@ -94,9 +96,9 @@ function processStudy(study, table) {
         genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
         
         genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
-        genotypingIcon = "<a href='#'><span class='glyphicon icon-target clickable context-help'" +
+        genotypingIcon = "<a href='#'><span class='glyphicon icon-target-tick clickable context-help'" +
             " data-toggle='tooltip'" +
-            "data-original-title='----'></span></a>";
+            "data-original-title='Targeted or exome array study'></span></a>";
     }
     
     
