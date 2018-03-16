@@ -237,7 +237,7 @@ public class StudyNoteOperationsService {
 
         Study sourceStudy = copiedNote.getStudy();
 
-        copiedNote.setTextNote(body.concat("\n").concat("Duplicated to other studies with Pubmed ID ").concat(sourceStudy.getPubmedId()).concat(" by ").concat(curator.getLastName()));
+        copiedNote.setTextNote(body.concat("\n").concat("Duplicated to other studies with Pubmed ID ").concat(sourceStudy.getPublicationId().getPubmedId()).concat(" by ").concat(curator.getLastName()));
 
         studyNoteService.saveStudyNote(copiedNote);
 

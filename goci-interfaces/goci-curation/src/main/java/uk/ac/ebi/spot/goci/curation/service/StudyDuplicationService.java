@@ -75,7 +75,7 @@ public class StudyDuplicationService {
         studyRepository.save(duplicateStudy);
 
         StudyNote note = studyNoteOperationsService.createAutomaticNote("Duplicate of study: "
-                + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId(),duplicateStudy,user);
+                + studyToDuplicate.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", PMID: " + studyToDuplicate.getPublicationId().getPubmedId(),duplicateStudy,user);
 
         // type of note to help the curator to tag a duplicated study
         StudyNote tagNote = studyNoteOperationsService.createTagDuplicateNote(tagDuplication,duplicateStudy,user);
@@ -116,13 +116,12 @@ public class StudyDuplicationService {
     private Study copyStudy(Study studyToDuplicate) {
 
         Study duplicateStudy = new Study();
-        duplicateStudy.setAuthor(studyToDuplicate.getAuthor());
-        duplicateStudy.setPublicationDate(studyToDuplicate.getPublicationDate());
-        duplicateStudy.setPublication(studyToDuplicate.getPublication());
-        duplicateStudy.setTitle(studyToDuplicate.getTitle());
+        // THOR
+        // duplicateStudy.setAuthor(studyToDuplicate.getAuthor() + " DUP");
+        duplicateStudy.setPublicationId(studyToDuplicate.getPublicationId());
         duplicateStudy.setInitialSampleSize(studyToDuplicate.getInitialSampleSize());
         duplicateStudy.setReplicateSampleSize(studyToDuplicate.getReplicateSampleSize());
-        duplicateStudy.setPubmedId(studyToDuplicate.getPubmedId());
+
         duplicateStudy.setCnv(studyToDuplicate.getCnv());
         duplicateStudy.setGxe(studyToDuplicate.getGxe());
         duplicateStudy.setGxg(studyToDuplicate.getGxg());

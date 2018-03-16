@@ -19,6 +19,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
     @Field("study_title") private Collection<String> titles;
     @Field("study_author") private Collection<String> authors; // combine in one connected field
+    @Field("study_orcid") private Collection<String> orcids; // combine in one connected field
     @Field("study_publication") private Collection<String> publications;
     @Field("study_publicationDate") private Collection<String> publicationDates; // combine in one connected field
     @Field("study_catalogPublishDate") private Collection<String> catalogPublishDates;
@@ -35,6 +36,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_numberOfIndividuals") private Collection<Integer> numberOfIndividuals;
     @Field("study_additionalAncestryDescription") private Collection<String> additionalAncestryDescription;
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
+    @Field("study_authorAscii") private Collection<String> authorsAscii;
+    @Field("study_authorsList") private Collection<String> authorsList;
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
@@ -64,6 +67,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.pubmedIds = new LinkedHashSet<>();
         this.titles = new LinkedHashSet<>();
         this.authors = new LinkedHashSet<>();
+        this.orcids = new LinkedHashSet<>();
         this.publications = new LinkedHashSet<>();
         this.publicationDates = new LinkedHashSet<>();
         this.catalogPublishDates = new LinkedHashSet<>();
@@ -81,6 +85,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.numberOfIndividuals = new LinkedHashSet<>();
         this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
+        this.authorsAscii = new LinkedHashSet<>();
+        this.authorsList = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -114,9 +120,15 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.titles.add(title);
     }
 
-    public void addAuthor(String author) {
-        this.authors.add(author);
+    public void addAuthor(String author) { this.authors.add(author); }
+
+    public void addOrcid(String orcid) {
+        this.orcids.add(orcid);
     }
+
+    public void addAuthorAscii(String authorAscii) { this.authorsAscii.add(authorAscii); }
+
+    public void addAuthorsList(Collection<String> authorsList) {this.authorsList = authorsList;}
 
     public void addPublication(String publication) {
         this.publications.add(publication);

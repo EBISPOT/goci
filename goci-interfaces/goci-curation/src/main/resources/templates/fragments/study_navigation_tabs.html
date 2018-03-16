@@ -16,7 +16,7 @@
             <li><a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'">
                 Print Study</a></li>
             <li>
-            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.pubmedId} + '\',\'/printview\');'">
+            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId.pubmedId} + '\',\'/printview\');'">
                 Print Publication
             </a></li>
         </ul>

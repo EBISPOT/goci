@@ -115,6 +115,7 @@ public class FilterDataProcessingService {
 
         for(int i = 1; i < data.length; i++){
 
+            System.out.println(Integer.toString(i));
             if((i*100)%data.length == 0) {
                 System.out.println((i*100)/data.length + " % done");
             }

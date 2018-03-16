@@ -366,3 +366,8 @@ a > .toplevel-view {
     left: 15px;
     top: 5px;
 }
+
+/*Change the size here*/
+.tolltip-inner {
+    max-width: 350px;
+}

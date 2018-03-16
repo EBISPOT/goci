@@ -80,9 +80,9 @@ public class TestFiltering {
 
 
         Study study = template(Study.class);
-        Filter dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+        Filter dateFilter = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
 
-        Filter dateFilter2 = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+        Filter dateFilter2 = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
 
         assertEquals("Filter type does not match expected",
                      Study.class,

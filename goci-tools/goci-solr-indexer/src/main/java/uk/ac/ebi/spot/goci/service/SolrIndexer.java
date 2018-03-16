@@ -98,7 +98,7 @@ public class SolrIndexer {
             int associationCount = associationCountFuture.get();
             int traitCount = traitCountFuture.get();
             int efoCount = efoCountFuture.get();
-            return studyCount + traitCount + associationCount + efoCount;
+            return studyCount + associationCount + traitCount + efoCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
@@ -116,7 +116,7 @@ public class SolrIndexer {
     }
 
     Integer mapStudies() {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationDate"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
         Pageable pager = new PageRequest(0, pageSize, sort);
         Page<Study> studyPage = studyService.findPublishedStudies(pager);
         studyMapper.map(studyPage.getContent());

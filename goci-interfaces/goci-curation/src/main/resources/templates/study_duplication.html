@@ -44,7 +44,7 @@
     <ol class="breadcrumb pull-right">
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span>
+        <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
             <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
@@ -86,7 +86,7 @@
                     <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10 static-field">
-                        <span type="text" th:field="*{author}" th:text="${study.author} ? ${study.author} : '-'" id="author"></span>
+                        <span type="text" th:field="*{author}" th:text="${study.publicationId.firstAuthor.fullname} ? ${study.publicationId.firstAuthor.fullname} : '-'" id="author"></span>
                     </div>
                 </div>
 
@@ -94,14 +94,14 @@
                     <label class="control-label col-md-2">Title</label>
 
                     <div for="title" class="col-md-10 static-field">
-                        <span type="text" th:field="*{title}" th:text="${study.title} ? ${study.title} : '-'" id="title"></span>
+                        <span type="text" th:field="*{title}" th:text="${study.publicationId.title} ? ${study.publicationId.title} : '-'" id="title"></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="publication" class="control-label col-md-2">Publication</label>
 
                     <div class="col-md-10 static-field">
-                        <span type="text" th:field="*{publication}" th:text="${study.publication} ? ${study.publication} : '-'" id="publication"></span>
+                        <span type="text" th:field="*{publication}" th:text="${study.publicationId.publication} ? ${study.publicationId.publication} : '-'" id="publication"></span>
                     </div>
                 </div>
 
@@ -109,7 +109,7 @@
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10 static-field">
-                        <span type="text" th:field="*{publicationDate}" th:text="${study.publicationDate} ? ${study.publicationDate} : '-'" id="publicationDate"></span>
+                        <span type="text" th:field="*{publicationId.publicationDate}" th:text="${study.publicationId.publicationDate} ? ${study.publicationId.publicationDate} : '-'" id="publicationDate"></span>
                     </div>
                 </div>
             </form>

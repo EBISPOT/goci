@@ -231,3 +231,7 @@ a > .toplevel-view {
 .morelink {
     display: block;
 }
+
+small, sub, sup { font-size: .55em }
+sub             { vertical-align: sub }
+sup             { vertical-align: super }

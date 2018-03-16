@@ -29,7 +29,7 @@ function loadStudiesList() {
 
     $.getJSON('../api/search/summaryStatistics', {
                 'q': searchTerm,
-                'max': 200,
+                'max': 250,
                 'fl': 'author,publicationDate,pubmedId,publication,title,traitName,associationCount,author_s,accessionId',
             })
             .done(function(data) {
@@ -86,7 +86,7 @@ function processStudyDoc(study, table) {
 
     row.append($("<td>").html(study.associationCount));
 
-    var a = (study.author_s).replace(/\s/g,"");
+    var a = (study.authorAscii_s).replace(/\s/g,"");
     var dir = a.concat("_").concat(study.pubmedId).concat("_").concat(study.accessionId);
     var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(dir).concat("' target='_blank'>Click for summary statistics</a>");
 
@@ -144,7 +144,7 @@ function doSummaryStatsSort(field, id) {
 
     $.getJSON('../api/search/summaryStatistics', {
         'q': searchTerm,
-        'max': 100,
+        'max': 250,
         'sort': field
     })
             .done(function(data) {

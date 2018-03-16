@@ -213,7 +213,7 @@ public class PussycatGOCIController {
             toValue.setTime(to);
 
             Study study = template(Study.class);
-            dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+            dateFilter = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
 
         }
         catch (ParseException e) {

@@ -25,9 +25,10 @@ public class CatalogMetaDataRepository {
 
     private static final String STUDY_COUNT =
             "SELECT COUNT(*) FROM(" +
-                    "SELECT DISTINCT S.PUBMED_ID " +
+                    "SELECT DISTINCT P.PUBMED_ID " +
                     "FROM STUDY S " +
                     "JOIN HOUSEKEEPING H ON H.ID = S.HOUSEKEEPING_ID " +
+                    "JOIN PUBLICATION P ON P.ID = S.PUBLICATION_ID " +
                     "WHERE H.CATALOG_PUBLISH_DATE IS NOT NULL AND H.CATALOG_UNPUBLISH_DATE IS NULL)";
 
     private static final String SNP_COUNT = "" +

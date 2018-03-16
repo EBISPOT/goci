@@ -6,28 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.service.CuratorService;
-import uk.ac.ebi.spot.goci.service.EventTypeService;
-import uk.ac.ebi.spot.goci.service.StudyNoteService;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
-import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
+import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.service.*;
 import uk.ac.ebi.spot.goci.curation.builder.AssigneeBuilder;
-import uk.ac.ebi.spot.goci.builder.CurationStatusBuilder;
-import uk.ac.ebi.spot.goci.builder.CuratorBuilder;
-import uk.ac.ebi.spot.goci.builder.HousekeepingBuilder;
-import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.curation.builder.StatusAssignmentBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.CurationStatus;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.UnpublishReason;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
@@ -98,6 +84,9 @@ public class StudyOperationServiceTest {
 
     @Mock
     private CuratorService curatorService;
+
+    @Mock
+    private PublicationService publicationService;
 
     // Class under test
     private StudyOperationsService studyOperationsService;
@@ -187,11 +176,19 @@ public class StudyOperationServiceTest {
 
     private static final Assignee ASSIGNEE = new AssigneeBuilder().build();
 
-    private static final Study NEW_STUDY = new StudyBuilder().setAuthor("Smith X")
+    // THOR
+    private static final Author NEW_AUTHOR = new AuthorBuilder().setFullname("Smith X")
+            .setOrcid("0000-0001-0002-003").build();
+
+    // THOR
+    private static final Publication NEW_PUBLICATION = new PublicationBuilder().setPublication("Nature")
             .setPubmedId("1001002")
-            .setPublication("Nature")
             .setPublicationDate(new Date())
-            .setTitle("Test")
+            .setTitle("Test").setFirstAuthor(NEW_AUTHOR)
+            .build();
+
+    // THOR
+    private static final Study NEW_STUDY = new StudyBuilder().setPublication(NEW_PUBLICATION)
             .build();
 
     private static Study STU1;
@@ -210,7 +207,8 @@ public class StudyOperationServiceTest {
                                                             housekeepingOperationsService,
                                                             studyNoteService,
                                                             studyNoteOperationsService,
-                                                            curatorService);
+                                                            curatorService,
+                                                            publicationService);
         // Create these objects before each test
         Housekeeping CURRENT_HOUSEKEEPING = new HousekeepingBuilder().setId(799L)
                 .setCurationStatus(AWAITING_CURATION)
@@ -231,9 +229,13 @@ public class StudyOperationServiceTest {
         verify(trackingOperationService, times(1)).create(NEW_STUDY, SECURE_USER);
         verify(studyRepository, times(1)).save(NEW_STUDY);
 
-        assertThat(study).extracting("author", "title", "publication", "pubmedId")
-                .contains("Smith X", "Test", "Nature", "1001002");
-        assertThat(study.getPublicationDate()).isToday();
+        // THOR
+        //assertThat(study).extracting("author", "title", "publication", "pubmedId")
+        //        .contains("Smith X", "Test", "Nature", "1001002");
+
+        assertThat(study.getPublicationId().getFirstAuthor()).extracting("fullname").contains("Smith X");
+        assertThat(study.getPublicationId()).extracting("title").contains("Test");
+        assertThat(study.getPublicationId().getPublicationDate()).isToday();
         assertThat(study.getHousekeeping().getStudyAddedDate()).isToday();
         assertThat(study.getHousekeeping().getCurationStatus()).extracting("status").contains("Awaiting Curation");
         assertThat(study.getHousekeeping().getCurator()).extracting("lastName").contains("Level 1 Curator");
