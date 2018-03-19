@@ -651,7 +651,7 @@ function setDownloadLink(rsId) {
 
     var facet = '&facet=association';
     var efo = '&efo=true';
-    var params = '&pvalfilter=&orfilter=&betafilter=&datefilter=&genomicfilter=&traitfilter[]=&dateaddedfilter=';
+    var params = '&pvalfilter=&orfilter=&betafilter=&datefilter=&genomicfilter=&genotypingfilter[]=&traitfilter[]=&dateaddedfilter=';
 
 
     var url = "window.open('".concat(baseUrl).concat(q).concat(params).concat(facet).concat(efo).concat("',    '_blank')");
