@@ -161,9 +161,11 @@ function doFiltering() {
 
 function clearFilters() {
     console.log("Clearing all filters");
+    cleanGenotypingTechnologyDropdown();
     $('#filter-form').find('input').val('');
-    $('#filter-form').removeClass('in-use')
-
+    $('#filter-form').removeClass('in-use');
+    displayGenotyping();
+    
     loadResults();
 
     //if ($('#facet').text()) {
@@ -352,15 +354,19 @@ function processGenotypingTechnologyDropdown() {
         genotyping = genotyping.replace(/\s/g, '+');
         genotyping = genotyping.replace('%2B', '+');
         genotyping = genotyping.replace('%27', "'");
-        console.log(genotyping);
         genotypingTechnologies[i] = genotyping;
         
     }
-    console.log(genotypingTechnologies);
+
     return genotypingTechnologies;
 }
 
-function solrfilter(pval, or, beta, date, region, traits,genotypingTechnologies, addeddate) {
+function cleanGenotypingTechnologyDropdown() {
+    $('#genotyping-dropdown ul').empty();
+}
+
+
+function solrfilter(pval, or, beta, date, region, traits, genotypingTechnologies, addeddate) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
                 ", " + date + ", " + traits + " and " + genotypingTechnologies + " and " + addeddate);

@@ -457,6 +457,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -504,9 +505,17 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
         if (sort != "") {
             addSortQuery(solrSearchBuilder, sort);
         }
+
 
         addQuery(solrSearchBuilder, query);
 
@@ -600,6 +609,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -660,6 +670,13 @@ public class SolrSearchController {
         if(facet.equals("association")){
             addDefaultSort(solrSearchBuilder);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -892,6 +909,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
             @RequestParam(value = "facet", required = true) String facet,
@@ -940,6 +958,11 @@ public class SolrSearchController {
             getLog().debug(addedDateRange);
             addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
+        }
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
         }
 
         addQuery(solrSearchBuilder, query);

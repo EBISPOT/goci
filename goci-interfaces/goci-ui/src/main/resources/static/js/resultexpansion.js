@@ -158,6 +158,8 @@ function loadAdditionalResults(facet, expand) {
     var date = processDate();
     var region = processGenomicRegion();
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
+    
 
     if ($('#filter').text() != '') {
 
@@ -205,6 +207,7 @@ function loadAdditionalResults(facet, expand) {
                   'datefilter': date,
                   'genomicfilter': region,
                   'traitfilter[]': traits,
+                  'genotypingfilter[]': genotypingTechnologies,
                   'sort': sort
               })
             .done(function(data) {
