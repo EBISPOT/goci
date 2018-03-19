@@ -12,7 +12,12 @@ $(document).ready(function() {
     $('#search-button').click(function() {
         doSearch();
     });
-
+    
+    $('#search-box').keypress(function(e){
+        if(e.keyCode==13)
+            doSearch();
+    });
+    
     $('.toplevel-view').hover(function() {
         $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
     }, function() {
