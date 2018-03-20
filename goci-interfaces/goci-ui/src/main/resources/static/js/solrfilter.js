@@ -367,7 +367,7 @@ function cleanGenotypingTechnologyDropdown() {
 }
 
 
-function solrfilter(pval, or, beta, date, region, traits,genotypingTechnologies, addeddate) {
+function solrfilter(pval, or, beta, date, region, traits, genotypingTechnologies, addeddate) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
                 ", " + date + ", " + traits + " and " + genotypingTechnologies + " and " + addeddate);
