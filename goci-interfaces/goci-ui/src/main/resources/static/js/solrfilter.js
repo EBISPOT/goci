@@ -161,9 +161,11 @@ function doFiltering() {
 
 function clearFilters() {
     console.log("Clearing all filters");
+    cleanGenotypingTechnologyDropdown();
     $('#filter-form').find('input').val('');
-    $('#filter-form').removeClass('in-use')
-
+    $('#filter-form').removeClass('in-use');
+    displayGenotyping();
+    
     loadResults();
 
     //if ($('#facet').text()) {
@@ -359,6 +361,11 @@ function processGenotypingTechnologyDropdown() {
     console.log(genotypingTechnologies);
     return genotypingTechnologies;
 }
+
+function cleanGenotypingTechnologyDropdown() {
+    $('#genotyping-dropdown ul').empty();
+}
+
 
 function solrfilter(pval, or, beta, date, region, traits,genotypingTechnologies, addeddate) {
     var query = $('#query').text();
