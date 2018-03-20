@@ -13,17 +13,9 @@ $(document).ready(function() {
         doSearch();
     });
     
-    $('#search-box').autocomplete({ autoFocus: true });
-    
-    
-    $('#search-box').keydown(function(event){
-        if(event.keyCode == 13) {
-            if($('#search-box').val().length==0) {
-                event.preventDefault();
-                return false;
-            }
-        }
-    });
+    //$('#search-box').change(function() {
+    //    console.log("uhm");
+    //});
     
     $('.toplevel-view').hover(function() {
         $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
