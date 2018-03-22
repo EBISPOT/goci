@@ -132,7 +132,7 @@ function buildBreadcrumbs() {
         else if (facet == "association") {
             last.text("Associations");
         }
-        else if (facet == "diseasetrait") {
+        else if (facet == "efotrait") {
             last.text("Catalog traits");
         }
 
@@ -216,7 +216,8 @@ function getMostRecentStudies() {
 
 function processData(data) {
     var documents = data.grouped.resourcename.groups;
-
+    var efoTraitsExists = false;
+    
     setDownloadLink(data.responseHeader.params);
     console.log("Solr search returned " + documents.length + " documents");
     updateCountBadges(data.facet_counts.facet_fields.resourcename);
@@ -303,8 +304,9 @@ function processData(data) {
 
                 }
             }
-            else if (group.groupValue == "diseasetrait") {
-                var traitTable = $('#diseasetrait-table-body').empty();
+            else if (group.groupValue == "efotrait") {
+                efoTraitsExists = true;
+                var traitTable = $('#efotrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
                     try {
                         var doc = group.doclist.docs[k];
@@ -315,9 +317,9 @@ function processData(data) {
                     }
                 }
                 if (group.doclist.numFound > 5) {
-                    $('#diseasetrait-summaries .table-toggle').show();
-                    $('#diseasetrait-summaries').addClass("more-results");
-                    $('.diseasetrait-toggle').empty().text("Show more results");
+                    $('#efotrait-summaries .table-toggle').show();
+                    $('#efotrait-summaries').addClass("more-results");
+                    $('.efotrait-toggle').empty().text("Show more results");
 
                 }
             }
@@ -328,8 +330,12 @@ function processData(data) {
     else {
         setState(SearchState.NO_RESULTS);
     }
-
+    
     $('#loadingResults').hide();
+    if (!efoTraitsExists) {
+        console.log("seconda query");
+        addTraits();
+    }
     console.log("Data display complete");
 }
 

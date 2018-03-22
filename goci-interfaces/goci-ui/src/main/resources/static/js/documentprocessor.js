@@ -705,20 +705,20 @@ function processAssociation(association, table) {
     table.append(row);
 }
 
-function processTrait(diseasetrait, table) {
+function processTrait(efotrait, table) {
     var row = $("<tr>");
     //if (table.find('tr').length >= 5) { row.addClass('accordion-body');
     //    row.addClass('collapse');
     //    row.addClass('hidden-resource');
     //}
-    var traitsearch = "<span><a href='search?query=".concat(diseasetrait.traitName[0]).concat("'>").concat(diseasetrait.traitName[0]).concat(
+    var traitsearch = "<span><a href='search?query=".concat(efotrait.mappedLabel[0]).concat("'>").concat(efotrait.mappedLabel[0]).concat(
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
     var efo = '';
-    if (diseasetrait.efoLink != null) {
-        for (var j = 0; j < diseasetrait.efoLink.length; j++) {
-            var data = diseasetrait.efoLink[j].split("|");
+    if (efotrait.efoLink != null) {
+        for (var j = 0; j < efotrait.efoLink.length; j++) {
+            var data = efotrait.efoLink[j].split("|");
             var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat(
                     "</a></span>");
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(
@@ -738,10 +738,10 @@ function processTrait(diseasetrait, table) {
     row.append($("<td>").html(efo));
 
     var syns = '';
-    if (diseasetrait.synonym != null) {
-        for (var j = 0; j < diseasetrait.synonym.length; j++) {
-            var synonymsearch = "<span><a href='search?query=".concat(diseasetrait.synonym[j]).concat("'>").concat(
-                    diseasetrait.synonym[j]).concat("</a></span>");
+    if (efotrait.synonym != null) {
+        for (var j = 0; j < efotrait.synonym.length; j++) {
+            var synonymsearch = "<span><a href='search?query=".concat(efotrait.synonym[j]).concat("'>").concat(
+                efotrait.synonym[j]).concat("</a></span>");
             if (syns == '') {
                 syns = synonymsearch;
             }
@@ -759,9 +759,9 @@ function processTrait(diseasetrait, table) {
 
     var studies = '';
 
-    if (diseasetrait.study_publicationLink != null) {
-        for (var d = 0; d < diseasetrait.study_publicationLink.length; d++) {
-            var data = diseasetrait.study_publicationLink[d].split("|");
+    if (efotrait.study_publicationLink != null) {
+        for (var d = 0; d < efotrait.study_publicationLink.length; d++) {
+            var data = efotrait.study_publicationLink[d].split("|");
             var author = data[0];
             var authorLabel = author.concat(", ").concat(data[1]);
             var pubmedid = data[2];
