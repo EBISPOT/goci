@@ -420,7 +420,9 @@ function setDownloadLink(searchParams) {
     var q = "q=".concat(searchParams.q);
 
     var trait = '';
+    var genotyping = '';
     var traitFilter = '&traitfilter[]=';
+    var genotypingFilter = '&genotypingfilter[]=';
     var pval = '&pvalfilter=';
     var or = '&orfilter=';
     var beta = '&betafilter=';
@@ -436,6 +438,7 @@ function setDownloadLink(searchParams) {
     var pubdate = date.concat(processDate());
 
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
 
     if (traits != '') {
         for (var t = 0; t < traits.length; t++) {
@@ -444,6 +447,15 @@ function setDownloadLink(searchParams) {
     }
     else {
         trait = traitFilter;
+    }
+    
+    if (genotypingTechnologies.length > 0) {
+        for (var elem = 0; elem < genotypingTechnologies.length; elem++) {
+            genotyping = genotyping.concat(genotypingFilter).concat(genotypingTechnologies[elem]);
+        }
+    }
+    else {
+        genotyping=genotypingFilter;
     }
 
     if (searchParams.q.indexOf('*') != -1 && $('#filter').text() != '') {
@@ -470,7 +482,8 @@ function setDownloadLink(searchParams) {
 
     }
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(addeddate).concat(facet);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(genotyping).concat(addeddate).concat(facet);
+   
     $('#results-download').removeAttr('href').attr('href', url);
 
 }

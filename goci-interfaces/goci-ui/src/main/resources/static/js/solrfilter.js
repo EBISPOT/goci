@@ -354,11 +354,10 @@ function processGenotypingTechnologyDropdown() {
         genotyping = genotyping.replace(/\s/g, '+');
         genotyping = genotyping.replace('%2B', '+');
         genotyping = genotyping.replace('%27', "'");
-        console.log(genotyping);
         genotypingTechnologies[i] = genotyping;
         
     }
-    console.log(genotypingTechnologies);
+
     return genotypingTechnologies;
 }
 

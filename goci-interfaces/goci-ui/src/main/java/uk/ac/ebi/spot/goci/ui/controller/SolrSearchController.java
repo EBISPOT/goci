@@ -909,6 +909,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
             @RequestParam(value = "facet", required = true) String facet,
@@ -957,6 +958,11 @@ public class SolrSearchController {
             getLog().debug(addedDateRange);
             addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
+        }
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
         }
 
         addQuery(solrSearchBuilder, query);
