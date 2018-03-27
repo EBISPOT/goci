@@ -8,6 +8,7 @@ import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.PublicationRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -113,5 +114,27 @@ public class PublicationService {
         }
         return true;
     }
+
+
+    @Transactional(readOnly = true)
+    public Publication deepFindPublicationbyId(Long publicationId) {
+
+        Publication publication = publicationRepository.findOne(publicationId);
+        this.loadAssociatedData(publication);
+        return publication;
+    }
+
+    public void loadAssociatedData(Publication publication) {
+        int studiesCount = publication.getStudies().size();
+
+        Collection<Author> authorArrayList = new ArrayList<>();
+        // Extract the author in order
+        publication.getPublicationAuthors().forEach(publicationAuthor ->{
+            authorArrayList.add(publicationAuthor.getAuthor());
+        });
+
+    }
+
+
 
 }

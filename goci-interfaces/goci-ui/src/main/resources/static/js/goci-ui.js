@@ -8,14 +8,20 @@ $(document).ready(function() {
     
     $('.auto-tooltip').tooltip();
     
-    $('#search-box').change(function() {
-        doSearch();
-    });
 
     $('#search-button').click(function() {
         doSearch();
     });
-
+    
+    $('#search-box').keydown(function(event){
+        if(event.keyCode == 13) {
+            if($('#search-box').val().length >0) {
+                doSearch();
+                
+            } else {return false;}
+        }
+    });
+    
     $('.toplevel-view').hover(function() {
         $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
     }, function() {
@@ -50,7 +56,7 @@ $(document).ready(function() {
 });
 
 function useAutoCompleteInput(){
-    if(window.location.pathname.indexOf("/diagram")){
+    if(window.location.pathname.indexOf("/diagram") > -1){
         doFilter();
     }
     else{
