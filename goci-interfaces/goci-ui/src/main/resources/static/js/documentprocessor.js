@@ -31,6 +31,11 @@ function processStudy(study, table) {
     
     
     var pubdate = study.publicationDate.substring(0, 10);
+    
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'" title="Go to the publication page">'+study.pubmedId+'&nbsp;<span class="icon-GWAS_Publication_2017"></span></a>';
+    
+    var accessionLink = '<a href="'+contextPath+'studies/'+study.accessionId+'" title="Go to the study page">'+study.accessionId+'&nbsp;<span class="icon-GWAS_Study_2017"></span></a>';
+    
     var pubmed = study.pubmedId;
     // To change
     //row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(
@@ -40,8 +45,8 @@ function processStudy(study, table) {
     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
     row.append($("<td>").html(authorsearch));
     
-    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
-    row.append($("<td>").html(study.accessionId));
+    row.append($("<td>").html(pubmedIdLink.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(accessionLink));
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -699,8 +704,8 @@ function processAssociation(association, table) {
             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
-    var accessionId = association.accessionId;
-    row.append($("<td>").html(accessionId));
+    var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page">'+association.accessionId+'&nbsp;<span class="icon-GWAS_Study_2017"></span></a>';
+    row.append($("<td>").html(accessionLink));
     
     table.append(row);
 }
