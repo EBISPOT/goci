@@ -24,11 +24,13 @@ public class StudyController {
         this.searchConfiguration = searchConfiguration;
     }
 
-    //@RequestMapping(value = "/studies", produces = MediaType.TEXT_HTML_VALUE)
-    //public String search() { return "studies"; }
+    @RequestMapping(value = "studies", produces = MediaType.TEXT_HTML_VALUE)
+    public String search() {
+        return "studies";
+    }
 
 
-    @RequestMapping(value = "/study/{accessionId}", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/studies/{accessionId}", produces = MediaType.TEXT_HTML_VALUE)
     public String search(Model model,
                          @PathVariable(required = false) String accessionId,
                          @RequestParam(required = false) String filter,

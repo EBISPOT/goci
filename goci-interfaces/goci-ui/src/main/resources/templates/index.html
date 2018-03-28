@@ -209,7 +209,28 @@
         window.setTimeout("setbackground()", 5000);
         rotate = rotate + 1;
 
+
         if (rotate == 1) {
+            $("#news_image").attr({
+                "src": contextPath + "icons/GWAS_study_2017.png",
+                "width": "24",
+                "height": "24"
+            });
+            $("#titleNews").html('<h3><span id="item" class="breaking-small-black">Study</span> page</h3>');
+            $("#news_description").html('');
+            $("#readmorebutton").attr('onclick', 'changeReadmeButtonLink("studies")');
+
+        }else if (rotate == 2) {
+            $("#news_image").attr({
+                "src": contextPath + "icons/GWAS_publication_2017.png",
+                "width": "24",
+                "height": "24"
+            });
+            $("#titleNews").html('<h3><span id="item" class="breaking-small-black">Publication</span> page</h3>');
+            $("#news_description").html('');
+            $("#readmorebutton").attr('onclick', 'changeReadmeButtonLink("publications")');
+
+        } else if (rotate == 3) {
             $("#news_image").attr({
                 "src": contextPath + "icons/GWAS_trait_2017.png",
                 "width": "24",
@@ -218,7 +239,7 @@
             $("#titleNews").html('<h3><span id="item" class="breaking-small-black">Trait</span> page</h3>');
             $("#news_description").html('Investigate and combine EFO trait focused GWAS Catalog data');
             $("#readmorebutton").attr('onclick', 'changeReadmeButtonLink("efotraits")');
-        } else if (rotate == 2) {
+        } else if (rotate == 4) {
             $("#news_image").attr({
                 "src": contextPath + "icons/GWAS_variant_2017.png",
                 "width": "24",
@@ -239,7 +260,8 @@
             $("#readmorebutton").attr('onclick', 'changeAPIBetaLink()');
 
         }
-        if (rotate == 3) {
+
+        if (rotate == 5) {
             rotate = 0;
         }
     }

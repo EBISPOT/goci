@@ -92,7 +92,7 @@ function getDataSolr(main, initLoad = false) {
     
     var searchQuery = main;
     console.log("Solr research request received for " + searchQuery);
-    return promisePost(window.location.pathname.split('/study/')[0] + '/api/search/advancefilter', {
+    return promisePost(window.location.pathname.split('/studies/')[0] + '/api/search/advancefilter', {
         'q': searchQuery,
         'max': 99999,
         'group.limit': 99999,
@@ -201,7 +201,7 @@ function initOrchidClaimData(study_info) {
         title : study_info[0].title,
         workType: 'data-set',
         publicationYear: year_publication,
-        url : 'http://www.ebi.ac.uk'+contextPath+'study/'+study_info[0].accessionId,
+        url : 'http://www.ebi.ac.uk'+contextPath+'studies/'+study_info[0].accessionId,
         workExternalIdentifiers : [ {
             workExternalIdentifierType : "other-id",
             workExternalIdentifierId : study_info[0].accessionId,
@@ -232,7 +232,8 @@ function displaySummaryStudy(data, clearBeforeInsert) {
     $("#study-author").html(first_author);
     $("#study-title").html(study.title);
     $("#study-journal").html(study.publication);
-    $("#study-pubmedid").html(study.pubmedId);
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'">'+study.pubmedId+'&nbsp;<span class="icon-GWAS_Publication_2017"></span></a>'
+    $("#study-pubmedid").html(pubmedIdLink);
     $("#study-datepublication").html(study.publicationDate.split('T')[0]);
     if ('authorsList' in study) {
         console.log(study.authorsList);

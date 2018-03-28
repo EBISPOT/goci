@@ -96,7 +96,7 @@ function getDataSolr(main, initLoad=false) {
     var searchQuery = main;
     
     console.log("Solr research request received for " + searchQuery);
-    return promisePost( window.location.pathname.split('/publication/')[0] + '/api/search/advancefilter',
+    return promisePost( window.location.pathname.split('/publications/')[0] + '/api/search/advancefilter',
         {
             'q': searchQuery,
             'max': 99999,
