@@ -99,7 +99,7 @@ function displayAuthorsListAsList(data_array) {
             var list = "";
             $.each(data_array, function(index, value) {
                 var author_orchid = value.split(" | ");
-                if(typeof author_orchid[1] === 'undefined') {
+                if(typeof author_orchid[3] === 'undefined') {
                     list = list.concat(author_orchid[0] + ", ");
                 }
                 else {
