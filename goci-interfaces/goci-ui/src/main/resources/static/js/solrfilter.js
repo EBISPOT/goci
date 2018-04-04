@@ -322,11 +322,13 @@ function processTraitDropdown() {
     for (var i = 0; i < traitInput.length; i++) {
 
         var trait = traitInput[i].value;
-        trait = trait.replace(/\s/g, '+');
-        trait = trait.replace('%2B', '+');
-        trait = trait.replace('%27', "'");
-        console.log(trait);
-        traits[i] = trait;
+        //trait = trait.replace(/\s/g, '%20');
+        //trait = trait.replace('%2B', '+');
+        //trait = trait.replace('%27', "'");
+        trait = trait.replace(/,/g, "%2C");
+        var traitURI = encodeURI(trait);
+        
+        traits[i] = traitURI;
 
     }
     console.log(traits);
@@ -356,6 +358,7 @@ function solrfilter(pval, or, beta, date, region, traits, addeddate) {
     else {
         var searchTerm = 'text:"'.concat(query).concat('"');
     }
+    
     $.getJSON('api/search/filter', {
                 'q': searchTerm,
                 'group': 'true',

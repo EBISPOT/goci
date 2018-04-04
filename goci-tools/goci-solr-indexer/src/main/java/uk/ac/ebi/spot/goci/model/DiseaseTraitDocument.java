@@ -15,8 +15,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     // basic DiseaseTrait information
     @Field private String traitName;
 
-    // embedded study info
-    @Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
+    //embedded study info
+    /*@Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
     @Field("study_title") private Collection<String> titles;
     @Field("study_author") private Collection<String> authors; // combine in one connected field
     @Field("study_orcid") private Collection<String> orcids; // combine in one connected field
@@ -38,7 +38,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
     @Field("study_authorAscii") private Collection<String> authorsAscii;
     @Field("study_authorsList") private Collection<String> authorsList;
-
+   */
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
     @Field("association_rsId") private Collection<String> rsIds;
@@ -64,7 +64,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         super(diseaseTrait);
         this.traitName = diseaseTrait.getTrait();
 
-        this.pubmedIds = new LinkedHashSet<>();
+       /* this.pubmedIds = new LinkedHashSet<>();
         this.titles = new LinkedHashSet<>();
         this.authors = new LinkedHashSet<>();
         this.orcids = new LinkedHashSet<>();
@@ -87,7 +87,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestryLinks = new LinkedHashSet<>();
         this.authorsAscii = new LinkedHashSet<>();
         this.authorsList = new LinkedHashSet<>();
-
+*/
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
@@ -111,7 +111,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public String getTraitName() {
         return traitName;
     }
-
+/*
     public void addPubmedId(String pubmedId) {
         this.pubmedIds.add(pubmedId);
     }
@@ -202,7 +202,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public void addAncestryLink(String ancestryLink) {
         this.ancestryLinks.add(ancestryLink);
     }
-
+*/
     public void addQualifier(String qualifier) {
         this.qualifiers.add(qualifier);
     }

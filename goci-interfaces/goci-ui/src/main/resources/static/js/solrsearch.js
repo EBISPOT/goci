@@ -333,8 +333,14 @@ function processData(data) {
     
     $('#loadingResults').hide();
     if (!efoTraitsExists) {
-        $('efotrait-resultset').val("specific-query");
-        addTraits();
+        var traits = processTraitDropdown();
+        if (traits.length > 0 ) {
+            addTraitsFilter();
+        }
+        else {
+            $('efotrait-resultset').val("specific-query");
+            addTraits();
+        }
     }
     else {
         $('efotrait-resultset').val("main-query");

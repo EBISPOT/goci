@@ -19,6 +19,23 @@ function addTraits() {
 }
 
 
+function addTraitsFilter() {
+    
+    var searchTerm = processTraitDropdown();
+    console.log("Solr research request received for");
+    var id = $('#efotrait-summaries').find('span.sorted').parent('th').attr('id');
+    var expand = true;
+    $.getJSON('api/search/traitFilterSearch',
+        {
+            'q[]': searchTerm,
+            'max': 5
+        })
+        .done(function (data) {
+            addResultsToTrait(data, id);
+        });
+}
+
+
 function addResultsToTrait(data, id) {
     if (data.error != null) {
         var sorter = $('#' + id).find('span.sorted');

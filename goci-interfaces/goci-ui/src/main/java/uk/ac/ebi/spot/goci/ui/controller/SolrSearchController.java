@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -354,8 +355,8 @@ public class SolrSearchController {
         }
         if (traits != null && traits.length != 0) {
             getLog().trace(String.valueOf(traits));
-            addFilterQuery(solrSearchBuilder, "mappedLabel", traits);
-            //addFilterQuery(solrSearchBuilder, "traitName_s", traits);
+            //addFilterQuery(solrSearchBuilder, "mappedLabel", traits);
+            addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
 
         addDefaultSort(solrSearchBuilder);
@@ -838,10 +839,34 @@ public class SolrSearchController {
         }
     }
 
-    private void dispatchSearch(String searchString, OutputStream out) throws IOException {
-        getLog().trace(searchString);
+    private void addQuery(StringBuilder solrSearchBuilder, String[] queries) throws IOException {
+        //Split the String[]
+        String query = "";
+        int counter = 0;
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        for (String term : queries) {
+            if (counter == 0) {
+                query = "%22".concat(URLDecoder.decode(term.toString())).concat("%22");
+                counter++;
+            }
+            else {
+                query =
+                        query.concat("+OR %22+").concat(URLDecoder.decode(term.toString())).concat("%22");
+                counter++;
+            }
+        }
+
+        try {
+            //solrSearchBuilder.append("&q=").append(URLEncoder.encode(query, "UTF-8"));
+            solrSearchBuilder.append("&q=").append(query);
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new IOException("Invalid query string - " + query, e);
+        }
+    }
+
+    // It is still duplicate in the QC module. TODO: to fix
+    private HttpGet createHttpGet(String searchString){
         HttpGet httpGet = new HttpGet(searchString);
         if (System.getProperty("http.proxyHost") != null) {
             HttpHost proxy;
@@ -854,6 +879,14 @@ public class SolrSearchController {
             }
             httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
         }
+        return httpGet;
+    }
+
+    private void dispatchSearch(String searchString, OutputStream out) throws IOException {
+        getLog().trace(searchString);
+
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = this.createHttpGet(searchString);
 
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
             getLog().debug("Received HTTP response: " + response.getStatusLine().toString());
@@ -993,18 +1026,7 @@ public class SolrSearchController {
     private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
         getLog().trace(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(searchString);
-        if (System.getProperty("http.proxyHost") != null) {
-            HttpHost proxy;
-            if (System.getProperty("http.proxyPort") != null) {
-                proxy = new HttpHost(System.getProperty("http.proxyHost"), Integer.parseInt(System.getProperty
-                        ("http.proxyPort")));
-            }
-            else {
-                proxy = new HttpHost(System.getProperty("http.proxyHost"));
-            }
-            httpGet.setConfig(RequestConfig.custom().setProxy(proxy).build());
-        }
+        HttpGet httpGet = this.createHttpGet(searchString);
 
         String file = null;
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
@@ -1036,6 +1058,7 @@ public class SolrSearchController {
         outputWriter.flush();
     }
 
+    // From Tburdett algorithm. Extract the traitName from the association and study.
     @RequestMapping(value = "api/search/parentSearch", produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public void doParentSearchSolrSearch(
@@ -1064,5 +1087,31 @@ public class SolrSearchController {
 
     }
 
+    // From Tburdett algorithm. Extract the traitName from the association and study.
+    @RequestMapping(value = "api/search/traitFilterSearch", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public void doTraitFilterSearchSolrSearch(
+            @RequestParam(value = "q[]", required = true) String[] query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "sort", required = false) String sort,
+            HttpServletResponse response) throws IOException {
 
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+
+        addFilterQuery(solrSearchBuilder, "resourcename", "diseaseTrait");
+        addGrouping(solrSearchBuilder, "traitName_s", 1);
+        addFields(solrSearchBuilder, "efoLink,mappedUri,synonym,groupValue,parent,mappedLabel");
+        addQuery(solrSearchBuilder, query);
+
+        System.out.println(solrSearchBuilder.toString());
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
+    }
 }
