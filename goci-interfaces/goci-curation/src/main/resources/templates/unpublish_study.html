@@ -117,7 +117,8 @@
                     <div class="col-md-4">
                         <select th:field="*{housekeeping.unpublishReason}"
                                 id="unpublishReason"
-                                class="form-control select2-select">
+                                class="form-control select2-select"
+                                required="required">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
                             <option th:each="unpublishReason : ${unpublishreasons}"

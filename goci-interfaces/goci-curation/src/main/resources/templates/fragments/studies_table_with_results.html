@@ -205,10 +205,11 @@
         </td>
 
         <td>
-            <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></p>
+            <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''">
+            </p>
 
             <div id="assignStatusForm"
-                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)}">
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)} and ${study.housekeeping.catalogUnpublishDate == null}">
 
                 <form class="form-inline" name="assignStatusForm" role="form" method="post"
                       th:action="@{/studies/{studyId}/status_update(studyId=${study.id})}"
@@ -219,7 +220,6 @@
                     </div>
 
                     <div class="form-group">
-
                         <div class="form-group">
                             <label for="curationStatus" class="control-label"></label>
                             <select name="curationStatus" class="form-control select2-select"
@@ -229,16 +229,26 @@
                                 <option th:each="curationStatus : ${curationstatuses}"
                                         th:value="${curationStatus.id}"
                                         th:text="${curationStatus.status}"
-                                        th:unless="${curationStatus.status} == 'Unpublished from catalog'"></option>
+                                        th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                                </option>
                             </select>
                         </div>
-
-                                    <button type="submit"
-                                            class="btn btn-primary btn-sm">Save
-                                    </button>
+                        <button type="submit"
+                                class="btn btn-primary btn-sm">Save
+                        </button>
                     </div>
                 </form>
             </div>
+
+            <!-- Show link to update status of unpublished study -->
+            <div
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)} and ${study.housekeeping.catalogUnpublishDate != null}">
+                <p>(Unpublished Study)</p>
+                <form th:action="@{/studies/{studyId}/housekeeping(studyId=${study.id})}">
+                    <input type="submit" value="Update Status" class="btn btn-primary btn-sm"/>
+                </form>
+            </div>
+
         </td>
 
         <td><span class="more">

@@ -5,12 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
@@ -167,6 +169,12 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     @RestResource(exported = false)
     Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
+
+    @RestResource(exported = false)
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(nativeQuery = true, value = "update study s set s.publication_id=null where s.id=:studyId")
+    void setPublicationIdNull(@Param("studyId") Long studyId);
 
 
 }
