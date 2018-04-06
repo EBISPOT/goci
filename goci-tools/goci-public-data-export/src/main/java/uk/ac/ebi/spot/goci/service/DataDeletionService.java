@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
@@ -29,6 +30,8 @@ public class DataDeletionService {
     private AncestryRepository ancestryRepository;
     private LociAttributesService lociAttributesService;
     private AssociationService associationService;
+    private PublicationAuthorsService publicationAuthorsService;
+    private PublicationService publicationService;
 
     @Autowired
     public DataDeletionService(StudyService studyService,
@@ -36,11 +39,15 @@ public class DataDeletionService {
                                CuratorTrackingService curatorTrackingService,
                                WeeklyTrackingService weeklyTrackingService,
                                LociAttributesService lociAttributesService,
-                               AssociationService associationService){
+                               AssociationService associationService,
+                               PublicationAuthorsService publicationAuthorsService,
+                               PublicationService publicationService){
         this.studyService = studyService;
         this.ancestryRepository = ancestryRepository;
         this.lociAttributesService = lociAttributesService;
         this.associationService = associationService;
+        this.publicationAuthorsService = publicationAuthorsService;
+        this.publicationService = publicationService;
     }
 
     public void deleteNonPublicStudies(){
@@ -64,6 +71,11 @@ public class DataDeletionService {
                                 + study.getAncestries().size() + "\t ancestries");
 
 
+        // THOR - Don't delete the publication and Author - OR check if there is just a publication.
+        Long publicationId = study.getPublicationId().getId();
+        study.setPublicationId(null);
+        studyService.setPublicationIdNull(study.getId());
+
         Collection<Association> associations = study.getAssociations();
 
         associations.forEach(this::deleteAssociation);
@@ -81,6 +93,12 @@ public class DataDeletionService {
         // Delete study
         studyService.deleteByStudyId(study.getId());
 
+        //THOR - delete the publication if there are no studies related
+        Publication publication = publicationService.deepFindPublicationbyId(publicationId);
+        if (publication.getStudies().size() == 0) {
+            publicationAuthorsService.deleteByPublication(publication);
+            Boolean delete = publicationService.deletePublication(publication);
+        }
 
     }
 

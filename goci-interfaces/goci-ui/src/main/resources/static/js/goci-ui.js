@@ -12,7 +12,16 @@ $(document).ready(function() {
     $('#search-button').click(function() {
         doSearch();
     });
-
+    
+    $('#search-box').keydown(function(event){
+        if(event.keyCode == 13) {
+            if($('#search-box').val().length >0) {
+                doSearch();
+                
+            } else {return false;}
+        }
+    });
+    
     $('.toplevel-view').hover(function() {
         $(this).addClass("background-color-complementary-accent", 300, "easeOutExpo");
     }, function() {

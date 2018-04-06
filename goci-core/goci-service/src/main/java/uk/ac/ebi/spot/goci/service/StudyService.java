@@ -135,6 +135,7 @@ public class StudyService {
     public List<Study> deepFindUnPublishedStudies() {
         List<Study> studies =
                 studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+
         studies.forEach(this::deepLoadAssociatedData);
         return studies;
     }
@@ -221,8 +222,6 @@ public class StudyService {
             authorArrayList.add(publicationAuthor.getAuthor());
         });
 
-
-
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
@@ -261,6 +260,11 @@ public class StudyService {
                 }
         );
 
+        Collection<Author> authorArrayList = new ArrayList<>();
+        // Extract the author in order
+        study.getPublicationId().getPublicationAuthors().forEach(publicationAuthor ->{
+            authorArrayList.add(publicationAuthor.getAuthor());
+        });
 
         Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
         study.getAssociations().forEach(
@@ -333,6 +337,10 @@ public class StudyService {
 
         // Delete the note rows related
         studyNoteService.deleteAllNoteByStudy(study);
+    }
+
+    public void setPublicationIdNull(Long studyId) {
+        studyRepository.setPublicationIdNull(studyId);
     }
 
 //convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time
