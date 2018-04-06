@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.sparql.pussycat.query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.pussycat.exception.DataIntegrityViolationException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
@@ -129,7 +130,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -227,7 +228,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -321,7 +322,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -411,7 +412,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -513,7 +514,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -607,7 +608,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -724,7 +725,7 @@ public class QueryManager {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
