@@ -629,6 +629,9 @@ HR: hormone receptor
 HRmax: maximum heart rate during treadmill fitness test
 
 
+HSV-2: Herpes simplex virus type 2
+
+
 Ht: hematocrit
 
 
