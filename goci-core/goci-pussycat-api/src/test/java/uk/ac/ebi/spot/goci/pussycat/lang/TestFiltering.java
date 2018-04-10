@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.pussycat.lang;
 
 import org.junit.Test;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 
@@ -79,13 +80,13 @@ public class TestFiltering {
         System.out.println(toValue);
 
 
-        Study study = template(Study.class);
-        Filter dateFilter = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
+        Publication publication = template(Publication.class);
+        Filter dateFilter = refine(publication).on(publication.getPublicationDate()).hasRange(fromValue, toValue);
 
-        Filter dateFilter2 = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
+        Filter dateFilter2 = refine(publication).on(publication.getPublicationDate()).hasRange(fromValue, toValue);
 
         assertEquals("Filter type does not match expected",
-                     Study.class,
+                     Publication.class,
                      dateFilter.getFilteredType());
 
         assertEquals("Filtered method does not match expected",
