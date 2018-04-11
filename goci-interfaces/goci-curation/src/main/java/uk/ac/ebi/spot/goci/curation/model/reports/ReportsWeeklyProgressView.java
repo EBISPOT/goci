@@ -22,6 +22,8 @@ public class ReportsWeeklyProgressView {
 
     private Set<Long> studiesPublished;
 
+    private Set<String> publicationsCreated;
+
     private Set<String> publicationsLevel1Completed;
 
     private Set<String> publicationsLevel2Completed;
@@ -71,6 +73,11 @@ public class ReportsWeeklyProgressView {
     public void setStudiesPublished(Set<Long> studiesPublished) {
         this.studiesPublished = studiesPublished;
     }
+
+    public Set<String> getPublicationsCreated() { return publicationsCreated; }
+
+    public void setPublicationsCreated(Set<String> publicationsCreated) {
+        this.publicationsCreated = publicationsCreated; }
 
     public Set<String> getPublicationsPublished() { return publicationsPublished; }
 

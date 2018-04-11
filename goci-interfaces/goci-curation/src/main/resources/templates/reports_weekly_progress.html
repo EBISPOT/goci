@@ -69,6 +69,7 @@
                     <th>Week Start Date</th>
                     <th>Created (Studies)</th>
                     <th>Created IDs (Studies)</th>
+                    <th>Created (Publications)</th>
                     <th>Level 1 Completed (Studies)</th>
                     <th>Level 1 IDs (Studies)</th>
                     <th>Level 1 Completed (Publications)</th>
@@ -82,9 +83,12 @@
                 </thead>
                 <tbody>
                 <tr th:each="view: ${weeklyProgressViews}">
+                    <!-- Week Start Date -->
                     <td th:text="${view.weekDate != null} ? ${#calendars.format(view.weekDate, 'dd MMMM yyyy')} : ''">
                         2022-22-22
                     </td>
+
+                    <!-- Created Studies -->
                     <td th:text="${#sets.size(view.studiesCreated)} ?: 'null'">1000</td>
                     <td>
                         <ul class="list-group">
@@ -93,6 +97,11 @@
                                 th:text="${study}"></li>
                         </ul>
                     </td>
+
+                    <!-- Created Publications -->
+                    <td th:text="${#sets.size(view.publicationsCreated)} ?: 'null'"></td>
+
+                    <!-- Level 1 Completed Studies -->
                     <td th:text="${#sets.size(view.studiesLevel1Completed)} ?: 'null'">1000</td>
                     <td>
                         <ul class="list-group">
@@ -101,7 +110,11 @@
                                 th:text="${study}"></li>
                         </ul>
                     </td>
+
+                    <!-- Level 1 Completed Publications -->
                     <td th:text="${#sets.size(view.publicationsLevel1Completed)} ?: 'null'"></td>
+
+                    <!-- Level 2 Completed Studies -->
                     <td th:text="${#sets.size(view.studiesLevel2Completed)} ?: 'null'">1000</td>
                     <td>
                         <ul class="list-group">
@@ -110,7 +123,11 @@
                                 th:text="${study}"></li>
                         </ul>
                     </td>
+
+                    <!-- Level 2 Completed Publications -->
                     <td th:text="${#sets.size(view.publicationsLevel2Completed)} ?: 'null'"></td>
+
+                    <!-- Published Studies -->
                     <td th:text="${#sets.size(view.studiesPublished)} ?: 'null'">1000</td>
                     <td>
                         <ul class="list-group">
@@ -119,6 +136,8 @@
                                 th:text="${study}"></li>
                         </ul>
                     </td>
+
+                    <!-- Published Publications -->
                     <td th:text="${#sets.size(view.publicationsPublished)} ?: 'null'"></td>
                 </tr>
                 </tbody>
@@ -146,14 +165,15 @@
                                                           {"targets": 1},
                                                           {"targets": 2, "visible": false},
                                                           {"targets": 3},
-                                                          {"targets": 4, "visible": false},
-                                                          {"targets": 5},
+                                                          {"targets": 4},
+                                                          {"targets": 5, "visible": false},
                                                           {"targets": 6},
-                                                          {"targets": 7, "visible": false},
-                                                          {"targets": 8},
+                                                          {"targets": 7},
+                                                          {"targets": 8, "visible": false},
                                                           {"targets": 9},
-                                                          {"targets": 10, "visible": false},
-                                                          {"targets": 11},
+                                                          {"targets": 10},
+                                                          {"targets": 11, "visible": false},
+                                                          {"targets": 12},
                                                       ],
                                                       "order": [[ 0, "desc" ]]
                                                   });
