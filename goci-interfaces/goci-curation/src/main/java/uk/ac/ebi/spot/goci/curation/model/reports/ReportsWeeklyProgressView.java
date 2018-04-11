@@ -22,6 +22,12 @@ public class ReportsWeeklyProgressView {
 
     private Set<Long> studiesPublished;
 
+    private Set<String> publicationsLevel1Completed;
+
+    private Set<String> publicationsLevel2Completed;
+
+    private Set<String> publicationsPublished;
+
     public ReportsWeeklyProgressView(Date weekDate) {
         this.weekDate = weekDate;
     }
@@ -65,4 +71,19 @@ public class ReportsWeeklyProgressView {
     public void setStudiesPublished(Set<Long> studiesPublished) {
         this.studiesPublished = studiesPublished;
     }
+
+    public Set<String> getPublicationsPublished() { return publicationsPublished; }
+
+    public void setPublicationsPublished(Set<String> publicationsPublished) {
+        this.publicationsPublished = publicationsPublished; }
+
+    public Set<String> getPublicationsLevel1Completed() { return publicationsLevel1Completed; }
+
+    public void setPublicationsLevel1Completed(Set<String> publicationsLevel1Completed) {
+        this.publicationsLevel1Completed = publicationsLevel1Completed; }
+
+    public Set<String> getPublicationsLevel2Completed() { return publicationsLevel2Completed; }
+
+    public void setPublicationsLevel2Completed(Set<String> publicationsLevel2Completed) {
+        this.publicationsLevel2Completed = publicationsLevel2Completed; }
 }

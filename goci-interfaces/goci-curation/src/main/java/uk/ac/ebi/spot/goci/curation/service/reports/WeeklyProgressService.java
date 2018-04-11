@@ -41,6 +41,10 @@ public class WeeklyProgressService {
 
         getLog().info("Creating weekly progress view");
 
+        Set<String> previouslyPublished_Publications = new HashSet<>();
+        Set<String> previousLevel1_CurationDone_Publications = new HashSet<>();
+        Set<String> previousLevel2_CurationDone_Publications = new HashSet<>();
+
         Set<Long> previouslyPublished_Studies = new HashSet<>();
         Set<Long> previousLevel1_CurationDone_Studies = new HashSet<>();
         Set<Long> previousLevel2_CurationDone_Studies = new HashSet<>();
@@ -118,11 +122,63 @@ public class WeeklyProgressService {
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
-            // Remove any study ID with status Level1_CurationDone
+            // Remove any study ID with status Level2_CurationDone
             studiesWithLevel2Completed.removeAll(previousLevel2_CurationDone_Studies);
 
             // Add set of study IDs to set of previouslyLevel1_CurationDone
             previousLevel2_CurationDone_Studies.addAll(studiesWithLevel2Completed);
+
+
+            /*
+                Get a unique set of PubmedIDs that went through Level 1 curation in that week
+            */
+            Set<String> publicationsWithLevel1Completed = weeklyProgressViews.stream()
+                    .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
+                    .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
+                            "STUDY_STATUS_CHANGE_LEVEL_1_CURATION_DONE"))
+                    .map(WeeklyProgressView::getPubmedId)
+                    .collect(Collectors.toSet());
+
+            // Remove any PubmedID with status Level1_CurationDone
+            publicationsWithLevel1Completed.removeAll(previousLevel1_CurationDone_Publications);
+
+            // Add set of study IDs to set of previouslyLevel1_CurationDone
+            previousLevel1_CurationDone_Publications.addAll(publicationsWithLevel1Completed);
+
+
+            /*
+                Get a unique set of PubmedIDs that went through Level 2 curation in that week
+            */
+            Set<String> publicationsWithLevel2Completed = weeklyProgressViews.stream()
+                    .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
+                    .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
+                            "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE"))
+                    .map(WeeklyProgressView::getPubmedId)
+                    .collect(Collectors.toSet());
+
+            // Remove any PubmedID with status Level2_CurationDone
+            publicationsWithLevel2Completed.removeAll(previousLevel2_CurationDone_Publications);
+
+            // Add set of PubmedIDs to set of previouslyLevel2_CurationDone
+            previousLevel2_CurationDone_Publications.addAll(publicationsWithLevel2Completed);
+
+
+            /*
+                Get a unique set of PubmedIDs published in that week
+             */
+            Set<String> publicationsPublishedThatWeek = weeklyProgressViews.stream()
+                    .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
+                    .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
+                            "STUDY_STATUS_CHANGE_PUBLISH_STUDY"))
+                    .map(WeeklyProgressView::getPubmedId)
+                    .collect(Collectors.toSet());
+
+            // Remove any PubmedID that was previously published
+            publicationsPublishedThatWeek.removeAll(previouslyPublished_Publications);
+
+            // Add set of PubmedIDs to set of previouslyPublished
+            previouslyPublished_Publications.addAll(publicationsPublishedThatWeek);
+
 
 
             // Add sets to view object
@@ -130,6 +186,11 @@ public class WeeklyProgressService {
             reportsWeeklyProgressView.setStudiesPublished(studiesPublishedThatWeek);
             reportsWeeklyProgressView.setStudiesLevel1Completed(studiesWithLevel1Completed);
             reportsWeeklyProgressView.setStudiesLevel2Completed(studiesWithLevel2Completed);
+
+            reportsWeeklyProgressView.setPublicationsLevel1Completed(publicationsWithLevel1Completed);
+            reportsWeeklyProgressView.setPublicationsLevel2Completed(publicationsWithLevel2Completed);
+            reportsWeeklyProgressView.setPublicationsPublished(publicationsPublishedThatWeek);
+
             reportsWeeklyProgressViews.add(reportsWeeklyProgressView);
         });
         return reportsWeeklyProgressViews;

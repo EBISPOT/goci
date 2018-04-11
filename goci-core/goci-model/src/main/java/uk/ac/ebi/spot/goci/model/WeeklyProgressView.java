@@ -21,6 +21,8 @@ public class WeeklyProgressView {
 
     private Date weekStartDay;
 
+    private String pubmedId;
+
     private Long studyId;
 
     //@Enumerated(EnumType.STRING)
@@ -33,11 +35,13 @@ public class WeeklyProgressView {
     public WeeklyProgressView(Long id,
                               Date weekStartDay,
                               Long studyId,
+                              String pubmedId,
                               String eventType,
                               Integer numberOfStudies) {
         this.id = id;
         this.weekStartDay = weekStartDay;
         this.studyId = studyId;
+        this.pubmedId = pubmedId;
         this.eventType = eventType;
     }
 
@@ -72,4 +76,8 @@ public class WeeklyProgressView {
     public void setStudyId(Long studyId) {
         this.studyId = studyId;
     }
+
+    public String getPubmedId() { return pubmedId; }
+
+    public void setPubmedId(String pubmedId) {this.pubmedId = pubmedId;}
 }
