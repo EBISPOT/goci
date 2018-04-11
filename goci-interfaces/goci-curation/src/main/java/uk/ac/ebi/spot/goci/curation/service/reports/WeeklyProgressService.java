@@ -10,10 +10,7 @@ import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.WeeklyProgressView;
 import uk.ac.ebi.spot.goci.repository.WeeklyProgressViewRepository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +41,10 @@ public class WeeklyProgressService {
 
         getLog().info("Creating weekly progress view");
 
+        Set<Long> previouslyPublished_Studies = new HashSet<>();
+        Set<Long> previousLevel1_CurationDone_Studies = new HashSet<>();
+        Set<Long> previousLevel2_CurationDone_Studies = new HashSet<>();
+
         // Get all details from database
         List<WeeklyProgressView> weeklyProgressViews = weeklyProgressViewRepository.findAll();
 
@@ -51,12 +52,16 @@ public class WeeklyProgressService {
         List<ReportsWeeklyProgressView> reportsWeeklyProgressViews = new ArrayList<>();
 
         // As a convenience get a unique set of week start dates
-        Set<Date> uniqueWeekSet = weeklyProgressViews.stream()
-                .map(WeeklyProgressView::getWeekStartDay)
-                .distinct()
-                .collect(Collectors.toSet());
+//        Set<Date> uniqueWeekSet = weeklyProgressViews.stream()
+//                .map(WeeklyProgressView::getWeekStartDay)
+//                .distinct()
+//                .collect(Collectors.toSet());
+//        uniqueWeekSet.forEach(date -> {
 
-        uniqueWeekSet.forEach(date -> {
+        // Get all unique start week dates as Custom Query
+        List<Date> uniqueWeekStartDate = weeklyProgressViewRepository.getAllWeekStartDates();
+
+        uniqueWeekStartDate.forEach(date -> {
 
             // For each date create a view object
             ReportsWeeklyProgressView reportsWeeklyProgressView = new ReportsWeeklyProgressView(date);
@@ -69,7 +74,9 @@ public class WeeklyProgressService {
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
-            // Get a unique set of study IDs published in that week
+            /*
+                Get a unique set of study IDs published in that week
+             */
             Set<Long> studiesPublishedThatWeek = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
@@ -77,7 +84,16 @@ public class WeeklyProgressService {
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
-            // Get a unique set of study IDs that went through level 1 curation in that week
+            // Remove any study ID that was previously published
+            studiesPublishedThatWeek.removeAll(previouslyPublished_Studies);
+
+            // Add set of study IDs to set of previouslyPublished
+            previouslyPublished_Studies.addAll(studiesPublishedThatWeek);
+
+
+            /*
+                Get a unique set of study IDs that went through Level 1 curation in that week
+             */
             Set<Long> studiesWithLevel1Completed = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
@@ -85,13 +101,29 @@ public class WeeklyProgressService {
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
 
-            // Get a unique set of study IDs that went through level 2 curation in that week
+            // Remove any study ID with status Level1_CurationDone
+            studiesWithLevel1Completed.removeAll(previousLevel1_CurationDone_Studies);
+
+            // Add set of study IDs to set of previouslyLevel1_CurationDone
+            previousLevel1_CurationDone_Studies.addAll(studiesWithLevel1Completed);
+
+
+            /*
+                Get a unique set of study IDs that went through Level 2 curation in that week
+            */
             Set<Long> studiesWithLevel2Completed = weeklyProgressViews.stream()
                     .filter(weeklyProgressView -> weeklyProgressView.getWeekStartDay().equals(date))
                     .filter(weeklyProgressView -> weeklyProgressView.getEventType().equals(
                             "STUDY_STATUS_CHANGE_LEVEL_2_CURATION_DONE"))
                     .map(WeeklyProgressView::getStudyId)
                     .collect(Collectors.toSet());
+
+            // Remove any study ID with status Level1_CurationDone
+            studiesWithLevel2Completed.removeAll(previousLevel2_CurationDone_Studies);
+
+            // Add set of study IDs to set of previouslyLevel1_CurationDone
+            previousLevel2_CurationDone_Studies.addAll(studiesWithLevel2Completed);
+
 
             // Add sets to view object
             reportsWeeklyProgressView.setStudiesCreated(studiesCreatedThatWeek);
@@ -100,7 +132,6 @@ public class WeeklyProgressService {
             reportsWeeklyProgressView.setStudiesLevel2Completed(studiesWithLevel2Completed);
             reportsWeeklyProgressViews.add(reportsWeeklyProgressView);
         });
-
         return reportsWeeklyProgressViews;
     }
 }

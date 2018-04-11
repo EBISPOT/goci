@@ -86,17 +86,21 @@ public class WeeklyProgressServiceTest {
                                                                               STUDY_LEVEL_2,
                                                                               STUDY_PUBLISH));
 
-        List<ReportsWeeklyProgressView> views = weeklyProgressService.processWeeklyView();
+        List<Date> uniqueWeekStartDate = weeklyProgressViewRepository.getAllWeekStartDates();
 
-        // Assertions
-        assertThat(views).hasSize(1);
-        assertThat(views).extracting("studiesCreated",
-                                     "studiesLevel1Completed",
-                                     "studiesLevel2Completed",
-                                     "studiesPublished")
-                .containsOnly(tuple(Collections.singleton(STUDY_CREATION.getStudyId()),
-                                    Collections.singleton(102L),
-                                    Collections.singleton(STUDY_LEVEL_2.getStudyId()),
-                                    Collections.singleton(STUDY_PUBLISH.getStudyId())));
+        uniqueWeekStartDate.forEach(date -> {
+            List<ReportsWeeklyProgressView> views = weeklyProgressService.processWeeklyView();
+
+            // Assertions
+            assertThat(views).hasSize(1);
+            assertThat(views).extracting("studiesCreated",
+                                            "studiesLevel1Completed",
+                                            "studiesLevel2Completed",
+                                            "studiesPublished")
+                        .containsOnly(tuple(Collections.singleton(STUDY_CREATION.getStudyId()),
+                                Collections.singleton(102L),
+                                Collections.singleton(STUDY_LEVEL_2.getStudyId()),
+                                Collections.singleton(STUDY_PUBLISH.getStudyId())));
+        });
     }
 }
