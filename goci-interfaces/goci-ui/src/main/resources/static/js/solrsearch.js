@@ -61,8 +61,11 @@ function loadResults() {
     //add the link to the specific page, for example, for snp, to variant-page
     if(/^rs[0-9]/.test(searchTerm)){
         //xintodo this is currently beta so need to change
+        var variant_term = $('#search-term').html();
+        $('#search-term').html('<span class="icon-GWAS_Variant_2017"></span>&nbsp;'+variant_term);
         $('#search-term').attr("href", "variants/"+searchTerm);
-        $("#search-term-popup").attr("data-original-title","Go to the variant page.");
+        $('#search-term').attr("title","Go to the variant page");
+        $("#search-term-popup").attr("style","display: none");
     }else{
         //we currently only ave variant page, so for other search, we disable the link and hide the popup
         $('#search-term').replaceWith('<span id=search-term th:text="*{query}">' + searchTerm +'</span>')

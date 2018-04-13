@@ -42,7 +42,7 @@ function displayDatatableAssociations(data, cleanBeforeInsert) {
         }
         // This is now linking to the variant page instead of the search page
         // riskAllele = setQueryUrl(riskAllele,riskAlleleLabel);
-        riskAllele = setExternalLinkText( window.location.pathname.split('/study/')[0] + '/variants/' + riskAllele_rsid,riskAlleleLabel);
+        riskAllele = setExternalLinkText( contextPath + '/variants/' + riskAllele_rsid,riskAlleleLabel);
         
         tmp['riskAllele'] = riskAllele;
         

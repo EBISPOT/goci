@@ -301,8 +301,8 @@ function processAssociation(association, table) {
 
     if (association.rsId != null && association.strongestAllele != null) {
         if ((association.rsId[0].indexOf(';') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
-            var rsidsearch = "<span><a href='search?query=".concat(association.rsId[0]).concat("'>").concat(association.strongestAllele[0]).concat(
-                    "</a></span>");
+            
+            var rsidsearch = '<span><a href=\"'+contextPath+'variants/'+association.rsId[0]+'\" title=\"Go to the variant page\"><span class=\"icon-GWAS_Variant_2017\"></span>&nbsp;'+association.rsId[0]+'</a></span>';
             var dbsnp = "<span><a href='https://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
                     "'  target='_blank'>").concat(
                     "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
@@ -724,8 +724,9 @@ function processTrait(diseasetrait, table) {
     if (diseasetrait.efoLink != null) {
         for (var j = 0; j < diseasetrait.efoLink.length; j++) {
             var data = diseasetrait.efoLink[j].split("|");
-            var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat(
-                    "</a></span>");
+            //var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat(
+            //        "</a></span>");
+            var efosearch = '<span><a href=\"'+contextPath+'efotraits/'+data[1]+'\" title=\"Go to the EFO trait page\"><span class=\"icon-GWAS_Trait_2017\"></span>&nbsp;'+data[0]+'</a></span>';
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(
                     "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 
