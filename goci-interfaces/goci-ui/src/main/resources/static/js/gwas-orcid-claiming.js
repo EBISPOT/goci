@@ -60,7 +60,7 @@
                     if(thorApplicationNamespace.userData != null && thorApplicationNamespace.userData.works.length > 0){
                         var userWorks = thorApplicationNamespace.userData.works;
                         for(var wli=0; wli < userWorks.length; wli++){
-                            if(userWorks[wli].workExternalIdentifiers[0].workExternalIdentifierType == 'gwas' &&
+                            if(userWorks[wli].workExternalIdentifiers[0].workExternalIdentifierType == 'other-id' &&
                                 userWorks[wli].workExternalIdentifiers[0].workExternalIdentifierId == orcidClaimData.workExternalIdentifiers[0].workExternalIdentifierId){
                                 currentUserClaimLflag = true;
                             }
