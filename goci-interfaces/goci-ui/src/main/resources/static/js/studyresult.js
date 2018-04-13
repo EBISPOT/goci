@@ -1,6 +1,7 @@
 /** DRY. From Xin original code. We must refactor all these 'action'result.js in a common way! */
 
 var EPMC_URL = "http://www.europepmc.org/abstract/MED/";
+var NCBI_URL = "https://www.ncbi.nlm.nih.gov/pubmed/?term=";
 var global_fl;
 var global_raw;
 
@@ -234,14 +235,14 @@ function displaySummaryStudy(data, clearBeforeInsert) {
     $("#study-author").html(first_author);
     $("#study-title").html(study.title);
     $("#study-journal").html(study.publication);
-    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'">'+study.pubmedId+'&nbsp;<span class="icon-GWAS_Publication_2017"></span></a>';
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'"><span class="icon-GWAS_Publication_2017"></span>&nbsp;'+study.pubmedId+'</a>';
     $("#study-pubmedid").html(pubmedIdLink);
     $("#study-datepublication").html(study.publicationDate.split('T')[0]);
     if ('authorsList' in study) {
         console.log(study.authorsList);
         $("#study-authors-list").html(displayAuthorsListAsList(study.authorsList));
     }
-    $("#pubmedid_button").attr('onclick', "window.open('" + EPMC_URL + study.pubmedId + "',    '_blank')");
+    $("#pubmedid_button").attr('onclick', "window.open('" + NCBI_URL + study.pubmedId + "',    '_blank')");
     hideLoadingOverLay('#summary-panel-loading');
     
 }
@@ -252,7 +253,8 @@ function initOrcidClaiming() {
     try {
         thorApplicationNamespace.createWorkOrcId(orcidClaimData.title, orcidClaimData.workType, orcidClaimData.publicationYear, orcidClaimData.url, orcidClaimData.shortDescription, orcidClaimData.clientDbName);
         thorApplicationNamespace.addWorkIdentifier(orcidClaimData.workExternalIdentifiers[0].workExternalIdentifierType, orcidClaimData.workExternalIdentifiers[0].workExternalIdentifierId);
-        thorApplicationNamespace.loadClaimingInfo('');
+        thorApplicationNamespace.loadClaimingInfo();
+        thorApplicationNamespace.loadLinks();
     } catch (ignore) {}
     
     

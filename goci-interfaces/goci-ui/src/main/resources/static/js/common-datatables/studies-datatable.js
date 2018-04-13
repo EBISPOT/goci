@@ -41,7 +41,7 @@ function displayDatatableStudies(data, cleanBeforeInsert=true) {
         tmp['publi'] = publi;
     
         // AccessionID
-        tmp['study'] = '<a href="'+contextPath+'studies/'+asso.accessionId+'">'+asso.accessionId+'&nbsp;<span class="icon-GWAS_Study_2017"></span></a>';
+        tmp['study'] = '<a href="'+contextPath+'studies/'+asso.accessionId+'"><span class="icon-GWAS_Study_2017"></span>&nbsp;'+asso.accessionId+'</a>';
     
     
         // Journal

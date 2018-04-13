@@ -103,7 +103,7 @@ function displayAuthorsListAsList(data_array) {
                     list = list.concat(author_orchid[0] + ", ");
                 }
                 else {
-                    var orchid = '&nbsp;<a href="https://orcid.org/'+author_orchid[1]+'" target="_blank"><img alt="Orcid profile" src="https://orcid.org/sites/default/files/images/orcid_16x16.png" width="16" height="16" hspace="4" /></a>';
+                    var orchid = '&nbsp;<a href="https://orcid.org/'+author_orchid[3]+'" target="_blank"><img alt="Orcid profile" src="https://orcid.org/sites/default/files/images/orcid_16x16.png" width="16" height="16" hspace="4" /></a>';
                     list = list.concat(author_orchid[0] + orchid +", ");
                 }
                 

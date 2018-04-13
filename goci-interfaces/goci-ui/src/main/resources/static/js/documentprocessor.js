@@ -32,9 +32,9 @@ function processStudy(study, table) {
     
     var pubdate = study.publicationDate.substring(0, 10);
     
-    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'" title="Go to the publication page">'+study.pubmedId+'&nbsp;<span class="icon-GWAS_Publication_2017"></span></a>';
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'" title="Go to the publication page"><span class="icon-GWAS_Publication_2017"></span>&nbsp;'+study.pubmedId+'</a>';
     
-    var accessionLink = '<a href="'+contextPath+'studies/'+study.accessionId+'" title="Go to the study page">'+study.accessionId+'&nbsp;<span class="icon-GWAS_Study_2017"></span></a>';
+    var accessionLink = '<a href="'+contextPath+'studies/'+study.accessionId+'" title="Go to the study page"><span class="icon-GWAS_Study_2017"></span>&nbsp;'+study.accessionId+'</a>';
     
     var pubmed = study.pubmedId;
     // To change
@@ -704,7 +704,7 @@ function processAssociation(association, table) {
             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
-    var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page">'+association.accessionId+'&nbsp;<span class="icon-GWAS_Study_2017"></span></a>';
+    var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page"><span class="icon-GWAS_Study_2017"></span>&nbsp;'+association.accessionId+'</a>';
     row.append($("<td>").html(accessionLink));
     
     table.append(row);
