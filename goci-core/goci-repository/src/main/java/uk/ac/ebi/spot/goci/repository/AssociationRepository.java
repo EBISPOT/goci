@@ -92,4 +92,7 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
 
     Collection<Association> findBylastMappingDateIsNull();
+
+    @RestResource(exported = false)
+    Page<Association> findByStudyPublicationIdPubmedId(String pubmedId, Pageable pageable);
 }
