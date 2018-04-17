@@ -1,6 +1,7 @@
 /** DRY. From Xin original code. We must refactor all these 'action'result.js in a common way! */
 
 var EPMC_URL = "http://www.europepmc.org/abstract/MED/";
+var NCBI_URL = "https://www.ncbi.nlm.nih.gov/pubmed/?term=";
 var global_fl;
 var global_raw;
 
@@ -213,7 +214,7 @@ function displaySummaryPublication(data,clearBeforeInsert) {
         console.log(publication.authorsList);
         $("#publication-authors-list").html(displayAuthorsListAsList(publication.authorsList));
     }
-    $("#pubmedid_button").attr('onclick',     "window.open('"+EPMC_URL+publication.pubmedId+"',    '_blank')");
+    $("#pubmedid_button").attr('onclick',     "window.open('"+NCBI_URL+publication.pubmedId+"',    '_blank')");
     hideLoadingOverLay('#summary-panel-loading');
     
 }
