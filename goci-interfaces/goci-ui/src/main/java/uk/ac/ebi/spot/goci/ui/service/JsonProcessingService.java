@@ -49,7 +49,7 @@ public class JsonProcessingService {
         }
         else{
             header =
-                    "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tREGION\tCHR_ID\tCHR_POS\tREPORTED GENE(S)\tMAPPED_GENE\tUPSTREAM_GENE_ID\tDOWNSTREAM_GENE_ID\tSNP_GENE_IDS\tUPSTREAM_GENE_DISTANCE\tDOWNSTREAM_GENE_DISTANCE\tSTRONGEST SNP-RISK ALLELE\tSNPS\tMERGED\tSNP_ID_CURRENT\tCONTEXT\tINTERGENIC\tRISK ALLELE FREQUENCY\tP-VALUE\tPVALUE_MLOG\tP-VALUE (TEXT)\tOR or BETA\t95% CI (TEXT)\tPLATFORM [SNPS PASSING QC]\tCNV";
+                    "DATE ADDED TO CATALOG\tPUBMEDID\tFIRST AUTHOR\tDATE\tJOURNAL\tLINK\tSTUDY\tDISEASE/TRAIT\tINITIAL SAMPLE SIZE\tREPLICATION SAMPLE SIZE\tREGION\tCHR_ID\tCHR_POS\tREPORTED GENE(S)\tMAPPED_GENE\tUPSTREAM_GENE_ID\tDOWNSTREAM_GENE_ID\tSNP_GENE_IDS\tUPSTREAM_GENE_DISTANCE\tDOWNSTREAM_GENE_DISTANCE\tSTRONGEST SNP-RISK ALLELE\tSNPS\tMERGED\tSNP_ID_CURRENT\tCONTEXT\tINTERGENIC\tRISK ALLELE FREQUENCY\tP-VALUE\tPVALUE_MLOG\tP-VALUE (TEXT)\tOR or BETA\t95% CI (TEXT)\tPLATFORM [SNPS PASSING QC]\tCNV\tGENOTYPING TECHNOLOGY";
         }
 
         if(includeAnnotations){
@@ -400,8 +400,10 @@ public class JsonProcessingService {
             platform = platform.replaceAll("\n", "").replaceAll("\r", "");
         }
         line.append(platform);
-
         line.append("\tN");
+        line.append("\t");
+        String genotyping = getGenotypingTechonologies(doc);
+        line.append(genotyping);
 
         if(includeAnnotations){
             line.append("\t");
@@ -910,6 +912,29 @@ public class JsonProcessingService {
         return accessionId;
     }
 
+    private String getGenotypingTechonologies(JsonNode doc) {
+        String genotypingTechnologiesList = "";
+
+        if (doc.get("genotypingTechnologies") != null) {
+            String priorityGenotypingTech = "";
+            for (int i = 0; i < doc.get("genotypingTechnologies").size(); i++) {
+                if (doc.get("genotypingTechnologies").get(i).asText().trim().compareTo("Genome-wide genotyping array") == 0) {
+                    priorityGenotypingTech = doc.get("genotypingTechnologies").get(i).asText().trim() + ", ";
+                } else {
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(doc.get("genotypingTechnologies").get(i).asText().trim());
+                    if (doc.get("studyDesignComment") != null) {
+                        genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(doc.get("studyDesignComment").asText().trim()).concat("]");
+                    }
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(", ");
+                }
+            }
+            genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
+
+            genotypingTechnologiesList = genotypingTechnologiesList.substring(0,genotypingTechnologiesList.length()-2);
+        }
+        return genotypingTechnologiesList;
+
+    }
 
     public boolean isMultiSnpHaplotype() {
         return isMultiSnpHaplotype;
