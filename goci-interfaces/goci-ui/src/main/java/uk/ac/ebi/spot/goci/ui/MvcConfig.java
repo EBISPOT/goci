@@ -27,7 +27,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/snp").setViewName("snp-page");
         registry.addViewController("/ancestry").setViewName("ancestry");
         registry.addViewController("/variants").setViewName("variants");
-
+        registry.addViewController("/anniversary").setViewName("anniversary");
         // dynamically generated docs pages
         registry.addViewController("/docs").setViewName("docs");
         registry.addViewController("/docs/about").setViewName("docs-template");
