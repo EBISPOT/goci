@@ -21,7 +21,7 @@
 <path style="fill:none;stroke:#797677;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" id="satellite21-o" d="m 38.78812500000001,78.258625 0.0,-4.336 c 0.0,-1.232875 1.9272500000000001,-2.260625 4.491625,-2.50975 l -0.006750000000000001,-7.387625 c -1.293,-0.456625 -2.2125,-1.5991250000000001 -2.2125,-2.9321250000000005 0.0,-1.738375 1.5527500000000003,-3.1446250000000004 3.4673750000000005,-3.1446250000000004 1.9165,0.0 3.4677500000000006,1.40625 3.4677500000000006,3.1446250000000004 0.0,1.333 -0.918,2.4755 -2.211,2.9321250000000005 l -0.005875,7.399875 c 2.507375,0.266125 4.372625,1.2841250000000002 4.372625,2.4975000000000005 l 0.0,4.336 -11.36325,-0.0 z "/>
 <path style="fill:none;stroke:#231f20;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:none" id="centre21" d="M 41.350125000000006,82.05499999999998 0.0,82.05499999999998 "/>
 <text>
-<tspan x="38.7915 43.793935499999996" y="127.62141249999999" id="label21" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">21</tspan>
+<tspan x="38.7915" y="127.62141249999999" id="label21" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">21</tspan>
 </text>
 </g>
 </svg>

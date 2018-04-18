@@ -40,7 +40,7 @@ public class SVGDocument {
                     "</mask>" +
                     "</defs>";
 
-    private final String globalText = "<text x=\"1600\" y=\"-350\" fill=\"#398A96\" font-family=\"Verdana\" font-size=\"42\"></text>";
+    private final String globalText = "<text x=\"1750\" y=\"-325\" text-anchor=\"end\" fill=\"#398A96\" font-family=\"Verdana\" font-size=\"70\"></text>";
     private final String globalTranslationStart = "<g transform='translate(x,y)'>";
 
     private final String globalTranslationEnd = "</g>";

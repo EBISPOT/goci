@@ -49,7 +49,7 @@
 <path style="fill:none;stroke:#797677;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" id="satellite15-o" d="m 34.92975,77.82900000000001 0.0,-7.378 c 0.0,-1.11075 1.7357500000000001,-2.0385 4.05025,-2.26075 l -0.007375,-6.660125 c -1.1655,-0.4126250000000001 -1.993125,-1.4403750000000002 -1.993125,-2.644 0.0,-1.565 1.3975000000000002,-2.8321250000000004 3.126,-2.8321250000000004 1.726,0.0 3.124,1.267125 3.124,2.8321250000000004 0.0,1.203625 -0.8276250000000002,2.231375 -1.993625,2.644 l -0.004875,6.672375000000001 c 2.25825,0.23925000000000002 3.9403750000000004,1.15475 3.9403750000000004,2.2485 l 0.0,7.378 -10.241625,-0.0 z "/>
 <path style="fill:none;stroke:#231f20;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:none" id="centre15" d="M 37.266125,82.05499999999999 0.0,82.05499999999999 "/>
 <text>
-<tspan x="34.919875 39.9223105" y="178.2694125" id="label15" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">15</tspan>
+<tspan x="34.919875" y="178.2694125" id="label15" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">15</tspan>
 </text>
 </g>
 </svg>
