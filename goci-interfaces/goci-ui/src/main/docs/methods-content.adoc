@@ -71,6 +71,7 @@ Information on the following study-level fields is extracted. Capitalised titles
 * DISEASE/TRAIT: Description of disease/trait examined in the study
 * INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
 * REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
+* GENOTYPING TECHNOLOGY: Genome-wide genotyping array, exome-wide genotyping array, targeted genotyping array (with an optional field for additional array information, for example ImmunoChip or MetaboChip).
 * PLATFORM (SNPS PASSING QC): Manufacturer of genotyping array used in GWAS stage; Number of SNPs passing quality control metrics and included in the GWAS analysis; also includes notation of “imputed” if imputation is used and "pooled" to denote studies of pooled DNA.
 
 For each identified SNP, we extract:
