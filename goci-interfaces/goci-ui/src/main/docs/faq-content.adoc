@@ -109,7 +109,7 @@
 6. <<faq-C6,What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
 
 
-7. <<faq-C7,How do I filter results from targeted or exome array studies?>>
+7. <<faq-C7,How do I filter results from targeted and exome array studies?>>
 
 
 === D. Sorting
