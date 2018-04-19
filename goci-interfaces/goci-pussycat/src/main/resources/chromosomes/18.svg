@@ -31,7 +31,7 @@
 <path style="fill:none;stroke:#797677;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" id="outline18" d="m 41.749,82.01837499999999 c -1.7553750000000001,0.905875 -2.941375,2.49025 -2.941375,3.4571250000000004 l 0.0,60.390625 c 0.0,1.4135 2.543875,2.5635000000000003 5.683625,2.5635000000000003 3.136625,0.0 5.678125,-1.15 5.678125,-2.5635000000000003 l 0.0,-60.390625 c 0.0,-0.9643750000000001 -1.17675,-2.548875 -2.919875,-3.4571250000000004 1.743125,-0.9057500000000002 2.919875,-2.490125 2.919875,-3.4545000000000003 l 0.0,-19.48975 c 0.0,-1.416 -2.5415000000000005,-2.561125 -5.678125,-2.561125 -3.1397500000000003,-0.0 -5.683625,1.145125 -5.683625,2.561125 l 0.0,19.48975 c 0.0,0.9667500000000001 1.186,2.55125 2.941375,3.4545000000000003 z "/>
 <path style="fill:none;stroke:#231f20;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:none" id="centre18" d="M 41.349125,82.05499999999998 0.0,82.05499999999998 "/>
 <text>
-<tspan x="38.793 43.7954355" y="157.0819125" id="label18" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">18</tspan>
+<tspan x="38.793" y="157.0819125" id="label18" style="font-size:7.19543791px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#797677;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Helvetica;-inkscape-font-specification:Helvetica">18</tspan>
 </text>
 </g>
 </svg>
