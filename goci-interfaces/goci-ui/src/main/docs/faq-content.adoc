@@ -85,7 +85,7 @@
 11. <<faq-B11,How do I identify interaction studies in the GWAS Catalog?>>
 
 
-12. <<faq-B12,How can I search for targeted or exome array studies and associations?
+12. <<faq-B12,How can I search for targeted and exome array studies and associations?
 >>
 
 
@@ -109,7 +109,7 @@
 6. <<faq-C6,What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
 
 
-7. <<faq-C7,How do I filter results from targeted/exome array studies?>>
+7. <<faq-C7,How do I filter results from targeted or exome array studies?>>
 
 
 === D. Sorting
@@ -164,17 +164,7 @@ You can subscribe to our announcement list by sending an e-mail to gwas-announce
 
 Please see the link:about[About] page for citation guidance.
 
-==== [[faq-A4]]4. What are the terms and conditions for accessing the GWAS Catalog data and code?
-
-The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use. Our code is available under the http://www.apache.org/licenses/LICENSE-2.0[Apache version 2.0 license]
-
-==== [[faq-A5]]5. Which genome build is the Catalog on?
-++++
-Data in the GWAS Catalog is currently mapped to genome assembly <span id="genomeBuild">GRCh38.p5</span> and dbSNP Build <span id="dbSNP">144</span>.
-++++
-
-==== [[faq-A6]]6. How can I access the GWAS Catalog data on alternative genome builds?
-
+==== [[faq-A4]]4. What are the te
 You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Alternatively, you can also use https://www.ncbi.nlm.nih.gov/genome/tools/remap.
 
 ==== [[faq-A7]]7. How often are the GWAS Catalog and diagram updated?
@@ -269,7 +259,7 @@ You can search by genomic region using the format chromNumber:bpLocation-bpLocat
 The GWAS Catalog contains SNP-by-SNP and SNP-by-environment interaction studies as long as the SNPs analysed meet our criteria of being genome-wide (see www.ebi.ac.uk/gwas/docs/methods). For both types of study, the term “interaction” is added in parenthesis to the reported trait. For SNP-by-environment interaction studies, the environmental component is also included in the reported trait e.g. “Lung cancer (smoking interaction)” or “Bone mineral density (gender interaction)”. For SNP-by-SNP interaction studies the term “SNP x SNP interaction” is added in parenthesis.
 To identify interaction studies, you can search for “interaction” in both the GWAS Catalog search and the download spreadsheet.
 
-==== [[faq-B12]]12. How can I search for targeted or exome array studies and associations?
+==== [[faq-B12]]12. How can I search for targeted and exome array studies and associations?
 
 You can enter the genotyping technology of your interest in the search bar, e.g. “targeted genotyping array”, “exome genotyping array”. This will return any study and association that uses that specific genotyping technology as reported by the authors. You can also filter results by genotyping technology as described below.
 
@@ -294,7 +284,7 @@ If you apply a filter to search results the count values will change to reflect 
 ==== [[faq-C6]]6. What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
 Filtering via the trait dropdown limits the search results to studies that have the selected trait(s) as their reported trait, as well as any associations identified in those studies. Clicking on a trait link does a complete new search for that term, searching across all fields, including title and sample descriptions, so you may get additional results, not just studies annotated with the search trait.
 
-==== [[faq-C7]]7. How do I filter results from targeted/exome array studies?
+==== [[faq-C7]]7. How do I filter results from targeted or exome array studies?
 
 You can filter your results using the genotyping technology dropdown on the left side of the page. The filter is inclusive, allowing users to retrieve studies, associations and traits that use at least the selected genotyping technology. You can also click on multiple genotyping technologies to display all studies and associations and traits that use at least one of the selected filtering terms, or both.
 
