@@ -154,6 +154,8 @@ public class JsonProcessingService {
             line.append(traits.get("uri"));
             line.append("\t");
             line.append(getAccessionId(doc));
+            line.append("\t");
+            line.append(getGenotypingTechonologies(doc));
         }
 
         line.append("\r\n");
