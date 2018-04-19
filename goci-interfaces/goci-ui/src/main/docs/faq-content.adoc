@@ -48,7 +48,7 @@
 17. <<faq-A17,How can I identify variants in linkage disequilibrium (LD) with a variant?>>
 
 18. <<faq-A18,Why are only certain targeted or exome array studies available in the GWAS Catalog?
-?>>
+>>
 
 === B. Searching
 
