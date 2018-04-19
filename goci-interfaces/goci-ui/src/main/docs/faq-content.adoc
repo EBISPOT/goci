@@ -266,7 +266,7 @@ You can search by genomic region using the format chromNumber:bpLocation-bpLocat
 The GWAS Catalog contains SNP-by-SNP and SNP-by-environment interaction studies as long as the SNPs analysed meet our criteria of being genome-wide (see www.ebi.ac.uk/gwas/docs/methods). For both types of study, the term “interaction” is added in parenthesis to the reported trait. For SNP-by-environment interaction studies, the environmental component is also included in the reported trait e.g. “Lung cancer (smoking interaction)” or “Bone mineral density (gender interaction)”. For SNP-by-SNP interaction studies the term “SNP x SNP interaction” is added in parenthesis.
 To identify interaction studies, you can search for “interaction” in both the GWAS Catalog search and the download spreadsheet.
 
-==== [[faq-B12]]12. How can I search for targeted/exome array studies and associations?
+==== [[faq-B12]]12. How can I search for targeted or exome array studies and associations?
 
 You can enter the genotyping technology of your interest in the search bar, e.g. “targeted genotyping array”, “exome genotyping array”. This will return any study and association that uses that specific genotyping technology as reported by the authors. You can also filter results by genotyping technology as described below.
 
