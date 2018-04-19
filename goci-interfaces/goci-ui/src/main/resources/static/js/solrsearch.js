@@ -481,8 +481,11 @@ function setDownloadLink(searchParams) {
         }
 
     }
+    
+    // Version association v.1.0.2
+    var efo = "&efo=true";
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(genotyping).concat(addeddate).concat(facet);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(genotyping).concat(addeddate).concat(efo).concat(facet);
    
     $('#results-download').removeAttr('href').attr('href', url);
 
