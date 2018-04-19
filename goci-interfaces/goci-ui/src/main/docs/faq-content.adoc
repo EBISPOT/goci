@@ -47,6 +47,9 @@
 
 17. <<faq-A17,How can I identify variants in linkage disequilibrium (LD) with a variant?>>
 
+18. <<faq-A18,Why are only certain targeted or exome array studies available in the GWAS Catalog?
+?>>
+
 === B. Searching
 
 1. <<faq-B1,How do I do a search?>>
@@ -211,6 +214,11 @@ All our code is freely available from https://github.com/EBISPOT/goci[our Github
 
 LD calculation between a variant of interest and its surrounding variants can be accessed programmatically using the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) where you can specify a variant ID, a window size of the region surrounding the variant, a population and a cut-off for the calculation results.
 In case of a dataset with more than 1 variant of interest, several independant calls to the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) can be done. Variants in LD with a specific GWAS Catalog variant can also be visualised on our new prototype variant page http://www.ebi.ac.uk/gwas/beta/variants.
+
+==== [[faq-A18]]18. Why are only certain targeted or exome array studies available in the GWAS Catalog?
+
+We are working on expanding the scope of the GWAS Catalog to include large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome array. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog. This is currently in a pilot phase where prioritisation of targeted and exome array studies for inclusion in the Catalog is by 1) relevance of the trait analysed 2) user request. 
+Targeted array studies included in the Catalog are indicated in the search interface using  a small “target” icon, close to the number of associations curated from that specific study.
 
 
 == B. Searching
