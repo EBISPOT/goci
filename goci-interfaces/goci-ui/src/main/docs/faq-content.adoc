@@ -284,7 +284,7 @@ If you apply a filter to search results the count values will change to reflect 
 ==== [[faq-C6]]6. What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
 Filtering via the trait dropdown limits the search results to studies that have the selected trait(s) as their reported trait, as well as any associations identified in those studies. Clicking on a trait link does a complete new search for that term, searching across all fields, including title and sample descriptions, so you may get additional results, not just studies annotated with the search trait.
 
-==== [[faq-C7]]7. How do I filter results from targeted or exome array studies?
+==== [[faq-C7]]7. How do I filter results from targeted and exome array studies?
 
 You can filter your results using the genotyping technology dropdown on the left side of the page. The filter is inclusive, allowing users to retrieve studies, associations and traits that use at least the selected genotyping technology. You can also click on multiple genotyping technologies to display all studies and associations and traits that use at least one of the selected filtering terms, or both.
 
