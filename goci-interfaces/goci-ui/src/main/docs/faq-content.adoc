@@ -85,7 +85,7 @@
 11. <<faq-B11,How do I identify interaction studies in the GWAS Catalog?>>
 
 
-12. <<faq-B12,How can I search for targeted/exome array studies and associations?
+12. <<faq-B12,How can I search for targeted or exome array studies and associations?
 >>
 
 
