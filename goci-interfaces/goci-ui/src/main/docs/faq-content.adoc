@@ -40,6 +40,7 @@
 12. <<faq-A12,How do I find out the accession id for my study of interest?>>
 
 
+13. <<faq-A13, Why are only certain targeted or exome array studies available in the GWAS Catalog?>>
 
 
 === B. Exploring the GWAS Catalog data
@@ -127,6 +128,7 @@
 5. <<faq-E5,How do I zoom and move the diagram?>>
 
 6. <<faq-E6,Why do the counts in the legend do not always match the association count for a search?>>
+
 
 === F. Genomic mappings and annotation
 
@@ -223,6 +225,12 @@ Some publications are split into multiple GWAS Catalog entries, if more than one
 ==== [[faq-A12]]12. How do I find out the accession id for my study of interest?
 
 Each separate study in the GWAS Catalog has an accession id beginning with “GCST”. Prior to March 2018, this was only available in the Studies download files. Study accessions are now visible in the web interface, in the Studies table, under the column heading “study accession”.  Accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. Accession numbers are not provided in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
+
+==== [[faq-A13]]13. Why are only certain targeted or exome array studies available in the GWAS Catalog?
+
+
+We are working on expanding the scope of the GWAS Catalog to include large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome array. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog. This is currently in a pilot phase where prioritisation of targeted and exome array studies for inclusion in the Catalog is by 1) relevance of the trait analysed 2) user request. 
+Targeted array studies included in the Catalog are indicated in the search interface using  a small “target” icon, close to the number of associations curated from that specific study.
 
 
 == [[B]]B. Exploring the GWAS Catalog data
