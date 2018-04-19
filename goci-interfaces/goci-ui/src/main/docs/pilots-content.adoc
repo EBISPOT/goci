@@ -41,17 +41,21 @@ Data submitted as part of the author deposition pilot can be found link:ftp://ft
 
 
 
-
-
 === Targeted array pilot
 
-Association studies using large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome arrays, are currently not included in the Catalog. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog. We carried out a pilot on the inclusion of targeted array based GWAS in the Catalog involving:
+Feedback from our users has indicated a high demand for targeted array studies to be included in the GWAS Catalog. 
+
+In 2016 we carried out a pilot on the inclusion of targeted array based GWAS in the Catalog involving:
 
 * Designing and carrying out a literature search to identify all studies that carry out genotyping and association analysis of at least 100,000 SNPs.
 * This identified approximately 150 targeted array studies that have been published up to June 2016 (including 62 Immunochip, 40 Metabochip and 36 exome arrays)
 * Curation of a representative set of these studies indicated that inclusion would require minimal changes to Catalog infrastructure and has enabled us to estimate the additional curation resources required to include these in the future.
 
 Data from the studies curated as part of the targeted array can be found link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/pilot_data/targeted_array_201607/[on our FTP server].
+
+Following on from this, we are currently piloting the inclusion of targeted array studies in the Catalog. Prioritisation of targeted and exome array studies for inclusion in the Catalog is now performed by 1) relevance of the trait analysed 2) user request, with Open Targets being the main user in this phase of the pilot.
+In September 2017, Open Targets (www.opentargets.org) requested curation of fifty-five currently out-of-scope GWAS publications for inclusion in the GWAS Catalog.  Moreover, the GWAS Catalog team have preliminarily identified over 150 publications based on targeted or exome array analysis from 2012 to 2017. These will also be curated as part of the inclusion pilot.
+
 
 
 === Sequencing-based association studies
