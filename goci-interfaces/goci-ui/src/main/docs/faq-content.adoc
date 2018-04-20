@@ -43,6 +43,8 @@
 13. <<faq-A13, Why are only certain targeted or exome array studies available in the GWAS Catalog?>>
 
 
+14. <<faq-A14, How do I identify targeted and exome array studies in the download?>>
+
 === B. Exploring the GWAS Catalog data
 
 1. <<faq-B1,How do I do a search?>>
@@ -234,6 +236,11 @@ Each separate study in the GWAS Catalog has an accession id beginning with “GC
 
 We are working on expanding the scope of the GWAS Catalog to include large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome array. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog. This is currently in a pilot phase where prioritisation of targeted and exome array studies for inclusion in the Catalog is by 1) relevance of the trait analysed 2) user request. 
 Targeted array studies included in the Catalog are indicated in the search interface using  a small “target” icon, close to the number of associations curated from that specific study.
+
+==== [[faq-A14]]14. How do I identify targeted and exome array studies in the download?
+
+
+Targeted/Exome array studies are identifiable in the download file from the presence of an extra column displaying the field “Genotyping technology (additional array information)”, as described in https://www.ebi.ac.uk/gwas/docs/file-downloads[our download section].
 
 
 == [[B]]B. Exploring the GWAS Catalog data
