@@ -185,7 +185,7 @@ From September 2010 to the present, delivery and development of the Catalog has 
 
 ==== [[faq-A2]]2. How can I learn more about using the GWAS Catalog?
 
-Have a look at our link:related-resources[Related Resources] page for training materials, or see the <<B,FAQ sections below>> for some hints and tips.
+Have a look at our link:related-resources[Related Resources] page for training materials, or see the <<B,FAQ sections below>> for some hints and tips. You can also read a description of our link:methods[curation methodology], and find a link:related-resources[list of publications by the GWAS catalog].
 
 ==== [[faq-A3]]3. How can I stay informed about new search features and developments?
 
