@@ -990,7 +990,7 @@ public class SolrSearchController {
             }
             else{
                 if(efo){
-                    fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+                    fileName = "gwas_catalog_v1.0.2-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
                 else {
                     fileName = "gwas_catalog_v1.0-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
