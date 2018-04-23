@@ -5,49 +5,47 @@
 
 === A. General
 
-1. <<faq-A1,Why has the Catalog moved to the EBI?>>
+1. <<faq-A1,Why has the Catalog moved from the NHGRI to the EBI?>>
+
+2. <<faq-A2,How can I learn more about using the GWAS Catalog?>>
 
 
-2. <<faq-A2,Is there any way I can stay informed about new search features and developments?>>
+3. <<faq-A3,How can I stay informed about new search features and developments?>>
 
 
-3. <<faq-A3,How should I cite the GWAS Catalog?>>
+4. <<faq-A4,How should I cite the GWAS Catalog?>>
 
 
-4. <<faq-A4,What are the terms and conditions for accessing the GWAS Catalog data and code?>>
+5. <<faq-A5,What are the terms and conditions for accessing the GWAS Catalog data and code?>>
 
 
-5. <<faq-A5,Which genome build is the Catalog on?>>
+6. <<faq-A6,How often are the GWAS Catalog and diagram updated?>>
 
 
-6. <<faq-A6,How can I access the GWAS Catalog data on alternative genome builds?>>
+7. <<faq-A7,Why does the data I just downloaded look different from what I downloaded in the old NHGRI Catalog?>>
 
 
-7. <<faq-A7,How often are the GWAS Catalog and diagram updated?>>
+8. <<faq-A8,What happened to the "CNV" annotation in the interface?>>
 
 
-8. <<faq-A8,Why does the data I just downloaded look different from what I downloaded in the old Catalog?>>
+9. <<faq-A9,A new GWAS study has just been published. Why is it not in the GWAS Catalog?>>
 
 
-9. <<faq-A9,What happened to the "CNV" annotation in the interface?>>
+10. <<faq-A10,Where can I find the GWAS Catalog infrastructure code?>>
 
-10. <<faq-A10,Why do some SNPs not have any corresponding mapping information?>>
 
-11. <<faq-A11,How is the ancestry data in the GWAS Catalog provided?>>
+11. <<faq-A11,Why is there sometimes more than one Catalog entry for the same publication>>
 
-12. <<faq-A12,What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?>>
 
-13. <<faq-A13,Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?>>
+12. <<faq-A12,How do I find out the accession id for my study of interest?>>
 
-14. <<faq-A14,What do the new "accession numbers" in some of the download files mean?>>
 
-15. <<faq-A15,Why are there no recent studies in the GWAS Catalog?>>
+13. <<faq-A13, Why are only certain targeted or exome array studies available in the GWAS Catalog?>>
 
-16. <<faq-A16,Where can I find the GWAS Catalog infrastructure code?>>
 
-17. <<faq-A17,How can I identify variants in linkage disequilibrium (LD) with a variant?>>
+14. <<faq-A14, How do I identify targeted and exome array studies in the download?>>
 
-=== B. Searching
+=== B. Exploring the GWAS Catalog data
 
 1. <<faq-B1,How do I do a search?>>
 
@@ -55,31 +53,44 @@
 2. <<faq-B2,What can I type into the search bar?>>
 
 
-3. <<faq-B3,What is the difference between a reported trait and a mapped trait?>>
+3. <<faq-B3,Can I limit my search to a specific type of field such as author?>>
 
 
-4. <<faq-B4,Can I limit my search to a specific type of field such as author?>>
+4. <<faq-B4,Can I search by genomic region?>>
 
 
-5. <<faq-B5,What is the difference between the blue links and link-out icons?>>
+5. <<faq-B5,How can I identify variants in linkage disequilibrium (LD) with a variant?>>
 
 
-6. <<faq-B6,When I search for a certain trait why are other traits returned?>>
+6. <<faq-B6,What is the difference between the blue links and link-out icons?>>
 
 
-7. <<faq-B7,Can I search for multiple or compound traits?>>
+7. <<faq-B7,How can I search for targeted and exome array studies and associations?>>
 
 
-8. <<faq-B8,Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?>>
+=== B(i). Searching by trait
+
+1. <<faq-B7,What is the difference between a reported trait and a mapped trait?>>
 
 
-9. <<faq-B9,How do I search for ancestry data in the GWAS Catalog?>>
+2. <<faq-B8,When I search for a certain trait why are other traits returned?>>
 
 
-10. <<faq-B10,Can I search by genomic region?>>
+3. <<faq-B9,How are multiple or compound traits represented in the Catalog?>>
 
 
-11. <<faq-B11,How do I identify interaction studies in the GWAS Catalog?>>
+4. <<faq-B10,Can I search for associations with more than one trait at the same time?>>
+
+
+5. <<faq-B11,Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?>>
+
+
+=== B(ii). Searching for interaction and pleiotropy studies
+
+1. <<faq-B12,How do I identify interaction studies in the GWAS Catalog?>>
+
+
+2. <<faq-B13,How do I identify pleiotropy studies in the GWAS Catalog?>>
 
 
 === C. Filters
@@ -101,6 +112,7 @@
 
 6. <<faq-C6,What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?>>
 
+7. <<faq-C7,How do I filter results from targeted and exome array studies?>>
 
 === D. Sorting
 
@@ -123,139 +135,191 @@
 
 6. <<faq-E6,Why do the counts in the legend do not always match the association count for a search?>>
 
-=== F. Genomic mappings
+
+=== F. Genomic mappings and annotation
 
 1. <<faq-F1,How is the genomic annotation for each SNP provided?>>
 
-2. <<faq-F2,What changes will I see in the genomic annotation with the new mapping pipeline?>>
+2. <<faq-F2,What is the difference between the old (pre-2016?) and the new mapping/annotation pipeline?>>
 
-3. <<faq-F3,How are SNP-SNP interactions and multi-SNP haplotypes displayed?>>
+3. <<faq-F3,Which genome build is the Catalog on?>>
+
+4. <<faq-F4,How can I access the GWAS Catalog data on alternative genome builds?>>
+
+5. <<faq-F5,Why do some SNPs not have any corresponding mapping information?>>
+
+6. <<faq-F6,How are SNP-SNP interactions and multi-SNP haplotypes displayed and annotated?>>
 
 
-=== G. Programmatic access
+=== G. Ancestry
 
-1. <<faq-G1,Is there a way of programmatically retrieving data from the GWAS Catalog?>>
+1. <<faq-G1,How is the ancestry data in the GWAS Catalog provided?>>
 
-2. <<faq-G2,How do I use the GWAS Catalog REST API?>>
+2. <<faq-G2,How do I search for ancestry data in the GWAS Catalog?>>
+
+3. <<faq-G3,What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?>>
+
+4. <<faq-G4,Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?>>
+
+
+=== H. Programmatic access
+
+1. <<faq-H1,Is there a way of programmatically retrieving data from the GWAS Catalog?>>
+
+2. <<faq-H2,How do I use the GWAS Catalog REST API?>>
+
+
+=== I. Summary Statistics
+
+1. <<faq-I1,How do I find out which publications have full summary statistics available?>>
+
+2. <<faq-I2,I am an author and would like to deposit my summary statistics in the GWAS Catalog, how to I go about this?>>  
+
+
 
 '''
 == A. General
 
 
-==== [[faq-A1]]1. Why has the Catalog moved to the EBI?
+==== [[faq-A1]]1. Why has the Catalog moved from the NHGRI to the EBI?
 
-From September 2010 to the present, delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from the http://www.genome.gov/gwastudies/[NHGRI site] was last updated 20 Februry 2015 and is now frozen. Updated content is available from http://www.ebi.ac.uk/gwas/[here] and will be updated. The download file is now available from link:../api/search/downloads/full[here] and has updated content.
+From September 2010 to the present, delivery and development of the Catalog has been a collaborative project between EMBL-EBI and NHGRI. In March 2015 the Catalog infrastructure moved to EMBL-EBI to enable delivery of an improved user interface, including ontology driven Catalog searching, and new curatorial infrastructure, supporting improved QC processes. Content available from the http://www.genome.gov/gwastudies/[NHGRI site] was last updated 20 February 2015 and is now frozen. Updated content is available from http://www.ebi.ac.uk/gwas/[here]. The latest updated download file is now available from link:../api/search/downloads/full[here].
 
-==== [[faq-A2]]2. Is there any way I can stay informed about new search features and developments?
+==== [[faq-A2]]2. How can I learn more about using the GWAS Catalog?
+
+Have a look at our link:related-resources[Related Resources] page for training materials, or see the <<B,FAQ sections below>> for some hints and tips. You can also read a description of our link:methods[curation methodology], and find a link:related-resources[list of publications by the GWAS catalog].
+
+==== [[faq-A3]]3. How can I stay informed about new search features and developments?
 
 You can subscribe to our announcement list by sending an e-mail to gwas-announce-join@ebi.ac.uk with subject heading "subscribe". Traffic on this list will be limited to important announcements only so you don't need to worry about getting bombarded with loads of emails. For queries and user discussion, we have separate mailing lists, gwas-info@ebi.ac.uk to contact the Catalog team and gwas-users@ebi.ac.uk for user discussion (subscribe by emailing gwas-users-join@ebi.ac.uk with subject heading "subscribe"). You can also follow us on Twitter https://twitter.com/GWASCatalog[@GWASCatalog].
 
-==== [[faq-A3]]3. How should I cite the GWAS Catalog?
+==== [[faq-A4]]4. How should I cite the GWAS Catalog?
 
 Please see the link:about[About] page for citation guidance.
 
-==== [[faq-A4]]4. What are the terms and conditions for accessing the GWAS Catalog data and code?
+==== [[faq-A5]]5. What are the terms and conditions for accessing the GWAS Catalog data and code?
 
 The GWAS Catalog data can be used under the standard terms of use for EBI services which can be found at http://www.ebi.ac.uk/about/terms-of-use. Our code is available under the http://www.apache.org/licenses/LICENSE-2.0[Apache version 2.0 license]
 
-==== [[faq-A5]]5. Which genome build is the Catalog on?
-++++
-Data in the GWAS Catalog is currently mapped to genome assembly <span id="genomeBuild">GRCh38.p5</span> and dbSNP Build <span id="dbSNP">144</span>.
-++++
-
-==== [[faq-A6]]6. How can I access the GWAS Catalog data on alternative genome builds?
-
-You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Alternatively, you can also use https://www.ncbi.nlm.nih.gov/genome/tools/remap.
-
-==== [[faq-A7]]7. How often are the GWAS Catalog and diagram updated?
+==== [[faq-A6]]6. How often are the GWAS Catalog and diagram updated?
 
 New data is added to the GWAS Catalog and diagram on a weekly basis, with new data generally going public every Tuesday. Data releases include all downloadable spreadsheets.
 
-==== [[faq-A8]]8. Why does the data I just downloaded look different from what I downloaded in the old Catalog?
+==== [[faq-A7]]7. Why does the data I just downloaded look different from what I downloaded in the old NHGRI Catalog?
 
 Due to the way we now process the Catalog data for the full download, you may find that your spreadsheet has more rows than it did previously. There should be no other major differences between the old and new spreadsheets but if you find any issues or inconsistencies, please do not hesitate to contact the GWAS Catalog team at gwas-info@ebi.ac.uk.
 
-==== [[faq-A9]]9. What happened to the "CNV" annotation in the interface?
+==== [[faq-A8]]8. What happened to the "CNV" annotation in the interface?
 
 Studies looking at copy number variations (CNV) are not part of the remit of the GWAS Catalog. Historically, a couple of CNV studies had been included in the Catalog but these have now been removed. As the Catalog no longer contains any CNV studies, the decision was made to also eliminate the CNV flag from the search results for studies. The corresponding column is still available in the downloadable full Catalog spreadsheet to preserve backwards compatibility with previous spreadsheet versions.
 
-==== [[faq-A10]]10. Why do some SNPs not have any corresponding mapping information?
 
-SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
+==== [[faq-A9]]9. A new GWAS study has just been published. Why is it not in the GWAS Catalog?
 
-==== [[faq-A11]]11. How is the ancestry data in the GWAS Catalog provided?
+Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. As the complexity of studies in terms of study design and statistical analysis of results continues to increase, so does the curation effort required to extract the correct information in line with our extraction guidelines. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialling various approaches to speed up the curation process.
 
-Ancestry data is provided in two forms: a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms and includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment. For more information please view our link:methods[Methods] page.
-
-==== [[faq-A12]]12. What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?
-
-As of September 2016, we release publicly all ancestry data extracted from the GWAS Catalog. Ancestry data from studies published before 2011 has not been reviewed by a second curator and so may not always conform to the strict standardised way we present more recent ancestry data.
-
-==== [[faq-A13]]13. Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?
-
-Most GWAS Catalog studies include at least two ancestry entries, one for the inital stage and one for the replication stage, and some studies may have several entries for each stage. As there is no way of usefully representing this multi-dimensional data in a single row in a spreadsheet, this data is instead provided in a separate spreadsheet, with each ancestry entry in its own row.
-
-==== [[faq-A14]]14. What do the new "accession numbers" in some of the download files mean?
-
-As detailed in the link:methods[ Methods] section, some publications are split into multiple GWAS Catalog entries, each of which represents one analysis for a distinct trait, sample cohort or other unique characteristic. In order to be able to link publication-level information, associations, sample descriptions and traits for each separate entry or "GWAS Catalog study", we have introduced a stable accession number for each entry. The accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. The decision was made to not include the accession numbers in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
-
-==== [[faq-A15]]15. Why are there no recent studies in the GWAS Catalog?
-
-Due to the considerable manual curation effort that goes into each study in the GWAS Catalog, it takes a while for studies to be published in the Catalog after they have been first indexed in Pubmed. As the complexity of studies in terms of study design and statistical analysis of results continues to increase, so does the curation effort required to extract the correct information in line with our extraction guidelines. The GWAS Catalog curation team work as fast as they can to process studies while maintaining the high standard of accuracy our users expect of the Catalog. We are in the process of trialing various approaches to speed up the curation process including automation of some parts of the data extraction process and data submission by study authors.
-
-==== [[faq-A16]]16. Where can I find the GWAS Catalog infrastructure code?
+==== [[faq-A10]]10. Where can I find the GWAS Catalog infrastructure code?
 
 All our code is freely available from https://github.com/EBISPOT/goci[our Github repository].
 
-==== [[faq-A17]]17. How can I identify variants in linkage disequilibrium (LD) with a variant?
+
+==== [[faq-A11]]11. Why is there sometimes more than one Catalog entry for the same publication?
+
+Some publications are split into multiple GWAS Catalog entries, if more than one GWAS has been included in a publication, with distinct traits, sample cohorts or other unique characteristics. You can read more about how we curate publications containing multiple analyses in our link:methods[ Methods] section. Each entry or "GWAS Catalog study" has a stable accession number which is linked to the publication-level information.
+
+==== [[faq-A12]]12. How do I find out the accession id for my study of interest?
+
+Each separate study in the GWAS Catalog has an accession id beginning with “GCST”. Prior to March 2018, this was only available in the Studies download files. Study accessions are now visible in the web interface, in the Studies table, under the column heading “study accession”.  Accession numbers are included in the v1.0.1 spreadsheets for associations and studies as well the ancestry spreadsheets. Accession numbers are not provided in the v1.0 spreadsheets as these are legacy formats provided only to support backwards compatibility with the old NHGRI spreadsheet.
+
+==== [[faq-A13]]13. Why are only certain targeted or exome array studies available in the GWAS Catalog?
+
+
+We are working on expanding the scope of the GWAS Catalog to include large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome array. Feedback from our users has indicated a high demand for studies of this type to be included in the Catalog. This is currently in a pilot phase where prioritisation of targeted and exome array studies for inclusion in the Catalog is by 1) relevance of the trait analysed 2) user request. 
+Targeted array studies included in the Catalog are indicated in the search interface using  a small “target” icon, close to the number of associations curated from that specific study.
+
+==== [[faq-A14]]14. How do I identify targeted and exome array studies in the download?
+
+
+Targeted/Exome array studies are identifiable in the download file from the presence of an extra column displaying the field “Genotyping technology (additional array information)”, as described in https://www.ebi.ac.uk/gwas/docs/file-downloads[our download section].
+
+
+== [[B]]B. Exploring the GWAS Catalog data
+
+==== [[faq-B1]]1. How do I do a search?
+
+Type your query, e.g. “breast cancer”, into the search box and hit return or click the search icon.
+
+==== [[faq-B2]]2. What can I type into the search bar?
+
+You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
+
+==== [[faq-B3]]3. Can I limit my search to a specific type of field such as author?
+
+At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson’s disease as well as studies with an author named Parkinson. Note that since March 2018, all authors associated with a publication are included in our database, so searching for an author name will return all studies featuring that author, not only first author publications.
+To identify all first author publications by an individuals, sort the search results by Author name, using the arrows at the top of the Author column. If you would like to search for a specific study, you can search by Pubmed ID.
+To limit your search to a specific trait or set of traits, we would suggest doing a general search for that trait first, then filtering your results using the <<Filters,trait filter>> dropdown to the left of the search results. For example, following a search for "lupus", you can limit your search results to "Systemic lupus erythematosus" via the dropdown.
+We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our <<faq-A2,announcement list>>.
+
+==== [[faq-B4]]4. Can I search by genomic region?
+
+You can search by genomic region using the format chromNumber:bpLocation-bpLocation, for example 6:16000000-25000000. Please note that this search returns only results of type "Association".
+
+==== [[faq-B5]]5. How can I identify variants in linkage disequilibrium (LD) with a variant?
 
 LD calculation between a variant of interest and its surrounding variants can be accessed programmatically using the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) where you can specify a variant ID, a window size of the region surrounding the variant, a population and a cut-off for the calculation results.
 In case of a dataset with more than 1 variant of interest, several independant calls to the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) can be done. Variants in LD with a specific GWAS Catalog variant can also be visualised on our new prototype variant page http://www.ebi.ac.uk/gwas/beta/variants.
 
+==== [[faq-B6]]6. What is the difference between the blue links and link-out icons?
 
-== B. Searching
-
-==== [[faq-B1]]1. How do I do a search?
-Type your query, e.g. “breast cancer”, into the search box and hit return or click the search icon.
-
-==== [[faq-B2]]2. What can I type into the search bar?
-You can type any text you wish into the search bar. This will then return any exact string matches within a number of data fields in the Catalog, including title, author, journal, reported trait, mapped (ontology) trait, mapped trait's synonyms, mapped trait's parents, sample descriptions, genes and SNPs. 
-
-==== [[faq-B3]]3. What is the difference between a reported trait and a mapped trait?
-Each study is assigned a trait description that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog, see our link:ontology[ontology] page.
-
-==== [[faq-B4]]4. Can I limit my search to a specific type of field such as author?
-At the moment, the main search only supports searching across all fields, so if your search term is for example "Parkinson", you will see results for Parkinson's disease as well as studies with a first author named Parkinson. We are working on an "advanced search" mode where you can limit your search to certain fields or search for specific combinations of fields. To be alerted as soon as this functionality becomes available, subscribe to our <<faq-2,announcement list>>.
-
-For now, if you would like to search for a specific study, you can search by Pubmed ID. To limit your search to a specific trait or set of traits, we would suggest doing a general search for that trait first, then filtering your results using the trait filter dropdown to the left of the search results. For example, following a search for "lupus", you can limit your search results to "Systemic lupus erythematosus" via the dropdown.
-
-==== [[faq-B5]]5. What is the difference between the blue links and link-out icons?
 Clicking on a term highlighted in blue (e.g. author, trait or rsID) performs a full new search for this term. Clicking on a little link-out icon next to a term takes you to an external page related to this term, e.g. Pubmed Central for studies or Ensembl for SNPs or genes.
 
-==== [[faq-B6]]6. When I search for a certain trait why are other traits returned?
+==== [[faq-B7]]7. How can I search for targeted and exome array studies and associations?
+
+You can enter the genotyping technology of your interest in the search bar, e.g. “targeted genotyping array”, “exome genotyping array”. This will return any study and association that uses that specific genotyping technology as reported by the authors. You can also filter results by genotyping technology as described below.
+
+== B(i). Searching by trait
+
+==== [[faq-B7]]1. What is the difference between a reported trait and a mapped trait?
+Each study is assigned a trait description that best represents the phenotype under investigation. This is known as the reported trait as it is taken from the study publication. All reported traits are mapped to terms from the http://www.ebi.ac.uk/efo[Experimental Factor Ontology] resulting in one or more mapped traits. For more information about how ontologies are used in the catalog, see our link:ontology[ontology] page.
+
+==== [[faq-B8]]2. When I search for a certain trait why are other traits returned?
 The search algorithm searches across a number of fields including study titles, sample descriptions, reported traits, mapped (ontology) traits, mapped traits' synonyms and mapped traits' parents. If your search term is a match to any of these categories, that result will be returned. If you search for "metabolic disease" for example, you will see a number of reported traits mapped to ontology traits such as "type II diabetes mellitus" because metabolic disease is a parent of diabetes in the ontology. Equally, searching for "diabetes" will return some potentially unexpected results as the search returns studies that were carried out in a sample population of diabetics, so the term "diabetes" is matched in the sample description. Filtering via the trait dropdown allows you to exclude unwanted traits for now and a more refined "advanced search" mode is under development.
 
-==== [[faq-B7]]7. Can I search for multiple or compound traits?
-Currently the search bar searches for the exact text match of the search term entered within a range of Catalog fields and any related traits through the mapped ontology fields. For example if you type “Schizophrenia and bipolar disorder” in the search bar this will return the compound reported trait "Schizophrenia and bipolar disorder" and "schizophrenia" but not "bipolar disorder". True multiple trait searching is currently not possible but we are working hard to include this feature as soon as possible. For now, we would recommend searching by a more general trait, eg "schizophrenia", then selecting any desired compound traits from the trait filter dropdown.
+==== [[faq-B9]]3. How are multiple or compound traits represented in the Catalog?
 
-==== [[faq-B8]]8. Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?
+Where a study includes cases and controls all sharing a background trait, this is indicated by the use of the word “in” in the reported trait. For example, if drug responders with bipolar disorder were compared to drug non-responders with bipolar disorder, the reported trait would be "drug response in bipolar disorder”. 
+
+Where a study has combined groups of individuals with different traits in the same analysis, this is indicated by the use of the word “or” in the reported trait. For example, if individuals with bipolar disorder and individuals with schizophrenia were compared to controls in the same analysis, the reported trait would be "bipolar disorder or schizophrenia”. 
+
+Where a study includes individuals each having multiple traits, this is indicated by the word “and” in the reported trait. For example, if individuals diagnosed with bipolar disorder who show binge-eating behaviour were compared to controls, the reported trait would be “bipolar disorder and binge eating”.
+
+See also <<faq-B13,How do I identify pleiotropy studies in the GWAS Catalog?>>
+
+
+==== [[faq-B10]]4. Can I search for associations across more than one trait at the same time?
+
+True multiple trait searching is currently not possible. The search bar searches for the exact text match of the search term entered within a range of Catalog fields, along with any related traits through the mapped ontology fields. For now, we would recommend searching by a more general trait, e.g. "schizophrenia", then selecting any desired compound traits from the trait filter dropdown e.g. “Bipolar disorder and schizophrenia”, “Schizophrenia or bipolar disorder”. Alternatively the data download enables complex analysis. We are working to improve this feature of the search in the near future. You can view our prototype trait-based search page at  http://www.ebi.ac.uk/gwas/beta/efotraits, which allows easy visualization of all associations with a trait, or combinations of multiple traits.
+
+==== [[faq-B11]]5. Why did my search return no results even though I am sure there used to be a trait like this in the Catalog?
 Our search functionality is currently unable to allow for typos or term variations, so if you accidentally type "beast cancer" instead of "breast cancer", you will not get any results. Equally, "metabolic disorder" won't return any results while "metabolic disease" will return loads. A browseable list of all reported traits is available link:http://www.ebi.ac.uk/gwas/search/traits[here] and autocomplete functionality for the search box is coming soon. In the mean time, if you get stuck, we recommend varying your search term or searching for your term in http://www.ebi.ac.uk/efo[EFO] to get an idea of what other terms might be available.
 
-==== [[faq-B9]]9. How do I search for ancestry data in the GWAS Catalog?
 
-Ancestry data can be searched by entering relevant text in the search bar, including ancestry category, country or ancestry identifier (e.g. “European”, “South Africa”, “Ashkenazi Jewish”). Any exact string match to the entered text will be returned. Ancestry data can be found in the expanded information in the “Studies” table, accessible by clicking the little "+" icon at the end of each row.
 
-==== [[faq-B10]]10.,Can I search by genomic region?
+== B(ii). Searching for interaction and pleiotropy studies
 
-You can search by genomic region using the format chromNumber:bpLocation-bpLocation, for example 6:16000000-25000000. Please note that this search returns only results of type "Association".
 
-==== [[faq-B11]]11.,How do I identify interaction studies in the GWAS Catalog?
+==== [[faq-B12]]1.How do I identify interaction studies in the GWAS Catalog?
 
 The GWAS Catalog contains SNP-by-SNP and SNP-by-environment interaction studies as long as the SNPs analysed meet our criteria of being genome-wide (see www.ebi.ac.uk/gwas/docs/methods). For both types of study, the term “interaction” is added in parenthesis to the reported trait. For SNP-by-environment interaction studies, the environmental component is also included in the reported trait e.g. “Lung cancer (smoking interaction)” or “Bone mineral density (gender interaction)”. For SNP-by-SNP interaction studies the term “SNP x SNP interaction” is added in parenthesis.
 To identify interaction studies, you can search for “interaction” in both the GWAS Catalog search and the download spreadsheet.
 
+==== [[faq-B13]]2. How do I identify pleiotropy studies in the GWAS Catalog?
 
-== C. Filters
+Studies aimed at identifying pleiotropic SNP associations have the term “pleiotropy” added in parenthesis to the reported trait, together with all traits investigated, e.g. “Schizophrenia or lung cancer (pleiotropy). To identify all pleiotropy studies, you can search for “pleiotropy” in both the GWAS Catalog search and the download spreadsheet.
+
+
+
+== C. [[Filters]]Filters
 
 ==== [[faq-C1]]1. How do I filter my results by p-value?
 To filter association results by p-value, enter a maximum p-value into the appropriate filter box. The input format is "mantissa"x 10^"exponent"^, e.g. 5 x 10^-8^.
@@ -274,6 +338,10 @@ If you apply a filter to search results the count values will change to reflect 
 
 ==== [[faq-C6]]6. What is the difference between filtering by a trait via the trait dropdown and doing a search by clicking on that trait in the results?
 Filtering via the trait dropdown limits the search results to studies that have the selected trait(s) as their reported trait, as well as any associations identified in those studies. Clicking on a trait link does a complete new search for that term, searching across all fields, including title and sample descriptions, so you may get additional results, not just studies annotated with the search trait.
+
+==== [[faq-C7]]7. How do I filter results from targeted and exome array studies?
+
+You can filter your results using the genotyping technology dropdown on the left side of the page. The filter is inclusive, allowing users to retrieve studies, associations and traits that use at least the selected genotyping technology. You can also click on multiple genotyping technologies to display all studies and associations and traits that use at least one of the selected filtering terms, or both together.
 
 
 == D. Sorting
@@ -315,8 +383,8 @@ The legend counts in the GWAS diagram legend are literally counts of the number 
 ==== [[faq-F1]]1. How is the genomic annotation for each SNP provided?
 In March 2016 we switched to a new Ensembl mapping pipeline which provides the genomic annotation (chromosome location, cytogenetic region and mapped genes), which is available alongside the curated content in the GWAS Catalog. Previously the genomic annotation was provided by an NCBI mapping pipeline.
 
-==== [[faq-F2]]2. What changes will I see in the genomic annotation with the new mapping pipeline?
-The format of the mapping data we provide in both the search interface and downloads will remain the same, but with the chromosomal position of the SNP, cytogenetic region and mapped Entrez genes provided by Ensembl. We are changing to using an Ensembl pipeline as this will allow us to provide a denser set of results and, in the future, to integrate additional information from Ensembl with GWAS Catalog data. As the mapping information will now be provided by Ensembl, rather than NCBI, there will be a small number of differences in SNP position and mapped gene. The mapping information will be updated at every Ensembl release, every 2-3 months. In addition, we have made improvements to the display of haplotypes and proxy SNPs to make the data more user-friendly.
+==== [[faq-F2]]2. What is the difference between the old (pre-2016?) and the new mapping/annotation pipeline?
+The format of the mapping data we provide in both the search interface and downloads is the same, but with the chromosomal position of the SNP, cytogenetic region and mapped Entrez genes provided by Ensembl. We have changed to using an Ensembl pipeline as this allows us to provide a denser set of results and, in the future, to integrate additional information from Ensembl with GWAS Catalog data. As the mapping information is now provided by Ensembl, rather than NCBI, there have been a small number of changes to SNP positions and mapped genes. The mapping information is updated at every Ensembl release, every 2-3 months. In addition, we have made improvements to the display of haplotypes and proxy SNPs to make the data more user-friendly.
 
 +++<u>Changes to mapping locations</u>+++
 
@@ -391,26 +459,66 @@ As with the old pipeline the new pipeline includes any genes in which a SNP maps
 |===
 
 
-==== [[faq-F3]]3. How are SNP-SNP interactions and multi-SNP haplotypes displayed?
+==== [[faq-F3]]3. Which genome build is the Catalog on?
+++++
+Data in the GWAS Catalog is currently mapped to genome assembly <span id="genomeBuild">GRCh38.p5</span> and dbSNP Build <span id="dbSNP">144</span>.
+++++
+
+==== [[faq-F4]]4. How can I access the GWAS Catalog data on alternative genome builds?
+
+You can use the link:http://rest.ensembl.org/[Ensembl API] to map the SNP rsIDs in the GWAS Catalog to previous genome builds. For GRCh37 this is available at http://grch37.rest.ensembl.org/. The variation call http://grch37.rest.ensembl.org/documentation/info/variation_id can be used to retrieve the dbSNP mapping of all SNPs on GRCh37. Alternatively, you can also use https://www.ncbi.nlm.nih.gov/genome/tools/remap.
+
+==== [[faq-F5]]5. Why do some SNPs not have any corresponding mapping information?
+
+SNPs are extracted from the literature exactly as reported by the authors of a publication. If there is a typographical error in a publication or the authors report non-standard SNP identifiers, the subsequent mapping pipeline may not be able to provide any mapping information for this SNP. Alternatively, if an older SNP is no longer found on the latest genome build used in the GWAS Catalog, the SNP identifier extracted from the paper will still be reported in the GWAS Catalog but no mapping information for this SNP will be provided.
+
+
+==== [[faq-F6]]6. How are SNP-SNP interactions and multi-SNP haplotypes displayed and annotated?
 We have recently done some work to improve the representation of SNP-SNP interactions and multi-SNP haplotypes in the GWAS Catalog, both in the search results and in the download spreadsheet. For SNP-SNP interactions, all elements that are specific to a given SNP (rsID, risk allele, mapped gene, chromosome location etc) are now separated by an "x" (eg "rs1336472-A x rs4715555-G", "1p31.3 x 6p12.1", "3_prime_UTR_variant x upstream_gene_variant"). For multi-SNP haplotypes, elements are separated by a ";" (eg "rs17310467-?; rs6088735-?; rs6060278-?; rs867186-?", "MYH7B; EDEM2 - PROCR; EDEM2 - PROCR; PROCR", "upstream_gene_variant; intergenic_variant; intergenic_variant; missense_variant"). In both cases, the position of each element is the same across all variables, so the first rsID corresponds to the first mapped gene or mapped gene range (for intergenic SNPs), the first bp location etc.
 
 While we do provide the mapped gene and position information in this format in both the results page and the download, we excluded some of the additional gene-related information such as upstream/downstream gene IDs and distances from SNPs to genes from the download spreadsheet. This decision was made as it is almost impossible to present this kind of multi-dimensional data cleanly in the current spreadsheet format. In particular in large multi-SNP haplotypes, it is possible for some of the SNPs to be located within a gene while others are intergenic. Splitting gene IDs and distances by in-gene, upstream and downstream position would make the individual values much harder to pair up.
 
 Please note that there is no loss of information in the new representation compared to the old one. Previously, haplotypes and interactions were either not mapped at all or only the first SNP in the sequence was mapped.
 
+=== G.Ancestry
 
-== G. Programmatic access
+==== [[faq-G1]]1. How is the ancestry data in the GWAS Catalog provided?
+
+The GWAS Catalog team has developed and published a link:https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1396-2[framework] to represent, in an accurate and standardized manner, the ancestry of samples. Our framework involves representing the ancestry of samples in two forms: (1) a detailed sample description and (2) an ancestry category from a controlled list. Detailed descriptions aim to capture accurate, informative, and comprehensive information regarding the ancestry or genealogy of each distinct sample. Category assignment reduces complexity within data sets and enables the establishment of hierarchical relationships, placing samples in context with other samples, groups, and populations. For more information please view our link:ancestry[Ancestry Documentation] page
+
+==== [[faq-G2]]2. How do I search for ancestry data in the GWAS Catalog?
+
+Ancestry data can be searched by entering relevant text in the search bar, including ancestry category, country or ancestry identifier (e.g. “European”, “South Africa”, “Ashkenazi Jewish”). Any exact string match to the entered text will be returned. Ancestry data can be found in the expanded information in the “Studies” table, accessible by clicking the little "+" icon at the end of each row.
+
+==== [[faq-G3]]3. What does the "Pre-2011 ancestry not double-curated" flag next to some of the ancestry data mean?
+
+As of September 2016, we release publicly all ancestry data extracted from the GWAS Catalog. Ancestry data from studies published before 2011 has not been reviewed by a second curator and so may not always conform to the strict standardised way we present more recent ancestry data.
+
+==== [[faq-G4]]4. Why is the ancestry information provided in a separate downloadable spreadsheet to the rest of the study-level information?
+
+Most GWAS Catalog studies include at least two ancestry entries, one for the inital stage and one for the replication stage, and some studies may have several entries for each stage. As there is no way of usefully representing this multi-dimensional data in a single row in a spreadsheet, this data is instead provided in a separate spreadsheet, with each ancestry entry in its own row.
 
 
-==== [[faq-G1]]1. Is there a way of programmatically retrieving data from the GWAS Catalog?
+== H. Programmatic access
+
+
+==== [[faq-H1]]1. Is there a way of programmatically retrieving data from the GWAS Catalog?
 
 The GWAS Catalog REST API is now available for beta testing at http://www.ebi.ac.uk/gwas/beta/rest/. Please note that as this is only a beta release, we do not guarantee the stability of the endpoints. We make every effort to group major changes into a single software release, which we communicate to users via our \gwas-announce@ebi.ac.uk mailing list. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Subscribe here].
 
 
-==== [[faq-G2]]2. How do I use the GWAS Catalog REST API?
+==== [[faq-H2]]2. How do I use the GWAS Catalog REST API?
 
 link:http://www.ebi.ac.uk/gwas/beta/rest/docs/api[Full technical documentation] for the GWAS Catalog REST API as well as link:http://www.ebi.ac.uk/gwas/beta/rest/docs/sample-scripts[usage examples] are available on the REST API beta site.
 
+
+=== I. Summary Statistics
+
+==== [[faq-I1]]1. How do I find out which publications have full summary statistics available?
+Studies with full summary statistics are indicated by an icon in the “Association count” column of the studies table. You can also view a full list of studies with summary statistics files link:https://www.ebi.ac.uk/gwas/downloads/summary-statistics[here] together with links to other summary statistics resources.
+
+==== [[faq-I2]]2. I am an author and would like to deposit my summary statistics in the GWAS Catalog, how to I go about this?  
+We currently extract summary statistics files from publications where they are made freely available either as Supplementary files or via a web link. We also encourage authors to submit their data directly. If you wish to deposit summary statistics in the GWAS Catalog, please contact us via gwas-info@ebi.ac.uk for instructions on how to access our ftp server.  We can only include data in the Catalog that has been published in a peer-reviewed journal and indexed in PubMed. We aren’t currently able to provide accession numbers before publication. If you have an accepted publication for which you intend to submit summary statistics to the GWAS Catalog, and need to include a data availability statement in your manuscript, please contact us. Note that for summary statistics to be made available through the GWAS Catalog, your study must fulfil our link:methods[eligibility criteria], and the summary statistics files must reflect the published results, not a sub-set. For example if your study is a genome-wide meta-analysis, we can only include summary statistics for the meta-analysis, not a component thereof. 
 
 '''
 
@@ -421,4 +529,4 @@ Email us at gwas-info@ebi.ac.uk.
 
 '''
 
-_Last updated: 19 September 2017_
+_Last updated: 20 April 2018_

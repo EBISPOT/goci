@@ -33,7 +33,7 @@
 |link:fileheaders#_file_headers_for_catalog_version_1_0_1[ Click to view]
 
 
-|All ancestry data _(link:faq#faq-A13[see FAQ A13 for more details])_
+|All ancestry data _(link:faq#faq-G1[see FAQ G1 for more details])_
 |link:../api/search/downloads/ancestry[ Click to download]
 |tab separated file
 |link:fileheaders#_file_headers_for_ancestry_download[ Click to view]
