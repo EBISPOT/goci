@@ -52,6 +52,14 @@ We also extract country information as it  provides additional detail on sample 
 * When the descriptor "African American", “European American”, “Mexican American” or “American Indian” is provided, the U.S. is entered as the country of recruitment.
 * “NR” is entered when no country of recruitment is provided.
 
+=== Country of Origin
+
+* Country of origin is entered if the author provides details of the country of origin of an individual’s grandparents. 
+* Country of origin is also entered if there is evidence of known genealogy associated with a country of origin, e.g. “knowledge of Icelandic genealogy” has been used to justify assigning country of origin.
+* “NR” is entered when no country of origin is provided.
+* Country of origin information is only included in the link:file-downloads.adoc[spreadsheet download].
+
+
 === Additional Description
 
 * All ancestry descriptors provided by the author are entered in the “Additional description” under the “Ancestry category” to which they have been mapped (this applies to GWAS Catalog studies from January 2016 onwards).
