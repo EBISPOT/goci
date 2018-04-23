@@ -6,7 +6,7 @@
 
 Here we present analysis of the ancestry data contained in the GWAS Catalog, last updated Jan 2018.
 
-image::ancestry-data.png[Ancestry data,1000,900,align="center"]
+image::ancestry-data.png[Ancestry data,1000,1000,align="center"]
 
 {empty} +
 
