@@ -484,7 +484,7 @@ Please note that there is no loss of information in the new representation compa
 
 ==== [[faq-G1]]1. How is the ancestry data in the GWAS Catalog provided?
 
-Ancestry data is provided in two forms: a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms and includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment. For more information please view our link:methods[Methods] page.
+The GWAS Catalog team has developed and published a link:https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1396-2[framework] to represent, in an accurate and standardized manner, the ancestry of samples. Our framework involves representing the ancestry of samples in two forms: (1) a detailed sample description and (2) an ancestry category from a controlled list. Detailed descriptions aim to capture accurate, informative, and comprehensive information regarding the ancestry or genealogy of each distinct sample. Category assignment reduces complexity within data sets and enables the establishment of hierarchical relationships, placing samples in context with other samples, groups, and populations. For more information please view our link:ancestry[Ancestry Documentation] page
 
 ==== [[faq-G2]]2. How do I search for ancestry data in the GWAS Catalog?
 
