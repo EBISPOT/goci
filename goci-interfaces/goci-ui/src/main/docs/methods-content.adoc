@@ -45,6 +45,11 @@ Individual SNP-trait associations identified in eligible studies are included in
 * SNP-trait associations that are described as previously known at the time of publication and are statistically significant in the GWAS sample, but are not attempted for replication, are reported.
 * The most significant SNP from each independent locus is extracted.
 
+==== Targeted and Exome array studies
+
+* We are working on expanding the scope of the GWAS Catalog to include studies using large-scale targeted/non-genome-wide arrays, including the Metabochip, Immunochip and Exome arrays. This is currently in a pilot phase where prioritisation of targeted and exome array studies for inclusion in the Catalog is by 1) relevance of the trait analysed 2) user request. 
+* Targeted array studies included in the Catalog are indicated in the search interface using  a small “target” icon, close to the number of associations curated from that specific study.
+
 === Data extraction
 
 GWAS Catalog data are manually extracted from the literature (either the main text or supporting information) by expert scientists.
@@ -66,6 +71,7 @@ Information on the following study-level fields is extracted. Capitalised titles
 * DISEASE/TRAIT: Description of disease/trait examined in the study
 * INITIAL SAMPLE DESCRIPTION: Sample size and ancestry description for stage 1 of GWAS (summing across multiple Stage 1 populations, if applicable)
 * REPLICATION SAMPLE DESCRIPTION: Sample size and ancestry description for subsequent replication(s) (summing across multiple populations, if applicable)
+* GENOTYPING TECHNOLOGY: Genome-wide genotyping array, exome-wide genotyping array, targeted genotyping array (with an optional field for additional array information, for example ImmunoChip or MetaboChip).
 * PLATFORM (SNPS PASSING QC): Manufacturer of genotyping array used in GWAS stage; Number of SNPs passing quality control metrics and included in the GWAS analysis; also includes notation of “imputed” if imputation is used and "pooled" to denote studies of pooled DNA.
 
 For each identified SNP, we extract:
@@ -81,9 +87,11 @@ For each identified SNP, we extract:
 
 ==== Ancestry data extraction
 
-Sample ancestry information is available in two distinct forms; a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms, enabling searching, visualisation and integration. It includes ancestry, chosen from a list of 15 ancestral categories, and country of recruitment.
+Sample ancestry information is available in two distinct forms; a free text sample description and structured ancestry and recruitment information. The free text descriptions of the initial and replication stages of the GWAS provide summary ancestry descriptions of the samples analysed in each stage, based on the language used in the paper. The structured information is designed to represent data using controlled terms, enabling searching, visualisation and integration. It includes ancestry, chosen from a list of ancestral categories, and country of recruitment.
 
 The ancestry is derived from the ancestry descriptors used in the publication. Country of recruitment is extracted if an author states the country of recruitment of the samples. It is not assumed from an ancestry identifier or from a cohort name. Where a country of recruitment but no ancestry is provided, published population demographic information, such as the https://www.cia.gov/library/publications/the-world-factbook/[CIA World Factbook] is consulted.
+
+Full details of the framework used to represent ancestry data in the GWAS Catalog can be found in our publication by link:http://rdcu.be/G6Fv[Morales et al.] and on our link:ancestry[Ancestry Documentation] page.
 
 ==== [[mapping]]Quality control and SNP mapping
 
