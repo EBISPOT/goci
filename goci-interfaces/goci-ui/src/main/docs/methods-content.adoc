@@ -91,7 +91,7 @@ Sample ancestry information is available in two distinct forms; a free text samp
 
 The ancestry is derived from the ancestry descriptors used in the publication. Country of recruitment is extracted if an author states the country of recruitment of the samples. It is not assumed from an ancestry identifier or from a cohort name. Where a country of recruitment but no ancestry is provided, published population demographic information, such as the https://www.cia.gov/library/publications/the-world-factbook/[CIA World Factbook] is consulted.
 
-Full details of the framework used to represent ancestry data in the GWAS Catalog can be found in our publication by link:http://rdcu.be/G6Fv[Morales et al.] and on our link:ancestry[Ancestry Documentation] page
+Full details of the framework used to represent ancestry data in the GWAS Catalog can be found in our publication by link:http://rdcu.be/G6Fv[Morales et al.] and on our link:ancestry[Ancestry Documentation] page.
 
 ==== [[mapping]]Quality control and SNP mapping
 
