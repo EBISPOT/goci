@@ -41,7 +41,42 @@ function processStudy(study, table) {
     row.append($("<td>").html(authorsearch));
     
     row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
-    row.append($("<td>").html(study.accessionId));
+    
+    // below the details of the study
+    var genotypingTechnologiesList = "";
+    var genotypingIcon= "";
+    var hasTargetArrayIcon = false;
+    if (study.genotypingTechnologies != null) {
+        var priorityGenotypingTech = "";
+        for (var i = 0; i < study.genotypingTechnologies.length; i++) {
+            if (study.genotypingTechnologies[i] == 'Genome-wide genotyping array') {
+                priorityGenotypingTech = study.genotypingTechnologies[i] + ", ";
+            }
+            else {
+                hasTargetArrayIcon = true;
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
+                if (study.studyDesignComment != null) {
+                    
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment.trim()).concat("]");
+                }
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
+            }
+        }
+        
+        genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
+        
+        genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
+    }
+    
+    if (hasTargetArrayIcon) {
+        genotypingIcon = "<a href='#'><span class='glyphicon icon-GWAS_target_icon clickable context-help'" +
+            " data-toggle='tooltip'" +
+            "data-original-title='Targeted or exome array study'></span></a>";
+    }
+    
+    var accessionInfo = (study.accessionId).concat(" ").concat(genotypingIcon);
+    row.append($("<td>").html(accessionInfo));
+    
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -72,40 +107,10 @@ function processStudy(study, table) {
 
     }
     
-    // below the details of the study
-    var genotypingTechnologiesList = "";
-    var genotypingIcon= "";
-    var hasTargetArrayIcon = false;
-    if (study.genotypingTechnologies != null) {
-        var priorityGenotypingTech = "";
-        for (var i = 0; i < study.genotypingTechnologies.length; i++) {
-            if (study.genotypingTechnologies[i] == 'Genome-wide genotyping array') {
-                priorityGenotypingTech = study.genotypingTechnologies[i] + ", ";
-            }
-            else {
-                hasTargetArrayIcon = true;
-                genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
-                if (study.studyDesignComment != null) {
-                    
-                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment.trim()).concat("]");
-                }
-                genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
-            }
-        }
-        
-        genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
-        
-        genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
-    }
     
-    if (hasTargetArrayIcon) {
-        genotypingIcon = "<a href='#'><span class='glyphicon icon-target-tick clickable context-help'" +
-            " data-toggle='tooltip'" +
-            "data-original-title='Targeted or exome array study'></span></a>";
-    }
     var count = study.associationCount;
     //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
-    var associationLink = (count + " ").concat(pvalueflag).concat(" ").concat(genotypingIcon);
+    var associationLink = (count + " ").concat(pvalueflag);
     row.append($("<td>").html(associationLink));
 
     //row.append($("<td>").html(study.associationCount));

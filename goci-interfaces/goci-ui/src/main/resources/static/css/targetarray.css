@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-GWAS_target_icon:before {
+  content: "\e900";
+}
 .icon-target-tick:before {
   content: "\e925";
 }
