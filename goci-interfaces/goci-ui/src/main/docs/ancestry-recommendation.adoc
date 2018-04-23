@@ -23,9 +23,9 @@ g. If available, genetic genealogy or ancestry of grandparents or parents should
 
 a.	Where possible, use genomic methods to confirm self-reported ancestry or to infer the ancestry of samples.
 
-b.	If inferred, indicate the analytical procedure utilized. See link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/bin/13059_2018_1396_MOESM1_ESM.docx[Box S1], Morales et al 2018 for a description of commonly used methods. 
+b.	If inferred, indicate the analytical procedure utilized. See link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/bin/13059_2018_1396_MOESM1_ESM.docx[Box S1] (Morales et al 2018) for a description of commonly used methods. 
 
-==== 3.	Assign an ancestry category for each distinct group of samples. See link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/table/Tab1/?report=objectonly[Table 1], Morales et al 2018, for a list of ancestry categories. Refer to link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/bin/13059_2018_1396_MOESM3_ESM.xlsx[Table S2], Morales et al 2018 for a list of descriptors in use in the Catalog with their category assignments.
+==== 3.	Assign an ancestry category for each distinct group of samples. See link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/table/Tab1/?report=objectonly[Table 1] (Morales et al 2018), for a list of ancestry categories. Refer to link:https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5815218/bin/13059_2018_1396_MOESM3_ESM.xlsx[Table S2] (Morales et al 2018) for a list of descriptors in use in the Catalog with their category assignments.
 
 ==== 4.	Provide the sample size for each distinct group of samples included in the analysis.
 
