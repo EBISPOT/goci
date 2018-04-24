@@ -109,7 +109,9 @@ MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 
 STUDY ACCESSION^*^ ^+^: Accession ID allocated to a GWAS Catalog study
 
-_Last updated: 16 September 2016_
+Dismissed from 1 May 2018
+
+_Last updated: 24 April 2018_
 
 '''
 
