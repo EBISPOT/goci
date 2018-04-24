@@ -111,6 +111,11 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-email-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0-rc3</version>
+        </dependency>
     </dependencies>
 
     <properties>

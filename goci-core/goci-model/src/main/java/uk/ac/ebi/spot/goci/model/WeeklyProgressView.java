@@ -6,6 +6,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.util.Date;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+
 /**
  * Created by emma on 08/06/2016.
  *
