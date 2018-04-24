@@ -8,6 +8,7 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 ++++
 
 
+
 <<File headers for catalog version 1.0>>
 
 <<File headers for catalog version 1.0.1>>
