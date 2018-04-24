@@ -18,9 +18,6 @@ var CONTEXT_RANGE = 500;
 
 
 // $(document).ready(function() {
-//     if (window.location.pathname.indexOf("beta") != -1) {
-//         $('#beta-icon').show();
-//     }
 //     var searchTerm = $('#query').text();
 //     console.log("Loading search module!");
 //     console.log("efoTrait: " + searchTerm);

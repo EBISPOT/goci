@@ -19,7 +19,6 @@ import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
  * Created by xinhe on 19/04/2017.
  */
 @Controller
-//@RequestMapping("/beta")
 public class EfoTraitController {
 
 

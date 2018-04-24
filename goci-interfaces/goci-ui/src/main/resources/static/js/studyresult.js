@@ -20,10 +20,7 @@ global_raw = 'fq:resourcename:association or resourcename:study'
 var pageRowLimit = 5;
 
 $(document).ready(() => {
-    //add beta icon
-    if (window.location.pathname.indexOf("beta") != -1) {
-    $('#beta-icon').show();
-}
+
 //jump to the top of the page
 $('html,body').scrollTop(0);
 

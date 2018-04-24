@@ -210,7 +210,7 @@ All our code is freely available from https://github.com/EBISPOT/goci[our Github
 ==== [[faq-A17]]17. How can I identify variants in linkage disequilibrium (LD) with a variant?
 
 LD calculation between a variant of interest and its surrounding variants can be accessed programmatically using the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) where you can specify a variant ID, a window size of the region surrounding the variant, a population and a cut-off for the calculation results.
-In case of a dataset with more than 1 variant of interest, several independant calls to the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) can be done. Variants in LD with a specific GWAS Catalog variant can also be visualised on our new prototype variant page http://www.ebi.ac.uk/gwas/beta/variants.
+In case of a dataset with more than 1 variant of interest, several independant calls to the Ensembl REST API (http://rest.ensembl.org/documentation/info/ld_pairwise_get) can be done. Variants in LD with a specific GWAS Catalog variant can also be visualised on our new prototype variant page http://www.ebi.ac.uk/gwas/labs/variants.
 
 
 == B. Searching
@@ -404,12 +404,12 @@ Please note that there is no loss of information in the new representation compa
 
 ==== [[faq-G1]]1. Is there a way of programmatically retrieving data from the GWAS Catalog?
 
-The GWAS Catalog REST API is now available for beta testing at http://www.ebi.ac.uk/gwas/beta/rest/. Please note that as this is only a beta release, we do not guarantee the stability of the endpoints. We make every effort to group major changes into a single software release, which we communicate to users via our \gwas-announce@ebi.ac.uk mailing list. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Subscribe here].
+The GWAS Catalog REST API is now available for beta testing at http://www.ebi.ac.uk/gwas/labs/rest/. Please note that as this is only a beta release, we do not guarantee the stability of the endpoints. We make every effort to group major changes into a single software release, which we communicate to users via our \gwas-announce@ebi.ac.uk mailing list. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Subscribe here].
 
 
 ==== [[faq-G2]]2. How do I use the GWAS Catalog REST API?
 
-link:http://www.ebi.ac.uk/gwas/beta/rest/docs/api[Full technical documentation] for the GWAS Catalog REST API as well as link:http://www.ebi.ac.uk/gwas/beta/rest/docs/sample-scripts[usage examples] are available on the REST API beta site.
+link:http://www.ebi.ac.uk/gwas/labs/rest/docs/api[Full technical documentation] for the GWAS Catalog REST API as well as link:http://www.ebi.ac.uk/gwas/labs/rest/docs/sample-scripts[usage examples] are available on the REST API beta site.
 
 
 '''

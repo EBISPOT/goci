@@ -14,8 +14,8 @@
  * http://es6-features.org/#ParameterContextMatching
  * http://es6-features.org/#ObjectPropertyAssignment //merge object
  */
-var global_color_url = 'https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/';
-var global_color_url_batch = 'https://wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMappings';
+var global_color_url = 'https://wwwdev.ebi.ac.uk/gwas/labs/rest/api/parentMapping/';
+var global_color_url_batch = 'https://wwwdev.ebi.ac.uk/gwas/labs/rest/api/parentMappings';
 var global_ols_api = 'https://www.ebi.ac.uk/ols/api/';
 var global_ols = 'https://www.ebi.ac.uk/ols/';
 var global_ols_seach_api =  global_ols_api + 'search';
@@ -207,10 +207,6 @@ new Clipboard('#sharable_link_btn', {
 });
 
 $(document).ready(() => {
-    //add beta icon
-    if (window.location.pathname.indexOf("beta") != -1) {
-        $('#beta-icon').show();
-    }
     //jump to the top of the page
     $('html,body').scrollTop(0);
 
@@ -851,7 +847,7 @@ function processSolrData(data, initLoad=false) {
         prepareAncestryFilter(allAncestries);
 
 
-        //wwwdev.ebi.ac.uk/gwas/beta/rest/api/parentMapping/EFO_0000400
+        //wwwdev.ebi.ac.uk/gwas/labs/rest/api/parentMapping/EFO_0000400
         //Load colour for unique efo
         var allColorLoaded = []
         Object.keys(allUniqueEFO).forEach((efo) => {

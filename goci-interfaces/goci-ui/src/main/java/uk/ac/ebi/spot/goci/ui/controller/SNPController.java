@@ -15,7 +15,6 @@ import uk.ac.ebi.spot.goci.ui.SearchConfiguration;
  */
 
 @Controller
-//@RequestMapping("/beta")
 public class SNPController {
 
     private SearchConfiguration searchConfiguration;

@@ -2,7 +2,7 @@
 
 == Programmatic access
 
-The full REST API for the GWAS Catalog is now available for beta testing at http://www.ebi.ac.uk/gwas/beta/rest/. We welcome any and all suggestions, comments and bug reports - please get in touch at gwas-info@ebi.ac.uk.
+The full REST API for the GWAS Catalog is now available for testing at http://www.ebi.ac.uk/gwas/labs/rest/. We welcome any and all suggestions, comments and bug reports - please get in touch at gwas-info@ebi.ac.uk.
 
 You can still link into the Catalog and build bookmarks using the guide below but if you used this approach to programmatically retrieve data from the Catalog, we would suggest updating your code to use the REST API.
 
