@@ -66,3 +66,4 @@ Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.u
 ==== _Citing the GWAS Catalog_
 
 _Please see the link:about[About] page for citation guidance._
+
