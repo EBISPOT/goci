@@ -57,8 +57,6 @@ We are working to provide richer, fully customise-able downloads of GWAS data an
 A file showing all GWAS to EFO mappings, including the parent category each trait is mapped to on the diagram can be found link:../api/search/downloads/trait_mappings[ here] and on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest[ our FTP server]. Note that mappings are not one-to-one, i.e. one EFO term may be mapped to several different GWAS traits and vice versa.
 
 
-
-
 == Downloading the GWAS Catalog as RDF/OWL
 
 *CAUTION*: Some of these files may be very large - attempting to open them in your browser may take a very long time. It is usually safest to right-click and choose "save as..." to download these files.
