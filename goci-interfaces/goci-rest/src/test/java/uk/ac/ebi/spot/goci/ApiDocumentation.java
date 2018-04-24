@@ -179,12 +179,12 @@ public class ApiDocumentation {
 //                              linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
 //                              linkWithRel("findByGxg").description("Search for a study via whether it is a gene-gene interaction study, using the parameter gxg"),
 //                              linkWithRel("findStudyDistinctByAssociationsSnpInteractionTrue").description("Search for studies that have associations that are SNP-SNP interactions "),
-                              linkWithRel("findByPubmedId").description("Search for a study using the parameter pubmedId"),
+                              linkWithRel("findByPublicationIdPubmedId").description("Search for a study using the parameter pubmedId"),
                               linkWithRel("findByAccessionId").description("Search for a study using the parameter accessionId"),
 //                              linkWithRel("findByGxe").description("Search for a study by whether it is a gene-environment interaction study, using the parameter gxe"),
                               linkWithRel("findByFullPvalueSet").description("Search for a study by whether full summary statistics are available, using the parameter fullPvalueSet"),
                               linkWithRel("findByUserRequested").description("Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested "),
-                              linkWithRel("findByAuthor").description("Search for a study by its first author using the parameter authorContainingIgnoreCase"),
+                              //linkWithRel("findByAuthor").description("Search for a study by its first author using the parameter authorContainingIgnoreCase"),
                               linkWithRel("findByEfoTrait").description("Search for a study via the annotated EFO term using the parameter efTrait"),
                               linkWithRel("findByEfoUri").description("Search for a study via the annotated EFO term using the parameter uri"),
                               linkWithRel("findByDiseaseTrait").description("Search for a study via the annotated disease term using the parameter diseaseTrait")
@@ -203,13 +203,8 @@ public class ApiDocumentation {
                                 ),
                         responseFields(
                                 fieldWithPath("_links").description("<<studies-links,Links>> to other resources"),
-                                fieldWithPath("pubmedId").description("The pubmed ID for the study"),
                                 fieldWithPath("accessionId").description("The study's GWAS Catalog accession ID"),
                                 fieldWithPath("fullPvalueSet").description("Whether full summary statistics are available for this study"),
-                                fieldWithPath("author").description("The study's first author"),
-                                fieldWithPath("publicationDate").description("The study's publication date"),
-                                fieldWithPath("publication").description("The study's journal"),
-                                fieldWithPath("title").description("The study title"),
                                 fieldWithPath("initialSampleSize").description("Initial sample description"),
                                 fieldWithPath("replicationSampleSize").description("Replication sample description"),
                                 fieldWithPath("gxe").description("Whether the study investigates a gene-environment interaction"),
@@ -223,7 +218,8 @@ public class ApiDocumentation {
                                 fieldWithPath("platforms").description("Genotyping platform(s) used in this study"),
                                 fieldWithPath("genotypingTechnologies").description("Genotyping technology used in this study"),
                                 fieldWithPath("diseaseTrait").description("Free text description of the trait investigated in this study"),
-                                fieldWithPath("ancestries").description("Ancestry entries for this study")
+                                fieldWithPath("ancestries").description("Ancestry entries for this study"),
+                                fieldWithPath("publicationInfo").description("Convenience representation of the publication with all info such as title, pubmedId, date of publication")
                                 ),
                         links(halLinks(),
                               linkWithRel("self").description("This study"),

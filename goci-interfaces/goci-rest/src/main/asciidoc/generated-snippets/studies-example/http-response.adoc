@@ -2,15 +2,10 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2499
+Content-Length: 2735
 
 {
-  "author" : "Perlis RH",
-  "publicationDate" : "2010-11-01T00:00:00.000+0000",
-  "publication" : "Am J Psychiatry",
-  "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
   "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
-  "pubmedId" : "21041247",
   "gxe" : false,
   "gxg" : false,
   "snpCount" : 1922309,
@@ -64,6 +59,22 @@ Content-Length: 2499
     "genotypingTechnology" : "Genome-wide genotyping array"
   } ],
   "replicationSampleSize" : "2,698 European ancestry Bipolar disorder cases, 1,649 Major depressive disorder cases",
+  "publicationInfo" : {
+    "pubmedId" : "21041247",
+    "publicationDate" : "2010-11-01",
+    "publication" : "Am J Psychiatry",
+    "title" : "Genome-wide association study of suicide attempts in mood disorder patients.",
+    "author" : {
+      "fullname" : "Perlis RH",
+      "orcid" : null
+    },
+    "_links" : {
+      "studies" : {
+        "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
+        "templated" : true
+      }
+    }
+  },
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854"
@@ -75,14 +86,14 @@ Content-Length: 2499
     "associationsByStudySummary" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
     },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
+    },
     "snps" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
     },
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
-    },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
     }
   }
 }

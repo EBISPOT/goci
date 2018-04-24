@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2827
+Content-Length: 2029
 
 {
   "riskFrequency" : "NR",
@@ -52,43 +52,8 @@ Content-Length: 2827
       }
     }
   } ],
-  "lastMappingDate" : "2017-08-26T17:25:47.000+0000",
-  "lastUpdateDate" : "2017-08-26T17:25:48.000+0000",
-  "genes" : [ {
-    "geneName" : "SLC2A9",
-    "entrezGeneIds" : [ {
-      "entrezGeneId" : "56606"
-    } ],
-    "ensemblGeneIds" : [ {
-      "ensemblGeneId" : "ENSG00000109667"
-    } ]
-  }, {
-    "geneName" : "RNA5SP154",
-    "entrezGeneIds" : [ {
-      "entrezGeneId" : "100873420"
-    } ],
-    "ensemblGeneIds" : [ {
-      "ensemblGeneId" : "ENSG00000252002"
-    } ]
-  }, {
-    "geneName" : "LOC105374476",
-    "entrezGeneIds" : [ {
-      "entrezGeneId" : "105374476"
-    } ],
-    "ensemblGeneIds" : [ ]
-  }, {
-    "geneName" : "AC005674.1",
-    "entrezGeneIds" : [ ],
-    "ensemblGeneIds" : [ {
-      "ensemblGeneId" : "ENSG00000250413"
-    } ]
-  }, {
-    "geneName" : "AC108199.1",
-    "entrezGeneIds" : [ ],
-    "ensemblGeneIds" : [ {
-      "ensemblGeneId" : "ENSG00000249219"
-    } ]
-  } ],
+  "lastMappingDate" : "2017-12-16T16:07:59.000+0000",
+  "lastUpdateDate" : "2017-12-16T16:07:59.000+0000",
   "pvalue" : 3.0000000000000002E-18,
   "_links" : {
     "self" : {
@@ -101,11 +66,11 @@ Content-Length: 2827
     "efoTraits" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
     },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
-    },
     "study" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
     }
   }
 }

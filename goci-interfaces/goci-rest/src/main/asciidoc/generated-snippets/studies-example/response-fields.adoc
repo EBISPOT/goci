@@ -5,10 +5,6 @@
 |`Object`
 |<<studies-links,Links>> to other resources
 
-|`pubmedId`
-|`String`
-|The pubmed ID for the study
-
 |`accessionId`
 |`String`
 |The study's GWAS Catalog accession ID
@@ -16,22 +12,6 @@
 |`fullPvalueSet`
 |`Boolean`
 |Whether full summary statistics are available for this study
-
-|`author`
-|`String`
-|The study's first author
-
-|`publicationDate`
-|`String`
-|The study's publication date
-
-|`publication`
-|`String`
-|The study's journal
-
-|`title`
-|`String`
-|The study title
 
 |`initialSampleSize`
 |`String`
@@ -88,5 +68,9 @@
 |`ancestries`
 |`Array`
 |Ancestry entries for this study
+
+|`publicationInfo`
+|`Object`
+|Convenience representation of the publication with all info such as title, pubmedId, date of publication
 
 |===

@@ -77,8 +77,4 @@
 |`Array`
 |A convenience concept linking associations to one or more risk alleles
 
-|`genes`
-|`Array`
-|Genes that the SNPs for this association are annotated to
-
 |===

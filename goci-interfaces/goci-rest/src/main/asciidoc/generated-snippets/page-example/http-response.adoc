@@ -2,17 +2,12 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
-Content-Length: 2912
+Content-Length: 3192
 
 {
   "_embedded" : {
     "studies" : [ {
-      "author" : "Ojwang JO",
-      "publicationDate" : "2010-10-21T23:00:00.000+0000",
-      "publication" : "J Hand Surg Am",
-      "title" : "Genome-wide association scan of Dupuytren's disease.",
       "initialSampleSize" : "37 European ancestry cases, 36 European ancestry controls",
-      "pubmedId" : "20971583",
       "gxe" : false,
       "gxg" : false,
       "snpCount" : 251837,
@@ -46,6 +41,22 @@ Content-Length: 2912
         "genotypingTechnology" : "Genome-wide genotyping array"
       } ],
       "replicationSampleSize" : "NA",
+      "publicationInfo" : {
+        "pubmedId" : "20971583",
+        "publicationDate" : "2010-10-21",
+        "publication" : "J Hand Surg Am",
+        "title" : "Genome-wide association scan of Dupuytren's disease.",
+        "author" : {
+          "fullname" : "Ojwang JO",
+          "orcid" : null
+        },
+        "_links" : {
+          "studies" : {
+            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841{?projection}",
+            "templated" : true
+          }
+        }
+      },
       "_links" : {
         "self" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841"
@@ -57,14 +68,14 @@ Content-Length: 2912
         "associationsByStudySummary" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations?projection=associationByStudy"
         },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations"
+        },
         "snps" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/snps"
         },
         "efoTraits" : {
           "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/efoTraits"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations"
         }
       }
     } ]
@@ -83,7 +94,7 @@ Content-Length: 2912
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=2&size=1"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=4774&size=1"
+      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=5600&size=1"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
@@ -94,8 +105,8 @@ Content-Length: 2912
   },
   "page" : {
     "size" : 1,
-    "totalElements" : 4775,
-    "totalPages" : 4775,
+    "totalElements" : 5601,
+    "totalPages" : 5601,
     "number" : 1
   }
 }

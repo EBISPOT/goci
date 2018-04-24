@@ -414,6 +414,7 @@ public class Study implements Trackable {
         setNotes((currentNotes));
     }
 
+    @JsonIgnore
     public String getTagDuplicatedNote() {
         Collection<StudyNote> currentNotes = getNotes();
         for  (Note note:currentNotes) {
@@ -423,6 +424,7 @@ public class Study implements Trackable {
         }
         return "";
     }
+
     public Collection<GenotypingTechnology> getGenotypingTechnologies() {
         return genotypingTechnologies;
     }

@@ -4,7 +4,7 @@
 |`self`
 |This study
 
-|`findByPubmedId`
+|`findByPublicationIdPubmedId`
 |Search for a study using the parameter pubmedId
 
 |`findByAccessionId`
@@ -15,9 +15,6 @@
 
 |`findByUserRequested`
 |Search for a study by whether its addition to the Catalog was requested by a user, using the parameter userRequested 
-
-|`findByAuthor`
-|Search for a study by its first author using the parameter authorContainingIgnoreCase
 
 |`findByEfoTrait`
 |Search for a study via the annotated EFO term using the parameter efTrait
