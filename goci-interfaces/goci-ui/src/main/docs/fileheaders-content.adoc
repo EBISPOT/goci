@@ -121,7 +121,7 @@ As for version 1.0.1 plus
 
 GENOTYPING_TECHNOLOGY^*^ ^+^: Genotyping technology/ies used in this study, with additional array information (ex. Immunochip or Exome array) in brackets.
 
-_Last updated: 24 April 2018_
+_Added: 24 April 2018_
 
 '''
 
