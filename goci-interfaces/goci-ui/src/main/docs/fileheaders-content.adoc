@@ -12,6 +12,8 @@ Data in the GWAS Catalog is currently mapped to genome assembly <span id="genome
 
 <<File headers for catalog version 1.0.1>>
 
+<<File headers for catalog version 1.0.2>>
+
 <<File headers for ancestry download>>
 
 *Available in associations download files
@@ -107,6 +109,16 @@ MAPPED_TRAIT_URI^*^ ^+^: URI of the EFO trait
 STUDY ACCESSION^*^ ^+^: Accession ID allocated to a GWAS Catalog study
 
 _Last updated: 16 September 2016_
+
+'''
+
+=== File headers for catalog version 1.0.2
+
+As for version 1.0.1 plus
+
+GENOTYPING_TECHNOLOGY^*^ ^+^: Genotyping technology/ies used in this study, with additional array information (ex. Immunochip or Exome array) in brackets.
+
+_Last updated: 24 April 2018_
 
 '''
 
