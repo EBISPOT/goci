@@ -45,8 +45,43 @@ function processStudy(study, table) {
     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
     row.append($("<td>").html(authorsearch));
     
-    row.append($("<td>").html(pubmedIdLink.concat('<br>').concat(viewPapers)));
-    row.append($("<td>").html(accessionLink));
+    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
+    
+    // below the details of the study
+    var genotypingTechnologiesList = "";
+    var genotypingIcon= "";
+    var hasTargetArrayIcon = false;
+    if (study.genotypingTechnologies != null) {
+        var priorityGenotypingTech = "";
+        for (var i = 0; i < study.genotypingTechnologies.length; i++) {
+            if (study.genotypingTechnologies[i] == 'Genome-wide genotyping array') {
+                priorityGenotypingTech = study.genotypingTechnologies[i] + ", ";
+            }
+            else {
+                hasTargetArrayIcon = true;
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(study.genotypingTechnologies[i]);
+                if (study.studyDesignComment != null) {
+                    
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(study.studyDesignComment.trim()).concat("]");
+                }
+                genotypingTechnologiesList = genotypingTechnologiesList.concat(", ")
+            }
+        }
+        
+        genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
+        
+        genotypingTechnologiesList = genotypingTechnologiesList.slice(0, -2);
+    }
+    
+    if (hasTargetArrayIcon) {
+        genotypingIcon = "<a href='#'><span class='glyphicon icon-GWAS_target_icon clickable context-help'" +
+            " data-toggle='tooltip'" +
+            "data-original-title='Targeted or exome array study'></span></a>";
+    }
+    
+    var accessionInfo = (study.accessionId).concat(" ").concat(genotypingIcon);
+    row.append($("<td>").html(accessionInfo));
+    
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -76,7 +111,8 @@ function processStudy(study, table) {
                          "data-original-title='Click for summary statistics'></span></a>");
 
     }
-
+    
+    
     var count = study.associationCount;
     //var associationsearch = "<span><a href='search?query=".concat(study.id.substring(0,6)).concat("'>").concat(count).concat("</a></span>");
     var associationLink = (count + " ").concat(pvalueflag);
@@ -282,7 +318,14 @@ function processStudy(study, table) {
                 "<td>").html(study.replicateSampleDescription)));
 
     }
-
+    
+    // above build the value
+    if (genotypingTechnologiesList != "") {
+   
+        innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Genotyping technology")).append(
+            $("<td>").html(genotypingTechnologiesList)));
+    }
+    
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append(
             $("<td>").html(study.platform)));
 
@@ -337,7 +380,7 @@ function processAssociation(association, table) {
                     if (alleles[i].trim().indexOf(rsIds[j].trim()) != -1) {
                         var rsidsearch = "<span><a href='search?query=".concat(rsIds[j].trim()).concat("'>").concat(
                                 alleles[i].trim()).concat("</a></span>");
-                        var ensembl = "<span><a href='https://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(
+                        var ensembl = "<span><a href='http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(
                                 rsIds[j].trim()).concat("'  target='_blank'>").concat(
                                 "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
                         if (content == '') {

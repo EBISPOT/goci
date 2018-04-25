@@ -222,6 +222,13 @@ public class StudyService {
             authorArrayList.add(publicationAuthor.getAuthor());
         });
 
+        int genotypingCount = study.getGenotypingTechnologies().size();
+
+        Collection<GenotypingTechnology> genotypingTechnologiesList = new ArrayList<>();
+        study.getGenotypingTechnologies().forEach( genotypingTechnology ->{
+            genotypingTechnologiesList.add(genotypingTechnology);
+        });
+
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {

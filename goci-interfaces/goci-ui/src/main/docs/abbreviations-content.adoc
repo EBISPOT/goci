@@ -553,6 +553,9 @@ G3D: grade 3 diarrhea
 GBA: glucocerebrosiadase
 
 
+GFR: glomerular filtration rate
+
+
 GGT: glutamyltranspeptidase
 
 
@@ -624,6 +627,9 @@ HR: hormone receptor
 
 
 HRmax: maximum heart rate during treadmill fitness test
+
+
+HSV-2: Herpes simplex virus type 2
 
 
 Ht: hematocrit

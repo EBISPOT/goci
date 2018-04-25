@@ -138,7 +138,7 @@ public class FileController {
             String releasedate = properties.getProperty("releasedate");
             String ensemblbuild = properties.getProperty("ensemblbuild");
 
-            String fileName = "gwas_catalog_v1.0.1-associations_e".concat(ensemblbuild).concat("_r").concat(releasedate).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0.2-associations_e".concat(ensemblbuild).concat("_r").concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 
@@ -168,7 +168,7 @@ public class FileController {
             String releasedate = properties.getProperty("releasedate");
 
 
-            String fileName = "gwas_catalog_v1.0.1-studies_r".concat(releasedate).concat(".tsv");
+            String fileName = "gwas_catalog_v1.0.2-studies_r".concat(releasedate).concat(".tsv");
             response.setContentType("text/tsv");
             response.setHeader("Content-Disposition", "attachement; filename=" + fileName);
 

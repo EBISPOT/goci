@@ -119,7 +119,16 @@ $(document).ready(function() {
             $('#trait-dropdown').removeClass("open");
         }
     });
-
+    
+    //if there is a click anywhere in the page body and the trait selector is open but the click was in the dropdown, close the dropdown
+    $('body').on('click', function(e) {
+        if ($('#genotyping-dropdown').hasClass('open') && !$('#genotyping-dropdown').is(e.target) &&
+            !$('#genotyping-dropdown').children().is(e.target) &&
+            !$('#genotyping-dropdown').children().find('input').is(e.target)) {
+            $('#genotyping-dropdown').removeClass("open");
+        }
+    });
+    
 });
 
 function doFiltering() {
@@ -129,6 +138,7 @@ function doFiltering() {
     var dateRange = processDate();
     var region = processGenomicRegion();
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
     var addeddate = '';
 
     if ($('#filter').text() != '') {
@@ -146,14 +156,16 @@ function doFiltering() {
 
 
     $('#filter-form').addClass('in-use')
-    solrfilter(pvalRange, orRange, betaRange, dateRange, region, traits, addeddate);
+    solrfilter(pvalRange, orRange, betaRange, dateRange, region, traits, genotypingTechnologies, addeddate);
 }
 
 function clearFilters() {
     console.log("Clearing all filters");
+    cleanGenotypingTechnologyDropdown();
     $('#filter-form').find('input').val('');
-    $('#filter-form').removeClass('in-use')
-
+    $('#filter-form').removeClass('in-use');
+    displayGenotyping();
+    
     loadResults();
 
     //if ($('#facet').text()) {
@@ -333,11 +345,31 @@ function processTraitDropdown() {
     return traits;
 }
 
+function processGenotypingTechnologyDropdown() {
+    var genotypingTechnologies = [];
+    var genotypingTechnologyInput = $('#genotyping-dropdown ul li input:checked');
+    for (var i = 0; i < genotypingTechnologyInput.length; i++) {
+        
+        var genotyping = genotypingTechnologyInput[i].value;
+        genotyping = genotyping.replace(/\s/g, '+');
+        genotyping = genotyping.replace('%2B', '+');
+        genotyping = genotyping.replace('%27', "'");
+        genotypingTechnologies[i] = genotyping;
+        
+    }
 
-function solrfilter(pval, or, beta, date, region, traits, addeddate) {
+    return genotypingTechnologies;
+}
+
+function cleanGenotypingTechnologyDropdown() {
+    $('#genotyping-dropdown ul').empty();
+}
+
+
+function solrfilter(pval, or, beta, date, region, traits, genotypingTechnologies, addeddate) {
     var query = $('#query').text();
     console.log("Solr research request received for " + query + " and filters " + pval + ", " + or + ", " + beta +
-                ", " + date + ", " + traits + " and " + addeddate);
+                ", " + date + ", " + traits + " and " + genotypingTechnologies + " and " + addeddate);
     if (query == '*') {
         var searchTerm = 'text:'.concat(query);
     }
@@ -367,6 +399,7 @@ function solrfilter(pval, or, beta, date, region, traits, addeddate) {
                 'datefilter': date,
                 'genomicfilter': region,
                 'traitfilter[]': traits,
+                'genotypingfilter[]': genotypingTechnologies,
                 'dateaddedfilter': addeddate
             })
             .done(function(data) {

@@ -366,6 +366,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -419,6 +420,13 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
 
         addDefaultSort(solrSearchBuilder);
         addQuery(solrSearchBuilder, query);
@@ -511,6 +519,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -536,20 +545,20 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "false");
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
 
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if (genomicRange != "") {
+        if(genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -558,9 +567,17 @@ public class SolrSearchController {
 
             addFilterQuery(solrSearchBuilder, "traitName_s", traits);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
         if (sort != "") {
             addSortQuery(solrSearchBuilder, sort);
         }
+
 
         addQuery(solrSearchBuilder, query);
 
@@ -654,6 +671,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "sort", required = false) String sort,
             HttpServletResponse response) throws IOException {
         StringBuilder solrSearchBuilder = buildBaseSearchRequest();
@@ -674,13 +692,13 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "false");
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
@@ -697,7 +715,7 @@ public class SolrSearchController {
                 addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
             }
         }
-        if (genomicRange != "") {
+        if(genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -714,6 +732,13 @@ public class SolrSearchController {
         if (facet.equals("association")) {
             addDefaultSort(solrSearchBuilder);
         }
+
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
+        }
+
         addQuery(solrSearchBuilder, query);
 
         // dispatch search
@@ -947,6 +972,7 @@ public class SolrSearchController {
             @RequestParam(value = "datefilter", required = false) String dateRange,
             @RequestParam(value = "genomicfilter", required = false) String genomicRange,
             @RequestParam(value = "traitfilter[]", required = false) String[] traits,
+            @RequestParam(value = "genotypingfilter[]", required = false) String[] genotypingTechnologies,
             @RequestParam(value = "dateaddedfilter", required = false) String addedDateRange,
             @RequestParam(value = "efo", defaultValue = "false") boolean efo,
             @RequestParam(value = "facet", required = true) String facet,
@@ -970,19 +996,19 @@ public class SolrSearchController {
             getLog().debug(orRange);
 
             addFilterQuery(solrSearchBuilder, "orPerCopyNum", orRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "true");
+//            addFilterQuery(solrSearchBuilder, "orType", "true");
         }
         if (betaRange != "") {
             getLog().debug(betaRange);
 
             addFilterQuery(solrSearchBuilder, "betaNum", betaRange);
-            //            addFilterQuery(solrSearchBuilder, "orType", "false");
+//            addFilterQuery(solrSearchBuilder, "orType", "false");
         }
         if (dateRange != "") {
             getLog().debug(dateRange);
             addFilterQuery(solrSearchBuilder, "publicationDate", dateRange);
         }
-        if (genomicRange != "") {
+        if(genomicRange != "") {
             getLog().debug(genomicRange);
             addGenomicRangeFilterQuery(solrSearchBuilder, genomicRange);
         }
@@ -995,6 +1021,11 @@ public class SolrSearchController {
             getLog().debug(addedDateRange);
             addFilterQuery(solrSearchBuilder, "catalogPublishDate", addedDateRange);
 
+        }
+        if (genotypingTechnologies != null && genotypingTechnologies.length != 0) {
+            getLog().trace(String.valueOf(genotypingTechnologies));
+
+            addFilterQuery(solrSearchBuilder, "genotypingTechnologies", genotypingTechnologies);
         }
 
         addQuery(solrSearchBuilder, query);
@@ -1017,19 +1048,19 @@ public class SolrSearchController {
             if (addedDateRange != "") {
                 fileName = "gwas-downloaded_".concat(now).concat("-recentStudies.tsv");
             }
-            else if (traits != null && traits.length != 0) {
+            else if (traits != null && traits.length != 0){
                 fileName = "gwas-downloaded_".concat(now).concat("-selectedTraits.tsv");
             }
-            else {
-                if (efo) {
-                    fileName = "gwas_catalog_v1.0.1-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
+            else{
+                if(efo){
+                    fileName = "gwas_catalog_v1.0.2-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
                 else {
                     fileName = "gwas_catalog_v1.0-".concat(facet).concat("-downloaded_").concat(now).concat(".tsv");
                 }
             }
         }
-        else if (ancestry) {
+        else if (ancestry){
             fileName = "gwas_catalog-ancestry-downloaded_".concat(now).concat(".tsv");
 
         }
@@ -1048,11 +1079,7 @@ public class SolrSearchController {
     }
 
 
-    private void dispatchDownloadSearch(String searchString,
-                                        OutputStream outputStream,
-                                        boolean efo,
-                                        String facet,
-                                        boolean ancestry) throws IOException {
+    private void dispatchDownloadSearch(String searchString, OutputStream outputStream, boolean efo, String facet, boolean ancestry) throws IOException {
         getLog().trace(searchString);
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(searchString);
