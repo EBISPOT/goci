@@ -13,7 +13,7 @@ They then undergo two levels of curation.
 First all data, including association information for SNPs, traits and general information about the study, are extracted by one curator.
 A second curator then performs an additional round of curation to double-check the accuracy and consistency of all the information. Finally, an automated pipeline performs validation of the extracted data, see the <<mapping, Quality control and SNP mapping section>> below for more details. This information is then used for queries and in the production of the diagram.
 
-The current eligibility criteria and extraction methods are described below. Pilots to investigate extending Catalog scope and alternative methods of data acquisition are described on our link:pilots[pilot projects page].
+The current eligibility criteria and extraction methods are described below. Pilots to investigate extending Catalog scope and alternative methods of data acquisition are described on our link:pilots[pilot projects page]. For a full list of publications by the GWAS Catalog team, and other useful background reading, please visit our link:related-resources[Resources page]
 
 == Full Description of Methods
 
