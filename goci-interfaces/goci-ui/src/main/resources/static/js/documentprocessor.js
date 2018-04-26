@@ -32,9 +32,10 @@ function processStudy(study, table) {
     
     var pubdate = study.publicationDate.substring(0, 10);
     
-    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'" title="Go to the publication page"><span class="icon-GWAS_Publication_2017"></span>&nbsp;'+study.pubmedId+'</a>';
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'" title="Go to the publication page">'+study.pubmedId+'&nbsp;<span class="gwas-icon-GWAS_Publication_2017"></span></a>';
     
-    var accessionLink = '<a href="'+contextPath+'studies/'+study.accessionId+'" title="Go to the study page"><span class="icon-GWAS_Study_2017"></span>&nbsp;'+study.accessionId+'</a>';
+    var accessionLink = '<a href="'+contextPath+'studies/'+study.accessionId+'" title="Go to the study page">'+study.accessionId+'&nbsp;<span class="gwas-icon-GWAS_Study_2017"></span></a>';
+    
     
     var pubmed = study.pubmedId;
     // To change
@@ -45,7 +46,7 @@ function processStudy(study, table) {
     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
     row.append($("<td>").html(authorsearch));
     
-    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(pubmedIdLink.concat('<br>').concat(viewPapers)));
     
     // below the details of the study
     var genotypingTechnologiesList = "";
@@ -79,7 +80,7 @@ function processStudy(study, table) {
             "data-original-title='Targeted or exome array study'></span></a>";
     }
     
-    var accessionInfo = (study.accessionId).concat(" ").concat(genotypingIcon);
+    var accessionInfo = accessionLink.concat(" ").concat(genotypingIcon);
     row.append($("<td>").html(accessionInfo));
     
     row.append($("<td>").html(pubdate));
@@ -345,7 +346,7 @@ function processAssociation(association, table) {
     if (association.rsId != null && association.strongestAllele != null) {
         if ((association.rsId[0].indexOf(';') == -1) && (association.rsId[0].indexOf(' x ') == -1)) {
             
-            var rsidsearch = '<span><a href=\"'+contextPath+'variants/'+association.rsId[0]+'\" title=\"Go to the variant page\"><span class=\"icon-GWAS_Variant_2017\"></span>&nbsp;'+association.rsId[0]+'</a></span>';
+            var rsidsearch = '<span><a href=\"'+contextPath+'variants/'+association.rsId[0]+'\" title=\"Go to the variant page\"><span class=\"gwas-icon-GWAS_Variant_2017\"></span>&nbsp;'+association.rsId[0]+'</a></span>';
             var dbsnp = "<span><a href='https://www.ensembl.org/Homo_sapiens/Variation/Summary?v=".concat(association.rsId[0]).concat(
                     "'  target='_blank'>").concat(
                     "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
@@ -747,7 +748,7 @@ function processAssociation(association, table) {
             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
-    var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page"><span class="icon-GWAS_Study_2017"></span>&nbsp;'+association.accessionId+'</a>';
+    var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page"><span class="gwas-icon-GWAS_Study_2017"></span>&nbsp;'+association.accessionId+'</a>';
     row.append($("<td>").html(accessionLink));
     
     table.append(row);
@@ -769,7 +770,7 @@ function processTrait(diseasetrait, table) {
             var data = diseasetrait.efoLink[j].split("|");
             //var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat(
             //        "</a></span>");
-            var efosearch = '<span><a href=\"'+contextPath+'efotraits/'+data[1]+'\" title=\"Go to the EFO trait page\"><span class=\"icon-GWAS_Trait_2017\"></span>&nbsp;'+data[0]+'</a></span>';
+            var efosearch = '<span><a href=\"'+contextPath+'efotraits/'+data[1]+'\" title=\"Go to the EFO trait page\"><span class=\"gwas-icon-GWAS_Trait_2017\"></span>&nbsp;'+data[0]+'</a></span>';
             var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(
                     "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
 

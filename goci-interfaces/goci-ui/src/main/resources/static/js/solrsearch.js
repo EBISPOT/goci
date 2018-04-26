@@ -62,7 +62,7 @@ function loadResults() {
     if(/^rs[0-9]/.test(searchTerm)){
         //xintodo this is currently beta so need to change
         var variant_term = $('#search-term').html();
-        $('#search-term').html('<span class="icon-GWAS_Variant_2017"></span>&nbsp;'+variant_term);
+        $('#search-term').html('<span class="gwas-icon-GWAS_Variant_2017"></span>&nbsp;'+variant_term);
         $('#search-term').attr("href", "variants/"+searchTerm);
         $('#search-term').attr("title","Go to the variant page");
         $("#search-term-popup").attr("style","display: none");

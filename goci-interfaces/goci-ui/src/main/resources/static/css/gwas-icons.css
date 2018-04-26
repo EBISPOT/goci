@@ -9,7 +9,7 @@
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="gwas-icon-"], [class*=" gwas-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'GWAS_iconfont_2017' !important;
   speak: none;
@@ -24,21 +24,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-GWAS_API_2017:before {
+.gwas-icon-GWAS_API_2017:before {
   content: "\41";
 }
-.icon-GWAS_GWAS_2017:before {
+.gwas-icon-GWAS_GWAS_2017:before {
   content: "\47";
 }
-.icon-GWAS_Publication_2017:before {
+.gwas-icon-GWAS_Publication_2017:before {
   content: "\50";
 }
-.icon-GWAS_Study_2017:before {
+.gwas-icon-GWAS_Study_2017:before {
   content: "\53";
 }
-.icon-GWAS_Trait_2017:before {
+.gwas-icon-GWAS_Trait_2017:before {
   content: "\54";
 }
-.icon-GWAS_Variant_2017:before {
+.gwas-icon-GWAS_Variant_2017:before {
   content: "\56";
 }

@@ -232,7 +232,7 @@ function displaySummaryStudy(data, clearBeforeInsert) {
     $("#study-author").html(first_author);
     $("#study-title").html(study.title);
     $("#study-journal").html(study.publication);
-    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'"><span class="icon-GWAS_Publication_2017"></span>&nbsp;'+study.pubmedId+'</a>';
+    var pubmedIdLink = '<a href="'+contextPath+'publications/'+study.pubmedId+'"><span class="gwas-icon-GWAS_Publication_2017"></span>&nbsp;'+study.pubmedId+'</a>';
     $("#study-pubmedid").html(pubmedIdLink);
     $("#study-datepublication").html(study.publicationDate.split('T')[0]);
     if ('authorsList' in study) {
