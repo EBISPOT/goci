@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/ancestries/14852643' 'Accept:application/json'
+$ http GET 'https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/14852643' 'Accept:application/json'
 ----
