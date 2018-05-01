@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44338
+Content-Length: 44942
 
 {
   "_embedded" : {
@@ -31,7 +31,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs9497975"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs9497975"
             }
           }
         } ],
@@ -42,30 +42,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:08:34.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:08:34.000+0000",
+      "lastMappingDate" : "2018-04-10T00:09:12.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:09:12.000+0000",
       "pvalue" : 7.0E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14347/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14347/efoTraits"
         }
       }
     }, {
@@ -93,7 +93,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs3815087"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs3815087"
             }
           }
         } ],
@@ -103,45 +103,45 @@ Content-Length: 44338
             "entrezGeneId" : "1041"
           } ],
           "ensemblGeneIds" : [ {
-            "ensemblGeneId" : "ENSG00000237114"
-          }, {
-            "ensemblGeneId" : "ENSG00000137197"
-          }, {
-            "ensemblGeneId" : "ENSG00000204539"
-          }, {
             "ensemblGeneId" : "ENSG00000237165"
           }, {
             "ensemblGeneId" : "ENSG00000237123"
           }, {
             "ensemblGeneId" : "ENSG00000206460"
+          }, {
+            "ensemblGeneId" : "ENSG00000204539"
+          }, {
+            "ensemblGeneId" : "ENSG00000237114"
+          }, {
+            "ensemblGeneId" : "ENSG00000137197"
           } ]
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:05.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:05.000+0000",
+      "lastMappingDate" : "2018-04-10T00:09:48.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:09:48.000+0000",
       "pvalue" : 8.0E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14350/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14350/efoTraits"
         }
       }
     }, {
@@ -169,7 +169,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17324272"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs17324272"
             }
           }
         } ],
@@ -180,30 +180,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:08.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:08.000+0000",
+      "lastMappingDate" : "2018-04-10T00:09:51.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:09:51.000+0000",
       "pvalue" : 2.0E-7,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14352/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14352/efoTraits"
         }
       }
     }, {
@@ -231,7 +231,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs212388"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs212388"
             }
           }
         } ],
@@ -246,30 +246,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-14T01:08:39.000+0000",
-      "lastUpdateDate" : "2017-12-14T01:08:39.000+0000",
+      "lastMappingDate" : "2018-04-13T16:30:45.000+0000",
+      "lastUpdateDate" : "2018-04-13T16:30:45.000+0000",
       "pvalue" : 3.0E-14,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/25563/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/25563/efoTraits"
         }
       }
     }, {
@@ -297,7 +297,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs4654925"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs4654925"
             }
           }
         } ],
@@ -312,30 +312,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:11.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:11.000+0000",
+      "lastMappingDate" : "2018-04-10T00:09:54.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:09:54.000+0000",
       "pvalue" : 9.0E-22,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14826/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14826/efoTraits"
         }
       }
     }, {
@@ -363,7 +363,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2138852"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs2138852"
             }
           }
         } ],
@@ -378,30 +378,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:15.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:15.000+0000",
+      "lastMappingDate" : "2018-04-10T00:09:59.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:09:59.000+0000",
       "pvalue" : 7.0E-28,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12441/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12441/efoTraits"
         }
       }
     }, {
@@ -429,7 +429,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12049330"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs12049330"
             }
           }
         } ],
@@ -460,30 +460,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:19.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:19.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:04.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:04.000+0000",
       "pvalue" : 6.0E-6,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14627/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14627/efoTraits"
         }
       }
     }, {
@@ -511,7 +511,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1128334"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs1128334"
             }
           }
         } ],
@@ -526,30 +526,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:22.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:22.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:07.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:07.000+0000",
       "pvalue" : 2.0E-11,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/14628/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/14628/efoTraits"
         }
       }
     }, {
@@ -577,7 +577,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2074356"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs2074356"
             }
           }
         } ],
@@ -588,30 +588,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:26.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:26.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:11.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:11.000+0000",
       "pvalue" : 8.0E-12,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12937/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12937/efoTraits"
         }
       }
     }, {
@@ -639,7 +639,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs12731740"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs12731740"
             }
           }
         } ],
@@ -660,30 +660,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:29.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:29.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:15.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:15.000+0000",
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12946/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12946/efoTraits"
         }
       }
     }, {
@@ -711,7 +711,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs6918981"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs6918981"
             }
           }
         } ],
@@ -726,30 +726,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:34.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:34.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:20.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:20.000+0000",
       "pvalue" : 3.0000000000000004E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12939/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12939/efoTraits"
         }
       }
     }, {
@@ -777,7 +777,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs10513137"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs10513137"
             }
           }
         } ],
@@ -792,30 +792,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:37.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:37.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:23.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:23.000+0000",
       "pvalue" : 6.0E-12,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12941/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12941/efoTraits"
         }
       }
     }, {
@@ -843,7 +843,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs13273123"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs13273123"
             }
           }
         } ],
@@ -858,30 +858,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:40.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:40.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:26.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:26.000+0000",
       "pvalue" : 1.0E-9,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12942/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12942/efoTraits"
         }
       }
     }, {
@@ -909,7 +909,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs3791675"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs3791675"
             }
           }
         } ],
@@ -924,30 +924,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:43.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:43.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:30.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:30.000+0000",
       "pvalue" : 2.0E-9,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12943/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12943/efoTraits"
         }
       }
     }, {
@@ -975,7 +975,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17249754"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs17249754"
             }
           }
         } ],
@@ -990,30 +990,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:47.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:47.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:34.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:34.000+0000",
       "pvalue" : 1.0E-7,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12944/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12944/efoTraits"
         }
       }
     }, {
@@ -1041,7 +1041,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs17249754"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs17249754"
             }
           }
         } ],
@@ -1056,30 +1056,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:49.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:49.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:37.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:37.000+0000",
       "pvalue" : 3.0E-6,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12945/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12945/efoTraits"
         }
       }
     }, {
@@ -1107,7 +1107,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs11809207"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs11809207"
             }
           }
         } ],
@@ -1122,30 +1122,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:09:55.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:09:55.000+0000",
+      "lastMappingDate" : "2018-04-10T00:10:43.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:10:44.000+0000",
       "pvalue" : 6.000000000000001E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12913/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12913/efoTraits"
         }
       }
     }, {
@@ -1173,7 +1173,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs13437082"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs13437082"
             }
           }
         } ],
@@ -1185,11 +1185,7 @@ Content-Length: 44338
           "ensemblGeneIds" : [ {
             "ensemblGeneId" : "ENSG00000228964"
           }, {
-            "ensemblGeneId" : "ENSG00000223532"
-          }, {
             "ensemblGeneId" : "ENSG00000234745"
-          }, {
-            "ensemblGeneId" : "ENSG00000232126"
           }, {
             "ensemblGeneId" : "ENSG00000224608"
           }, {
@@ -1198,30 +1194,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:10:20.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:10:20.000+0000",
+      "lastMappingDate" : "2018-04-10T00:11:12.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:11:12.000+0000",
       "pvalue" : 5.0E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12919/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12919/efoTraits"
         }
       }
     }, {
@@ -1249,7 +1245,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs1182188"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs1182188"
             }
           }
         } ],
@@ -1264,30 +1260,30 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:10:22.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:10:22.000+0000",
+      "lastMappingDate" : "2018-04-10T00:11:15.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:11:15.000+0000",
       "pvalue" : 3.0000000000000004E-9,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12922/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12922/efoTraits"
         }
       }
     }, {
@@ -1315,7 +1311,7 @@ Content-Length: 44338
           "limitedList" : null,
           "_links" : {
             "snp" : {
-              "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms/rs2282978"
+              "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs2282978"
             }
           }
         } ],
@@ -1330,58 +1326,58 @@ Content-Length: 44338
         } ],
         "_links" : {
           "association" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924{?projection}",
             "templated" : true
           }
         }
       } ],
-      "lastMappingDate" : "2017-12-13T01:10:25.000+0000",
-      "lastUpdateDate" : "2017-12-13T01:10:25.000+0000",
+      "lastMappingDate" : "2018-04-10T00:11:18.000+0000",
+      "lastUpdateDate" : "2018-04-10T00:11:18.000+0000",
       "pvalue" : 1.0E-8,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924"
         },
         "association" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924{?projection}",
           "templated" : true
         },
-        "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/efoTraits"
-        },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924/study"
         },
         "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/12924/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924/snps"
+        },
+        "efoTraits" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/12924/efoTraits"
         }
       }
     } ]
   },
   "_links" : {
     "first" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=0&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=0&size=20"
     },
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations"
     },
     "next" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=1&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations?page=3904&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=4049&size=20"
     },
     "profile" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/associations"
     },
     "search" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/search"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search"
     }
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 78081,
-    "totalPages" : 3905,
+    "totalElements" : 80991,
+    "totalPages" : 4050,
     "number" : 0
   }
 }

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 721
+Content-Length: 746
 
 {
   "trait" : "celiac disease",
@@ -10,19 +10,19 @@ Content-Length: 721
   "shortForm" : "EFO_0001060",
   "_links" : {
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits/EFO_0001060"
     },
     "efoTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits/EFO_0001060"
     },
     "associationsByTraitSummary" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/associations?projection=associationByEfoTrait"
-    },
-    "studies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/studies"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits/EFO_0001060/associations?projection=associationByEfoTrait"
     },
     "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits/EFO_0001060/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits/EFO_0001060/associations"
+    },
+    "studies" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits/EFO_0001060/studies"
     }
   }
 }

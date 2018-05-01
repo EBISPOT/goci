@@ -7,10 +7,10 @@ Content-Length: 224
 {
   "_embedded" : {
     "mappingMetadatas" : [ {
-      "ensemblReleaseNumber" : 91,
-      "genomeBuildVersion" : "GRCh38.p10",
+      "ensemblReleaseNumber" : 92,
+      "genomeBuildVersion" : "GRCh38.p12",
       "dbsnpVersion" : 150,
-      "usageStartDate" : "2017-12-11T14:00:01.560+0000"
+      "usageStartDate" : "2018-04-09T13:00:01.908+0000"
     } ]
   }
 }

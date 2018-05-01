@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 163
+Content-Length: 168
 
-{"timestamp":1524593085965,"status":400,"error":"Bad Request","message":"The tag 'https://www.ebi.ac.uk/gwas/rest/api/studies/123' does not exist","path":"/notes"}
+{"timestamp":1525190682189,"status":400,"error":"Bad Request","message":"The tag 'https://www.ebi.ac.uk/gwas/labs/rest/api/studies/123' does not exist","path":"/notes"}
 ----

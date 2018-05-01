@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 2735
+Content-Length: 2770
 
 {
   "initialSampleSize" : "3,117 European ancestry Bipolar disorder cases, 1,273 European ancestry Major depressive disorder cases",
@@ -70,30 +70,30 @@ Content-Length: 2735
     },
     "_links" : {
       "studies" : {
-        "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
+        "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854{?projection}",
         "templated" : true
       }
     }
   },
   "_links" : {
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854"
     },
     "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854{?projection}",
       "templated" : true
     },
     "associationsByStudySummary" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
-    },
-    "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
-    },
-    "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/associations?projection=associationByStudy"
     },
     "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/efoTraits"
+    },
+    "associations" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/associations"
+    },
+    "snps" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/snps"
     }
   }
 }

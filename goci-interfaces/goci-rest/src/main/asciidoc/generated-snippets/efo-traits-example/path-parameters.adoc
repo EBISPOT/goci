@@ -1,4 +1,4 @@
-./gwas/rest/api/efoTraits/{short_form}
+./gwas/labs/rest/api/efoTraits/{short_form}
 |===
 |Parameter|Description
 

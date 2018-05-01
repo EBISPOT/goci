@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,6 +32,11 @@ public class ParentMappingControllerTest {
 
     private MockMvc mockMvc;
 
+    // Ideally adding the rest.contextpath to the application.properties file the path is created automatically.
+    // This is still in labs. TODO when the class will be in production
+    @Value("${rest.contextpath:/gwas/labs}")
+    private String contextPath;
+
     @Autowired
     private WebApplicationContext context;
 
@@ -45,7 +51,7 @@ public class ParentMappingControllerTest {
     public void testGetColourMapping() throws Exception{
 
         this.mockMvc
-                .perform(get("/gwas/rest/api/parentMapping/EFO_0001359").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+                .perform(get(contextPath.concat("/rest/api/parentMapping/EFO_0001359")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -62,8 +68,8 @@ public class ParentMappingControllerTest {
 
 
         this.mockMvc
-                .perform(post("/gwas/rest/api/parentMappings")
-                                 .contextPath("/gwas/rest")
+                .perform(post(contextPath.concat("/rest/api/parentMappings"))
+                                 .contextPath(contextPath.concat("/rest"))
                                  .contentType(MediaType.APPLICATION_JSON)
                                  .content(asJsonString(terms))
                                  .accept(MediaType.APPLICATION_JSON))

@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 62301
+Content-Length: 63051
 
 {
   "_embedded" : {
@@ -72,30 +72,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000854/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000854/snps"
         }
       }
     }, {
@@ -144,30 +144,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000841/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000841/snps"
         }
       }
     }, {
@@ -264,36 +264,36 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : [ {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000807{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000807{?projection}",
             "templated" : true
           }, {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809{?projection}",
             "templated" : true
           }, {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000805{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000805{?projection}",
             "templated" : true
           } ]
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000809/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000809/snps"
         }
       }
     }, {
@@ -364,30 +364,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000847/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000847/snps"
         }
       }
     }, {
@@ -436,30 +436,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000871/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000871/snps"
         }
       }
     }, {
@@ -530,30 +530,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001837/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001837/snps"
         }
       }
     }, {
@@ -638,30 +638,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000970/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000970/snps"
         }
       }
     }, {
@@ -714,30 +714,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000981/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000981/snps"
         }
       }
     }, {
@@ -828,30 +828,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000988/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000988/snps"
         }
       }
     }, {
@@ -948,30 +948,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000997/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000997/snps"
         }
       }
     }, {
@@ -1020,30 +1020,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000996/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000996/snps"
         }
       }
     }, {
@@ -1098,30 +1098,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000986/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000986/snps"
         }
       }
     }, {
@@ -1188,30 +1188,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001008/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001008/snps"
         }
       }
     }, {
@@ -1272,30 +1272,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000711/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000711/snps"
         }
       }
     }, {
@@ -1356,30 +1356,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000596/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000596/snps"
         }
       }
     }, {
@@ -1470,30 +1470,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST002233/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST002233/snps"
         }
       }
     }, {
@@ -1562,30 +1562,30 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000332/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000332/snps"
         }
       }
     }, {
@@ -1642,33 +1642,33 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : [ {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001849{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001849{?projection}",
             "templated" : true
           }, {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848{?projection}",
             "templated" : true
           } ]
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST001848/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST001848/snps"
         }
       }
     }, {
@@ -1713,33 +1713,33 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : [ {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082{?projection}",
             "templated" : true
           }, {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000080{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000080{?projection}",
             "templated" : true
           } ]
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000082/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000082/snps"
         }
       }
     }, {
@@ -1808,58 +1808,58 @@ Content-Length: 62301
         },
         "_links" : {
           "studies" : {
-            "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073{?projection}",
+            "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073{?projection}",
             "templated" : true
           }
         }
       },
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073{?projection}",
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073{?projection}",
           "templated" : true
         },
         "associationsByStudySummary" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/associations?projection=associationByStudy"
-        },
-        "associations" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/associations"
-        },
-        "snps" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/snps"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073/associations?projection=associationByStudy"
         },
         "efoTraits" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/GCST000073/efoTraits"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073/efoTraits"
+        },
+        "associations" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073/associations"
+        },
+        "snps" : {
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/GCST000073/snps"
         }
       }
     } ]
   },
   "_links" : {
     "first" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=0&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=0&size=20"
     },
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies"
     },
     "next" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies?page=280&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=282&size=20"
     },
     "profile" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/studies"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/studies"
     },
     "search" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/search"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/search"
     }
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 5601,
-    "totalPages" : 281,
+    "totalElements" : 5645,
+    "totalPages" : 283,
     "number" : 0
   }
 }

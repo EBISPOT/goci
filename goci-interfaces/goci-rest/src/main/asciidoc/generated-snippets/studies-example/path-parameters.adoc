@@ -1,4 +1,4 @@
-./gwas/rest/api/studies/{study_accession_id}
+./gwas/labs/rest/api/studies/{study_accession_id}
 |===
 |Parameter|Description
 

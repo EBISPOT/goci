@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.JUnitRestDocumentation;
@@ -55,6 +56,11 @@ public class ApiDocumentation {
 
     private RestDocumentationResultHandler restDocumentationResultHandler;
 
+    // Ideally adding the rest.contextpath to the application.properties file the path is created automatically.
+    // This is still in labs. TODO when the class will be in production
+    @Value("${rest.contextpath:/gwas/labs}")
+    private String contextPath;
+
     @Autowired
     private WebApplicationContext context;
 
@@ -90,7 +96,7 @@ public class ApiDocumentation {
     @Test
     public void pageExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/studies?page=1&size=1").contextPath("/gwas/rest"))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/studies?page=1&size=1")).contextPath(contextPath.concat("/rest")))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
                                 fieldWithPath("_links").description("<<resources-page-links,Links>> to other resources"),
@@ -124,7 +130,7 @@ public class ApiDocumentation {
                                  .requestAttr(RequestDispatcher.ERROR_REQUEST_URI,
                                               "/notes")
                                  .requestAttr(RequestDispatcher.ERROR_MESSAGE,
-                                              "The tag 'https://www.ebi.ac.uk/gwas/rest/api/studies/123' does not exist"))
+                                              "The tag 'https://www.ebi.ac.uk".concat(contextPath).concat("/rest/api/studies/123' does not exist")))
                 .andDo(print()).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("error", is("Bad Request")))
                 .andExpect(jsonPath("timestamp", is(notNullValue())))
@@ -143,7 +149,7 @@ public class ApiDocumentation {
     @Test
     public void apiExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         responseFields(
                                 fieldWithPath("_links").description("<<resources-ontologies-links,Links>> to other resources")
@@ -162,7 +168,7 @@ public class ApiDocumentation {
     @Test
     public void studiesListExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/studies").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/studies")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -171,7 +177,7 @@ public class ApiDocumentation {
     @Test
     public void studiesSearchExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/studies/search").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/studies/search")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This study"),
@@ -196,7 +202,7 @@ public class ApiDocumentation {
     @Test
     public void studiesExample() throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/studies/{study_accession_id}", "GCST000854").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/studies/{study_accession_id}"), "GCST000854").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("study_accession_id").description("The accession id of the study in the GWAS Catalog")
@@ -237,7 +243,7 @@ public class ApiDocumentation {
     @Test
     public void associationsListExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/associations").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/associations")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -246,7 +252,7 @@ public class ApiDocumentation {
     @Test
     public void associationsSearchExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/associations/search").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/associations/search")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
@@ -262,7 +268,7 @@ public class ApiDocumentation {
 
     @Test
     public void associationsExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/associations/{association_id}", "16510553").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/associations/{association_id}"), "16510553").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("association_id").description("The id of the association in the GWAS Catalog")),
@@ -310,7 +316,7 @@ public class ApiDocumentation {
     @Test
     public void singleNucleotidePolymorphismsListExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/singleNucleotidePolymorphisms")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -319,7 +325,7 @@ public class ApiDocumentation {
     @Test
     public void singleNucleotidePolymorphismsSearchExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms/search").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/singleNucleotidePolymorphisms/search")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This association"),
@@ -337,7 +343,7 @@ public class ApiDocumentation {
 
     @Test
     public void singleNucleotidePolymorphismsExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/singleNucleotidePolymorphisms/{rs_id}", "rs7329174").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/singleNucleotidePolymorphisms/{rs_id}"), "rs7329174").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("rs_id").description("The rs Id of the SNP")),
@@ -366,7 +372,7 @@ public class ApiDocumentation {
     @Test
     public void efoTraitsListExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/efoTraits").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/efoTraits")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -375,7 +381,7 @@ public class ApiDocumentation {
     @Test
     public void efoTraitsSearchExample () throws Exception {
 
-        this.mockMvc.perform(get("/gwas/rest/api/efoTraits/search").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/efoTraits/search")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo(this.restDocumentationResultHandler.document(
                         links(halLinks(),
                               linkWithRel("self").description("This endpoint"),
@@ -389,7 +395,7 @@ public class ApiDocumentation {
 
     @Test
     public void efoTraitsExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/efoTraits/{short_form}", "EFO_0001060").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/efoTraits/{short_form}"), "EFO_0001060").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("short_form").description("The URI short form of this EFO trait")),
@@ -412,7 +418,7 @@ public class ApiDocumentation {
 
     @Test
     public void snpLocationExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/snpLocation/{range}", "10:95000000-96000000").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/snpLocation/{range}"), "10:95000000-96000000").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("range").description("The range of interest, in format chr:bpLocationStart-bpLocationEnd")),
@@ -435,7 +441,7 @@ public class ApiDocumentation {
 
     @Test
     public void parentMappingExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/parentMapping/{ontologyTermId}", "EFO_0000305").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/parentMapping/{ontologyTermId}"), "EFO_0000305").contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         pathParameters(
                                 parameterWithName("ontologyTermId").description("The ontology term ID (in shortform or full URI)")),
@@ -455,7 +461,7 @@ public class ApiDocumentation {
 
     @Test
     public void metaDataExample() throws Exception {
-        this.mockMvc.perform(get("/gwas/rest/api/metadata").contextPath("/gwas/rest").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(contextPath.concat("/rest/api/metadata")).contextPath(contextPath.concat("/rest")).accept(MediaType.APPLICATION_JSON))
                 .andDo( this.restDocumentationResultHandler.document(
                         responseFields(
                                 fieldWithPath("_embedded").description("The main content. See <<resources-single-nucleotide-polymorphism,SNP resource specification>> for details"),

@@ -1,4 +1,4 @@
-./gwas/rest/api/parentMapping/{ontologyTermId}
+./gwas/labs/rest/api/parentMapping/{ontologyTermId}
 |===
 |Parameter|Description
 
