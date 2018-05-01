@@ -38,6 +38,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
     @Field("study_authorAscii") private Collection<String> authorsAscii;
     @Field("study_authorsList") private Collection<String> authorsList;
+    @Field("study_genotypingTechnologies")  private Collection<String> genotypingTechnologies;
+    @Field("study_studyDesignComment") private String studyDesignComment;
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
@@ -87,6 +89,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestryLinks = new LinkedHashSet<>();
         this.authorsAscii = new LinkedHashSet<>();
         this.authorsList = new LinkedHashSet<>();
+        this.genotypingTechnologies = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -154,6 +157,11 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.accessionIds.add(accessionId);
     }
 
+    public void addGenotypingTechnologies(Collection<String> genotypingTechnologies) {
+        this.genotypingTechnologies.addAll(genotypingTechnologies);
+    }
+
+    public void addStudyDesignComment(String studyDesignComment) { this.studyDesignComment = studyDesignComment;}
 
     public void addInitialSampleDescription(String initialSampleDescription) {
         this.initialSampleDescriptions.add(initialSampleDescription);
