@@ -106,7 +106,7 @@
                                     <a href="#association" class="list-group-item" id="association-facet">
                                         <span class="badge">0</span>Associations
                                     </a>
-                                    <a href="#diseasetrait" class="list-group-item" id="diseasetrait-facet">
+                                    <a href="#efotrait" class="list-group-item" id="efotrait-facet">
                                         <span class="badge">0</span>Catalog traits
                                     </a>
                                 </div>
@@ -302,7 +302,7 @@
                                                                onclick="">Expand all studies
                                 </button></span>
                             </div>
-
+                            <div id = "study_spinner" class="spinner" style="display:none"></div>
                             <table id="study-table" class="table table-striped-study">
                                 <thead id="study-table-header">
                                 <tr>
@@ -368,7 +368,7 @@
                         </div>
                         <div id="association-summaries" class="results-container">
                             <h3><i>Associations</i></h3>
-
+                            <div id = "association_spinner" class="spinner" style="display:none"></div>
                             <table id="association-table" class="table table-striped">
                                 <thead id="association-table-header">
                                 <tr>
@@ -463,18 +463,20 @@
                             </button>
                         </div>
 
-                        <div id="diseasetrait-summaries" class="results-container">
+                        <div id="efotrait-summaries" class="results-container">
+                            <input type="hidden" id="efotrait-resultset" />
                             <h3><i>Catalog traits</i></h3>
-                            <table id="diseasetrait-table" class="table table-striped">
-                                <thead id="diseasetrait-table-header">
+                            <div id = "efotrait_spinner" class="spinner" style="display:none"></div>
+                            <table id="efotrait-table" class="table table-striped">
+                                <thead id="efotrait-table-header">
                                 <tr>
-                                    <th style="width: 30%" id="traitName_s-alt2">Reported trait
+                                    <th style="width: 30%" id="traitName_s-alt2">Trait
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Description of disease/trait analysed in the study"></span>
                                         <span class="glyphicon glyphicon-sort clickable sorting unsorted"> </span>
                                     </th>
-                                    <th style="width: 25%">Mapped ontology traits
+                                    <th style="width: 25%">Mapped traits
                                         <span class="glyphicon glyphicon-question-sign context-help"
                                               data-toggle="tooltip"
                                               data-original-title="Mapped Experimental Factor Ontology disease or trait name"></span>
@@ -491,10 +493,10 @@
                                     </th>
                                 </tr>
                                 </thead>
-                                <tbody id="diseasetrait-table-body">
+                                <tbody id="efotrait-table-body">
                                 </tbody>
                             </table>
-                            <button class="table-toggle btn btn-default btn-xs accordion-toggle diseasetrait-toggle pull-right"
+                            <button class="table-toggle btn btn-default btn-xs accordion-toggle efotrait-toggle pull-right"
                                     style="display: none">
 
                                 Show more results
@@ -545,6 +547,7 @@
 <script src="../static/js/resultexpansion.js" th:src="@{js/resultexpansion.js}"></script>
 <script src="../static/js/solrsort.js" th:src="@{js/solrsort.js}"></script>
 <script src="../static/js/traitlist.js" th:src="@{js/traitlist.js}"></script>
+<script src="../static/js/solrtrait.js" th:src="@{js/solrtrait.js}"></script>
 <script src="../static/js/autocomplete-termselect.js" th:src="@{js/autocomplete-termselect.js}"></script>
 <script src="../static/js/jquery.autocomplete.js" th:src="@{js/jquery.autocomplete.js}"></script>
 

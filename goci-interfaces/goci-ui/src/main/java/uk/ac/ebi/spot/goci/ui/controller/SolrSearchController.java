@@ -770,6 +770,11 @@ public class SolrSearchController {
                 .append("&group.field=").append(groupBy);
     }
 
+    private void addFields(StringBuilder solrSearchBuilder, String fields) {
+        solrSearchBuilder.append("&fl=").append(fields);
+    }
+
+
     private void addRowsAndPage(StringBuilder solrSearchBuilder, int maxResults, int page) {
         solrSearchBuilder.append("&rows=").append(maxResults)
                 .append("&start=").append((page - 1) * maxResults);
@@ -857,6 +862,18 @@ public class SolrSearchController {
             throw new IOException("Invalid query string - " + query, e);
         }
     }
+
+    private void addSpecificQuery(StringBuilder solrSearchBuilder, String query) throws IOException {
+        try {
+            solrSearchBuilder.append("&q=%22").append(URLEncoder.encode(query, "UTF-8"));
+            solrSearchBuilder.append("%22");
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new IOException("Invalid query string - " + query, e);
+        }
+    }
+
+
 
     private void dispatchSearch(String searchString, OutputStream out) throws IOException {
         getLog().trace(searchString);
@@ -1062,5 +1079,65 @@ public class SolrSearchController {
         outputWriter.flush();
     }
 
+    // From Tburdett algorithm. Extract the traitName from the association and study.
+    @RequestMapping(value = "api/search/parentSearch", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public void doParentSearchSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "sort", required = false) String sort,
+            HttpServletResponse response) throws IOException {
+
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+        //fq=-resourcename%3AefoTrait&fl=groupValue&wt=json&indent=true&group=true&group.field=traitName_s&fl=mappedUri,synonym
+        //q=text%3ASoranzo&fq=-resourcename%3AefoTrait&fl=groupValue&wt=json&indent=true&group=true&group.field=traitName_s&fl=mappedUri,synonym
+        addFilterQuery(solrSearchBuilder, "-resourcename", "efoTrait");
+        addFilterQuery(solrSearchBuilder, "-resourcename", "diseaseTrait");
+        addGrouping(solrSearchBuilder, "traitName_s", 1);
+        addFields(solrSearchBuilder, "efoLink,mappedUri,synonym,groupValue,parent,mappedLabel,accessionId,author_s,pubmedId");
+        addSpecificQuery(solrSearchBuilder, query);
+
+        System.out.println(solrSearchBuilder.toString());
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
+    }
+
+
+    // From Tburdett ida. Show the studies related to the selected trait
+    @RequestMapping(value = "api/search/studyByTraitSearch", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin
+    public void doStudiesByTraitSearchSolrSearch(
+            @RequestParam("q") String query,
+            @RequestParam(value = "jsonp", required = false, defaultValue = "false") boolean useJsonp,
+            @RequestParam(value = "callback", required = false) String callbackFunction,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int maxResults,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "sort", required = false) String sort,
+            HttpServletResponse response) throws IOException {
+
+        StringBuilder solrSearchBuilder = buildBaseSearchRequest();
+
+        if (useJsonp) {
+            addJsonpCallback(solrSearchBuilder, callbackFunction);
+        }
+
+        addRowsAndPage(solrSearchBuilder, maxResults, page);
+        addFilterQuery(solrSearchBuilder, "resourcename", "study");
+        addGrouping(solrSearchBuilder, "pubmedId", 1);
+        addFields(solrSearchBuilder, "accessionId,author_s,pubmedId,publicationLink");
+        addSpecificQuery(solrSearchBuilder, query);
+
+        System.out.println(solrSearchBuilder.toString());
+        // dispatch search
+        dispatchSearch(solrSearchBuilder.toString(), response.getOutputStream());
+
+    }
 
 }

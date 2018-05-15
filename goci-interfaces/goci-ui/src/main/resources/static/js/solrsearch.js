@@ -255,6 +255,7 @@ function processData(data) {
         }
     }
 
+    var efoTraitsExists = false;
     if (documents.length != 0) {
         $(".results-container .table-toggle").hide();
         for (var j = 0; j < documents.length; j++) {
@@ -303,8 +304,9 @@ function processData(data) {
 
                 }
             }
-            else if (group.groupValue == "diseasetrait") {
-                var traitTable = $('#diseasetrait-table-body').empty();
+            /*else if (group.groupValue == "efotrait") {
+                efoTraitsExists = true;
+                var traitTable = $('#efotrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
                     try {
                         var doc = group.doclist.docs[k];
@@ -315,12 +317,12 @@ function processData(data) {
                     }
                 }
                 if (group.doclist.numFound > 5) {
-                    $('#diseasetrait-summaries .table-toggle').show();
-                    $('#diseasetrait-summaries').addClass("more-results");
-                    $('.diseasetrait-toggle').empty().text("Show more results");
+                    $('#efotrait-summaries .table-toggle').show();
+                    $('#efotrait-summaries').addClass("more-results");
+                    $('.efotrait-toggle').empty().text("Show more results");
 
                 }
-            }
+            }*/
         }
 
         setState(SearchState.RESULTS);
@@ -330,6 +332,11 @@ function processData(data) {
     }
 
     $('#loadingResults').hide();
+    
+    if (!efoTraitsExists) {
+        addTraits();
+    }
+    
     console.log("Data display complete");
 }
 
@@ -506,4 +513,29 @@ function setStats(data) {
     catch (ex) {
         console.log("Failure to process stats " + ex);
     }
+}
+
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
+function addLoadingDiv(divId) {
+    var ctrl = $(divId);
+    
+    //uncomment for mask
+    /*ctrl.append('<div class="exposeMask" style="width: ' + ctrl.width() + '; height: ' + ctrl.height() + '; opacity = .5;"></div>');*/
+    
+    var left = ((ctrl.width() / 2) - 50) + 'px';
+    var top = ((ctrl.height() / 2) - 25) + 'px';
+    loadingDiv = '<div class="ajaxLoadingMore" style="top: ' + top + '; left: ' + left + ';">Loading...</div>';
+    ctrl.addClass('loading');
+    ctrl.append(loadingDiv);
 }

@@ -37,10 +37,11 @@ function processStudy(study, table) {
     //        ncbilink).concat('&nbsp;&nbsp;').concat(epmclink)));
     
     // GOCI-2138
-    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    
     row.append($("<td>").html(authorsearch));
     
-    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(pubmed.concat('&nbsp;').concat(viewPapers)));
     
     // below the details of the study
     var genotypingTechnologiesList = "";
@@ -80,7 +81,8 @@ function processStudy(study, table) {
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
-    var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
+    var traitSearchURI = encodeURIComponent(study.traitName).replace(/[!'()*]/g, escape);
+    var traitsearch = "<span><a href='search?query=".concat(traitSearchURI).concat("'>").concat(study.traitName).concat(
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
@@ -724,7 +726,8 @@ function processAssociation(association, table) {
     row.append($("<td>").html(mapgene));
 
     if (association.traitName != null) {
-        var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat(
+        var traitSearchURI = encodeURIComponent(association.traitName).replace(/[!'()*]/g, escape);
+        var traitsearch = "<span><a href='search?query=".concat(traitSearchURI).concat("'>").concat(association.traitName).concat(
                 "</a></span>");
         row.append($("<td>").html(traitsearch));
     }
@@ -735,12 +738,12 @@ function processAssociation(association, table) {
     var studydate = association.publicationDate.substring(0, 4);
     var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
-    var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
     var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat(
             "</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
+
+    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+association.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+association.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(viewPapers)));
 
     var accessionId = association.accessionId;
     row.append($("<td>").html(accessionId));
@@ -748,86 +751,3 @@ function processAssociation(association, table) {
     table.append(row);
 }
 
-function processTrait(diseasetrait, table) {
-    var row = $("<tr>");
-    //if (table.find('tr').length >= 5) { row.addClass('accordion-body');
-    //    row.addClass('collapse');
-    //    row.addClass('hidden-resource');
-    //}
-    var traitsearch = "<span><a href='search?query=".concat(diseasetrait.traitName[0]).concat("'>").concat(diseasetrait.traitName[0]).concat(
-            "</a></span>");
-    row.append($("<td>").html(traitsearch));
-
-    var efo = '';
-    if (diseasetrait.efoLink != null) {
-        for (var j = 0; j < diseasetrait.efoLink.length; j++) {
-            var data = diseasetrait.efoLink[j].split("|");
-            var efosearch = "<span><a href='search?query=".concat(data[0]).concat("'>").concat(data[0]).concat(
-                    "</a></span>");
-            var link = "<a href='".concat(data[2]).concat("' target='_blank'>").concat(
-                    "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-            if (efo == '') {
-                efo = efosearch.concat('&nbsp;&nbsp;').concat(link);
-            }
-            else {
-                efo = efo.concat(", <br>").concat(efosearch.concat('&nbsp;&nbsp;').concat(link));
-            }
-        }
-    }
-    else {
-        efo = "N/A";
-    }
-    row.append($("<td>").html(efo));
-
-    var syns = '';
-    if (diseasetrait.synonym != null) {
-        for (var j = 0; j < diseasetrait.synonym.length; j++) {
-            var synonymsearch = "<span><a href='search?query=".concat(diseasetrait.synonym[j]).concat("'>").concat(
-                    diseasetrait.synonym[j]).concat("</a></span>");
-            if (syns == '') {
-                syns = synonymsearch;
-            }
-            else if (j > 4) {
-                syns = syns.concat(", [...]");
-                break;
-            }
-            else {
-                syns = syns.concat(", ").concat(synonymsearch);
-            }
-        }
-    }
-
-    row.append($("<td>").html(syns));
-
-    var studies = '';
-
-    if (diseasetrait.study_publicationLink != null) {
-        for (var d = 0; d < diseasetrait.study_publicationLink.length; d++) {
-            var data = diseasetrait.study_publicationLink[d].split("|");
-            var author = data[0];
-            var authorLabel = author.concat(", ").concat(data[1]);
-            var pubmedid = data[2];
-
-            var europepmc = "http://www.europepmc.org/abstract/MED/".concat(pubmedid);
-            var searchlink = "<span><a href='search?query=".concat(author).concat("'>").concat(authorLabel).concat(
-                    "</a></span>");
-            var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-                    "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-
-            if (studies == '') {
-                studies = studies.concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
-            }
-            else {
-                studies = studies.concat(",<br>").concat(searchlink).concat('&nbsp;&nbsp;').concat(epmclink);
-            }
-        }
-    }
-    else {
-        studies = 'N/A';
-    }
-
-    row.append($("<td>").html(studies));
-
-    table.append(row);
-}
