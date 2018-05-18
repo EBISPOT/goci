@@ -1,12 +1,12 @@
 = Downloading the GWAS Diagram
-
+ 
 == Downloading the GWAS Diagram
 
-Download the latest version of the iconic GWAS diagram in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.svg[svg], ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.png[png] or in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.pdf[pdf] formats. In the diagram associations with p-values less than 5x10-8 are shown, and colored according to trait categories. See ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/diagram_legend.png[legend] for details.
+Download the latest version of the iconic GWAS diagram in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.svg[svg], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.png[png] or in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/diagram.pdf[pdf] formats. In the diagram associations with p-values less than 5x10-8 are shown, and colored according to trait categories. See link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/diagram_legend.png[legend] for details.
 
-Diagrams representing earlier stages of the catalog are also availagle from our ftp site in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/png[png], ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/svg[svg] and ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/pdf[pdf] formats! 
+Diagrams representing earlier stages of the catalog are also availagle from our ftp site in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/png[png], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/svg[svg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/pdf[pdf] formats! 
 
-An annotated version of the diagram is also available containing legend and association counts in the most recent release. ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/current_annotated_diagram.pdf[Here]
+An annotated version of the diagram is also available containing legend and association counts in the most recent release. link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/current_annotated_diagram.pdf[Here]
 
 == Slideshow
 
@@ -14,5 +14,5 @@ Diagrams from from each quarters since 2005 have been compiled into a visually s
 
 <video comes here!>
 
-The slideshow can be downloaded in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[mp4], ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[webm], ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[ogg] and ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[pdf] formats.
+The slideshow can be downloaded in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[mp4], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[webm], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[ogg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[pdf] formats.
 
