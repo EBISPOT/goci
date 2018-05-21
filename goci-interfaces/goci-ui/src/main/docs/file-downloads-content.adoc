@@ -60,7 +60,7 @@ A file showing all GWAS to EFO mappings, including the parent category each trai
 
 *CAUTION*: Some of these files may be very large - attempting to open them in your browser may take a very long time. It is usually safest to right-click and choose "save as..." to download these files.
 
-Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-kb.owl[OWL knowledge base] that can be loaded into an RDF triple store. In order to work with the knowledge base, a copy of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-diagram.owl[schema ontology] and of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/efo.owl[Experimental Factor Ontology (EFO)] are required. For more information on our use of ontologies, see our link:ontology[ontology] page.
+Each release of the GWAS Catalog is also available as an link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-kb.owl[OWL knowledge base] that can be loaded into an RDF triple store. In order to work with the knowledge base, a copy of the link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-diagram.owl[schema ontology] and of the link:http://www.ebi.ac.uk/efo/efo.owl[Experimental Factor Ontology (EFO)] are required. For more information on our use of ontologies, see our link:ontology[ontology] page.
 
 
 ==== _Citing the GWAS Catalog_
