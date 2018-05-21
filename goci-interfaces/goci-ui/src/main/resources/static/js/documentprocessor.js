@@ -738,7 +738,7 @@ function processAssociation(association, table) {
     var studydate = association.publicationDate.substring(0, 4);
     var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
-    var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat(
+    var searchlink = "<span><a href='search?query=".concat(association.pubmedId).concat("'>").concat(author).concat(
             "</a></span>");
 
     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+association.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+association.pubmedId+'\">View in PubMed</a></li></ul></div>';

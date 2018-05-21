@@ -157,7 +157,7 @@ function processTraitNoEFODocs(doc, table, indexDoc) {
         
         row.append($("<td>").html(syns));
     
-        var searchStudiesByTrait = "<div id='trait_"+indexDoc+"'><a href='#' onclick='getStudiesRelatedByTrait(\""+doc.groupValue+"\","+indexDoc+");return false;'>Show studies</a></div>";
+        var searchStudiesByTrait = "<div id='trait_"+indexDoc+"'><a href='#' onclick='getStudiesRelatedByTrait(\""+doc.groupValue+"\","+indexDoc+");return false;'>Show publications</a></div>";
         row.append($("<td>").html(searchStudiesByTrait));
         
     }
@@ -203,7 +203,7 @@ function getStudiesRelatedByTrait(trait, divId) {
                     var doc = data.grouped.pubmedId.groups[index].doclist.docs[0];
                     var yearOfPublication = doc.publicationLink[0].split("|")[1];
                     var infoStudy = doc.author_s.concat(' (PMID: ').concat(doc.pubmedId).concat("), ").concat(yearOfPublication);
-                    var searchlink = "<span><a href='search?query=".concat(doc.author_s).concat("'>").concat(infoStudy).concat(
+                    var searchlink = "<span><a href='search?query=".concat(doc.pubmedId).concat("'>").concat(infoStudy).concat(
                         "</a></span>");
                     var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+doc.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+doc.pubmedId+'\">View in PubMed</a></li></ul></div>';
                     var globalInfo = searchlink.concat("&nbsp;&nbsp;").concat(viewPapers).concat("<br>");
