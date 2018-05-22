@@ -49,12 +49,13 @@ All code for the GWAS Catalog infrastructure can be found in https://github.com/
 == Privacy policy 
 
 The General Data Protection Regulation (GDPR) will apply in the UK from 25 May 2018. It will replace the 1998 Data Protection Act and introduce new rules on privacy notices, as well as processing and safeguarding personal data. 
+Below you can find ...
 
 https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-submissions[GWAS Catalog Submissions]
 
 https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services]
 
-https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking]
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking] applies to any publication-specific data (including author names, e-mail and etc) that is being retained to help curators actually get data through the curation process.
 
 
 == Credits &amp; acknowledgements
