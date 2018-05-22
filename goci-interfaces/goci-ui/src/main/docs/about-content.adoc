@@ -56,7 +56,7 @@ https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-submissions[GW
 
 https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services] applies to our public e-mail lists such as gwas-info@ebi.ac.uk, gwas-announce@ebi.ac.uk and gwas-users@ebi.ac.uk.
 
-https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking] applies to any publication-specific data (including author names, e-mail and etc) that is being retained to help curators actually get data through the curation process.
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking] applies to any publication-specific data (including author names, e-mail and address) that is being retained to help curators actually get data through the curation process.
 
 
 == Credits &amp; acknowledgements
