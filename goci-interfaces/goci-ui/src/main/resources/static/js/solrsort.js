@@ -100,6 +100,8 @@ function doSortingSearch(facet, field, id) {
     var date = processDate();
     var region = processGenomicRegion();
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
+    
 
     if ($('#filter').text() != '') {
         if ($('#filter').text() != 'recent' && traits == '') {
@@ -126,6 +128,7 @@ function doSortingSearch(facet, field, id) {
                 'datefilter': date,
                 'genomicfilter': region,
                 'traitfilter[]': traits,
+                'genotypingfilter[]': genotypingTechnologies,
                 'sort': field
             })
             .done(function(data) {

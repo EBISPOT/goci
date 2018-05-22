@@ -255,6 +255,7 @@ function processData(data) {
         }
     }
 
+    var efoTraitsExists = false;
     if (documents.length != 0) {
         $(".results-container .table-toggle").hide();
         for (var j = 0; j < documents.length; j++) {
@@ -303,8 +304,9 @@ function processData(data) {
 
                 }
             }
-            else if (group.groupValue == "diseasetrait") {
-                var traitTable = $('#diseasetrait-table-body').empty();
+            /*else if (group.groupValue == "efotrait") {
+                efoTraitsExists = true;
+                var traitTable = $('#efotrait-table-body').empty();
                 for (var k = 0; k < group.doclist.docs.length; k++) {
                     try {
                         var doc = group.doclist.docs[k];
@@ -315,12 +317,12 @@ function processData(data) {
                     }
                 }
                 if (group.doclist.numFound > 5) {
-                    $('#diseasetrait-summaries .table-toggle').show();
-                    $('#diseasetrait-summaries').addClass("more-results");
-                    $('.diseasetrait-toggle').empty().text("Show more results");
+                    $('#efotrait-summaries .table-toggle').show();
+                    $('#efotrait-summaries').addClass("more-results");
+                    $('.efotrait-toggle').empty().text("Show more results");
 
                 }
-            }
+            }*/
         }
 
         setState(SearchState.RESULTS);
@@ -330,6 +332,11 @@ function processData(data) {
     }
 
     $('#loadingResults').hide();
+    
+    if (!efoTraitsExists) {
+        addTraits();
+    }
+    
     console.log("Data display complete");
 }
 
@@ -420,7 +427,9 @@ function setDownloadLink(searchParams) {
     var q = "q=".concat(searchParams.q);
 
     var trait = '';
+    var genotyping = '';
     var traitFilter = '&traitfilter[]=';
+    var genotypingFilter = '&genotypingfilter[]=';
     var pval = '&pvalfilter=';
     var or = '&orfilter=';
     var beta = '&betafilter=';
@@ -436,6 +445,7 @@ function setDownloadLink(searchParams) {
     var pubdate = date.concat(processDate());
 
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
 
     if (traits != '') {
         for (var t = 0; t < traits.length; t++) {
@@ -444,6 +454,15 @@ function setDownloadLink(searchParams) {
     }
     else {
         trait = traitFilter;
+    }
+    
+    if (genotypingTechnologies.length > 0) {
+        for (var elem = 0; elem < genotypingTechnologies.length; elem++) {
+            genotyping = genotyping.concat(genotypingFilter).concat(genotypingTechnologies[elem]);
+        }
+    }
+    else {
+        genotyping=genotypingFilter;
     }
 
     if (searchParams.q.indexOf('*') != -1 && $('#filter').text() != '') {
@@ -469,8 +488,12 @@ function setDownloadLink(searchParams) {
         }
 
     }
+    
+    // Version association v.1.0.2
+    var efo = "&efo=true";
 
-    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(addeddate).concat(facet);
+    var url = baseUrl.concat(q).concat(pval).concat(or).concat(beta).concat(pubdate).concat(region).concat(trait).concat(genotyping).concat(addeddate).concat(efo).concat(facet);
+   
     $('#results-download').removeAttr('href').attr('href', url);
 
 }
@@ -490,4 +513,29 @@ function setStats(data) {
     catch (ex) {
         console.log("Failure to process stats " + ex);
     }
+}
+
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
+function addLoadingDiv(divId) {
+    var ctrl = $(divId);
+    
+    //uncomment for mask
+    /*ctrl.append('<div class="exposeMask" style="width: ' + ctrl.width() + '; height: ' + ctrl.height() + '; opacity = .5;"></div>');*/
+    
+    var left = ((ctrl.width() / 2) - 50) + 'px';
+    var top = ((ctrl.height() / 2) - 25) + 'px';
+    loadingDiv = '<div class="ajaxLoadingMore" style="top: ' + top + '; left: ' + left + ';">Loading...</div>';
+    ctrl.addClass('loading');
+    ctrl.append(loadingDiv);
 }

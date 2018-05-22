@@ -26,6 +26,7 @@ $(document).ready(function() {
     });
 
     $('.study-toggle').click(function() {
+
         if ($('#study-summaries').hasClass('more-results')) {
             console.log("More results to load");
             loadAdditionalResults("study", false);
@@ -93,38 +94,16 @@ $(document).ready(function() {
         }
     });
 
-    $('.diseasetrait-toggle').click(function() {
-        if ($('#diseasetrait-summaries').hasClass('more-results')) {
+    $('.efotrait-toggle').click(function() {
+        if ($('#efotrait-summaries').hasClass('more-results')) {
             console.log("More results to load");
-            loadAdditionalResults("diseasetrait", false);
+            loadAdditionalResultsTraitNoEFODocs(true);
             $(this).empty().text("Show fewer results");
 
         }
         else {
             $(this).empty().text("Show more results");
-            $('#diseasetrait-summaries').addClass('more-results');
-            if ($('#filter-form').hasClass('in-use')) {
-                doFiltering();
-            }
-            else if ($('#diseasetrait-summaries').find('th').find('span.sorted').length != 0) {
-                var id = $('#diseasetrait-summaries').find('span.sorted').parent('th').attr('id');
-                var field = id;
-
-                if (id.indexOf('-') != -1) {
-                    field = id.split('-')[0];
-                }
-
-                if ($('#diseasetrait-summaries').find('span.sorted').hasClass('asc')) {
-                    field = field.concat('+asc');
-                }
-                else {
-                    field = field.concat('+desc');
-                }
-                doSortingSearch("diseasetrait", field, id);
-            }
-            else {
-                loadResults();
-            }
+            loadAdditionalResultsTraitNoEFODocs(false);
         }
     });
 
@@ -158,6 +137,8 @@ function loadAdditionalResults(facet, expand) {
     var date = processDate();
     var region = processGenomicRegion();
     var traits = processTraitDropdown();
+    var genotypingTechnologies = processGenotypingTechnologyDropdown();
+    
 
     if ($('#filter').text() != '') {
 
@@ -194,6 +175,9 @@ function loadAdditionalResults(facet, expand) {
     else {
         var searchTerm = 'text:"'.concat(queryTerm).concat('"');
     }
+    // spinner
+    $("#"+facet+"_spinner").show();
+    $("#"+facet+"-table").hide();
     $.getJSON('api/search/moreresults',
               {
                   'q': searchTerm,
@@ -205,11 +189,21 @@ function loadAdditionalResults(facet, expand) {
                   'datefilter': date,
                   'genomicfilter': region,
                   'traitfilter[]': traits,
+                  'genotypingfilter[]': genotypingTechnologies,
                   'sort': sort
               })
             .done(function(data) {
                 addResults(data, expand, id);
-            });
+                $("#"+facet+"_spinner").hide();
+                $("#"+facet+"-table").show();
+            })
+            .fail(function (jqXHR, textStatus, err) {
+                 alert("Something went wrong.");
+            })
+            .always(function () {
+                $("#"+facet+"-table").show();
+                $("#"+facet+"_spinner").hide();
+                });
 }
 
 function addResults(data, expand, id) {
@@ -255,24 +249,6 @@ function addResults(data, expand, id) {
                     console.log("Failure to process document " + ex);
                 }
             }
-        }
-
-        else if (data.responseHeader.params.fq == "resourcename:diseasetrait" ||
-                $.inArray("resourcename:diseasetrait", data.responseHeader.params.fq) != -1) {
-            console.log("Processing diseasetraits");
-            var traitTable = $('#diseasetrait-table-body').empty();
-            $('#diseasetrait-summaries').removeClass('more-results');
-
-            for (var j = 0; j < documents.length; j++) {
-                try {
-                    var doc = documents[j];
-                    processTrait(doc, traitTable);
-                }
-                catch (ex) {
-                    console.log("Failure to process document " + ex);
-                }
-            }
-
         }
 
         if (expand) {

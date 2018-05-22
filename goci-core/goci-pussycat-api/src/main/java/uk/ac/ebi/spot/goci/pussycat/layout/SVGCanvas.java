@@ -7,6 +7,6 @@ package uk.ac.ebi.spot.goci.pussycat.layout;
 public class SVGCanvas {
 
     public static final int canvasWidth = 1800;
-    public static final int canvasHeight = 1500;
+    public static final int canvasHeight = 1700;
 
 }

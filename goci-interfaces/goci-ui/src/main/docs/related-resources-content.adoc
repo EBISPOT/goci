@@ -21,7 +21,7 @@ A 2013 http://www.genome.gov/27554296[webinar] hosted by the NHGRI Division of G
 
 ==== GWAS Catalog publications
 
-Morales et al, 2017 link:https://www.biorxiv.org/content/early/2017/10/02/129395[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog] (pre-print).
+Morales et al, 2017 link:http://rdcu.be/G6Fv[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog] Genome Biology, 19:21.
 
 MacArthur et al, 2017. link:https://academic.oup.com/nar/article/45/D1/D896/2605751[The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog)]. Nucleic Acids Research, Vol. 45 (Database issue): D896-D901.
 
@@ -94,9 +94,6 @@ For more information on how we use these resources, see our link:https://www.ebi
 
 |https://www.ncbi.nlm.nih.gov/[National Centre for Biotechnology Information]
 |Provides wide range of resources including Entrez gene, GenBank, PubMed and ClinVar
-
-|http://geneticassociationdb.nih.gov/[Genetic Association Database]
-|Database of genetic association data from complex diseases and disorders, retired in 2014
 
 |===
 // end::b-col-indv[]

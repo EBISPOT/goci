@@ -115,7 +115,7 @@ public class EmbeddableDocumentTest {
         }
     }
 
-    @Test
+    /*@Test
     public void testEmbedTrait() {
         try {
             traitDoc.embed(associationDoc);
@@ -124,7 +124,7 @@ public class EmbeddableDocumentTest {
             e.printStackTrace();
             fail();
         }
-    }
+    }*/
 
     @Test
     public void testIntrospection() {

@@ -53,7 +53,7 @@ public class JsonProcessingService {
         }
 
         if(includeAnnotations){
-            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI\tSTUDY ACCESSION");
+            header = header.concat("\tMAPPED_TRAIT\tMAPPED_TRAIT_URI\tSTUDY ACCESSION\tGENOTYPING TECHNOLOGY");
         }
 
         header = header.concat("\r\n");
@@ -154,6 +154,8 @@ public class JsonProcessingService {
             line.append(traits.get("uri"));
             line.append("\t");
             line.append(getAccessionId(doc));
+            line.append("\t");
+            line.append(getGenotypingTechonologies(doc));
         }
 
         line.append("\r\n");
@@ -400,8 +402,8 @@ public class JsonProcessingService {
             platform = platform.replaceAll("\n", "").replaceAll("\r", "");
         }
         line.append(platform);
-
         line.append("\tN");
+
 
         if(includeAnnotations){
             line.append("\t");
@@ -413,6 +415,8 @@ public class JsonProcessingService {
             line.append(traits.get("uri"));
             line.append("\t");
             line.append(getAccessionId(doc));
+            line.append("\t");
+            line.append(getGenotypingTechonologies(doc));
         }
 
         line.append("\r\n");
@@ -910,6 +914,29 @@ public class JsonProcessingService {
         return accessionId;
     }
 
+    private String getGenotypingTechonologies(JsonNode doc) {
+        String genotypingTechnologiesList = "";
+
+        if (doc.get("genotypingTechnologies") != null) {
+            String priorityGenotypingTech = "";
+            for (int i = 0; i < doc.get("genotypingTechnologies").size(); i++) {
+                if (doc.get("genotypingTechnologies").get(i).asText().trim().compareTo("Genome-wide genotyping array") == 0) {
+                    priorityGenotypingTech = doc.get("genotypingTechnologies").get(i).asText().trim() + ", ";
+                } else {
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(doc.get("genotypingTechnologies").get(i).asText().trim());
+                    if (doc.get("studyDesignComment") != null) {
+                        genotypingTechnologiesList = genotypingTechnologiesList.concat(" [").concat(doc.get("studyDesignComment").asText().trim()).concat("]");
+                    }
+                    genotypingTechnologiesList = genotypingTechnologiesList.concat(", ");
+                }
+            }
+            genotypingTechnologiesList = priorityGenotypingTech + genotypingTechnologiesList;
+
+            genotypingTechnologiesList = genotypingTechnologiesList.substring(0,genotypingTechnologiesList.length()-2);
+        }
+        return genotypingTechnologiesList;
+
+    }
 
     public boolean isMultiSnpHaplotype() {
         return isMultiSnpHaplotype;

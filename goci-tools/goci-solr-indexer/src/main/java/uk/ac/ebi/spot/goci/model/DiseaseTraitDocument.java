@@ -16,7 +16,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field private String traitName;
 
     // embedded study info
-    @Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
+    /*@Field("study_pubmedId") private Collection<String> pubmedIds; // combine in one connected field
     @Field("study_title") private Collection<String> titles;
     @Field("study_author") private Collection<String> authors; // combine in one connected field
     @Field("study_orcid") private Collection<String> orcids; // combine in one connected field
@@ -38,6 +38,8 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("study_ancestryLinks") private Collection<String> ancestryLinks;
     @Field("study_authorAscii") private Collection<String> authorsAscii;
     @Field("study_authorsList") private Collection<String> authorsList;
+    @Field("study_genotypingTechnologies")  private Collection<String> genotypingTechnologies;
+    @Field("study_studyDesignComment") private String studyDesignComment;
 
     // embedded Association info
     @Field("association_qualifier") private Collection<String> qualifiers;
@@ -55,7 +57,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     @Field("association_chromosomePosition") private Collection<Integer> chromosomePositions;
     @Field("association_positionLinks") private Collection<String> positionLinks;
     @Field("association_last_modified") private Collection<String> lastModifiedDates;
-
+*/
     // embedded EfoTrait info
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
@@ -64,6 +66,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         super(diseaseTrait);
         this.traitName = diseaseTrait.getTrait();
 
+        /*
         this.pubmedIds = new LinkedHashSet<>();
         this.titles = new LinkedHashSet<>();
         this.authors = new LinkedHashSet<>();
@@ -87,6 +90,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.ancestryLinks = new LinkedHashSet<>();
         this.authorsAscii = new LinkedHashSet<>();
         this.authorsList = new LinkedHashSet<>();
+        this.genotypingTechnologies = new LinkedHashSet<>();
 
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
@@ -103,7 +107,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.chromosomePositions = new LinkedHashSet<>();
         this.positionLinks = new LinkedHashSet<>();
         this.lastModifiedDates = new LinkedHashSet<>();
-
+*/
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
     }
@@ -112,6 +116,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         return traitName;
     }
 
+    /*
     public void addPubmedId(String pubmedId) {
         this.pubmedIds.add(pubmedId);
     }
@@ -154,6 +159,11 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
         this.accessionIds.add(accessionId);
     }
 
+    public void addGenotypingTechnologies(Collection<String> genotypingTechnologies) {
+        this.genotypingTechnologies.addAll(genotypingTechnologies);
+    }
+
+    public void addStudyDesignComment(String studyDesignComment) { this.studyDesignComment = studyDesignComment;}
 
     public void addInitialSampleDescription(String initialSampleDescription) {
         this.initialSampleDescriptions.add(initialSampleDescription);
@@ -263,6 +273,7 @@ public class DiseaseTraitDocument extends OntologyEnabledDocument<DiseaseTrait> 
     public void addLastModifiedDates(Collection<String> lastModifiedDates) {
         this.lastModifiedDates.addAll(lastModifiedDates);
     }
+    */
 
     public void addMappedLabel(String mappedLabel) {
         this.mappedLabels.add(mappedLabel);
