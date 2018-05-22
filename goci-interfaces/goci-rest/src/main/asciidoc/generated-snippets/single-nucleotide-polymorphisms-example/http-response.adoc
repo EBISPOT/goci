@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 10732
+Content-Length: 10846
 
 {
   "rsId" : "rs7329174",
@@ -394,7 +394,6 @@ Content-Length: 10732
       }
     }
   } ],
-  "mergedInto" : null,
   "_links" : {
     "self" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs7329174"
@@ -404,6 +403,9 @@ Content-Length: 10732
     },
     "associationsBySnpSummary" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs7329174/associations?projection=associationBySnp"
+    },
+    "currentSnp" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs7329174/currentSnp"
     },
     "associations" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/rs7329174/associations"

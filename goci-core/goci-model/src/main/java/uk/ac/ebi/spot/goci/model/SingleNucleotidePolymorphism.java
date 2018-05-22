@@ -59,7 +59,6 @@ public class SingleNucleotidePolymorphism {
     @JoinTable(name = "SNP_MERGED_SNP",
                joinColumns = @JoinColumn(name = "SNP_ID_MERGED"),
                inverseJoinColumns = @JoinColumn(name = "SNP_ID_CURRENT"))
-    @RestResource(exported = false)
     private SingleNucleotidePolymorphism currentSnp;
 
     @ManyToMany

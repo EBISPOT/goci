@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44942
+Content-Length: 45068
 
 {
   "_embedded" : {
@@ -103,17 +103,17 @@ Content-Length: 44942
             "entrezGeneId" : "1041"
           } ],
           "ensemblGeneIds" : [ {
+            "ensemblGeneId" : "ENSG00000237114"
+          }, {
+            "ensemblGeneId" : "ENSG00000137197"
+          }, {
+            "ensemblGeneId" : "ENSG00000204539"
+          }, {
             "ensemblGeneId" : "ENSG00000237165"
           }, {
             "ensemblGeneId" : "ENSG00000237123"
           }, {
             "ensemblGeneId" : "ENSG00000206460"
-          }, {
-            "ensemblGeneId" : "ENSG00000204539"
-          }, {
-            "ensemblGeneId" : "ENSG00000237114"
-          }, {
-            "ensemblGeneId" : "ENSG00000137197"
           } ]
         } ],
         "_links" : {
@@ -1185,7 +1185,11 @@ Content-Length: 44942
           "ensemblGeneIds" : [ {
             "ensemblGeneId" : "ENSG00000228964"
           }, {
+            "ensemblGeneId" : "ENSG00000223532"
+          }, {
             "ensemblGeneId" : "ENSG00000234745"
+          }, {
+            "ensemblGeneId" : "ENSG00000232126"
           }, {
             "ensemblGeneId" : "ENSG00000224608"
           }, {
@@ -1365,7 +1369,7 @@ Content-Length: 44942
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=4049&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations?page=4156&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/associations"
@@ -1376,8 +1380,8 @@ Content-Length: 44942
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 80991,
-    "totalPages" : 4050,
+    "totalElements" : 83121,
+    "totalPages" : 4157,
     "number" : 0
   }
 }

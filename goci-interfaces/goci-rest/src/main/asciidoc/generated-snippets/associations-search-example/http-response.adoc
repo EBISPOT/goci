@@ -10,20 +10,20 @@ Content-Length: 1036
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByEfoTrait{?efoTrait,projection}",
       "templated" : true
     },
-    "findByRsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByRsId{?rsId,projection}",
-      "templated" : true
-    },
-    "findByRsIdAndAccessionId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByRsIdAndAccessionId{?rsId,accessionId,page,size,sort,projection}",
-      "templated" : true
-    },
     "findByStudyAccessionId" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByStudyAccessionId{?accessionId,projection}",
       "templated" : true
     },
+    "findByRsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByRsId{?rsId,projection}",
+      "templated" : true
+    },
     "findByPubmedId" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByPubmedId{?pubmedId,projection}",
+      "templated" : true
+    },
+    "findByRsIdAndAccessionId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/search/findByRsIdAndAccessionId{?rsId,accessionId,page,size,sort,projection}",
       "templated" : true
     },
     "self" : {

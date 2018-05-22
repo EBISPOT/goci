@@ -6,22 +6,6 @@ Content-Length: 1469
 
 {
   "_links" : {
-    "findByGene" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByGene{?geneName,page,size,sort}",
-      "templated" : true
-    },
-    "findByPubmedId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByPubmedId{?pubmedId,page,size,sort}",
-      "templated" : true
-    },
-    "findByBpLocation" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByBpLocation{?bpLocation}",
-      "templated" : true
-    },
-    "findByRsId" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByRsId{?rsId}",
-      "templated" : true
-    },
     "findByChromBpLocationRange" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByChromBpLocationRange{?chrom,bpStart,bpEnd,page,size,sort}",
       "templated" : true
@@ -30,8 +14,24 @@ Content-Length: 1469
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByDiseaseTrait{?diseaseTrait}",
       "templated" : true
     },
+    "findByBpLocation" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByBpLocation{?bpLocation}",
+      "templated" : true
+    },
+    "findByGene" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByGene{?geneName,page,size,sort}",
+      "templated" : true
+    },
+    "findByPubmedId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByPubmedId{?pubmedId,page,size,sort}",
+      "templated" : true
+    },
     "findByEfoTrait" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByEfoTrait{?efoTrait}",
+      "templated" : true
+    },
+    "findByRsId" : {
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms/search/findByRsId{?rsId}",
       "templated" : true
     },
     "self" : {

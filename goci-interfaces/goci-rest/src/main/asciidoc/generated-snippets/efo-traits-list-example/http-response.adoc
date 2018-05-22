@@ -439,7 +439,7 @@ Content-Length: 17502
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits?page=111&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits?page=112&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/efoTraits"
@@ -450,8 +450,8 @@ Content-Length: 17502
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 2239,
-    "totalPages" : 112,
+    "totalElements" : 2258,
+    "totalPages" : 113,
     "number" : 0
   }
 }

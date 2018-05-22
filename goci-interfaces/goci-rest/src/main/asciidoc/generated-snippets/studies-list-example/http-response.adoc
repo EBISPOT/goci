@@ -1847,7 +1847,7 @@ Content-Length: 63051
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=282&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=287&size=20"
     },
     "profile" : {
       "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/studies"
@@ -1858,8 +1858,8 @@ Content-Length: 63051
   },
   "page" : {
     "size" : 20,
-    "totalElements" : 5645,
-    "totalPages" : 283,
+    "totalElements" : 5756,
+    "totalPages" : 288,
     "number" : 0
   }
 }
