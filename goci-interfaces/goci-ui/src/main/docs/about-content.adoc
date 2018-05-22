@@ -46,6 +46,15 @@ The NHGRI-EBI GWAS Catalog and all its contents are available under the general 
 
 All code for the GWAS Catalog infrastructure can be found in https://github.com/EBISPOT/goci[our Github repository]. The code is freely available under http://www.apache.org/licenses/LICENSE-2.0[the Apache version 2.0 license]
 
+== Privacy policy 
+
+The General Data Protection Regulation (GDPR) will apply in the UK from 25 May 2018. It will replace the 1998 Data Protection Act and introduce new rules on privacy notices, as well as processing and safeguarding personal data. 
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-submissions[GWAS Catalog Submissions]
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services]
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking]
 
 
 == Credits &amp; acknowledgements
