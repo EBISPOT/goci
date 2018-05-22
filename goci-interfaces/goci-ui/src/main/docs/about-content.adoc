@@ -54,7 +54,7 @@ More details about our privacy policy can be found by following the links below.
 
 https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-submissions[GWAS Catalog Submissions] applies to the data submitted to the GWAS Catalog (eg. Summary statistics files) or the data pulled out from the publications.
 
-https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services] applies to our public emailing list such as gwas-info@ebi.ac.uk, gwas-announce@ebi.ac.uk and gwas-users@ebi.ac.uk.
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services] applies to our public e-mail lists such as gwas-info@ebi.ac.uk, gwas-announce@ebi.ac.uk and gwas-users@ebi.ac.uk.
 
 https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking] applies to any publication-specific data (including author names, e-mail and etc) that is being retained to help curators actually get data through the curation process.
 
