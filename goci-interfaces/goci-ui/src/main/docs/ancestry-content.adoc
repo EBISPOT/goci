@@ -68,7 +68,7 @@ We also extract country information as it  provides additional detail on sample 
 
 == Full Ancestry Extraction details
 
-For additional information please review our paper, Morales et al., 2018, link:https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1396-2[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog]. 
+For additional information please review our link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/ancestry[GWAS Catalog Ancestry Extraction Guidelines] and our paper, Morales et al., 2018, link:https://genomebiology.biomedcentral.com/articles/10.1186/s13059-018-1396-2[A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog]. 
 
 
 == Finding Curated Ancestry Data
