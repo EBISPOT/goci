@@ -12,7 +12,7 @@ An annotated version of the diagram is also available containing legend and asso
 
 Diagrams from from each quarters since 2005 have been compiled into a visually striking time lapse:
 
-video::ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[width=640, height=480 ]
+video::/gwas/video/gwas_catalog_2018_anniversary.mp4[width=640, height=480 ]
 
 The slideshow can be downloaded in ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[mp4], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[webm], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[ogg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/video.mp4[pdf] formats.
 
