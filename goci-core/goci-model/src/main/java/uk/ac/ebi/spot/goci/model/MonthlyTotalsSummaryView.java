@@ -11,8 +11,11 @@ import javax.persistence.Entity;
 public class MonthlyTotalsSummaryView extends TotalsSummaryView {
 
     private Integer month;
+    private String pubmedId;
+    private String accessionId;
+    private String author;
 
-    private Integer monthlyTotal;
+//    private Integer monthlyTotal;
 
     // JPA no-args constructor
     public MonthlyTotalsSummaryView() {
@@ -22,11 +25,15 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
                                     String curator,
                                     Integer curatorTotal,
                                     String curationStatus,
-                                    Integer month,
-                                    Integer monthlyTotal) {
+                                    Integer month
+//                                    Integer monthlyTotal
+                                    ) {
         super(year, curator, curatorTotal, curationStatus);
         this.month = month;
-        this.monthlyTotal = monthlyTotal;
+//        this.monthlyTotal = monthlyTotal;
+        this.pubmedId = pubmedId;
+        this.accessionId = accessionId;
+        this.author = author;
     }
 
     public Integer getMonth() {
@@ -37,11 +44,35 @@ public class MonthlyTotalsSummaryView extends TotalsSummaryView {
         this.month = month;
     }
 
-    public Integer getMonthlyTotal() {
-        return monthlyTotal;
+    public String getPubmedId() {
+        return pubmedId;
     }
 
-    public void setMonthlyTotal(Integer monthlyTotal) {
-        this.monthlyTotal = monthlyTotal;
+    public void setPubmedId(String pubmedId) {
+        this.pubmedId = pubmedId;
     }
+
+    public String getAccessionId() {
+        return accessionId;
+    }
+
+    public void setAccessionId(String accessionId) {
+        this.accessionId = accessionId;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+//    public Integer getMonthlyTotal() {
+//        return monthlyTotal;
+//    }
+//
+//    public void setMonthlyTotal(Integer monthlyTotal) {
+//        this.monthlyTotal = monthlyTotal;
+//    }
 }

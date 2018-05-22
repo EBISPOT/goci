@@ -55,7 +55,7 @@ var loadDocumentation = function(pagename, content) {
         //console.log(data);
         content.html(data);
 
-        $.getJSON('../api/search/stats')
+        $.getJSON(contextPath+'api/search/stats')
                 .done(function(stats) {
                           setBuilds(stats);
                       });

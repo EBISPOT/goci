@@ -14,15 +14,34 @@ function processStudy(study, table) {
     //    row.addClass('collapse');
     //    row.addClass('hidden-resource');
     //}
+    
+    
     var europepmc = "http://www.europepmc.org/abstract/MED/".concat(study.pubmedId);
-    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("'>").concat(study.author).concat(
-            "</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
+    var ncbi="https://www.ncbi.nlm.nih.gov/pubmed/?term=".concat(study.pubmedId);
+    
+    var authorsList = study.authorsList.map( collaborator => { return collaborator.split(" | ")[0];}).toString();
 
+    var authorsearch = "<span><a href='search?query=".concat(study.author).concat("' rel=\"tooltip\" title=\"").concat(authorsList).concat("\">").concat(study.author).concat(
+            " et al.</a></span>");
+
+    var epmclink = "<span><a href='".concat(europepmc).concat("' title='Go to EuropePMC' target='_blank'>").concat(
+            "<img alt='externalLink' class='link-icon' src='icons/europepmcx20.png' th:src='@{icons/europepmcx20.png}'/></a></span>");
+    var ncbilink = "<span><a href='".concat(ncbi).concat("' title='Go to NCBI' target='_blank'>").concat(
+       "<img alt='externalLink' class='link-icon' src='icons/ncbix20.png' th:src='@{icons/ncbix20.png}'/></a></span>");
+    
+    
     var pubdate = study.publicationDate.substring(0, 10);
-    row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(
-            epmclink)));
+    var pubmed = study.pubmedId;
+    // To change
+    //row.append($("<td>").html(authorsearch.concat(' (PMID: ').concat(study.pubmedId).concat(') &nbsp;&nbsp;').concat(
+    //        ncbilink).concat('&nbsp;&nbsp;').concat(epmclink)));
+    
+    // GOCI-2138
+    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    row.append($("<td>").html(authorsearch));
+    
+    row.append($("<td>").html(pubmed.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(study.accessionId));
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
@@ -30,6 +49,7 @@ function processStudy(study, table) {
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
+    
     //TO DO - uncomment once FTP structure & Solr variable are available
 
     var fullpvalset = study.fullPvalueSet;
@@ -40,7 +60,7 @@ function processStudy(study, table) {
     if(fullpvalset == 1) {
 
 
-        var a = (study.author_s).replace(/\s/g,"");
+        var a = (study.authorAscii_s).replace(/\s/g,"");
         var dir = a.concat("_").concat(study.pubmedId).concat("_").concat(study.accessionId);
 
         var ftplink = "<a href='ftp://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/"
@@ -261,7 +281,7 @@ function processStudy(study, table) {
     innerTable.append($("<tr>").append($("<th>").attr('style', 'width: 30%').html("Platform [SNPs passing QC]")).append(
             $("<td>").html(study.platform)));
 
-    hiddenrow.append($('<td>').attr('colspan', 7).attr('style', 'border-top: none').append(innerTable));
+    hiddenrow.append($('<td>').attr('colspan', 9).attr('style', 'border-top: none').append(innerTable));
 
     table.append(hiddenrow);
 }
@@ -679,7 +699,9 @@ function processAssociation(association, table) {
             "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
     row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
 
-
+    var accessionId = association.accessionId;
+    row.append($("<td>").html(accessionId));
+    
     table.append(row);
 }
 

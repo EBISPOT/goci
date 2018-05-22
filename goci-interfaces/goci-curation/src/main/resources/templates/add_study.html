@@ -21,7 +21,18 @@
 
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
 
+        /*]]>*/
+    </script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -34,7 +45,7 @@
         <div class="col-md-offset-2 col-md-4">
             <div class="alert alert-info">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong>Enter pubmed ID to import study details or add details manually</strong>
+                <strong>Enter pubmed ID or a list of pumed ID separated by comma</strong>
             </div>
         </div>
     </div>
@@ -45,20 +56,22 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <form id="addStudyWithPubmed" class="form-horizontal" role="form" method="post"
-                  th:object="${pubmedIdForImport}" th:action="@{/studies/new/import}">
+            <form class="form-horizontal">
+                <div id="main_error" class="alert alert-danger col-md-offset-2 col-md-10" style="display: none;">
+                    <span id="error_text"></span>
+                </div>
+
                 <div class="form-group">
-                    <label class="control-label col-md-2" for="inputPubmedAdd">Add using Pubmed ID</label>
+                    <label class="control-label col-md-2">Add using Pubmed ID</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="inputPubmedAdd"
-                               th:field="*{pubmedId}" placeholder="Add using Pubmed ID"/>
+                        <input type="text" class="form-control" id="pubmedId" placeholder="Add using Pubmed ID"/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Import</button>
+                        <button type="button" id="add_study" class="btn btn-primary">Import</button>
                     </div>
                 </div>
             </form>
@@ -66,79 +79,27 @@
     </div>
 </div>
 
-
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <form id="addStudyForm" class="form-horizontal" method="post" th:object="${study}" name="addStudyForm"
-                  th:action="@{/studies/new}">
-
-
-                <div class="alert alert-danger col-md-offset-2 col-md-10" th:if="${#fields.hasErrors('*')}">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-
-                    <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="pubmedId" class="control-label col-md-2">Pubmed ID</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmedId" placeholder="Pubmed ID"
-                               th:field="*{pubmedId}"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="author" class="control-label col-md-2">Author</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="author"
-                               placeholder="last name of first author" th:field="*{author}"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="title" class="control-label col-md-2">Title</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" placeholder="Title of paper"
-                               th:field="*{title}"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="publication" class="control-label col-md-2">Publication</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="publication"
-                               placeholder="Publishing journal name" th:field="*{publication}"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
-
-                    <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" placeholder="YYYY-MM-DD"
-                               th:field="*{publicationDate}"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </form>
+        <div class="col-md-12">
+          <table id="pubmedIdDatatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+              <thead>
+              <tr>
+                  <th>Pubmed ID</th>
+                  <th>Study</th>
+                  <th>Author</th>
+                  <th>Title</th>
+                  <th>Error</th>
+              </tr>
+              </thead>
+          </table>
         </div>
     </div>
 </div>
 
 <div th:include="fragments/footer :: page_footer"></div>
 
+<script th:src="@{/js/goci-pubmed-import.js}"></script>
 </body>
 
 </html>

@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -138,6 +135,7 @@ public class StudyService {
     public List<Study> deepFindUnPublishedStudies() {
         List<Study> studies =
                 studyRepository.findByHousekeepingCatalogPublishDateIsNullOrHousekeepingCatalogUnpublishDateIsNotNull();
+
         studies.forEach(this::deepLoadAssociatedData);
         return studies;
     }
@@ -217,7 +215,13 @@ public class StudyService {
                                            + cor + " countries of recruitment");
                 }
         );
-        
+
+        Collection<Author> authorArrayList = new ArrayList<>();
+        // Extract the author in order
+        study.getPublicationId().getPublicationAuthors().forEach(publicationAuthor ->{
+            authorArrayList.add(publicationAuthor.getAuthor());
+        });
+
         int platformCount = study.getPlatforms().size();
         Date publishDate = study.getHousekeeping().getCatalogPublishDate();
         if (publishDate != null) {
@@ -256,6 +260,11 @@ public class StudyService {
                 }
         );
 
+        Collection<Author> authorArrayList = new ArrayList<>();
+        // Extract the author in order
+        study.getPublicationId().getPublicationAuthors().forEach(publicationAuthor ->{
+            authorArrayList.add(publicationAuthor.getAuthor());
+        });
 
         Collection<SingleNucleotidePolymorphism> snps = new ArrayList<>();
         study.getAssociations().forEach(
@@ -330,14 +339,35 @@ public class StudyService {
         studyNoteService.deleteAllNoteByStudy(study);
     }
 
+    public void setPublicationIdNull(Long studyId) {
+        studyRepository.setPublicationIdNull(studyId);
+    }
+
 //convenience method for when an already loaded & modified study needs to be deleted - this method lazy-loads the study from scratch at deletion time
     public void deleteByStudyId(Long studyId){
         studyRepository.delete(studyId);
     }
 
-    public Study findOne(Long id){
-        //#xintodo this could be the place to add exception if a study is null
-        return studyRepository.findOne(id);
+
+    public Optional<Study> getValue(Study study) {
+        return (study != null) ? Optional.of(study) : Optional.empty();
+    }
+
+
+    public Optional<Study> findOptionalByStudyId(Long studyId) {
+        Study study = studyRepository.findOne(studyId);
+        return getValue(study);
+    }
+
+    //#xintodo this could be the place to add exception if a study is null
+    // CM: to avoid any exception and return NULL I use Optional
+    public Study findOne(Long id) {
+        Optional<Study> study = findOptionalByStudyId(id);
+        return (study.isPresent()) ? study.get(): null;
+    }
+
+    public void save(Study study) {
+        save(study);
     }
 
 }

@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model.mail;
 
 import uk.ac.ebi.spot.goci.model.GenericEmail;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 
@@ -19,8 +20,9 @@ public class CurationSystemEmailToCurator extends GenericEmail {
 
     public void createBody(Study study, String status) {
         // Set up some of the values used in mail body
-        String studyTitle = study.getTitle();
-        String pubmedLink = "http://europepmc.org/abstract/MED/" + study.getPubmedId();
+        Publication publication = study.getPublicationId();
+        String studyTitle = publication.getTitle();
+        String pubmedLink = "http://europepmc.org/abstract/MED/" + publication.getPubmedId();
         String currentCurator = study.getHousekeeping().getCurator().getLastName();
 
         // These could be null so catch this case
@@ -39,7 +41,7 @@ public class CurationSystemEmailToCurator extends GenericEmail {
         }
 
         // Format dates
-        Date studyDate = study.getPublicationDate();
+        Date studyDate = publication.getPublicationDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         String bodyStudyDate = dateFormat.format(studyDate);
 
@@ -50,9 +52,9 @@ public class CurationSystemEmailToCurator extends GenericEmail {
         }
         String editStudyLink = getLink() + "studies/" + study.getId();
 
-        this.setSubject(study.getAuthor() + " - " + status);
+        this.setSubject(publication.getFirstAuthor().getFullnameShort(50) + " - " + status);
         this.setBody(
-                "The GWAS paper by " + study.getAuthor() + " with study date " + bodyStudyDate + " now has status " +
+                "The GWAS paper by " + publication.getFirstAuthor().getFullname() + " with study date " + bodyStudyDate + " now has status " +
                         status
                         + "\n" + "Title: " + studyTitle
                         + "\n" + "Trait: " + studyTrait

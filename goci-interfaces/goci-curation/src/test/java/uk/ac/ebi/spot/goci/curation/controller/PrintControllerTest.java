@@ -16,9 +16,11 @@ import uk.ac.ebi.spot.goci.curation.model.SnpAssociationTableView;
 import uk.ac.ebi.spot.goci.curation.service.StudyPrintService;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +56,9 @@ public class PrintControllerTest {
     @Mock
     private StudyPrintService studyPrintService;
 
+    @Mock
+    private PublicationService publicationService;
+
     private MockMvc mockMvc;
 
     private static final Ancestry ETH1 = new AncestryBuilder().setNotes("ETH1 notes")
@@ -87,7 +92,7 @@ public class PrintControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        PrintController printController = new PrintController(studyRepository, ancestryRepository, studyPrintService);
+        PrintController printController = new PrintController(studyRepository, ancestryRepository, studyPrintService, publicationService);
         mockMvc = MockMvcBuilders.standaloneSetup(printController).build();
     }
 

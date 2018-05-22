@@ -38,7 +38,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
 
     @Override public void doEnrichment(DiseaseTraitDocument document) {
         long id = Long.valueOf(document.getId().split(":")[1]);
-
+        // Comment this part if you want to exclude the DiseaseTrait Doc Enrichment
         studyService.findByDiseaseTraitId(id).forEach(
                 study -> {
                     document.embed(new StudyDocument(study));
@@ -53,7 +53,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
                                 // and embed all associations mapped to this efo trait
                                 associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
                                         association -> document.embed(new AssociationDocument(association)));
-                            });
+                    });
                 });
     }
 }

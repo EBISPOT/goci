@@ -1,7 +1,13 @@
 $(document).ready(function() {
-    $('#search-box').change(function() {
-        doSearch();
+    
+    $("a").tooltip({
+        'selector': '',
+        'placement': 'top',
+        'container':'body'
     });
+    
+    $('.auto-tooltip').tooltip();
+    
 
     $('#search-button').click(function() {
         doSearch();
@@ -23,8 +29,9 @@ $(document).ready(function() {
         }
     }
 
-    if($("#homepageStats")){
-        $.getJSON('api/search/stats')
+    // Bug change column with id=associationID
+    if($("#homepageStats").length){
+        $.getJSON(contextPath+'api/search/stats')
                 .done(function(stats) {
                           setStats(stats);
                       });
@@ -40,7 +47,7 @@ $(document).ready(function() {
 });
 
 function useAutoCompleteInput(){
-    if(window.location.pathname.indexOf("/diagram")){
+    if(window.location.pathname.indexOf("/diagram") > -1){
         doFilter();
     }
     else{

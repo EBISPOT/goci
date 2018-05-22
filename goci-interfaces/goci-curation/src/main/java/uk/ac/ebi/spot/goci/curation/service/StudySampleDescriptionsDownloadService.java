@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.StudySampleDescription;
-import uk.ac.ebi.spot.goci.model.AncestralGroup;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Country;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 
 import java.io.IOException;
@@ -52,9 +49,11 @@ public class StudySampleDescriptionsDownloadService {
 
                 // Study attributes
                 Long studyId = study.getId();
-                String author = study.getAuthor();
-                Date publicationDate = study.getPublicationDate();
-                String pubmedId = study.getPubmedId();
+                Publication publication = study.getPublicationId();
+
+                String author = publication.getFirstAuthor().getFullname();
+                Date publicationDate = publication.getPublicationDate();
+                String pubmedId = publication.getPubmedId();
                 String initialSampleSize = study.getInitialSampleSize();
                 String replicateSampleSize = study.getReplicateSampleSize();
 
@@ -347,7 +346,7 @@ public class StudySampleDescriptionsDownloadService {
 
     // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByPublicationDateDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "study.publicationDate"));
+        return new Sort(new Sort.Order(Sort.Direction.DESC, "study.publicationId.publicationDate"));
     }
 
 }

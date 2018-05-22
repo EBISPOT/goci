@@ -105,11 +105,6 @@ public class JsonBuilder {
         Collection<Ancestry> ancestries = association.getStudy().getAncestries();
         int sampleSize = 0;
 
-        if (association.getStudy().getPubmedId().equals("25673412")) {
-            System.out.println();
-        } else {
-            System.out.println();
-        }
         System.out.println("\n\nancestry size = " + ancestries.size());
         for (Ancestry ancestry : ancestries) {
 //            if("initial".equals(ancestry.getType())) {
@@ -147,7 +142,7 @@ public class JsonBuilder {
                                         jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
                                                 efoTrait.getUri(),
                                                 riskAllele.getSnp().getRsId(),
-                                                association.getStudy().getPubmedId(),
+                                                association.getStudy().getPublicationId().getPubmedId(),
                                                 sampleSize,
                                                 snpCount,
                                                 ensemblId,
@@ -247,7 +242,7 @@ public class JsonBuilder {
         JsonObject resourceScore = Json.createObjectBuilder()
                 .add("type", "pvalue")
                 .add("method", method)
-                .add("value", pvalue) //0.000000003
+                .add("value", pvalue)
                 .build();
 
         JsonArray evidenceCodes = Json.createArrayBuilder()
@@ -312,17 +307,6 @@ public class JsonBuilder {
 
 
         String jsonToReturn = json.toString();
-//        Pattern pattern = Pattern.compile(",\"value\":(\".E.\")");
-//        Matcher matcher = pattern.matcher(jsonToReturn);
-//
-//        boolean found = false;
-//        while (matcher.find()) {
-//            System.out.println("I found the text" +
-//                            matcher.group() + " starting at " +
-//                            "index " + matcher.start() + " and ending at index " +  matcher.end() );
-//            found = true;
-//        }
-
 
         jsonToReturn = removeQuoteAroundPvalue(jsonToReturn);
         System.out.println("\n"+ jsonToReturn);

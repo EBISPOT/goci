@@ -83,7 +83,7 @@ public class MappingErrorComparisonService {
             // Establish association and study details
             Long associationId = oldErrorReport.getAssociation().getId();
             Study study = studyRepository.findByAssociationsId(associationId);
-            String pubmedId = study.getPubmedId();
+            String pubmedId = study.getPublicationId().getPubmedId();
             Long studyId = study.getId();
 
             mappingErrorComparisonReport.setStudyId(studyId);

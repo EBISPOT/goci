@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.StudyNote;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +36,7 @@ public class PrintController {
     private StudyRepository studyRepository;
     private AncestryRepository ancestryRepository;
     private StudyPrintService studyPrintService;
+    private PublicationService publicationService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -45,10 +47,12 @@ public class PrintController {
     @Autowired
     public PrintController(StudyRepository studyRepository,
                            AncestryRepository ancestryRepository,
-                           StudyPrintService studyPrintService) {
+                           StudyPrintService studyPrintService,
+                           PublicationService publicationService) {
         this.studyRepository = studyRepository;
         this.ancestryRepository = ancestryRepository;
         this.studyPrintService = studyPrintService;
+        this.publicationService = publicationService;
     }
 
 
@@ -108,7 +112,9 @@ public class PrintController {
         return () -> {
             Hashtable<String, ArrayList<Object>> listStudies = new Hashtable<String, ArrayList<Object>>();
 
-            Collection<Study> allStudiesByPubmedId = studyRepository.findByPubmedId(pubmedId);
+            // THOR
+            Collection<Study> allStudiesByPubmedId = publicationService.findStudiesByPubmedId(pubmedId);
+
             for (Study studyToPrint : allStudiesByPubmedId) {
                 ArrayList<Object> infoToPrint = getStudyInfoToPrint(studyToPrint);
                 listStudies.put(studyToPrint.getId().toString(), infoToPrint);

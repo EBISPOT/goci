@@ -713,8 +713,8 @@ public class JsonProcessingService {
 
     private String getAuthor(JsonNode doc) {
         String author;
-        if (doc.get("author_s") != null) {
-            author = doc.get("author_s").asText().trim();
+        if (doc.get("authorAscii_s") != null) {
+            author = doc.get("authorAscii_s").asText().trim();
         }
         else {
             author = "";

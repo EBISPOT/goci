@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<div th:fragment="contextPath" xmlns:th="http://www.thymeleaf.org">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
+
+        function imageExists(url, callback) {
+            var img = new Image();
+            img.onload = function() { callback(true); };
+            img.onerror = function() { callback(false); };
+            img.src = url;
+        }
+
+        // Check beta-icon
+        var imageUrl = contextPath+'icons/beta-icon.png';
+        imageExists(imageUrl, function(exists) {
+            console.log('RESULT: url=' + imageUrl + ', exists=' + exists);
+            console.log(typeof(exists));
+            if (exists) {
+                var element = document.getElementById('beta-icon');
+                element.style.display = 'inline';
+            }
+        });
+        /*]]>*/
+    </script>
+
+</div>
+</body>
+</html>

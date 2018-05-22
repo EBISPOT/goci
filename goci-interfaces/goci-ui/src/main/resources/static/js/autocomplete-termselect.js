@@ -4,18 +4,11 @@
 $(document).ready(function() {
 
     $("input[data-widget='select']").each(function() {
-
-        var relativePath = $(this).data("selectpath") ? $(this).data("selectpath") : '';
-        var path = window.location.pathname;
-        var pagename = path.substr(path.lastIndexOf('/') + 1);
-
-        if ((path.indexOf("docs") != -1 && pagename != "docs") || path.indexOf("variant") != -1 || (path.indexOf("downloads") != -1 && pagename != "downloads") || path.indexOf("traits") != -1) {
-            relativePath = '../'
-        }
-
+        
         //var ontology =   $(this).data("gwasontology") ? $(this).data("gwasontology") : '';
+        // Please use contextPath for ajax call!
         $(this).devbridgeAutocomplete({
-                                          serviceUrl: relativePath + 'api/select',
+                                          serviceUrl: contextPath + 'api/select',
                                           minChars: 3,
                                           // maxHeight: 500,
                                           // limit: 100,
