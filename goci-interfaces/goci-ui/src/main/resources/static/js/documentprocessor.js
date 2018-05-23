@@ -43,10 +43,11 @@ function processStudy(study, table) {
     //        ncbilink).concat('&nbsp;&nbsp;').concat(epmclink)));
     
     // GOCI-2138
-    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\">View paper<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+study.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+study.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    
     row.append($("<td>").html(authorsearch));
     
-    row.append($("<td>").html(pubmedIdLink.concat('<br>').concat(viewPapers)));
+    row.append($("<td>").html(pubmed.concat('&nbsp;').concat(viewPapers)));
     
     // below the details of the study
     var genotypingTechnologiesList = "";
@@ -80,13 +81,14 @@ function processStudy(study, table) {
             "data-original-title='Targeted or exome array study'></span></a>";
     }
     
-    var accessionInfo = accessionLink.concat(" ").concat(genotypingIcon);
+    var accessionInfo = (study.accessionId).concat(" ").concat(genotypingIcon);
     row.append($("<td>").html(accessionInfo));
     
     row.append($("<td>").html(pubdate));
     row.append($("<td>").html(study.publication));
     row.append($("<td>").html(study.title));
-    var traitsearch = "<span><a href='search?query=".concat(study.traitName).concat("'>").concat(study.traitName).concat(
+    var traitSearchURI = encodeURIComponent(study.traitName).replace(/[!'()*]/g, escape);
+    var traitsearch = "<span><a href='search?query=".concat(traitSearchURI).concat("'>").concat(study.traitName).concat(
             "</a></span>");
     row.append($("<td>").html(traitsearch));
 
@@ -730,7 +732,8 @@ function processAssociation(association, table) {
     row.append($("<td>").html(mapgene));
 
     if (association.traitName != null) {
-        var traitsearch = "<span><a href='search?query=".concat(association.traitName).concat("'>").concat(association.traitName).concat(
+        var traitSearchURI = encodeURIComponent(association.traitName).replace(/[!'()*]/g, escape);
+        var traitsearch = "<span><a href='search?query=".concat(traitSearchURI).concat("'>").concat(association.traitName).concat(
                 "</a></span>");
         row.append($("<td>").html(traitsearch));
     }
@@ -741,12 +744,12 @@ function processAssociation(association, table) {
     var studydate = association.publicationDate.substring(0, 4);
     var author = association.author[0].concat(' (PMID: ').concat(association.pubmedId).concat("), ").concat(studydate);
 
-    var europepmc = "http://www.europepmc.org/abstract/MED/".concat(association.pubmedId);
-    var searchlink = "<span><a href='search?query=".concat(association.author).concat("'>").concat(author).concat(
+    var searchlink = "<span><a href='search?query=".concat(association.pubmedId).concat("'>").concat(author).concat(
             "</a></span>");
-    var epmclink = "<span><a href='".concat(europepmc).concat("' target='_blank'>").concat(
-            "<img alt='externalLink' class='link-icon' src='icons/external1.png' th:src='@{icons/external1.png}'/></a></span>");
-    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(epmclink)));
+
+    var viewPapers = '<div class=\"btn-group\"> <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-xs btn-default dropdown-toggle\"><span><img alt=\"externalLink\" class=\"link-icon\" src=\"icons/external1.png\" th:src=\"@{icons/external1.png}\"/></span></button><ul class=\"dropdown-menu\"> <li><a target=\"_blank\" href=\"http://europepmc.org/abstract/MED/'+association.pubmedId+'\">View in Europe PMC</a></li> <li><a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov/pubmed/?term='+association.pubmedId+'\">View in PubMed</a></li></ul></div>';
+    
+    row.append($("<td>").html(searchlink.concat('&nbsp;&nbsp;').concat(viewPapers)));
 
     var accessionLink = '<a href="'+contextPath+'studies/'+association.accessionId+'" title="Go to the study page"><span class="gwas-icon-GWAS_Study_2017"></span>&nbsp;'+association.accessionId+'</a>';
     row.append($("<td>").html(accessionLink));

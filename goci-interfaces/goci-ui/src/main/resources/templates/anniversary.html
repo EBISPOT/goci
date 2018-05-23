@@ -59,22 +59,36 @@
 <div class="container tight-to-top">
 
     <div class="row">
-        <h2 style="color: black"><img id="news_image" th:src="@{/images/birthday_10th.png}" style="vertical-align:middle" th:width="72" th:height="72"/>&nbsp;Anniversary of GWAS Catalog</h2>
-        <p>The GWAS Catalog was launched in 2008 to provide a publicly available central repository of all published GWAS and association results. Over the last 10 years the Catalog has grown, from containing the first published GWAS on age-related macular degeneration, into the primary source of disease related associations. The Catalog now contains over #, with global reach and over # visitors per week. This vast amount of data fuels research into common disease, enabling investigations to identify causal variants, understand disease mechanisms, and establish targets for novel therapies.
-            <br/>
-            <br/>
-            The GWAS landscape has evolved over the last 10 years…. - study design, genotyping technologies and user needs. How study design has changed, ancestry, genotyping technologies. Ensure GWAS Catalog data has the greatest utility to users - most up-to-date studies, annotation and integration to fully exploit. User needs. Here at GWAS Catalog aim to adapt to meet changing tech and user needs. Over last 10 years some of major developments developed search functionality, added links to external resources, diagram interactive providing visualisation, filterable by trait. Structured ancestry information added for all studies, recently published.
-            <br/>
-            <br/>
-            Recently started hosting summary statistics for GWAS Catalog studies. Vastly extend potential of Catalog data.
-            <br/>
-            <br/>
-            Targeted arrays, focusing on exonic regions of the genome or candidate loci. Collaboration with Open Targets to expand scope to include studies employing these.
-            <br/>
-            <br/>
-            Looking forward… Sequencing studies…. <b>Making full p-value datasets more accessible</b>
-
-        </p>
+        <h2 style="color: black">10th Anniversary of the NHGRI-EBI GWAS Catalog</h2>
+        <br/>
+        <p>The GWAS Catalog was launched in 2008 to provide a publicly available curated resource of all published human genome wide association studies (GWAS) and association results. Over 10 years, the Catalog has grown, from a single published GWAS on age-related macular degeneration (Klein et al., 2005), into the primary source of disease-related associations with genetic variants (watch the associations increase over time in this video). The Catalog now contains over 3,300 publications and almost 60,000 unique SNP-trait associations, with global reach and over 10,000 visitors per month. Extensive manual curation of GWA studies by expert scientists ensures that the Catalog provides an accurate, comprehensive and structured summary of GWAS results. This vast amount of data underpins research into common disease, enabling investigations to identify causal variants, understand disease mechanisms, and establish targets for novel therapies.</p>
+        <br/>
+        <p th:align="center"><video width="800" height="600" controls="controls">
+            <source th:src="@{/video/gwas_catalog_2018_anniversary.mp4}" type="video/mp4" />
+            <source th:src="@{/video/gwas_catalog_2018_10th_anniversary.ogg}" type="video/ogg" />
+            Your browser does not support the video tag.
+        </video>
+        </p><p>
+        <br/>
+        The GWAS landscape has evolved over the last 10 years, with developments in study design and genotyping technologies. GWAS have illustrated the highly polygenic nature of complex traits and the opportunity to address the issue of missing heritability (Manolio et al., 2009). The field has thus evolved with the examination of increasing sample sizes, number of genetic variants assayed and ever more specific traits, endophenotypes and measurements. Consequently, we have seen an increase in the complexity of GWAS: publications include multiple GWAS studies, combinatorial trait models, interaction effects, pleiotropy and multi-ancestry analysis. Here at the GWAS Catalog we adapt to ensure the resource contains the most relevant and up-to-date research that has the greatest utility to the scientific community.
+        <br/>
+        <br/>
+        Highlights over the last 10 years include releasing a new GWAS Catalog website in 2015 (<a th:href="@{/home}">www.ebi.ac.uk/gwas</a>); mapping curated trait descriptions to ontology terms to enable enriched ontology-driven search capabilities; improving the well-known GWAS Catalog diagram; and more completely capturing ancestry. Accurate characterization of ancestry is essential to interpret human genomics data. To facilitate this we developed a framework to systematically describe detailed ancestry information (see our recent published framework and guidelines for reporting ancestry (Morales et al., 2018). Recently, with support from the scientific community, we started hosting summary statistics for GWAS Catalog studies. Integration of these full p-value datasets with the structured meta-data in the Catalog will facilitate community analysis and re-use of these valuable data. In the future, we will make these datasets more accessible via a comprehensive, searchable database, providing a platform for downstream meta-analysis. Please submit your data to us to extend the utility of your results and the potential for follow on studies.
+        <br/>
+        <br/>
+        We are also investigating expanding our scope to include targeted arrays and going beyond array-based genotyping to include sequencing-based genotyping, which enables a deeper interrogation of rare disease-associated variants. With these developments come many challenges, including how best to represent the increasing complexity of study designs, trait architecture and statistical analyses, but with the help of GWAS Catalog publication authors and users we are excited about what the next 10 years of GWAS hold.
+        <br/>
+        <br/>
+        <b>References</b>
+        <br/>
+        <br/>
+        Klein RJ, Zeiss C, Chew EY, Tsai JY, Sackler RS, Haynes C, Henning AK, SanGiovanni JP, Mane SM, Mayne ST, Bracken MB, Ferris FL, Ott J, Barnstable C, Hoh J. Complement factor H polymorphism in age-related macular degeneration. Science. 2005 Apr 15;308(5720):385-9. Epub 2005 Mar 10. PubMed PMID: 15761122; PubMed Central PMCID: PMC1512523.
+        <br/><br/>
+        Manolio TA, Collins FS, Cox NJ, Goldstein DB, Hindorff LA, Hunter DJ, McCarthy MI, Ramos EM, Cardon LR, Chakravarti A, Cho JH, Guttmacher AE, Kong A, Kruglyak L, Mardis E, Rotimi CN, Slatkin M, Valle D, Whittemore AS, Boehnke M, Clark AG, Eichler EE, Gibson G, Haines JL, Mackay TF, McCarroll SA, Visscher PM. Finding the missing heritability of complex diseases. Nature. 2009 Oct 8;461(7265):747-53. doi: 10.1038/nature08494. Review. PubMed PMID: 19812666; PubMed Central PMCID: PMC2831613.
+        <br/><br/>
+        Morales J, Welter D, Bowler EH, Cerezo M, Harris LW, McMahon AC, Hall P, Junkins HA, Milano A, Hastings E, Malangone C, Buniello A, Burdett T, Flicek P, Parkinson H, Cunningham F, Hindorff LA, MacArthur JAL. A standardized framework for representation of ancestry data in genomics studies, with application to the NHGRI-EBI GWAS Catalog. Genome Biol. 2018 Feb 15;19(1):21. doi: 10.1186/s13059-018-1396-2. PubMed PMID: 29448949; PubMed Central PMCID: PMC5815218.
+        <br/><br/>
+    </p>
 
 
     </div>
@@ -97,7 +111,7 @@
 
 <!-- GOCI JavaScript
 ================================================== -->
-<script src="../static/js/goci-ui.js" th:src="@{../js/goci-ui.js}"></script>
+<script src="../static/js/goci-ui.js" th:src="@{js/goci-ui.js}"></script>
 <script src="../static/js/autocomplete-termselect.js" th:src="@{../js/autocomplete-termselect.js}"></script>
 <script src="../static/js/jquery.autocomplete.js" th:src="@{../js/jquery.autocomplete.js}"></script>
 

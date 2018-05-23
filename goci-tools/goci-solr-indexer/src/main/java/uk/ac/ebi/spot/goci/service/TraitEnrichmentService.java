@@ -41,7 +41,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
         // Comment this part if you want to exclude the DiseaseTrait Doc Enrichment
         studyService.findByDiseaseTraitId(id).forEach(
                 study -> {
-                    document.embed(new StudyDocument(study));
+                    //document.embed(new StudyDocument(study));
                     // collect unique efo traits by study
                     Set<EfoTrait> efoTraits = new HashSet<>();
                     traitService.findMappedTraitByStudyId(study.getId()).forEach(efoTraits::add);
@@ -51,8 +51,8 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
                                 // embed efo trait info in disease trait document
                                 document.embed(new EfoDocument(trait));
                                 // and embed all associations mapped to this efo trait
-                                associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
-                                        association -> document.embed(new AssociationDocument(association)));
+                                //associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
+                                //        association -> document.embed(new AssociationDocument(association)));
                     });
                 });
     }
