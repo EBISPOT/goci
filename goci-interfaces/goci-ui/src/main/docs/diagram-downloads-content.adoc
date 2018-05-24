@@ -2,7 +2,7 @@
  
 == Downloading the GWAS Diagram
 
-Download the latest version of the iconic GWAS diagram in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/GWAS_Catalog_diagram.svg[svg], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/GWAS_Catalog_diagram.png[png] or in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/latest/GWAS_Catalog_diagram.pdf[pdf] formats. In the diagram associations with p-values less than 5x10-8 are shown, and colored according to trait categories. See link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/diagram_legend.png[legend] for details.
+Download the latest version of the iconic GWAS diagram in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_diagram.svg[svg], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_diagram.png[png] or in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_diagram.pdf[pdf] formats. In the diagram associations with p-values less than 5x10-8 are shown, and colored according to trait categories. See link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/diagram_legend.png[legend] for details.
 
 Diagrams representing earlier stages of the catalog are also availagle from our ftp site in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/png[png], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/svg[svg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/pdf[pdf] formats! 
 
@@ -14,5 +14,5 @@ Diagrams from from each quarters since 2005 have been compiled into a visually s
 
 video::/gwas/video/gwas_catalog_2018_anniversary.mp4[width=640, height=480 ]
 
-The slideshow can be downloaded in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/GWAS_Catalog_slideshow.mp4[mp4], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/GWAS_Catalog_slideshow.webm[webm], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/GWAS_Catalog_slideshow.ogg[ogg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/timelapse/GWAS_Catalog_slideshow.pdf[pdf] formats.
+The slideshow can be downloaded in link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_slideshow.mp4[mp4], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_slideshow.webm[webm], link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_slideshow.ogg[ogg] and link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/timeseries/current/GWAS_Catalog_slideshow.pdf[pdf] formats.
 
