@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping("/reports/weekly_progress")
+//@RequestMapping("/reports/weekly_progress")
 public class WeeklyProgressController {
 
     private WeeklyProgressService weeklyProgressService;
@@ -30,11 +30,23 @@ public class WeeklyProgressController {
         this.weeklyProgressService = weeklyProgressService;
     }
 
-    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(value = "/reports/weekly_progress", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getWeeklyProgressTable(Model model) {
 
-        List<ReportsWeeklyProgressView> weeklyProgressViews = weeklyProgressService.processWeeklyView();
+        String content = "overall";
+
+        List<ReportsWeeklyProgressView> weeklyProgressViews = weeklyProgressService.processWeeklyView(content);
         model.addAttribute("weeklyProgressViews", weeklyProgressViews);
         return "reports_weekly_progress";
+    }
+
+    @RequestMapping(value = "/reports/reports_weekly_progress_targeted_arrays", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String getWeeklyProgressTargetedArraysTable(Model model) {
+
+        String content = "targeted";
+
+        List<ReportsWeeklyProgressView> weeklyProgressViews = weeklyProgressService.processWeeklyView(content);
+        model.addAttribute("weeklyProgressViews", weeklyProgressViews);
+        return "reports_weekly_progress_targeted_arrays";
     }
 }

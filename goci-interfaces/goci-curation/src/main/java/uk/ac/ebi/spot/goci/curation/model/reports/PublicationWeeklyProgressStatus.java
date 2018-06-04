@@ -35,6 +35,7 @@ public class PublicationWeeklyProgressStatus {
     public PublicationWeeklyProgressStatus(String pubmedId, List studyIds) {
         this.pubmedId = pubmedId;
         this.studyIds = studyIds;
+        this.totalStudyCount = 0L;
         this.count_Created = 0L;
         this.count_Level1_CurationDone = 0L;
         this.count_Level2_CurationDone = 0L;
@@ -60,11 +61,17 @@ public class PublicationWeeklyProgressStatus {
 
     public Long getTotalStudyCount() {
         totalStudyCount = Long.valueOf(studyIds.size());
+        // NEW
+//        if (totalStudyCount == null) {
+//            totalStudyCount = 0L;
+//        }
         return totalStudyCount;
     }
 
     public void setTotalStudyCount(Long totalStudyCount) {
+
         this.totalStudyCount = Long.valueOf(studyIds.size());
+//        this.totalStudyCount = totalStudyCount;
     }
 
     public Long getCount_Created() {

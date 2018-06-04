@@ -38,7 +38,7 @@ public class WeeklyProgressService {
         this.weeklyProgressViewRepository = weeklyProgressViewRepository;
     }
 
-    public List<ReportsWeeklyProgressView> processWeeklyView() {
+    public List<ReportsWeeklyProgressView> processWeeklyView(String content) {
 
         getLog().info("Creating weekly progress view");
 
@@ -59,30 +59,46 @@ public class WeeklyProgressService {
 //                .collect(Collectors.toSet());
 //        uniqueWeekSet.forEach(date -> {
 
-        // Get map of all publications and their studies as a Custom Query
-        List<Map.Entry> publicationToStudies = weeklyProgressViewRepository.getAllPublicationToStudyMappings();
+        System.out.println("** Content: "+content);
+        List<Map.Entry> publicationToStudies = null;
+
+        if(content.equals("overall")) {
+            // Get map of all publications and their studies (GWAS and Targeted Arrays) as a Custom Query
+            publicationToStudies = weeklyProgressViewRepository.getAllPublicationToStudyMappings();
+            System.out.println("** Overall data: "+publicationToStudies.size());
+        }
+        if(content.equals("targeted")) {
+            // Get maps of all publications and their targeted array studies only
+            publicationToStudies = weeklyProgressViewRepository.getAllPublicationToTargetedArrayStudyMappings();
+            System.out.println("** Targeted Array data: "+publicationToStudies.size());
+        }
 
         // Create map of pmid to PublicationWeeklyProgressStatus objects
-        HashMap<String, PublicationWeeklyProgressStatus> pwpsHM = new HashMap<>();
+        HashMap<String, PublicationWeeklyProgressStatus> publicationWeeklyProgressStatusData = new HashMap<>();
+        List<String> allPMIDs = new ArrayList<String>();
 
         // Iterate through publicationToStudies to create individual PublicationWeeklyProgressStatus objects
         for (java.util.Map.Entry entry: publicationToStudies){
             String pmid = entry.getKey().toString();
             List studyIds = new ArrayList<>(Arrays.asList(entry.getValue().toString().split("\\s*,\\s*")));
+            System.out.println("** PMID: "+pmid+" - StudyIds: "+studyIds);
+
+            // Create list of all PMIDs in the data set to analyze, e.g. use with data filtered in query (targeted arrays)
+            allPMIDs.add(pmid);
 
             // Create PublicationWeeklyProgressStatus object with pmid and studyIds
             // to track when all studies for a given publication have reached the status of interest
             PublicationWeeklyProgressStatus publicationWeeklyProgressStatus = new PublicationWeeklyProgressStatus(pmid, studyIds);
 
             // Add to map
-            pwpsHM.put(pmid, publicationWeeklyProgressStatus);
+            publicationWeeklyProgressStatusData.put(pmid, publicationWeeklyProgressStatus);
         }
 
         // Get all unique start week dates as Custom Query, order by WEEK_START_DAY ASC
         List<Date> uniqueWeekStartDate = weeklyProgressViewRepository.getAllWeekStartDates();
 
         uniqueWeekStartDate.forEach((Date date) -> {
-            System.out.println("\n\n** Week Start Date: " + date);
+            System.out.println("** Date: "+date);
 
             // For each week start date create a view object
             ReportsWeeklyProgressView reportsWeeklyProgressView = new ReportsWeeklyProgressView(date);
@@ -107,23 +123,26 @@ public class WeeklyProgressService {
                 Map.Entry<String, List<WeeklyProgressView>> pair = it.next();
                 String pmid = pair.getKey().toString();
 
-                int counter = 0;
-                for (WeeklyProgressView item : pair.getValue()) {
+                if (allPMIDs.contains(pmid)) {
 
-                    if (!studiesCreatedThatWeek.contains(item.getStudyId())) {
-                        counter++;
-                        studiesCreatedThatWeek.add((item.getStudyId()));
+                    int counter = 0;
+                    for (WeeklyProgressView item : pair.getValue()) {
+
+                        if (!studiesCreatedThatWeek.contains(item.getStudyId())) {
+                            counter++;
+                            studiesCreatedThatWeek.add((item.getStudyId()));
+                        }
+                        publicationWeeklyProgressStatusData.get(pmid).setCount_Created(publicationWeeklyProgressStatusData.get(pmid).getCount_Created() + counter);
                     }
-                    pwpsHM.get(pmid).setCount_Created(pwpsHM.get(pmid).getCount_Created() + counter);
-                }
 
-                // Check if total number of created studies equals number of all studies for publication
-                Long totalNumStudies = pwpsHM.get(pmid).getTotalStudyCount();
-                Long totalStudiesCreatedToDate = pwpsHM.get(pmid).getCount_Created();
+                    // Check if total number of created studies equals number of all studies for publication
+                    Long totalNumStudies = publicationWeeklyProgressStatusData.get(pmid).getTotalStudyCount();
+                    Long totalStudiesCreatedToDate = publicationWeeklyProgressStatusData.get(pmid).getCount_Created();
 
-                if (totalStudiesCreatedToDate.equals(totalNumStudies)) {
-                    if (!publicationsCreatedThatWeek.contains(pmid)) {
-                        publicationsCreatedThatWeek.add(pwpsHM.get(pmid).getPubmedId());
+                    if (totalStudiesCreatedToDate.equals(totalNumStudies)) {
+                        if (!publicationsCreatedThatWeek.contains(pmid)) {
+                            publicationsCreatedThatWeek.add(publicationWeeklyProgressStatusData.get(pmid).getPubmedId());
+                        }
                     }
                 }
             }
@@ -148,26 +167,30 @@ public class WeeklyProgressService {
                 Map.Entry<String, List<WeeklyProgressView>> pairPublished = itLevelPublished.next();
                 String pmidPublished = pairPublished.getKey().toString();
 
-                Long totalNumStudies = pwpsHM.get(pmidPublished).getTotalStudyCount();
+                // Check if PMID in data set
+                if (allPMIDs.contains(pmidPublished)) {
 
-                for (WeeklyProgressView itemPublished : pairPublished.getValue()) {
+                    Long totalNumStudies = publicationWeeklyProgressStatusData.get(pmidPublished).getTotalStudyCount();
 
-                    // Check that StudyId was never set to this status before
-                    if (!previouslyPublished_Studies.contains(itemPublished.getStudyId())) {
-                        studiesPublishedThatWeek.add((itemPublished.getStudyId()));
+                    for (WeeklyProgressView itemPublished : pairPublished.getValue()) {
 
-                        pwpsHM.get(pmidPublished).setCount_Published(pwpsHM.get(pmidPublished).getCount_Published()+ 1L);
+                        // Check that StudyId was never set to this status before
+                        if (!previouslyPublished_Studies.contains(itemPublished.getStudyId())) {
+                            studiesPublishedThatWeek.add((itemPublished.getStudyId()));
 
-                        // Check if total number of published studies equals number of all studies for publication
-                        if(pwpsHM.get(pmidPublished).getCount_Published().equals(totalNumStudies)) {
+                            publicationWeeklyProgressStatusData.get(pmidPublished).setCount_Published(publicationWeeklyProgressStatusData.get(pmidPublished).getCount_Published() + 1L);
 
-                            if (!publicationsPublishedThatWeek.contains(pmidPublished)) {
-                                publicationsPublishedThatWeek.add(pwpsHM.get(pmidPublished).getPubmedId());
+                            // Check if total number of published studies equals number of all studies for publication
+                            if (publicationWeeklyProgressStatusData.get(pmidPublished).getCount_Published().equals(totalNumStudies)) {
+
+                                if (!publicationsPublishedThatWeek.contains(pmidPublished)) {
+                                    publicationsPublishedThatWeek.add(publicationWeeklyProgressStatusData.get(pmidPublished).getPubmedId());
+                                }
                             }
-                        }
 
-                        // Add previously seen StudyIds that are Published to "previouslyPublished_Studies"
-                        previouslyPublished_Studies.add(itemPublished.getStudyId());
+                            // Add previously seen StudyIds that are Published to "previouslyPublished_Studies"
+                            previouslyPublished_Studies.add(itemPublished.getStudyId());
+                        }
                     }
                 }
             }
@@ -190,27 +213,40 @@ public class WeeklyProgressService {
 
             while (itLevel1.hasNext()) {
                 Map.Entry<String, List<WeeklyProgressView>> pairLevel1 = itLevel1.next();
+                System.out.println("\n** PairLevel1: " + pairLevel1.getValue());
+
                 String pmidLevel1 = pairLevel1.getKey().toString();
+                System.out.println("** PMID_Level1: " + pmidLevel1);
 
-                Long totalNumStudies = pwpsHM.get(pmidLevel1).getTotalStudyCount();
+                if (allPMIDs.contains(pmidLevel1)) {
 
-                for (WeeklyProgressView itemLevel1 : pairLevel1.getValue()) {
+                    System.out.println("** PMID: " + pmidLevel1);
+                    System.out.println("   StudyIds: " + publicationWeeklyProgressStatusData.get(pmidLevel1).getStudyIds());
+                    Long totalNumStudies = publicationWeeklyProgressStatusData.get(pmidLevel1).getTotalStudyCount();
+//                Long totalNumStudies = 0L;
+                    System.out.println("** TotalNumStudies: " + totalNumStudies);
 
-                    // Check that StudyId was never set to this status before
-                    if (!previousLevel1_CurationDone_Studies.contains(itemLevel1.getStudyId())) {
-                        studiesWithLevel1Completed.add((itemLevel1.getStudyId()));
+                    for (WeeklyProgressView itemLevel1 : pairLevel1.getValue()) {
 
-                        pwpsHM.get(pmidLevel1).setCount_Level1_CurationDone(pwpsHM.get(pmidLevel1).getCount_Level1_CurationDone()+ 1L);
+                        // Check that StudyId was never set to this status before
+                        if (!previousLevel1_CurationDone_Studies.contains(itemLevel1.getStudyId())) {
+                            studiesWithLevel1Completed.add((itemLevel1.getStudyId()));
 
-                        // Check if total number of created studies equals number of all studies for publication
-                        if(pwpsHM.get(pmidLevel1).getCount_Level1_CurationDone().equals(totalNumStudies)) {
+                            System.out.println("** Level1CurationDone: " + publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone());
 
-                            if (!publicationsWithLevel1Completed.contains(pmidLevel1)) {
-                                publicationsWithLevel1Completed.add(pwpsHM.get(pmidLevel1).getPubmedId());
+                            publicationWeeklyProgressStatusData.get(pmidLevel1).setCount_Level1_CurationDone(publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone() + 1L);
+//                      publicationWeeklyProgressStatusData.get(pmidPublished).setCount_Published(publicationWeeklyProgressStatusData.get(pmidPublished).getCount_Published()+ 1L);
+
+                            // Check if total number of created studies equals number of all studies for publication
+                            if (publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone().equals(totalNumStudies)) {
+
+                                if (!publicationsWithLevel1Completed.contains(pmidLevel1)) {
+                                    publicationsWithLevel1Completed.add(publicationWeeklyProgressStatusData.get(pmidLevel1).getPubmedId());
+                                }
                             }
+                            // Add previously seen StudyIds at Level 1 to "previousLevel1_CurationDone_Studies"
+                            previousLevel1_CurationDone_Studies.add(itemLevel1.getStudyId());
                         }
-                        // Add previously seen StudyIds at Level 1 to "previousLevel1_CurationDone_Studies"
-                        previousLevel1_CurationDone_Studies.add(itemLevel1.getStudyId());
                     }
                 }
             }
@@ -236,25 +272,28 @@ public class WeeklyProgressService {
                 Map.Entry<String, List<WeeklyProgressView>> pairLevel2 = itLevel2.next();
                 String pmidLevel2 = pairLevel2.getKey().toString();
 
-                Long totalNumStudies = pwpsHM.get(pmidLevel2).getTotalStudyCount();
+                if (allPMIDs.contains(pmidLevel2)) {
 
-                for (WeeklyProgressView itemLevel2 : pairLevel2.getValue()) {
+                    Long totalNumStudies = publicationWeeklyProgressStatusData.get(pmidLevel2).getTotalStudyCount();
 
-                    // Check that StudyId was never set to this status before
-                    if (!previousLevel2_CurationDone_Studies.contains(itemLevel2.getStudyId())) {
-                        studiesWithLevel2Completed.add((itemLevel2.getStudyId()));
+                    for (WeeklyProgressView itemLevel2 : pairLevel2.getValue()) {
 
-                        pwpsHM.get(pmidLevel2).setCount_Level2_CurationDone(pwpsHM.get(pmidLevel2).getCount_Level2_CurationDone()+ 1L);
+                        // Check that StudyId was never set to this status before
+                        if (!previousLevel2_CurationDone_Studies.contains(itemLevel2.getStudyId())) {
+                            studiesWithLevel2Completed.add((itemLevel2.getStudyId()));
 
-                        // Check if total number of created studies equals number of all studies for publication
-                        if(pwpsHM.get(pmidLevel2).getCount_Level2_CurationDone().equals(totalNumStudies)) {
+                            publicationWeeklyProgressStatusData.get(pmidLevel2).setCount_Level2_CurationDone(publicationWeeklyProgressStatusData.get(pmidLevel2).getCount_Level2_CurationDone() + 1L);
 
-                            if (!publicationsWithLevel2Completed.contains(pmidLevel2)) {
-                                publicationsWithLevel2Completed.add(pwpsHM.get(pmidLevel2).getPubmedId());
+                            // Check if total number of created studies equals number of all studies for publication
+                            if (publicationWeeklyProgressStatusData.get(pmidLevel2).getCount_Level2_CurationDone().equals(totalNumStudies)) {
+
+                                if (!publicationsWithLevel2Completed.contains(pmidLevel2)) {
+                                    publicationsWithLevel2Completed.add(publicationWeeklyProgressStatusData.get(pmidLevel2).getPubmedId());
+                                }
                             }
+                            // Add previously seen StudyIds at Level 2 to "previousLevel2_CurationDone_Studies"
+                            previousLevel2_CurationDone_Studies.add(itemLevel2.getStudyId());
                         }
-                        // Add previously seen StudyIds at Level 2 to "previousLevel2_CurationDone_Studies"
-                        previousLevel2_CurationDone_Studies.add(itemLevel2.getStudyId());
                     }
                 }
             }

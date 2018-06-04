@@ -89,7 +89,9 @@ public class WeeklyProgressServiceTest {
         List<Date> uniqueWeekStartDate = weeklyProgressViewRepository.getAllWeekStartDates();
 
         uniqueWeekStartDate.forEach(date -> {
-            List<ReportsWeeklyProgressView> views = weeklyProgressService.processWeeklyView();
+            String content = "overall";
+
+            List<ReportsWeeklyProgressView> views = weeklyProgressService.processWeeklyView(content);
 
             // Assertions
             assertThat(views).hasSize(1);
