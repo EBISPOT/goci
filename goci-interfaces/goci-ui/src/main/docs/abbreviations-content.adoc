@@ -291,6 +291,9 @@ CF-PWVLTA: carotid-femoral pulse wave velocity, long-term average
 CGI: Clinical Global Impressions-Severity
 
 
+CHD: Coronary heart disease
+
+
 CHS1: 1st principal component on transformed hue and saturation values
 
 
