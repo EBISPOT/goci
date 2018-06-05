@@ -59,18 +59,15 @@ public class WeeklyProgressService {
 //                .collect(Collectors.toSet());
 //        uniqueWeekSet.forEach(date -> {
 
-        System.out.println("** Content: "+content);
         List<Map.Entry> publicationToStudies = null;
 
         if(content.equals("overall")) {
             // Get map of all publications and their studies (GWAS and Targeted Arrays) as a Custom Query
             publicationToStudies = weeklyProgressViewRepository.getAllPublicationToStudyMappings();
-            System.out.println("** Overall data: "+publicationToStudies.size());
         }
         if(content.equals("targeted")) {
             // Get maps of all publications and their targeted array studies only
             publicationToStudies = weeklyProgressViewRepository.getAllPublicationToTargetedArrayStudyMappings();
-            System.out.println("** Targeted Array data: "+publicationToStudies.size());
         }
 
         // Create map of pmid to PublicationWeeklyProgressStatus objects
@@ -81,7 +78,6 @@ public class WeeklyProgressService {
         for (java.util.Map.Entry entry: publicationToStudies){
             String pmid = entry.getKey().toString();
             List studyIds = new ArrayList<>(Arrays.asList(entry.getValue().toString().split("\\s*,\\s*")));
-            System.out.println("** PMID: "+pmid+" - StudyIds: "+studyIds);
 
             // Create list of all PMIDs in the data set to analyze, e.g. use with data filtered in query (targeted arrays)
             allPMIDs.add(pmid);
@@ -98,7 +94,6 @@ public class WeeklyProgressService {
         List<Date> uniqueWeekStartDate = weeklyProgressViewRepository.getAllWeekStartDates();
 
         uniqueWeekStartDate.forEach((Date date) -> {
-            System.out.println("** Date: "+date);
 
             // For each week start date create a view object
             ReportsWeeklyProgressView reportsWeeklyProgressView = new ReportsWeeklyProgressView(date);
@@ -213,18 +208,11 @@ public class WeeklyProgressService {
 
             while (itLevel1.hasNext()) {
                 Map.Entry<String, List<WeeklyProgressView>> pairLevel1 = itLevel1.next();
-                System.out.println("\n** PairLevel1: " + pairLevel1.getValue());
 
                 String pmidLevel1 = pairLevel1.getKey().toString();
-                System.out.println("** PMID_Level1: " + pmidLevel1);
 
                 if (allPMIDs.contains(pmidLevel1)) {
-
-                    System.out.println("** PMID: " + pmidLevel1);
-                    System.out.println("   StudyIds: " + publicationWeeklyProgressStatusData.get(pmidLevel1).getStudyIds());
                     Long totalNumStudies = publicationWeeklyProgressStatusData.get(pmidLevel1).getTotalStudyCount();
-//                Long totalNumStudies = 0L;
-                    System.out.println("** TotalNumStudies: " + totalNumStudies);
 
                     for (WeeklyProgressView itemLevel1 : pairLevel1.getValue()) {
 
@@ -232,10 +220,7 @@ public class WeeklyProgressService {
                         if (!previousLevel1_CurationDone_Studies.contains(itemLevel1.getStudyId())) {
                             studiesWithLevel1Completed.add((itemLevel1.getStudyId()));
 
-                            System.out.println("** Level1CurationDone: " + publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone());
-
                             publicationWeeklyProgressStatusData.get(pmidLevel1).setCount_Level1_CurationDone(publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone() + 1L);
-//                      publicationWeeklyProgressStatusData.get(pmidPublished).setCount_Published(publicationWeeklyProgressStatusData.get(pmidPublished).getCount_Published()+ 1L);
 
                             // Check if total number of created studies equals number of all studies for publication
                             if (publicationWeeklyProgressStatusData.get(pmidLevel1).getCount_Level1_CurationDone().equals(totalNumStudies)) {
