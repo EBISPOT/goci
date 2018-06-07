@@ -867,6 +867,9 @@ MSE: middle and short endurance athletes
 MSSS: Multiple Sclerosis Severity Scale
 
 
+MTAG: Multi-Trait Analysis of GWAS
+
+
 M-VLDL-PL: Phospholipids in medium VLDL
 
 
