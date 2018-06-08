@@ -117,7 +117,7 @@
         <!-- Using thymeleaf elvis operator for string, date attributes-->
 
         <td><p>
-            <span th:text="${study.publicationId.firstAuthor.fullname} ?: ''"></span><span th:text="${study.getTagDuplicatedNote()} != '' ? ' ['+${study.getTagDuplicatedNote()}+']': ''"></span>&nbsp;&nbsp;
+            <span th:text="${study.publicationId?.firstAuthor?.fullname}"></span><span th:text="${study.getTagDuplicatedNote()} != '' ? ' ['+${study.getTagDuplicatedNote()}+']': ''"></span>&nbsp;&nbsp;
             <a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'" title="Print single GWA study">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a></p>
@@ -126,22 +126,22 @@
 
         <td >
             <p>
-                <span th:text="${study.publicationId.title} ?: ''"></span>
-                <div th:if="${study.userRequested}" th:remove="tag">
+                <span th:text="${study.publicationId?.title}"></span>
+            <div th:if="${study.userRequested}" th:remove="tag">
                          <span class="glyphicon glyphicon-star color-primary-bold" aria-hidden="true"
                                title="User Requested Study"></span>
-                </div>
+            </div>
             </p>
         </td>
 
-        <td th:text="${study.publicationId.publicationDate != null } ? ${#dates.format(study.publicationId.publicationDate,'yyyy-MM-dd')} : ''"></td>
+        <td th:text="${study.publicationId?.publicationDate != null } ? ${#dates.format(study.publicationId?.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
-            <span th:text="${study.publicationId.pubmedId} ?: ''"></span>
+            <span th:text="${study.publicationId?.pubmedId}"></span>
             &nbsp;&nbsp;
-            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
+            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a>
-            </p>
+        </p>
 
             <div class="btn-group">
                             <button type="button"
@@ -151,10 +151,10 @@
 
                 <ul class="dropdown-menu">
                     <li>
-                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.publicationId.pubmedId})}"
+                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}"
                            target="_blank">View in Europe PMC</a></li>
                     <li>
-                        <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.publicationId.pubmedId})}"
+                        <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.publicationId?.pubmedId})}"
                            target="_blank">View in PubMed</a></li>
 
                 </ul>
@@ -163,7 +163,7 @@
 
         <!--<td th:text="${study.userRequested} ?: ''"></td>-->
 
-        <td th:text="${study.publicationId.publication} ?: ''"></td>
+        <td th:text="${study.publicationId?.publication}"></td>
 
         <!--If study has associated disease trait or EFO trait return traits name-->
         <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
