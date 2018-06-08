@@ -17,13 +17,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/363"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/363"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/363/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/363/study"
         }
       }
     }, {
@@ -37,13 +37,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/365"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/365"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/365/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/365/study"
         }
       }
     }, {
@@ -57,13 +57,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/366"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/366"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/366/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/366/study"
         }
       }
     }, {
@@ -77,13 +77,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/367"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/367"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/367/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/367/study"
         }
       }
     }, {
@@ -97,13 +97,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/368"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/368"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/368/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/368/study"
         }
       }
     }, {
@@ -117,13 +117,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/370"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/370"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/370/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/370/study"
         }
       }
     }, {
@@ -137,13 +137,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/381"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/381"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/381/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/381/study"
         }
       }
     }, {
@@ -157,13 +157,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/383"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/383"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/383/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/383/study"
         }
       }
     }, {
@@ -177,13 +177,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/386"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/386"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/386/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/386/study"
         }
       }
     }, {
@@ -197,13 +197,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/388"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/388"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/388/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/388/study"
         }
       }
     }, {
@@ -217,13 +217,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/401"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/401"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/401/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/401/study"
         }
       }
     }, {
@@ -237,13 +237,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/423"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/423"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/423/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/423/study"
         }
       }
     }, {
@@ -257,13 +257,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/424"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/424"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/424/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/424/study"
         }
       }
     }, {
@@ -277,13 +277,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/425"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/425"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/425/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/425/study"
         }
       }
     }, {
@@ -297,13 +297,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/627"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/627"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/627/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/627/study"
         }
       }
     }, {
@@ -317,13 +317,13 @@ Content-Length: 13892
       "notes" : "Study sample and origin from table S1.",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/675"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/675"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/675/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/675/study"
         }
       }
     }, {
@@ -337,13 +337,13 @@ Content-Length: 13892
       "notes" : "Sample size in table 1 \"summary of study cohorts.\"",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/541"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/541"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/541/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/541/study"
         }
       }
     }, {
@@ -357,13 +357,13 @@ Content-Length: 13892
       "notes" : null,
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/676"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/676"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/676/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/676/study"
         }
       }
     }, {
@@ -377,13 +377,13 @@ Content-Length: 13892
       "notes" : "Checked suppl. notes, only brief description on all the studies.",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/506"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/506"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/506/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/506/study"
         }
       }
     }, {
@@ -397,35 +397,35 @@ Content-Length: 13892
       "notes" : "Sample size found in \"Discussion.\"  Description found in suppl.\r\n\r\nIncluded sample size from Results, p. 5. (IBC analysis not GWAS)",
       "_links" : {
         "self" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/508"
         },
         "ancestry" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/508"
         },
         "study" : {
-          "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/508/study"
+          "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/508/study"
         }
       }
     } ]
   },
   "_links" : {
     "first" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=0&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries?page=0&size=20"
     },
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries"
     },
     "next" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=1&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries?page=1&size=20"
     },
     "last" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries?page=360&size=20"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries?page=360&size=20"
     },
     "profile" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile/ancestries"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile/ancestries"
     },
     "search" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries/search"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries/search"
     }
   },
   "page" : {

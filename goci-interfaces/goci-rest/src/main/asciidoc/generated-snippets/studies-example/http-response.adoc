@@ -25,28 +25,28 @@ Content-Length: 1567
   "fullPvalueSet" : false,
   "_links" : {
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993"
     },
     "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993"
     },
     "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/efoTraits"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/efoTraits"
     },
     "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/snps"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/snps"
     },
     "diseaseTrait" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/diseaseTrait"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/diseaseTrait"
     },
     "platforms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/platforms"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/platforms"
     },
     "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/ancestries"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/ancestries"
     },
     "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies/5993/associations"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies/5993/associations"
     }
   }
 }

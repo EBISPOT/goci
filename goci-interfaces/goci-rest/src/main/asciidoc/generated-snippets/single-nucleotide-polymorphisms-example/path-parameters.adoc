@@ -1,4 +1,4 @@
-./gwas/rest/api/singleNucleotidePolymorphisms/{snp_id}
+./gwas/labs/rest/api/singleNucleotidePolymorphisms/{snp_id}
 |===
 |Parameter|Description
 

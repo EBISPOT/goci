@@ -1,4 +1,4 @@
-./gwas/rest/api/ancestries/{ancestry_id}
+./gwas/labs/rest/api/ancestries/{ancestry_id}
 |===
 |Parameter|Description
 

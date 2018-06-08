@@ -1,4 +1,4 @@
 [source,bash]
 ----
-$ http GET 'https://www.ebi.ac.uk/gwas/rest/api/studies?page=1&size=1'
+$ http GET 'https://www.ebi.ac.uk/gwas/labs/rest/api/studies?page=1&size=1'
 ----

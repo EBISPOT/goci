@@ -24,25 +24,25 @@ Content-Length: 1258
   "pvalue" : 3.0000000000000002E-18,
   "_links" : {
     "self" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553"
     },
     "association" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553"
     },
     "snps" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/snps"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553/snps"
     },
     "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/efoTraits"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553/efoTraits"
     },
     "loci" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/loci"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553/loci"
     },
     "genes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/genes"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553/genes"
     },
     "study" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations/16510553/study"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations/16510553/study"
     }
   }
 }

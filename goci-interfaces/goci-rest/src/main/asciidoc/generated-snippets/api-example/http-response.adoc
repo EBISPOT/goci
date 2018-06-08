@@ -7,75 +7,75 @@ Content-Length: 2438
 {
   "_links" : {
     "ensemblGenes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ensemblGenes{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ensemblGenes{?page,size,sort}",
       "templated" : true
     },
     "mappingMetadatas" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/mappingMetadatas{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/mappingMetadatas{?page,size,sort}",
       "templated" : true
     },
     "genes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genes{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/genes{?page,size,sort}",
       "templated" : true
     },
     "loci" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/loci{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/loci{?page,size,sort}",
       "templated" : true
     },
     "entrezGenes" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/entrezGenes{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/entrezGenes{?page,size,sort}",
       "templated" : true
     },
     "associations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/associations{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/associations{?page,size,sort}",
       "templated" : true
     },
     "studies" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/studies{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/studies{?page,size,sort}",
       "templated" : true
     },
     "genomicContexts" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/genomicContexts{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/genomicContexts{?page,size,sort}",
       "templated" : true
     },
     "regions" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/regions{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/regions{?page,size,sort}",
       "templated" : true
     },
     "diseaseTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/diseaseTraits{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/diseaseTraits{?page,size,sort}",
       "templated" : true
     },
     "riskAlleles" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/riskAlleles{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/riskAlleles{?page,size,sort}",
       "templated" : true
     },
     "countries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/countries{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/countries{?page,size,sort}",
       "templated" : true
     },
     "singleNucleotidePolymorphisms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/singleNucleotidePolymorphisms{?page,size,sort}",
       "templated" : true
     },
     "ancestries" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/ancestries{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/ancestries{?page,size,sort}",
       "templated" : true
     },
     "efoTraits" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/efoTraits{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/efoTraits{?page,size,sort}",
       "templated" : true
     },
     "platforms" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/platforms{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/platforms{?page,size,sort}",
       "templated" : true
     },
     "locations" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/locations{?page,size,sort}",
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/locations{?page,size,sort}",
       "templated" : true
     },
     "profile" : {
-      "href" : "https://www.ebi.ac.uk/gwas/rest/api/profile"
+      "href" : "https://www.ebi.ac.uk/gwas/labs/rest/api/profile"
     }
   }
 }

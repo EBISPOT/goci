@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-GET /gwas/rest/api/studies?page=1&size=1 HTTP/1.1
+GET /gwas/labs/rest/api/studies?page=1&size=1 HTTP/1.1
 Host: www.ebi.ac.uk
 
 ----
