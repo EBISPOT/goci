@@ -92,6 +92,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field private Collection<Integer> numberOfIndividuals;
     @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
+    @Field private Collection<String> genotypingTechnologies;
+    @Field private String studyDesignComment;
 
 
     // embedded DiseaseTrait info
@@ -152,6 +154,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.numberOfIndividuals = new LinkedHashSet<>();
         this.additionalAncestryDescription = new LinkedHashSet<>();
         this.ancestryLinks = new LinkedHashSet<>();
+        this.genotypingTechnologies = new LinkedHashSet<>();
     }
 
     public Collection<String> getRegion() {
@@ -309,6 +312,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     public void addAncestralGroup(String ancestralGroup) {
         this.ancestralGroups.add(ancestralGroup);
     }
+
+    public void addGenotypingTechnologies(Collection<String> genotypingTechnologies) {
+        this.genotypingTechnologies.addAll(genotypingTechnologies);
+    }
+
+    public void addStudyDesignComment(String studyDesignComment) { this.studyDesignComment = studyDesignComment;}
 
     public void addCountryOfOrigin(String countryOfOrigin) {
         this.countriesOfOrigin.add(countryOfOrigin);

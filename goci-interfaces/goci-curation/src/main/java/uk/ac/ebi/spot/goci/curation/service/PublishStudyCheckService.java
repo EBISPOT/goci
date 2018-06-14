@@ -45,28 +45,21 @@ public class PublishStudyCheckService {
 
         Collection<GenotypingTechnology> genotypingTechnologies = study.getGenotypingTechnologies();
 
-        boolean targetedArrayStudy = false;
+        //boolean targetedArrayStudy = false;
         boolean missingGenotypingTechnology = false;
 
         if(genotypingTechnologies.isEmpty()){
             missingGenotypingTechnology = true;
         }
 
-        for(GenotypingTechnology gt : genotypingTechnologies){
+        /*for(GenotypingTechnology gt : genotypingTechnologies){
             if(gt.getGenotypingTechnology().contains("Targeted") || gt.getGenotypingTechnology().contains("Exome") || gt.getGenotypingTechnology().contains("sequencing")){
                 targetedArrayStudy = true;
             }
-        }
+        }*/
 
 
-        if (targetedArrayStudy) {
-            message = "Study: "
-                    + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", "
-                    + " pubmed = " + study.getPublicationId().getPubmedId()
-                    + ", is a targeted array, other non-genome-wide or sequencing study and should not be published.";
-        }
-
-        else if(snpNotApproved == 1 || !efoTermsAssigned || missingCoR || missingGenotypingTechnology){
+        if(snpNotApproved == 1 || !efoTermsAssigned || missingCoR || missingGenotypingTechnology){
             message = "Study: "
                     + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", "
                     + " pubmed = " + study.getPublicationId().getPubmedId()

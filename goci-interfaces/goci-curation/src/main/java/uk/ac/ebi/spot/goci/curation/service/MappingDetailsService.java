@@ -7,14 +7,10 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by emma on 08/03/2016.
@@ -44,52 +40,23 @@ public class MappingDetailsService {
     public MappingDetails createMappingSummary(Study study) {
 
         MappingDetails mappingSummary = new MappingDetails();
-        Collection<Association> studyAssociations = associationRepository.findByStudyId(study.getId());
-
-        if (studyAssociations != null && !studyAssociations.isEmpty()) {
-
-            // Determine if we have more than one performer
-            Set<String> allAssociationMappingPerformers = new HashSet<String>();
-            for (Association association : studyAssociations) {
-                allAssociationMappingPerformers.add(association.getLastMappingPerformedBy());
+        // GOCI-2267 hotfix. Reduce massively the performance. The previous approach was tedious.
+        // The curator needs to know the last date mapping (automated mapping)
+        Optional<Timestamp> mappingDate= associationRepository.findLastMappingDateByStudyId(study.getId());
+        if (mappingDate.isPresent()){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date newDate = null;
+            try {
+                Timestamp mappingDateInfo= mappingDate.get();
+                newDate=new Date(mappingDateInfo.getTime());
             }
-
-            Map<String, String> mappingDateToPerformerMap = new HashMap<>();
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-
-            // If only one performer we need to check dates to see mapping didn't happen at different times
-            if (allAssociationMappingPerformers.size() == 1) {
-                String performer = allAssociationMappingPerformers.iterator().next();
-
-                // Only care about automated mapping
-                if (performer != null) {
-                    if (performer.equals("automatic_mapping_process")) {
-
-                        // Go through all associations and store mapping performer and date
-                        for (Association association : studyAssociations) {
-                            String date = dt.format(association.getLastMappingDate());
-                            mappingDateToPerformerMap.put(date, performer);
-                        }
-                    }
-                }
+            catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // If its only been mapped by an automated process, all with same date
-            if (mappingDateToPerformerMap.size() == 1) {
-                for (String date : mappingDateToPerformerMap.keySet()) {
-                    Date newDate = null;
-                    try {
-                        newDate = dt.parse(date);
-
-                    }
-                    catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    mappingSummary.setMappingDate(newDate);
-                    mappingSummary.setPerformer(mappingDateToPerformerMap.get(date));
-                }
-            }
+            mappingSummary.setMappingDate(newDate);
+            mappingSummary.setPerformer("automatic_mapping_process");
         }
+
         return mappingSummary;
     }
 }

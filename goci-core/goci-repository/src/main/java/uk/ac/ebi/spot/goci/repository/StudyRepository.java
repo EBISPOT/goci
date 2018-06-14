@@ -112,6 +112,7 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     // THOR
     //Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
+    @RestResource(exported = false)
     Page<Study> findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(String author, Pageable pageable);
 
     @RestResource(exported = false)

@@ -16,9 +16,9 @@ To contact the GWAS Catalog team, with queries, comments, feedback or to add you
 
 === Keeping up-to-date
 
-We announce new releases and other developments on our announcement list, \gwas-announce@ebi.ac.uk. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Sign up for updates]. 
+We announce new releases and other developments on our announcement list, \gwas-announce@ebi.ac.uk. link:++mailto:gwas-announce-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to receive GWAS Catalog updates++[Sign up for updates].
 
-To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. link:++mailto:gwas-users-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to the GWAS users list++[Send us a quick email] to subscribe to this list. 
+To interact with other GWAS Catalog users, join our user community mailing list, \gwas-users@ebi.ac.uk. link:++mailto:gwas-users-join@ebi.ac.uk?subject=subscribe&body=Please subscribe me to the GWAS users list++[Send us a quick email] to subscribe to this list.
 
 You can also follow us on Twitter https://twitter.com/GWASCatalog[@GWASCatalog].
 
@@ -30,14 +30,8 @@ The NHGRI-EBI GWAS Catalog is funded by NHGRI Grant Number 2U41HG007823, and del
 
 == Citing the GWAS Catalog
 
-===  How to cite NHGRI-EBI GWAS Catalog data:
 
-_Burdett T (EBI), Hall PN (NHGRI), Hastings E (EBI), Hindorff LA (NHGRI), Junkins HA (NHGRI), Klemm AK (NHGRI), MacArthur J (EBI), Manolio TA (NHGRI), Morales J (EBI), Parkinson H (EBI) and Welter D (EBI)._ +
-The NHGRI-EBI Catalog of published genome-wide association studies. +
-Available at: www.ebi.ac.uk/gwas. Accessed [date of access], version [version number]. +
-_version number only applies to the download spreadsheet - v1.0 for the traditional version of the spreadsheet, v1.0.1 for the version with added EFO terms_  +
-
-=== How to cite the NHGRI-EBI GWAS Catalog:
+=== How to cite the NHGRI-EBI GWAS Catalog or data therein:
 
 _MacArthur J, Bowler E, Cerezo M, Gil L, Hall P, Hastings E, Junkins H, McMahon A, Milano  A, Morales J, Pendlington Z, Welter D, Burdett T, Hindorff L, Flicek P, Cunningham F, and Parkinson H._ +
 The new NHGRI-EBI Catalog of published genome-wide association studies (GWAS Catalog). +
@@ -52,6 +46,17 @@ The NHGRI-EBI GWAS Catalog and all its contents are available under the general 
 
 All code for the GWAS Catalog infrastructure can be found in https://github.com/EBISPOT/goci[our Github repository]. The code is freely available under http://www.apache.org/licenses/LICENSE-2.0[the Apache version 2.0 license]
 
+== Privacy policy
+
+The General Data Protection Regulation (GDPR) will apply in the UK from 25 May 2018. It will replace the 1998 Data Protection Act and introduce new rules on privacy notices, as well as processing and safeguarding personal data.
+
+More details about our privacy policy can be found by following the links below.
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-submissions[GWAS Catalog Submissions] applies to the data submitted to the GWAS Catalog (eg. Summary statistics files) or the data pulled out from the publications.
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-mail-services[GWAS Catalog Mail Services] applies to our public e-mail lists such as gwas-info@ebi.ac.uk, gwas-announce@ebi.ac.uk and gwas-users@ebi.ac.uk.
+
+https://www.ebi.ac.uk/data-protection/privacy-notice/gwas-catalog-confluence[GWAS Catalog Curation Tracking] applies to any personal data acquired from publications, or from communication with authors (including author names, e-mails and addresses), that we retain in order to track GWAS publications through our curation processes as part of making those publications available as part of the GWAS Catalog.
 
 
 == Credits &amp; acknowledgements
@@ -60,4 +65,3 @@ All code for the GWAS Catalog infrastructure can be found in https://github.com/
 The authors are http://picol.org[Picol].
 
 * http://www.jetbrains.com/idea/index.html[IntelliJ IDEA]: Full-featured commercial IDE with a complete set of tools and integrations with the most important modern technologies and frameworks, such as Spring and Hibernate — a must-have for effective Web and Java EE development.
-
