@@ -12,9 +12,11 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -44,6 +46,9 @@ public class MappingDetailsServiceTest {
     private static final Association ASS2 =
             new AssociationBuilder().setId(101L)
                     .setLastMappingDate(new Date()).setLastMappingPerformedBy("automatic_mapping_process").build();
+
+    private static final Timestamp LASTDATEMAPPING = new Timestamp(new Date().getTime());
+
 
     private static final Association ASS3 =
             new AssociationBuilder().setId(103L)
@@ -86,10 +91,12 @@ public class MappingDetailsServiceTest {
     public void testCreateMappingSummaryForStudyWithNoAssociations() {
 
         // Stubbing association repository
-        when(associationRepository.findByStudyId(STU_NO_ASS.getId())).thenReturn(Collections.EMPTY_LIST);
+        // GOCI-2267
+        Optional<Timestamp> returnLastDateMapping = Optional.ofNullable(null);
+        when(associationRepository.findLastMappingDateByStudyId(STU_NO_ASS.getId())).thenReturn(returnLastDateMapping);
 
         MappingDetails mappingDetails = mappingDetailsService.createMappingSummary(STU_NO_ASS);
-        verify(associationRepository, times(1)).findByStudyId(STU_NO_ASS.getId());
+        verify(associationRepository, times(1)).findLastMappingDateByStudyId(STU_NO_ASS.getId());
         assertThat(mappingDetails).isInstanceOf(MappingDetails.class);
         assertThat(mappingDetails).hasFieldOrPropertyWithValue("mappingDate",
                                                                null);
@@ -101,10 +108,12 @@ public class MappingDetailsServiceTest {
     public void testCreateMappingSummaryForStudyWithAssociationsWithNoMapping() {
 
         // Stubbing association repository
-        when(associationRepository.findByStudyId(STU_ASS_NO_MAPPING.getId())).thenReturn(Arrays.asList(ASS_NO_MAPPING_01,
-                                                                                                       ASS_NO_MAPPING_02));
+        // GOCI-2267
+        Optional<Timestamp> returnLastDateMapping = Optional.ofNullable(null);
+        when(associationRepository.findLastMappingDateByStudyId(STU_ASS_NO_MAPPING.getId())).thenReturn(returnLastDateMapping);
+
         MappingDetails mappingDetails = mappingDetailsService.createMappingSummary(STU_ASS_NO_MAPPING);
-        verify(associationRepository, times(1)).findByStudyId(STU_ASS_NO_MAPPING.getId());
+        verify(associationRepository, times(1)).findLastMappingDateByStudyId(STU_ASS_NO_MAPPING.getId());
         assertThat(mappingDetails).isInstanceOf(MappingDetails.class);
         assertThat(mappingDetails).hasFieldOrPropertyWithValue("mappingDate",
                                                                null);
@@ -116,10 +125,13 @@ public class MappingDetailsServiceTest {
     public void testCreateMappingSummaryForStudyWithAssociationsWithCuratorMapping() {
 
         // Stubbing association repository
-        when(associationRepository.findByStudyId(STU_CURATOR_MAPPING.getId())).thenReturn(Arrays.asList(ASS3, ASS4));
+        // GOCI-2267
+        Optional<Timestamp> returnLastDateMapping = Optional.ofNullable(null);
+        when(associationRepository.findLastMappingDateByStudyId(STU_CURATOR_MAPPING.getId())).thenReturn(returnLastDateMapping);
+
 
         MappingDetails mappingDetails = mappingDetailsService.createMappingSummary(STU_CURATOR_MAPPING);
-        verify(associationRepository, times(1)).findByStudyId(STU_CURATOR_MAPPING.getId());
+        verify(associationRepository, times(1)).findLastMappingDateByStudyId(STU_CURATOR_MAPPING.getId());
 
         assertThat(mappingDetails).isInstanceOf(MappingDetails.class);
         assertThat(mappingDetails).hasFieldOrPropertyWithValue("mappingDate",
@@ -132,10 +144,12 @@ public class MappingDetailsServiceTest {
     public void testCreateMappingSummaryForStudyWithAssociationsWithAutomaticMapping() {
 
         // Stubbing association repository
-        when(associationRepository.findByStudyId(STU_AUTO_MAPPING.getId())).thenReturn(Arrays.asList(ASS1, ASS2));
+        // GOCI-2267
+        Optional<Timestamp> returnLastDateMapping = Optional.of((Timestamp) LASTDATEMAPPING);
+        when(associationRepository.findLastMappingDateByStudyId(STU_AUTO_MAPPING.getId())).thenReturn(returnLastDateMapping);
 
         MappingDetails mappingDetails = mappingDetailsService.createMappingSummary(STU_AUTO_MAPPING);
-        verify(associationRepository, times(1)).findByStudyId(STU_AUTO_MAPPING.getId());
+        verify(associationRepository, times(1)).findLastMappingDateByStudyId(STU_AUTO_MAPPING.getId());
 
         assertThat(mappingDetails).isInstanceOf(MappingDetails.class);
         assertThat(mappingDetails.getMappingDate()).isInstanceOf(Date.class);
