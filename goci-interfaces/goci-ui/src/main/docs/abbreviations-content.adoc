@@ -58,6 +58,9 @@ ACVn: normalised agkistrodon contortrix venom ratio
 AD: Alzheimer's Disease
 
 
+ADHD: Attention deficit hyperactivity disorder
+
+
 ADM: Adrenomedullin
 
 
