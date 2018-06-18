@@ -139,10 +139,13 @@ apoA-1: apolipoprotein A-1
 aPTT: activated partial thromboplastin time
 
 
+AQP4: pathogenic water channel aquaporin 4
+
+
 ARC: AR-C124910XX
 
 
-ASD: Ostium secundum atrial septal defect
+ASD: ostium secundum atrial septal defect
 
 
 AST: aspartate aminotransferase
