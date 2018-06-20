@@ -51,9 +51,7 @@ def get_all_studies_missing_event_data(event_type):
         print exception
 
 
-    # Prepare Insert statements
-    count = 0
-    
+    # Prepare data to generate Insert statements
     study_missing_added_date = []
     study_missing_published_date = []
 
@@ -68,7 +66,6 @@ def get_all_studies_missing_event_data(event_type):
             # Generate Insert statements for CREATED
             if event_type == 'STUDY_CREATION':
                 if item[4] is not None:
-                    count += 1
                     # Example Insert Statement:
                     # INSERT INTO EVENT VALUES (NULL, TO_DATE('1999-01-01 10:01:01', 'yyyy-mm-dd hh24:mi:ss'), 'STUDY_CREATION', 14978333, null);
                     # Note: User_ID=14978333 is the ID for the automatic_mapping_process
@@ -95,7 +92,6 @@ def get_all_studies_missing_event_data(event_type):
             # Generate Insert statements for PUBLISHED
             if event_type == 'STUDY_STATUS_CHANGE_PUBLISH_STUDY':
                 if item[5] is not None:
-                    count += 1 
                     # Note: User_ID=14978333 is the ID for the automatic_mapping_process
                     insert_published = "INSERT INTO EVENT VALUES (NULL, TO_DATE("+ \
                         "'"+str(item[5])+"'" +", 'yyyy-mm-dd hh24:mi:ss'), "+ \
@@ -104,6 +100,11 @@ def get_all_studies_missing_event_data(event_type):
                     # Execute insert statements
                     if args.mode == 'production':
                         _execute_statements(study_id, insert_published)
+
+                else:
+                    study_missing_published_date.append(item[2])
+                    # For testing, no values expected based on query to get data on Line 27
+                    print "** Missing: ", item[2]
 
 
     if len(study_missing_added_date) != 0:
@@ -172,7 +173,6 @@ def _execute_statements(study_id, sql_statement):
         # https://stackoverflow.com/questions/35327135/retrieving-identity-of-most-recent-insert-in-oracle-db-12c
         new_id = cursor.var(cx_Oracle.NUMBER)
         sql_event = sql_statement + " returning id into :new_id"
-        # print "SQL_Event: ", sql_event, "\n"
 
         # Write data to file to review 
         csvout.writerow(["StudyID: "+study_id])
@@ -188,7 +188,6 @@ def _execute_statements(study_id, sql_statement):
 
         # Write data to file to review
         csvout.writerow([sql_study_event+"\n"])
-        # print "SQL_Study-Event: ", sql_study_event
 
         cursor.execute(sql_study_event)
         
@@ -232,11 +231,13 @@ def get_studies_missing_first_publication_event():
 
         housekeeping_published_studies = cursor.fetchall()
 
+        # For Testing
+        missing_initial_publication_event = []
+
         # Review Catalog_Publish_Date for each StudyId
         for hp_study in housekeeping_published_studies:
             hp_study_id = str(hp_study[2])
             hp_publish_date = hp_study[3]
-
 
             # Query Study-StudyEvent-Event with this study_id
             cursor.prepare("""
@@ -254,19 +255,22 @@ def get_studies_missing_first_publication_event():
 
             initial_publication_event = cursor.fetchone()
 
+
             event_type = 'STUDY_STATUS_CHANGE_PUBLISH_STUDY'
 
-            if hp_publish_date is not None and hp_publish_date < initial_publication_event[3]:
-                print "StudyId: ", hp_study_id, "HousekeepingPublishDate: ", hp_publish_date, \
-                "InitialPubEvent: ", initial_publication_event[3], \
-                "EventIsInitialPublication: ", "\n"
+            if initial_publication_event is not None and hp_publish_date < initial_publication_event[3]:
 
                 insert_initial_published = "INSERT INTO EVENT VALUES (NULL, TO_DATE("+ \
                         "'"+str(hp_publish_date)+"'" +", 'yyyy-mm-dd hh24:mi:ss'), "+ \
                         "'"+event_type+"'" + ", 14978333, null)"
 
                 _execute_statements(hp_study_id, insert_initial_published)
+            elif initial_publication_event is None:
+                missing_initial_publication_event.append(hp_study_id)
+            else:
+                pass
 
+        # print "Studies missing InitialPubEvent Date: ", len(missing_initial_publication_event)
 
         cursor.close()
         connection.close()
@@ -288,20 +292,22 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    # Get all studies marked as Published in Housekeeping, 
-    # but do not have a 'CREATED' StudyEvent
+    # Get all studies marked as Published in the 
+    # Housekeeping table, but do not have a 'CREATED' StudyEvent
     CREATED = 'STUDY_CREATION'
-    all_study_created_insert_statements = get_all_studies_missing_event_data(CREATED)
+    get_all_studies_missing_event_data(CREATED)
 
     
-    # Get all studies marked as Published in Housekeeping, 
-    # but do not have a 'STUDY_STATUS_CHANGE_PUBLISH_STUDY' StudyEvent
+    # Get all studies marked as Published in the 
+    # Housekeeping table, but do not have a 'STUDY_STATUS_CHANGE_PUBLISH_STUDY' StudyEvent
     PUBLISHED = 'STUDY_STATUS_CHANGE_PUBLISH_STUDY'
     get_all_studies_missing_event_data(PUBLISHED)
 
 
-    # Check for missing first Publication Event
+    # Check if the Housekeeping.Catalog_Publish_Date is earlier 
+    # than the 'STUDY_STATUS_CHANGE_PUBLISH_STUDY' Event
     get_studies_missing_first_publication_event()
+
 
 
 
