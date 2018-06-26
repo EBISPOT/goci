@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-email-service</artifactId>
-    <version>2.3.7-BETA-SNAPSHOT</version>
+    <version>2.3.7-BETA</version>
 
 
     <name>GOCI Catalog Email </name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.3.7-BETA-SNAPSHOT</version>
+        <version>2.3.7-BETA</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
