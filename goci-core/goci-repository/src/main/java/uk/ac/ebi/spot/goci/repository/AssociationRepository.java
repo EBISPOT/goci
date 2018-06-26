@@ -10,8 +10,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Association;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -28,6 +30,12 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     @RestResource(exported = false)
     Page<Association> findByStudyId(long studyId, Pageable pageable);
+
+
+    //GOCI-2267 hotfix
+    @RestResource(exported=false)
+    @Query(value="SELECT max(a.LAST_MAPPING_DATE) FROM Association a where a.study_id = :study_id and a.LAST_MAPPING_PERFORMED_BY='automatic_mapping_process'", nativeQuery = true)
+    Optional<Timestamp> findLastMappingDateByStudyId(@Param("study_id") Long study_id);
 
     Collection<Association> findByStudyAccessionId(String accessionId);
 
