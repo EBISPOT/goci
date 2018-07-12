@@ -132,6 +132,8 @@ For more information on how we use these resources, see our link:https://www.ebi
 |https://omictools.com/search?q=GWAS[OMICStools]
 |Searchable database of GWAS and other bioinformatics tools
 
+|https://pharos.nih.gov/idg/index[Pharos]
+|Pharos is the user interface to the Knowledge Management Center (KMC) for the Illuminating the Druggable Genome (IDG) program
 
 |===
 // end::b-col-indv[]
