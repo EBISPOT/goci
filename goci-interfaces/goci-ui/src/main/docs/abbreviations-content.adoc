@@ -654,6 +654,9 @@ HVLT-dr: Hopkins Verbal Learning Test delayed recall (belongs to WL-dr category)
 
 === I
 
+IA: islet autoantibody
+
+
 ICAIMT: internal cartotid artery internal and common carotid intimal medial thickness
 
 
