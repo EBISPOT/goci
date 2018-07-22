@@ -58,6 +58,9 @@ ACVn: normalised agkistrodon contortrix venom ratio
 AD: Alzheimer's Disease
 
 
+ADHD: Attention deficit hyperactivity disorder
+
+
 ADM: Adrenomedullin
 
 
@@ -136,10 +139,13 @@ apoA-1: apolipoprotein A-1
 aPTT: activated partial thromboplastin time
 
 
+AQP4: pathogenic water channel aquaporin 4
+
+
 ARC: AR-C124910XX
 
 
-ASD: Ostium secundum atrial septal defect
+ASD: ostium secundum atrial septal defect
 
 
 AST: aspartate aminotransferase
@@ -289,6 +295,9 @@ CF-PWVLTA: carotid-femoral pulse wave velocity, long-term average
 
 
 CGI: Clinical Global Impressions-Severity
+
+
+CHD: Coronary heart disease
 
 
 CHS1: 1st principal component on transformed hue and saturation values
@@ -645,6 +654,9 @@ HVLT-dr: Hopkins Verbal Learning Test delayed recall (belongs to WL-dr category)
 
 === I
 
+IA: islet autoantibody
+
+
 ICAIMT: internal cartotid artery internal and common carotid intimal medial thickness
 
 
@@ -862,6 +874,9 @@ MSE: middle and short endurance athletes
 
 
 MSSS: Multiple Sclerosis Severity Scale
+
+
+MTAG: Multi-Trait Analysis of GWAS
 
 
 M-VLDL-PL: Phospholipids in medium VLDL

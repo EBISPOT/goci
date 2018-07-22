@@ -10,11 +10,13 @@ Check out link:http://www.ebi.ac.uk/training/online/course/gwas-catalog-explorin
 
 Training materials from workshops held by the GWAS Catalog team are available on link:ftp://ftp.ebi.ac.uk/pub/databases/gwas/training_materials/[our FTP server]. If you would like to make use of these slides, please cite the GWAS Catalog as detailed on the link:about[About] page.
 
-==== GWAS Webinars
+==== GWAS webinars & blog posts
 
 A 2017 link:http://www.ebi.ac.uk/training/online/course/nhgri-ebi-gwas-catalog-curated-resource-snp-trait-associations[webinar] on GWAS design and use of the GWAS Catalog, hosted by the GWAS Catalog Team. It covers topics such as Catalog content, data availability and access, search capability and interoperability with other resources.
 
 A 2013 http://www.genome.gov/27554296[webinar] hosted by the NHGRI Division of Genomic Medicine, to highlight the utility and impact of the GWAS Catalog.
+
+10th Anniversary (2018) http://www.ensembl.info/2018/06/28/ten-years-of-the-gwas-catalog-past-present-and-future/[blog post] highlighting the links between the GWAS Catalog and Ensembl.
 
 
 === Publications
@@ -130,6 +132,8 @@ For more information on how we use these resources, see our link:https://www.ebi
 |https://omictools.com/search?q=GWAS[OMICStools]
 |Searchable database of GWAS and other bioinformatics tools
 
+|https://pharos.nih.gov/idg/index[Pharos]
+|Pharos is the user interface to the Knowledge Management Center (KMC) for the Illuminating the Druggable Genome (IDG) program
 
 |===
 // end::b-col-indv[]
