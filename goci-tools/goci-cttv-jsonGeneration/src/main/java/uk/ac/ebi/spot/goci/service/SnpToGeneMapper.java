@@ -53,7 +53,8 @@ public class SnpToGeneMapper {
         soTermToSoTerm.put("start_lost","http://purl.obolibrary.org/obo/SO_0002012");
         soTermToSoTerm.put("inframe_deletion","http://purl.obolibrary.org/obo/SO_0001822");
         soTermToSoTerm.put("inframe_insertion","http://purl.obolibrary.org/obo/SO_0001821");
-
+        soTermToSoTerm.put("mature_miRNA_variant", "http://purl.obolibrary.org/obo/SO_0001620");
+        soTermToSoTerm.put("non_coding_transcript_exon_variant", "http://purl.obolibrary.org/obo/SO_0001792");
 
         String line;
         BufferedReader br = new BufferedReader(new FileReader(snp2geneFilePath));

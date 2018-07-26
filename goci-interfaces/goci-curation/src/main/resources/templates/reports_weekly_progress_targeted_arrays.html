@@ -27,8 +27,8 @@
     <link href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css" rel="stylesheet" />
 
     <!--<script type="text/javascript"-->
-            <!--charset="utf8"-->
-            <!--src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
+    <!--charset="utf8"-->
+    <!--src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
     <script type="text/javascript"
             charset="utf8"
             src="//cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
@@ -77,8 +77,8 @@
             <li><a th:href="@{/reports/monthly}">Monthly Curator Totals</a></li>
             <li><a th:href="@{/reports/yearly}">Yearly Curator Totals</a></li>
             <li><a th:href="@{/reports/weekly}">Weekly Curator Totals</a></li>
-            <li class="active"><a href="#">Overall Weekly progress</a></li>
-            <li><a th:href="@{/reports/reports_weekly_progress_targeted_arrays}">Open Targets Weekly progress</a></li>
+            <li><a th:href="@{/reports/weekly_progress}">Overall Weekly progress</a></li>
+            <li class="active"><a href="#">Open Targets Weekly progress</a></li>
             <li><a th:href="@{/reports/studies_backlog}">Studies Backlog Graph</a></li>
             <li><a th:href="@{/reports/stats}">Stats</a></li>
         </ul>
@@ -108,7 +108,7 @@
                     <th>Level 2 Completed Study IDs</th>
                     <th>Published Publications</th>
                     <th>Published Publication IDs</th>
-                    <th>Published Studies</th>
+                    <th>Published Studies </th>
                     <th>Published Study IDs</th>
                 </tr>
                 </thead>
@@ -254,42 +254,41 @@
         var full_current_date = (curr_date + "_" + curr_month + "_" + curr_year);
 
         var table = $('#progressTable').DataTable({
-                                                      info: false,
-                                                      paging: false,
-                                                      dom: 'Bfrtip',
-                                                      buttons: [
-                                                          {
-                                                              extend: 'colvis',
-                                                              columns: ':gt(0)',
-                                                              postfixButtons: ['colvisRestore']
-                                                          },
-                                                          {
-                                                              extend: 'csv',
-                                                              text: 'Save to CSV',
-                                                              filename: 'weekly_progress_totals-'+full_current_date
-                                                          },
-                                                      ],
-                                                      "columnDefs": [
-                                                          {"targets": 1},
-//                                                          {"targets": 2, "visible": false},
-                                                          {"targets": 2},
-                                                          {"targets": 3},
-                                                          {"targets": 4},
-                                                          {"targets": 5},
-                                                          {"targets": 6},
-                                                          {"targets": 7},
-                                                          {"targets": 8},
-                                                          {"targets": 9},
-                                                          {"targets": 10},
-                                                          {"targets": 11},
-                                                          {"targets": 12},
-                                                          {"targets": 13},
-                                                          {"targets": 14},
-                                                          {"targets": 15},
-                                                          {"targets": 16},
-                                                      ],
-                                                      "order": [[ 0, "desc" ]]
-                                                  });
+            info: false,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'colvis',
+                    columns: ':gt(0)',
+                    postfixButtons: ['colvisRestore']
+                },
+                {
+                    extend: 'csv',
+                    text: 'Save to CSV',
+                    filename: 'targeted_weekly_progress_totals-'+full_current_date
+                },
+            ],
+            "columnDefs": [
+                {"targets": 1},
+                {"targets": 2},
+                {"targets": 3},
+                {"targets": 4},
+                {"targets": 5},
+                {"targets": 6},
+                {"targets": 7},
+                {"targets": 8},
+                {"targets": 9},
+                {"targets": 10},
+                {"targets": 11},
+                {"targets": 12},
+                {"targets": 13},
+                {"targets": 14},
+                {"targets": 15},
+                {"targets": 16},
+            ],
+            "order": [[ 0, "desc" ]]
+        });
     });
 </script>
 </body>
