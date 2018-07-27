@@ -529,16 +529,23 @@
 
 <script th:inline="javascript">
     $(document).ready(function() {
-        $("#loadingResults").show();
-        var page_size = 100;
         /*<![CDATA[*/
         var total_associations = /*[[${totalAssociations}]]*/;
         /*]]>*/
+
+        if (total_associations == 0) {
+            $("#loadingResults").hide();
+        }
+        else {
+            $("#loadingResults").show();
+        }
+
+        var page_size = 100;
         var total_pages = total_associations/page_size + 1;
 
         /*<![CDATA[*/
         var page_number = 1;
-        while(page_number < total_pages) {
+        while(page_number <= total_pages) {
             page_number++;
             appendData(page_number);
         }
