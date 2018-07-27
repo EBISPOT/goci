@@ -148,6 +148,12 @@
         </div>
         <div class="col-md-4"></div>
     </div>
+    <div class="row"></div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4" id="loadingStatus"></div>
+        <div class="col-md-4"></div>
+    </div>
 </div>
 
 
@@ -596,6 +602,7 @@
         /*]]>*/
         var table = $('#mainTable').DataTable();
         var row_count = table.rows().count();
+        document.getElementById("loadingStatus").innerHTML = "Total rows loaded: "+row_count;
         if(row_count == total_associations) {
             $("#loadingResults").hide();
         }
