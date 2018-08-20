@@ -1,159 +1,89 @@
 .color-primary {
-    color: #B0DFE6;
+    color: #669CFF !important;
 }
 
 .color-primary-accent {
-    color: #D3EFF3;
+    color: #ABC9FF !important;
 }
 
 .color-primary-bold {
-    color: #398A96;
+    color: #2150A6 !important;
 }
 
 .background-color-primary {
-    background-color: #B0DFE6;
+    background-color: #669CFF !important;
 }
 
 .background-color-primary-accent {
-    background-color: #E7F7F9;
+    background-color: #ABC9FF !important;
 }
 
 .background-color-primary-bold {
-    background-color: #398A96;
+    background-color: #2150A6 !important;
 }
 
 .color-secondary {
-    color: #B8C5EA;
+    color: #876AFF !important;
 }
 
 .color-secondary-accent {
-    color: #D8DFF5;
+    color: #BDADFF !important;
 }
 
 .color-secondary-bold {
-    color: #3C5398;
+    color: #3C22A6 !important;
 }
 
 .background-color-secondary {
-    background-color: #B8C5EA;
+    background-color: #876AFF !important;
 }
 
 .background-color-secondary-accent {
-    background-color: #D8DFF5;
+    background-color: #BDADFF !important;
 }
 
 .background-color-secondary-bold {
-    background-color: #3C5398;
+    background-color: #3C22A6 !important;
 }
 
 .color-complementary {
-    color: #FFDFC2;
+    color: #FFC456 !important;
 }
 
 .color-complementary-accent {
-    color: #FFEEDD;
+    color: #FFDEA2 !important;
 }
 
 .color-complementary-bold {
-    color: #A6703F;
+    color: #A6751C !important;
 }
 
 .background-color-complementary {
-    background-color: #FFDFC2;
+    background-color: #FFC456 !important;
 }
 
 .background-color-complementary-accent {
-    background-color: #FFF6EC;
+    background-color: #FFDEA2 !important;
 }
 
 .background-color-complementary-bold {
-    background-color: #A6703F;
+    background-color: #A6751C !important;
 }
 
 a {
-    color: #3C5398;
+    color: #3C22A6;
 }
 
 a:hover {
-    color: #398A96;
-}
-
-a.list-group-item:hover {
-    background-color: #E7F7F9;
-}
-
-a.list-group-item.selected {
-    background-color: #B0DFE6;
-}
-
-a > .toplevel-view {
-    color: #333;
-}
-
-.btn {
-    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
-}
-
-.btn-default {
-    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
-}
-
-.btn:hover {
-    background-color: #B0DFE6;
-}
-
-.btn-default {
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-}
-
-.btn-default:hover,
-.btn-default:focus,
-.btn-default.focus,
-.btn-default:active,
-.btn-default.active,
-.open > .dropdown-toggle.btn-default {
-    background-image: linear-gradient(to bottom, #D3EFF3 0%, #B0DFE6 100%);
-    background-color: #B0DFE6;
-}
-
-.navbar {
-    background-image: linear-gradient(to bottom, #222 0%, #222 100%);
+    color: #2150A6;
 }
 
 .list-group-item:hover {
-    background-color: #E7F7F9;
+    background-color: #ABC9FF !important;
 }
 
-.list-group-item.disabled {
-    color: #DDD;
-    background-color: #FFF;
-}
-
-.list-group-item.disabled:hover {
-    color: #DDD;
-    background-color: #FFF;
-}
-
-.list-group-item > .badge {
-    background-color: #398A96;
-}
-
-.list-group-item.disabled > .badge {
-    background-color: #DDD;
-}
-
-.panel-default > .panel-heading {
-    background-image: linear-gradient(to bottom, #E7F7F9 50%, #D3EFF3 100%);
-}
-
-.table-striped > tbody > tr:nth-child(odd) {
-    background-color: #F6FDFC;
-}
-
-.table-hover > tbody > tr:hover {
-    background-color: #F6FDFC;
+.btn:hover {
+    background-color: #669CFF !important;
 }
 
 .sup-new {
@@ -161,8 +91,77 @@ a > .toplevel-view {
     bottom: 1.7em;
     color: #a94442;
     font-size: 30%;
-    background: #FFF6EC;
+    background: #FFDEA2;
     border-radius: 50px;
 }
 
+.ribbon {
+    margin: 10px auto;
+    border-radius: 10px;
+    position: relative;
+    z-index: 90;
+}
 
+.ribbon:after {
+    content: attr(data-ribbon);
+    position: absolute;
+    width: 200px;
+    color: white;
+    text-align: center;
+    text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform:    rotate(45deg);
+    -ms-transform:     rotate(45deg);
+    -o-transform:      rotate(45deg);
+    background-color: darkred;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8B0000));
+    background-image: -webkit-linear-gradient(top, #a94442, #8B0000);
+    background-image:    -moz-linear-gradient(top, #a94442, #8B0000);
+    background-image:     -ms-linear-gradient(top, #a94442, #8B0000);
+    background-image:      -o-linear-gradient(top, #a94442, #8B0000);
+    top: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-transform: rotate(-45deg);
+    display: block;
+    left: -70px;
+}
+
+.ribbon-page {
+    border-radius: 10px;
+    position: relative;
+    z-index: 90;
+}
+
+.ribbon-page:after {
+    content: attr(data-ribbon);
+    position: absolute;
+    width: 160px;
+    color: white;
+    text-align: center;
+    text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform:    rotate(45deg);
+    -ms-transform:     rotate(45deg);
+    -o-transform:      rotate(45deg);
+    background-color: darkred;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8B0000));
+    background-image: -webkit-linear-gradient(top, #a94442, #8B0000);
+    background-image:    -moz-linear-gradient(top, #a94442, #8B0000);
+    background-image:     -ms-linear-gradient(top, #a94442, #8B0000);
+    background-image:      -o-linear-gradient(top, #a94442, #8B0000);
+    top: 0px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-transform: rotate(-45deg);
+    display: block;
+    left: -50px;
+}

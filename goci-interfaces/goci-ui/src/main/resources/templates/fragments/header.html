@@ -12,7 +12,7 @@
 
     <div class="container">
         <div id="beta-icon" style="display: none">
-            <img
+            <img class="cinzia"
                     th:src="@{/icons/beta-icon.png}"/>
         </div>
         <div class="navbar-header">
@@ -68,62 +68,64 @@
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div th:fragment="jumbotron">
-<div class="jumbotron background-color-primary-accent"  th:fragment="jumbotron">
-    <div class="container">
-        <div class="gwas-circle">
-            <img
-                 th:src="@{/images/GWAS_Catalog_circle_178x178.png}"/>
-        </div>
-        <div>
-            <h1>GWAS Catalog</h1>
+    <div class="ribbon" data-ribbon="LABS">
+        <div class="jumbotron background-color-primary-accent"  th:fragment="jumbotron">
+            <div class="container">
+                <div class="gwas-circle">
+                    <img
+                            th:src="@{/images/GWAS_Catalog_circle_178x178.png}"/>
+                </div>
+                <div>
+                    <h1>GWAS Catalog</h1>
 
-            <h3>The NHGRI-EBI Catalog of published genome-wide association studies</h3>
+                    <h3>The NHGRI-EBI Catalog of published genome-wide association studies</h3>
 
-            <!-- search box goes here -->
-            <div class="input-group">
-                <input type="text" class="form-control ac_input" placeholder="Search the catalog" id="search-box"
-                name="q"
-                data-widget="select"
-                data-ontology=""
-                />
-                <span class="input-group-btn">
+                    <!-- search box goes here -->
+                    <div class="input-group">
+                        <input type="text" class="form-control ac_input" placeholder="Search the catalog" id="search-box"
+                               name="q"
+                               data-widget="select"
+                               data-ontology=""
+                        />
+                        <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="search-button">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                 </span>
-            </div>
-            <div class="examples">
-                Examples:
-                <a th:href="@{/search(query='breast cancer')}">breast cancer</a>,
-                <a th:href="@{/search(query=rs7329174)}">rs7329174</a>,
-                <a th:href="@{/search(query=Yang)}">Yang</a>,
-                <a th:href="@{/search(query=2q37.1)}">2q37.1</a>,
-                <a th:href="@{/search(query=HBS1L)}">HBS1L</a>,
-                <a th:href="@{/search(query='6:16000000-25000000')}">6:16000000-25000000</a>
-            </div>
-        </div>
-    </div>
-</div>
-    <div th:if="${newsDiv == '1'}">
-        <div class="container">
-            <div class="row">
-                <div id="breakingNews" class="breaking-news mocked">
-                    <div class="col-lg-4 text-right breaking-left">
-                        <h2 class="responsive">
-                            <span class="breaking-small">New</span><br/>
-                            <span class="breaking-large">Features</span>
-                        </h2>
                     </div>
-                    <div class="col-lg-8 breaking-right">
-                        <img id="news_image" th:src="@{/icons/GWAS_trait_2017.png}" style="vertical-align:middle" th:width="24" th:height="24"/>
-                        <h3 id="titleNews"><span id="item" class="breaking-small-black">Trait</span> page</h3>
-                        <p id="news_description">Investigate and combine EFO trait focused GWAS Catalog data</p>
-                        <button id="readmorebutton" type="gwasbutton" class="btn btn-default btn-xs"  value="Input Button" onclick="return changeReadmeButtonLink('efotraits');">Read More
-                            <i class="glyphicon glyphicon-arrow-right"></i>
-                        </button>
+                    <div class="examples">
+                        Examples:
+                        <a th:href="@{/search(query='breast cancer')}">breast cancer</a>,
+                        <a th:href="@{/search(query=rs7329174)}">rs7329174</a>,
+                        <a th:href="@{/search(query=Yang)}">Yang</a>,
+                        <a th:href="@{/search(query=2q37.1)}">2q37.1</a>,
+                        <a th:href="@{/search(query=HBS1L)}">HBS1L</a>,
+                        <a th:href="@{/search(query='6:16000000-25000000')}">6:16000000-25000000</a>
                     </div>
                 </div>
-            </div><!-- /row -->
+            </div>
+        </div>
+        <div th:if="${newsDiv == '1'}">
+            <div class="container">
+                <div class="row">
+                    <div id="breakingNews" class="breaking-news mocked">
+                        <div class="col-lg-4 text-right breaking-left">
+                            <h2 class="responsive">
+                                <span class="breaking-small">New</span><br/>
+                                <span class="breaking-large">Features</span>
+                            </h2>
+                        </div>
+                        <div class="col-lg-8 breaking-right">
+                            <img id="news_image" th:src="@{/icons/GWAS_trait_2017.png}" style="vertical-align:middle" th:width="24" th:height="24"/>
+                            <h3 id="titleNews"><span id="item" class="breaking-small-black">Trait</span> page</h3>
+                            <p id="news_description">Investigate and combine EFO trait focused GWAS Catalog data</p>
+                            <button id="readmorebutton" type="gwasbutton" class="btn btn-default btn-xs"  value="Input Button" onclick="return changeReadmeButtonLink('efotraits');">Read More
+                                <i class="glyphicon glyphicon-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- /row -->
+            </div>
         </div>
     </div>
 </div>
