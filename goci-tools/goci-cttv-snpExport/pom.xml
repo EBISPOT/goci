@@ -7,12 +7,12 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.3.8-BETA-SNAPSHOT</version>
+        <version>3.0.0-BETA</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-cttv-snpExport</artifactId>
-    <version>2.3.8-BETA-SNAPSHOT</version>
+    <version>3.0.0-BETA</version>
     <packaging>jar</packaging>
 
     <name>Snp Exporter</name>
