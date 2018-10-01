@@ -117,11 +117,6 @@
             </dependency>
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
-                <artifactId>goci-ui</artifactId>
-                <version>${goci.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-ontology</artifactId>
                 <version>${goci.version}</version>
             </dependency>
