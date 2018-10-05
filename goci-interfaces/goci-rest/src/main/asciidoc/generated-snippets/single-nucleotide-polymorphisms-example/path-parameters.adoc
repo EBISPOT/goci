@@ -1,8 +1,0 @@
-./gwas/rest/api/singleNucleotidePolymorphisms/{snp_id}
-|===
-|Parameter|Description
-
-|`snp_id`
-|The id of the SNP in the GWAS Catalog
-
-|===

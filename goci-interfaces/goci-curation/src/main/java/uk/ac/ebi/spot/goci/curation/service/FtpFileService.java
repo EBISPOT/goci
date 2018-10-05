@@ -73,7 +73,7 @@ public class FtpFileService {
                     "Unable to connect to FTP. Max attempts exceeded.");
         }
 
-        /*
+
         InputStream inputStream = new FileInputStream(outputFile);
         String remoteFile = "gwas.txt";
 
@@ -87,7 +87,7 @@ public class FtpFileService {
             getLog().error("Failed to upload file " + remoteFile + " to FTP");
         }
 
-        */
+
         // Close FTP connection
         disconnect();
     }
