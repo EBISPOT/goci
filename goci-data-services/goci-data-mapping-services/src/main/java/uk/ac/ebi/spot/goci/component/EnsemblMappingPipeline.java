@@ -350,13 +350,19 @@ public class EnsemblMappingPipeline {
             for (int i = 0; i < overlap_gene_result.length(); ++i) {
                 JSONObject gene_json_object = overlap_gene_result.getJSONObject(i);
 
-                String geneName = gene_json_object.getString("external_name");
+                if (gene_json_object.has("external_name")) {
 
-                if (source.equals(getNcbiSource())) {
-                    getEnsemblMappingResult().addNcbiOverlappingGene(geneName);
+                    String geneName = gene_json_object.getString("external_name");
+
+                    if (source.equals(getNcbiSource())) {
+                        getEnsemblMappingResult().addNcbiOverlappingGene(geneName);
+                    }
+                    else {
+                       getEnsemblMappingResult().addEnsemblOverlappingGene(geneName);
+                    }
                 }
                 else {
-                    getEnsemblMappingResult().addEnsemblOverlappingGene(geneName);
+                    log.error("Source:".concat(source).concat(" Gene Id returned: ").concat(gene_json_object.getString("gene_id")));
                 }
             }
             addGenomicContext(overlap_gene_result, snp_location, source, "overlap");
@@ -480,7 +486,12 @@ public class EnsemblMappingPipeline {
             for (int i = 0; i < json_gene_list.length(); ++i) {
                 JSONObject json_gene = json_gene_list.getJSONObject(i);
                 String gene_id = json_gene.getString("id");
-                String gene_name = json_gene.getString("external_name");
+
+                String gene_name = null;
+
+                if (json_gene.has("external_name")) {
+                    gene_name = json_gene.getString("external_name");
+                }
 
                 if (source.equals(getNcbiSource())) {
                     if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
@@ -515,7 +526,10 @@ public class EnsemblMappingPipeline {
         for (int i = 0; i < json_gene_list.length(); ++i) {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
             String gene_id = json_gene.getString("id");
-            String gene_name = json_gene.getString("external_name");
+            String gene_name = null;
+            if (json_gene.has("external_name")) {
+                 gene_name = json_gene.getString("external_name");
+            }
             String ncbi_id = (source.equals("NCBI")) ? gene_id : null;
             String ensembl_id = (source.equals("Ensembl")) ? gene_id : null;
             int distance = 0;
@@ -639,8 +653,10 @@ public class EnsemblMappingPipeline {
                 for (int i = 0; i < json_gene_list.length(); ++i) {
                     JSONObject json_gene = json_gene_list.getJSONObject(i);
                     String gene_id = json_gene.getString("id");
-                    String gene_name = json_gene.getString("external_name");
-
+                    String gene_name = null;
+                    if (json_gene.has("external_name")) {
+                        gene_name = json_gene.getString("external_name");
+                    }
                     if (source.equals(getNcbiSource())) {
                         if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
                                 gene_name ==

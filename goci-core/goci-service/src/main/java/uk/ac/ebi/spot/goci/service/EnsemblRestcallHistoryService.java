@@ -2,6 +2,8 @@ package uk.ac.ebi.spot.goci.service;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.EnsemblRestcallHistory;
@@ -26,6 +28,11 @@ public class EnsemblRestcallHistoryService {
 
     private EnsemblRestcallHistoryRepository ensemblRestcallHistoryRepository;
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     public EnsemblRestcallHistoryService(EnsemblRestcallHistoryRepository ensemblRestcallHistoryRepository) {
@@ -62,6 +69,7 @@ public class EnsemblRestcallHistoryService {
                 }
             }
         }
+        log.error("URL requested:".concat(ensemblRestcallHistory.getEnsemblUrl()));
         return ensemblRestcallHistory;
     }
 

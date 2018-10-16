@@ -146,7 +146,15 @@ public class SnpGenomicContextMappingService {
         for (GenomicContext genomicContext : genomicContexts) {
 
             // Check gene exists
-            String geneName = genomicContext.getGene().getGeneName().trim();
+            String geneName = "undefined";
+            if (genomicContext.getGene().getGeneName() != null) {
+                geneName = genomicContext.getGene().getGeneName().trim();
+            }
+            else {
+                // BUG !
+                log.debug("Genomic Context Empty gene name: "+ genomicContext.getSource());
+                genomicContext.getGene().setGeneName("undefined");
+            }
 
             if (!geneName.equalsIgnoreCase("undefined")) {
 

@@ -72,7 +72,7 @@ public class MapCatalogService {
         getLog().info("Mapping all associations in database, total number: " + associations.size());
 
         try {
-            mappingService.validateAndMapAllAssociations(associations, performer);
+             mappingService.validateAndMapAllAssociations(associations, performer);
         }
         catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
