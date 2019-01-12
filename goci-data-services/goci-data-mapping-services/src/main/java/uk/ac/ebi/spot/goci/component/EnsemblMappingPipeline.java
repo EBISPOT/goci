@@ -482,6 +482,18 @@ public class EnsemblMappingPipeline {
                 String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
 
+                // Gene Entrez gene ID is extracted from the description:
+                if (source.equals(getNcbiSource())) {
+                    Pattern refseqIdPattern = Pattern.compile("Acc:(\\d+)]");
+                    String gene_description = json_gene.getString("description");
+                    Matcher matcher = refseqIdPattern.matcher(gene_description);
+                    if (matcher.find()) {
+                        gene_id = matcher.group(1);
+                    } else {
+                        System.out.println("[Warning] ID for Ensembl gene " + gene_name + " was not found!");
+                    }
+                }
+
                 if (source.equals(getNcbiSource())) {
                     if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
                             gene_name ==
@@ -516,6 +528,19 @@ public class EnsemblMappingPipeline {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
             String gene_id = json_gene.getString("id");
             String gene_name = json_gene.getString("external_name");
+
+            // Gene Entrez gene ID is extracted from the description:
+            if (source.equals(getNcbiSource())) {
+                Pattern refseqIdPattern = Pattern.compile("Acc:(\\d+)]");
+                String gene_description = json_gene.getString("description");
+                Matcher matcher = refseqIdPattern.matcher(gene_description);
+                if (matcher.find()) {
+                    gene_id = matcher.group(1);
+                } else {
+                    System.out.println("[Warning] ID for Ensembl gene " + gene_name + " was not found!");
+                }
+            }
+
             String ncbi_id = (source.equals("NCBI")) ? gene_id : null;
             String ensembl_id = (source.equals("Ensembl")) ? gene_id : null;
             int distance = 0;
