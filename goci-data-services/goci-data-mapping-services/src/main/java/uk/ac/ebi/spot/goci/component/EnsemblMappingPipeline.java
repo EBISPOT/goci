@@ -482,11 +482,7 @@ public class EnsemblMappingPipeline {
                 String gene_name = json_gene.getString("external_name");
 
                 // If the source is NCBI, we parse the ID from the description:
-                String gene_id = json_gene.getString("id");
-                if (source.equals(getNcbiSource())){
-                    System.out.println("[Info] Processing an NCBI gene.");
-                    parseNCBIid(json_gene.getString("description"), gene_name);
-                }
+                String gene_id = source.equals(getNcbiSource()) ? parseNCBIid(json_gene.getString("description"), gene_name) : json_gene.getString("id");
 
                 if (source.equals(getNcbiSource())) {
                     if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
@@ -523,11 +519,8 @@ public class EnsemblMappingPipeline {
             String gene_name = json_gene.getString("external_name");
 
             // If the source is NCBI, we parse the ID from the description:
-            String gene_id = json_gene.getString("id");
-            if (source.equals(getNcbiSource())){
-                System.out.println("[Info] Processing an NCBI gene.");
-                parseNCBIid(json_gene.getString("description"), gene_name);
-            }
+            String gene_id = source.equals(getNcbiSource()) ? parseNCBIid(json_gene.getString("description"), gene_name) : json_gene.getString("id");
+
 
             String ncbi_id = (source.equals("NCBI")) ? gene_id : null;
             String ensembl_id = (source.equals("Ensembl")) ? gene_id : null;
@@ -606,7 +599,7 @@ public class EnsemblMappingPipeline {
         String gene_description = description;
         Matcher matcher = refseqIdPattern.matcher(gene_description);
         if (matcher.find()) {
-            System.out.println("[Info] NCBI ID for " + gene_name + ": " + matcher.group(1));
+            // System.out.println("[Info] NCBI ID for " + gene_name + ": " + matcher.group(1));
             return matcher.group(1);
         } else {
             System.out.println("[Warning] NCBI ID for " + gene_name + "Was not found. ");
