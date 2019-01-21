@@ -40,8 +40,10 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
     private EfoMapper efoMapper;
 
-    private int pageSize = 1000;
-    private int maxPages = -1;
+//    private int pageSize = 1000;
+//    private int maxPages = -1;
+    private int pageSize = 10;
+    private int maxPages = 2;
     private boolean sysOutLogging = false;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -59,14 +61,14 @@ public class SolrIndexer {
                        TraitMapper traitMapper,
                        AssociationMapper associationMapper,
                        EfoMapper efoMapper) {
-        this.studyService = studyService;
-        this.diseaseTraitRepository = diseaseTraitRepository;
-        this.efoTraitRepository = efoTraitRepository;
+//        this.studyService = studyService;
+//        this.diseaseTraitRepository = diseaseTraitRepository;
+//        this.efoTraitRepository = efoTraitRepository;
         this.associationService = associationService;
-        this.studyMapper = studyMapper;
-        this.traitMapper = traitMapper;
+//        this.studyMapper = studyMapper;
+//        this.traitMapper = traitMapper;
         this.associationMapper = associationMapper;
-        this.efoMapper = efoMapper;
+//        this.efoMapper = efoMapper;
     }
 
     public int getPageSize() {
@@ -88,17 +90,18 @@ public class SolrIndexer {
     public int fetchAndIndex() {
         ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
 
-        Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
+//        Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
         Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
-        Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
-        Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
+//        Future<Integer> traitCountFuture = taskExecutor.submit(this::mapTraits);
+//        Future<Integer> efoCountFuture = taskExecutor.submit(this::mapEfo);
 
         try {
-            int studyCount = studyCountFuture.get();
+//            int studyCount = studyCountFuture.get();
             int associationCount = associationCountFuture.get();
-            int traitCount = traitCountFuture.get();
-            int efoCount = efoCountFuture.get();
-            return studyCount + associationCount + traitCount + efoCount;
+//            int traitCount = traitCountFuture.get();
+//            int efoCount = efoCountFuture.get();
+//            return studyCount + associationCount + traitCount + efoCount;
+            return associationCount;
         }
         catch (InterruptedException | ExecutionException e) {
             throw new SolrIndexingException("Failed to map one or more documents into Solr", e);
