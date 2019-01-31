@@ -32,7 +32,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field @NonEmbeddableField private String betaDirection;
     @Field("orDescription") @NonEmbeddableField private String description;
     @Field @NonEmbeddableField private String range;
-//    @Field @NonEmbeddableField private String orType;
+    //    @Field @NonEmbeddableField private String orType;
     @Field @NonEmbeddableField private Boolean snpInteraction;
     @Field @NonEmbeddableField private Boolean multiSnpHaplotype;
 
@@ -49,10 +49,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // mapped genes and reported genes must be per snp -
     // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
     // and then include 'x' or ',' as designated by multiple loci/risk alleles
-    @Field("entrezMappedGenes") private Collection<String> entrezMappedGenes;
-    @Field("entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
-    //    @Field("ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
-    //    @Field("ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+//    @Field("entrezMappedGenes") private Collection<String> entrezMappedGenes;
+//    @Field("entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
+
+    @Field("ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+    @Field("ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+
     @Field("reportedGene") private Collection<String> reportedGenes;
     @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field @NonEmbeddableField private Long merged;
@@ -134,10 +136,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.chromLocations = new LinkedHashSet<>();
         this.positionLinks = new LinkedHashSet<>();
 
-        this.entrezMappedGenes = new LinkedHashSet<>();
-        this.entrezMappedGeneLinks = new LinkedHashSet<>();
-        //        this.ensemblMappedGenes = new LinkedHashSet<>();
-        //        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
+//        this.entrezMappedGenes = new LinkedHashSet<>();
+//        this.entrezMappedGeneLinks = new LinkedHashSet<>();
+
+        this.ensemblMappedGenes = new LinkedHashSet<>();
+        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
+
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.studyIds = new HashSet<>();
@@ -161,21 +165,21 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return region;
     }
 
-    public Collection<String> getEntrezMappedGenes() {
-        return entrezMappedGenes;
+//    public Collection<String> getEntrezMappedGenes() {
+//        return entrezMappedGenes;
+//    }
+
+//    public Collection<String> getEntrezMappedGeneLinks() {
+//        return entrezMappedGeneLinks;
+//    }
+
+    public Collection<String> getEnsemblMappedGenes() {
+        return ensemblMappedGenes;
     }
 
-    public Collection<String> getEntrezMappedGeneLinks() {
-        return entrezMappedGeneLinks;
+    public Collection<String> getEnsemblMappedGeneLinks() {
+        return ensemblMappedGeneLinks;
     }
-
-    //    public Collection<String> getEnsemblMappedGenes() {
-    //        return ensemblMappedGenes;
-    //    }
-    //
-    //    public Collection<String> getEnsemblMappedGeneLinks() {
-    //        return ensemblMappedGeneLinks;
-    //    }
 
     public String getStrongestAllele() {
         return strongestAllele;
@@ -353,7 +357,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     private void embedGeneticData(Association association) {
         if (association.getMultiSnpHaplotype() || association.getSnpInteraction()) {
-            final String[] entrezMappedGene = new String[1];
+//            final String[] entrezMappedGene = new String[1];
+            final String[] ensemblMappedGene = new String[1];
+
             final String[] reportedGeneString = new String[1];
             final String[] regionString = new String[1];
             final String[] contextString = new String[1];
@@ -396,18 +402,22 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     currentSnp = setOrAppend(currentSnp, current, primary_delimiter);
 
                                     snp.getLocations().forEach(
-                                        location -> {
-                                            if (!regions.contains(location.getRegion().getName())) {
-                                                regions.add(location.getRegion().getName());
-                                                regionString[0] = setOrAppend(regionString[0], location.getRegion().getName(), secondary_delimiter);
-                                            }
-                                        });
+                                            location -> {
+                                                if (!regions.contains(location.getRegion().getName())) {
+                                                    regions.add(location.getRegion().getName());
+                                                    regionString[0] = setOrAppend(regionString[0], location.getRegion().getName(), secondary_delimiter);
+                                                }
+                                            });
 
 
-                                    entrezMappedGene[0] = setOrAppend(entrezMappedGene[0], getMappedGeneString(association, snp, "NCBI"), primary_delimiter);
+//                                    entrezMappedGene[0] = setOrAppend(entrezMappedGene[0], getMappedGeneString(association, snp, "NCBI"), primary_delimiter);
+
+                                    ensemblMappedGene[0] = setOrAppend(ensemblMappedGene[0], getMappedGeneString(association, snp, "Ensembl"), primary_delimiter);
 
                                     // and add entrez links for each entrez mapped gene
-                                    entrezMappedGeneLinks.addAll(createMappedGeneLinks(snp, "NCBI"));
+//                                    entrezMappedGeneLinks.addAll(createMappedGeneLinks(snp, "NCBI"));
+
+                                    ensemblMappedGeneLinks.addAll(createMappedGeneLinks(snp, "Ensembl"));
 
                                     contextString[0]= setOrAppend(contextString[0], snp.getFunctionalClass(), primary_delimiter);
                                     Collection<Location> snpLocations = snp.getLocations();
@@ -447,7 +457,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                         reportedGeneString[0] = setOrAppend(reportedGeneString[0], localGeneString[0], secondary_delimiter);
                     }
             );
-            entrezMappedGenes.add(entrezMappedGene[0]);
+//            entrezMappedGenes.add(entrezMappedGene[0]);
+            ensemblMappedGenes.add(ensemblMappedGene[0]);
+
             reportedGenes.add(reportedGeneString[0]);
             region.add(regionString[0]);
             chromLocations.add(positionString[0]);
@@ -473,7 +485,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     String current;
                                     if(snp.getCurrentSnp() != null){
-                                         current = snp.getCurrentSnp().getRsId();
+                                        current = snp.getCurrentSnp().getRsId();
                                     }
                                     else{
                                         current = snp.getRsId();
@@ -488,13 +500,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             });
 
                                     if(association.getMultiSnpHaplotype()){
-                                        entrezMappedGenes.add(getMappedGeneString(association, snp, "NCBI"));
+//                                        entrezMappedGenes.add(getMappedGeneString(association, snp, "NCBI"));
+                                        ensemblMappedGenes.add(getMappedGeneString(association, snp, "Ensembl"));
                                     }
                                     else{
-                                        entrezMappedGenes.addAll(getMappedGenes(association, snp, "NCBI"));
+//                                        entrezMappedGenes.addAll(getMappedGenes(association, snp, "NCBI"));
+                                        ensemblMappedGenes.addAll(getMappedGenes(association, snp, "Ensembl"));
 
                                         // and add entrez links for each entrez mapped gene
-                                        entrezMappedGeneLinks.addAll(createMappedGeneLinks(snp, "NCBI"));
+//                                        entrezMappedGeneLinks.addAll(createMappedGeneLinks(snp, "NCBI"));
+                                        ensemblMappedGeneLinks.addAll(createMappedGeneLinks(snp, "Ensembl"));
                                     }
 
 
@@ -642,17 +657,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         // Create link information for reported gene
         String geneLink = gene.getGeneName().trim();
-        List<String> entrezIds = new ArrayList<String>();
-        String entrezLinks = "";
+//        List<String> entrezIds = new ArrayList<String>();
+//        String entrezLinks = "";
         List<String> ensemblIds = new ArrayList<String>();
         String ensemblLinks = "";
 
-        if (gene.getEntrezGeneIds() != null) {
-            for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
-                entrezIds.add(entrezGene.getEntrezGeneId());
-            }
-            entrezLinks = String.join("|", entrezIds);
-        }
+//        if (gene.getEntrezGeneIds() != null) {
+//            for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+//                entrezIds.add(entrezGene.getEntrezGeneId());
+//            }
+//            entrezLinks = String.join("|", entrezIds);
+//        }
         if (gene.getEnsemblGeneIds() != null) {
             for (EnsemblGene ensemblGene : gene.getEnsemblGeneIds()) {
                 ensemblIds.add(ensemblGene.getEnsemblGeneId());
@@ -661,16 +676,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         }
 
         // Construct link with Ensembl and Entrez IDs for reported gene
-        if (!entrezLinks.isEmpty()) {
-
-            if (!ensemblLinks.isEmpty()) {
-                geneLink = geneLink.concat("|").concat(entrezLinks).concat("|").concat(ensemblLinks);
-            }
-            else {
-                geneLink = geneLink.concat("|").concat(entrezLinks);
-            }
-        }
-        else if (!ensemblLinks.isEmpty()) {
+//        if (!entrezLinks.isEmpty()) {
+//
+//            if (!ensemblLinks.isEmpty()) {
+//                geneLink = geneLink.concat("|").concat(entrezLinks).concat("|").concat(ensemblLinks);
+//            }
+//            else {
+//                geneLink = geneLink.concat("|").concat(entrezLinks);
+//            }
+//        }
+        if (!ensemblLinks.isEmpty()) {
             geneLink = geneLink.concat("|").concat(ensemblLinks);
 
         }
@@ -711,14 +726,40 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 }
 
 
-                if (source.equalsIgnoreCase("NCBI")) {
+//                if (source.equalsIgnoreCase("NCBI")) {
+//
+//                    if (gene.getEntrezGeneIds() != null) {
+//                        for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+//                            String geneLink =
+//                                    gene.getGeneName()
+//                                            .concat("|")
+//                                            .concat(entrezGene.getEntrezGeneId());
+//                            if (!distance.equals("")) {
+//                                geneLink = geneLink.concat("|").concat(distance);
+//                            }
+//                            else {
+//                                geneLink = geneLink.concat("|N/A");
+//                            }
+//                            if (!location.equals("")) {
+//                                geneLink = geneLink.concat("|".concat(location));
+//                            }
+//                            else {
+//                                geneLink = geneLink.concat("|N/A");
+//                            }
+//                            mappedGeneLinks.add(geneLink);
+//                        }
+//                    }
+//
+//                }
 
-                    if (gene.getEntrezGeneIds() != null) {
-                        for (EntrezGene entrezGene : gene.getEntrezGeneIds()) {
+                if (source.equalsIgnoreCase("Ensembl")) {
+
+                    if (gene.getEnsemblGeneIds() != null) {
+                        for (EnsemblGene ensemblGene : gene.getEnsemblGeneIds()) {
                             String geneLink =
                                     gene.getGeneName()
                                             .concat("|")
-                                            .concat(entrezGene.getEntrezGeneId());
+                                            .concat(ensemblGene.getEnsemblGeneId());
                             if (!distance.equals("")) {
                                 geneLink = geneLink.concat("|").concat(distance);
                             }
@@ -734,7 +775,6 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                             mappedGeneLinks.add(geneLink);
                         }
                     }
-
                 }
             }
         });
@@ -751,7 +791,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         List<String> allMappedGenes = new ArrayList<String>();
 
         if(snp.getGenomicContexts().isEmpty()){
-             allMappedGenes.add("No mapped genes");
+            allMappedGenes.add("No mapped genes");
         }
         else {
             snp.getGenomicContexts().forEach(
@@ -805,7 +845,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                                 else if (context.getIsDownstream()) {
                                                     closestUpstreamDownstreamGenesToLocation.get(locationId).put("down",
-                                                                                                                 geneName);
+                                                            geneName);
                                                 }
                                             }
 
@@ -827,7 +867,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                                 if (!closestUpstreamDownstreamGenes.isEmpty()) {
                                                     closestUpstreamDownstreamGenesToLocation.put(locationId,
-                                                                                                 closestUpstreamDownstreamGenes);
+                                                            closestUpstreamDownstreamGenes);
                                                 }
                                             }
                                         }
