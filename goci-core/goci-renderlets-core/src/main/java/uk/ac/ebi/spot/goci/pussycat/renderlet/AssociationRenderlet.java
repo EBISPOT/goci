@@ -88,7 +88,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             if (band.getBandName().contains("p")) {
                                 // p arm - we need to know how many traits are in this band
                                 int traitCount = getNumberOfTraitsInSameBand(nexus, context, associationEntity);
-                                int rowCount = ((traitCount - 1) / 10) + 2;
+                                int rowCount = ((traitCount - 1) / 20) + 2;
                                 double blockSize = rowCount * dotRadius;
 
                                 if (y1 + blockSize > previousY) {
@@ -103,7 +103,7 @@ public abstract class AssociationRenderlet<C, E> implements Renderlet<C, E> {
                             else {
                                 // q arm - we need to know how many traits were in the previous band (ie. the one above)
                                 int traitCount = getNumberOfTraitsInPreviousBand(nexus, context, associationEntity);
-                                int rowCount = ((traitCount - 1) / 10) + 2;
+                                int rowCount = ((traitCount - 1) / 20) + 2;
                                 double blockSize = rowCount * dotRadius;
 
                                 if (previousY + blockSize > y1) {
