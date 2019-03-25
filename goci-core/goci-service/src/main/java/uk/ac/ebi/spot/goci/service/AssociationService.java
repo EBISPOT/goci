@@ -182,7 +182,7 @@ public class AssociationService {
         Collection<SingleNucleotidePolymorphism> proxySnps = new HashSet<>();
         Collection<Region> regions = new HashSet<>();
         Collection<Gene> mappedGenes = new HashSet<>();
-        Map<String, Set<String>> mappedGeneEntrezIds = new HashMap<>();
+//        Map<String, Set<String>> mappedGeneEntrezIds = new HashMap<>();
         Map<String, Set<String>> mappedGeneEnsemblIds = new HashMap<>();
         association.getLoci().forEach(
                 locus -> {
@@ -194,57 +194,59 @@ public class AssociationService {
                                 }
 
                                 snp.getGenomicContexts().forEach(context -> {
-                                                                     mappedGenes.add(context.getGene());
+                                            mappedGenes.add(context.getGene());
 
-                                                                     String geneName = context.getGene().getGeneName();
-                                                                     Collection<EntrezGene> geneEntrezGeneIds =
-                                                                             context.getGene().getEntrezGeneIds();
-                                                                     Collection<EnsemblGene> geneEnsemblGeneIds =
-                                                                             context.getGene().getEnsemblGeneIds();
+                                            String geneName = context.getGene().getGeneName();
+                                            Collection<EntrezGene> geneEntrezGeneIds =
+                                                    context.getGene().getEntrezGeneIds();
+                                            Collection<EnsemblGene> geneEnsemblGeneIds =
+                                                    context.getGene().getEnsemblGeneIds();
 
-                                                                     if (mappedGeneEntrezIds.containsKey(geneName)) {
-                                                                         for (EntrezGene entrezGene : geneEntrezGeneIds) {
-                                                                             mappedGeneEntrezIds.get(geneName).add(
-                                                                                     entrezGene.getEntrezGeneId());
-                                                                         }
-                                                                     }
+//                                            if (mappedGeneEntrezIds.containsKey(geneName)) {
+//                                                for (EntrezGene entrezGene : geneEntrezGeneIds) {
+//                                                    mappedGeneEntrezIds.get(geneName).add(
+//                                                            entrezGene.getEntrezGeneId());
+//                                                }
+//                                            }
 
-                                                                     // First time we see a SNP store the location
-                                                                     else {
-                                                                         Set<String> entrezIds = new HashSet<>();
-                                                                         for (EntrezGene entrezGene : geneEntrezGeneIds) {
-                                                                             entrezIds.add(entrezGene.getEntrezGeneId());
-                                                                         }
-                                                                         mappedGeneEntrezIds.put(geneName,
-                                                                                                 entrezIds);
-                                                                     }
+                                            // First time we see a SNP store the location
+//                                            else {
+//                                                Set<String> entrezIds = new HashSet<>();
+//                                                for (EntrezGene entrezGene : geneEntrezGeneIds) {
+//                                                    entrezIds.add(entrezGene.getEntrezGeneId());
+//                                                }
+//                                                mappedGeneEntrezIds.put(geneName,
+//                                                        entrezIds);
+//                                            }
 
-                                                                     if (mappedGeneEnsemblIds.containsKey(geneName)) {
-                                                                         for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
-                                                                             mappedGeneEnsemblIds.get(geneName)
-                                                                                     .add(ensemblGene.getEnsemblGeneId());
-                                                                         }
-                                                                     }
+                                            if (mappedGeneEnsemblIds.containsKey(geneName)) {
+                                                for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
+                                                    mappedGeneEnsemblIds.get(geneName)
+                                                            .add(ensemblGene.getEnsemblGeneId());
+                                                }
+                                            }
 
-                                                                     // First time we see a SNP store the location
-                                                                     else {
-                                                                         Set<String> ensemblIds = new HashSet<>();
-                                                                         for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
-                                                                             ensemblIds.add(ensemblGene.getEnsemblGeneId());
-                                                                         }
-                                                                         mappedGeneEntrezIds.put(geneName,
-                                                                                                 ensemblIds);
-                                                                     }
-                                                                 }
+                                            // First time we see a SNP store the location
+                                            else {
+                                                Set<String> ensemblIds = new HashSet<>();
+                                                for (EnsemblGene ensemblGene : geneEnsemblGeneIds) {
+                                                    ensemblIds.add(ensemblGene.getEnsemblGeneId());
+                                                }
+//                                                                         mappedGeneEntrezIds.put(geneName,
+//                                                                                                 ensemblIds);
+                                                mappedGeneEnsemblIds.put(geneName,
+                                                        ensemblIds);
+                                            }
+                                        }
                                 );
                                 snps.add(snp);
                             }
                     );
 
                     snps.addAll(locus.getStrongestRiskAlleles()
-                                        .stream()
-                                        .map(RiskAllele::getSnp)
-                                        .collect(Collectors.toList()));
+                            .stream()
+                            .map(RiskAllele::getSnp)
+                            .collect(Collectors.toList()));
 
                     locus.getStrongestRiskAlleles().forEach(
                             riskAllele -> {
@@ -258,18 +260,18 @@ public class AssociationService {
                     locus.getAuthorReportedGenes().forEach(
                             authorReportedGene -> {
                                 authorReportedGene.getEnsemblGeneIds().size();
-                                authorReportedGene.getEntrezGeneIds().size();
+//                                authorReportedGene.getEntrezGeneIds().size();
                             }
                     );
                 });
         getLog().trace("Association '" + association.getId() + "' is mapped to " +
-                               "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
-                               "(author reported " + reportedGeneCount + " gene(s)); " +
-                               "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
-                               "mapped to " + mappedGenes.size() + " genes.");
+                "" + traitCount + " EFO traits where study id = " + study.getId() + " " +
+                "(author reported " + reportedGeneCount + " gene(s)); " +
+                "this reports on " + snps.size() + " SNPs in " + regions.size() + " regions, " +
+                "mapped to " + mappedGenes.size() + " genes.");
     }
 
-//convenience method for when an already loaded & modified association needs to be deleted - this method lazy-loads the association from scratch at deletion time
+    //convenience method for when an already loaded & modified association needs to be deleted - this method lazy-loads the association from scratch at deletion time
     public void deleteByAssociationId(Long associationId){
         associationRepository.delete(associationId);
     }
