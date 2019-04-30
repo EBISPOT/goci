@@ -35,7 +35,7 @@ Studies and associations are excluded if:
 * SNPs assayed or analysed were limited to those in candidate genes.
 * The study uses customized gene-based arrays without a clearly described GWAS backbone, including those selected to replicate published GWAS findings (e.g., Metabochip, Immunochip, etc.).
 * Samples were assayed to measure somatic variation (e.g., in tumor samples).
-* The study does not include any new GWAS data.
+* The study does not include any new GWAS data. Studies with available summary statistics, however, are an exception to this role and automatically fulfil our eligibility criteria. 
 
 Individual SNP-trait associations identified in eligible studies are included in the Catalog if they meet the following criteria:
 
