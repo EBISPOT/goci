@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -126,6 +127,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
+
+    @RestResource(exported = false)
+    Page<Study> findByPublicationIdPubmedIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(String pubmedId, Pageable pageable);
 
     @RestResource(exported = false)
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(

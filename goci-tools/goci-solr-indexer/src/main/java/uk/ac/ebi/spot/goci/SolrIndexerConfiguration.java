@@ -4,10 +4,14 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.ontology.config.OntologyLoaderConfig;
+import uk.ac.ebi.spot.goci.ontology.owl.AssertedOntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
@@ -41,7 +45,7 @@ public class SolrIndexerConfiguration {
     }
 
     @Bean OntologyLoader ontologyLoader() {
-        ReasonedOntologyLoader loader = ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
+        OntologyLoader loader = ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
         return loader;
     }
 }
