@@ -315,6 +315,21 @@
         </dependencies>
     </dependencyManagement>
 
+
+    <repositories>
+   	    <repository>
+   	        <id>nexus-public</id>
+   	        <name>Public Repository</name>
+   	        <url>https://www.ebi.ac.uk/spot/nexus/repository/maven-public/</url>
+   	        <releases>
+   	            <enabled>true</enabled>
+   	        </releases>
+   	        <snapshots>
+   	            <enabled>true</enabled>
+   	        </snapshots>
+   	    </repository>
+   	</repositories>
+    
     <!--<repositories>-->
         <!--<repository>-->
             <!--<id>hasbanana-repo</id>-->
