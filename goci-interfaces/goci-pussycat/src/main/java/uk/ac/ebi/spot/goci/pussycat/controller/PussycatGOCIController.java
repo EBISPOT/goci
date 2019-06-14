@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
@@ -212,8 +213,10 @@ public class PussycatGOCIController {
             Calendar toValue = Calendar.getInstance();
             toValue.setTime(to);
 
-            Study study = template(Study.class);
-            dateFilter = refine(study).on(study.getPublicationDate()).hasRange(fromValue, toValue);
+            //Study study = template(Study.class);
+            //dateFilter = refine(study).on(study.getPublicationId().getPublicationDate()).hasRange(fromValue, toValue);
+            Publication publication = template(Publication.class);
+            dateFilter = refine(publication).on(publication.getPublicationDate()).hasRange(fromValue, toValue);
 
         }
         catch (ParseException e) {

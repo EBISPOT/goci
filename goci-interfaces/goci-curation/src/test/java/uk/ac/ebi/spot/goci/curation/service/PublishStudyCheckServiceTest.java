@@ -5,19 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import uk.ac.ebi.spot.goci.builder.AncestryBuilder;
-import uk.ac.ebi.spot.goci.builder.AssociationBuilder;
-import uk.ac.ebi.spot.goci.builder.CountryBuilder;
-import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
-import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.model.Ancestry;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.Country;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.model.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -42,6 +35,21 @@ public class PublishStudyCheckServiceTest {
 
     @Mock
     private CheckEfoTermAssignmentService checkEfoTermAssignmentService;
+
+
+    // THOR
+    private static final Author AUTHOR = new AuthorBuilder().setFullname("MacTest T")
+            .setOrcid("0000-0002-0002-003").build();
+
+
+    // THOR
+    private static final Publication PUBLICATION = new PublicationBuilder().setPublication("Nature")
+            .setPubmedId("1234569")
+            .setPublication("Testing is Awesome")
+            .setTitle("Pubmed TEST")
+            .setPublicationDate(new Date())
+            .setFirstAuthor(AUTHOR)
+            .build();
 
     private static final EfoTrait EFO1 =
             new EfoTraitBuilder().setId(987L)
@@ -77,17 +85,39 @@ public class PublishStudyCheckServiceTest {
             new AssociationBuilder().setId(803L)
                     .setSnpApproved(false).build();
 
+    private static final GenotypingTechnology GT_GENOMWIDE_ARRAY =
+            new GenotypingTechnologyBuilder().setId(900L)
+                    .setGenotypingTechnology("Genome-wide genotyping array").build();
+
+    private static final GenotypingTechnology GT_TARGETED_ARRAY =
+            new GenotypingTechnologyBuilder().setId(905L)
+                    .setGenotypingTechnology("Targeted genotyping array").build();
+
+
     private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR =
             new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
                     .setEfoTraits(Arrays.asList(EFO1, EFO2))
                     .setAssociations(Collections.singletonList(ASS_APPROVED))
                     .setAncestries(Collections.singleton(AN_WITH_COR))
+                    .setGenotypingTechnologies(Collections.singleton(GT_GENOMWIDE_ARRAY))
                     .build();
 
     private static final Study STUDY_NO_EFO_TRAIT =
             new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
                     .setAssociations(Collections.singletonList(ASS_NOT_APPROVED))
                     .setAncestries(Collections.singleton(AN_NO_COR))
+                    .setGenotypingTechnologies(Collections.singleton(GT_GENOMWIDE_ARRAY))
+                    .build();
+
+    private static final Study STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY =
+            new StudyBuilder().setId(802L)
+                    .setPublication(PUBLICATION)
+                    .setEfoTraits(Arrays.asList(EFO1, EFO2))
+                    .setAssociations(Collections.singletonList(ASS_APPROVED))
+                    .setAncestries(Collections.singleton(AN_WITH_COR))
+                    .setGenotypingTechnologies(Collections.singleton(GT_TARGETED_ARRAY))
                     .build();
 
     @Before
@@ -126,7 +156,23 @@ public class PublishStudyCheckServiceTest {
                                                          Collections.singletonList(ASS_APPROVED)));
         assertThat(publishStudyCheckService.runChecks(STUDY_NO_EFO_TRAIT,
                                                       Collections.singletonList(ASS_APPROVED))
-                           .contains("No EFO trait assigned and some SNP associations have not been approved for study"));
+                           .contains("some SNP associations have not been approved; no EFO trait assigned; "));
+
+    }
+
+    @Test
+    public void testStudyWithTargetedArray() throws Exception {
+        when(checkEfoTermAssignmentService.checkStudyEfoAssignment(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR)).thenReturn(true);
+
+        publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY,
+                                           Collections.singletonList(ASS_APPROVED));
+
+        assertNotNull(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY,
+                                                         Collections.singletonList(ASS_APPROVED)));
+
+        assertThat(publishStudyCheckService.runChecks(STUDY_EFO_TRAIT_ASSIGNED_ASS_APPROVED_AN_WITH_COR_TARGETED_ARRAY,
+                                                      Collections.singletonList(ASS_APPROVED))
+                           .contains("is a targeted array study, other non-genome-wide or sequencing study and should not be published."));
 
     }
 }

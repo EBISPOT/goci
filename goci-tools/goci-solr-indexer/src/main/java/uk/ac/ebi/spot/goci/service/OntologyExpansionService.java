@@ -39,6 +39,7 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
     @Override public void doEnrichment(OntologyEnabledDocument<?> document) {
         // improve trait document with parent and child terms etc here
         for (String traitUriString : document.getTraitUris()) {
+            traitUriString = traitUriString.trim();
             URI traitURI = URI.create(traitUriString);
 
             // get additional fields for trait documents

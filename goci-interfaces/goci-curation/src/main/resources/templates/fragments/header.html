@@ -3,6 +3,9 @@
       xmlns="http://www.w3.org/1999/xhtml">
 
 <body th:fragment="navbar">
+
+<div th:remove="tag" th:replace="fragments/contextPath :: contextPath"></div>
+
 <div>
     <nav class="navbar navbar-fixed-top navbar-default">
         <!--<div class="container">-->
@@ -68,6 +71,7 @@
                         <li><a th:href="@{/studies}">Curation Home</a></li>
                         <li><a th:href="@{/studies/new}">Add Study</a></li>
                         <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
+                        <li><a th:href="@{/efotraits}">Update EFO Traits</a></li>
                         <li><a th:href="@{/reports/monthly}">Reports</a></li>
                         <li>
                             <div class="btn-group">

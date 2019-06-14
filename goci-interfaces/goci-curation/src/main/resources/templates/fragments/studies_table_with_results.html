@@ -44,6 +44,15 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
+        <!--<th class="col-md-1">User Requested-->
+            <!--<div>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortasc)}"-->
+                   <!--class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>-->
+                <!--<a th:href="@{${uri}(sorttype=userrequestedsortdesc)}"-->
+                   <!--class="btn btn-default btn-xs"><span-->
+                        <!--class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>-->
+            <!--</div>-->
+        <!--</th>-->
         <th class="col-md-1">Publication
             <div>
                 <a th:href="@{${uri}(sorttype=publicationsortasc)}"
@@ -108,20 +117,31 @@
         <!-- Using thymeleaf elvis operator for string, date attributes-->
 
         <td><p>
-            <span th:text="${study.author} ?: ''"></span>&nbsp;&nbsp;
+            <span th:text="${study.publicationId?.firstAuthor?.fullname}"></span><span th:text="${study.getTagDuplicatedNote()} != '' ? ' ['+${study.getTagDuplicatedNote()}+']': ''"></span>&nbsp;&nbsp;
             <a th:onclick="'javascript:printPage(\''+ @{/studies/}+'\',\'' + ${study.id} + '\',\'/printview\');'" title="Print single GWA study">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a></p>
+
         </td>
-        <td th:text="${study.title} ?: ''"></td>
-        <td th:text="${study.publicationDate != null } ? ${#dates.format(study.publicationDate,'yyyy-MM-dd')} : ''"></td>
+
+        <td >
+            <p>
+                <span th:text="${study.publicationId?.title}"></span>
+            <div th:if="${study.userRequested}" th:remove="tag">
+                         <span class="glyphicon glyphicon-star color-primary-bold" aria-hidden="true"
+                               title="User Requested Study"></span>
+            </div>
+            </p>
+        </td>
+
+        <td th:text="${study.publicationId?.publicationDate != null } ? ${#dates.format(study.publicationId?.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
-            <span th:text="${study.pubmedId} ?: ''"></span>
+            <span th:text="${study.publicationId?.pubmedId}"></span>
             &nbsp;&nbsp;
-            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
+            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a>
-            </p>
+        </p>
 
             <div class="btn-group">
                             <button type="button"
@@ -131,18 +151,19 @@
 
                 <ul class="dropdown-menu">
                     <li>
-                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.pubmedId})}"
+                        <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}"
                            target="_blank">View in Europe PMC</a></li>
                     <li>
-                        <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.pubmedId})}"
+                        <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=${study.publicationId?.pubmedId})}"
                            target="_blank">View in PubMed</a></li>
 
                 </ul>
             </div>
         </td>
 
+        <!--<td th:text="${study.userRequested} ?: ''"></td>-->
 
-        <td th:text="${study.publication} ?: ''"></td>
+        <td th:text="${study.publicationId?.publication}"></td>
 
         <!--If study has associated disease trait or EFO trait return traits name-->
         <td th:text="${study.diseaseTrait != null} ? ${study.diseaseTrait.trait} : ''"></td>
@@ -184,10 +205,11 @@
         </td>
 
         <td>
-            <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''"></p>
+            <p th:text="${study.housekeeping != null and study.housekeeping.curationStatus != null } ? ${study.housekeeping.curationStatus.status} : ''">
+            </p>
 
             <div id="assignStatusForm"
-                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)}">
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)} and ${study.housekeeping.catalogUnpublishDate == null}">
 
                 <form class="form-inline" name="assignStatusForm" role="form" method="post"
                       th:action="@{/studies/{studyId}/status_update(studyId=${study.id})}"
@@ -198,7 +220,6 @@
                     </div>
 
                     <div class="form-group">
-
                         <div class="form-group">
                             <label for="curationStatus" class="control-label"></label>
                             <select name="curationStatus" class="form-control select2-select"
@@ -208,16 +229,26 @@
                                 <option th:each="curationStatus : ${curationstatuses}"
                                         th:value="${curationStatus.id}"
                                         th:text="${curationStatus.status}"
-                                        th:unless="${curationStatus.status} == 'Unpublished from catalog'"></option>
+                                        th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                                </option>
                             </select>
                         </div>
-
-                                    <button type="submit"
-                                            class="btn btn-primary btn-sm">Save
-                                    </button>
+                        <button type="submit"
+                                class="btn btn-primary btn-sm">Save
+                        </button>
                     </div>
                 </form>
             </div>
+
+            <!-- Show link to update status of unpublished study -->
+            <div
+                 th:if="*{#bools.isFalse(study.housekeeping.isPublished)} and ${study.housekeeping.catalogUnpublishDate != null}">
+                <p>(Unpublished Study)</p>
+                <form th:action="@{/studies/{studyId}/housekeeping(studyId=${study.id})}">
+                    <input type="submit" value="Update Status" class="btn btn-primary btn-sm"/>
+                </form>
+            </div>
+
         </td>
 
         <td><span class="more">

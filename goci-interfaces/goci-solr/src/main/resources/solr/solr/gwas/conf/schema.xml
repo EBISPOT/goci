@@ -119,6 +119,8 @@
     <field name="description" type="text_general" indexed="true" stored="true" />
     <field name="comments" type="text_general" indexed="true" stored="true" />
     <field name="author" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="authorAscii" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="orcid" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="keywords" type="text_general" indexed="true" stored="true" />
     <field name="category" type="text_general" indexed="true" stored="true" />
     <field name="resourcename" type="text_general" indexed="true" stored="true" />
@@ -146,11 +148,19 @@
     <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="ancestryLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
+    <field name="authorsList" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="genotypingTechnologies" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="studyDesignComment" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_orcid" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_authorAscii" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_authorsList" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="study_genotypingTechnologies" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="study_studyDesignComment" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="study_title" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_pubmedId" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="study_publication" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -207,10 +217,10 @@
     <field name="strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="context" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="region" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
-    <!--<field name="ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />-->
-    <!--<field name="ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />-->
+    <!-- <field name="entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" /> -->
+    <!-- <field name="entrezMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" /> -->
+    <field name="ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="studyId" type="text_general" indexed="true" stored="true" multiValued="false" />
@@ -230,14 +240,14 @@
     <field name="association_strongestAllele" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_context" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_regions" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="association_entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
-    <field name="association_entrezMappedGeneLinks"
+    <!-- <field name="association_entrezMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" /> -->
+    <!-- <field name="association_entrezMappedGeneLinks"
            type="text_general"
            indexed="false"
            stored="true"
-           multiValued="true" />
-    <!--<field name="association_ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />-->
-    <!--<field name="association_ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />-->
+           multiValued="true" /> -->
+    <field name="association_ensemblMappedGenes" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="association_ensemblMappedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_reportedGene" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="association_reportedGeneLinks" type="text_general" indexed="false" stored="true" multiValued="true" />
     <field name="association_chromosomeName" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -329,6 +339,9 @@
     <!-- Text fields from SolrCell to search by default in our catch-all field -->
     <copyField source="title" dest="text" />
     <copyField source="author" dest="text" />
+    <copyField source="authorAscii" dest="text" />
+    <copyField source="authorsList" dest="text" />
+    <copyField source="orcid" dest="text" />
     <copyField source="description" dest="text" />
     <copyField source="keywords" dest="text" />
     <copyField source="content" dest="text" />
@@ -338,6 +351,9 @@
 
     <!-- Create a string version of author for faceting -->
     <copyField source="author" dest="author_s" />
+    <copyField source="authorAscii" dest="authorAscii_s" />
+
+    <copyField source="orcid" dest="orcid_s" />
     <copyField source="traitName" dest="traitName_s" />
 
     <!-- Above, multiple source fields are copied to the [text] field.
@@ -360,8 +376,13 @@
     <copyField source="numberOfIndividuals" dest="text" />
     <copyField source="additionalAncestryDescription" dest="text" />
     <copyField source="accessionId" dest="text" />
+    <copyField source="genotypingTechnologies" dest="text" />
+    <copyField source="study_genotypingTechnologies" dest="text" />
     <copyField source="fullPvalueSet" dest="text" />
     <copyField source="study_author" dest="text" />
+    <copyField source="study_orcid" dest="text" />
+    <copyField source="study_authorAscii" dest="text" />
+    <copyField source="study_authorsList" dest="text" />
     <copyField source="study_title" dest="text" />
     <copyField source="study_pubmedId" dest="text" />
     <copyField source="study_publication" dest="text" />
@@ -400,7 +421,8 @@
     <copyField source="strongestAllele" dest="text" />
     <copyField source="context" dest="text" />
     <copyField source="region" dest="text" />
-    <copyField source="entrezMappedGenes" dest="text" />
+    <!-- <copyField source="entrezMappedGenes" dest="text" /> -->
+    <copyField source="ensemblMappedGenes" dest="text" />
     <copyField source="reportedGene" dest="text" />
     <copyField source="studyId" dest="text" />
     <copyField source="chromosomeName" dest="text" />
@@ -413,7 +435,8 @@
     <copyField source="association_strongestAllele" dest="text" />
     <copyField source="association_context" dest="text" />
     <copyField source="association_regions" dest="text" />
-    <copyField source="association_entrezMappedGenes" dest="text" />
+    <!-- <copyField source="association_entrezMappedGenes" dest="text" /> -->
+    <copyField source="association_ensemblMappedGenes" dest="text" />
     <copyField source="association_reportedGene" dest="text" />
     <copyField source="association_chromosomeName" dest="text" />
     <copyField source="association_chromosomePosition" dest="text" />
@@ -518,8 +541,8 @@
     <!-- sortMissingLast and sortMissingFirst attributes are optional attributes are
          currently supported on types that are sorted internally as strings
          and on numeric types.
-	     This includes "string","boolean", and, as of 3.5 (and 4.x),
-	     int, float, long, date, double, including the "Trie" variants.
+       This includes "string","boolean", and, as of 3.5 (and 4.x),
+       int, float, long, date, double, including the "Trie" variants.
        - If sortMissingLast="true", then a sort on this field will cause documents
          without the field to come after documents with the field,
          regardless of the requested sort order (asc or desc).
@@ -559,7 +582,7 @@
 
     <!-- The format for this date field is of the form 1995-12-31T23:59:59Z, and
          is a more restricted form of the canonical representation of dateTime
-         http://www.w3.org/TR/xmlschema-2/#dateTime    
+         http://www.w3.org/TR/xmlschema-2/#dateTime
          The trailing "Z" designates UTC time and is mandatory.
          Optional fractional seconds are allowed: 1995-12-31T23:59:59.999Z
          All other components are mandatory.
@@ -574,7 +597,7 @@
                NOW/DAY+6MONTHS+3DAYS
                   ... 6 months and 3 days in the future from the start of
                       the current day
-                      
+
          Consult the TrieDateField javadocs for more information.
 
          Note: For faster range queries, consider the tdate type
@@ -590,11 +613,11 @@
 
     <!-- The "RandomSortField" is not used to store or search any
          data.  You can declare fields of this type it in your schema
-         to generate pseudo-random orderings of your docs for sorting 
+         to generate pseudo-random orderings of your docs for sorting
          or function purposes.  The ordering is generated based on the field
          name and the version of the index. As long as the index version
          remains unchanged, and the same field name is reused,
-         the ordering of the docs will be consistent.  
+         the ordering of the docs will be consistent.
          If you want different psuedo-random orderings of documents,
          for the same version of the index, use a dynamicField and
          change the field name in the request.
@@ -630,9 +653,9 @@
 
     <!-- A general text field that has reasonable, generic
          cross-language defaults: it tokenizes with StandardTokenizer,
-	 removes stop words from case-insensitive "stopwords.txt"
-	 (empty by default), and down cases.  At query time only, it
-	 also applies synonyms. -->
+   removes stop words from case-insensitive "stopwords.txt"
+   (empty by default), and down cases.  At query time only, it
+   also applies synonyms. -->
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
             <tokenizer class="solr.StandardTokenizerFactory" />
@@ -687,13 +710,13 @@
     </fieldType>
 
     <!-- A text field with defaults appropriate for English, plus
-	 aggressive word-splitting and autophrase features enabled.
-	 This field is just like text_en, except it adds
-	 WordDelimiterFilter to enable splitting and matching of
-	 words on case-change, alpha numeric boundaries, and
-	 non-alphanumeric chars.  This means certain compound word
-	 cases will work, for example query "wi fi" will match
-	 document "WiFi" or "wi-fi".
+   aggressive word-splitting and autophrase features enabled.
+   This field is just like text_en, except it adds
+   WordDelimiterFilter to enable splitting and matching of
+   words on case-change, alpha numeric boundaries, and
+   non-alphanumeric chars.  This means certain compound word
+   cases will work, for example query "wi fi" will match
+   document "WiFi" or "wi-fi".
         -->
     <fieldType name="text_en_splitting"
                class="solr.TextField"
@@ -761,7 +784,7 @@
     </fieldType>
 
     <!-- Just like text_general except it reverses the characters of
-	 each token, to enable more efficient leading wildcard queries. -->
+   each token, to enable more efficient leading wildcard queries. -->
     <fieldType name="text_general_rev" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
             <tokenizer class="solr.StandardTokenizerFactory" />

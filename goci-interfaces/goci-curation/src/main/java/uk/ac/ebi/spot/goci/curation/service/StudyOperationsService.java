@@ -7,30 +7,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
-import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.curation.model.errors.ErrorNotification;
+import uk.ac.ebi.spot.goci.curation.model.errors.NoteIsLockedError;
 import uk.ac.ebi.spot.goci.curation.model.errors.StudyIsLockedError;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.CurationStatus;
-import uk.ac.ebi.spot.goci.model.Curator;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
-import uk.ac.ebi.spot.goci.model.StudyNote;
-import uk.ac.ebi.spot.goci.model.UnpublishReason;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.HousekeepingRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
-import uk.ac.ebi.spot.goci.service.CuratorService;
-import uk.ac.ebi.spot.goci.service.EventTypeService;
-import uk.ac.ebi.spot.goci.service.StudyNoteService;
-import uk.ac.ebi.spot.goci.service.TrackingOperationService;
+import uk.ac.ebi.spot.goci.service.*;
+import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Created by emma on 22/10/2015.
@@ -55,6 +47,7 @@ public class StudyOperationsService {
     private StudyNoteService studyNoteService;
     private StudyNoteOperationsService studyNoteOperationsService;
     private CuratorService curatorService;
+    private PublicationService publicationService;
 
     @Autowired
     public StudyOperationsService(AssociationRepository associationRepository,
@@ -69,7 +62,8 @@ public class StudyOperationsService {
                                   HousekeepingOperationsService housekeepingOperationsService,
                                   StudyNoteService studyNoteService,
                                   StudyNoteOperationsService studyNoteOperationsService,
-                                  CuratorService curatorService
+                                  CuratorService curatorService,
+                                  PublicationService publicationService
     ) {
         this.associationRepository = associationRepository;
         this.mailService = mailService;
@@ -84,6 +78,7 @@ public class StudyOperationsService {
         this.studyNoteService = studyNoteService;
         this.studyNoteOperationsService=studyNoteOperationsService;
         this.curatorService=curatorService;
+        this.publicationService = publicationService;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -299,9 +294,15 @@ public class StudyOperationsService {
                                 + " and republished on "
                                 + new Date().toString();
 
-                        String notes = housekeeping.getNotes();
+                        //the old note in house keeping comment out.
+//                        String notes = housekeeping.getNotes();
+//                        housekeeping.setNotes(notes.concat("****").concat(republish_message));
 
-                        housekeeping.setNotes(notes.concat("****").concat(republish_message));
+                        StudyNote note = studyNoteOperationsService.createAutomaticNote(republish_message,study,user);
+                        // The note is properly created. We don't need to check any business logic. Just link to the study.
+                        studyNoteService.saveStudyNote(note);
+                        study.addNote(note);
+
                         housekeeping.setCatalogUnpublishDate(null);
                         housekeeping.setUnpublishReason(null);
                     }
@@ -357,10 +358,16 @@ public class StudyOperationsService {
             notification.addError(new NoteIsLockedError());
         }
 
+        //published study can only have private note added to it
+        //This is comment out because curators want to add public note to published studies.
+//        if(isPublished(study) & studyNoteOperationsService.isPublicNote(studyNote)){
+//            notification.addError(new PublicNoteIsNotAllowedForPublishedStudyError());
+//        }
+
         //check if study is published
-        if(isPublished(study)){
-            notification.addError(new StudyIsLockedError());
-        }
+//        if(isPublished(study)){
+//            notification.addError(new StudyIsLockedError());
+//        }
 
         if(!notification.hasErrors()){
             studyNoteService.saveStudyNote(studyNote);
@@ -388,6 +395,33 @@ public class StudyOperationsService {
 
         return notification;
     }
+
+    public ErrorNotification duplicateStudyNoteToSiblingStudies(Study sourceStudy,Long nodeId,SecureUser user){
+        //find all studies with the same pubmed id
+        // THOR
+        Collection<Study> studies = publicationService.findStudiesByPubmedId(sourceStudy.getPublicationId().getPubmedId());
+        //remove the source study
+        studies = studies.stream().filter(targetStudy -> sourceStudy.getId() != targetStudy.getId()).collect(Collectors.toList());
+
+        //find the note
+        StudyNote noteToCopy = studyNoteService.findOne(nodeId);
+
+        ErrorNotification notification = new ErrorNotification();
+
+
+        //copy note to studies
+        studies.stream().forEach(targetStudy -> {
+            ErrorNotification en = addStudyNote(targetStudy, studyNoteOperationsService.duplicateNote(targetStudy, noteToCopy, user), user);
+            if(en.hasErrors()){
+                notification.addError(en.getErrors());
+            }
+        });
+
+        studyNoteOperationsService.updateDuplicatedNote(noteToCopy, user);
+        return notification;
+    }
+
+
 
 
     //#xintodo refactor needed

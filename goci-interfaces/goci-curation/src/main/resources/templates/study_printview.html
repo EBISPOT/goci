@@ -31,25 +31,25 @@
                         <tbody>
                         <tr>
                             <th>Author</th>
-                            <td th:text="${study.author} ?: '' "></td>
+                            <td th:text="${study.publicationId.firstAuthor.fullname} ?: '' "></td>
                         </tr>
                         <tr>
                             <th>Title</th>
-                            <td th:text="${study.title} ?: ''"></td>
+                            <td th:text="${study.publicationId.title} ?: ''"></td>
                         </tr>
 
                         <tr>
                             <th>Publication</th>
-                            <td th:text="${study.publication} ?: ''"></td>
+                            <td th:text="${study.publicationId.publication} ?: ''"></td>
                         </tr>
                         <tr>
                             <th>Pubmed Id</th>
-                            <td th:text="${study.pubmedId} ?: ''"></td>
+                            <td th:text="${study.publicationId.pubmedId} ?: ''"></td>
                         </tr>
 
                         <tr>
                             <th>Publication Date</th>
-                            <td th:text="${#calendars.format(study.publicationDate,'yyyy-MM-dd')} ?: ''"></td>
+                            <td th:text="${#calendars.format(study.publicationId.publicationDate,'yyyy-MM-dd')} ?: ''"></td>
                         </tr>
 
                         <tr>
@@ -61,6 +61,12 @@
                             <th>EFO traits</th>
                             <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
                                       th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait}) ?: ''"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Genotyping technology</th>
+                            <td><span th:each="genotypingTechnology, iterStat: ${study.genotypingTechnologies}"
+                                      th:text="(!${iterStat.last} ? ${genotypingTechnology.genotypingTechnology}+', ' : ${genotypingTechnology.genotypingTechnology}) ?: ''"></span>
                             </td>
                         </tr>
                         <tr>
@@ -88,27 +94,27 @@
                             <td th:text="${study.studyDesignComment != null} ? ${study.studyDesignComment} : ''"></td>
                         </tr>
 
-                        <tr>
-                            <th>Genomewide Genotyping Array</th>
-                            <td th:switch="${study.genomewideArray}">
-    <p th:case="'null'"></p>
+                        <!--<tr>-->
+                            <!--<th>Genomewide Genotyping Array</th>-->
+                            <!--<td th:switch="${study.genomewideArray}">-->
+    <!--<p th:case="'null'"></p>-->
 
-    <p th:case="false">No</p>
+    <!--<p th:case="false">No</p>-->
 
-    <p th:case="true">Yes</p>
-    </td>
-    </tr>
+    <!--<p th:case="true">Yes</p>-->
+    <!--</td>-->
+    <!--</tr>-->
 
-    <tr>
-        <th>Targeted Genotyping Array</th>
-        <td th:switch="${study.targetedArray}">
-            <p th:case="'null'"></p>
+    <!--<tr>-->
+        <!--<th>Targeted Genotyping Array</th>-->
+        <!--<td th:switch="${study.targetedArray}">-->
+            <!--<p th:case="'null'"></p>-->
 
-            <p th:case="false">No</p>
+            <!--<p th:case="false">No</p>-->
 
-            <p th:case="true">Yes</p>
-        </td>
-    </tr>
+            <!--<p th:case="true">Yes</p>-->
+        <!--</td>-->
+    <!--</tr>-->
 
     <tr>
         <th>CNV</th>
@@ -156,6 +162,28 @@
     </tr>
 
     <tr>
+        <th>User requested</th>
+        <td th:switch="${study.userRequested}">
+            <p th:case="'null'"></p>
+
+            <p th:case="false">No</p>
+
+            <p th:case="true">Yes</p>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Open Targets</th>
+        <td th:switch="${study.openTargets}">
+            <p th:case="'null'"></p>
+
+            <p th:case="false">No</p>
+
+            <p th:case="true">Yes</p>
+        </td>
+    </tr>
+
+    <tr>
         <th>Full p-Value Set</th>
         <td th:switch="${study.fullPvalueSet}">
             <p th:case="'null'"></p>
@@ -165,6 +193,8 @@
             <p th:case="true">Yes</p>
         </td>
     </tr>
+
+
 
     <tr>
         <th>Initial Sample Description</th>

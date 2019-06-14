@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.Ancestry;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.GenotypingTechnology;
 import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public class PublishStudyCheckService {
      * @param associations all associations found for a study
      */
     public String runChecks(Study study, Collection<Association> associations) {
-        String message;
+        String message = null;
 
         // Check EFO term assigned to study
         Boolean efoTermsAssigned = checkEfoTermAssignmentService.checkStudyEfoAssignment(study);
@@ -42,61 +43,41 @@ public class PublishStudyCheckService {
 
         boolean missingCoR = countryOfRecruitmentCheck(study);
 
-        Boolean targetedArrayStudy = study.getTargetedArray();
+        Collection<GenotypingTechnology> genotypingTechnologies = study.getGenotypingTechnologies();
 
-        if (targetedArrayStudy) {
+        //boolean targetedArrayStudy = false;
+        boolean missingGenotypingTechnology = false;
+
+        if(genotypingTechnologies.isEmpty()){
+            missingGenotypingTechnology = true;
+        }
+
+        /*for(GenotypingTechnology gt : genotypingTechnologies){
+            if(gt.getGenotypingTechnology().contains("Targeted") || gt.getGenotypingTechnology().contains("Exome") || gt.getGenotypingTechnology().contains("sequencing")){
+                targetedArrayStudy = true;
+            }
+        }*/
+
+
+        if(snpNotApproved == 1 || !efoTermsAssigned || missingCoR || missingGenotypingTechnology){
             message = "Study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", is a targeted array study and should not be published.";
-        }
+                    + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", "
+                    + " pubmed = " + study.getPublicationId().getPubmedId()
+                    + " requires review before publication because ";
 
-        else if (snpNotApproved == 1 && !efoTermsAssigned && missingCoR) {
-            message = "No EFO trait assigned and some SNP associations have not been approved and "
-                    + "at least one ancestry description with no country of recruitment for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else if (snpNotApproved == 1 && !efoTermsAssigned) {
-            message = "No EFO trait assigned and some SNP associations have not been approved for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else if (snpNotApproved == 1 && missingCoR) {
-            message = "Some SNP associations have not been approved and at least one ancestry description with no country of recruitment for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else if (!efoTermsAssigned && missingCoR) {
-            message = "No EFO trait assigned and at least one ancestry description with no country of recruitment for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
+            if(snpNotApproved == 1){
+                message = message.concat("some SNP associations have not been approved; ");
+            }
+            if(!efoTermsAssigned){
+                message = message.concat("no EFO trait assigned; ");
+            }
+            if(missingCoR){
+                message = message.concat("at least one ancestry description with no country of recruitment; ");
 
-        else if (missingCoR) {
-            message = "At least one ancestry description with no country of recruitment for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else if (snpNotApproved == 1) {
-            message = "Some SNP associations have not been approved for study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else if (!efoTermsAssigned) {
-            message = "No EFO trait assigned to study: "
-                    + study.getAuthor() + ", "
-                    + " pubmed = " + study.getPubmedId()
-                    + ", please review before changing the status.";
-        }
-        else {
-            message = null;
+            }
+            if(missingGenotypingTechnology){
+                message = message.concat("no genotyping technology provided; ");
+            }
         }
 
         return message;

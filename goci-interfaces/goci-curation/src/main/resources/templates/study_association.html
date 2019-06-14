@@ -68,7 +68,8 @@
 <div>
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
         <li class="active">SNP Associations</li>
     </ol>
 </div>
@@ -134,6 +135,21 @@
         <input type="hidden" th:field="${study.housekeeping.isPublished}" class="form-control" id="publish_flag"/>
     </div>
 </div>
+
+<!-- Add spinner -->
+<div id="loadingResults" class="container">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <button class="btn btn-lg">
+                <i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>
+                <span>Loading...</span>
+            </button>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -497,8 +513,8 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </div>
-</div>
 <br/>
 
 <!--Bottom level buttons and modals-->
@@ -511,8 +527,24 @@
 <div th:include="fragments/footer :: page_footer"></div>
 
 
-<script>
+<script th:inline="javascript">
     $(document).ready(function() {
+        $("#loadingResults").show();
+        var page_size = 100;
+        /*<![CDATA[*/
+        var total_associations = /*[[${totalAssociations}]]*/;
+        /*]]>*/
+        var total_pages = total_associations/page_size + 1;
+
+        /*<![CDATA[*/
+        var page_number = 1;
+        while(page_number < total_pages) {
+            page_number++;
+            appendData(page_number);
+        }
+        /*]]>*/
+
+
         var table = $('#mainTable').DataTable({
                                                   info: false,
                                                   paging: false,
@@ -526,6 +558,41 @@
                                                   ]
                                               });
     });
+
+    function appendData(page_number) {
+        /*<![CDATA[*/
+        var studyid = /*[[${study.id}]]*/;
+        var contextPath = /*[[@{/}]]*/'';
+        /*]]>*/
+        $.ajax({
+            type: "GET",
+            url: contextPath+"/studies/"+studyid+"/associations",
+            data: {
+                page: page_number,
+            },
+            success: function (data) {
+                var newRows = data;
+                $("#mainTable").DataTable().rows.add($(newRows)).draw();
+                checkRowCount();
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+
+
+    function checkRowCount() {
+        // Check number of rows, if equal to total_associations then hide spinner
+        /*<![CDATA[*/
+        var total_associations = /*[[${totalAssociations}]]*/;
+        /*]]>*/
+        var table = $('#mainTable').DataTable();
+        var row_count = table.rows().count();
+        if(row_count == total_associations) {
+            $("#loadingResults").hide();
+        }
+    }
 </script>
 
 </body>

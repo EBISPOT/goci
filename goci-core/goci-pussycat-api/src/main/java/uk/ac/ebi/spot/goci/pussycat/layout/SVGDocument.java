@@ -30,16 +30,17 @@ public class SVGDocument {
                     "<stop style='stop-color:black;stop-opacity:1' offset='100%' />" +
                     "</linearGradient>" +
                     "<mask width='" + SVGCanvas.canvasWidth + "' maskUnits='userSpaceOnUse' " +
-                    "x='0' height='" + SVGCanvas.canvasHeight + "' y='-200' " +
+                    "x='0' height='" + SVGCanvas.canvasHeight + "' y='-400' " +
                     "id='traitMask'>" +
                     "<rect fill='grey' x='0' width='" + SVGCanvas.canvasWidth + "' " +
                     "height='" + SVGCanvas.canvasHeight + "' " +
-                    "y='-200' " +
+                    "y='-400' " +
                     "opacity='" +
                     ".25' />" +
                     "</mask>" +
                     "</defs>";
 
+    private final String globalText = "<text x=\"1750\" y=\"-325\" text-anchor=\"end\" fill=\"#398A96\" font-family=\"Verdana\" font-size=\"70\"></text>";
     private final String globalTranslationStart = "<g transform='translate(x,y)'>";
 
     private final String globalTranslationEnd = "</g>";
@@ -62,7 +63,7 @@ public class SVGDocument {
 
     public String getHeader() {
         if (doTranslation) {
-            return header.concat(getTranslation());
+            return header.concat(getTranslation()).concat(globalText);
         }
         else {
             return header;

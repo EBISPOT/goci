@@ -33,6 +33,29 @@
     <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
     <script th:src="@{/js/goci-print-page.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
+
+        /*]]>*/
+    </script>
+    <style>
+         /* The Close Button */
+        .closePureJS {
+            color: #aaaaaa;
+            float: right;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .closePureJS:hover,
+        .closePureJS:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
@@ -44,7 +67,8 @@
     <ol class="breadcrumb pull-right">
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
-        <li><span th:text="${study.author + '_' + study.id} ?: '' "></span></li>
+        <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
+             <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>
@@ -71,6 +95,18 @@
             <div class="alert alert-info">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <strong th:text="${duplicateMessage}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Alert change first author-->
+<div id="changeAuthorDiv" class="container-fluid" style="display: none;">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="changeAuthorAlert" class="alert">
+                <span class="closePureJS">&times;</span>
+                <p id="ChangeAuthorText"></p>
             </div>
         </div>
     </div>
@@ -130,23 +166,57 @@
 
 
 
+
                 <!--Visible fields-->
                 <div class="form-group">
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
 
-                    <div class="col-md-10 static-field">
+                    <div class="col-md-5 static-field">
                         <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
                         <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
+                    </div>
+
+                    <div class="col-md-5">
+                        <button id="duplicateStudy" type="button" class="btn btn-primary pull-right" th:onclick="|window.location.href='@{/studies/{studyId}/duplicate(studyId=${study.id})}'|"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Duplicate Study</button>
+                    </div>
+
+                </div>
+
+                <!--Hidden field Publication -->
+                <div class="form-group">
+                    <label for="id" class="control-label col-md-2"></label>
+
+                    <div class="col-md-10">
+                        <input type="hidden" th:field="*{publicationId}" class="form-control" id="publicationId"/>
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="author" class="control-label col-md-2">Author</label>
+                    <label for="firstAuthorStatic" class="control-label col-md-2">Author</label>
 
-                    <div class="col-md-10">
+                    <div class="col-md-10 static-field">
                         <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
-                        <input type="text" th:field="*{author}" class="form-control" id="author"/>
+                        <!--input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author" readonly="readonly" /-->
+                    <b id="firstAuthorStatic"><span th:utext="*{publicationId.firstAuthor.fullname}" >Description</span></b>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">List of Authors</label>
+
+                    <div class="col-md-10 static-field">
+
+                        <p th:inline="text" th:each="orderedAuthor,iter : *{publicationId.publicationAuthors}" th:remove="tag">
+                        <div th:unless="${study.housekeeping.isPublished}" th:remove="tag">
+                            <a th:onclick="'javascript:changeFirstAuthor('+${study.id}+','+ ${orderedAuthor.author.id} +',\''+${orderedAuthor.author.fullname}+'\');'" th:title="'Change First Author to '+${orderedAuthor.author.fullname}">
+                                <span class="glyphicon glyphicon-pencil color-primary-bold"></span>
+                            </a>
+                        </div>
+                            [[${orderedAuthor.author.fullname}]]<sup>&nbsp;[[${orderedAuthor.sort}]]</sup>
+                            <span th:unless="${iter.last}" th:remove="tag">,&nbsp;</span>
+                        </p>
 
                     </div>
                 </div>
@@ -155,7 +225,7 @@
                     <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" th:field="*{title}"/>
+                        <input type="text" class="form-control" id="title" th:field="*{publicationId.title}" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -163,7 +233,7 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="publication"
-                               th:field="*{publication}"/>
+                               th:field="*{publicationId.publication}" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -171,7 +241,7 @@
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmed" th:field="*{pubmedId}"/>
+                        <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />
 
                         <div class="btn-group pull-right">
                             <button type="button" data-toggle="dropdown" class="btn btn-sm btn-default dropdown-toggle always-clickable">
@@ -179,10 +249,10 @@
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=*{pubmedId})}"
+                                    <a th:href="@{http://europepmc.org/abstract/MED/{pubmedId}(pubmedId=*{publicationId.pubmedId})}"
                                        target="_blank">View in Europe PMC</a></li>
                                 <li>
-                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=*{pubmedId})}"
+                                    <a th:href="@{http://www.ncbi.nlm.nih.gov/pubmed/?term={pubmedId}(pubmedId=*{publicationId.pubmedId})}"
                                        target="_blank">View in PubMed</a></li>
 
                             </ul>
@@ -193,9 +263,24 @@
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationDate}"/>
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}" />
                     </div>
                 </div>
+
+
+                <div class="form-group">
+                    <label for="genotypingTechnology" class="control-label col-md-2">Genotyping technology</label>
+
+                    <div class="col-md-10">
+                        <select name="genotypingTechnology" th:field="*{genotypingTechnologies}" class="form-control select2-select"
+                                multiple="multiple" id="genotypingTechnology">
+                            <option th:each="genotypingTechnology : ${genotypingTechnologies}"
+                                    th:value="${genotypingTechnology.id}"
+                                    th:text="${genotypingTechnology.genotypingTechnology}"></option>
+                        </select>
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label for="platform" class="control-label col-md-2">Array manufacturer</label>
@@ -305,17 +390,17 @@
                     <input id="cnv" type="hidden" th:field="*{cnv}"/>
                 </div>
 
-                <div class="form-group">
-                    <label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>
+                <!--<div class="form-group">-->
+                    <!--<label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>-->
 
-                    <input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>
-                </div>
+                    <!--<input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>-->
+                <!--</div>-->
 
-                <div class="form-group">
-                    <label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>
+                <!--<div class="form-group">-->
+                    <!--<label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>-->
 
-                    <input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>
-                </div>
+                    <!--<input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>-->
+                <!--</div>-->
 
                 <div class="form-group">
                     <label for="gxe" class="control-label col-md-2">GxE</label>
@@ -334,11 +419,25 @@
 
                     <input id="pooled" type="checkbox" th:field="*{pooled}"/>
                 </div>
+
+                <div class="form-group">
+                    <label for="userRequested" class="control-label col-md-2">User Requested</label>
+
+                    <input id="userRequested" type="checkbox" th:field="*{userRequested}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="openTargets" class="control-label col-md-2">Open Targets</label>
+
+                    <input id="openTargets" type="checkbox" th:field="*{openTargets}"/>
+                </div>
+
                 <div class="form-group">
                     <label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>
 
                     <input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>
                 </div>
+
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
@@ -353,6 +452,8 @@
 
 <div th:include="fragments/footer :: page_footer"></div>
 
+<script src="../static/js/study/study-init.js" th:src="@{../js/study/study-init.js}"></script>
+<script th:src="@{/js/study/study-authors.js}"></script>
 
 <script>
     $(function() {
@@ -372,6 +473,16 @@
                                        placeholder: "Select a disease/trait",
                                        allowClear: true
                                    });
+    });
+</script>
+
+<script>
+    $(function() {
+        // turn the element to select2 select style
+        $('#genotypingTechnology').select2({
+                                   placeholder: "Select a genotyping technology",
+                                   allowClear: true
+                               });
     });
 </script>
 

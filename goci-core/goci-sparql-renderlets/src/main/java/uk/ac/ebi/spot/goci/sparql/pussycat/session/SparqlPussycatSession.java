@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
@@ -137,7 +138,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                             .concat("  FILTER ( ?pvalue >= ?? )");
 
                 }
-                if (filter.getFilteredType().equals(Study.class)) {
+                if (filter.getFilteredType().equals(Publication.class)) {
 
                     associationQueryString = associationQueryString.concat(
                             "?association ro:part_of ?study . ?study gt:has_publication_date ?date .");
@@ -286,7 +287,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }
@@ -337,7 +338,7 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                     pval_min = filter.getFilteredValues().get(0);
                     pval_max = filter.getFilteredValues().get(1);
                 }
-                else if (filter.getFilteredType().equals(Study.class)) {
+                else if (filter.getFilteredType().equals(Publication.class)) {
                     date_min = filter.getFilteredRange().from();
                     date_max = filter.getFilteredRange().to();
                 }

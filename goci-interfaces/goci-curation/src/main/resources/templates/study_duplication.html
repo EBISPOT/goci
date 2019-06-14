@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--Select2: http://ivaynberg.github.io/select2/-->
+    <!-- Include Select2 CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+
+    <!-- CSS to make Select2 fit in with Bootstrap 3.x -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <!-- Include Select2 JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+    <script th:src="@{/js/goci-formset.js}"></script>
+    <script th:src="@{/js/goci-study-duplication.js}"></script>
+
+
+</head>
+<body>
+
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div>
+    <ol class="breadcrumb pull-right">
+        <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
+        <li><a th:href="@{/studies}">Studies</a></li>
+        <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+        <li class="active">Study Details</li>
+    </ol>
+</div>
+
+<!--Include study navigation tabs-->
+<div th:include="fragments/study_navigation_tabs :: tabs"></div>
+
+<!--Alert if data is saved-->
+<div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <form id="studyForm" class="form-horizontal" th:object="${study}" name="studyForm">
+
+                <!--Visible fields-->
+                <div class="form-group">
+                    <label for="accessionId" class="control-label col-md-2">Accession ID</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:field="*{accessionId}" th:text="${study.accessionId} ? ${study.accessionId} : 'Awaiting accession'" id="accessionId"></span>
+                        <input type="hidden" th:field="*{accessionId}" class="form-control" id="accessionId" />
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="author" class="control-label col-md-2">Author</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:field="*{author}" th:text="${study.publicationId.firstAuthor.fullname} ? ${study.publicationId.firstAuthor.fullname} : '-'" id="author"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Title</label>
+
+                    <div for="title" class="col-md-10 static-field">
+                        <span type="text" th:field="*{title}" th:text="${study.publicationId.title} ? ${study.publicationId.title} : '-'" id="title"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="publication" class="control-label col-md-2">Publication</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:field="*{publication}" th:text="${study.publicationId.publication} ? ${study.publicationId.publication} : '-'" id="publication"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
+
+                    <div class="col-md-10 static-field">
+                        <span type="text" th:field="*{publicationId.publicationDate}" th:text="${study.publicationId.publicationDate} ? ${study.publicationId.publicationDate} : '-'" id="publicationDate"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <input id="id_study-duplications-TOTAL_FORMS" value="1" type="hidden"/>
+            <input id="studyId"  th:value="${study.id} ? ${study.id} : ''" type="hidden" />
+            <div id="study-duplications-form-container">
+                <div id="study-duplications-1" class="studyItemForm">
+                    <div class="row">
+                        <div class="form-group col-sm-1 col-lg-1">
+                            <div class="col-sm-12">
+                                <span class="studyItemFormRow pull-right" id="tagRow1">1</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-lg-8">
+                            <div class="col-sm-12">
+                                <input type="text" name="tagtext1" class="form-control studyItemFormInput" />
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-5 col-lg-3">
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-danger btn-sm remove-study-duplications" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="form-group col-sm-9 col-lg-9">
+                    <div class="col-sm-1">
+                        <input id="multi-add-study-duplications" type="text" onkeypress="checkNumbers()" value="1" class="form-control"/>
+                    </div>
+                    <div class="col-sm-10">
+                        <button id="multi-add-study-duplications-button" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Add Rows</button>
+                    </div>
+                </div>
+                <div class="form-group col-sm-3 col-lg-3">
+                    <div class="col-sm-12">
+                        <button id="duplicateStudy" type="button" class="btn btn-primary pull-left"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Duplicate Study</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script type="text/html" id="study-duplications-template">
+    <div id="study-duplications-__prefix__" class="studyItemForm">
+        <div class="row">
+            <div class="form-group col-sm-1 col-lg-1">
+                <div class="col-sm-12">
+                    <span class="studyItemFormRow pull-right" id="tagRow__prefix__">__prefix__</span>
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-lg-8">
+                <div class="col-xs-12">
+                    <input type="text" name="tagtext__prefix__" class="form-control studyItemFormInput" />
+                </div>
+            </div>
+            <div class="form-group col-sm-5 col-lg-3">
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn-danger btn-sm remove-study-duplications" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function checkNumbers() {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return;
+        }
+        event.preventDefault();
+    }
+    /*]]>*/
+</script>
+<script>
+
+    $('study-duplications-form-container').gociformset({
+       prefix: 'study-duplications',
+       formCssClass: 'studyItemForm',
+       addbuttonid: 'add-study-duplications-button',
+       multiaddbuttonid: 'multi-add-study-duplications-button'
+    });
+
+</script>
+</html>

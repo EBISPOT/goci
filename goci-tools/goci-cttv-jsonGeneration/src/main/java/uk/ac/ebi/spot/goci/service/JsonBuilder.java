@@ -143,7 +143,7 @@ public class JsonBuilder {
                                     jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
                                                     efoTrait.getUri(),
                                                     riskAllele.getSnp().getRsId(),
-                                                    association.getStudy().getPubmedId(),
+                                                    association.getStudy().getPublicationId().getPubmedId(),
                                                     sampleSize,
                                                     snpCount,
                                                     ensemblId)

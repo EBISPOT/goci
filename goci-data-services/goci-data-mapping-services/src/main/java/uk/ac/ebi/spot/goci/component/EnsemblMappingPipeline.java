@@ -479,8 +479,10 @@ public class EnsemblMappingPipeline {
 
             for (int i = 0; i < json_gene_list.length(); ++i) {
                 JSONObject json_gene = json_gene_list.getJSONObject(i);
-                String gene_id = json_gene.getString("id");
                 String gene_name = json_gene.getString("external_name");
+
+                // If the source is NCBI, we parse the ID from the description:
+                String gene_id = source.equals(getNcbiSource()) ? parseNCBIid(json_gene.getString("description"), gene_name) : json_gene.getString("id");
 
                 if (source.equals(getNcbiSource())) {
                     if ((gene_name != null && getEnsemblMappingResult().getNcbiOverlappingGene().contains(gene_name)) ||
@@ -514,8 +516,12 @@ public class EnsemblMappingPipeline {
 
         for (int i = 0; i < json_gene_list.length(); ++i) {
             JSONObject json_gene = json_gene_list.getJSONObject(i);
-            String gene_id = json_gene.getString("id");
             String gene_name = json_gene.getString("external_name");
+
+            // If the source is NCBI, we parse the ID from the description:
+            String gene_id = source.equals(getNcbiSource()) ? parseNCBIid(json_gene.getString("description"), gene_name) : json_gene.getString("id");
+
+
             String ncbi_id = (source.equals("NCBI")) ? gene_id : null;
             String ensembl_id = (source.equals("Ensembl")) ? gene_id : null;
             int distance = 0;
@@ -577,6 +583,30 @@ public class EnsemblMappingPipeline {
         return (closest_gene != "") ? true : false;
     }
 
+
+    /**
+     * This method parses out NCBI ID from the gene description of a REST response
+     *
+     * Expected format: "description": "RAB19, member RAS oncogene family [Source:NCBI gene;Acc:401409]",
+     * Where the NCBI ID is 401409
+     *
+     * GOCI 2581 By Daniel Suveges 2019. January 13
+    */
+    private String parseNCBIid( String description, String gene_name){
+
+        // Using regular expression to parse description:
+        Pattern refseqIdPattern = Pattern.compile("Acc:(\\d+)]");
+        String gene_description = description;
+        Matcher matcher = refseqIdPattern.matcher(gene_description);
+        if (matcher.find()) {
+            // System.out.println("[Info] NCBI ID for " + gene_name + ": " + matcher.group(1));
+            return matcher.group(1);
+        } else {
+            System.out.println("[Warning] NCBI ID for " + gene_name + "Was not found. ");
+            return "NCBI ID was not found for this gene.";
+        }
+
+    }
 
     /**
      * Recursive method to get the closest upstream or downstream gene over the 100kb range, jumping 100kb by 100kb

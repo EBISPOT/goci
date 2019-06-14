@@ -89,8 +89,8 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         double cx, cy;
                         int position = getTraitPosition(nexus, context, trait, band, locations);
 
-                        int horizontal = position % 10;
-                        int vertical = position / 10;
+                        int horizontal = position % 20;
+                        int vertical = position / 20;
 
                         if (position == 0) {
                             cx = ax + alength + radius;

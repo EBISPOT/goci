@@ -2,20 +2,13 @@ package uk.ac.ebi.spot.goci.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,25 +29,9 @@ public class Study implements Trackable {
     @GeneratedValue
     private Long id;
 
-    @NotBlank(message = "Please enter an author")
-    private String author;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Please enter a study date in format YYYY-MM-DD")
-    private Date publicationDate;
-
-    @NotBlank(message = "Please enter a publication")
-    private String publication;
-
-    @NotBlank(message = "Please enter a title")
-    private String title;
-
     private String initialSampleSize;
 
     private String replicateSampleSize;
-
-    @NotBlank(message = "Please enter a pubmed id")
-    private String pubmedId;
 
     // Defaults set as false
     @JsonIgnore
@@ -64,9 +41,9 @@ public class Study implements Trackable {
 
     private Boolean gxg = false;
 
-    private Boolean genomewideArray = true;
-
-    private Boolean targetedArray = false;
+//    private Boolean genomewideArray = true;
+//
+//    private Boolean targetedArray = false;
 
     private Integer snpCount;
 
@@ -81,6 +58,10 @@ public class Study implements Trackable {
     private String accessionId;
 
     private Boolean fullPvalueSet = false;
+
+    private Boolean userRequested = false;
+
+    private Boolean openTargets = false;
 
     @ManyToMany
     @JoinTable(name = "STUDY_PLATFORM",
@@ -122,8 +103,22 @@ public class Study implements Trackable {
     @OrderBy // important don't remove. Tracking ticket
     private Collection<Event> events = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "STUDY_GENOTYPING_TECHNOLOGY",
+               joinColumns = @JoinColumn(name = "STUDY_ID"),
+               inverseJoinColumns = @JoinColumn(name = "GENOTYPING_TECHNOLOGY_ID"))
+    private Collection<GenotypingTechnology> genotypingTechnologies;
+
     @OneToMany(mappedBy = "study")
     private Collection<WeeklyTracking> weeklyTrackings;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JsonManagedReference("publicationInfo")
+    @JoinColumn(name = "publication_id")
+    private Publication publicationId;
+
+
+
 
     /**REST API fix: reversal of control of study-SNP relationship from study to SNP to fix deletion issues with respect to
      * the study-SNP view table. Works but not optimal, improve solution if possible**/
@@ -152,18 +147,13 @@ public class Study implements Trackable {
     public Study() {
     }
 
-    public Study(String author,
-                 Date publicationDate,
-                 String publication,
-                 String title,
-                 String initialSampleSize,
+    public Study(String initialSampleSize,
                  String replicateSampleSize,
-                 String pubmedId,
                  Boolean cnv,
                  Boolean gxe,
                  Boolean gxg,
-                 Boolean genomewideArray,
-                 Boolean targetedArray,
+//                 Boolean genomewideArray,
+//                 Boolean targetedArray,
                  Integer snpCount,
                  String qualifier,
                  Boolean imputed,
@@ -171,6 +161,8 @@ public class Study implements Trackable {
                  String studyDesignComment,
                  String accessionId,
                  Boolean fullPvalueSet,
+                 Boolean userRequested,
+                 Boolean openTargets,
                  Collection<Platform> platforms,
                  Collection<Association> associations,
                  Collection<Ancestry> ancestries,
@@ -178,19 +170,15 @@ public class Study implements Trackable {
                  Collection<EfoTrait> efoTraits,
                  Housekeeping housekeeping,
                  StudyReport studyReport, Collection<Event> events,
-                 Collection<SingleNucleotidePolymorphism> snps) {
-        this.author = author;
-        this.publicationDate = publicationDate;
-        this.publication = publication;
-        this.title = title;
+                 Collection<SingleNucleotidePolymorphism> snps,
+                 Collection<GenotypingTechnology> genotypingTechnologies) {
         this.initialSampleSize = initialSampleSize;
         this.replicateSampleSize = replicateSampleSize;
-        this.pubmedId = pubmedId;
         this.cnv = cnv;
         this.gxe = gxe;
         this.gxg = gxg;
-        this.genomewideArray = genomewideArray;
-        this.targetedArray = targetedArray;
+//        this.genomewideArray = genomewideArray;
+//        this.targetedArray = targetedArray;
         this.snpCount = snpCount;
         this.qualifier = qualifier;
         this.imputed = imputed;
@@ -198,6 +186,8 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
         this.accessionId = accessionId;
         this.fullPvalueSet = fullPvalueSet;
+        this.userRequested = userRequested;
+        this.openTargets = openTargets;
         this.platforms = platforms;
         this.associations = associations;
         this.ancestries = ancestries;
@@ -207,6 +197,7 @@ public class Study implements Trackable {
         this.studyReport = studyReport;
         this.events = events;
         this.snps = snps;
+        this.genotypingTechnologies = genotypingTechnologies;
     }
 
     public Long getId() {
@@ -215,38 +206,6 @@ public class Study implements Trackable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public Date getPublicationDate() {
-        return publicationDate;
-    }
-
-    public void setPublicationDate(Date publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getInitialSampleSize() {
@@ -273,14 +232,6 @@ public class Study implements Trackable {
         this.platforms = platforms;
     }
 
-    public String getPubmedId() {
-        return pubmedId;
-    }
-
-    public void setPubmedId(String pubmedId) {
-        this.pubmedId = pubmedId;
-    }
-
     public Boolean getCnv() {
         return cnv;
     }
@@ -305,13 +256,13 @@ public class Study implements Trackable {
         this.gxg = gxg;
     }
 
-    public Boolean getTargetedArray() {
-        return targetedArray;
-    }
+//    public Boolean getTargetedArray() {
+//        return targetedArray;
+//    }
 
-    public void setTargetedArray(Boolean targetedArray) {
-        this.targetedArray = targetedArray;
-    }
+//    public void setTargetedArray(Boolean targetedArray) {
+//        this.targetedArray = targetedArray;
+//    }
 
     public Collection<Association> getAssociations() {
         return associations;
@@ -402,13 +353,13 @@ public class Study implements Trackable {
         this.studyDesignComment = studyDesignComment;
     }
 
-    public Boolean getGenomewideArray() {
-        return genomewideArray;
-    }
-
-    public void setGenomewideArray(Boolean genomewideArray) {
-        this.genomewideArray = genomewideArray;
-    }
+//    public Boolean getGenomewideArray() {
+//        return genomewideArray;
+//    }
+//
+//    public void setGenomewideArray(Boolean genomewideArray) {
+//        this.genomewideArray = genomewideArray;
+//    }
 
     public Collection<Event> getEvents() {
         return events;
@@ -455,4 +406,44 @@ public class Study implements Trackable {
         currentNotes.add(note);
         setNotes((currentNotes));
     }
+
+    @JsonIgnore
+    public String getTagDuplicatedNote() {
+        Collection<StudyNote> currentNotes = getNotes();
+        for  (Note note:currentNotes) {
+            if (note.getNoteSubject().getSubject().compareToIgnoreCase("Duplication TAG") == 0) {
+                return note.getTextNote();
+            }
+        }
+        return "";
+    }
+    public Collection<GenotypingTechnology> getGenotypingTechnologies() {
+        return genotypingTechnologies;
+    }
+
+    public void setGenotypingTechnologies(Collection<GenotypingTechnology> genotypingTechnologies) {
+        this.genotypingTechnologies = genotypingTechnologies;
+    }
+
+    public Boolean getUserRequested() {
+        return userRequested;
+    }
+
+    public void setUserRequested(Boolean userRequested) {
+        this.userRequested = userRequested;
+    }
+
+    public Boolean getOpenTargets() {
+        return openTargets;
+    }
+
+    public void setOpenTargets(Boolean openTargets) {
+        this.openTargets = openTargets;
+    }
+
+    @JsonProperty("publicationInfo")
+    public Publication getPublicationId() { return publicationId; }
+
+    @JsonProperty("publicationInfo")
+    public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
 }

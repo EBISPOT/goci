@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid" th:if="${!#strings.isEmpty(efoTraitUsed)}">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${efoTraitUsed}">Error: </strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <div id="deleteDiseaseTraitForm">
+                <form class="form-horizontal" name="deleteDiseaseTraitForm" method="post"
+                      th:object="${efoTrait}" role="form">
+                    <div class="form-group">
+                        <label for="trait" class="control-label">EFO trait: </label>
+
+                        <div class="input-group">
+                        <!--</div>-->
+                        <!--<div class="col-md-10 col-md-offset-2">-->
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>EFO trait</th>
+                                    <th>URI</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" id="trait" th:field="*{trait}"/>
+                                        <!--Catch an empty value being added-->
+                                        <p th:if="${#fields.hasErrors('trait')}" class="label label-danger"
+                                           th:errors="*{trait}"></p>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="uri" th:field="*{uri}"/>
+                                        <!--Catch an empty value being added-->
+                                        <p th:if="${#fields.hasErrors('uri')}" class="label label-danger"
+                                           th:errors="*{uri}"></p>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                            <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                     <a th:href="@{/efotraits}" class="btn btn-default" role="button">Cancel</a>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" th:if="${totalStudies != 0 }">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Warning: Disease trait is used in the following studies: </h3>
+                </div>
+                <div class="panel-body">
+                    <table id="mainTable" class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th class="col-md-1">Author</th>
+                            <th class="col-md-1">Title</th>
+                            <th class="col-md-1">Pubmed ID</th>
+                            <th class="col-md-1">Disease/Trait</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="study : ${studies}">
+                                <td th:text="${study.id} ?: '' "></td>
+                                <td th:text="${study.publicationId.firstAuthor.fullname} ?: '' "></td>
+                                <td th:text="${study.publicationId.title} ?: ''"></td>
+                                <td th:text="${study.publicationId.pubmedId} ?: ''"></td>
+                                <td><span th:each="efoTrait, iterStat: ${study.efoTraits}"
+                                          th:text="(!${iterStat.last} ? ${efoTrait.trait}+', ' : ${efoTrait.trait} ) ?: ''"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+</body>
+</html>

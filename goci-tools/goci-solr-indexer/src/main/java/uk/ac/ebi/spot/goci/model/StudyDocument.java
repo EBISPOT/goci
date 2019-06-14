@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import javax.persistence.CollectionTable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String pubmedId;
     @Field private String title;
     @Field private String author;
+    @Field private String authorAscii;
+    @Field private String orcid;
     @Field private String publication;
     @Field private String publicationDate;
     @Field private String catalogPublishDate;
@@ -34,13 +37,15 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private String initialSampleDescription;
     @Field private String replicateSampleDescription;
 
+    @Field private Collection<String> authorsList;
     @Field private Collection<String> ancestralGroups;
     @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
     @Field private Collection<Integer> numberOfIndividuals;
     @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
-
+    @Field private Collection<String> genotypingTechnologies;
+    @Field private String studyDesignComment;
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -52,8 +57,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("association_regions") private Collection<String> regions;
     @Field("association_entrezMappedGenes") private Collection<String> entrezMappedGenes;
     @Field("association_entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
-    //    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
-    //    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+    @Field("association_ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
+    @Field("association_ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
     @Field("association_reportedGene") private Collection<String> reportedGenes;
     @Field("association_reportedGeneLinks") private Collection<String> reportedGeneLinks;
     @Field("association_chromosomeName") private Collection<String> chromosomeNames;
@@ -73,10 +78,12 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public StudyDocument(Study study) {
         super(study);
-        this.pubmedId = study.getPubmedId();
-        this.title = study.getTitle();
-        this.author = study.getAuthor();
-        this.publication = study.getPublication();
+        this.pubmedId = study.getPublicationId().getPubmedId();
+        this.title = study.getPublicationId().getTitle();
+        this.author = study.getPublicationId().getFirstAuthor().getFullname();
+        this.authorAscii = study.getPublicationId().getFirstAuthor().getFullnameStandard();
+        this.orcid = study.getPublicationId().getFirstAuthor().getOrcid();
+        this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
 
@@ -85,17 +92,17 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 //        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        if (study.getPublicationDate() != null) {
-            this.publicationDate = df.format(study.getPublicationDate());
+        if (study.getPublicationId().getPublicationDate() != null) {
+            this.publicationDate = df.format(study.getPublicationId().getPublicationDate());
         }
         if (study.getHousekeeping().getCatalogPublishDate() != null) {
             this.catalogPublishDate = df.format(study.getHousekeeping().getCatalogPublishDate());
         }
 
         String year;
-        if (study.getPublicationDate() != null) {
+        if (study.getPublicationId().getPublicationDate() != null) {
             Calendar studyCal = Calendar.getInstance();
-            studyCal.setTime(study.getPublicationDate());
+            studyCal.setTime(study.getPublicationId().getPublicationDate());
             year = String.valueOf(studyCal.get(Calendar.YEAR));
         }
         else {
@@ -103,8 +110,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         }
         this.publicationLink = author.concat("|").concat(year).concat("|").concat(pubmedId);
 
+        this.authorsList = new LinkedHashSet<>();
+        embedAuthors(study);
         this.platform = embedPlatformField(study);
-
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
         this.countriesOfRecruitment = new LinkedHashSet<>();
@@ -113,6 +121,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.ancestryLinks = new LinkedHashSet<>();
         embedAncestryData(study);
 
+        this.genotypingTechnologies = new LinkedHashSet<>();
+        embedGenotypingTechnologiesData(study);
+        this.studyDesignComment = study.getStudyDesignComment();
+
         this.qualifiers = new LinkedHashSet<>();
         this.rsIds = new LinkedHashSet<>();
         this.strongestAlleles = new LinkedHashSet<>();
@@ -120,8 +132,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.regions = new LinkedHashSet<>();
         this.entrezMappedGenes = new LinkedHashSet<>();
         this.entrezMappedGeneLinks = new LinkedHashSet<>();
-        //        this.ensemblMappedGenes = new LinkedHashSet<>();
-        //        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
+        this.ensemblMappedGenes = new LinkedHashSet<>();
+        this.ensemblMappedGeneLinks = new LinkedHashSet<>();
         this.reportedGenes = new LinkedHashSet<>();
         this.reportedGeneLinks = new LinkedHashSet<>();
         this.chromosomeNames = new LinkedHashSet<>();
@@ -144,9 +156,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
+    public String getAuthor() { return author; }
+
+    public String getOrcid() { return orcid; }
+
+    public String getAuthorAscii() { return authorAscii; }
+
+    public Collection<String> getAuthorsList() { return authorsList; }
 
     public String getPublication() {
         return publication;
@@ -208,13 +224,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.entrezMappedGeneLinks.addAll(mappedGeneLinks);
     }
 
-    //    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
-    //        this.ensemblMappedGenes.addAll(mappedGenes);
-    //    }
-    //
-    //    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
-    //        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
-    //    }
+    public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
+            this.ensemblMappedGenes.addAll(mappedGenes);
+    }
+
+    public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
+        this.ensemblMappedGeneLinks.addAll(mappedGeneLinks);
+    }
 
 
     public void addReportedGenes(Collection<String> reportedGenes) {
@@ -271,10 +287,34 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
 
+    public Collection<String> getGenotypingTechnologies() {return genotypingTechnologies; }
+
+
+    private void embedGenotypingTechnologiesData(Study study){
+        Collection<GenotypingTechnology> genotypingTechnologiesCollection = study.getGenotypingTechnologies();
+        for (GenotypingTechnology genotypingTechnology: genotypingTechnologiesCollection) {
+            genotypingTechnologies.add(genotypingTechnology.getGenotypingTechnology());
+        }
+    }
+
+
+    private void embedAuthors(Study study) {
+        //Collection<Author> authors = study.getPublicationId().getAuthors();
+        Collection<PublicationAuthors> authors = study.getPublicationId().getPublicationAuthors();
+        for (PublicationAuthors author : authors) {
+            String authorLink = author.getAuthor().getFullname().concat(" | ").concat(author.getAuthor().getFullnameStandard()).concat(" | ").concat(author.getSort().toString());
+            if (author.getAuthor().getOrcid() != null) {
+                authorLink = authorLink.concat(" | ").concat(author.getAuthor().getOrcid());
+            }
+            authorsList.add(authorLink);
+        }
+
+    }
+
+
     public Collection<String> getAncestryLinks() {
         return ancestryLinks;
     }
-
 
     private void embedAncestryData(Study study) {
         study.getAncestries().forEach(
@@ -443,4 +483,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
     public Boolean getFullPvalueSet() { return fullPvalueSet; }
+
+    public String getStudyDesignComment() { return studyDesignComment; }
+
 }
