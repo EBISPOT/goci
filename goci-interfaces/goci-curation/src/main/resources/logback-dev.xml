@@ -22,34 +22,38 @@
     </appender>
 
     <logger name="uk.ac.ebi.spot.goci.curation" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.service.MappingService" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestService" level="TRACE" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.service.SnpGenomicContextMappingService" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="uk.ac.ebi.spot.goci.exception.EnsemblRestClientException" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
     </root>
 </configuration> 

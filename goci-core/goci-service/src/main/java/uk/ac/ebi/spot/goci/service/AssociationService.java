@@ -135,6 +135,15 @@ public class AssociationService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Association> findPublishedAssociationsPublicationId(String pubmedId, Pageable pageable) {
+        Page<Association> allAssociations =
+                associationRepository.findByStudyHousekeepingCatalogPublishDateIsNotNullAndStudyHousekeepingCatalogUnpublishDateIsNullAndStudyPublicationIdPubmedId(pubmedId,
+                        pageable);
+        allAssociations.forEach(this::loadAssociatedData);
+        return allAssociations;
+    }
+
+    @Transactional(readOnly = true)
     public Collection<Association> findPublishedAssociationsByStudyId(Long studyId) {
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
         associations.forEach(this::loadAssociatedData);

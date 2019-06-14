@@ -4,14 +4,15 @@
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-    <logger name="uk.ac.ebi.spot.goci" level="DEBUG" additivity="false">
-        <appender-ref ref="FILE" />
+    <logger name="uk.ac.ebi.spot.goci" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <root level="INFO">
-        <!--<appender-ref ref="CONSOLE" />-->
-        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+        <!--<appender-ref ref="FILE" />-->
     </root>
 
 </configuration>
