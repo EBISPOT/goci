@@ -166,7 +166,7 @@ public class JsonBuilder {
 
         String dbVersion = getDate();
         String gwasDbId = "http://identifiers.org/gwas_catalog";
-        String jsonSchemaVersion = "1.2.8";
+        String jsonSchemaVersion = "1.6.1";
 
         JsonObject target = Json.createObjectBuilder()
                 .add("activity", "http://identifiers.org/cttv.activity/predicted_damaging")

@@ -138,7 +138,8 @@ public class SnpListBuilderApp {
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
         for(String snp : snps.keySet()){
-            if(snp.startsWith("rs")) {
+            if (snp.matches("rs[0-9]+")) {
+            //if(snp.startsWith("rs")) {
 
                 Map<String, String> snpInfo = snps.get(snp);
                 Object[] keySet = snpInfo.keySet().toArray();
