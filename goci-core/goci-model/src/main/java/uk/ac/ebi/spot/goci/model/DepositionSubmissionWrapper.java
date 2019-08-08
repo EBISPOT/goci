@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionWrapper {
+public class DepositionSubmissionWrapper {
     List<DepositionSubmission> submissions = new ArrayList<>();
 }

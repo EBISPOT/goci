@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.DepositionPublication;
+import uk.ac.ebi.spot.goci.model.DepositionPublicationList;
 import uk.ac.ebi.spot.goci.model.DepositionSubmission;
 
 import java.util.HashMap;
@@ -39,7 +40,6 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Override
     public DepositionPublication retrievePublication(String id) {
         log.info("Retrieving publication using id [{}]", id);
-        RestTemplate template = new RestTemplate();
         DepositionPublication publication = null;
         Map<String, String> params = new HashMap<>();
         params.put("pmID", id);
@@ -59,17 +59,16 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         try {
             String message = mapper.writeValueAsString(depositionPublication);
             System.out.println(message);
+            DepositionPublication response = template.postForObject(url, depositionPublication, DepositionPublication.class);
+            System.out.println("created " + response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        DepositionPublication response = template.postForObject(url, depositionPublication, DepositionPublication.class);
-        System.out.println("created " + response);
     }
 
     @Override
     public DepositionSubmission retrieveSubmission(String id) {
         log.info("Retrieving submission using id [{}]", id);
-        RestTemplate template = new RestTemplate();
         DepositionSubmission submission = null;
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", id);
@@ -85,10 +84,28 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Override
     public void addSubmission(DepositionSubmission depositionSubmission) {
-        RestTemplate template = new RestTemplate();
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", depositionSubmission.getSubmissionId());
         String url = depositionUri + "/submissions/{submissionID}";
         template.put(url, depositionSubmission, params);
+    }
+
+    @Override
+    public Map<String, DepositionPublication> getAllPublications() {
+        log.info("Retrieving publications");
+        Map<String, DepositionPublication> publicationMap = new HashMap<>();
+        String url = depositionUri + "/publications";
+        try {
+            String response = template.getForObject(url, String.class);
+            DepositionPublicationList publications = template.getForObject(url, DepositionPublicationList.class);
+            if(publications.getWrapper() != null && publications.getWrapper().getPublications() != null) {
+                for (DepositionPublication publication : publications.getWrapper().getPublications()) {
+                    publicationMap.put(publication.getPmid(), publication);
+                }
+            }
+        }catch(HttpClientErrorException e){
+            System.out.println(e.getMessage());
+        }
+        return publicationMap;
     }
 }

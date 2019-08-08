@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -69,25 +70,26 @@ public class DepositionSyncService {
     public void syncPublications(boolean syncAll) {
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
+        Map<String, DepositionPublication> depositionPublications =  depositionPublicationService.getAllPublications();
         //if publication not in Deposition, insert
         for (Publication p : gociPublications) {
             String pubmedId = p.getPubmedId();
             boolean isPublished = isPublished(p);
             boolean isAvailable = isAvailable(p);
             if (isPublished) {
-                DepositionPublication depositionPublication = depositionPublicationService.retrievePublication(pubmedId);
+                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
                 if (depositionPublication == null) {
                     DepositionPublication newPublication = createPublication(p);
-                    System.out.println("adding new publication" + pubmedId + " to mongo");
+                    System.out.println("adding published publication" + pubmedId + " to mongo");
                     newPublication.setStatus("EXPORTED");
                     depositionPublicationService.addPublication(newPublication);
 
                 }
             } else if (isAvailable && syncAll) {
-                DepositionPublication depositionPublication = depositionPublicationService.retrievePublication(pubmedId);
+                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
                 if (depositionPublication == null) {
                     DepositionPublication newPublication = createPublication(p);
-                    System.out.println("adding published publication" + pubmedId + " to mongo");
+                    System.out.println("adding new publication" + pubmedId + " to mongo");
                     newPublication.setStatus("AVAILABLE");
                     depositionPublicationService.addPublication(newPublication);
                 }
