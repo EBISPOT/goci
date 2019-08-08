@@ -8,7 +8,7 @@ import org.junit.Test;
 import uk.ac.ebi.spot.goci.model.DepositionPublication;
 import uk.ac.ebi.spot.goci.model.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.DepositionSubmissionList;
-import uk.ac.ebi.spot.goci.model.DepositionWrapper;
+import uk.ac.ebi.spot.goci.model.DepositionSubmissionWrapper;
 
 import java.io.IOException;
 
@@ -41,7 +41,7 @@ public class SubmissionControllerTest {
     @Test
     public void testCreateSubmissionWrapper() {
         DepositionSubmissionList wrapper = new DepositionSubmissionList();
-        wrapper.setWrapper(new DepositionWrapper());
+        wrapper.setWrapper(new DepositionSubmissionWrapper());
         DepositionSubmission submission = new DepositionSubmission();
         wrapper.getWrapper().getSubmissions().add(submission);
         try {
