@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionSubmissionList {
+public class DepositionPublicationList {
     @JsonProperty(value = "_embedded")
-    private DepositionSubmissionWrapper wrapper;
+    private DepositionPublicationWrapper wrapper;
 }
