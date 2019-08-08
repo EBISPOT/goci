@@ -1,18 +1,11 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,8 +46,11 @@ public class SubmissionController {
     @Autowired
     private CurrentUserDetailsService currentUserDetailsService;
 
+    @Autowired
+    private RestTemplate template;
+
     @Value("${deposition.uri}")
-    private String deposotionURL;
+    private String depositionURL;
 
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
@@ -65,9 +61,8 @@ public class SubmissionController {
 
     private List<Submission> getSubmissions() {
         List<Submission> submissionList = new ArrayList<>();
-        RestTemplate template = new RestTemplate();
-        String response = template.getForObject(deposotionURL + "/submissions", String.class);
-        DepositionSubmissionList list = template.getForObject(deposotionURL + "/submissions", DepositionSubmissionList.class);
+        String response = template.getForObject(depositionURL + "/submissions", String.class);
+        DepositionSubmissionList list = template.getForObject(depositionURL + "/submissions", DepositionSubmissionList.class);
         for (DepositionSubmission submission : list.getWrapper().getSubmissions()) {
             Submission testSub = new Submission();
             testSub.setId(submission.getSubmissionId());
@@ -85,9 +80,8 @@ public class SubmissionController {
     private DepositionSubmission getSubmission(String submissionID) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        RestTemplate template = new RestTemplate();
-        String response = template.getForObject(deposotionURL + "/submissions/{submissionID}", String.class, params);
-        DepositionSubmission submission = template.getForObject(deposotionURL + "/submissions/{submissionID}", DepositionSubmission.class, params);
+        String response = template.getForObject(depositionURL + "/submissions/{submissionID}", String.class, params);
+        DepositionSubmission submission = template.getForObject(depositionURL + "/submissions/{submissionID}", DepositionSubmission.class, params);
         return submission;
     }
 
@@ -120,8 +114,7 @@ public class SubmissionController {
             depositionSubmission.setStatus("IMPORTED");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
-//        RestTemplate template = new RestTemplate();
-//        template.put(deposotionURL + "/submissions/{submissionID}", depositionSubmission, params);
+//        template.put(depositionURL + "/submissions/{submissionID}", depositionSubmission, params);
         }
         List<Submission> submissionList = getSubmissions();
         model.addAttribute("submissions", submissionList);
