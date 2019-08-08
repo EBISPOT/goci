@@ -25,6 +25,7 @@ public class Publication {
     private Long id;
 
     @NotBlank(message = "Please enter a pubmed id")
+    @Column(unique = true)
     private String pubmedId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

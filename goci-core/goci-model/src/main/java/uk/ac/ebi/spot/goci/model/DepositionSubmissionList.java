@@ -15,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class DepositionSubmissionList {
     @JsonProperty(value = "_embedded")
     private DepositionSubmissionWrapper wrapper;
+    private DepositionPageInfo page;
 }

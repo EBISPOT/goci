@@ -94,18 +94,32 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     public Map<String, DepositionPublication> getAllPublications() {
         log.info("Retrieving publications");
         Map<String, DepositionPublication> publicationMap = new HashMap<>();
-        String url = depositionUri + "/publications";
+        String url = depositionUri + "/publications?page={page}&size=100";
         try {
-            String response = template.getForObject(url, String.class);
-            DepositionPublicationList publications = template.getForObject(url, DepositionPublicationList.class);
-            if(publications.getWrapper() != null && publications.getWrapper().getPublications() != null) {
-                for (DepositionPublication publication : publications.getWrapper().getPublications()) {
-                    publicationMap.put(publication.getPmid(), publication);
-                }
+            int i = 0;
+            Map<String, Integer> params = new HashMap<>();
+            params.put("page", i);
+            String response = template.getForObject(url, String.class, params);
+            DepositionPublicationList publications = template.getForObject(url, DepositionPublicationList.class,
+                    params);
+            while(i < publications.getPage().getTotalPages()){
+                addPublications(publicationMap, publications);
+                params.put("page", ++i);
+                publications = template.getForObject(url, DepositionPublicationList.class,
+                        params);
             }
         }catch(HttpClientErrorException e){
             System.out.println(e.getMessage());
         }
         return publicationMap;
+    }
+
+    private void addPublications(Map<String, DepositionPublication> publicationMap,
+                                 DepositionPublicationList publications){
+        if(publications.getWrapper() != null && publications.getWrapper().getPublications() != null) {
+            for (DepositionPublication publication : publications.getWrapper().getPublications()) {
+                publicationMap.put(publication.getPmid(), publication);
+            }
+        }
     }
 }
