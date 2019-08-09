@@ -61,27 +61,19 @@ public class SubmissionController {
 
     private List<Submission> getSubmissions() {
         List<Submission> submissionList = new ArrayList<>();
-        int i = 0;
-        Map<String, Integer> params = new HashMap<>();
-        params.put("page", i);
-        String response = template.getForObject(depositionURL + "/submissions?page={page}", String.class, params);
-        DepositionSubmissionList submissions = template.getForObject(depositionURL + "/submissions?page={page}",
-                DepositionSubmissionList.class, params);
-        while(i < submissions.getPage().getTotalPages()){
-            for(DepositionSubmission submission: submissions.getWrapper().getSubmissions()) {
-                Submission testSub = new Submission();
-                testSub.setId(submission.getSubmissionId());
-                testSub.setPubMedID(submission.getPublication().getPmid());
-                testSub.setAuthor(submission.getPublication().getFirstAuthor());
-                testSub.setCurator(submission.getCreated().getUser().getName());
-                testSub.setStatus(submission.getStatus());
-                testSub.setTitle(submission.getPublication().getTitle());
-                testSub.setCreated(submission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-                submissionList.add(testSub);
-                params.put("page", ++i);
-                submissions = template.getForObject(depositionURL + "/submissions?page={page}",
-                        DepositionSubmissionList.class, params);
-            }
+        String response = template.getForObject(depositionURL + "/submissions", String.class);
+        DepositionSubmissionList list = template.getForObject(depositionURL + "/submissions", DepositionSubmissionList.class);
+        for (DepositionSubmission submission : list.getWrapper().getSubmissions()) {
+            Submission testSub = new Submission();
+            testSub.setId(submission.getSubmissionId());
+            testSub.setPubMedID(submission.getPublication().getPmid());
+            testSub.setAuthor(submission.getPublication().getFirstAuthor());
+            testSub.setCurator(submission.getCreated().getUser().getName());
+            testSub.setStatus(submission.getStatus());
+            testSub.setPublicationStatus(submission.getPublication().getStatus());
+            testSub.setTitle(submission.getPublication().getTitle());
+            testSub.setCreated(submission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            submissionList.add(testSub);
         }
         return submissionList;
     }

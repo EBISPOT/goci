@@ -46,28 +46,41 @@
           <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
               <thead>
               <tr>
+                  <th style="width:10%">Submission Status</th>
                   <th style="width:10%">Submission ID</th>
-                  <th style="width:10%">PubMed ID</th>
-                  <th>Title</th>
-                  <th style="width:10%">Curator</th>
-                  <th style="width:10%">Author</th>
                   <th style="width:10%">Date Created</th>
-                  <th style="width:10%">Status</th>
+                  <th style="width:10%">Curator</th>
+                  <th>Title</th>
+                  <th style="width:10%">Author</th>
+                  <th style="width:10%">PubMed ID</th>
+                  <th style="width:10%">Publication Status</th>
               </tr>
               </thead>
               <tbody>
               <tr th:each="submission : ${submissions}">
                   <td>
-                      <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}" th:text="${submission.id}"></a>
+                      <div th:if="${submission.status.equals('VALID')}" th:remove="tag">
+                          <form class="form-inline" name="assignStatusForm" role="form" method="post"
+                                th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
+                                th:object="${submission}">
+
+                              <button type="submit"
+                                      class="btn btn-primary btn-sm">Import
+                              </button>
+                              <span th:text="${submission.status}"></span>
+                          </form>
+                      </div>
+                      <div th:unless="${submission.status.equals('VALID')}" th:remove="tag">
+                          <span th:text="${submission.status}"></span>
+                      </div>
+                  </td>
+                  <td>
+                      <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}"
+                         th:text="${submission.id}"></a>
                   </td>
                   <td>
                       <p>
-                          <a th:href="@{{baseURL}/publication/{pubMedID}(baseURL=${@environment.getProperty('deposition.ui.uri')},pubMedID=${submission.pubMedID})}" th:text="${submission.pubMedID}"></a>
-                      </p>
-                  </td>
-                  <td>
-                      <p>
-                          <span th:text="${submission.title}"></span>
+                          <span th:text="${submission.created}"></span>
                       </p>
                   </td>
                   <td>
@@ -77,29 +90,24 @@
                   </td>
                   <td>
                       <p>
+                          <span th:text="${submission.title}"></span>
+                      </p>
+                  </td>
+                  <td>
+                      <p>
                           <span th:text="${submission.author}"></span>
                       </p>
                   </td>
                   <td>
                       <p>
-                          <span th:text="${submission.created}"></span>
+                          <a th:href="@{{baseURL}/publication/{pubMedID}(baseURL=${@environment.getProperty('deposition.ui.uri')},pubMedID=${submission.pubMedID})}"
+                             th:text="${submission.pubMedID}"></a>
                       </p>
                   </td>
                   <td>
-                      <div th:if="${submission.status.equals('VALID')}" th:remove="tag">
-                          <form class="form-inline" name="assignStatusForm" role="form" method="post"
-                                th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
-                                th:object="${submission}">
-
-                              <span th:text="${submission.status}"></span>
-                                  <button type="submit"
-                                          class="btn btn-primary btn-sm">Import
-                                  </button>
-                          </form>
-                      </div>
-                      <div th:unless="${submission.status.equals('VALID')}" th:remove="tag">
-                              <span th:text="${submission.status}"></span>
-                      </div>
+                      <p>
+                          <span th:text="${submission.publicationStatus}"></span>
+                      </p>
                   </td>
               </tr>
               </tbody>

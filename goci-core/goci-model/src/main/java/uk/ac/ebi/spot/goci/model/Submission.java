@@ -12,4 +12,5 @@ public class Submission {
     String status;
     String curator;
     String created;
+    String publicationStatus;
 }
