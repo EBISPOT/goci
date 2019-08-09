@@ -70,6 +70,7 @@ public class SubmissionController {
             testSub.setAuthor(submission.getPublication().getFirstAuthor());
             testSub.setCurator(submission.getCreated().getUser().getName());
             testSub.setStatus(submission.getStatus());
+            testSub.setPublicationStatus(submission.getPublication().getStatus());
             testSub.setTitle(submission.getPublication().getTitle());
             testSub.setCreated(submission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
             submissionList.add(testSub);
