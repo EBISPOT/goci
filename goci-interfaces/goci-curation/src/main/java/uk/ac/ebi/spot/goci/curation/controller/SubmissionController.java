@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.StudyService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -25,6 +28,14 @@ import java.util.*;
 @RequestMapping("/submissions")
 public class SubmissionController {
 
+    private final PublicationService publicationService;
+    private final StudyOperationsService studyOperationsService;
+    private final CuratorRepository curatorRepository;
+    private final CurationStatusRepository statusRepository;
+    private final CurrentUserDetailsService currentUserDetailsService;
+    private final Curator levelTwoCurator;
+    private final CurationStatus levelOneCurationComplete;
+    private final CurationStatus levelOnePlaceholderStatus;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -32,26 +43,27 @@ public class SubmissionController {
     }
 
     @Autowired
-    private PublicationService publicationService;
-
-    @Autowired
-    private StudyOperationsService studyOperationsService;
-
-    @Autowired
-    private CuratorRepository curatorRepository;
-
-    @Autowired
-    private CurationStatusRepository statusRepository;
-
-    @Autowired
-    private CurrentUserDetailsService currentUserDetailsService;
-
-    @Autowired
     private RestTemplate template;
 
     @Value("${deposition.uri}")
     private String depositionURL;
 
+    public SubmissionController(@Autowired PublicationService publicationService,
+                                @Autowired StudyOperationsService studyOperationsService,
+                                @Autowired CuratorRepository curatorRepository,
+                                @Autowired CurationStatusRepository statusRepository,
+                                @Autowired CurrentUserDetailsService currentUserDetailsService) {
+
+        this.publicationService = publicationService;
+        this.studyOperationsService = studyOperationsService;
+        this.curatorRepository = curatorRepository;
+        this.statusRepository = statusRepository;
+        this.currentUserDetailsService = currentUserDetailsService;
+        levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
+        levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
+        levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literatur");
+
+    }
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
         List<Submission> submissionList = getSubmissions();
@@ -90,35 +102,58 @@ public class SubmissionController {
     @RequestMapping(value = "/import/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String importSubmission(@PathVariable String submissionID, @ModelAttribute Submission submission, Model model, HttpServletRequest request) {
         DepositionSubmission depositionSubmission = getSubmission(submissionID);
-        Curator levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
-        CurationStatus levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         StatusAssignment newStatus = new StatusAssignment();
         newStatus.setStatusId(levelOneCurationComplete.getId());
 
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
         Publication publication = publicationService.findByPumedId(submission.getPubMedID());
 
-        Collection<DepositionStudyDto> studies = depositionSubmission.getStudies();
+        List<DepositionStudyDto> studies = depositionSubmission.getStudies();
+        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
+        List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
+
         if (studies != null) {
             for (DepositionStudyDto studyDto : studies) {
                 Study study = studyDto.buildStudy();
                 study.setPublicationId(publication);
-                studyOperationsService.createStudy(study, currentUser);
-                //            studyOperationsService.assignStudyStatus(study,
-                //                    newStatus, currentUser);
+                study = studyOperationsService.createStudy(study, currentUser);
+                            studyOperationsService.assignStudyStatus(study,
+                                    newStatus, currentUser);
                 Housekeeping housekeeping = study.getHousekeeping();
                 CurationStatus status = housekeeping.getCurationStatus();
                 status.setStatus("Level 1 curation done");
                 housekeeping.setCurator(levelTwoCurator);
-                //            studyOperationsService.updateHousekeeping(housekeeping, study, currentUser);
+                studyOperationsService.updateHousekeeping(housekeeping, study, currentUser);
             }
             depositionSubmission.setStatus("IMPORTED");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
-//        template.put(depositionURL + "/submissions/{submissionID}", depositionSubmission, params);
+            template.put(depositionURL + "/submissions/{submissionID}", depositionSubmission, params);
         }
         List<Submission> submissionList = getSubmissions();
         model.addAttribute("submissions", submissionList);
         return "view_submissions";
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/update/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.PUT)
+    public ResponseEntity<Submission> updateSubmission(@PathVariable String submissionID,
+                                                       @ModelAttribute Submission submission,
+                                                       Model model, HttpServletRequest request) {
+        String pubMedID = submission.getPubMedID();
+        Publication publication = publicationService.findByPumedId(pubMedID);
+        Collection<Study> studies = publication.getStudies();
+        SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
+        for(Study study: studies){
+            if(submission.getStatus().equals("STARTED")){
+                Housekeeping houseKeeping = study.getHousekeeping();
+                houseKeeping.setCurationStatus(levelOnePlaceholderStatus);
+                studyOperationsService.updateHousekeeping(houseKeeping, study, currentUser);
+            }
+        }
+        ResponseEntity<Submission> response = new ResponseEntity<>(submission, HttpStatus.OK);
+        return response;
     }
 }

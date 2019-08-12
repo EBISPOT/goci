@@ -10,6 +10,8 @@ public interface DepositionPublicationService {
 
     void addPublication(DepositionPublication depositionPublication);
 
+    void updatePublication(DepositionPublication depositionPublication);
+
     DepositionSubmission retrieveSubmission(String id);
 
     void addSubmission(DepositionSubmission depositionSubmission);

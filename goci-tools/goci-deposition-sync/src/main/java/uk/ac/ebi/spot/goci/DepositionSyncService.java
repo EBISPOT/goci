@@ -95,17 +95,21 @@ public class DepositionSyncService {
             boolean isAvailable = isAvailable(p);
             if (isPublished) {
                 DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-                if (depositionPublication == null) {
+                if (depositionPublication == null) { //initial sync - sync published publications
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
                         newPublication.setStatus("EXPORTED");
                         depositionPublicationService.addPublication(newPublication);
+                    }else if(newPublication != null && !newPublication.getStatus().equals("EXPORTED")){ //sync newly
+                        // published publications
+                        depositionPublication.setStatus("EXPORTED");
+                        depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
             } else if (isAvailable && syncAll) {
                 DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-                if (depositionPublication == null) {
+                if (depositionPublication == null) { // sync new publications
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         System.out.println("adding new publication" + pubmedId + " to mongo");
