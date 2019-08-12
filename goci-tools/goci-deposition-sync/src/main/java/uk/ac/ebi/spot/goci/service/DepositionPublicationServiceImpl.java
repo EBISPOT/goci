@@ -67,6 +67,19 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     }
 
     @Override
+    public void updatePublication(DepositionPublication depositionPublication) {
+        String url = depositionUri + "/publications";
+        try {
+            String message = mapper.writeValueAsString(depositionPublication);
+            System.out.println(message);
+            template.put(url, depositionPublication);
+            System.out.println("updated " + depositionPublication);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public DepositionSubmission retrieveSubmission(String id) {
         log.info("Retrieving submission using id [{}]", id);
         DepositionSubmission submission = null;
