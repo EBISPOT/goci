@@ -139,10 +139,13 @@ public class JsonBuilder {
                                 }
                                 if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
                                     for (String ensemblId : ensemblIds) {
-                                        jsons.add(buildJson(association.getPvalueMantissa() + "e" + association.getPvalueExponent(),
+                                        jsons.add(buildJson(association.getPvalueMantissa(),
+                                                association.getPvalueExponent(),
+                                                association.getPvalueDescription(),
                                                 efoTrait.getUri(),
                                                 riskAllele.getSnp().getRsId(),
                                                 association.getStudy().getPublicationId().getPubmedId(),
+                                                association.getStudy().getAccessionId(),
                                                 sampleSize,
                                                 snpCount,
                                                 ensemblId,
@@ -161,7 +164,7 @@ public class JsonBuilder {
         return jsons;
     }
 
-    public String buildJson(String pvalue, String efoTrait, String rsId, String pubmedId, int sampleSize, long gwasPanelResolution, String ensemblId, String soTerm,
+    public String buildJson(int pvalueMantissa, int pvalueExponent, String pvalueText, String efoTrait, String rsId, String pubmedId, String study_acc, int sampleSize, long gwasPanelResolution, String ensemblId, String soTerm,
                             Float oddRatio, String range) {
 
         String dbVersion = getDate();
@@ -183,20 +186,21 @@ public class JsonBuilder {
                 .build();
 
         JsonObjectBuilder uniqueAssociationBuilder = Json.createObjectBuilder()
-                .add("sample_size", Integer.toString(sampleSize))
-                .add("gwas_panel_resolution", Long.toString(gwasPanelResolution))
                 .add("pubmed_refs", "http://europepmc.org/abstract/MED/" + pubmedId)
                 .add("target", "http://identifiers.org/ensembl/" + ensemblId)
-                .add("object", efoTrait)
-                .add("variant", "http://identifiers.org/dbsnp/" + rsId)
-                .add("study_name", "otar009_gwas_catalog")
-                .add("pvalue", pvalue)
-                .add("confidence_interval", range);
+                .add("disease_id", efoTrait)
+                .add("variant", "http://identifiers.org/dbsnp/" + rsId);
 
-        if(oddRatio == null){
-            uniqueAssociationBuilder.add("odd_ratio", "");
+        if(study_acc == null){
+            uniqueAssociationBuilder.add("study_name", "");
         } else {
-            uniqueAssociationBuilder.add("odd_ratio", Float.toString(oddRatio));
+            uniqueAssociationBuilder.add("study_name", study_acc);
+        }
+
+        if(pvalueText == null){
+            uniqueAssociationBuilder.add("pvalue_annotation", "");
+        } else {
+            uniqueAssociationBuilder.add("pvalue_annotation", pvalueText);
         }
 
         JsonObject uniqueAssociationFields = uniqueAssociationBuilder.build();
@@ -242,7 +246,8 @@ public class JsonBuilder {
         JsonObject resourceScore = Json.createObjectBuilder()
                 .add("type", "pvalue")
                 .add("method", method)
-                .add("value", pvalue)
+                .add("mantissa", pvalueMantissa)
+                .add("exponent", pvalueExponent)
                 .build();
 
         JsonArray evidenceCodes = Json.createArrayBuilder()
@@ -250,7 +255,7 @@ public class JsonBuilder {
                 .add("http://purl.obolibrary.org/obo/ECO_0000205")
                 .build();
 
-        JsonObject variant2disease = Json.createObjectBuilder()
+        JsonObjectBuilder variant2diseaseBuilder = Json.createObjectBuilder()
                 .add("gwas_sample_size", sampleSize)
                 .add("unique_experiment_reference", "http://europepmc.org/abstract/MED/" + pubmedId)
                 .add("gwas_panel_resolution", gwasPanelResolution)
@@ -259,7 +264,14 @@ public class JsonBuilder {
                 .add("resource_score", resourceScore)
                 .add("evidence_codes", evidenceCodes)
                 .add("date_asserted", dbVersion)
-                .build();
+                .add("confidence_interval", range);
+
+        if(oddRatio == null){
+            variant2diseaseBuilder.add("odds_ratio", "");
+        } else {
+            variant2diseaseBuilder.add("odds_ratio", Float.toString(oddRatio));
+        }
+        JsonObject variant2diseaseFields = variant2diseaseBuilder.build();
 
         JsonObject gene2Variantexpert = Json.createObjectBuilder()
                 .add("status", true)
@@ -287,7 +299,7 @@ public class JsonBuilder {
 
         JsonObject evidence = Json.createObjectBuilder()
 //                .add("provenance_type", provenanceType)
-                .add("variant2disease", variant2disease)
+                .add("variant2disease", variant2diseaseFields)
                 .add("gene2variant", gene2variant)
                 .build();
 
@@ -308,7 +320,6 @@ public class JsonBuilder {
 
         String jsonToReturn = json.toString();
 
-        jsonToReturn = removeQuoteAroundPvalue(jsonToReturn);
         System.out.println("\n"+ jsonToReturn);
         return jsonToReturn;
 
@@ -373,31 +384,5 @@ public class JsonBuilder {
 
         return date;
     }
-
-
-    public static String  removeQuoteAroundPvalue(String json){
-        Pattern pattern = Pattern.compile("\"value\":\"(.*e-\\d{1,3})\"},");
-        Matcher matcher = pattern.matcher(json);
-
-        boolean found = false;
-        int count = 0;
-        while (matcher.find()) {
-            count++;
-            System.out.println("I found the text " +
-                    matcher.group(1) + " starting at " +
-                    "index " + matcher.start(1) + " and ending at index " +  matcher.end(1) );
-            found = true;
-
-
-
-
-            json = json.replace(",\"value\":\"" + matcher.group(1) + "\"", ",\"value\":" + matcher.group(1));
-
-
-        }
-        return json;
-    }
-
-
 
 }

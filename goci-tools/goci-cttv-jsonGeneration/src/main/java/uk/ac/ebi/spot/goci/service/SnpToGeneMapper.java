@@ -39,22 +39,22 @@ public class SnpToGeneMapper {
         soTermToSoTerm.put("coding_sequence_variant","http://purl.obolibrary.org/obo/SO_0001580");
         soTermToSoTerm.put("downstream_gene_variant","http://purl.obolibrary.org/obo/SO_0001632");
         soTermToSoTerm.put("frameshift_variant","http://purl.obolibrary.org/obo/SO_0001589");
+        soTermToSoTerm.put("inframe_deletion","http://purl.obolibrary.org/obo/SO_0001822");
+        soTermToSoTerm.put("inframe_insertion","http://purl.obolibrary.org/obo/SO_0001821");
         soTermToSoTerm.put("intron_variant","http://purl.obolibrary.org/obo/SO_0001627");
+        soTermToSoTerm.put("mature_miRNA_variant", "http://purl.obolibrary.org/obo/SO_0001620");
         soTermToSoTerm.put("missense_variant","http://purl.obolibrary.org/obo/SO_0001583");
         soTermToSoTerm.put("nearest_gene_five_prime_end","http://targetvalidation.org/sequence/nearest_gene_five_prime_end");
         soTermToSoTerm.put("nearest_gene_five_prime_end_reg","http://targetvalidation.org/sequence/regulatory_nearest_gene_five_prime_end");
+        soTermToSoTerm.put("non_coding_transcript_exon_variant", "http://purl.obolibrary.org/obo/SO_0001792");
         soTermToSoTerm.put("splice_acceptor_variant","http://purl.obolibrary.org/obo/SO_0001574");
         soTermToSoTerm.put("splice_donor_variant","http://purl.obolibrary.org/obo/SO_0001575");
         soTermToSoTerm.put("splice_region_variant","http://purl.obolibrary.org/obo/SO_0001630");
+        soTermToSoTerm.put("start_lost","http://purl.obolibrary.org/obo/SO_0002012");
         soTermToSoTerm.put("stop_gained","http://purl.obolibrary.org/obo/SO_0001587");
         soTermToSoTerm.put("stop_lost","http://purl.obolibrary.org/obo/SO_0001578");
         soTermToSoTerm.put("synonymous_variant","http://purl.obolibrary.org/obo/SO_0001819");
         soTermToSoTerm.put("upstream_gene_variant","http://purl.obolibrary.org/obo/SO_0001631");
-        soTermToSoTerm.put("start_lost","http://purl.obolibrary.org/obo/SO_0002012");
-        soTermToSoTerm.put("inframe_deletion","http://purl.obolibrary.org/obo/SO_0001822");
-        soTermToSoTerm.put("inframe_insertion","http://purl.obolibrary.org/obo/SO_0001821");
-        soTermToSoTerm.put("mature_miRNA_variant", "http://purl.obolibrary.org/obo/SO_0001620");
-        soTermToSoTerm.put("non_coding_transcript_exon_variant", "http://purl.obolibrary.org/obo/SO_0001792");
 
         String line;
         BufferedReader br = new BufferedReader(new FileReader(snp2geneFilePath));
@@ -130,7 +130,7 @@ public class SnpToGeneMapper {
 
         SearchQuery response = this.restTemplate.getForObject(uri, SearchQuery.class);
         if (response.getResponse().getNumFound() != 1){
-            throw new RuntimeException("Could not retrive SO Term from OLS: " + soTerm);
+            throw new RuntimeException("Could not retrieve SO Term from OLS: " + soTerm);
         }
         return response.getResponse().getSearchResults()[0].getIri();
     }
