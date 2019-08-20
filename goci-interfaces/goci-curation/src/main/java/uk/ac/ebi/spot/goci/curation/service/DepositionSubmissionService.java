@@ -8,13 +8,11 @@ import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.model.deposition.util.*;
-import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyList;
 import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.AssociationService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
-import uk.ac.ebi.spot.goci.service.SingleNucleotidePolymorphismService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -138,12 +136,14 @@ public class DepositionSubmissionService {
                         //find associations in study
                         for(DepositionAssociationDto associationDto: associations){
                             if(associationDto.getStudyTag().equals(studyTag)){
-//                                Association association = new Association();
-//                                association.setPvalueExponent(associationDto.getPValue().scale());
-//                                association.setPvalueMantissa(associationDto.getPValue().toBigInteger().intValue());
-//                                SingleNucleotidePolymorphism snp = snpService.findByRsId(associationDto.getEffectAllele());
-//                                association.setSnps(Arrays.asList(new SingleNucleotidePolymorphism[]{snp}));
-//                                association.setStudy(study);
+                                Association association = new Association();
+                                BigDecimal pValue = associationDto.getPValue();
+                                int exponent = pValue.precision() - pValue.scale() - 1;
+                                association.setPvalueExponent(exponent);
+                                association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                                SingleNucleotidePolymorphism snp = snpService.findByRsId(associationDto.getVariantID());
+                                association.setSnps(Arrays.asList(new SingleNucleotidePolymorphism[]{snp}));
+                                association.setStudy(study);
                             }
                         }
                     }if(samples != null){
