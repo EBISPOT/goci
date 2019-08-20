@@ -4,7 +4,6 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
@@ -31,14 +30,10 @@ public class DepositionSyncService {
 
     private CuratorRepository curatorRepository;
 
-    private StudyOperationsService studyOperationsService;
-
-    public DepositionSyncService(@Autowired StudyOperationsService studyOperationsService,
-                                 @Autowired PublicationService publicationService,
+    public DepositionSyncService(@Autowired PublicationService publicationService,
                                  @Autowired DepositionPublicationService depositionPublicationService,
                                  @Autowired CurationStatusRepository statusRepository,
                                  @Autowired CuratorRepository curatorRepository) {
-        this.studyOperationsService = studyOperationsService;
         this.curatorRepository = curatorRepository;
         this.statusRepository = statusRepository;
         this.depositionPublicationService = depositionPublicationService;
