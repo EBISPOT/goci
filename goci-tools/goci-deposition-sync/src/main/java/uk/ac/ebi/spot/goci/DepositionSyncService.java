@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
@@ -18,7 +20,7 @@ import java.util.Map;
 @Service
 @Transactional
 public class DepositionSyncService {
-    private final CurationStatus levelOneCurationComplete;
+    private final CurationStatus curationComplete;
     private final Curator levelOneCurator;
     private final CurationStatus awaitingCuration;
     private PublicationService publicationService;
@@ -41,7 +43,7 @@ public class DepositionSyncService {
         this.statusRepository = statusRepository;
         this.depositionPublicationService = depositionPublicationService;
         this.publicationService = publicationService;
-        levelOneCurationComplete = statusRepository.findByStatus("Publish study");
+        curationComplete = statusRepository.findByStatus("Publish study");
         levelOneCurator = curatorRepository.findByLastName("Level 1 Curator");
         awaitingCuration = statusRepository.findByStatus("Awaiting Curation");
 
@@ -50,8 +52,8 @@ public class DepositionSyncService {
     private boolean isPublished(Publication publication) {
 
         for (Study study : publication.getStudies()) {
-            if (study.getHousekeeping().getCurationStatus() == null ||
-                    !study.getHousekeeping().getCurationStatus().equals(levelOneCurationComplete)) {
+            Housekeeping housekeeping = study.getHousekeeping();
+            if (!housekeeping.getIsPublished()) {
                 return false;
             }
         }
@@ -64,8 +66,12 @@ public class DepositionSyncService {
             Housekeeping housekeeping = study.getHousekeeping();
             CurationStatus curationStatus = housekeeping.getCurationStatus();
             Curator curator = housekeeping.getCurator();
-            if (curationStatus == null || !(curationStatus.getId() == awaitingCuration.getId()) ||
-                    !(curator.getId() == levelOneCurator.getId())) {
+            if (curationStatus == null) {
+                return false;
+            } else if (curationStatus.getId() != awaitingCuration.getId() &&
+                    curationStatus.getId() != curationComplete.getId()) {
+                return false;
+            } else if (!(curator.getId() == levelOneCurator.getId())) {
                 return false;
             }
         }
@@ -99,11 +105,13 @@ public class DepositionSyncService {
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
-                        newPublication.setStatus("EXPORTED");
                         depositionPublicationService.addPublication(newPublication);
-                    }else if(newPublication != null && !newPublication.getStatus().equals("EXPORTED")){ //sync newly
-                        // published publications
-                        depositionPublication.setStatus("EXPORTED");
+                    }
+                } else if (depositionPublication != null &&
+                        !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                    // published publications
+                    DepositionPublication newPublication = createPublication(p);
+                    if (newPublication != null) {
                         depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
@@ -113,10 +121,21 @@ public class DepositionSyncService {
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         System.out.println("adding new publication" + pubmedId + " to mongo");
-                        newPublication.setStatus("AVAILABLE");
+                        newPublication.setStatus("ELIGIBLE");
                         depositionPublicationService.addPublication(newPublication);
                     }
                 }
+            }else if(syncAll){
+                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
+                if (depositionPublication == null) { // sync in-work publications
+                    DepositionPublication newPublication = createPublication(p);
+                    if (newPublication != null) {
+                        System.out.println("adding in-work publication" + pubmedId + " to mongo");
+                        newPublication.setStatus("CURATION_STARTED");
+                        depositionPublicationService.addPublication(newPublication);
+                    }
+                }
+
             }
         }
     }
@@ -140,6 +159,7 @@ public class DepositionSyncService {
                         .setAuthorName(correspondingAuthor.getLastName() + " " + correspondingAuthor.getInitials());
                 newPublication.setCorrespondingAuthor(depositionAuthor);
             }
+            newPublication.setStatus("PUBLISHED");
         } else {
             System.out.println("error: publication " + p.getPubmedId() + " has no authors");
         }

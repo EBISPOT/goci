@@ -49,7 +49,7 @@
                   <th style="width:10%">Submission Status</th>
                   <th style="width:10%">Submission ID</th>
                   <th style="width:10%">Date Created</th>
-                  <th style="width:10%">Curator</th>
+                  <th style="width:10%">Submitter</th>
                   <th>Title</th>
                   <th style="width:10%">Author</th>
                   <th style="width:10%">PubMed ID</th>
@@ -59,7 +59,7 @@
               <tbody>
               <tr th:each="submission : ${submissions}">
                   <td>
-                      <div th:if="${submission.status.equals('VALID')}" th:remove="tag">
+                      <div th:if="${submission.status.equals('SUBMITTED')}" th:remove="tag">
                           <form class="form-inline" name="assignStatusForm" role="form" method="post"
                                 th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
                                 th:object="${submission}">
@@ -70,7 +70,7 @@
                               <span th:text="${submission.status}"></span>
                           </form>
                       </div>
-                      <div th:unless="${submission.status.equals('VALID')}" th:remove="tag">
+                      <div th:unless="${submission.status.equals('SUBMITTED')}" th:remove="tag">
                           <span th:text="${submission.status}"></span>
                       </div>
                   </td>

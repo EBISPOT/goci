@@ -1,11 +1,11 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.model.deposition.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionSubmissionWrapper {
-    List<DepositionSubmission> submissions = new ArrayList<>();
+public class DepositionSubmissionList {
+    private List<DepositionSubmission> submissions = new ArrayList<>();
 }

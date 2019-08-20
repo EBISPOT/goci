@@ -374,7 +374,6 @@ public class StudyService {
     }
 
     public void save(Study study) {
-        save(study);
+        studyRepository.save(study);
     }
-
 }

@@ -2,22 +2,17 @@ package uk.ac.ebi.spot.goci.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import uk.ac.ebi.spot.goci.model.DepositionPublication;
-import uk.ac.ebi.spot.goci.model.DepositionPublicationList;
-import uk.ac.ebi.spot.goci.model.DepositionSubmission;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPublicationListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +24,9 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Value("${deposition.uri}")
     private String depositionUri;
+
+    @Value("${deposition.ingest.uri}")
+    private String depositionIngestUri;
 
     @Autowired
     @Qualifier("JodaMapper")
@@ -55,7 +53,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Override
     public void addPublication(DepositionPublication depositionPublication) {
-        String url = depositionUri + "/publications";
+        String url = depositionIngestUri + "/publications";
         try {
             String message = mapper.writeValueAsString(depositionPublication);
             System.out.println(message);
@@ -68,7 +66,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Override
     public void updatePublication(DepositionPublication depositionPublication) {
-        String url = depositionUri + "/publications";
+        String url = depositionIngestUri + "/publications";
         try {
             String message = mapper.writeValueAsString(depositionPublication);
             System.out.println(message);
@@ -85,7 +83,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         DepositionSubmission submission = null;
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", id);
-        String url = depositionUri + "/submissions/{submissionID}";
+        String url = depositionIngestUri + "/submissions/{submissionID}";
         try {
             String response = template.getForObject(url, String.class, params);
             submission = template.getForObject(url, DepositionSubmission.class, params);
@@ -113,12 +111,12 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             Map<String, Integer> params = new HashMap<>();
             params.put("page", i);
             String response = template.getForObject(url, String.class, params);
-            DepositionPublicationList publications = template.getForObject(url, DepositionPublicationList.class,
+            DepositionPublicationListWrapper publications = template.getForObject(url, DepositionPublicationListWrapper.class,
                     params);
             while(i < publications.getPage().getTotalPages()){
                 addPublications(publicationMap, publications);
                 params.put("page", ++i);
-                publications = template.getForObject(url, DepositionPublicationList.class,
+                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
                         params);
             }
         }catch(HttpClientErrorException e){
@@ -128,9 +126,9 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     }
 
     private void addPublications(Map<String, DepositionPublication> publicationMap,
-                                 DepositionPublicationList publications){
-        if(publications.getWrapper() != null && publications.getWrapper().getPublications() != null) {
-            for (DepositionPublication publication : publications.getWrapper().getPublications()) {
+                                 DepositionPublicationListWrapper publications){
+        if(publications != null && publications.getPublications() != null) {
+            for (DepositionPublication publication : publications.getPublications().getPublications()) {
                 publicationMap.put(publication.getPmid(), publication);
             }
         }

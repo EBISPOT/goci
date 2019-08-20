@@ -1,20 +1,22 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.model.deposition;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionPublicationWrapper {
-    List<DepositionPublication> publications = new ArrayList<>();
+public class DepositionMetadata {
+    private Integer page;
+    private Integer itemsPerPage;
+    private Integer totalPages;
+    private Integer totalItems;
+    private Map<String, String> filters;
 }

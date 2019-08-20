@@ -1,7 +1,7 @@
 package uk.ac.ebi.spot.goci.service;
 
-import uk.ac.ebi.spot.goci.model.DepositionPublication;
-import uk.ac.ebi.spot.goci.model.DepositionSubmission;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
 import java.util.Map;
 

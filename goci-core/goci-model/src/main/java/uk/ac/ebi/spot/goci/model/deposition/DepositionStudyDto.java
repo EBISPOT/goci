@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.model;
+package uk.ac.ebi.spot.goci.model.deposition;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.ac.ebi.spot.goci.model.*;
 
 import java.util.Arrays;
 
@@ -17,6 +18,9 @@ import java.util.Arrays;
 public class DepositionStudyDto {
     @JsonProperty("study_tag")
     private String studyTag;
+
+    @JsonProperty("study_accession")
+    private String accession;
 
     @JsonProperty("genotyping_technology")
     private String genotypingTechnology;
@@ -42,15 +46,6 @@ public class DepositionStudyDto {
     @JsonProperty("trait")
     private String trait;
 
-    @JsonProperty("efo_trait")
-    private String efoTrait;
-
-    @JsonProperty("background_trait")
-    private String backgroundTrait;
-
-    @JsonProperty("background_efo_trait")
-    private String backgroundEfoTrait;
-
     @JsonProperty("checksum")
     private String checksum;
 
@@ -62,12 +57,8 @@ public class DepositionStudyDto {
 
     public Study buildStudy(){
         Study study = new Study();
-        EfoTrait trait = new EfoTrait();
-        trait.setTrait(efoTrait);
-        study.setEfoTraits(Arrays.asList(new EfoTrait[]{trait}));
-        GenotypingTechnology gtt = new GenotypingTechnology();
-        gtt.setGenotypingTechnology(genotypingTechnology);
-        study.setGenotypingTechnologies(Arrays.asList(new GenotypingTechnology[]{gtt}));
+        study.setAccessionId(accession);
+        study.setStudyDesignComment(studyDescription);
         study.setImputed(imputation);
         return study;
     }
