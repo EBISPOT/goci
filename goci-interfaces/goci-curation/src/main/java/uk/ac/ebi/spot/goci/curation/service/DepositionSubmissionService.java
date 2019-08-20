@@ -10,6 +10,7 @@ import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.model.deposition.util.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.SingleNucleotidePolymorphismService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.math.BigDecimal;
@@ -32,9 +33,10 @@ public class DepositionSubmissionService {
     private final NoteSubjectRepository noteSubjectRepository;
     private final CountryRepository countryRepository;
     private final HousekeepingOperationsService housekeepingRepository;
-    private final StudyAncestryService ancestryService;
-    private final SingleNucleotidePolymorphismRepository snpService;
-    private final AssociationRepository associationService;
+    private final AncestryRepository ancestryRepository;
+    private final SingleSnpMultiSnpAssociationService snpService;
+    private final SingleNucleotidePolymorphismRepository snpRepository;
+    private final AssociationOperationsService associationOperationsService;
 
     @Autowired
     private RestTemplate template;
@@ -58,9 +60,10 @@ public class DepositionSubmissionService {
                                        @Autowired NoteSubjectRepository noteSubjectRepository,
                                        @Autowired CountryRepository countryRepository,
                                        @Autowired HousekeepingOperationsService housekeepingRepository,
-                                       @Autowired StudyAncestryService ancestryService,
-                                       @Autowired SingleNucleotidePolymorphismRepository snpService,
-                                       @Autowired AssociationRepository associationService) {
+                                       @Autowired AncestryRepository ancestryRepository,
+                                       @Autowired SingleSnpMultiSnpAssociationService snpService,
+                                       @Autowired SingleNucleotidePolymorphismRepository snpRepository,
+                                       @Autowired AssociationOperationsService associationOperationsService) {
         this.publicationService = publicationService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
@@ -73,9 +76,10 @@ public class DepositionSubmissionService {
         this.noteSubjectRepository = noteSubjectRepository;
         this.countryRepository = countryRepository;
         this.housekeepingRepository = housekeepingRepository;
-        this.ancestryService = ancestryService;
+        this.ancestryRepository = ancestryRepository;
         this.snpService = snpService;
-        this.associationService = associationService;
+        this.snpRepository = snpRepository;
+        this.associationOperationsService = associationOperationsService;
         levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
@@ -132,44 +136,10 @@ public class DepositionSubmissionService {
                 for (DepositionStudyDto studyDto : studies) {
                     String studyTag = studyDto.getStudyTag();
                     Study study = initStudy(studyDto, publication, currentUser);
-                    if(associations != null){
-                        //find associations in study
-                        for(DepositionAssociationDto associationDto: associations){
-                            if(associationDto.getStudyTag().equals(studyTag)){
-                                Association association = new Association();
-                                BigDecimal pValue = associationDto.getPValue();
-                                int exponent = pValue.precision() - pValue.scale() - 1;
-                                association.setPvalueExponent(exponent);
-                                association.setPvalueMantissa(pValue.unscaledValue().intValue());
-                                SingleNucleotidePolymorphism snp = snpService.findByRsId(associationDto.getVariantID());
-                                association.setSnps(Arrays.asList(new SingleNucleotidePolymorphism[]{snp}));
-                                association.setStudy(study);
-                            }
-                        }
-                    }if(samples != null){
-                        //find samples in study
-                        for(DepositionSampleDto sampleDto: samples){
-                            if(sampleDto.getStudyTag().equals(studyTag)){
-                                Ancestry ancestry = new Ancestry();
-                                if(sampleDto.getStage().equals("Discovery")){
-                                    ancestry.setType("initial");
-                                    study.setInitialSampleSize(buildDescription(sampleDto));
-                                }else if(sampleDto.getStage().equals("Replication")){
-                                    ancestry.setType("replication");
-                                    study.setReplicateSampleSize(buildDescription(sampleDto));
-                                }
-                                ancestry.setDescription(sampleDto.getAncestryDescription());
-                                Country country =
-                                        countryRepository.findByCountryName(sampleDto.getCountryRecruitement());
-                                ancestry.setCountryOfRecruitment(Arrays.asList(new Country[]{country}));
-                                ancestry.setNumberOfIndividuals(sampleDto.getSize());
-                                ancestryService.addAncestry(study.getId(), ancestry, currentUser);
-                            }
-                        }
-                    }if(notes != null){
+                    if (notes != null) {
                         //find notes in study
-                        for(DepositionNoteDto noteDto: notes){
-                            if(noteDto.getStudyTag().equals(studyTag)){
+                        for (DepositionNoteDto noteDto : notes) {
+                            if (noteDto.getStudyTag().equals(studyTag)) {
                                 StudyNote note = new StudyNote();
                                 note.setTextNote(noteDto.getNote());
                                 note.setNoteSubject(noteSubjectRepository.findBySubjectIgnoreCase(noteDto.getNoteSubject()));
@@ -178,6 +148,45 @@ public class DepositionSubmissionService {
                         }
                     }
                     studyService.save(study);
+                    if (associations != null) {
+                        //find associations in study
+                        for (DepositionAssociationDto associationDto : associations) {
+                            if (associationDto.getStudyTag().equals(studyTag)) {
+                                Association association = new Association();
+                                BigDecimal pValue = associationDto.getPValue();
+                                int exponent = pValue.precision() - pValue.scale() - 1;
+                                association.setPvalueExponent(exponent);
+                                association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                                SingleNucleotidePolymorphism snp =
+                                        snpRepository.findByRsId(associationDto.getVariantID());
+                                association.setSnps(Arrays.asList(new SingleNucleotidePolymorphism[]{snp}));
+                                association.setStudy(study);
+                                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
+                            }
+                        }
+                    }
+                    if (samples != null) {
+                        //find samples in study
+                        for (DepositionSampleDto sampleDto : samples) {
+                            if (sampleDto.getStudyTag().equals(studyTag)) {
+                                Ancestry ancestry = new Ancestry();
+                                if (sampleDto.getStage().equals("Discovery")) {
+                                    ancestry.setType("initial");
+                                    study.setInitialSampleSize(buildDescription(sampleDto));
+                                } else if (sampleDto.getStage().equals("Replication")) {
+                                    ancestry.setType("replication");
+                                    study.setReplicateSampleSize(buildDescription(sampleDto));
+                                }
+                                ancestry.setDescription(sampleDto.getAncestryDescription());
+                                Country country =
+                                        countryRepository.findByCountryName(sampleDto.getCountryRecruitement());
+                                ancestry.setCountryOfRecruitment(Arrays.asList(new Country[]{country}));
+                                ancestry.setNumberOfIndividuals(sampleDto.getSize());
+                                ancestry.setStudy(study);
+                                ancestryRepository.save(ancestry);
+                            }
+                        }
+                    }
                 }
             }
             depositionSubmission.setStatus("IMPORTED");
