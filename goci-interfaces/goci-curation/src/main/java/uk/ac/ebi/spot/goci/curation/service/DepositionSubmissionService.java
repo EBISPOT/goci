@@ -177,6 +177,7 @@ public class DepositionSubmissionService {
                             }
                         }
                     }
+                    studyService.save(study);
                 }
             }
             depositionSubmission.setStatus("IMPORTED");
@@ -291,7 +292,6 @@ public class DepositionSubmissionService {
         study.setHousekeeping(housekeeping);
         housekeeping.setCurator(levelTwoCurator);
         housekeeping.setCurationStatus(levelOneCurationComplete);
-        studyService.save(study);
         return study;
     }
 

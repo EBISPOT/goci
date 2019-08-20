@@ -51,8 +51,8 @@ public class DepositionAssociationDtoTest {
             assertNotNull(pValue);
             BigInteger sv = pValue.unscaledValue();
             int exponent = pValue.precision() - pValue.scale() - 1;
-            assertEquals(sv.intValue(), 3);
-            assertEquals(pValue.scale(), -7);
+            assertEquals(3, sv.intValue());
+            assertEquals(-7, exponent);
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());
