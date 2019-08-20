@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.model.deposition.util.*;
 import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.SingleNucleotidePolymorphismService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -37,6 +38,7 @@ public class DepositionSubmissionService {
     private final SingleSnpMultiSnpAssociationService snpService;
     private final SingleNucleotidePolymorphismRepository snpRepository;
     private final AssociationOperationsService associationOperationsService;
+    private final LociAttributesService lociService;
 
     @Autowired
     private RestTemplate template;
@@ -63,7 +65,8 @@ public class DepositionSubmissionService {
                                        @Autowired AncestryRepository ancestryRepository,
                                        @Autowired SingleSnpMultiSnpAssociationService snpService,
                                        @Autowired SingleNucleotidePolymorphismRepository snpRepository,
-                                       @Autowired AssociationOperationsService associationOperationsService) {
+                                       @Autowired AssociationOperationsService associationOperationsService,
+                                       @Autowired LociAttributesService lociService) {
         this.publicationService = publicationService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
@@ -80,6 +83,7 @@ public class DepositionSubmissionService {
         this.snpService = snpService;
         this.snpRepository = snpRepository;
         this.associationOperationsService = associationOperationsService;
+        this.lociService = lociService;
         levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
@@ -157,10 +161,11 @@ public class DepositionSubmissionService {
                                 int exponent = pValue.precision() - pValue.scale() - 1;
                                 association.setPvalueExponent(exponent);
                                 association.setPvalueMantissa(pValue.unscaledValue().intValue());
-                                SingleNucleotidePolymorphism snp =
-                                        snpRepository.findByRsId(associationDto.getVariantID());
-                                association.setSnps(Arrays.asList(new SingleNucleotidePolymorphism[]{snp}));
-                                association.setStudy(study);
+                                Locus locus = new Locus();
+                                SingleNucleotidePolymorphism snp = lociService.createSnp(associationDto.getVariantID());
+                                RiskAllele riskAllele = lociService.createRiskAllele(associationDto.getEffectAllele(), snp);
+                                locus.setStrongestRiskAlleles(Arrays.asList(new RiskAllele[]{riskAllele}));
+                                association.setLoci(Arrays.asList(new Locus[]{locus}));
                                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
                             }
                         }
