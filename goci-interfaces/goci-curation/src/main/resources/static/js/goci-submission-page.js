@@ -5,9 +5,9 @@ $(document).ready(function () {
             {"mData": "id", "sTitle": "Submission ID", "bSearchable": true},
             {"mData": "created", "sDefaultContent": "", "sTitle": "Date Created", "bSearchable": true},
             {"mData": "curator", "sDefaultContent": "", "sTitle": "Submitter", "bSearchable": true},
+            {"mData": "pubMedID", "sTitle": "PubMed ID", "bSearchable": true},
             {"mData": "title", "sDefaultContent": "", "sTitle": "Title", "bSearchable": true}, // <-- which values to use inside object
             {"mData": "author", "sDefaultContent": "", "sTitle": "Author", "bSearchable": true},
-            {"mData": "pubMedID", "sTitle": "PubMed ID", "bSearchable": true},
             {"mData": "publicationStatus", "sTitle": "Publication Status", "bSearchable": true}
         ],
         "aLengthMenu": [

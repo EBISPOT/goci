@@ -15,15 +15,13 @@ import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPublicationListWrappe
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class DepositionPublicationServiceImpl implements DepositionPublicationService {
 
     private static final Logger log = LoggerFactory.getLogger(DepositionPublicationServiceImpl.class);
-
-    @Value("${deposition.uri}")
-    private String depositionUri;
 
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
@@ -41,7 +39,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         DepositionPublication publication = null;
         Map<String, String> params = new HashMap<>();
         params.put("pmID", id);
-        String url = depositionUri + "/publications/{pmID}?pmid=true";
+        String url = depositionIngestUri + "/publications/{pmID}?pmid=true";
         try {
             String response = template.getForObject(url, String.class, params);
             publication = template.getForObject(url, DepositionPublication.class, params);
@@ -97,7 +95,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     public void addSubmission(DepositionSubmission depositionSubmission) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", depositionSubmission.getSubmissionId());
-        String url = depositionUri + "/submissions/{submissionID}";
+        String url = depositionIngestUri + "/submissions/{submissionID}";
         template.put(url, depositionSubmission, params);
     }
 
@@ -105,7 +103,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     public Map<String, DepositionPublication> getAllPublications() {
         log.info("Retrieving publications");
         Map<String, DepositionPublication> publicationMap = new HashMap<>();
-        String url = depositionUri + "/publications?page={page}&size=100";
+        String url = depositionIngestUri + "/publications?page={page}&size=100";
         try {
             int i = 0;
             Map<String, Integer> params = new HashMap<>();

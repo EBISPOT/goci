@@ -206,6 +206,15 @@ public class StudyService {
 
         study.getAncestries().forEach(
                 ancestry -> {
+                    if(ancestry.getAncestralGroups() == null){
+                        getLog().debug(ancestry.getId() + " has no AncestralGroup");
+                    }
+                    if(ancestry.getCountryOfOrigin() == null){
+                        getLog().debug(ancestry.getId() + " has no CountryOfOrigin");
+                    }
+                    if(ancestry.getCountryOfRecruitment() == null){
+                        getLog().debug(ancestry.getId() + " has no CountryOfRecruitment");
+                    }
                     int groupCount = ancestry.getAncestralGroups().size();
                     int coo = ancestry.getCountryOfOrigin().size();
                     int cor = ancestry.getCountryOfRecruitment().size();
@@ -257,6 +266,15 @@ public class StudyService {
 
         study.getAncestries().forEach(
                 ancestry -> {
+                    if(ancestry.getAncestralGroups() == null){
+                        getLog().debug(ancestry.getId() + " has no AncestralGroup");
+                    }
+                    if(ancestry.getCountryOfOrigin() == null){
+                        getLog().debug(ancestry.getId() + " has no CountryOfOrigin");
+                    }
+                    if(ancestry.getCountryOfRecruitment() == null){
+                        getLog().debug(ancestry.getId() + " has no CountryOfRecruitment");
+                    }
                     int groupCount = ancestry.getAncestralGroups().size();
                     int coo = ancestry.getCountryOfOrigin().size();
                     int cor = ancestry.getCountryOfRecruitment().size();

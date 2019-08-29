@@ -1,0 +1,824 @@
+{
+  "_embedded" : {
+    "submissions" : [ {
+      "submissionId" : "5d514e99dcf21d0001eee221",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2fd",
+        "pmid" : "21044949",
+        "title" : "ELF1 is associated with systemic lupus erythematosus in Asian populations.",
+        "journal" : "Hum Mol Genet",
+        "firstAuthor" : "Yang J",
+        "publicationDate" : "2010-11-02",
+        "correspondingAuthor" : {
+          "authorName" : "Jing Yang"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T11:33:45.005Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d514e99dcf21d0001eee221"
+        }
+      }
+    }, {
+      "submissionId" : "5d515077dcf21d0001eee22b",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2fe",
+        "pmid" : "17690259",
+        "title" : "Common sequence variants in the LOXL1 gene confer susceptibility to exfoliation glaucoma.",
+        "journal" : "Science",
+        "firstAuthor" : "Thorleifsson G",
+        "publicationDate" : "2007-08-09",
+        "correspondingAuthor" : {
+          "authorName" : "Gudmar Thorleifsson"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5150ffdcf21d0001eee22e",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "file",
+        "fileSize" : 13600
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "submission_status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "date_submitted" : "2019-08-12",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T11:41:43.861Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d515077dcf21d0001eee22b"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d51572edcf21d0001eee23c",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2ff",
+        "pmid" : "19561606",
+        "title" : "Sequence variants in the CLDN14 gene associate with kidney stones and bone mineral density.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Thorleifsson G",
+        "publicationDate" : "2009-06-28",
+        "correspondingAuthor" : {
+          "authorName" : "Gudmar Thorleifsson"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5519470e4fb100016c395b",
+        "status" : "INVALID",
+        "type" : "METADATA",
+        "fileName" : "incorrect_accepted_value.xlsx",
+        "fileSize" : 13611,
+        "errors" : [ "Samples: Column 'Stage' in row '1' contains incorrect value. Accepted values are: 'discovery; replication'" ]
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "INVALID",
+      "metadata_status" : "INVALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T12:10:22.527Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d51572edcf21d0001eee23c"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d51572edcf21d0001eee23c/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d52b01a07d5180001ecd194",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e300",
+        "pmid" : "19079260",
+        "title" : "Genome-wide association yields new sequence variants at seven loci that associate with measures of obesity.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Thorleifsson G",
+        "publicationDate" : "2008-12-14",
+        "correspondingAuthor" : {
+          "authorName" : "Gudmar Thorleifsson"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5517be0e4fb100016c3958",
+        "status" : "INVALID",
+        "type" : "METADATA",
+        "fileName" : "orphan_sample.xlsx",
+        "fileSize" : 13601,
+        "errors" : [ "Samples: Row '7' makes reference to a non-existing study tag" ]
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-13T12:42:02.641Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d52b01a07d5180001ecd194"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52b01a07d5180001ecd194/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d52c92d9db55c00016ce903",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e301",
+        "pmid" : "17460697",
+        "title" : "A variant in CDKAL1 influences insulin response and risk of type 2 diabetes.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Steinthorsdottir V",
+        "publicationDate" : "2007-04-26",
+        "correspondingAuthor" : {
+          "authorName" : "Valgerdur Steinthorsdottir"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d53c3f1df14b900018eb4d5",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "Carr_31220337_example_template with metadata.xlsx",
+        "fileSize" : 17866
+      } ],
+      "study_count" : 4,
+      "sample_count" : 6,
+      "association_count" : 38,
+      "submission_status" : "VALID",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-13T14:29:01.895Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d52c92d9db55c00016ce903"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c92d9db55c00016ce903/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c92d9db55c00016ce903/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c92d9db55c00016ce903/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c92d9db55c00016ce903/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d53d9b1df14b900018eb507",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e302",
+        "pmid" : "21983786",
+        "title" : "Identification of low-frequency variants associated with gout and serum uric acid levels.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Sulem P",
+        "publicationDate" : "2011-10-09",
+        "correspondingAuthor" : {
+          "authorName" : "Patrick Sulem"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d53d9d9df14b900018eb50a",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "valid.xlsx",
+        "fileSize" : 13654
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "submission_status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "date_submitted" : "2019-08-14",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-14T09:51:45.602Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d53d9b1df14b900018eb507"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53d9b1df14b900018eb507/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53d9b1df14b900018eb507/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53d9b1df14b900018eb507/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53d9b1df14b900018eb507/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d53dde0df14b900018eb518",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e303",
+        "pmid" : "19448622",
+        "title" : "Genome-wide association study identifies sequence variants on 6q21 associated with age at menarche.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Sulem P",
+        "publicationDate" : "2009-05-15",
+        "correspondingAuthor" : {
+          "authorName" : "Patrick Sulem"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d53deaddf14b900018eb51b",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "valid.xlsx",
+        "fileSize" : 13654
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "submission_status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "date_submitted" : "2019-08-14",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-14T10:09:36.889Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d53dde0df14b900018eb518"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53dde0df14b900018eb518/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53dde0df14b900018eb518/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53dde0df14b900018eb518/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53dde0df14b900018eb518/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d54042edf14b900018eb52d",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e304",
+        "pmid" : "17478679",
+        "title" : "A common variant on chromosome 9p21 affects the risk of myocardial infarction.",
+        "journal" : "Science",
+        "firstAuthor" : "Helgadottir A",
+        "publicationDate" : "2007-05-03",
+        "correspondingAuthor" : {
+          "authorName" : "Anna Helgadottir"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d540ea5df14b900018eb533",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "template.xlsx",
+        "fileSize" : 7510
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "date_submitted" : "2019-08-14",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-14T12:53:02.212Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d54042edf14b900018eb52d"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d54042edf14b900018eb52d/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d5d5fe486526800018c49e7",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e30e",
+        "pmid" : "18723019",
+        "title" : "Genome-wide association analysis in sarcoidosis and Crohn's disease unravels a common susceptibility locus on 10p12.2.",
+        "journal" : "Gastroenterology",
+        "firstAuthor" : "Franke A",
+        "publicationDate" : "2008-07-21",
+        "correspondingAuthor" : {
+          "authorName" : "Andre Franke"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5d60c786526800018c4a13",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "valid.xlsx",
+        "fileSize" : 13600
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "submission_status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-21T15:14:44.148Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d5d5fe486526800018c49e7"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d5d5fe486526800018c49e7/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d5d5fe486526800018c49e7/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d5d5fe486526800018c49e7/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d5d5fe486526800018c49e7/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d5ceaccf75bd00001cdb81d",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e30f",
+        "pmid" : "22174851",
+        "title" : "Genomewide association study for determinants of HIV-1 acquisition and viral set point in HIV-1 serodiscordant couples with quantified virus exposure.",
+        "journal" : "PLoS One",
+        "firstAuthor" : "Lingappa JR",
+        "publicationDate" : "2011-12-12",
+        "correspondingAuthor" : {
+          "authorName" : "Jairam R Lingappa"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-21T06:55:08.376Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d5ceaccf75bd00001cdb81d"
+        }
+      }
+    }, {
+      "submissionId" : "5d52c0f907d5180001ecd1b9",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e31b",
+        "pmid" : "28461288",
+        "title" : "A meta-analysis of genome-wide association studies of asthma in Puerto Ricans.",
+        "journal" : "Eur Respir J",
+        "firstAuthor" : "Yan Q",
+        "publicationDate" : "2017-05-01",
+        "correspondingAuthor" : {
+          "authorName" : "Qi Yan"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5ce37df75bd00001cdb81c",
+        "status" : "INVALID",
+        "type" : "METADATA",
+        "fileName" : "orphan_association.xlsx",
+        "fileSize" : 13604,
+        "errors" : [ "Associations: Row(s) [4] reference(s) a non-existing study tag" ]
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "INVALID",
+      "metadata_status" : "INVALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-13T13:54:01.168Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d52c0f907d5180001ecd1b9"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c0f907d5180001ecd1b9/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d52b3d507d5180001ecd1b1",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e31d",
+        "pmid" : "19349983",
+        "title" : "A genome-wide association study identifies variants in the HLA-DP locus associated with chronic hepatitis B in Asians.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Kamatani Y",
+        "publicationDate" : "2009-04-06",
+        "correspondingAuthor" : {
+          "authorName" : "Yoichiro Kamatani"
+        },
+        "status" : "UNDER_SUMMARY_STATS_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d52b3d607d5180001ecd1b4",
+        "status" : "VALID",
+        "type" : "SUMMARY_STATS_TEMPLATE",
+        "fileName" : "template.xlsx",
+        "fileSize" : 6296
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-13T12:57:57.152Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d52b3d507d5180001ecd1b1"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52b3d507d5180001ecd1b1/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d53e384df14b900018eb529",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e31e",
+        "pmid" : "20139978",
+        "title" : "Genome-wide association study of hematological and biochemical traits in a Japanese population.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Kamatani Y",
+        "publicationDate" : "2010-02-07",
+        "correspondingAuthor" : {
+          "authorName" : "Yoichiro Kamatani"
+        },
+        "status" : "UNDER_SUMMARY_STATS_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d53e384df14b900018eb52c",
+        "status" : "VALID",
+        "type" : "SUMMARY_STATS_TEMPLATE",
+        "fileName" : "template.xlsx",
+        "fileSize" : 6618
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-14T10:33:40.380Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d53e384df14b900018eb529"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d53e384df14b900018eb529/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d5412bddf14b900018eb534",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e323",
+        "pmid" : "18445777",
+        "title" : "Multiple genetic loci for bone mineral density and fractures.",
+        "journal" : "N Engl J Med",
+        "firstAuthor" : "Styrkarsdottir U",
+        "publicationDate" : "2008-04-29",
+        "correspondingAuthor" : {
+          "authorName" : "Unnur Styrkarsdottir"
+        },
+        "status" : "UNDER_SUMMARY_STATS_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5412bddf14b900018eb537",
+        "status" : "VALID",
+        "type" : "SUMMARY_STATS_TEMPLATE",
+        "fileName" : "template.xlsx",
+        "fileSize" : 6331
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-14T13:55:09.224Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d5412bddf14b900018eb534"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d5412bddf14b900018eb534/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d515a3bdcf21d0001eee240",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e32b",
+        "pmid" : "22763110",
+        "title" : "Identification of new susceptibility loci for osteoarthritis (arcOGEN): a genome-wide association study.",
+        "journal" : "Lancet",
+        "firstAuthor" : "Zeggini E",
+        "publicationDate" : "2012-07-03",
+        "correspondingAuthor" : {
+          "authorName" : "Eleftheria Zeggini"
+        },
+        "status" : "UNDER_SUMMARY_STATS_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d515a3bdcf21d0001eee243",
+        "status" : "VALID",
+        "type" : "SUMMARY_STATS_TEMPLATE",
+        "fileName" : "template.xlsx",
+        "fileSize" : 6301
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T12:23:23.242Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d515a3bdcf21d0001eee240"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515a3bdcf21d0001eee240/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d52c0b107d5180001ecd1b5",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e334",
+        "pmid" : "30552067",
+        "title" : "Moderate-to-severe asthma in individuals of European ancestry: a genome-wide association study.",
+        "journal" : "Lancet Respir Med",
+        "firstAuthor" : "Shrine N",
+        "publicationDate" : "2018-12-11",
+        "correspondingAuthor" : {
+          "authorName" : "Nick Shrine"
+        },
+        "status" : "UNDER_SUMMARY_STATS_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d52c0b107d5180001ecd1b8",
+        "status" : "VALID",
+        "type" : "SUMMARY_STATS_TEMPLATE",
+        "fileName" : "template.xlsx",
+        "fileSize" : 6309
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-13T13:52:49.315Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d52c0b107d5180001ecd1b5"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d52c0b107d5180001ecd1b5/uploads"
+        }
+      }
+    }, {
+      "submissionId" : "5d5d86c286526800018c4a24",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e352",
+        "pmid" : "23166209",
+        "title" : "Impact of ancestry and common genetic variants on QT interval in African Americans.",
+        "journal" : "Circ Cardiovasc Genet",
+        "firstAuthor" : "Smith JG",
+        "publicationDate" : "2012-11-19",
+        "correspondingAuthor" : {
+          "authorName" : "J Gustav Smith"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "submission_status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-21T18:00:34.304Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d5d86c286526800018c4a24"
+        }
+      }
+    }, {
+      "submissionId" : "5d56b95007d73c0001e30d4a",
+      "publication" : {
+        "publicationId" : "5d56b67207d73c0001e30d49",
+        "pmid" : "14604893",
+        "title" : "Carcinogen-induced impairment of enzymes for replicative fidelity of DNA and the initiation of tumours.",
+        "journal" : "Carcinogenesis",
+        "firstAuthor" : "Bignold LP",
+        "publicationDate" : "2004-03-25",
+        "correspondingAuthor" : {
+          "authorName" : "Bignold LP"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d56b9d307d73c0001e30d50",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "valid2.xlsx",
+        "fileSize" : 13670
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "submission_status" : "CURATOR_REVIEW",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-16T14:10:24.841Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d56b95007d73c0001e30d4a"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d56b95007d73c0001e30d4a/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d56b95007d73c0001e30d4a/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d56b95007d73c0001e30d4a/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d56b95007d73c0001e30d4a/associations"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://193.62.54.159/backend/v1/submissions"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 18,
+    "totalPages" : 1,
+    "number" : 0
+  }
+}

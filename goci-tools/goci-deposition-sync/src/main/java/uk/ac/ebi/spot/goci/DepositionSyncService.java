@@ -84,54 +84,53 @@ public class DepositionSyncService {
      * as EXPORTED and a submission is created containing the study data from GOCI.
      * This is the reverse of the Import endpoint, where a submission is received from Curation and added into GOCI.
      */
-    public void syncPublications(boolean syncAll) {
+    public void syncPublications(boolean initialSync) {
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
-        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
         //if publication not in Deposition, insert
+        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
         for (Publication p : gociPublications) {
             String pubmedId = p.getPubmedId();
             System.out.println("checking pmid " + pubmedId);
             boolean isPublished = isPublished(p);
             boolean isAvailable = isAvailable(p);
-            if (isPublished) {
-                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-                if (depositionPublication == null) { //initial sync - sync published publications
-                    DepositionPublication newPublication = createPublication(p);
-                    if (newPublication != null) {
+            if(initialSync) { // add all publications to mongo
+                DepositionPublication newPublication = createPublication(p);
+                if (newPublication != null) {
+                    if(isPublished) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
-                        depositionPublicationService.addPublication(newPublication);
                     }
-                } else if (depositionPublication != null &&
-                        !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
-                    // published publications
-                    DepositionPublication newPublication = createPublication(p);
-                    if (newPublication != null) {
-                        depositionPublicationService.updatePublication(depositionPublication);
+                    else if(isAvailable) {
+                        newPublication.setStatus("ELIGIBLE");
+                    }else {
+                        newPublication.setStatus("CURATION_STARTED");
                     }
+                    depositionPublicationService.addPublication(newPublication);
                 }
-            } else if (isAvailable && syncAll) {
+            }else {
                 DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-                if (depositionPublication == null) { // sync new publications
+                if(depositionPublication == null) { // add new publication
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         System.out.println("adding new publication" + pubmedId + " to mongo");
                         newPublication.setStatus("ELIGIBLE");
                         depositionPublicationService.addPublication(newPublication);
                     }
-                }
-            }else if(syncAll){
-                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-                if (depositionPublication == null) { // sync in-work publications
-                    DepositionPublication newPublication = createPublication(p);
-                    if (newPublication != null) {
-                        System.out.println("adding in-work publication" + pubmedId + " to mongo");
-                        newPublication.setStatus("CURATION_STARTED");
-                        depositionPublicationService.addPublication(newPublication);
+                }else {//check publication status, update if needed
+                    if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                        // published publications
+                        System.out.println("setting publication status to PUBLISHED for " + pubmedId);
+                        depositionPublication.setStatus("PUBLISHED");
+                        depositionPublicationService.updatePublication(depositionPublication);
+                    }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
+                        // sync in-work publications
+                        System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
+                        depositionPublication.setStatus("CURATION_STARTED");
+                        depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
-
             }
+
         }
     }
 
@@ -153,6 +152,8 @@ public class DepositionSyncService {
                 depositionAuthor
                         .setAuthorName(correspondingAuthor.getLastName() + " " + correspondingAuthor.getInitials());
                 newPublication.setCorrespondingAuthor(depositionAuthor);
+            }else {
+                System.out.println("error: publication " + p.getPubmedId() + " has no corresponding authors");
             }
             newPublication.setStatus("PUBLISHED");
         } else {

@@ -17,12 +17,46 @@ import java.math.BigDecimal;
 public class DepositionAssociationDto {
     @JsonProperty("study_tag")
     private String studyTag;
+
+    @JsonProperty("haplotype_id")
+    private String haplotypeId;
+
     @JsonProperty("variant_id")
     private String variantID;
+
     @JsonProperty("pvalue")
     private BigDecimal pValue;
+
+    @JsonProperty("pvalue_text")
+    private String pValueText;
+
+    @JsonProperty("proxy_variant")
+    private String proxyVariant;
+
     @JsonProperty("effect_allele")
     private String effectAllele;
+
     @JsonProperty("other_allele")
     private String otherAllele;
+
+    @JsonProperty("effect_allele_frequency")
+    private Double effectAlleleFrequency;
+
+    @JsonProperty("odds_ratio")
+    private Double oddsRatio;
+
+    @JsonProperty("beta")
+    private Double beta;
+
+    @JsonProperty("beta_unit")
+    private String betaUnit;
+
+    @JsonProperty("ci_lower")
+    private Double ciLower;
+
+    @JsonProperty("ci_upper")
+    private Double ciUpper;
+
+    @JsonProperty("standard_error")
+    private Double standardError;
 }

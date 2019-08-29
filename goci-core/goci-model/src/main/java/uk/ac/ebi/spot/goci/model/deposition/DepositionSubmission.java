@@ -21,8 +21,8 @@ public class DepositionSubmission {
     private String status;
     private DepositionProvenance created;
     private List<DepositionFileUploadDto> files;
-//    private List<DepositionStudyDto> studies;
-//    private List<DepositionSampleDto> samples;
-//    private List<DepositionAssociationDto> associations;
-//    private List<DepositionNoteDto> notes;
+    //private List<DepositionStudyDto> studies;
+    //private List<DepositionSampleDto> samples;
+    //private List<DepositionAssociationDto> associations;
+    //private List<DepositionNoteDto> notes;
 }

@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.model.deposition.util.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.LociAttributesService;
+import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
-import uk.ac.ebi.spot.goci.service.SingleNucleotidePolymorphismService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.math.BigDecimal;
@@ -39,12 +40,13 @@ public class DepositionSubmissionService {
     private final SingleNucleotidePolymorphismRepository snpRepository;
     private final AssociationOperationsService associationOperationsService;
     private final LociAttributesService lociService;
+    private final MapCatalogService mapCatalogService;
 
     @Autowired
     private RestTemplate template;
 
-    @Value("${deposition.uri}")
-    private String depositionURL;
+    //@Value("${deposition.uri}")
+    //private String depositionIngestURL;
 
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
@@ -66,7 +68,8 @@ public class DepositionSubmissionService {
                                        @Autowired SingleSnpMultiSnpAssociationService snpService,
                                        @Autowired SingleNucleotidePolymorphismRepository snpRepository,
                                        @Autowired AssociationOperationsService associationOperationsService,
-                                       @Autowired LociAttributesService lociService) {
+                                       @Autowired LociAttributesService lociService,
+                                       @Autowired MapCatalogService mapCatalogService) {
         this.publicationService = publicationService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
@@ -84,6 +87,7 @@ public class DepositionSubmissionService {
         this.snpRepository = snpRepository;
         this.associationOperationsService = associationOperationsService;
         this.lociService = lociService;
+        this.mapCatalogService = mapCatalogService;
         levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
@@ -127,10 +131,12 @@ public class DepositionSubmissionService {
                             note.setTextNote("DELETED");
                         }
                     }else{
+                        List<StudyNote> noteList = new ArrayList<>();
                         StudyNote note = new StudyNote();
                         note.setTextNote("DELETED");
                         note.setStudy(study);
-                        study.setNotes(Arrays.asList(new StudyNote[]{note}));
+                        noteList.add(note);
+                        study.setNotes(noteList);
                     }
 //                    study.setStudyDesignComment("DELETED " + study.getStudyDesignComment());
                     studyService.save(study);
@@ -144,67 +150,96 @@ public class DepositionSubmissionService {
                         //find notes in study
                         for (DepositionNoteDto noteDto : notes) {
                             if (noteDto.getStudyTag().equals(studyTag)) {
+                                List<StudyNote> noteList = new ArrayList<>();
                                 StudyNote note = new StudyNote();
                                 note.setTextNote(noteDto.getNote());
                                 note.setNoteSubject(noteSubjectRepository.findBySubjectIgnoreCase(noteDto.getNoteSubject()));
-                                study.setNotes(Arrays.asList(new StudyNote[]{note}));
+                                noteList.add(note);
+                                study.setNotes(noteList);
                             }
                         }
                     }
                     studyService.save(study);
                     if (associations != null) {
                         //find associations in study
+                        Collection<Association> associationList = new ArrayList<>();
                         for (DepositionAssociationDto associationDto : associations) {
                             if (associationDto.getStudyTag().equals(studyTag)) {
                                 Association association = new Association();
+                                if(associationDto.getStandardError() != null) {
+                                    association.setStandardError(associationDto.getStandardError().floatValue());
+                                }
                                 BigDecimal pValue = associationDto.getPValue();
-                                int exponent = pValue.precision() - pValue.scale() - 1;
-                                association.setPvalueExponent(exponent);
-                                association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                                if(pValue != null) {
+                                    int exponent = pValue.precision() - pValue.scale() - 1;
+                                    association.setPvalueExponent(exponent);
+                                    association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                                }
+                                List<Locus> locusList = new ArrayList<>();
                                 Locus locus = new Locus();
                                 SingleNucleotidePolymorphism snp = lociService.createSnp(associationDto.getVariantID());
                                 RiskAllele riskAllele = lociService.createRiskAllele(associationDto.getEffectAllele(), snp);
-                                locus.setStrongestRiskAlleles(Arrays.asList(new RiskAllele[]{riskAllele}));
-                                association.setLoci(Arrays.asList(new Locus[]{locus}));
+                                List<RiskAllele> alleleList = new ArrayList<>();
+                                alleleList.add(riskAllele);
+                                locus.setStrongestRiskAlleles(alleleList);
+                                locusList.add(locus);
+                                association.setLoci(locusList);
                                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
+                                associationList.add(association);
                             }
+                        }
+                        try {
+                            mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(), associationList);
+                        } catch (EnsemblMappingException e) {
+                            e.printStackTrace();
                         }
                     }
                     if (samples != null) {
                         //find samples in study
+                        String initialSampleSize = "";
+                        String replicateSampleSize = "";
                         for (DepositionSampleDto sampleDto : samples) {
                             if (sampleDto.getStudyTag().equals(studyTag)) {
                                 Ancestry ancestry = new Ancestry();
                                 if (sampleDto.getStage().equals("Discovery")) {
                                     ancestry.setType("initial");
-                                    study.setInitialSampleSize(buildDescription(sampleDto));
+                                    initialSampleSize += buildDescription(sampleDto);
                                 } else if (sampleDto.getStage().equals("Replication")) {
                                     ancestry.setType("replication");
-                                    study.setReplicateSampleSize(buildDescription(sampleDto));
+                                    replicateSampleSize += buildDescription(sampleDto);
                                 }
                                 ancestry.setDescription(sampleDto.getAncestryDescription());
+                                List<Country> countryList = new ArrayList<>();
                                 Country country =
                                         countryRepository.findByCountryName(sampleDto.getCountryRecruitement());
-                                ancestry.setCountryOfRecruitment(Arrays.asList(new Country[]{country}));
+                                countryList.add(country);
+                                ancestry.setCountryOfRecruitment(countryList);
                                 ancestry.setNumberOfIndividuals(sampleDto.getSize());
                                 ancestry.setStudy(study);
                                 ancestryRepository.save(ancestry);
                             }
                         }
+                        study.setInitialSampleSize(initialSampleSize.trim());
+                        study.setReplicateSampleSize(replicateSampleSize.trim());
                     }
+                    studyService.save(study);
                 }
             }
             depositionSubmission.setStatus("IMPORTED");
-            //Map<String, String> params = new HashMap<>();
-            //params.put("submissionID", submissionID);
-            //template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
+            Map<String, String> params = new HashMap<>();
+            params.put("submissionID", submissionID);
+            template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
         }
     }
 
     private String buildDescription(DepositionSampleDto sampleDto){
-        String description = sampleDto.getCases() + " " + sampleDto.getAncestryCategory() + " ancestry cases, "
-                + sampleDto.getControls() + " " + sampleDto.getAncestryCategory() + " ancestry controls";
-        return description;
+        if(sampleDto.getAncestry().equals("") || sampleDto.getAncestry().contains(",")){
+            return sampleDto.getCases() + " " + sampleDto.getAncestryCategory() + " ancestry cases, "
+                    + sampleDto.getControls() + " " + sampleDto.getAncestryCategory() + " ancestry controls\n";
+        }else{
+            return sampleDto.getCases() + " " + sampleDto.getAncestry() + " ancestry cases, "
+                    + sampleDto.getControls() + " " + sampleDto.getAncestry() + " ancestry controls\n";
+        }
     }
 
     public Submission updateSubmission(Submission submission, SecureUser currentUser){
@@ -220,13 +255,13 @@ public class DepositionSubmissionService {
         }
         return submission;
     }
-    private uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyList getStudies(String submissionID) {
+    private DepositionStudyList getStudies(String submissionID) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
         String response =
-                template.getForObject(depositionURL + "/submissions/{submissionID}/studies", String.class, params);
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies", String.class, params);
         DepositionStudyListWrapper studyList =
-                template.getForObject(depositionURL + "/submissions/{submissionID}/studies",
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies",
                         DepositionStudyListWrapper.class, params);
         if (studyList.getStudies() == null) {
             studyList.setStudies(new DepositionStudyList());
@@ -238,9 +273,9 @@ public class DepositionSubmissionService {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
         String response =
-                template.getForObject(depositionURL + "/submissions/{submissionID}/associations", String.class, params);
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/associations", String.class, params);
         DepositionAssociationListWrapper associationListWrapper =
-                template.getForObject(depositionURL + "/submissions/{submissionID" + "}/associations",
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/associations",
                         DepositionAssociationListWrapper.class, params);
         if (associationListWrapper.getAssociations() == null) {
             associationListWrapper.setAssociations(new DepositionAssociationList());
@@ -252,9 +287,9 @@ public class DepositionSubmissionService {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
         String response =
-                template.getForObject(depositionURL + "/submissions/{submissionID}/samples", String.class, params);
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/samples", String.class, params);
         DepositionSampleListWrapper sampleListWrapper =
-                template.getForObject(depositionURL + "/submissions/{submissionID" + "}/samples",
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/samples",
                         DepositionSampleListWrapper.class, params);
         if (sampleListWrapper.getSamplesList() == null) {
             sampleListWrapper.setSamplesList(new DepositionSampleList());
@@ -266,9 +301,9 @@ public class DepositionSubmissionService {
 //        Map<String, String> params = new HashMap<>();
 //        params.put("submissionID", submissionID);
 //        String response =
-//                template.getForObject(depositionURL + "/submissions/{submissionID}/uploads", String.class, params);
+//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/uploads", String.class, params);
 //        DepositionFileUploadListWrapper listWrapper =
-//                template.getForObject(depositionURL + "/submissions/{submissionID" + "}/uploads",
+//                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/uploads",
 //                        DepositionFileUploadListWrapper.class, params);
 //        if (listWrapper.getUploads() == null) {
 //            listWrapper.setUploads(new DepositionFileUploadList());
@@ -279,10 +314,10 @@ public class DepositionSubmissionService {
         private DepositionNoteList getNotes(String submissionID){
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-//        String response = template.getForObject(depositionURL + "/submissions/{submissionID}/files",
+//        String response = template.getForObject(depositionIngestURL + "/submissions/{submissionID}/files",
 //                String.class,
 //                params);
-//        DepositionFileUploadListWrapper listWrapper = template.getForObject(depositionURL +
+//        DepositionFileUploadListWrapper listWrapper = template.getForObject(depositionIngestURL +
 //        "/submissions/{submissionID" +
 //                        "}/files",
 //                DepositionFileUploadListWrapper.class, params);
@@ -296,10 +331,14 @@ public class DepositionSubmissionService {
         study.setDiseaseTrait(diseaseTrait);
 
         Platform platform = platformRepository.findByManufacturer(studyDto.getArrayManufacturer());
-        study.setPlatforms(Arrays.asList(new Platform[]{platform}));
+        List<Platform> platformList = new ArrayList<>();
+        platformList.add(platform);
+        study.setPlatforms(platformList);
+        List<GenotypingTechnology> gtList = new ArrayList<>();
         GenotypingTechnology gtt =
                 genotypingTechnologyRepository.findByGenotypingTechnology(studyDto.getGenotypingTechnology());
-        study.setGenotypingTechnologies(Arrays.asList(new GenotypingTechnology[]{gtt}));
+        gtList.add(gtt);
+        study.setGenotypingTechnologies(gtList);
 
         study.setPublicationId(publication);
         Housekeeping housekeeping = housekeepingRepository.createHousekeeping();

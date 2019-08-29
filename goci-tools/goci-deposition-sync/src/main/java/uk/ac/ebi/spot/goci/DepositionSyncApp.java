@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Created by jstewart on 23/07/2019
  */
-@SpringBootApplication
+//@SpringBootApplication
 public class DepositionSyncApp implements CommandLineRunner {
 
     @Autowired
@@ -61,7 +61,7 @@ public class DepositionSyncApp implements CommandLineRunner {
     public void run(String... args) {
         long start_time = System.currentTimeMillis();
 
-        if (args.length != 0 && args[0].equalsIgnoreCase("all")) {
+        if (args.length != 0 && args[0].equalsIgnoreCase("initial")) {
             // execute publisher
             syncService.syncPublications(true);
         } else {
@@ -73,10 +73,11 @@ public class DepositionSyncApp implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        SpringApplicationBuilder builder = new SpringApplicationBuilder();
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(DepositionSyncApp.class);
         System.out.println("Starting Goci Deposition Sync...");
-        SpringApplication app = builder.web(false).main(DepositionSyncApp.class).addCommandLineProperties(true).build(args);
-        ApplicationContext ctx = app.run(DepositionSyncApp.class, args);
+        SpringApplication app =
+                builder.web(false).addCommandLineProperties(true).build(args);
+        ApplicationContext ctx = app.run(args);
         System.out.println("Application executed successfully!");
         app.exit(ctx);
     }

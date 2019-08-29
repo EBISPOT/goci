@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.DepositionSubmissionService;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
-import uk.ac.ebi.spot.goci.model.deposition.util.*;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSubmissionListWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/submissions")
@@ -41,8 +41,8 @@ public class SubmissionController {
     @Autowired
     private RestTemplate template;
 
-    @Value("${deposition.uri}")
-    private String depositionURL;
+    //@Value("${deposition.uri}")
+    //private String depositionIngestURL;
 
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
@@ -65,14 +65,13 @@ public class SubmissionController {
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-        String response = template.getForObject(depositionURL + "/submissions?page={page}", String.class, params);
+        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class, params);
 
         DepositionSubmissionListWrapper submissions =
-                template.getForObject(depositionURL + "/submissions" + "?page={page}",
+                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
                         DepositionSubmissionListWrapper.class, params);
         while (i < submissions.getPage().getTotalPages()) {
             for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
-//        for(DepositionSubmission submission: submissions){
                 Submission testSub = new Submission();
                 testSub.setId(submission.getSubmissionId());
                 testSub.setPubMedID(submission.getPublication().getPmid());
@@ -84,7 +83,7 @@ public class SubmissionController {
                 testSub.setPublicationStatus(submission.getPublication().getStatus());
                 submissionList.add(testSub);
                 params.put("page", ++i);
-                submissions = template.getForObject(depositionURL + "/submissions?page={page}",
+                submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
                         DepositionSubmissionListWrapper.class, params);
             }
         }
@@ -94,9 +93,10 @@ public class SubmissionController {
     private DepositionSubmission getSubmission(String submissionID) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        String response = template.getForObject(depositionURL + "/submissions/{submissionID}", String.class, params);
+        String response =
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
         DepositionSubmission submission =
-                template.getForObject(depositionURL + "/submissions/{submissionID}", DepositionSubmission.class,
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
                         params);
 
         return submission;
@@ -110,8 +110,8 @@ public class SubmissionController {
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
         submissionService.importSubmission(depositionSubmission, currentUser);
 
-        for(Submission submission: submissionList){
-            if(submission.getId().equals(depositionSubmission.getSubmissionId())){
+        for (Submission submission : submissionList) {
+            if (submission.getId().equals(depositionSubmission.getSubmissionId())) {
                 submission.setStatus("IMPORTED");
             }
         }
