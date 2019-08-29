@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,8 +41,11 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
     private EfoMapper efoMapper;
 
-    private int pageSize = 1000;
+    @Value("${solr_index.page_size:10}")
+    private int pageSize = 10;
     private int maxPages = -1;
+    @Value("${solr_index.thread_count:1}")
+    private int threadCount = 1;
     private boolean sysOutLogging = false;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -86,7 +90,7 @@ public class SolrIndexer {
     }
 
     public int fetchAndIndex() {
-        ExecutorService taskExecutor = Executors.newFixedThreadPool(1);
+        ExecutorService taskExecutor = Executors.newFixedThreadPool(threadCount);
 
         Future<Integer> studyCountFuture = taskExecutor.submit(this::mapStudies);
         Future<Integer> associationCountFuture = taskExecutor.submit(this::mapAssociations);
