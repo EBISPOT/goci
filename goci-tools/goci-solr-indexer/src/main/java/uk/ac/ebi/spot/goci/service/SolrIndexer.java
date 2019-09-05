@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,8 +43,11 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
     private EfoMapper efoMapper;
 
-    private int pageSize = 5000;
+    @Value("${solr_index.page_size:100}")
+    private int pageSize = 100;
     private int maxPages = -1;
+    @Value("${solr_index.thread_count:1}")
+    private int threadCount = 1;
     private boolean sysOutLogging = false;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -131,7 +135,7 @@ public class SolrIndexer {
      * @return
      */
     Integer mapStudies(Collection<String> pubmedIds) {
-//        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
+        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
         Pageable pager = new PageRequest(0, pageSize);
 
         Page<Study> studyPage = null;
@@ -180,7 +184,7 @@ public class SolrIndexer {
     }
 
     Integer mapAssociations(Collection<String> pubmedIds) {
-//        Sort sort = new Sort(new Sort.Order("id"));
+        Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize);
 
         Page<Association> associationPage = null;
@@ -223,7 +227,7 @@ public class SolrIndexer {
 
 
     Integer mapTraits(Collection<String> pubmedIds) {
-//        Sort sort = new Sort(new Sort.Order("trait"));
+        Sort sort = new Sort(new Sort.Order("trait"));
         Pageable pager = new PageRequest(0, pageSize);
 
         Page<DiseaseTrait> diseaseTraitPage = null;
@@ -272,7 +276,7 @@ public class SolrIndexer {
     }
 
     Integer mapEfo(Collection<String> pubmedIds) {
-//        Sort sort = new Sort(new Sort.Order("id"));
+        Sort sort = new Sort(new Sort.Order("id"));
         Pageable pager = new PageRequest(0, pageSize);
 
         Page<EfoTrait> efoTraitPage = null;
