@@ -22,7 +22,7 @@
   "study_count" : 2,
   "sample_count" : 7,
   "association_count" : 4,
-  "submission_status" : "SUBMITTED",
+  "status" : "SUBMITTED",
   "metadata_status" : "VALID",
   "summary_statistics_status" : "NA",
   "date_submitted" : "2019-08-12",

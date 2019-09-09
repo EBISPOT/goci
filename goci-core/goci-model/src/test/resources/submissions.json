@@ -18,7 +18,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -58,7 +58,7 @@
       "study_count" : 2,
       "sample_count" : 7,
       "association_count" : 4,
-      "submission_status" : "SUBMITTED",
+      "status" : "SUBMITTED",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "date_submitted" : "2019-08-12",
@@ -112,7 +112,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "INVALID",
+      "status" : "INVALID",
       "metadata_status" : "INVALID",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -156,7 +156,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -199,7 +199,7 @@
       "study_count" : 4,
       "sample_count" : 6,
       "association_count" : 38,
-      "submission_status" : "VALID",
+      "status" : "VALID",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -251,7 +251,7 @@
       "study_count" : 2,
       "sample_count" : 7,
       "association_count" : 4,
-      "submission_status" : "SUBMITTED",
+      "status" : "SUBMITTED",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "date_submitted" : "2019-08-14",
@@ -304,7 +304,7 @@
       "study_count" : 2,
       "sample_count" : 7,
       "association_count" : 4,
-      "submission_status" : "SUBMITTED",
+      "status" : "SUBMITTED",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "date_submitted" : "2019-08-14",
@@ -357,7 +357,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "SUBMITTED",
+      "status" : "SUBMITTED",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "date_submitted" : "2019-08-14",
@@ -401,7 +401,7 @@
       "study_count" : 2,
       "sample_count" : 7,
       "association_count" : 4,
-      "submission_status" : "SUBMITTED",
+      "status" : "SUBMITTED",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -447,7 +447,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -488,7 +488,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "INVALID",
+      "status" : "INVALID",
       "metadata_status" : "INVALID",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -531,7 +531,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -574,7 +574,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -617,7 +617,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -660,7 +660,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -703,7 +703,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -740,7 +740,7 @@
       "study_count" : 0,
       "sample_count" : 0,
       "association_count" : 0,
-      "submission_status" : "STARTED",
+      "status" : "STARTED",
       "metadata_status" : "NA",
       "summary_statistics_status" : "NA",
       "created" : {
@@ -780,7 +780,7 @@
       "study_count" : 2,
       "sample_count" : 7,
       "association_count" : 4,
-      "submission_status" : "CURATOR_REVIEW",
+      "status" : "CURATOR_REVIEW",
       "metadata_status" : "VALID",
       "summary_statistics_status" : "NA",
       "created" : {
