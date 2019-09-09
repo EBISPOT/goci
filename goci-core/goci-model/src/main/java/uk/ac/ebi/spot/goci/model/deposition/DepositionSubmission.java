@@ -17,7 +17,7 @@ import java.util.List;
 public class DepositionSubmission {
     private String submissionId;
     private DepositionPublication publication;
-    @JsonProperty("submission_status")
+    //@JsonProperty("submission_status")
     private String status;
     private DepositionProvenance created;
     private List<DepositionFileUploadDto> files;

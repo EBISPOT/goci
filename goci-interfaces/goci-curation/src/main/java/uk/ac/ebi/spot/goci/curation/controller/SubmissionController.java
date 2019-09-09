@@ -67,11 +67,14 @@ public class SubmissionController {
         params.put("page", i);
         String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class, params);
 
-        DepositionSubmissionListWrapper submissions =
-                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
-                        DepositionSubmissionListWrapper.class, params);
-        while (i < submissions.getPage().getTotalPages()) {
-            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
+//        DepositionSubmissionListWrapper submissions =
+//                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
+//                        DepositionSubmissionListWrapper.class, params);
+//        while (i < submissions.getPage().getTotalPages()) {
+//            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
+        DepositionSubmission[] submissions = template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
+                        DepositionSubmission[].class, params);
+        for(DepositionSubmission submission: submissions){
                 Submission testSub = new Submission();
                 testSub.setId(submission.getSubmissionId());
                 testSub.setPubMedID(submission.getPublication().getPmid());
@@ -83,10 +86,10 @@ public class SubmissionController {
                 testSub.setPublicationStatus(submission.getPublication().getStatus());
                 submissionList.add(testSub);
                 params.put("page", ++i);
-                submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
-                        DepositionSubmissionListWrapper.class, params);
+          //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
+          //              DepositionSubmissionListWrapper.class, params);
             }
-        }
+        //}
         return submissionList;
     }
 
