@@ -103,7 +103,7 @@ public class DepositionSyncService {
                     else if(isAvailable) {
                         newPublication.setStatus("ELIGIBLE");
                     }else {
-                        newPublication.setStatus("CURATION_STARTED");
+                        newPublication.setStatus("UNDER_SUBMISSION");
                     }
                     depositionPublicationService.addPublication(newPublication);
                 }
@@ -112,8 +112,14 @@ public class DepositionSyncService {
                 if(depositionPublication == null) { // add new publication
                     DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
-                        System.out.println("adding new publication" + pubmedId + " to mongo");
-                        newPublication.setStatus("ELIGIBLE");
+                        if(isPublished) {
+                            System.out.println("adding published publication" + pubmedId + " to mongo");
+                        }
+                        else if(isAvailable) {
+                            newPublication.setStatus("ELIGIBLE");
+                        }else {
+                            newPublication.setStatus("UNDER_SUBMISSION");
+                        }
                         depositionPublicationService.addPublication(newPublication);
                     }
                 }else {//check publication status, update if needed
@@ -125,7 +131,7 @@ public class DepositionSyncService {
                     }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
                         // sync in-work publications
                         System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
-                        depositionPublication.setStatus("CURATION_STARTED");
+                        depositionPublication.setStatus("UNDER_SUBMISSION");
                         depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }

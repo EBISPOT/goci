@@ -109,14 +109,13 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             Map<String, Integer> params = new HashMap<>();
             params.put("page", i);
             String response = template.getForObject(url, String.class, params);
-            DepositionPublicationListWrapper publications = template.getForObject(url, DepositionPublicationListWrapper.class,
+            DepositionPublication[] publications = template.getForObject(url, DepositionPublication[].class,
                     params);
-            while(i < publications.getPage().getTotalPages()){
+            //while(i < publications.getPage().getTotalPages()){
                 addPublications(publicationMap, publications);
                 params.put("page", ++i);
-                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
-                        params);
-            }
+//                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
+//                        params);
         }catch(HttpClientErrorException e){
             System.out.println(e.getMessage());
         }
@@ -124,9 +123,9 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     }
 
     private void addPublications(Map<String, DepositionPublication> publicationMap,
-                                 DepositionPublicationListWrapper publications){
-        if(publications != null && publications.getPublications() != null) {
-            for (DepositionPublication publication : publications.getPublications().getPublications()) {
+                                 DepositionPublication[] publications){
+        if(publications != null){// && publications.getPublications() != null) {
+            for (DepositionPublication publication : publications){//.getPublications().getPublications()) {
                 publicationMap.put(publication.getPmid(), publication);
             }
         }

@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Created by jstewart on 23/07/2019
  */
-//@SpringBootApplication
+@SpringBootApplication
 public class DepositionSyncApp implements CommandLineRunner {
 
     @Autowired

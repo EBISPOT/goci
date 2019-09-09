@@ -3,17 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>goci-deposition-sync</artifactId>
+    <version>2.4.4</version>
+    <packaging>jar</packaging>
+
+    <name>GOCI Deposition Sync</name>
+
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
         <version>2.4.4</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
-
-    <artifactId>goci-deposition-sync</artifactId>
-    <version>2.4.4</version>
-    <packaging>jar</packaging>
-    <name>GOCI Deposition Sync</name>
 
     <build>
         <finalName>goci-deposition-sync</finalName>
