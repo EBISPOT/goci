@@ -20,7 +20,7 @@
     <logger name="org.hibernate" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="org.hibernate.jdbc" level="DEBUG" additivity="false">
+    <logger name="org.hibernate.jdbc" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

@@ -64,6 +64,9 @@ public class DepositionSyncApp implements CommandLineRunner {
         if (args.length != 0 && args[0].equalsIgnoreCase("initial")) {
             // execute publisher
             syncService.syncPublications(true);
+        } else if (args.length != 0 && args[0].equalsIgnoreCase("fix")) {
+            // execute publisher
+            syncService.fixPublications();
         } else {
             syncService.syncPublications(false);
         }

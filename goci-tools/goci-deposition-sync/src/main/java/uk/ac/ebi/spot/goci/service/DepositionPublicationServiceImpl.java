@@ -64,7 +64,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Override
     public void updatePublication(DepositionPublication depositionPublication) {
-        String url = depositionIngestUri + "/publications";
+        String url = depositionIngestUri + "/publications/" + depositionPublication.getPmid();
         try {
             String message = mapper.writeValueAsString(depositionPublication);
             System.out.println(message);

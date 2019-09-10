@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ public class DepositionSyncService {
     private final CurationStatus curationComplete;
     private final Curator levelOneCurator;
     private final CurationStatus awaitingCuration;
+    private final CurationStatus awaitingLiterature;
     private PublicationService publicationService;
 
     private DepositionPublicationService depositionPublicationService;
@@ -41,7 +43,7 @@ public class DepositionSyncService {
         curationComplete = statusRepository.findByStatus("Publish study");
         levelOneCurator = curatorRepository.findByLastName("Level 1 Curator");
         awaitingCuration = statusRepository.findByStatus("Awaiting Curation");
-
+        awaitingLiterature = statusRepository.findByStatus("Awaiting literature");
     }
 
     private boolean isPublished(Publication publication) {
@@ -63,10 +65,28 @@ public class DepositionSyncService {
             Curator curator = housekeeping.getCurator();
             if (curationStatus == null) {
                 return false;
-            } else if (curationStatus.getId() != awaitingCuration.getId() &&
-                    curationStatus.getId() != curationComplete.getId()) {
+            } else if (!curationStatus.getId().equals(awaitingCuration.getId()) &&
+                    !curationStatus.getId().equals(curationComplete.getId()) &&
+                    !curationStatus.getId().equals(awaitingLiterature.getId())) {
                 return false;
-            } else if (!(curator.getId() == levelOneCurator.getId())) {
+            } else if (!curator.getId().equals(levelOneCurator.getId())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isWaiting(Publication publication) {
+
+        for (Study study : publication.getStudies()) {
+            Housekeeping housekeeping = study.getHousekeeping();
+            CurationStatus curationStatus = housekeeping.getCurationStatus();
+            Curator curator = housekeeping.getCurator();
+            if (curationStatus == null) {
+                return false;
+            } else if (!curationStatus.getId().equals(awaitingLiterature.getId())) {
+                return false;
+            } else if (!curator.getId().equals(levelOneCurator.getId())) {
                 return false;
             }
         }
@@ -94,23 +114,22 @@ public class DepositionSyncService {
             System.out.println("checking pmid " + pubmedId);
             boolean isPublished = isPublished(p);
             boolean isAvailable = isAvailable(p);
+            DepositionPublication newPublication = createPublication(p);
+            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
             if(initialSync) { // add all publications to mongo
-                DepositionPublication newPublication = createPublication(p);
-                if (newPublication != null) {
+                if (newPublication != null && depositionPublication == null) {
                     if(isPublished) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
                     }
                     else if(isAvailable) {
                         newPublication.setStatus("ELIGIBLE");
                     }else {
-                        newPublication.setStatus("UNDER_SUBMISSION");
+                        newPublication.setStatus("CURATION_STARTED");
                     }
                     depositionPublicationService.addPublication(newPublication);
                 }
             }else {
-                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
                 if(depositionPublication == null) { // add new publication
-                    DepositionPublication newPublication = createPublication(p);
                     if (newPublication != null) {
                         if(isPublished) {
                             System.out.println("adding published publication" + pubmedId + " to mongo");
@@ -118,7 +137,7 @@ public class DepositionSyncService {
                         else if(isAvailable) {
                             newPublication.setStatus("ELIGIBLE");
                         }else {
-                            newPublication.setStatus("UNDER_SUBMISSION");
+                            newPublication.setStatus("CURATION_STARTED");
                         }
                         depositionPublicationService.addPublication(newPublication);
                     }
@@ -131,12 +150,34 @@ public class DepositionSyncService {
                     }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
                         // sync in-work publications
                         System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
-                        depositionPublication.setStatus("UNDER_SUBMISSION");
+                        depositionPublication.setStatus("CURATION_STARTED");
                         depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
             }
 
+        }
+    }
+
+    /**
+     * fix publications is intended as a one-off execution to correct errors with loaded data, not as part of the
+     * daily sync
+     */
+    public void fixPublications() {
+        //read all publications from GOCI
+        List<Publication> gociPublications = publicationService.findAll();
+        //if publication not in Deposition, insert
+        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
+        for (Publication p : gociPublications) {
+            String pubmedId = p.getPubmedId();
+            System.out.println("checking pmid " + pubmedId);
+            boolean waiting = isWaiting(p);
+            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
+            if(waiting && depositionPublication.getStatus().equals("CURATION_STARTED")){
+                depositionPublication.setStatus("ELIGIBLE");
+                depositionPublicationService.updatePublication(depositionPublication);
+                System.out.println(pubmedId + " changing status from CURATION_STARTED to ELIGIBLE");
+            }
         }
     }
 
@@ -151,12 +192,23 @@ public class DepositionSyncService {
             newPublication.setPublicationId(p.getId().toString());
             newPublication.setTitle(p.getTitle());
             newPublication.setJournal(p.getPublication());
-            Iterator<Author> authorIterator = p.getAuthors().iterator();
+            Collection<PublicationAuthors> authorIterator = p.getPublicationAuthors();
             if (authorIterator != null) {
-                Author correspondingAuthor = authorIterator.next();
+                Author correspondingAuthor = null;
+                for(PublicationAuthors authors: authorIterator) {
+                    correspondingAuthor = authors.getAuthor();
+                    if(correspondingAuthor.getFullname().equals(correspondingAuthor.getFullname())) {
+                        break;
+                    }
+                }
                 DepositionAuthor depositionAuthor = new DepositionAuthor();
-                depositionAuthor
-                        .setAuthorName(correspondingAuthor.getLastName() + " " + correspondingAuthor.getInitials());
+                if(correspondingAuthor.getLastName() == null || correspondingAuthor.getInitials() == null){
+                    depositionAuthor
+                            .setAuthorName(correspondingAuthor.getFullname());
+                }else {
+                    depositionAuthor
+                            .setAuthorName(correspondingAuthor.getLastName() + " " + correspondingAuthor.getInitials());
+                }
                 newPublication.setCorrespondingAuthor(depositionAuthor);
             }else {
                 System.out.println("error: publication " + p.getPubmedId() + " has no corresponding authors");
