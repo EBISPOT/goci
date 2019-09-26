@@ -232,7 +232,7 @@ public class DepositionSubmissionService {
                 }
             }
             depositionSubmission.setDateSubmitted(new DateTime());
-            depositionSubmission.setStatus("IMPORTED");
+            depositionSubmission.setStatus("CURATION_COMPLETE");
             template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
         }
     }
