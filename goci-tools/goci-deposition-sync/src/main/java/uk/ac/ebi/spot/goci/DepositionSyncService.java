@@ -7,15 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSummaryStatsDto;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSummaryStatsStatusDto;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -57,41 +56,41 @@ public class DepositionSyncService {
         return true;
     }
 
-    private boolean isAvailable(Publication publication) {
-
-        for (Study study : publication.getStudies()) {
-            Housekeeping housekeeping = study.getHousekeeping();
-            CurationStatus curationStatus = housekeeping.getCurationStatus();
-            Curator curator = housekeeping.getCurator();
-            if (curationStatus == null) {
-                return false;
-            } else if (!curationStatus.getId().equals(awaitingCuration.getId()) &&
-                    !curationStatus.getId().equals(curationComplete.getId()) &&
-                    !curationStatus.getId().equals(awaitingLiterature.getId())) {
-                return false;
-            } else if (!curator.getId().equals(levelOneCurator.getId())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isWaiting(Publication publication) {
-
-        for (Study study : publication.getStudies()) {
-            Housekeeping housekeeping = study.getHousekeeping();
-            CurationStatus curationStatus = housekeeping.getCurationStatus();
-            Curator curator = housekeeping.getCurator();
-            if (curationStatus == null) {
-                return false;
-            } else if (!curationStatus.getId().equals(awaitingLiterature.getId())) {
-                return false;
-            } else if (!curator.getId().equals(levelOneCurator.getId())) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean isAvailable(Publication publication) {
+//
+//        for (Study study : publication.getStudies()) {
+//            Housekeeping housekeeping = study.getHousekeeping();
+//            CurationStatus curationStatus = housekeeping.getCurationStatus();
+//            Curator curator = housekeeping.getCurator();
+//            if (curationStatus == null) {
+//                return false;
+//            } else if (!curationStatus.getId().equals(awaitingCuration.getId()) &&
+//                    !curationStatus.getId().equals(curationComplete.getId()) &&
+//                    !curationStatus.getId().equals(awaitingLiterature.getId())) {
+//                return false;
+//            } else if (!curator.getId().equals(levelOneCurator.getId())) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    private boolean isWaiting(Publication publication) {
+//
+//        for (Study study : publication.getStudies()) {
+//            Housekeeping housekeeping = study.getHousekeeping();
+//            CurationStatus curationStatus = housekeeping.getCurationStatus();
+//            Curator curator = housekeeping.getCurator();
+//            if (curationStatus == null) {
+//                return false;
+//            } else if (!curationStatus.getId().equals(awaitingLiterature.getId())) {
+//                return false;
+//            } else if (!curator.getId().equals(levelOneCurator.getId())) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * syncPublications intends to keep publications syned between GOCI and Deposition. It checks the GOCI catalog
@@ -113,18 +112,19 @@ public class DepositionSyncService {
             String pubmedId = p.getPubmedId();
             System.out.println("checking pmid " + pubmedId);
             boolean isPublished = isPublished(p);
-            boolean isAvailable = isAvailable(p);
+//            boolean isAvailable = isAvailable(p);
             DepositionPublication newPublication = createPublication(p);
             DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
             if(initialSync) { // add all publications to mongo
                 if (newPublication != null && depositionPublication == null) {
                     if(isPublished) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
-                    }
-                    else if(isAvailable) {
-                        newPublication.setStatus("ELIGIBLE");
+                        addSummaryStatsData(newPublication, p);
+//                    }
+//                    else if(isAvailable) {
+//                        newPublication.setStatus("ELIGIBLE");
                     }else {
-                        newPublication.setStatus("CURATION_STARTED");
+                        newPublication.setStatus("ELIGIBLE");
                     }
                     depositionPublicationService.addPublication(newPublication);
                 }
@@ -133,11 +133,12 @@ public class DepositionSyncService {
                     if (newPublication != null) {
                         if(isPublished) {
                             System.out.println("adding published publication" + pubmedId + " to mongo");
-                        }
-                        else if(isAvailable) {
-                            newPublication.setStatus("ELIGIBLE");
+//                        }
+//                        else if(isAvailable) {
+//                            newPublication.setStatus("ELIGIBLE");
                         }else {
-                            newPublication.setStatus("CURATION_STARTED");
+                            //TODO: create FTP folder
+                            newPublication.setStatus("ELIGIBLE");
                         }
                         depositionPublicationService.addPublication(newPublication);
                     }
@@ -147,16 +148,29 @@ public class DepositionSyncService {
                         System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         depositionPublication.setStatus("PUBLISHED");
                         depositionPublicationService.updatePublication(depositionPublication);
-                    }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
-                        // sync in-work publications
-                        System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
-                        depositionPublication.setStatus("CURATION_STARTED");
-                        depositionPublicationService.updatePublication(depositionPublication);
+//                    }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
+//                        // sync in-work publications
+//                        System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
+//                        depositionPublication.setStatus("CURATION_STARTED");
+//                        depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
             }
 
         }
+    }
+
+    private void addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){
+        List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
+        Collection<Study> studies = publication.getStudies();
+        for(Study study: studies){
+            DepositionSummaryStatsDto summaryStatsDto = new DepositionSummaryStatsDto();
+            summaryStatsDto.setStudyAccession(study.getAccessionId());
+            summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
+            summaryStatsDto.setTrait(study.getDiseaseTrait().getTrait());
+            summaryStatsDtoList.add(summaryStatsDto);
+        }
+        depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
     }
 
     /**
@@ -169,15 +183,6 @@ public class DepositionSyncService {
         //if publication not in Deposition, insert
         Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
         for (Publication p : gociPublications) {
-            String pubmedId = p.getPubmedId();
-            System.out.println("checking pmid " + pubmedId);
-            boolean waiting = isWaiting(p);
-            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-            if(waiting && depositionPublication.getStatus().equals("CURATION_STARTED")){
-                depositionPublication.setStatus("ELIGIBLE");
-                depositionPublicationService.updatePublication(depositionPublication);
-                System.out.println(pubmedId + " changing status from CURATION_STARTED to ELIGIBLE");
-            }
         }
     }
 
@@ -187,32 +192,18 @@ public class DepositionSyncService {
         if (author != null) { //error check for invalid publications
             newPublication = new DepositionPublication();
             newPublication.setPmid(p.getPubmedId());
-            newPublication.setFirstAuthor(author.getLastName() + " " + author.getInitials());
+            String authorName = null;
+            Author firstAuthor = p.getFirstAuthor();
+            if(firstAuthor.getLastName() == null || firstAuthor.getInitials() == null){
+                authorName = firstAuthor.getFullname();
+            }else {
+                authorName = firstAuthor.getLastName() + " " + firstAuthor.getInitials();
+            }
+            newPublication.setFirstAuthor(authorName);
             newPublication.setPublicationDate(new LocalDate(p.getPublicationDate()));
             newPublication.setPublicationId(p.getId().toString());
             newPublication.setTitle(p.getTitle());
             newPublication.setJournal(p.getPublication());
-            Collection<PublicationAuthors> authorIterator = p.getPublicationAuthors();
-            if (authorIterator != null) {
-                Author correspondingAuthor = null;
-                for(PublicationAuthors authors: authorIterator) {
-                    correspondingAuthor = authors.getAuthor();
-                    if(correspondingAuthor.getFullname().equals(correspondingAuthor.getFullname())) {
-                        break;
-                    }
-                }
-                DepositionAuthor depositionAuthor = new DepositionAuthor();
-                if(correspondingAuthor.getLastName() == null || correspondingAuthor.getInitials() == null){
-                    depositionAuthor
-                            .setAuthorName(correspondingAuthor.getFullname());
-                }else {
-                    depositionAuthor
-                            .setAuthorName(correspondingAuthor.getLastName() + " " + correspondingAuthor.getInitials());
-                }
-                newPublication.setCorrespondingAuthor(depositionAuthor);
-            }else {
-                System.out.println("error: publication " + p.getPubmedId() + " has no corresponding authors");
-            }
             newPublication.setStatus("PUBLISHED");
         } else {
             System.out.println("error: publication " + p.getPubmedId() + " has no authors");

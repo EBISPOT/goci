@@ -99,11 +99,16 @@ public class DepositionSubmissionService {
         Collection<Study> dbStudies =
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
 
-        List<DepositionStudyDto> studies = getStudies(submissionID).getStudies();
-        List<DepositionAssociationDto> associations = getAssociations(submissionID).getAssociations();
-        List<DepositionSampleDto> samples = getSamples(submissionID).getSamples();
+//        List<DepositionStudyDto> studies = getStudies(submissionID).getStudies();
+//        List<DepositionAssociationDto> associations = getAssociations(submissionID).getAssociations();
+//        List<DepositionSampleDto> samples = getSamples(submissionID).getSamples();
+//        List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+//        List<DepositionNoteDto> notes = getNotes(submissionID).getNotes();
+        List<DepositionStudyDto> studies = depositionSubmission.getStudies();
+        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
         List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
-        List<DepositionNoteDto> notes = getNotes(submissionID).getNotes();
+        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
 
         //check submission status. if UNDER_SUMMARY_STATS_SUBMISSION, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
@@ -226,9 +231,7 @@ public class DepositionSubmissionService {
                 }
             }
             depositionSubmission.setStatus("IMPORTED");
-            Map<String, String> params = new HashMap<>();
-            params.put("submissionID", submissionID);
-            template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
+            template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
         }
     }
 
