@@ -42,6 +42,7 @@ public class DepositionSubmissionService {
     private final AssociationOperationsService associationOperationsService;
     private final LociAttributesService lociService;
     private final MapCatalogService mapCatalogService;
+    private final AncestralGroupRepository ancestralGroupRepository;
 
     @Autowired
     private RestTemplate template;
@@ -70,7 +71,8 @@ public class DepositionSubmissionService {
                                        @Autowired SingleNucleotidePolymorphismRepository snpRepository,
                                        @Autowired AssociationOperationsService associationOperationsService,
                                        @Autowired LociAttributesService lociService,
-                                       @Autowired MapCatalogService mapCatalogService) {
+                                       @Autowired MapCatalogService mapCatalogService,
+                                       @Autowired AncestralGroupRepository ancestralGroupRepository) {
         this.publicationService = publicationService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
@@ -89,6 +91,7 @@ public class DepositionSubmissionService {
         this.associationOperationsService = associationOperationsService;
         this.lociService = lociService;
         this.mapCatalogService = mapCatalogService;
+        this.ancestralGroupRepository = ancestralGroupRepository;
         levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
@@ -181,10 +184,12 @@ public class DepositionSubmissionService {
                                     association.setPvalueExponent(exponent);
                                     association.setPvalueMantissa(pValue.unscaledValue().intValue());
                                 }
+                                String rsID = associationDto.getVariantID();
                                 List<Locus> locusList = new ArrayList<>();
                                 Locus locus = new Locus();
-                                SingleNucleotidePolymorphism snp = lociService.createSnp(associationDto.getVariantID());
-                                RiskAllele riskAllele = lociService.createRiskAllele(associationDto.getEffectAllele(), snp);
+                                SingleNucleotidePolymorphism snp =
+                                        lociService.createSnp(rsID);
+                                RiskAllele riskAllele = lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
                                 List<RiskAllele> alleleList = new ArrayList<>();
                                 alleleList.add(riskAllele);
                                 locus.setStrongestRiskAlleles(alleleList);
@@ -221,6 +226,19 @@ public class DepositionSubmissionService {
                                 countryList.add(country);
                                 ancestry.setCountryOfRecruitment(countryList);
                                 ancestry.setNumberOfIndividuals(sampleDto.getSize());
+                                ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
+                                sampleDto.getAncestryCategory();
+                                String ancestryStr = sampleDto.getAncestry();
+                                String ancestryCat = sampleDto.getAncestryCategory();
+                                AncestralGroup ancestryGroup = null;
+                                if(ancestryStr != null){
+                                    ancestryGroup = ancestralGroupRepository.findByAncestralGroup(ancestryStr);
+                                }else{
+                                    ancestryGroup = ancestralGroupRepository.findByAncestralGroup(ancestryCat);
+                                }
+                                List<AncestralGroup> ancestryGroups = new ArrayList<>();
+                                ancestryGroups.add(ancestryGroup);
+                                ancestry.setAncestralGroups(ancestryGroups);
                                 ancestry.setStudy(study);
                                 ancestryRepository.save(ancestry);
                             }
