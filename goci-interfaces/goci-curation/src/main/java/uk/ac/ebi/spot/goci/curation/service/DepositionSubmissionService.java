@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -230,6 +231,7 @@ public class DepositionSubmissionService {
                     studyService.save(study);
                 }
             }
+            depositionSubmission.setDateSubmitted(new DateTime());
             depositionSubmission.setStatus("IMPORTED");
             template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
         }

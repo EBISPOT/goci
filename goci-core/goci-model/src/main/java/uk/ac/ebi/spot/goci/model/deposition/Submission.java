@@ -1,16 +1,19 @@
 package uk.ac.ebi.spot.goci.model.deposition;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.joda.time.DateTime;
 
 @Data
 public class Submission {
 
-    String id;
-    String pubMedID;
-    String title;
-    String author;
-    String status;
-    String curator;
-    String created;
-    String publicationStatus;
+    private String id;
+    private String pubMedID;
+    private String title;
+    private String author;
+    private String status;
+    private String curator;
+    private String created;
+    private String publicationStatus;
+
 }
