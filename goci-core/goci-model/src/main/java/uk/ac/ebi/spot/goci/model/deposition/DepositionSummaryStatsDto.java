@@ -19,4 +19,8 @@ public class DepositionSummaryStatsDto {
 
     @JsonProperty("sample_description")
     private String sampleDescription;
+
+    @JsonProperty("hasSummaryStats")
+    private Boolean hasSummaryStats;
+
 }

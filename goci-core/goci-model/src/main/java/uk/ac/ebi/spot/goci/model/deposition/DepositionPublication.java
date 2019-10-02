@@ -28,5 +28,5 @@ public class DepositionPublication{
     private LocalDate publicationDate;
     private String status;
     @JsonProperty("ssTemplateEntries")
-    private List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
+    private List<DepositionSummaryStatsDto> summaryStatsDtoList;
 }

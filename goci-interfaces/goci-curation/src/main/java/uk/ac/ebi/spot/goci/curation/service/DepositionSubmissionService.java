@@ -1,8 +1,17 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
@@ -43,6 +52,10 @@ public class DepositionSubmissionService {
     private final LociAttributesService lociService;
     private final MapCatalogService mapCatalogService;
     private final AncestralGroupRepository ancestralGroupRepository;
+
+    @Autowired
+    @Qualifier("JodaMapper")
+    private ObjectMapper mapper;
 
     @Autowired
     private RestTemplate template;
@@ -114,9 +127,9 @@ public class DepositionSubmissionService {
         List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
         List<DepositionNoteDto> notes = depositionSubmission.getNotes();
 
-        //check submission status. if UNDER_SUMMARY_STATS_SUBMISSION, import summary stats, set state DONE
+        //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
-        if(depositionSubmission.getPublication().getStatus().equals("UNDER_SUMMARY_STATS_SUBMISSION")){
+        if(depositionSubmission.getPublication().getStatus().equals("PUBLISHED")){
             UnpublishReason tempReason = unpublishReasonRepository.findById(1L);
             for(Study study: dbStudies){
                 CurationStatus currentStatus = study.getHousekeeping().getCurationStatus();
@@ -135,7 +148,7 @@ public class DepositionSubmissionService {
                 for (Study study : dbStudies) {
                     Collection<StudyNote> studyNotes
                             = study.getNotes();
-                    if(studyNotes != null) {
+                    if(studyNotes != null && studyNotes.size() != 0) {
                         for (StudyNote note : studyNotes) {
                             note.setTextNote("DELETED");
                         }
@@ -249,9 +262,19 @@ public class DepositionSubmissionService {
                     studyService.save(study);
                 }
             }
-            depositionSubmission.setDateSubmitted(new DateTime());
+            depositionSubmission.setDateSubmitted(new LocalDate());
             depositionSubmission.setStatus("CURATION_COMPLETE");
-            template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
+            try{
+                String message = mapper.writeValueAsString(depositionSubmission);
+                template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
+//                String message = mapper.writeValueAsString(depositionSubmission);
+//                HttpEntity<DepositionSubmission> requestEntity = new HttpEntity<DepositionSubmission>(depositionSubmission);
+//                HttpEntity<DepositionSubmission[]> response = template.exchange(depositionIngestURL + "/submissions/" + submissionID, HttpMethod.PUT, requestEntity,
+//                        DepositionSubmission[].class);
+//                System.out.println(response);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -368,6 +391,9 @@ public class DepositionSubmissionService {
         study.setHousekeeping(housekeeping);
         housekeeping.setCurator(levelTwoCurator);
         housekeeping.setCurationStatus(levelOneCurationComplete);
+        if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("")){
+            study.setFullPvalueSet(true);
+        }
         return study;
     }
 

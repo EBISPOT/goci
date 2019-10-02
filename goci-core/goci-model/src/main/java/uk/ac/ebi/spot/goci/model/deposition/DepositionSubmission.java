@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -27,5 +28,5 @@ public class DepositionSubmission {
     private List<DepositionAssociationDto> associations;
     private List<DepositionNoteDto> notes;
     @JsonProperty("date_submitted")
-    private DateTime dateSubmitted;
+    private LocalDate dateSubmitted;
 }
