@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,6 +51,9 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     Page<EfoTrait> findByUri(Pageable pageable, String uri);
 
     EfoTrait findByTraitIgnoreCase(String trait);
+
+    @RestResource(exported = false)
+    Page<EfoTrait> findByStudiesPublicationIdPubmedId(String pumbedId, Pageable pageable);
 
 }
 

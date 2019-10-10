@@ -100,6 +100,7 @@ public class AssertedOntologyLoader extends AbstractOntologyLoader {
         return owlOntology.getSubClassAxiomsForSuperClass(owlClass)
                 .stream()
                 .map(OWLSubClassOfAxiom::getSubClass)
+                .filter(exp ->  !exp.isAnonymous() )
                 .map(OWLClassExpression::asOWLClass)
                 .collect(Collectors.toSet());
     }
@@ -108,6 +109,7 @@ public class AssertedOntologyLoader extends AbstractOntologyLoader {
         return owlOntology.getSubClassAxiomsForSubClass(owlClass)
                 .stream()
                 .map(OWLSubClassOfAxiom::getSuperClass)
+                .filter(exp ->  !exp.isAnonymous() )
                 .map(OWLClassExpression::asOWLClass)
                 .collect(Collectors.toSet());
     }

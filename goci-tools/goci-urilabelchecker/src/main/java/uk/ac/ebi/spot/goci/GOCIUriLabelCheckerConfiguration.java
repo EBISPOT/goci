@@ -31,7 +31,6 @@ public class GOCIUriLabelCheckerConfiguration {
     }
 
     @Bean OntologyLoader ontologyLoader() {
-        ReasonedOntologyLoader loader = ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
-        return loader;
+        return ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
     }
 }
