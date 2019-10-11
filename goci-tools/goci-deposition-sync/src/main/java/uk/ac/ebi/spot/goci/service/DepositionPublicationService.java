@@ -17,4 +17,6 @@ public interface DepositionPublicationService {
     void addSubmission(DepositionSubmission depositionSubmission);
 
     Map<String, DepositionPublication> getAllPublications();
+
+    Map<String, DepositionPublication> getAllBackendPublications();
 }

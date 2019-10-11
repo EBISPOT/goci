@@ -119,10 +119,10 @@ public class DepositionSyncService {
                 if (newPublication != null && depositionPublication == null) {
                     if(isPublished) {
                         System.out.println("adding published publication" + pubmedId + " to mongo");
-                        addSummaryStatsData(newPublication, p);
-//                    }
-//                    else if(isAvailable) {
-//                        newPublication.setStatus("ELIGIBLE");
+                        if(addSummaryStatsData(newPublication, p)){
+                            newPublication.setStatus("PUBLISHED_WITH_SS");
+                        }
+                        //todo: else create ftp directory
                     }else {
                         newPublication.setStatus("ELIGIBLE");
                     }
@@ -133,9 +133,6 @@ public class DepositionSyncService {
                     if (newPublication != null) {
                         if(isPublished) {
                             System.out.println("adding published publication" + pubmedId + " to mongo");
-//                        }
-//                        else if(isAvailable) {
-//                            newPublication.setStatus("ELIGIBLE");
                         }else {
                             //TODO: create FTP folder
                             newPublication.setStatus("ELIGIBLE");
@@ -147,12 +144,10 @@ public class DepositionSyncService {
                         // published publications
                         System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         depositionPublication.setStatus("PUBLISHED");
+                        if(addSummaryStatsData(newPublication, p)){
+                            newPublication.setStatus("PUBLISHED_WITH_SS");
+                        }
                         depositionPublicationService.updatePublication(depositionPublication);
-//                    }else if(!isPublished && !isAvailable && depositionPublication.getStatus().equals("ELIGIBLE")) {
-//                        // sync in-work publications
-//                        System.out.println("setting publication status to CURATION_STARTED for " + pubmedId);
-//                        depositionPublication.setStatus("CURATION_STARTED");
-//                        depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }
             }
@@ -160,7 +155,8 @@ public class DepositionSyncService {
         }
     }
 
-    private void addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){
+    private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){
+        boolean hasFiles = false;
         List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
         Collection<Study> studies = publication.getStudies();
         for(Study study: studies){
@@ -168,9 +164,14 @@ public class DepositionSyncService {
             summaryStatsDto.setStudyAccession(study.getAccessionId());
             summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
             summaryStatsDto.setTrait(study.getDiseaseTrait().getTrait());
+            if(study.getFullPvalueSet()){
+                hasFiles = true;
+            }
+            summaryStatsDto.setHasSummaryStats(study.getFullPvalueSet());
             summaryStatsDtoList.add(summaryStatsDto);
         }
         depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
+        return hasFiles;
     }
 
     /**
@@ -180,9 +181,19 @@ public class DepositionSyncService {
     public void fixPublications() {
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
-        //if publication not in Deposition, insert
-        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
+        //check status, set to PUBLISHED_SS if hasSummaryStats
+        Map<String, DepositionPublication> depositionPublications =
+                depositionPublicationService.getAllBackendPublications();
         for (Publication p : gociPublications) {
+            boolean isPublished = isPublished(p);
+            String pubmedId = p.getPubmedId();
+            //System.out.println("checking pmid " + pubmedId);
+            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
+            if(isPublished && depositionPublication.getStatus().equals("PUBLISHED") && addSummaryStatsData(depositionPublication, p)){
+                depositionPublication.setStatus("PUBLISHED_WITH_SS");
+                System.out.println("updating " + depositionPublication.getPmid());
+                depositionPublicationService.updatePublication(depositionPublication);
+            }
         }
     }
 

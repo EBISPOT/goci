@@ -26,6 +26,9 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
 
+    @Value("${deposition.uri}")
+    private String depositionBackendUri;
+
     @Autowired
     @Qualifier("JodaMapper")
     private ObjectMapper mapper;
@@ -102,8 +105,35 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Override
     public Map<String, DepositionPublication> getAllPublications() {
         log.info("Retrieving publications");
-        Map<String, DepositionPublication> publicationMap = new HashMap<>();
         String url = depositionIngestUri + "/publications?page={page}&size=100";
+        return getAllPublications(url);
+    }
+
+    @Override
+    public Map<String, DepositionPublication> getAllBackendPublications() {
+        log.info("Retrieving publications");
+        String url = depositionBackendUri + "/publications?page={page}&size=100";
+        Map<String, DepositionPublication> publicationMap = new HashMap<>();
+        try {
+            int i = 0;
+            Map<String, Integer> params = new HashMap<>();
+            params.put("page", i);
+            String response = template.getForObject(url, String.class, params);
+            DepositionPublicationListWrapper publications = template.getForObject(url, DepositionPublicationListWrapper.class,
+                    params);
+            while(i < publications.getPage().getTotalPages()) {
+                addPublications(publicationMap, publications);
+                params.put("page", ++i);
+                publications = template.getForObject(url, DepositionPublicationListWrapper.class, params);
+            }
+        }catch(HttpClientErrorException e){
+            System.out.println(e.getMessage());
+        }
+        return publicationMap;
+    }
+
+    private Map<String, DepositionPublication> getAllPublications(String url) {
+        Map<String, DepositionPublication> publicationMap = new HashMap<>();
         try {
             int i = 0;
             Map<String, Integer> params = new HashMap<>();
@@ -112,8 +142,8 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             DepositionPublication[] publications = template.getForObject(url, DepositionPublication[].class,
                     params);
             //while(i < publications.getPage().getTotalPages()){
-                addPublications(publicationMap, publications);
-                params.put("page", ++i);
+            addPublications(publicationMap, publications);
+            params.put("page", ++i);
 //                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
 //                        params);
         }catch(HttpClientErrorException e){
@@ -123,6 +153,12 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     }
 
     private void addPublications(Map<String, DepositionPublication> publicationMap,
+                                 DepositionPublicationListWrapper publications){
+        addPublications(publicationMap,
+                publications.getPublications().getPublications().toArray(new DepositionPublication[0]));
+    }
+
+        private void addPublications(Map<String, DepositionPublication> publicationMap,
                                  DepositionPublication[] publications){
         if(publications != null){// && publications.getPublications() != null) {
             for (DepositionPublication publication : publications){//.getPublications().getPublications()) {
