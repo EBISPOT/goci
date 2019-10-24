@@ -137,11 +137,17 @@ public class JsonBuilder {
                                 if (association.getStudy().getSnpCount() != null) {
                                     snpCount = association.getStudy().getSnpCount();
                                 }
+                                // Stet pvalue to minimum system value
+                                double pvalue = 2.2E-308;
+                                if (association.getPvalue() != 0.0) {
+                                    pvalue = association.getPvalue();
+                                }
                                 if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
                                     for (String ensemblId : ensemblIds) {
                                         jsons.add(buildJson(association.getPvalueMantissa(),
                                                 association.getPvalueExponent(),
                                                 association.getPvalueDescription(),
+                                                pvalue,
                                                 efoTrait.getUri(),
                                                 riskAllele.getSnp().getRsId(),
                                                 association.getStudy().getPublicationId().getPubmedId(),
@@ -164,12 +170,12 @@ public class JsonBuilder {
         return jsons;
     }
 
-    public String buildJson(int pvalueMantissa, int pvalueExponent, String pvalueText, String efoTrait, String rsId, String pubmedId, String study_acc, int sampleSize, long gwasPanelResolution, String ensemblId, String soTerm,
+    public String buildJson(int pvalueMantissa, int pvalueExponent, String pvalueText, double pvalue, String efoTrait, String rsId, String pubmedId, String study_acc, int sampleSize, long gwasPanelResolution, String ensemblId, String soTerm,
                             Float oddRatio, String range) {
 
         String dbVersion = getDate();
         String gwasDbId = "http://identifiers.org/gwas_catalog";
-        String jsonSchemaVersion = "1.6.1";
+        String jsonSchemaVersion = "1.6.2";
 
         JsonObject target = Json.createObjectBuilder()
                 .add("activity", "http://identifiers.org/cttv.activity/predicted_damaging")
@@ -246,6 +252,7 @@ public class JsonBuilder {
         JsonObject resourceScore = Json.createObjectBuilder()
                 .add("type", "pvalue")
                 .add("method", method)
+                .add("value", pvalue)
                 .add("mantissa", pvalueMantissa)
                 .add("exponent", pvalueExponent)
                 .build();
