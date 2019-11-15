@@ -1,20 +1,18 @@
-package uk.ac.ebi.spot.goci.curation.service;
+package uk.ac.ebi.spot.goci.curation.service.deposition;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
+import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
@@ -26,6 +24,7 @@ import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.*;
 
 @Service
@@ -48,10 +47,8 @@ public class DepositionSubmissionService {
     private final AncestryRepository ancestryRepository;
     private final SingleSnpMultiSnpAssociationService snpService;
     private final SingleNucleotidePolymorphismRepository snpRepository;
-    private final AssociationOperationsService associationOperationsService;
-    private final LociAttributesService lociService;
-    private final MapCatalogService mapCatalogService;
     private final AncestralGroupRepository ancestralGroupRepository;
+    private final DepositionAssociationService depositionAssociationService;
 
     @Autowired
     @Qualifier("JodaMapper")
@@ -82,10 +79,8 @@ public class DepositionSubmissionService {
                                        @Autowired AncestryRepository ancestryRepository,
                                        @Autowired SingleSnpMultiSnpAssociationService snpService,
                                        @Autowired SingleNucleotidePolymorphismRepository snpRepository,
-                                       @Autowired AssociationOperationsService associationOperationsService,
-                                       @Autowired LociAttributesService lociService,
-                                       @Autowired MapCatalogService mapCatalogService,
-                                       @Autowired AncestralGroupRepository ancestralGroupRepository) {
+                                       @Autowired AncestralGroupRepository ancestralGroupRepository,
+                                       @Autowired DepositionAssociationService depositionAssociationService) {
         this.publicationService = publicationService;
         this.studyOperationsService = studyOperationsService;
         this.studyService = studyService;
@@ -101,10 +96,8 @@ public class DepositionSubmissionService {
         this.ancestryRepository = ancestryRepository;
         this.snpService = snpService;
         this.snpRepository = snpRepository;
-        this.associationOperationsService = associationOperationsService;
-        this.lociService = lociService;
-        this.mapCatalogService = mapCatalogService;
         this.ancestralGroupRepository = ancestralGroupRepository;
+        this.depositionAssociationService = depositionAssociationService;
         levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
@@ -160,9 +153,9 @@ public class DepositionSubmissionService {
                         noteList.add(note);
                         study.setNotes(noteList);
                     }
-//                    study.setStudyDesignComment("DELETED " + study.getStudyDesignComment());
+                    study.setStudyDesignComment("DELETED " + study.getStudyDesignComment());
                     studyService.save(study);
-                    //studyService.deleteByStudyId(study.getId());
+//                    studyService.deleteByStudyId(study.getId());
                 }
 
                 for (DepositionStudyDto studyDto : studies) {
@@ -183,40 +176,7 @@ public class DepositionSubmissionService {
                     }
                     studyService.save(study);
                     if (associations != null) {
-                        //find associations in study
-                        Collection<Association> associationList = new ArrayList<>();
-                        for (DepositionAssociationDto associationDto : associations) {
-                            if (associationDto.getStudyTag().equals(studyTag)) {
-                                Association association = new Association();
-                                if(associationDto.getStandardError() != null) {
-                                    association.setStandardError(associationDto.getStandardError().floatValue());
-                                }
-                                BigDecimal pValue = associationDto.getPValue();
-                                if(pValue != null) {
-                                    int exponent = pValue.precision() - pValue.scale() - 1;
-                                    association.setPvalueExponent(exponent);
-                                    association.setPvalueMantissa(pValue.unscaledValue().intValue());
-                                }
-                                String rsID = associationDto.getVariantID();
-                                List<Locus> locusList = new ArrayList<>();
-                                Locus locus = new Locus();
-                                SingleNucleotidePolymorphism snp =
-                                        lociService.createSnp(rsID);
-                                RiskAllele riskAllele = lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
-                                List<RiskAllele> alleleList = new ArrayList<>();
-                                alleleList.add(riskAllele);
-                                locus.setStrongestRiskAlleles(alleleList);
-                                locusList.add(locus);
-                                association.setLoci(locusList);
-                                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
-                                associationList.add(association);
-                            }
-                        }
-                        try {
-                            mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(), associationList);
-                        } catch (EnsemblMappingException e) {
-                            e.printStackTrace();
-                        }
+                        depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations);
                     }
                     if (samples != null) {
                         //find samples in study
@@ -376,10 +336,16 @@ public class DepositionSubmissionService {
         DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait());
         study.setDiseaseTrait(diseaseTrait);
 
-        Platform platform = platformRepository.findByManufacturer(studyDto.getArrayManufacturer());
-        List<Platform> platformList = new ArrayList<>();
-        platformList.add(platform);
-        study.setPlatforms(platformList);
+        String manufacturerString = studyDto.getArrayManufacturer();
+        if(manufacturerString != null){
+            List<Platform> platformList = new ArrayList<>();
+            String[] manufacturers = manufacturerString.split("\\|");
+            for(String manufacturer: manufacturers){
+                Platform platform = platformRepository.findByManufacturer(manufacturer);
+                platformList.add(platform);
+            }
+            study.setPlatforms(platformList);
+        }
         List<GenotypingTechnology> gtList = new ArrayList<>();
         GenotypingTechnology gtt =
                 genotypingTechnologyRepository.findByGenotypingTechnology(studyDto.getGenotypingTechnology());
@@ -389,6 +355,7 @@ public class DepositionSubmissionService {
         study.setPublicationId(publication);
         Housekeeping housekeeping = housekeepingRepository.createHousekeeping();
         study.setHousekeeping(housekeeping);
+        study.addEvent(new Event(new Date(System.currentTimeMillis()), "Study created", "STUDY_CREATION", currentUser));
         housekeeping.setCurator(levelTwoCurator);
         housekeeping.setCurationStatus(levelOneCurationComplete);
         if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("")){
