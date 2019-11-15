@@ -41,6 +41,15 @@ public class SolrIndexer {
     private AssociationMapper associationMapper;
     private EfoMapper efoMapper;
 
+    @Value("${solr_index.associations:true}")
+    private boolean runAssociations = true;
+    @Value("${solr_index.studies:true}")
+    private boolean runStudies = true;
+    @Value("${solr_index.traits:true}")
+    private boolean runTraits = true;
+    @Value("${solr_index.efos:true}")
+    private boolean runEfos = true;
+
     @Value("${solr_index.page_size:100}")
     private int pageSize = 100;
     private int maxPages = -1;
@@ -125,87 +134,104 @@ public class SolrIndexer {
 
     private int mapAllStudies(ExecutorService taskExecutor) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
-        Pageable pager = new PageRequest(0, pageSize);
-        Page<Study> studyPage = studyService.findPublishedStudies(pager);
-        studyMapper.map(studyPage.getContent());
-        CountDownLatch latch = new CountDownLatch(studyPage.getTotalPages() - 1);
-        if(sysOutLogging){
-            System.out.println("mapping " + studyPage.getTotalPages() + " study pages");
-        }
-        while (studyPage.hasNext()) {
-            //pass parsing of page off to thread
-            if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
-                break;
+        if(runStudies) {
+            Pageable pager = new PageRequest(0, pageSize);
+            Page<Study> studyPage = studyService.findPublishedStudies(pager);
+            studyMapper.map(studyPage.getContent());
+            CountDownLatch latch = new CountDownLatch(studyPage.getTotalPages() - 1);
+            if (sysOutLogging) {
+                System.out.println("mapping " + studyPage.getTotalPages() + " study pages");
             }
-            pager = pager.next();
-            studyPage = studyService.findPublishedStudies(pager);
-            taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+            while (studyPage.hasNext()) {
+                //pass parsing of page off to thread
+                if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
+                    break;
+                }
+                pager = pager.next();
+                studyPage = studyService.findPublishedStudies(pager);
+                taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+            }
+            latch.await();
+            return (int) studyPage.getTotalElements();
+        }else{
+            return 0;
         }
-        latch.await();
-        return (int) studyPage.getTotalElements();
     }
 
     private int mapAllAssociations(ExecutorService taskExecutor) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("id"));
-        Pageable pager = new PageRequest(0, pageSize);
-        Page<Association> associationPage = associationService.findPublishedAssociations(pager);
-        associationMapper.map(associationPage.getContent());
-        if(sysOutLogging){
-            System.out.println("mapping " + associationPage.getTotalPages() + " association pages");
-        }
-        CountDownLatch latch = new CountDownLatch(associationPage.getTotalPages() - 1);
-        while (associationPage.hasNext()) {
-            if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
-                break;
+        if(runAssociations) {
+            Pageable pager = new PageRequest(0, pageSize);
+            Page<Association> associationPage = associationService.findPublishedAssociations(pager);
+            associationMapper.map(associationPage.getContent());
+            if (sysOutLogging) {
+                System.out.println("mapping " + associationPage.getTotalPages() + " association pages");
             }
-            pager = pager.next();
-            associationPage = associationService.findPublishedAssociations(pager);
-            taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+            CountDownLatch latch = new CountDownLatch(associationPage.getTotalPages() - 1);
+            while (associationPage.hasNext()) {
+                if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
+                    break;
+                }
+                pager = pager.next();
+                associationPage = associationService.findPublishedAssociations(pager);
+                taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+            }
+            latch.await();
+            return (int) associationPage.getTotalElements();
         }
-        latch.await();
-        return (int) associationPage.getTotalElements();
+        else{
+            return 0;
+        }
     }
 
     private int mapAllTraits(ExecutorService taskExecutor) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("trait"));
-        Pageable pager = new PageRequest(0, pageSize);
-        Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
-        traitMapper.map(diseaseTraitPage.getContent());
-        if(sysOutLogging){
-            System.out.println("mapping " + diseaseTraitPage.getTotalPages() + " disease trait pages");
-        }
-        CountDownLatch latch = new CountDownLatch(diseaseTraitPage.getTotalPages() - 1);
-        while (diseaseTraitPage.hasNext()) {
-            if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
-                break;
+        if(runTraits) {
+            Pageable pager = new PageRequest(0, pageSize);
+            Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+            traitMapper.map(diseaseTraitPage.getContent());
+            if (sysOutLogging) {
+                System.out.println("mapping " + diseaseTraitPage.getTotalPages() + " disease trait pages");
             }
-            pager = pager.next();
-            diseaseTraitPage = diseaseTraitRepository.findAll(pager);
-            taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+            CountDownLatch latch = new CountDownLatch(diseaseTraitPage.getTotalPages() - 1);
+            while (diseaseTraitPage.hasNext()) {
+                if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
+                    break;
+                }
+                pager = pager.next();
+                diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+                taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+            }
+            latch.await();
+            return (int) diseaseTraitPage.getTotalElements();
+        }else{
+            return 0;
         }
-        latch.await();
-        return (int) diseaseTraitPage.getTotalElements();
     }
 
     private int mapAllEfos(ExecutorService taskExecutor) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("trait"));
-        Pageable pager = new PageRequest(0, pageSize);
-        Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
-        if(sysOutLogging){
-            System.out.println("mapping " + efoTraitPage.getTotalPages() + " efo trait pages");
-        }
-        efoMapper.map(efoTraitPage.getContent());
-        CountDownLatch latch = new CountDownLatch(efoTraitPage.getTotalPages() - 1);
-        while (efoTraitPage.hasNext()) {
-            if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
-                break;
+        if(runEfos) {
+            Pageable pager = new PageRequest(0, pageSize);
+            Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
+            if (sysOutLogging) {
+                System.out.println("mapping " + efoTraitPage.getTotalPages() + " efo trait pages");
             }
-            pager = pager.next();
-            efoTraitPage = efoTraitRepository.findAll(pager);
-            taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+            efoMapper.map(efoTraitPage.getContent());
+            CountDownLatch latch = new CountDownLatch(efoTraitPage.getTotalPages() - 1);
+            while (efoTraitPage.hasNext()) {
+                if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
+                    break;
+                }
+                pager = pager.next();
+                efoTraitPage = efoTraitRepository.findAll(pager);
+                taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+            }
+            latch.await();
+            return (int) efoTraitPage.getTotalElements();
+        }else{
+            return 0;
         }
-        latch.await();
-        return (int) efoTraitPage.getTotalElements();
     }
 
     public int fetchAndIndexPublications(Collection<String> pubmedIds) {
@@ -255,22 +281,25 @@ public class SolrIndexer {
      * @return
      */
     Integer mapStudies(Collection<String> pubmedIds) {
-        Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
-        Pageable pager = new PageRequest(0, pageSize);
+        if(runStudies) {
+            Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
+            Pageable pager = new PageRequest(0, pageSize);
 
-        Page<Study> studyPage = null;
-        int totalElements = 0;
-        if (!pubmedIds.isEmpty()) {
-            for (String pmid : pubmedIds) {
-                studyPage = studyService.findPublishedStudiesByPublicationId(pmid, pager);
-                totalElements += _mapPagedStudies(pmid, studyPage, pager);
+            Page<Study> studyPage = null;
+            int totalElements = 0;
+            if (!pubmedIds.isEmpty()) {
+                for (String pmid : pubmedIds) {
+                    studyPage = studyService.findPublishedStudiesByPublicationId(pmid, pager);
+                    totalElements += _mapPagedStudies(pmid, studyPage, pager);
+                }
+            } else {
+                studyPage = studyService.findPublishedStudies(pager);
+                totalElements = _mapPagedStudies(null, studyPage, pager);
             }
+            return totalElements;
+        }else{
+            return 0;
         }
-        else {
-            studyPage = studyService.findPublishedStudies(pager);
-            totalElements = _mapPagedStudies(null, studyPage, pager);
-        }
-        return totalElements;
     }
 
     private Integer _mapPagedStudies(String pubmedId, Page<Study> studyPage, Pageable pager) {
@@ -304,24 +333,28 @@ public class SolrIndexer {
     }
 
     Integer mapAssociations(Collection<String> pubmedIds) {
-        Sort sort = new Sort(new Sort.Order("id"));
-        Pageable pager = new PageRequest(0, pageSize);
+        if(runAssociations){
+            Sort sort = new Sort(new Sort.Order("id"));
+            Pageable pager = new PageRequest(0, pageSize);
 
-        Page<Association> associationPage = null;
-        int totalElements = 0;
+            Page<Association> associationPage = null;
+            int totalElements = 0;
 
-        if (!pubmedIds.isEmpty()) {
-            for (String pmid : pubmedIds) {
-                associationPage = associationService.findPublishedAssociationsPublicationId(pmid, pager);
-                totalElements += _mapPagedAssociations(pmid, associationPage, pager);
+            if (!pubmedIds.isEmpty()) {
+                for (String pmid : pubmedIds) {
+                    associationPage = associationService.findPublishedAssociationsPublicationId(pmid, pager);
+                    totalElements += _mapPagedAssociations(pmid, associationPage, pager);
+                }
             }
-        }
-        else {
-            associationPage = associationService.findPublishedAssociations(pager);
-            totalElements = _mapPagedAssociations(null, associationPage, pager);
-        }
+            else {
+                associationPage = associationService.findPublishedAssociations(pager);
+                totalElements = _mapPagedAssociations(null, associationPage, pager);
+            }
 
-        return totalElements;
+            return totalElements;
+        }else{
+            return 0;
+        }
     }
 
     private Integer _mapPagedAssociations(String pubmedId, Page<Association> associationPage, Pageable pager) {
@@ -347,25 +380,28 @@ public class SolrIndexer {
 
 
     Integer mapTraits(Collection<String> pubmedIds) {
-        Sort sort = new Sort(new Sort.Order("trait"));
-        Pageable pager = new PageRequest(0, pageSize);
+        if(runTraits){
+            Sort sort = new Sort(new Sort.Order("trait"));
+            Pageable pager = new PageRequest(0, pageSize);
 
-        Page<DiseaseTrait> diseaseTraitPage = null;
-        int totalElements = 0;
+            Page<DiseaseTrait> diseaseTraitPage = null;
+            int totalElements = 0;
 
-        if (!pubmedIds.isEmpty()) {
-            for (String pmid : pubmedIds) {
-                diseaseTraitPage = diseaseTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
-                totalElements += _mapPagedTraits(pmid, diseaseTraitPage, pager);
+            if (!pubmedIds.isEmpty()) {
+                for (String pmid : pubmedIds) {
+                    diseaseTraitPage = diseaseTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                    totalElements += _mapPagedTraits(pmid, diseaseTraitPage, pager);
+                }
             }
-        }
-        else {
-            diseaseTraitPage = diseaseTraitRepository.findAll(pager);
-            totalElements = _mapPagedTraits(null, diseaseTraitPage, pager);
-        }
+            else {
+                diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+                totalElements = _mapPagedTraits(null, diseaseTraitPage, pager);
+            }
 
-        return totalElements;
-
+            return totalElements;
+        }else{
+            return 0;
+        }
     }
 
     private Integer _mapPagedTraits(String pubmedId, Page<DiseaseTrait> traitPage, Pageable pager) {
@@ -396,24 +432,27 @@ public class SolrIndexer {
     }
 
     Integer mapEfo(Collection<String> pubmedIds) {
-        Sort sort = new Sort(new Sort.Order("id"));
-        Pageable pager = new PageRequest(0, pageSize);
+        if(runEfos) {
+            Sort sort = new Sort(new Sort.Order("id"));
+            Pageable pager = new PageRequest(0, pageSize);
 
-        Page<EfoTrait> efoTraitPage = null;
-        int totalElements = 0;
+            Page<EfoTrait> efoTraitPage = null;
+            int totalElements = 0;
 
-        if (!pubmedIds.isEmpty()) {
-            for (String pmid : pubmedIds) {
-                efoTraitPage = efoTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
-                totalElements += _mapPagedEfo(pmid, efoTraitPage, pager);
+            if (!pubmedIds.isEmpty()) {
+                for (String pmid : pubmedIds) {
+                    efoTraitPage = efoTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                    totalElements += _mapPagedEfo(pmid, efoTraitPage, pager);
+                }
+            } else {
+                efoTraitPage = efoTraitRepository.findAll(pager);
+                totalElements = _mapPagedEfo(null, efoTraitPage, pager);
             }
-        }
-        else {
-            efoTraitPage = efoTraitRepository.findAll(pager);
-            totalElements = _mapPagedEfo(null, efoTraitPage, pager);
-        }
 
-        return totalElements;
+            return totalElements;
+        }else{
+            return 0;
+        }
     }
 
     Integer mapEfo() {
