@@ -123,6 +123,8 @@ public class DepositionSubmissionService {
                     if(submissionType.toString().contains("SUM_STATS")){
                         depositionStudyService.publishSummaryStats(study, currentUser);
                     }
+                    depositionStudyService.addStudyNote(study, studyNote.toString(), "STUDY_CREATION", curator,
+                            "Import study creation", currentUser);
                 }
             }
             depositionSubmission.setDateSubmitted(new LocalDate());
