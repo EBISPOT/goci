@@ -16,4 +16,8 @@ public class Submission {
     private String created;
     private String publicationStatus;
 
+    private SubmissionType submissionType;
+    public enum SubmissionType {METADATA, METADATA_AND_SUM_STATS, SUM_STATS, METADATA_AND_TOP_ASSOCIATIONS,
+        METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS, UNKNOWN };
+
 }

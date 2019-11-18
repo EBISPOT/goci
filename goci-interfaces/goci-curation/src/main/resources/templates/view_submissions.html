@@ -51,6 +51,7 @@
               <thead>
               <tr>
                   <th style="width:10%">Submission Status</th>
+                  <th style="width:10%">Submission Type</th>
                   <th style="width:10%">Submission ID</th>
                   <th style="width:10%">Date Created</th>
                   <th style="width:10%">Submitter</th>
@@ -79,6 +80,11 @@
                       </div>
                   </td>
                   <td>
+                      <p>
+                          <span th:text="${submission.submissionType}"></span>
+                      </p>
+                  </td>
+                  <td>
                       <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}"
                          th:text="${submission.id}" target="_blank"></a>
                   </td>
@@ -94,8 +100,12 @@
                   </td>
                   <td>
                       <p>
-                          <a th:href="@{{baseURL}/publication/{pubMedID}(baseURL=${@environment.getProperty('deposition.ui.uri')},pubMedID=${submission.pubMedID})}"
-                             th:text="${submission.pubMedID}" target="_blank"></a>
+                          <!--<a
+                              th:href="@{{baseURL}/publication/{pubMedID}(baseURL=${@environment.getProperty('deposition.ui.uri')},pubMedID=${submission.pubMedID})}"
+                             th:text="${submission.pubMedID}" target="_blank"></a>-->
+                          <a
+                                  th:href="@{/studies(page=1,pubmed=${submission.pubMedID})}"
+                                  th:text="${submission.pubMedID}" target="_blank"></a>
                       </p>
                   </td>
                   <td>

@@ -2,6 +2,7 @@ $(document).ready(function () {
     $('#submissionDataTable').DataTable({
         "columns": [
             {"mData": "status", "sDefaultContent": "", "sTitle": "Submission Status", "bSearchable": true },
+            {"mData": "submissionType", "sDefaultContent": "", "sTitle": "Submission Type", "bSearchable": true },
             {"mData": "id", "sTitle": "Submission ID", "bSearchable": true},
             {"mData": "created", "sDefaultContent": "", "sTitle": "Date Created", "bSearchable": true},
             {"mData": "curator", "sDefaultContent": "", "sTitle": "Submitter", "bSearchable": true},
