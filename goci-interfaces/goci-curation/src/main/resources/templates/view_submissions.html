@@ -68,15 +68,16 @@
                           <form class="form-inline" name="assignStatusForm" role="form" method="post"
                                 th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
                                 th:object="${submission}">
-
-                              <span th:text="${submission.status}"></span>
+                              <span
+                                      th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                               <button type="submit"
                                       class="btn btn-primary btn-sm">Import
                               </button>
                           </form>
                       </div>
                       <div th:unless="${submission.status.equals('SUBMITTED')}" th:remove="tag">
-                          <span th:text="${submission.status}"></span>
+                          <span
+                                  th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                       </div>
                   </td>
                   <td>

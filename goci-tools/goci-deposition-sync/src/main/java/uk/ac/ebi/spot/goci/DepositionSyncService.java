@@ -122,7 +122,6 @@ public class DepositionSyncService {
                         if(addSummaryStatsData(newPublication, p)){
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                         }
-                        //todo: else create ftp directory
                     }else {
                         newPublication.setStatus("ELIGIBLE");
                     }
@@ -134,7 +133,6 @@ public class DepositionSyncService {
                         if(isPublished) {
                             System.out.println("adding published publication" + pubmedId + " to mongo");
                         }else {
-                            //TODO: create FTP folder
                             newPublication.setStatus("ELIGIBLE");
                         }
                         depositionPublicationService.addPublication(newPublication);

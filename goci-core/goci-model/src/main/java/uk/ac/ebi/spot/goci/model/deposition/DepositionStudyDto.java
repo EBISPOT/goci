@@ -37,6 +37,9 @@ public class DepositionStudyDto {
     @JsonProperty("variant_count")
     private Integer variantCount;
 
+    @JsonProperty("sample_description")
+    private String sampleDescription;
+
     @JsonProperty("statistical_model")
     private String statisticalModel;
 
@@ -45,6 +48,15 @@ public class DepositionStudyDto {
 
     @JsonProperty("trait")
     private String trait;
+
+    @JsonProperty("efo_trait")
+    private String efoTrait;
+
+    @JsonProperty("background_trait")
+    private String backgroundTrait;
+
+    @JsonProperty("background_efo_trait")
+    private String backgroundEfoTrait;
 
     @JsonProperty("checksum")
     private String checksum;
@@ -55,6 +67,11 @@ public class DepositionStudyDto {
     @JsonProperty("summary_statistics_assembly")
     private String summaryStatisticsAssembly;
 
+    @JsonProperty("cohort")
+    private String cohort;
+
+    @JsonProperty("cohort_id")
+    private String cohortId;
     public Study buildStudy(){
         Study study = new Study();
         study.setAccessionId(accession);

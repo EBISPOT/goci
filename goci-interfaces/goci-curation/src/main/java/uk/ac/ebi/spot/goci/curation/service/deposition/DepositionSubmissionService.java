@@ -68,7 +68,6 @@ public class DepositionSubmissionService {
     }
 
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
-        //TODO: update notes with import log
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
@@ -95,8 +94,8 @@ public class DepositionSubmissionService {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
 
-                StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
                 for (DepositionStudyDto studyDto : studies) {
+                    StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
                     String studyTag = studyDto.getStudyTag();
                     studyNote.append("created " + studyTag + "\n");
                     Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);

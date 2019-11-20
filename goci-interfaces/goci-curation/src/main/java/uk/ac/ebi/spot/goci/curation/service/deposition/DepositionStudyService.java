@@ -12,8 +12,9 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
-import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 public class DepositionStudyService {
@@ -37,9 +38,12 @@ public class DepositionStudyService {
     StudyOperationsService studyOperationsService;
     @Autowired
     StudyNoteOperationsService noteOperationsService;
-    @Autowired NoteSubjectRepository noteSubjectRepository;
-    @Autowired NoteRepository noteRepository;
-
+    @Autowired
+    NoteSubjectRepository noteSubjectRepository;
+    @Autowired
+    NoteRepository noteRepository;
+    @Autowired
+    EfoTraitRepository efoTraitRepository;
 
 
     public void publishSummaryStats(Study study, SecureUser currentUser) {
@@ -53,7 +57,7 @@ public class DepositionStudyService {
                         currentUser);
     }
 
-        public void publishSummaryStats(Collection<Study> dbStudies, SecureUser currentUser) {
+    public void publishSummaryStats(Collection<Study> dbStudies, SecureUser currentUser) {
         for (Study study : dbStudies) {
             publishSummaryStats(study, currentUser);
         }
@@ -101,18 +105,28 @@ public class DepositionStudyService {
         }
         study.setImputed(studyDto.getImputation());
         study.setSnpCount(studyDto.getVariantCount());
+        List<EfoTrait> efoTraitList = new ArrayList<>();
+        String efoTrait = studyDto.getEfoTrait();
+        if(efoTrait != null){
+            String[] efoTraits = efoTrait.split("\\|");
+            for(String trait: efoTraits){
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait());
+                efoTraitList.add(dbTrait);
+            }
+        }
+        study.setEfoTraits(efoTraitList);
         return study;
     }
 
     public void deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
         for (Study study : dbStudies) {
-            addStudyNote(study, "DELETED, replaced by deposition import", null, curator, null, currentUser);
+            addStudyNote(study, "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
 //          studyService.deleteByStudyId(study.getId());
         }
     }
 
-    public void addStudyNote(Study study, String noteText, String noteStatus,
-                             Curator noteCurator, String noteSubject, SecureUser currentUser){
+    public void addStudyNote(Study study, String noteText, String noteStatus, Curator noteCurator, String noteSubject,
+                             SecureUser currentUser) {
         Collection<StudyNote> studyNotes = study.getNotes();
         if (studyNotes != null && studyNotes.size() != 0) {
             for (StudyNote note : studyNotes) {
@@ -121,13 +135,13 @@ public class DepositionStudyService {
         } else {
             StudyNote note = noteOperationsService.createEmptyStudyNote(study, currentUser);
             note.setTextNote(noteText);
-            if(noteStatus != null) {
+            if (noteStatus != null) {
                 note.setStatus(Boolean.parseBoolean(noteStatus));
             }
-            if(noteCurator != null) {
+            if (noteCurator != null) {
                 note.setCurator(noteCurator);
             }
-            if(noteSubject != null) {
+            if (noteSubject != null) {
                 note.setNoteSubject(noteSubjectRepository.findBySubjectIgnoreCase(noteSubject));
             }
             note.setStudy(study);
@@ -138,7 +152,7 @@ public class DepositionStudyService {
         studyService.save(study);
     }
 
-    public void addStudyNote(Study study, DepositionNoteDto noteDto, SecureUser currentUser, Curator curator){
+    public void addStudyNote(Study study, DepositionNoteDto noteDto, SecureUser currentUser, Curator curator) {
         addStudyNote(study, noteDto.getNote(), noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
 
     }
