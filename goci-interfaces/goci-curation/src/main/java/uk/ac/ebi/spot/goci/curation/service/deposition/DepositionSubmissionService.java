@@ -85,7 +85,7 @@ public class DepositionSubmissionService {
         //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
         if (submissionType == Submission.SubmissionType.SUM_STATS) { //if submission type is SUM_STATS only
-            depositionStudyService.publishSummaryStats(dbStudies, currentUser);
+            depositionStudyService.publishSummaryStats(studies, dbStudies, currentUser);
             depositionSubmission.setStatus("COMPLETE");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
@@ -104,7 +104,7 @@ public class DepositionSubmissionService {
                         //find notes in study
                         for (DepositionNoteDto noteDto : notes) {
                             if (noteDto.getStudyTag().equals(studyTag)) {
-                                depositionStudyService.addStudyNote(study, noteDto, currentUser, curator);
+                                depositionStudyService.addStudyNote(study, studyDto, noteDto, currentUser, curator);
                             }
                         }
                     }
@@ -118,12 +118,10 @@ public class DepositionSubmissionService {
                     }
 
                     eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study creation");
-                    studyService.save(study);
-                    if(submissionType.toString().contains("SUM_STATS")){
-                        depositionStudyService.publishSummaryStats(study, currentUser);
-                    }
-                    depositionStudyService.addStudyNote(study, studyNote.toString(), "STUDY_CREATION", curator,
+                    depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
+                            curator,
                             "Import study creation", currentUser);
+                    studyService.save(study);
                 }
             }
             depositionSubmission.setDateSubmitted(new LocalDate());

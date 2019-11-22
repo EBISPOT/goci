@@ -49,26 +49,35 @@ public class DepositionStudyService {
     public void publishSummaryStats(Study study, SecureUser currentUser) {
         UnpublishReason tempReason = unpublishReasonRepository.findById(1L);
         CurationStatus currentStatus = study.getHousekeeping().getCurationStatus();
+        //studyOperationsService.unpublishStudy(study.getId(), tempReason, currentUser);
         study.setFullPvalueSet(true);
         studyService.save(study);
-        studyOperationsService.unpublishStudy(study.getId(), tempReason, currentUser);
-        studyOperationsService
-                .assignStudyStatus(study, new StatusAssignment(currentStatus.getId(), currentStatus.getStatus()),
-                        currentUser);
+//        studyOperationsService
+//                .assignStudyStatus(study, new StatusAssignment(currentStatus.getId(), currentStatus.getStatus()),
+//                        currentUser);
     }
 
-    public void publishSummaryStats(Collection<Study> dbStudies, SecureUser currentUser) {
-        for (Study study : dbStudies) {
-            publishSummaryStats(study, currentUser);
+    public void publishSummaryStats(Collection<DepositionStudyDto> studyDtos, Collection<Study> dbStudies,
+                                    SecureUser currentUser) {
+        for(DepositionStudyDto studyDto: studyDtos) {
+            String tag = studyDto.getStudyTag();
+            boolean match = false;
+            for (Study study : dbStudies) {
+                if(study.getAccessionId().equals(studyDto.getAccession())){
+                    publishSummaryStats(study, currentUser);
+                    match = true;
+                }
+            }
+            if(!match){
+                List<Long> studyIds = new ArrayList<>();
+                for (Study study : dbStudies) {
+                    studyIds.add(study.getId());
+                }
+                for (Long studyId: studyIds) {
+                    publishSummaryStats(studyService.findOne(studyId), currentUser);
+                }
+            }
         }
-    }
-
-    public void unPublishStudy(Study study) {
-
-    }
-
-    public void createStudy(DepositionStudyDto studyDto) {
-
     }
 
     Study initStudy(DepositionStudyDto studyDto, Publication publication, SecureUser currentUser) {
@@ -114,27 +123,45 @@ public class DepositionStudyService {
                 efoTraitList.add(dbTrait);
             }
         }
+        if(studyDto.getSummaryStatisticsFile() != null){
+            study.setFullPvalueSet(true);
+        }
         study.setEfoTraits(efoTraitList);
         return study;
     }
 
     public void deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
-        for (Study study : dbStudies) {
-            addStudyNote(study, "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
+        int length = dbStudies.size();
+        for (int i = 0; i < length; i++) {
+            addStudyNote(dbStudies.toArray(new Study[0])[i], null, "Review for deletion, replaced by deposition import",
+                    null,
+                    curator, null,
+                    currentUser);
 //          studyService.deleteByStudyId(study.getId());
         }
     }
 
-    public void addStudyNote(Study study, String noteText, String noteStatus, Curator noteCurator, String noteSubject,
+    public void addStudyNote(Study study, String studyTag, String noteText, String noteStatus, Curator noteCurator,
+                             String noteSubject,
                              SecureUser currentUser) {
         Collection<StudyNote> studyNotes = study.getNotes();
         if (studyNotes != null && studyNotes.size() != 0) {
-            for (StudyNote note : studyNotes) {
-                note.setTextNote(noteText);
+            int length = studyNotes.size();
+            StudyNote[] notes = studyNotes.toArray(new StudyNote[0]);
+            for (int i = 0; i < length; i++) {
+                if(studyTag != null) {
+                    notes[i].setTextNote(studyTag + "\n" + noteText);
+                }else{
+                    notes[i].setTextNote(noteText);
+                }
             }
         } else {
             StudyNote note = noteOperationsService.createEmptyStudyNote(study, currentUser);
-            note.setTextNote(noteText);
+            if(studyTag != null) {
+                note.setTextNote(studyTag + "\n" + noteText);
+            }else{
+                note.setTextNote(noteText);
+            }
             if (noteStatus != null) {
                 note.setStatus(Boolean.parseBoolean(noteStatus));
             }
@@ -152,8 +179,12 @@ public class DepositionStudyService {
         studyService.save(study);
     }
 
-    public void addStudyNote(Study study, DepositionNoteDto noteDto, SecureUser currentUser, Curator curator) {
-        addStudyNote(study, noteDto.getNote(), noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
+    public void addStudyNote(Study study, DepositionStudyDto studyDto, DepositionNoteDto noteDto,
+                             SecureUser currentUser,
+                             Curator curator) {
+        addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(), curator,
+                noteDto.getNoteSubject(),
+                currentUser);
 
     }
 }
