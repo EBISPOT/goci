@@ -74,6 +74,7 @@ public class DepositionStudyDto {
     private String cohortId;
     public Study buildStudy(){
         Study study = new Study();
+        study.setStudyTag(studyTag);
         study.setAccessionId(accession);
         study.setStudyDesignComment(studyDescription);
         study.setImputed(imputation);
