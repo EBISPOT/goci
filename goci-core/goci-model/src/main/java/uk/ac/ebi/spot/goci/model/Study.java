@@ -121,6 +121,7 @@ public class Study implements Trackable {
     @JoinColumn(name = "publication_id")
     private Publication publicationId;
 
+    private String studyTag;
 
 
 
@@ -458,4 +459,12 @@ public class Study implements Trackable {
 
     @JsonProperty("publicationInfo")
     public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
+
+    public String getStudyTag(){
+        return studyTag;
+    }
+
+    public void setStudyTag(String studyTag){
+        this.studyTag = studyTag;
+    }
 }
