@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.ac.ebi.spot.goci.model.*;
 
-import java.util.Arrays;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +33,7 @@ public class DepositionStudyDto {
     private Boolean imputation;
 
     @JsonProperty("variant_count")
-    private Integer variantCount;
+    private String variantCount;
 
     @JsonProperty("sample_description")
     private String sampleDescription;

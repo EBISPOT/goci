@@ -113,7 +113,10 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setImputed(studyDto.getImputation());
-        study.setSnpCount(studyDto.getVariantCount());
+        try {
+            Integer variantCount = Integer.parseInt(studyDto.getVariantCount());
+            study.setSnpCount(variantCount);
+        }catch(NumberFormatException e){}
         List<EfoTrait> efoTraitList = new ArrayList<>();
         String efoTrait = studyDto.getEfoTrait();
         if(efoTrait != null){
