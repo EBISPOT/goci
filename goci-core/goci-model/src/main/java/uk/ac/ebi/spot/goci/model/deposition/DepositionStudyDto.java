@@ -33,7 +33,7 @@ public class DepositionStudyDto {
     private Boolean imputation;
 
     @JsonProperty("variant_count")
-    private String variantCount;
+    private Integer variantCount;
 
     @JsonProperty("sample_description")
     private String sampleDescription;

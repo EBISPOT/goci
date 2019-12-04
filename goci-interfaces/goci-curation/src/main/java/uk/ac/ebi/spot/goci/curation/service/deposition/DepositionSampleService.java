@@ -49,7 +49,9 @@ public class DepositionSampleService {
                     }
                 }
                 ancestry.setCountryOfRecruitment(countryList);
-                ancestry.setNumberOfIndividuals(sampleDto.getSize());
+                if(sampleDto.getSize() != -1) {
+                    ancestry.setNumberOfIndividuals(sampleDto.getSize());
+                }
                 ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
                 sampleDto.getAncestryCategory();
                 String ancestryStr = sampleDto.getAncestry();
@@ -86,8 +88,10 @@ public class DepositionSampleService {
         if(sampleDto.getCases() != null && sampleDto.getControls() != null){
             return sampleDto.getCases() + " " + ancestry + " ancestry cases, "
                     + sampleDto.getControls() + " " + ancestry + " ancestry controls\n";
-        }else{
+        }else if(sampleDto.getSize() != -1){
             return sampleDto.getSize() + " " + ancestry + " individuals";
+        }else{
+            return ancestry + " individuals";
         }
     }
 
