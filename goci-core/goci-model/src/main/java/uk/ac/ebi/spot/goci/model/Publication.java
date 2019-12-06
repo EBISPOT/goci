@@ -58,6 +58,10 @@ public class Publication {
     @JsonIgnore
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "publicationId")
+    @JsonIgnore
+    private Collection<PublicationCorrespondingAuthor> correspondingAuthors;
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
