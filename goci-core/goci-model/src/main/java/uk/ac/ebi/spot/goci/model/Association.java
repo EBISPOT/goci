@@ -85,6 +85,10 @@ public class Association implements Trackable {
     private AssociationReport associationReport;
 
     @JsonIgnore
+    @OneToOne(mappedBy = "association", orphanRemoval = true)
+    private AssociationExtension associationExtension;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "association", orphanRemoval = true)
     private Collection<AssociationValidationReport> associationValidationReports = new ArrayList<>();
 
@@ -349,6 +353,14 @@ public class Association implements Trackable {
 
     public void setAssociationReport(AssociationReport associationReport) {
         this.associationReport = associationReport;
+    }
+
+    public AssociationExtension getAssociationExtension() {
+        return associationExtension;
+    }
+
+    public void setAssociationExtension(AssociationExtension associationExtension) {
+        this.associationExtension = associationExtension;
     }
 
     public Date getLastMappingDate() {

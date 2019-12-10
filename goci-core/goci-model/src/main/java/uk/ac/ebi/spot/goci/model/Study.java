@@ -296,6 +296,14 @@ public class Study implements Trackable {
         this.housekeeping = housekeeping;
     }
 
+    public StudyExtension getStudyExtension() {
+        return studyExtension;
+    }
+
+    public void setStudyExtension(StudyExtension studyExtension) {
+        this.studyExtension = studyExtension;
+    }
+
     public StudyReport getStudyReport() {
         return studyReport;
     }
