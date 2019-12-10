@@ -25,5 +25,5 @@ public class AncestryExtension {
 
     private String ancestryDescriptor;
 
-    private String geneticallyIsolatedPopulation;
+    private String isolatedPopulation;
 }

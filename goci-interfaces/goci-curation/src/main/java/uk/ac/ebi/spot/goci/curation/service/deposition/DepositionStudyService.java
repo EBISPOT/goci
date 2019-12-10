@@ -2,7 +2,6 @@ package uk.ac.ebi.spot.goci.curation.service.deposition;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
@@ -139,7 +138,7 @@ public class DepositionStudyService {
         studyExtension.setCohortSpecificReference(studyDto.getCohortId());
         studyExtension.setStatisticalModel(studyDto.getStatisticalModel());
         studyExtension.setSummaryStatisticsFile(studyDto.getSummaryStatisticsFile());
-        studyExtension.setSummaryStatisticsGenomeAssembly(studyDto.getSummaryStatisticsAssembly());
+        studyExtension.setSummaryStatisticsAssembly(studyDto.getSummaryStatisticsAssembly());
         studyExtension.setStudy(study);
         studyExtensionRepository.save(studyExtension);
         study.setStudyExtension(studyExtension);

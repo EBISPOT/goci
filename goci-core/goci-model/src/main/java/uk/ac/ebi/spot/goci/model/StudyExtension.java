@@ -30,5 +30,5 @@ public class StudyExtension {
 
     private String summaryStatisticsFile;
 
-    private String summaryStatisticsGenomeAssembly;
+    private String summaryStatisticsAssembly;
 }
