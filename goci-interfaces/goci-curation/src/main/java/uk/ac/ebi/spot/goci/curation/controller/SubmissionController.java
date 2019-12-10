@@ -40,15 +40,6 @@ public class SubmissionController {
     @Autowired
     private RestTemplate template;
 
-//    @Value("${ftp.src}")
-//    private String ftpSrcDir;
-//
-//    @Value("${ftp.dest}")
-//    private String ftpDestDir;
-//
-    //@Value("${deposition.uri}")
-    //private String depositionIngestURL;
-
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
 
@@ -137,25 +128,4 @@ public class SubmissionController {
         ResponseEntity<Submission> response = new ResponseEntity<>(submission, HttpStatus.OK);
         return response;
     }
-
-/*    @CrossOrigin
-    @RequestMapping(value = "/test", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<String> testExec() {
-        String fileList = "";
-        File rootSrcDir = new File(ftpSrcDir);
-        File rootDestDir = new File(ftpDestDir);
-        try {
-        for(File f: rootSrcDir.listFiles()){
-                Files.copy(f.toPath(), rootDestDir.toPath().resolve(f.getName()));
-                fileList += f.getAbsolutePath() + "\n";
-        }
-        for(File f: rootSrcDir.listFiles()){
-            fileList += f.getAbsolutePath() + "\n";
-        }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ResponseEntity<String> response = new ResponseEntity<>(fileList, HttpStatus.OK);
-        return response;
-    }*/
 }

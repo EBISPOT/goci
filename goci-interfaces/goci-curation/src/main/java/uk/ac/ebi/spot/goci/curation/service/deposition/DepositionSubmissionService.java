@@ -13,8 +13,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.NoteSubjectRepository;
-import uk.ac.ebi.spot.goci.repository.PublicationCorrespondingAuthorRepository;
+import uk.ac.ebi.spot.goci.repository.PublicationExtensionRepository;
 import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -33,7 +32,7 @@ public class DepositionSubmissionService {
     private final DepositionStudyService depositionStudyService;
     private final CuratorRepository curatorRepository;
     private final EventOperationsService eventOperationsService;
-    private final PublicationCorrespondingAuthorRepository authorRepository;
+    private final PublicationExtensionRepository authorRepository;
 
     @Autowired
     @Qualifier("JodaMapper")
@@ -58,7 +57,7 @@ public class DepositionSubmissionService {
                                        @Autowired CurationStatusRepository statusRepository,
                                        @Autowired CuratorRepository curatorRepository,
                                        @Autowired EventOperationsService eventOperationsService,
-                                       @Autowired PublicationCorrespondingAuthorRepository authorRepository) {
+                                       @Autowired PublicationExtensionRepository authorRepository) {
         this.publicationService = publicationService;
         this.studyService = studyService;
         this.studyOperationsService = studyOperationsService;
@@ -78,11 +77,11 @@ public class DepositionSubmissionService {
         String submissionID = depositionSubmission.getSubmissionId();
         Publication publication = publicationService.findByPumedId(depositionSubmission.getPublication().getPmid());
         if(depositionSubmission.getPublication().getCorrespondingAuthor() != null){
-            PublicationCorrespondingAuthor author = new PublicationCorrespondingAuthor();
+            PublicationExtension author = new PublicationExtension();
             author.setCorrespondingAuthorEmail(depositionSubmission.getPublication().getCorrespondingAuthor().getEmail());
             author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getAuthorName());
             authorRepository.save(author);
-            List<PublicationCorrespondingAuthor> authorList = new ArrayList<>();
+            List<PublicationExtension> authorList = new ArrayList<>();
             authorList.add(author);
             publication.setCorrespondingAuthors(authorList);
             publicationService.save(publication);

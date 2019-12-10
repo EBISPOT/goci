@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Entity
 @Data
-public class PublicationCorrespondingAuthor {
+public class PublicationExtension {
     @Id
     @GeneratedValue
     private Long id;

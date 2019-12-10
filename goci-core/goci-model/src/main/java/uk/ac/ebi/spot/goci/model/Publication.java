@@ -60,7 +60,7 @@ public class Publication {
 
     @OneToMany(mappedBy = "publicationId")
     @JsonIgnore
-    private Collection<PublicationCorrespondingAuthor> correspondingAuthors;
+    private Collection<PublicationExtension> correspondingAuthors;
 
     @PrePersist
     protected void onCreate() {
@@ -135,9 +135,9 @@ public class Publication {
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
 
-    public Collection<PublicationCorrespondingAuthor> getCorrespondingAuthors() { return correspondingAuthors; }
+    public Collection<PublicationExtension> getCorrespondingAuthors() { return correspondingAuthors; }
 
-    public void setCorrespondingAuthors(Collection<PublicationCorrespondingAuthor> correspondingAuthors) { this.correspondingAuthors =
+    public void setCorrespondingAuthors(Collection<PublicationExtension> correspondingAuthors) { this.correspondingAuthors =
             correspondingAuthors; }
 
     public Collection<Study> getStudies() { return studies; }
