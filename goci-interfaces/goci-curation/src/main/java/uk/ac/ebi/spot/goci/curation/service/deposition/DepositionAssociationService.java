@@ -7,6 +7,7 @@ import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
+import uk.ac.ebi.spot.goci.repository.AssociationExtensionRepository;
 import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
 
@@ -24,6 +25,8 @@ public class DepositionAssociationService {
     LociAttributesService lociService;
     @Autowired
     MapCatalogService mapCatalogService;
+    @Autowired
+    AssociationExtensionRepository extensionRepository;
 
     public DepositionAssociationService() {}
 
@@ -76,6 +79,13 @@ public class DepositionAssociationService {
                 if(associationDto.getCiLower() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
                 }
+                AssociationExtension associationExtension = new AssociationExtension();
+                associationExtension.setAssociation(association);
+                associationExtension.setEffectAllele(associationDto.getEffectAllele());
+                associationExtension.setOtherAllele(associationDto.getOtherAllele());
+                extensionRepository.save(associationExtension);
+                association.setAssociationExtension(associationExtension);
+                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
             }
         }
         try {

@@ -194,6 +194,14 @@ public class Ancestry implements Trackable {
         this.study = study;
     }
 
+    public AncestryExtension getAncestryExtension() {
+        return ancestryExtension;
+    }
+
+    public void setAncestryExtension(AncestryExtension ancestryExtension) {
+        this.ancestryExtension = ancestryExtension;
+    }
+
     public Collection<Event> getEvents() {
         return events;
     }

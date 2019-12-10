@@ -71,13 +71,17 @@
                               <span
                                       th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                               <button type="submit"
-                                      class="btn btn-primary btn-sm">Import
+                                      class="btn btn-sm"
+                                      th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
+                                      th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"
+                                      th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import">
                               </button>
                           </form>
                       </div>
                       <div th:unless="${submission.status.equals('SUBMITTED')}" th:remove="tag">
                           <span
-                                  th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
+                                  th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' :
+                                  ${submission.status}"></span>
                       </div>
                   </td>
                   <td>

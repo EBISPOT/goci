@@ -44,6 +44,8 @@ public class DepositionStudyService {
     NoteRepository noteRepository;
     @Autowired
     EfoTraitRepository efoTraitRepository;
+    @Autowired
+    StudyExtensionRepository studyExtensionRepository;
 
 
     public void publishSummaryStats(Study study, SecureUser currentUser) {
@@ -130,17 +132,28 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setEfoTraits(efoTraitList);
+        studyService.save(study);
+        StudyExtension studyExtension = new StudyExtension();
+        studyExtension.setBackgroundTrait(studyDto.getBackgroundTrait());
+        studyExtension.setCohort(studyDto.getCohort());
+        studyExtension.setCohortSpecificReference(studyDto.getCohortId());
+        studyExtension.setStatisticalModel(studyDto.getStatisticalModel());
+        studyExtension.setSummaryStatisticsFile(studyDto.getSummaryStatisticsFile());
+        studyExtension.setSummaryStatisticsGenomeAssembly(studyDto.getSummaryStatisticsAssembly());
+        studyExtension.setStudy(study);
+        studyExtensionRepository.save(studyExtension);
+        study.setStudyExtension(studyExtension);
+        studyService.save(study);
         return study;
     }
 
     public void deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
-        int length = dbStudies.size();
-        for (int i = 0; i < length; i++) {
-            addStudyNote(dbStudies.toArray(new Study[0])[i], null, "Review for deletion, replaced by deposition import",
-                    null,
-                    curator, null,
-                    currentUser);
-//          studyService.deleteByStudyId(study.getId());
+        if(dbStudies != null) {
+            for (int i = 0; i < dbStudies.size(); i++) {
+                addStudyNote(dbStudies.toArray(new Study[0])[i], null,
+                        "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
+                //          studyService.deleteByStudyId(study.getId());
+            }
         }
     }
 

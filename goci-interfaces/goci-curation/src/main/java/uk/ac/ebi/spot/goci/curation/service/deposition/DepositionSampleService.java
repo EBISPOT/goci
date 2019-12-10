@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
 import uk.ac.ebi.spot.goci.repository.AncestralGroupRepository;
+import uk.ac.ebi.spot.goci.repository.AncestryExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.CountryRepository;
 
@@ -19,6 +20,8 @@ public class DepositionSampleService {
     AncestryRepository ancestryRepository;
     @Autowired
     AncestralGroupRepository ancestralGroupRepository;
+    @Autowired
+    AncestryExtensionRepository extensionRepository;
 
     public DepositionSampleService(){}
     public String saveSamples(SecureUser currentUser, String studyTag, Study study, List<DepositionSampleDto> samples){
@@ -67,6 +70,12 @@ public class DepositionSampleService {
                 ancestry.setAncestralGroups(ancestryGroups);
                 ancestry.setStudy(study);
                 ancestry.setDescription(sampleDto.getAncestry());
+                ancestryRepository.save(ancestry);
+                AncestryExtension ancestryExtension = new AncestryExtension();
+                ancestryExtension.setAncestry(ancestry);
+                ancestryExtension.setAncestryDescriptor(sampleDto.getAncestryDescription());
+                extensionRepository.save(ancestryExtension);
+                ancestry.setAncestryExtension(ancestryExtension);
                 ancestryRepository.save(ancestry);
             }
         }

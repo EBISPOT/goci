@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
 import uk.ac.ebi.spot.goci.repository.NoteSubjectRepository;
+import uk.ac.ebi.spot.goci.repository.PublicationCorrespondingAuthorRepository;
 import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -32,6 +33,7 @@ public class DepositionSubmissionService {
     private final DepositionStudyService depositionStudyService;
     private final CuratorRepository curatorRepository;
     private final EventOperationsService eventOperationsService;
+    private final PublicationCorrespondingAuthorRepository authorRepository;
 
     @Autowired
     @Qualifier("JodaMapper")
@@ -55,7 +57,8 @@ public class DepositionSubmissionService {
                                        @Autowired DepositionStudyService depositionStudyService,
                                        @Autowired CurationStatusRepository statusRepository,
                                        @Autowired CuratorRepository curatorRepository,
-                                       @Autowired EventOperationsService eventOperationsService) {
+                                       @Autowired EventOperationsService eventOperationsService,
+                                       @Autowired PublicationCorrespondingAuthorRepository authorRepository) {
         this.publicationService = publicationService;
         this.studyService = studyService;
         this.studyOperationsService = studyOperationsService;
@@ -64,6 +67,7 @@ public class DepositionSubmissionService {
         this.depositionStudyService = depositionStudyService;
         this.curatorRepository = curatorRepository;
         this.eventOperationsService = eventOperationsService;
+        this.authorRepository = authorRepository;
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
 
@@ -73,6 +77,16 @@ public class DepositionSubmissionService {
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
         String submissionID = depositionSubmission.getSubmissionId();
         Publication publication = publicationService.findByPumedId(depositionSubmission.getPublication().getPmid());
+        if(depositionSubmission.getPublication().getCorrespondingAuthor() != null){
+            PublicationCorrespondingAuthor author = new PublicationCorrespondingAuthor();
+            author.setCorrespondingAuthorEmail(depositionSubmission.getPublication().getCorrespondingAuthor().getEmail());
+            author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getAuthorName());
+            authorRepository.save(author);
+            List<PublicationCorrespondingAuthor> authorList = new ArrayList<>();
+            authorList.add(author);
+            publication.setCorrespondingAuthors(authorList);
+            publicationService.save(publication);
+        }
         Collection<Study> dbStudies =
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
 
@@ -99,7 +113,6 @@ public class DepositionSubmissionService {
                     String studyTag = studyDto.getStudyTag();
                     studyNote.append("created " + studyTag + "\n");
                     Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
-                    studyService.save(study);
                     if (notes != null) {
                         //find notes in study
                         for (DepositionNoteDto noteDto : notes) {

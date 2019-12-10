@@ -135,6 +135,11 @@ public class Publication {
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
 
+    public Collection<PublicationCorrespondingAuthor> getCorrespondingAuthors() { return correspondingAuthors; }
+
+    public void setCorrespondingAuthors(Collection<PublicationCorrespondingAuthor> correspondingAuthors) { this.correspondingAuthors =
+            correspondingAuthors; }
+
     public Collection<Study> getStudies() { return studies; }
 
     public void setStudies(Collection<Study> studies) { this.studies = studies; }
