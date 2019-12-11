@@ -50,6 +50,7 @@
           <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
               <thead>
               <tr>
+                  <th>Action</th>
                   <th style="width:10%">Submission Status</th>
                   <th style="width:10%">Submission Type</th>
                   <th style="width:10%">Submission ID</th>
@@ -68,8 +69,6 @@
                           <form class="form-inline" name="assignStatusForm" role="form" method="post"
                                 th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
                                 th:object="${submission}">
-                              <span
-                                      th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                               <button type="submit"
                                       class="btn btn-sm"
                                       th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
@@ -77,6 +76,13 @@
                                       th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import">
                               </button>
                           </form>
+                      </div>
+
+                  </td>
+                  <td>
+                      <div th:if="${submission.status.equals('SUBMITTED')}" th:remove="tag">
+                              <span
+                                      th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                       </div>
                       <div th:unless="${submission.status.equals('SUBMITTED')}" th:remove="tag">
                           <span

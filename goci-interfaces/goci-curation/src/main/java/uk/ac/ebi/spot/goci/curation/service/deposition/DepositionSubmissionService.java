@@ -112,6 +112,12 @@ public class DepositionSubmissionService {
                     String studyTag = studyDto.getStudyTag();
                     studyNote.append("created " + studyTag + "\n");
                     Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
+                    Collection<Study> pubStudies = publication.getStudies();
+                    if(pubStudies == null){
+                        pubStudies = new ArrayList<>();
+                    }
+                    pubStudies.add(study);
+                    publication.setStudies(pubStudies);
                     if (notes != null) {
                         //find notes in study
                         for (DepositionNoteDto noteDto : notes) {
@@ -136,6 +142,7 @@ public class DepositionSubmissionService {
                     studyService.save(study);
                 }
             }
+            publicationService.save(publication);
             depositionSubmission.setDateSubmitted(new LocalDate());
             depositionSubmission.setStatus("CURATION_COMPLETE");
             try {

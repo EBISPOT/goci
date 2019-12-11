@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $('#submissionDataTable').DataTable({
         "columns": [
+            {"mData": "action", "sDefaultContent": "", "sTitle": "Action", "bSearchable": false },
             {"mData": "status", "sDefaultContent": "", "sTitle": "Submission Status", "bSearchable": true },
             {"mData": "submissionType", "sDefaultContent": "", "sTitle": "Submission Type", "bSearchable": true },
             {"mData": "id", "sTitle": "Submission ID", "bSearchable": true},
@@ -16,6 +17,6 @@ $(document).ready(function () {
             [5, 10, 25, 50, 100, "All"]
         ],
         "iDisplayLength": -1,
-        //"order": [[ 0, "desc" ]],
+        "order": [[ 1, "desc" ]]
     });
 });

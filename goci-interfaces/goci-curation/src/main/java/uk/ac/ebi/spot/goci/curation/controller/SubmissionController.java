@@ -115,7 +115,7 @@ public class SubmissionController {
         submission.setStatus("IMPORTED");
         model.addAttribute("submissions", submissionList.values());
 
-        return "view_submissions";
+        return "redirect:/submissions/new";
     }
 
     @CrossOrigin

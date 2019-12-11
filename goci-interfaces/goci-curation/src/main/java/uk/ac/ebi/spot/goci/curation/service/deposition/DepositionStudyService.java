@@ -184,7 +184,11 @@ public class DepositionStudyService {
                 note.setCurator(noteCurator);
             }
             if (noteSubject != null) {
-                note.setNoteSubject(noteSubjectRepository.findBySubjectIgnoreCase(noteSubject));
+                NoteSubject subject = noteSubjectRepository.findBySubjectIgnoreCase(noteSubject);
+                if(subject == null){
+                    subject = noteSubjectRepository.findBySubjectIgnoreCase("System note");
+                }
+                note.setNoteSubject(subject);
             }
             note.setStudy(study);
             noteRepository.save(note);

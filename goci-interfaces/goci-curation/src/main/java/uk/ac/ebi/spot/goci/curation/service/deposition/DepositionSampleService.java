@@ -79,8 +79,8 @@ public class DepositionSampleService {
                 ancestryRepository.save(ancestry);
             }
         }
-        studyNote.append(initialSampleSize + "\n");
-        studyNote.append(replicateSampleSize + "\n");
+        studyNote.append("initial: " + initialSampleSize + "\n");
+        studyNote.append("replication: " + replicateSampleSize + "\n");
         study.setInitialSampleSize(initialSampleSize.trim());
         study.setReplicateSampleSize(replicateSampleSize.trim());
         return studyNote.toString();
