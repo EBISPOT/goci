@@ -176,7 +176,8 @@ public class AssociationService {
     @Transactional(readOnly = true)
     public void loadAssociatedData(Association association) {
         int traitCount = association.getEfoTraits().size();
-        Study study = studyService.fetchOne(association.getStudy());
+        //Study study = studyService.fetchOne(association.getStudy());
+        Study study = association.getStudy();
         AtomicInteger reportedGeneCount = new AtomicInteger();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
         Collection<SingleNucleotidePolymorphism> proxySnps = new HashSet<>();
