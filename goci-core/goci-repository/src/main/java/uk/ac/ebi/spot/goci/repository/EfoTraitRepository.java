@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
@@ -36,6 +37,10 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
 
     @RestResource(exported = false)
     List<EfoTrait> findByAssociationsId(Long associationId);
+
+    @RestResource(exported = false)
+    @Query("select e.trait from EfoTrait e join e.associations a where a.id = :associationId")
+    List<String> findTraitNamesByAssociationsId(Long associationId);
 
     @RestResource(exported = false)
     List<EfoTrait> findByAssociationsId(Sort sort, Long associationId);

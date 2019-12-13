@@ -12,6 +12,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
+import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 import uk.ac.ebi.spot.goci.service.SolrIndexer;
 
 import javax.mail.internet.AddressException;
@@ -51,7 +53,8 @@ public class SolrIndexerApplication implements CommandLineRunner {
             int docCount = 0;
             if (pmids.length > 0) {
                 System.out.print("Loading selected publications..." + Arrays.toString(pmids));
-                docCount = solrIndexer.fetchAndIndexPublications(Arrays.asList(pmids));
+                //docCount = solrIndexer.fetchAndIndexPublications(Arrays.asList(pmids));
+                docCount = solrIndexer.fetchAndIndexAllThreads(Arrays.asList(pmids));
             }
             else {
                 System.out.print("Converting all GWAS database objects...");

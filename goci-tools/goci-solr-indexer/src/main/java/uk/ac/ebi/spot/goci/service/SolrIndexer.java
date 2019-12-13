@@ -104,16 +104,20 @@ public class SolrIndexer {
      * @return
      */
     public int fetchAndIndexAllThreads(){
+        return fetchAndIndexAllThreads(new ArrayList<String>());
+    }
+
+    public int fetchAndIndexAllThreads(Collection<String> pubmedIds){
         ExecutorService taskExecutor = Executors.newFixedThreadPool(threadCount);
         int count = -1;
         try {
             int processors = Runtime.getRuntime().availableProcessors();
             log.debug("available processors: " + processors);
             log.debug("running with # threads: " + threadCount);
-            int associationCount = mapAllAssociations(taskExecutor);
-            int studyCount = mapAllStudies(taskExecutor);
-            int efoCount = mapAllEfos(taskExecutor);
-            int traitCount = mapAllTraits(taskExecutor);
+            int associationCount = mapAllAssociations(taskExecutor, pubmedIds);
+            int studyCount = mapAllStudies(taskExecutor, pubmedIds);
+            int efoCount = mapAllEfos(taskExecutor, pubmedIds);
+            int traitCount = mapAllTraits(taskExecutor, pubmedIds);
             count = studyCount + associationCount + traitCount + efoCount;
         }catch(InterruptedException e){
             getLog().error(e.getMessage(), e);
@@ -132,103 +136,200 @@ public class SolrIndexer {
     }
 
 
-    private int mapAllStudies(ExecutorService taskExecutor) throws InterruptedException {
+    private int mapAllStudies(ExecutorService taskExecutor, Collection<String> pubmedIds) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
         if(runStudies) {
             Pageable pager = new PageRequest(0, pageSize);
-            Page<Study> studyPage = studyService.findPublishedStudies(pager);
-            studyMapper.map(studyPage.getContent());
-            CountDownLatch latch = new CountDownLatch(studyPage.getTotalPages() - 1);
-            if (sysOutLogging) {
-                System.out.println("mapping " + studyPage.getTotalPages() + " study pages");
-            }
-            while (studyPage.hasNext()) {
-                //pass parsing of page off to thread
-                if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
-                    break;
+
+            if (!pubmedIds.isEmpty()) {
+                int totalElements = 0;
+                for (String pmid : pubmedIds) {
+                    Page<Study> studyPage = studyService.findPublishedStudiesByPublicationId(pmid, pager);
+                    CountDownLatch latch = new CountDownLatch(studyPage.getTotalPages());
+                    taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+                    if (sysOutLogging) {
+                        System.out.println("mapping " + studyPage.getTotalPages() + " study pages");
+                    }
+                    while (studyPage.hasNext()) {
+                        //pass parsing of page off to thread
+                        if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
+                            break;
+                        }
+                        pager = pager.next();
+                        studyPage = studyService.findPublishedStudiesByPublicationId(pmid, pager);
+                        taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+                    }
+                    latch.await();
+                    totalElements += studyPage.getTotalElements();
                 }
-                pager = pager.next();
-                studyPage = studyService.findPublishedStudies(pager);
+                return totalElements;
+            } else {
+                Page<Study> studyPage = studyService.findPublishedStudies(pager);
+                CountDownLatch latch = new CountDownLatch(studyPage.getTotalPages());
                 taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+                if (sysOutLogging) {
+                    System.out.println("mapping " + studyPage.getTotalPages() + " study pages");
+                }
+                while (studyPage.hasNext()) {
+                    //pass parsing of page off to thread
+                    if (maxPages != -1 && studyPage.getNumber() >= maxPages - 1) {
+                        break;
+                    }
+                    pager = pager.next();
+                    studyPage = studyService.findPublishedStudies(pager);
+                    taskExecutor.execute(new StudyThread(studyPage.getContent(), latch, pager.getPageNumber()));
+                }
+                latch.await();
+                return (int) studyPage.getTotalElements();
             }
-            latch.await();
-            return (int) studyPage.getTotalElements();
+
         }else{
             return 0;
         }
     }
 
-    private int mapAllAssociations(ExecutorService taskExecutor) throws InterruptedException {
+    private int mapAllAssociations(ExecutorService taskExecutor, Collection<String> pubmedIds) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("id"));
         if(runAssociations) {
             Pageable pager = new PageRequest(0, pageSize);
-            Page<Association> associationPage = associationService.findPublishedAssociations(pager);
-            associationMapper.map(associationPage.getContent());
-            if (sysOutLogging) {
-                System.out.println("mapping " + associationPage.getTotalPages() + " association pages");
-            }
-            CountDownLatch latch = new CountDownLatch(associationPage.getTotalPages() - 1);
-            while (associationPage.hasNext()) {
-                if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
-                    break;
+            if (!pubmedIds.isEmpty()) {
+                int totalElements = 0;
+                for (String pmid : pubmedIds) {
+                    Page<Association> associationPage =
+                            associationService.findPublishedAssociationsPublicationId(pmid, pager);
+                    CountDownLatch latch = new CountDownLatch(associationPage.getTotalPages());
+                    taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+                    if (sysOutLogging) {
+                        System.out.println("mapping " + associationPage.getTotalPages() + " association pages");
+                    }
+                    while (associationPage.hasNext()) {
+                        if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
+                            break;
+                        }
+                        pager = pager.next();
+                        associationPage = associationService.findPublishedAssociationsPublicationId(pmid, pager);
+                        taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+                    }
+                    latch.await();
+                    totalElements += associationPage.getTotalElements();
                 }
-                pager = pager.next();
-                associationPage = associationService.findPublishedAssociations(pager);
+                return totalElements;
+            }else {
+                Page<Association> associationPage = associationService.findPublishedAssociations(pager);
+                CountDownLatch latch = new CountDownLatch(associationPage.getTotalPages());
                 taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+                if (sysOutLogging) {
+                    System.out.println("mapping " + associationPage.getTotalPages() + " association pages");
+                }
+                while (associationPage.hasNext()) {
+                    if (maxPages != -1 && associationPage.getNumber() >= maxPages - 1) {
+                        break;
+                    }
+                    pager = pager.next();
+                    associationPage = associationService.findPublishedAssociations(pager);
+                    taskExecutor.execute(new AssociationThread(associationPage.getContent(), latch, pager.getPageNumber()));
+                }
+                latch.await();
+                return (int) associationPage.getTotalElements();
             }
-            latch.await();
-            return (int) associationPage.getTotalElements();
         }
         else{
             return 0;
         }
     }
 
-    private int mapAllTraits(ExecutorService taskExecutor) throws InterruptedException {
+    private int mapAllTraits(ExecutorService taskExecutor, Collection<String> pubmedIds) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("trait"));
         if(runTraits) {
             Pageable pager = new PageRequest(0, pageSize);
-            Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
-            traitMapper.map(diseaseTraitPage.getContent());
-            if (sysOutLogging) {
-                System.out.println("mapping " + diseaseTraitPage.getTotalPages() + " disease trait pages");
-            }
-            CountDownLatch latch = new CountDownLatch(diseaseTraitPage.getTotalPages() - 1);
-            while (diseaseTraitPage.hasNext()) {
-                if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
-                    break;
+            if (!pubmedIds.isEmpty()) {
+                int totalElements = 0;
+                for (String pmid : pubmedIds) {
+                    Page<DiseaseTrait> diseaseTraitPage =
+                            diseaseTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                    CountDownLatch latch = new CountDownLatch(diseaseTraitPage.getTotalPages());
+                    taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+                    if (sysOutLogging) {
+                        System.out.println("mapping " + diseaseTraitPage.getTotalPages() + " disease trait pages");
+                    }
+                    while (diseaseTraitPage.hasNext()) {
+                        if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
+                            break;
+                        }
+                        pager = pager.next();
+                        diseaseTraitPage = diseaseTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                        taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+                    }
+                    totalElements += diseaseTraitPage.getTotalElements();
+                    latch.await();
                 }
-                pager = pager.next();
-                diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+                return totalElements;
+            }else {
+                Page<DiseaseTrait> diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+                CountDownLatch latch = new CountDownLatch(diseaseTraitPage.getTotalPages());
                 taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+                if (sysOutLogging) {
+                    System.out.println("mapping " + diseaseTraitPage.getTotalPages() + " disease trait pages");
+                }
+                while (diseaseTraitPage.hasNext()) {
+                    if (maxPages != -1 && diseaseTraitPage.getNumber() >= maxPages - 1) {
+                        break;
+                    }
+                    pager = pager.next();
+                    diseaseTraitPage = diseaseTraitRepository.findAll(pager);
+                    taskExecutor.execute(new TraitThread(diseaseTraitPage.getContent(), latch, pager.getPageNumber()));
+                }
+                latch.await();
+                return (int) diseaseTraitPage.getTotalElements();
             }
-            latch.await();
-            return (int) diseaseTraitPage.getTotalElements();
         }else{
             return 0;
         }
     }
 
-    private int mapAllEfos(ExecutorService taskExecutor) throws InterruptedException {
+    private int mapAllEfos(ExecutorService taskExecutor, Collection<String> pubmedIds) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("trait"));
         if(runEfos) {
             Pageable pager = new PageRequest(0, pageSize);
-            Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
-            if (sysOutLogging) {
-                System.out.println("mapping " + efoTraitPage.getTotalPages() + " efo trait pages");
-            }
-            efoMapper.map(efoTraitPage.getContent());
-            CountDownLatch latch = new CountDownLatch(efoTraitPage.getTotalPages() - 1);
-            while (efoTraitPage.hasNext()) {
-                if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
-                    break;
+            if (!pubmedIds.isEmpty()) {
+                int totalElements = 0;
+                for (String pmid : pubmedIds) {
+                    Page<EfoTrait> efoTraitPage = efoTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                    if (sysOutLogging) {
+                        System.out.println("mapping " + efoTraitPage.getTotalPages() + " efo trait pages");
+                    }
+                    CountDownLatch latch = new CountDownLatch(efoTraitPage.getTotalPages());
+                    taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+                    while (efoTraitPage.hasNext()) {
+                        if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
+                            break;
+                        }
+                        pager = pager.next();
+                        efoTraitPage = efoTraitRepository.findByStudiesPublicationIdPubmedId(pmid, pager);
+                        taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+                    }
+                    latch.await();
+                    totalElements += efoTraitPage.getTotalElements();
                 }
-                pager = pager.next();
-                efoTraitPage = efoTraitRepository.findAll(pager);
+                return totalElements;
+            }else {
+                Page<EfoTrait> efoTraitPage = efoTraitRepository.findAll(pager);
+                if (sysOutLogging) {
+                    System.out.println("mapping " + efoTraitPage.getTotalPages() + " efo trait pages");
+                }
+                CountDownLatch latch = new CountDownLatch(efoTraitPage.getTotalPages());
                 taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+                while (efoTraitPage.hasNext()) {
+                    if (maxPages != -1 && efoTraitPage.getNumber() >= maxPages - 1) {
+                        break;
+                    }
+                    pager = pager.next();
+                    efoTraitPage = efoTraitRepository.findAll(pager);
+                    taskExecutor.execute(new EfoThread(efoTraitPage.getContent(), latch, pager.getPageNumber()));
+                }
+                latch.await();
+                return (int) efoTraitPage.getTotalElements();
             }
-            latch.await();
-            return (int) efoTraitPage.getTotalElements();
         }else{
             return 0;
         }

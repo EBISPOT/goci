@@ -18,14 +18,21 @@ import java.util.Collection;
  */
 @Service
 public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDocument> {
+    private final EfoDocumentCache efoCache;
+    private final DiseaseTraitDocumentCache diseaseTraitCache;
+    private final StudyDocumentCache studyDocumentCache;
     private AssociationService associationService;
     private TraitService traitService;
 
     @Autowired
     public StudyEnrichmentService(AssociationService associationService,
-                                  TraitService traitService) {
+                                  TraitService traitService, EfoDocumentCache efoCache,
+                                  DiseaseTraitDocumentCache diseaseTraitCache, StudyDocumentCache studyDocumentCache) {
         this.associationService = associationService;
         this.traitService = traitService;
+        this.efoCache = efoCache;
+        this.diseaseTraitCache = diseaseTraitCache;
+        this.studyDocumentCache = studyDocumentCache;
     }
 
     @Override public int getPriority() {
@@ -34,14 +41,17 @@ public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDo
 
     @Override public void doEnrichment(StudyDocument document) {
         long id = Long.valueOf(document.getId().split(":")[1]);
+        if(!studyDocumentCache.hasDocument(id)){
+            studyDocumentCache.addDocument(id, document);
+        }
 
         Collection<Association> associations = associationService.findPublishedAssociationsByStudyId(id);
         document.setAssociationCount(associations.size());
         associations.forEach(association -> document.embed(new AssociationDocument(association)));
 
         traitService.findReportedTraitByStudyId(id).forEach(
-                trait -> document.embed(new DiseaseTraitDocument(trait)));
+                trait -> document.embed(diseaseTraitCache.getDocument(trait.getTrait())));
         traitService.findMappedTraitByStudyId(id).forEach(
-                trait -> document.embed(new EfoDocument(trait)));
+                trait -> document.embed(efoCache.getDocument(trait.getTrait())));
     }
 }
