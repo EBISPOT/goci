@@ -47,4 +47,8 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
     Page<DiseaseTrait> findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Pageable pageable,
             Long associationId);
+
+    Page<DiseaseTrait> findByStudiesPublicationIdPubmedId(
+            String pubmedId,
+            Pageable pageable);
 }

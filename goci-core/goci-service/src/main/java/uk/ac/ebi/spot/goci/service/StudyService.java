@@ -159,6 +159,17 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Study> findPublishedStudiesByPublicationId(String pubmedId, Pageable pageable) {
+        Page<Study> studies =
+                studyRepository.findByPublicationIdPubmedIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
+                        pubmedId,
+                        pageable);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
+
+
+    @Transactional(readOnly = true)
     public Study fetchOne(Study study) {
         loadAssociatedData(study);
         return study;

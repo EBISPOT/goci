@@ -128,6 +128,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     Page<Study> findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(Pageable pageable);
 
     @RestResource(exported = false)
+    Page<Study> findByPublicationIdPubmedIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(String pubmedId, Pageable pageable);
+
+    @RestResource(exported = false)
     List<Study> findByAssociationsLociStrongestRiskAllelesSnpIdAndHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull(
             Long snpId);
 
