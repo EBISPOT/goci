@@ -134,16 +134,19 @@ public class DepositionSyncService {
                             System.out.println("adding published publication" + pubmedId + " to mongo");
                         }else {
                             newPublication.setStatus("ELIGIBLE");
+                            System.out.println("adding eligible publication" + pubmedId + " to mongo");
                         }
                         depositionPublicationService.addPublication(newPublication);
                     }
                 }else {//check publication status, update if needed
                     if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         // published publications
-                        System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         depositionPublication.setStatus("PUBLISHED");
                         if(addSummaryStatsData(newPublication, p)){
                             newPublication.setStatus("PUBLISHED_WITH_SS");
+                            System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
+                        }else{
+                            System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         }
                         depositionPublicationService.updatePublication(depositionPublication);
                     }
