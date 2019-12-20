@@ -144,9 +144,12 @@
                             <select name="countryOfOrigin" class="form-control select2-select"
                                     multiple="multiple" th:field="*{ancestry.countryOfOrigin}"
                                     id="countryOfOrigin">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.id}"
-                                        th:text="${country.countryName}"></option>
+                                <optgroup th:each="kv: ${countryMap}"
+                                          th:label="${kv.key}">
+                                    <option th:each="country : ${kv.value}"
+                                            th:value="${country.id}"
+                                            th:text="${country.countryName}"></option>
+                                </optgroup>
                             </select>
                         </div>
 
@@ -154,20 +157,23 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="countryOfRecruitment" class="control-label col-md-2">Country of Recruitment:</label>
+                        <label for="countryOfRecruitment" class="control-label col-md-2">Country of
+                            Recruitment:</label>
 
                         <div class="col-md-10">
                             <select name="countryOfRecruitment" class="form-control select2-select"
                                     multiple="multiple"
                                     th:field="*{ancestry.countryOfRecruitment}"
                                     id="countryOfRecruitment">
-                                <option th:each="country : ${countries}"
-                                        th:value="${country.id}"
-                                        th:text="${country.countryName}"></option>
+                                <optgroup th:each="kv: ${countryMap}"
+                                          th:label="${kv.key}">
+                                    <option th:each="country : ${kv.value}"
+                                            th:value="${country.id}"
+                                            th:text="${country.countryName}"></option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
-
 
                     <div class="form-group">
                         <label for="description" class="control-label col-md-2">Additional Description:</label>
@@ -235,7 +241,6 @@
     $(function() {
         // turn the element to select2 select style
         $('#countryOfRecruitment').select2();
-
     });
 </script>
 

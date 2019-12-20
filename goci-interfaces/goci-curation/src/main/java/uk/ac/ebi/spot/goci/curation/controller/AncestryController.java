@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.curation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +29,7 @@ import uk.ac.ebi.spot.goci.repository.CountryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
@@ -306,13 +303,30 @@ public class AncestryController {
 
     @ModelAttribute("ancestralGroups")
     public List<AncestralGroup> populateAncestralGroups(Model model) {
-        return ancestralGroupRepository.findAll();
+        List<AncestralGroup> groups = ancestralGroupRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC,
+                "ancestralGroup").ignoreCase()));
+        return groups;
     }
 
+    @ModelAttribute("countryMap")
+    public Map<String, Set<Country>> populateCountryMap(Model model) {
+        Map<String, Set<Country>> countryMap = new TreeMap<>();
+        List<Country> countries = countryRepository.findAll();
+        for(Country country: countries){
+            Set<Country> countrySet = countryMap.get(country.getMajorArea());
+            if(countrySet == null){
+                countrySet = new TreeSet<Country>(Comparator.comparing(Country::getCountryName));
+                countryMap.put(country.getMajorArea(), countrySet);
+            }
+            countrySet.add(country);
+        }
+        return countryMap;
+    }
 
     @ModelAttribute("countries")
     public List<Country> populateCountries(Model model) {
-         List<Country> countries = countryRepository.findAll();
+         List<Country> countries = countryRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC,
+                 "countryName").ignoreCase()));
         return countries;
     }
 
