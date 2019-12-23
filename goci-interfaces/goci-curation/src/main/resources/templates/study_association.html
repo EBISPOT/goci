@@ -534,13 +534,16 @@
         /*<![CDATA[*/
         var total_associations = /*[[${totalAssociations}]]*/;
         /*]]>*/
-        var total_pages = total_associations/page_size + 1;
+        var total_pages = Math.ceil(total_associations/page_size);
 
         /*<![CDATA[*/
         var page_number = 1;
         while(page_number < total_pages) {
             page_number++;
             appendData(page_number);
+        }
+        if(1 >= total_pages){
+            $("#loadingResults").hide();
         }
         /*]]>*/
 
@@ -560,13 +563,14 @@
     });
 
     function appendData(page_number) {
+        console.log(contextPath);
         /*<![CDATA[*/
         var studyid = /*[[${study.id}]]*/;
         var contextPath = /*[[@{/}]]*/'';
         /*]]>*/
         $.ajax({
             type: "GET",
-            url: contextPath+"/studies/"+studyid+"/associations",
+            url: window.location.origin + "/studies/"+studyid+"/associations",
             data: {
                 page: page_number,
             },

@@ -91,7 +91,7 @@ public class Study implements Trackable {
     @JsonIgnore
     private Housekeeping housekeeping;
 
-    @OneToOne(mappedBy = "study", orphanRemoval = true)
+    @OneToOne(mappedBy = "study", orphanRemoval = true, optional=true)
     @JsonIgnore
     private StudyExtension studyExtension;
 

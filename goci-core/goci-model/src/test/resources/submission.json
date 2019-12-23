@@ -1,0 +1,54 @@
+{
+  "submissionId" : "5d515077dcf21d0001eee22b",
+  "publication" : {
+    "publicationId" : "5d403399218e4cbdf409e2fe",
+    "pmid" : "17690259",
+    "title" : "Common sequence variants in the LOXL1 gene confer susceptibility to exfoliation glaucoma.",
+    "journal" : "Science",
+    "firstAuthor" : "Thorleifsson G",
+    "publicationDate" : "2007-08-09",
+    "correspondingAuthor" : {
+      "authorName" : "Gudmar Thorleifsson"
+    },
+    "status" : "UNDER_SUBMISSION"
+  },
+  "files" : [ {
+    "fileUploadId" : "5d5150ffdcf21d0001eee22e",
+    "status" : "VALID",
+    "type" : "METADATA",
+    "fileName" : "file",
+    "fileSize" : 13600
+  } ],
+  "study_count" : 2,
+  "sample_count" : 7,
+  "association_count" : 4,
+  "status" : "SUBMITTED",
+  "metadata_status" : "VALID",
+  "summary_statistics_status" : "NA",
+  "date_submitted" : "2019-08-12",
+  "created" : {
+    "user" : {
+      "name" : "Test User",
+      "email" : "test@test.com",
+      "domains" : [ ]
+    },
+    "timestamp" : "2019-08-12T11:41:43.861Z"
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://193.62.54.159/backend/v1/submissions/5d515077dcf21d0001eee22b"
+    },
+    "files" : {
+      "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/uploads"
+    },
+    "studies" : {
+      "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/studies"
+    },
+    "samples" : {
+      "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/samples"
+    },
+    "associations" : {
+      "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/associations"
+    }
+  }
+}

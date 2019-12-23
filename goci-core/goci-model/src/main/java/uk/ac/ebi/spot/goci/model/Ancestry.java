@@ -50,7 +50,7 @@ public class Ancestry implements Trackable {
     @OneToOne
     private Study study;
 
-    @OneToOne(mappedBy = "ancestry", orphanRemoval = true)
+    @OneToOne(mappedBy = "ancestry", orphanRemoval = true, optional=true)
     private AncestryExtension ancestryExtension;
 
     @ManyToMany

@@ -33,7 +33,7 @@ public class EmailMappingErrorsService {
 
         Collection<Association> associations = study.getAssociations();
 
-        if (associations.isEmpty()) {
+        if (associations == null || associations.isEmpty()) {
             associationSummary = "No associations for this study";
         }
         else {

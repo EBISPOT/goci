@@ -388,9 +388,12 @@
                                     <select name="countryOfOrigin" class="form-control select2-select"
                                         multiple="multiple" th:field="*{countryOfOrigin}"
                                         id="countryOfOrigin">
-                                        <option th:each="country : ${countries}"
-                                            th:value="${country.id}"
-                                            th:text="${country.countryName}"></option>
+                                        <optgroup th:each="kv: ${countryMap}"
+                                                  th:label="${kv.key}">
+                                            <option th:each="country : ${kv.value}"
+                                                    th:value="${country.id}"
+                                                    th:text="${country.countryName}"></option>
+                                        </optgroup>
                                     </select>
                                 </div>
 
@@ -404,9 +407,12 @@
                                             multiple="multiple"
                                             th:field="*{countryOfRecruitment}"
                                             id="countryOfRecruitment">
-                                        <option th:each="country : ${countries}"
-                                                th:value="${country.id}"
-                                                th:text="${country.countryName}"></option>
+                                        <optgroup th:each="kv: ${countryMap}"
+                                                  th:label="${kv.key}">
+                                            <option th:each="country : ${kv.value}"
+                                                    th:value="${country.id}"
+                                                    th:text="${country.countryName}"></option>
+                                        </optgroup>
                                     </select>
                                 </div>
                             </div>

@@ -33,5 +33,6 @@
         <module>goci-association-file-validator</module>
         <module>goci-public-data-export</module>
         <module>goci-email-service</module>
+        <module>goci-deposition-sync</module>
     </modules>
 </project>
