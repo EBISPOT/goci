@@ -60,20 +60,21 @@ public class DepositionStudyService {
 
     public void publishSummaryStats(Collection<DepositionStudyDto> studyDtos, Collection<Study> dbStudies,
                                     SecureUser currentUser) {
+        List<Long> studyIds = new ArrayList<>();
+        for (Study study : dbStudies) {
+            studyIds.add(study.getId());
+        }
         for(DepositionStudyDto studyDto: studyDtos) {
             String tag = studyDto.getStudyTag();
             boolean match = false;
-            for (Study study : dbStudies) {
+            for (Long studyId: studyIds) {
+                Study study = studyService.findOne(studyId);
                 if(study.getAccessionId().equals(studyDto.getAccession())){
                     publishSummaryStats(study, currentUser);
                     match = true;
                 }
             }
             if(!match){
-                List<Long> studyIds = new ArrayList<>();
-                for (Study study : dbStudies) {
-                    studyIds.add(study.getId());
-                }
                 for (Long studyId: studyIds) {
                     publishSummaryStats(studyService.findOne(studyId), currentUser);
                 }

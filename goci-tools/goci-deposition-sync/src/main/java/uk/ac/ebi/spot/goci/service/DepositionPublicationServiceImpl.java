@@ -26,6 +26,9 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
 
+    @Value("${deposition.token}")
+    private String depositionToken;
+
     @Value("${deposition.uri}")
     private String depositionBackendUri;
 

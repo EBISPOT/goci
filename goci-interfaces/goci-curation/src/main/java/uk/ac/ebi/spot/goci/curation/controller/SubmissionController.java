@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +59,8 @@ public class SubmissionController {
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class, params);
+        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class,
+                params);
 
 //        DepositionSubmissionListWrapper submissions =
 //                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
@@ -69,8 +68,7 @@ public class SubmissionController {
 //        while (i < submissions.getPage().getTotalPages()) {
 //            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
         DepositionSubmission[] submissions =
-                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
-                        DepositionSubmission[].class, params);
+                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
         for (DepositionSubmission submission : submissions) {
             Submission testSub = new Submission();
             testSub.setId(submission.getSubmissionId());

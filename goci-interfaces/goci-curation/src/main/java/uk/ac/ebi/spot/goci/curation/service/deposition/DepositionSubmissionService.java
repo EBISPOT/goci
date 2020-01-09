@@ -47,6 +47,8 @@ public class DepositionSubmissionService {
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
 
+    @Value("${deposition.token}")
+    private String depositionToken;
 
     public DepositionSubmissionService(@Autowired PublicationService publicationService,
                                        @Autowired StudyService studyService,
