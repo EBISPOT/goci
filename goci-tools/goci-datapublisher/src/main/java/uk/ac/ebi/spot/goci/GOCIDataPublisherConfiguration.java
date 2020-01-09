@@ -29,7 +29,6 @@ public class GOCIDataPublisherConfiguration {
     }
 
     @Bean OntologyLoader ontologyLoader() {
-        ReasonedOntologyLoader loader = ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
-        return loader;
+        return ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
     }
 }

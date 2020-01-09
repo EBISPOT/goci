@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.ontology.config.OntologyLoaderConfig;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
@@ -27,8 +28,8 @@ public class ParentMappingConfiguration {
         this.ontologyLoaderConfig = ontologyLoaderConfig;
     }
 
-    @Bean(name = "parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader() {
-        ReasonedOntologyLoader loader = ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
-        return loader;
+    @Bean(name = "parentTermOntologyLoader")
+    OntologyLoader ontologyLoader() {
+        return ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
     }
 }
