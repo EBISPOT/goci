@@ -30,6 +30,9 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
     @RestResource(exported = false)
     Page<Association> findByStudyId(long studyId, Pageable pageable);
 
+    @RestResource(exported = false)
+    @Query("select new Association (a.id) from Association a join a.study s where s.id = :studyId")
+    Collection<Association> findIdByStudyId(long studyId);
 
     //GOCI-2267 hotfix
     @RestResource(exported=false)
