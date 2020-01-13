@@ -24,11 +24,14 @@ import java.util.stream.Collectors;
 @Service
 public class AssociationDownloadService {
 
+    private AssociationRepository associationRepository;
     private AssociationOperationsService associationOperationsService;
 
     @Autowired
-    public AssociationDownloadService(AssociationOperationsService associationOperationsService) {
+    public AssociationDownloadService(AssociationOperationsService associationOperationsService,
+                                      AssociationRepository associationRepository) {
         this.associationOperationsService = associationOperationsService;
+        this.associationRepository = associationRepository;
     }
 
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
@@ -61,7 +64,8 @@ public class AssociationDownloadService {
         outputStream.write(header.getBytes("UTF-8"));
 
 
-        for (Association association : associations) {
+        for (Association a : associations) {
+            Association association = associationRepository.findOne(a.getId());
             StringBuilder line = new StringBuilder();
 
             extractGeneticData(association, line);

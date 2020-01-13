@@ -1276,7 +1276,8 @@ public class AssociationController {
     public void downloadStudySnps(HttpServletResponse response, @PathVariable Long studyId)
             throws IOException {
 
-        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+//        Collection<Association> associations = associationRepository.findByStudyId(studyId);
+        Collection<Association> associations = associationRepository.findIdByStudyId(studyId);
         Study study = studyRepository.findOne((studyId));
 
         if (associations.size() > 0) {

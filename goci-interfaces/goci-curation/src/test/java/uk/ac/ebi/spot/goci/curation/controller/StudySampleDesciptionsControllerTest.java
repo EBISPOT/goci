@@ -6,10 +6,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.omg.CORBA.portable.OutputStream;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.curation.service.StudySampleDescriptionsDownloadService;
+
+import java.io.OutputStream;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
