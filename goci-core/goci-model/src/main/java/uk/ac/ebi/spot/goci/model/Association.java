@@ -141,6 +141,10 @@ public class Association implements Trackable {
     public Association() {
     }
 
+    public Association(Long id){
+        this.id = id;
+    }
+
     public Association(String riskFrequency,
                        String pvalueDescription,
                        Integer pvalueMantissa,
