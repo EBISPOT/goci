@@ -17,6 +17,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.IOException;
 import java.util.*;
+import javax.transaction.Transactional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +52,7 @@ public class JsonBuilder {
     }
 
 
+    @Transactional
     public Collection<String> getJsons(String snp2geneMappingFilePath) throws IOException {
 
         Collection<String> jsons = new ArrayList<>();
