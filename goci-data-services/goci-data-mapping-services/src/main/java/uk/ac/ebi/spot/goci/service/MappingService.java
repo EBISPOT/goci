@@ -152,6 +152,7 @@ public class MappingService {
             }
         getLog().debug("Number of associations FAILED");
         getLog().debug(String.valueOf(associationsFailed.size()));
+        getLog().debug(Arrays.toString(associationsFailed.toArray(new Long[0])));
     }
 
     private void doMapping(Association association, String eRelease) throws EnsemblMappingException {
