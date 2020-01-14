@@ -144,7 +144,7 @@ public class JsonBuilder {
                                 if (association.getPvalue() != 0.0) {
                                     pvalue = association.getPvalue();
                                 }
-                                if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0) {
+                                if (association.getPvalueMantissa() != null && association.getPvalueExponent() < 0 && association.getStudy().getHousekeeping().getIsPublished() == true ) {
                                     for (String ensemblId : ensemblIds) {
                                         jsons.add(buildJson(association.getPvalueMantissa(),
                                                 association.getPvalueExponent(),
