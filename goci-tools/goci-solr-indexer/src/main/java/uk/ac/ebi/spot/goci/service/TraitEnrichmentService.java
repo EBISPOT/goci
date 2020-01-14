@@ -19,6 +19,7 @@ import java.util.Set;
  */
 @Service
 public class TraitEnrichmentService implements DocumentEnrichmentService<DiseaseTraitDocument> {
+    private final EfoDocumentCache efoCache;
     private StudyService studyService;
     private AssociationService associationService;
     private TraitService traitService;
@@ -26,10 +27,11 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
     @Autowired
     public TraitEnrichmentService(StudyService studyService,
                                   AssociationService associationService,
-                                  TraitService traitService) {
+                                  TraitService traitService, EfoDocumentCache efoCache) {
         this.studyService = studyService;
         this.associationService = associationService;
         this.traitService = traitService;
+        this.efoCache = efoCache;
     }
 
     @Override public int getPriority() {
@@ -49,7 +51,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
                     efoTraits.forEach(
                             trait -> {
                                 // embed efo trait info in disease trait document
-                                document.embed(new EfoDocument(trait));
+                                document.embed(efoCache.getDocument(trait.getTrait()));
                                 // and embed all associations mapped to this efo trait
                                 //associationService.findPublishedAssociationsByEfoTraitId(trait.getId()).forEach(
                                 //        association -> document.embed(new AssociationDocument(association)));

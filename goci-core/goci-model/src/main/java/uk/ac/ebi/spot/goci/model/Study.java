@@ -91,6 +91,10 @@ public class Study implements Trackable {
     @JsonIgnore
     private Housekeeping housekeeping;
 
+    @OneToOne(mappedBy = "study", orphanRemoval = true, optional=true)
+    @JsonIgnore
+    private StudyExtension studyExtension;
+
     @JsonIgnore
     @OneToOne(mappedBy = "study", orphanRemoval = true)
     private StudyReport studyReport;
@@ -117,6 +121,7 @@ public class Study implements Trackable {
     @JoinColumn(name = "publication_id")
     private Publication publicationId;
 
+    private String studyTag;
 
 
 
@@ -296,6 +301,14 @@ public class Study implements Trackable {
         this.housekeeping = housekeeping;
     }
 
+    public StudyExtension getStudyExtension() {
+        return studyExtension;
+    }
+
+    public void setStudyExtension(StudyExtension studyExtension) {
+        this.studyExtension = studyExtension;
+    }
+
     public StudyReport getStudyReport() {
         return studyReport;
     }
@@ -446,4 +459,12 @@ public class Study implements Trackable {
 
     @JsonProperty("publicationInfo")
     public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
+
+    public String getStudyTag(){
+        return studyTag;
+    }
+
+    public void setStudyTag(String studyTag){
+        this.studyTag = studyTag;
+    }
 }

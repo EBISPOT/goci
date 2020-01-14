@@ -1,0 +1,20 @@
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+
+spring:
+  profiles:
+    active: dev
+  main:
+    web-application-type: none
+
+  jackson:
+    serialization:
+      indent_output: true
+      write_dates_as_timestamps: false
+    default-property-inclusion: non_null
+
+server:
+  port: -1

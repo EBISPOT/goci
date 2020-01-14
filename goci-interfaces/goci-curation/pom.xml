@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-curation</artifactId>
-    <version>2.4.4</version>
+    <version>2.4.10</version>
     <packaging>war</packaging>
 
     <name>GOCI Curation Interface</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.4.4</version>
+        <version>2.4.10</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
@@ -33,6 +33,11 @@
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-tracking</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
@@ -115,6 +120,15 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0-rc3</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>2.9.9</version>
         </dependency>
     </dependencies>
 

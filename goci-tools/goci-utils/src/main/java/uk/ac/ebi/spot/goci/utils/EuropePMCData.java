@@ -1,9 +1,7 @@
 package uk.ac.ebi.spot.goci.utils;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
-import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
 

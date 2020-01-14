@@ -1,0 +1,17 @@
+{
+  "publicationId" : "5d403399218e4cbdf409e2fd",
+  "pmid" : "21044949",
+  "title" : "ELF1 is associated with systemic lupus erythematosus in Asian populations.",
+  "journal" : "Hum Mol Genet",
+  "firstAuthor" : "Yang J",
+  "publicationDate" : "2010-11-02",
+  "correspondingAuthor" : {
+    "authorName" : "Jing Yang"
+  },
+  "status" : "UNDER_SUBMISSION",
+  "_links" : {
+    "self" : {
+      "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e2fd?pmid=false"
+    }
+  }
+}

@@ -50,6 +50,9 @@ public class Ancestry implements Trackable {
     @OneToOne
     private Study study;
 
+    @OneToOne(mappedBy = "ancestry", orphanRemoval = true, optional=true)
+    private AncestryExtension ancestryExtension;
+
     @ManyToMany
     @JoinTable(name = "ANCESTRY_ANCESTRAL_GROUP",
                joinColumns = @JoinColumn(name = "ANCESTRY_ID"),
@@ -189,6 +192,14 @@ public class Ancestry implements Trackable {
 
     public void setStudy(Study study) {
         this.study = study;
+    }
+
+    public AncestryExtension getAncestryExtension() {
+        return ancestryExtension;
+    }
+
+    public void setAncestryExtension(AncestryExtension ancestryExtension) {
+        this.ancestryExtension = ancestryExtension;
     }
 
     public Collection<Event> getEvents() {

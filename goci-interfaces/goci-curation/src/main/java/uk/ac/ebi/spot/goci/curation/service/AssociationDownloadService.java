@@ -6,9 +6,12 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -21,25 +24,30 @@ import java.util.stream.Collectors;
 @Service
 public class AssociationDownloadService {
 
+    private AssociationRepository associationRepository;
     private AssociationOperationsService associationOperationsService;
 
     @Autowired
-    public AssociationDownloadService(AssociationOperationsService associationOperationsService) {
+    public AssociationDownloadService(AssociationOperationsService associationOperationsService,
+                                      AssociationRepository associationRepository) {
         this.associationOperationsService = associationOperationsService;
+        this.associationRepository = associationRepository;
     }
 
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
             throws IOException {
 
-        String file = processAssociations(associations);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+        processAssociations(associations, bufferedOutputStream);
 
         // Write file
-        outputStream.write(file.getBytes("UTF-8"));
-        outputStream.flush();
-        outputStream.close();
+        //outputStream.write(file.getBytes("UTF-8"));
+        bufferedOutputStream.flush();
+        bufferedOutputStream.close();
     }
 
-    private String processAssociations(Collection<Association> associations) {
+    private void processAssociations(Collection<Association> associations, OutputStream outputStream)
+            throws IOException {
 
         String header =
                 "Gene(s)\tStrongest SNP-Risk Allele\tSNP\tProxy SNP" +
@@ -53,11 +61,11 @@ public class AssociationDownloadService {
                         "\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tSNP Status\tSNP type\tEFO traits\r\n";
 
 
-        StringBuilder output = new StringBuilder();
-        output.append(header);
+        outputStream.write(header.getBytes("UTF-8"));
 
 
-        for (Association association : associations) {
+        for (Association a : associations) {
+            Association association = associationRepository.findOne(a.getId());
             StringBuilder line = new StringBuilder();
 
             extractGeneticData(association, line);
@@ -215,9 +223,9 @@ public class AssociationDownloadService {
             }
             line.append("\r\n");
 
-            output.append(line.toString());
+            outputStream.write(line.toString().getBytes("UTF-8"));
         }
-        return output.toString();
+//        return output.toString();
     }
 
     private void extractSNPStatus(Association association, StringBuilder line) {

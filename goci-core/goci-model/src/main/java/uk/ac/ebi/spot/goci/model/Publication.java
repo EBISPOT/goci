@@ -25,6 +25,7 @@ public class Publication {
     private Long id;
 
     @NotBlank(message = "Please enter a pubmed id")
+    @Column(unique = true)
     private String pubmedId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -56,6 +57,10 @@ public class Publication {
     @Column(name = "UPDATED")
     @JsonIgnore
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "publicationId")
+    @JsonIgnore
+    private Collection<PublicationExtension> correspondingAuthors;
 
     @PrePersist
     protected void onCreate() {
@@ -129,6 +134,11 @@ public class Publication {
     public Collection<Author> getAuthors() { return authors; }
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
+
+    public Collection<PublicationExtension> getCorrespondingAuthors() { return correspondingAuthors; }
+
+    public void setCorrespondingAuthors(Collection<PublicationExtension> correspondingAuthors) { this.correspondingAuthors =
+            correspondingAuthors; }
 
     public Collection<Study> getStudies() { return studies; }
 
