@@ -133,7 +133,6 @@ public class MappingService {
         List<Long> associationsFailed = new ArrayList<Long>();
             for (Association association : associations) {
                 try {
-
                     getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
                     doMapping(association, eRelease);
 
@@ -147,7 +146,8 @@ public class MappingService {
                 } catch (EnsemblMappingException e) {
                     //throw new EnsemblMappingException("Attempt to map all associations failed", e);
                     associationsFailed.add(association.getId());
-
+                }catch (Throwable t){
+                    getLog().error(association.getId() + ": " + t.getMessage());
                 }
             }
         getLog().debug("Number of associations FAILED");
