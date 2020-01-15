@@ -32,7 +32,8 @@ public class ParentMappingService {
     private ReasonedOntologyLoader ontologyLoader;
 
     @Autowired
-    public ParentMappingService(@Qualifier("parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader){
+    //public ParentMappingService(@Qualifier("parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader){
+    public ParentMappingService( ReasonedOntologyLoader ontologyLoader){
           this.ontologyLoader = ontologyLoader;
 
     }

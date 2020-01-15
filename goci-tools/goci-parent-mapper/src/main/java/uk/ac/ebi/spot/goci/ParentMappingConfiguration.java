@@ -28,7 +28,7 @@ public class ParentMappingConfiguration {
         this.ontologyLoaderConfig = ontologyLoaderConfig;
     }
 
-    @Bean(name = "parentTermOntologyLoader")
+    @Bean//(name = "parentTermOntologyLoader")
     OntologyLoader ontologyLoader() {
         return ontologyLoaderConfig.setEfoOntologyLoader(efoResource);
     }
