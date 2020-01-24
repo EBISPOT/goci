@@ -742,7 +742,7 @@ public class EnsemblMappingPipeline {
         JsonNode result = restResponseResult.getRestResult();
         JSONArray overlap_result = new JSONArray();
 
-        if (result.isArray()) {
+        if (result != null && result.isArray()) {
             overlap_result = result.getArray();
         }
 

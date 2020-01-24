@@ -67,7 +67,11 @@ public class SnpLocationMappingService {
 
             // Check if the SNP exists
             SingleNucleotidePolymorphism snpInDatabase =
-                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+                    singleNucleotidePolymorphismRepository.findByRsId(snpRsId);
+            if(snpInDatabase == null){
+                snpInDatabase =
+                        singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+            }
 
             if (snpInDatabase != null) {
 
@@ -176,9 +180,12 @@ public class SnpLocationMappingService {
      * @param id Id of location object
      */
     private void cleanUpLocations(Long id) {
+//        List<SingleNucleotidePolymorphism> snps =
+//                singleNucleotidePolymorphismRepository.findByLocationsId(id);
+//        List<GenomicContext> genomicContexts = genomicContextRepository.findByLocationId(id);
         List<SingleNucleotidePolymorphism> snps =
-                singleNucleotidePolymorphismRepository.findByLocationsId(id);
-        List<GenomicContext> genomicContexts = genomicContextRepository.findByLocationId(id);
+                singleNucleotidePolymorphismRepository.findIdsByLocationId(id);
+        List<GenomicContext> genomicContexts = genomicContextRepository.findIdsByLocationId(id);
 
         if (snps.size() == 0 && genomicContexts.size() == 0) {
             locationRepository.delete(id);

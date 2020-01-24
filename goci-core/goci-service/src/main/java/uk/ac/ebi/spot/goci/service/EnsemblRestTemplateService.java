@@ -47,6 +47,8 @@ public class EnsemblRestTemplateService {
 
     private Hashtable<String, String> endpoints = new Hashtable<String, String>();
 
+    private RestTemplate restTemplate;
+
     @Autowired
     public void createEndpoints() {
         Hashtable<String, String> endpointsToCreate = new Hashtable<String, String>();
@@ -106,12 +108,13 @@ public class EnsemblRestTemplateService {
     }
 
     public RestTemplate getRestTemplate() {
-        // Create a new RestTemplate instance
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
-        // Add the Jackson message converter
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
+        if(restTemplate == null) {
+            // Create a new RestTemplate instance
+            restTemplate = new RestTemplate();
+            restTemplate.setErrorHandler(new CustomResponseErrorHandler());
+            // Add the Jackson message converter
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        }
         return restTemplate;
     }
 

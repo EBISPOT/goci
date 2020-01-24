@@ -3,8 +3,10 @@ package uk.ac.ebi.spot.goci.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
 
 import java.util.Collection;
@@ -32,6 +34,11 @@ public interface SingleNucleotidePolymorphismRepository extends JpaRepository<Si
     Collection<SingleNucleotidePolymorphism> findByRiskAllelesLociAssociationStudyDiseaseTraitId(Long traitId);
 
     List<SingleNucleotidePolymorphism> findByLocationsId(Long locationId);
+
+    @RestResource(exported = false)
+    @Query("select new SingleNucleotidePolymorphism(s.id) from SingleNucleotidePolymorphism s join s.locations loc " +
+            "where loc.id = :locationId")
+    List<SingleNucleotidePolymorphism> findIdsByLocationId(Long locationId);
 
     List<SingleNucleotidePolymorphism> findByLocationsChromosomePosition(@Param("bpLocation") int chromosomePosition);
 

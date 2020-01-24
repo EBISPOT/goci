@@ -205,6 +205,7 @@ public class SnpGenomicContextMappingService {
      */
     private void storeGenes(Map<String, Set<String>> geneToExternalIdMap, String source) {
 
+        List<Gene> genesToCreate = new ArrayList<>();
         for (String geneName : geneToExternalIdMap.keySet()) {
 
             Set<String> externalIds = geneToExternalIdMap.get(geneName);
@@ -216,7 +217,8 @@ public class SnpGenomicContextMappingService {
 
             // If gene is not found in database then create one
             if (existingGeneInDatabase == null) {
-                createGene(geneName, externalIds, source);
+                Gene newGene = createGene(geneName, externalIds, source);
+                genesToCreate.add(newGene);
             }
 
             // Update gene
@@ -282,6 +284,7 @@ public class SnpGenomicContextMappingService {
                 }
             }
         }
+        geneRepository.save(genesToCreate);
 
     }
 
@@ -293,6 +296,7 @@ public class SnpGenomicContextMappingService {
      */
     private void storeSnpGenomicContext(Map<String, Set<GenomicContext>> snpToGenomicContextMap) {
 
+        List<SingleNucleotidePolymorphism> updatedSnps = new ArrayList<>();
         // Go through each rs_id and its associated genomic contexts returned from the mapping pipeline
         for (String snpRsId : snpToGenomicContextMap.keySet()) {
 
@@ -302,7 +306,11 @@ public class SnpGenomicContextMappingService {
 
             // Check if the SNP exists
             SingleNucleotidePolymorphism snpInDatabase =
-                    singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+                    singleNucleotidePolymorphismRepository.findByRsId(snpRsId);
+            if(snpInDatabase == null){
+                snpInDatabase =
+                        singleNucleotidePolymorphismQueryService.findByRsIdIgnoreCase(snpRsId);
+            }
 
             if (snpInDatabase != null) {
 
@@ -371,8 +379,8 @@ public class SnpGenomicContextMappingService {
                 snpInDatabase.setGenomicContexts(newSnpGenomicContexts);
                 // Update the last update date
                 snpInDatabase.setLastUpdateDate(new Date());
-                singleNucleotidePolymorphismRepository.save(snpInDatabase);
-
+                //singleNucleotidePolymorphismRepository.save(snpInDatabase);
+                updatedSnps.add(snpInDatabase);
             }
 
             // SNP doesn't exist, this should be extremely rare as SNP value is a copy
@@ -385,6 +393,8 @@ public class SnpGenomicContextMappingService {
                         "Adding genomic context for SNP not found in database, RS_ID: " + snpRsId);
             }
         }
+        singleNucleotidePolymorphismRepository.save(updatedSnps);
+
     }
 
     /**
@@ -394,7 +404,7 @@ public class SnpGenomicContextMappingService {
      * @param externalIds external gene IDs
      * @param source      the source of mapping, either Ensembl or Entrez
      */
-    private void createGene(String geneName, Set<String> externalIds, String source) {
+    private Gene createGene(String geneName, Set<String> externalIds, String source) {
         // Create new gene
         Gene newGene = new Gene();
         newGene.setGeneName(geneName);
@@ -421,7 +431,8 @@ public class SnpGenomicContextMappingService {
 
         // Save gene
         getLog().debug("Creating " + source + " gene, with name " + geneName);
-        geneRepository.save(newGene);
+        //geneRepository.save(newGene);
+        return newGene;
     }
 
     /**
@@ -547,8 +558,8 @@ public class SnpGenomicContextMappingService {
                 if (snpGenomicContext.getLocation() != null) {
                     oldSnpLocationIds.add(snpGenomicContext.getLocation().getId());
                 }
-                genomicContextRepository.delete(snpGenomicContext);
             }
+            genomicContextRepository.delete(snpGenomicContexts);
 
             for (Long oldSnpLocationId : oldSnpLocationIds) {
                 cleanUpLocations(oldSnpLocationId);
@@ -564,8 +575,8 @@ public class SnpGenomicContextMappingService {
      */
     private void cleanUpLocations(Long id) {
         List<SingleNucleotidePolymorphism> snps =
-                singleNucleotidePolymorphismRepository.findByLocationsId(id);
-        List<GenomicContext> genomicContexts = genomicContextRepository.findByLocationId(id);
+                singleNucleotidePolymorphismRepository.findIdsByLocationId(id);
+        List<GenomicContext> genomicContexts = genomicContextRepository.findIdsByLocationId(id);
 
         if (snps.size() == 0 && genomicContexts.size() == 0) {
             locationRepository.delete(id);

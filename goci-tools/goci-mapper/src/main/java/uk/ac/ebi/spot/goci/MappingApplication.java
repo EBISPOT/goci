@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -55,8 +56,13 @@ public class MappingApplication {
         String filename = "gwas_mapper.night.";
         System.setProperty("logfilename", filename);
         System.out.println("Starting mapping service...");
-        ApplicationContext ctx = SpringApplication.run(MappingApplication.class, args);
-        int code = SpringApplication.exit(ctx, () -> exitCode);
+        SpringApplicationBuilder builder = new SpringApplicationBuilder(MappingApplication.class);
+        SpringApplication app =
+                builder.web(false).addCommandLineProperties(true).build(args);
+        ApplicationContext ctx = app.run(args);
+        System.out.println("Application executed successfully!");
+        int code = app.exit(ctx);
+
         if (code > 0) {
             System.exit(code);
         }
