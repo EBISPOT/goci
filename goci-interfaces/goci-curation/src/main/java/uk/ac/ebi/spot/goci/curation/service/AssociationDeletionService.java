@@ -74,13 +74,13 @@ public class AssociationDeletionService {
         // Add deletion event
         trackingOperationService.delete(association, user);
         DeletedAssociation deletedAssociation = createDeletedAssociation(association);
+        // Save deleted association
+        getLog().info("Saving details of deleted association: ".concat(String.valueOf(deletedAssociation.getId())));
+        deletedAssociationRepository.save(deletedAssociation);
 
         // Delete associations
         associationRepository.delete(association);
 
-        // Save deleted association
-        getLog().info("Saving details of deleted association: ".concat(String.valueOf(deletedAssociation.getId())));
-        deletedAssociationRepository.save(deletedAssociation);
     }
 
     private DeletedAssociation createDeletedAssociation(Association association) {

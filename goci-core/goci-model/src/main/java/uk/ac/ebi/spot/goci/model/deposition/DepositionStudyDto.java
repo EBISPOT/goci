@@ -74,7 +74,6 @@ public class DepositionStudyDto {
         Study study = new Study();
         study.setStudyTag(studyTag);
         study.setAccessionId(accession);
-        study.setStudyDesignComment(studyDescription);
         study.setImputed(imputation);
         return study;
     }

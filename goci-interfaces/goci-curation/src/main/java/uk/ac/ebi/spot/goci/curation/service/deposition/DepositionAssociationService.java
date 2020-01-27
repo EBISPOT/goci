@@ -43,9 +43,12 @@ public class DepositionAssociationService {
                 }
                 BigDecimal pValue = associationDto.getPValue();
                 if (pValue != null) {
-                    int exponent = pValue.precision() - pValue.scale() - 1;
+                    String pValString = pValue.toString();
+                    String[] pValues = pValString.split("E");
+                    int exponent = Integer.valueOf(pValues[1]);
+                    int mantissa = Double.valueOf(pValues[0]).intValue();
                     association.setPvalueExponent(exponent);
-                    association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                    association.setPvalueMantissa(mantissa);
                 }
                 String rsID = associationDto.getVariantID();
                 List<Locus> locusList = new ArrayList<>();

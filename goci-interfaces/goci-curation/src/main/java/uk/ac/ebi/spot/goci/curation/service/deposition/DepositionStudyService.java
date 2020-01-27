@@ -95,15 +95,20 @@ public class DepositionStudyService {
             List<Platform> platformList = new ArrayList<>();
             String[] manufacturers = manufacturerString.split("\\|");
             for (String manufacturer : manufacturers) {
-                Platform platform = platformRepository.findByManufacturer(manufacturer);
+                Platform platform = platformRepository.findByManufacturer(manufacturer.trim());
                 platformList.add(platform);
             }
             study.setPlatforms(platformList);
         }
         List<GenotypingTechnology> gtList = new ArrayList<>();
-        GenotypingTechnology gtt =
-                genotypingTechnologyRepository.findByGenotypingTechnology(studyDto.getGenotypingTechnology());
-        gtList.add(gtt);
+        String genotypingTech = studyDto.getGenotypingTechnology();
+        if(genotypingTech != null) {
+            String[] technologies = genotypingTech.split("\\|");
+            for (String technology : technologies) {
+                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(technology.trim());
+                gtList.add(gtt);
+            }
+        }
         study.setGenotypingTechnologies(gtList);
 
         study.setPublicationId(publication);
@@ -124,7 +129,7 @@ public class DepositionStudyService {
         if(efoTrait != null){
             String[] efoTraits = efoTrait.split("\\|");
             for(String trait: efoTraits){
-                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait());
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait().trim());
                 efoTraitList.add(dbTrait);
             }
         }
