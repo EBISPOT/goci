@@ -205,7 +205,10 @@ public class SnpGenomicContextMappingService {
      */
     private void storeGenes(Map<String, Set<String>> geneToExternalIdMap, String source) {
 
+        List<Gene> genesToUpdate = new ArrayList<>();
         List<Gene> genesToCreate = new ArrayList<>();
+        List<EntrezGene> entrezGenesToDelete = new ArrayList<>();
+        List<EnsemblGene> ensemblGenesToDelete = new ArrayList<>();
         for (String geneName : geneToExternalIdMap.keySet()) {
 
             Set<String> externalIds = geneToExternalIdMap.get(geneName);
@@ -245,11 +248,12 @@ public class SnpGenomicContextMappingService {
                     existingGeneInDatabase.setEnsemblGeneIds(newEnsemblGenes);
 
                     // Save changes
-                    geneRepository.save(existingGeneInDatabase);
+                    //geneRepository.save(existingGeneInDatabase);
+                    genesToUpdate.add(existingGeneInDatabase);
 
                     // Clean-up any Ensembl IDs that may now be left without a gene linked
                     for (Long oldEnsemblIdLinkedToGene : oldEnsemblIdsLinkedToGene) {
-                        cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene);
+                        cleanUpEnsemblGenes(oldEnsemblIdLinkedToGene, ensemblGenesToDelete);
                     }
 
                 }
@@ -274,18 +278,21 @@ public class SnpGenomicContextMappingService {
                     existingGeneInDatabase.setEntrezGeneIds(newEntrezGenes);
 
                     // Save changes
-                    geneRepository.save(existingGeneInDatabase);
+                    //geneRepository.save(existingGeneInDatabase);
+                    genesToUpdate.add(existingGeneInDatabase);
 
                     // Clean-up any Entrez IDs that may now be left without a gene linked
                     for (Long oldEntrezGenesIdLinkedToGene : oldEntrezGenesIdsLinkedToGene) {
-                        cleanUpEntrezGenes(oldEntrezGenesIdLinkedToGene);
+                        cleanUpEntrezGenes(oldEntrezGenesIdLinkedToGene, entrezGenesToDelete);
                     }
 
                 }
             }
         }
+        ensemblGeneRepository.delete(ensemblGenesToDelete);
+        entrezGeneRepository.delete(entrezGenesToDelete);
         geneRepository.save(genesToCreate);
-
+        geneRepository.save(genesToUpdate);
     }
 
 
@@ -511,14 +518,15 @@ public class SnpGenomicContextMappingService {
      * @param id Ensembl gene ID to delete
      */
 
-    private void cleanUpEnsemblGenes(Long id) {
+    private void cleanUpEnsemblGenes(Long id, List<EnsemblGene> ensemblGenesToDelete) {
 
         // Find any genes with this Ensembl ID
         Gene geneWithEnsemblId = geneRepository.findByEnsemblGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
         if (geneWithEnsemblId == null) {
-            ensemblGeneRepository.delete(id);
+//            ensemblGeneRepository.delete(id);
+            ensemblGenesToDelete.add(ensemblGeneRepository.findOne(id));
         }
     }
 
@@ -527,14 +535,15 @@ public class SnpGenomicContextMappingService {
      *
      * @param id Entrez gene ID to delete
      */
-    private void cleanUpEntrezGenes(Long id) {
+    private void cleanUpEntrezGenes(Long id, List<EntrezGene> entrezGenesToDelete) {
 
         // Find any genes with this Entrez ID
         Gene geneWithEntrezIds = geneRepository.findByEntrezGeneIdsId(id);
 
         // If this ID is not linked to a gene then delete it
         if (geneWithEntrezIds == null) {
-            entrezGeneRepository.delete(id);
+//            entrezGeneRepository.delete(id);
+            entrezGenesToDelete.add(entrezGeneRepository.findOne(id));
         }
     }
 
