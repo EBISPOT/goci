@@ -51,6 +51,9 @@ public class DepositionAssociationDto {
     @JsonProperty("beta_unit")
     private String betaUnit;
 
+    @JsonProperty("beta_direction")
+    private String betaDirection;
+
     @JsonProperty("ci_lower")
     private Double ciLower;
 

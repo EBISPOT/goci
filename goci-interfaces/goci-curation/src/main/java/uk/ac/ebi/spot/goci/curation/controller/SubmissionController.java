@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -103,15 +104,17 @@ public class SubmissionController {
 
     @CrossOrigin
     @RequestMapping(value = "/import/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request) {
+    public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
+                                   RedirectAttributes redirectAttributes) {
         Map<String, Submission> submissionList = getSubmissions();
         DepositionSubmission depositionSubmission = getSubmission(submissionID);
         Submission submission = submissionList.get(submissionID);
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-        submissionService.importSubmission(depositionSubmission, currentUser);
+        List<String> statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);
 
         submission.setStatus("IMPORTED");
         model.addAttribute("submissions", submissionList.values());
+        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
 
         return "redirect:/submissions/new";
     }

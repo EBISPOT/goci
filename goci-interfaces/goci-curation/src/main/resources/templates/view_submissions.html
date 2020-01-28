@@ -41,6 +41,16 @@
 <div th:include="fragments/header :: navbar"></div>
 
 <div class="container-fluid">
+    <div class="container-fluid" th:if="${!#strings.isEmpty(result)}">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong th:text="${result}">Success!</strong>
+                </div>
+            </div>
+        </div>
+    </div>
     <div><h4>
         <a th:href="@{{baseURL}/submissions(baseURL=${@environment.getProperty('deposition.ui.uri')})}" target="_blank">View
             All Submissions</a></h4>

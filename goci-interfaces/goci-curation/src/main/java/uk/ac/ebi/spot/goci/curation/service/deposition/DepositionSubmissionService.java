@@ -72,7 +72,8 @@ public class DepositionSubmissionService {
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
 
-    public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
+    public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
+        List<String> statusMessages = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
@@ -105,6 +106,7 @@ public class DepositionSubmissionService {
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
             template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
+            statusMessages.add("imported summary stats");
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
@@ -120,14 +122,6 @@ public class DepositionSubmissionService {
                     }
                     pubStudies.add(study);
                     publication.setStudies(pubStudies);
-                    if (notes != null) {
-                        //find notes in study
-                        for (DepositionNoteDto noteDto : notes) {
-                            if (noteDto.getStudyTag().equals(studyTag)) {
-                                depositionStudyService.addStudyNote(study, studyDto, noteDto, currentUser, curator);
-                            }
-                        }
-                    }
                     studyService.save(study);
                     if (associations != null) {
                         studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study,
@@ -141,7 +135,17 @@ public class DepositionSubmissionService {
                     depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
                             curator,
                             "Import study creation", currentUser);
+                    if (notes != null) {
+                        //find notes in study
+                        for (DepositionNoteDto noteDto : notes) {
+                            if (noteDto.getStudyTag().equals(studyTag)) {
+                                depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(),
+                                        noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
+                            }
+                        }
+                    }
                     studyService.save(study);
+                    statusMessages.add(studyNote.toString());
                 }
             }
             publicationService.save(publication);
@@ -155,6 +159,7 @@ public class DepositionSubmissionService {
                 e.printStackTrace();
             }
         }
+        return statusMessages;
     }
 
     public Submission updateSubmission(Submission submission, SecureUser currentUser) {

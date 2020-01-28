@@ -50,6 +50,7 @@ public class DepositionAssociationService {
                     association.setPvalueExponent(exponent);
                     association.setPvalueMantissa(mantissa);
                 }
+                association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
                 List<Locus> locusList = new ArrayList<>();
                 Locus locus = new Locus();
@@ -82,6 +83,7 @@ public class DepositionAssociationService {
                 if(associationDto.getCiLower() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
                 }
+                association.setBetaDirection(associationDto.getBetaDirection());
                 AssociationExtension associationExtension = new AssociationExtension();
                 associationExtension.setAssociation(association);
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());

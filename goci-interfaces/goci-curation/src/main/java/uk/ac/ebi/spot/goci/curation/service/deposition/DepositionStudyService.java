@@ -137,6 +137,7 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setEfoTraits(efoTraitList);
+        study.setStudyDesignComment(studyDto.getArrayInformation());
         studyService.save(study);
         StudyExtension studyExtension = new StudyExtension();
         studyExtension.setBackgroundTrait(studyDto.getBackgroundTrait());
@@ -166,17 +167,17 @@ public class DepositionStudyService {
                              String noteSubject,
                              SecureUser currentUser) {
         Collection<StudyNote> studyNotes = study.getNotes();
-        if (studyNotes != null && studyNotes.size() != 0) {
-            int length = studyNotes.size();
-            StudyNote[] notes = studyNotes.toArray(new StudyNote[0]);
-            for (int i = 0; i < length; i++) {
-                if(studyTag != null) {
-                    notes[i].setTextNote(studyTag + "\n" + noteText);
-                }else{
-                    notes[i].setTextNote(noteText);
-                }
-            }
-        } else {
+//        if (studyNotes != null && studyNotes.size() != 0) {
+//            int length = studyNotes.size();
+//            StudyNote[] notes = studyNotes.toArray(new StudyNote[0]);
+//            for (int i = 0; i < length; i++) {
+//                if(studyTag != null) {
+//                    notes[i].setTextNote(studyTag + "\n" + noteText);
+//                }else{
+//                    notes[i].setTextNote(noteText);
+//                }
+//            }
+//        } else {
             StudyNote note = noteOperationsService.createEmptyStudyNote(study, currentUser);
             if(studyTag != null) {
                 note.setTextNote(studyTag + "\n" + noteText);
@@ -199,17 +200,17 @@ public class DepositionStudyService {
             note.setStudy(study);
             noteRepository.save(note);
             study.addNote(note);
-        }
+//        }
         //study.setStudyDesignComment("DELETED " + study.getStudyDesignComment());
         studyService.save(study);
     }
 
-    public void addStudyNote(Study study, DepositionStudyDto studyDto, DepositionNoteDto noteDto,
-                             SecureUser currentUser,
-                             Curator curator) {
-        addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(), curator,
-                noteDto.getNoteSubject(),
-                currentUser);
-
-    }
+//    public void addStudyNote(Study study, DepositionStudyDto studyDto, DepositionNoteDto noteDto,
+//                             SecureUser currentUser,
+//                             Curator curator) {
+//        addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(), curator,
+//                noteDto.getNoteSubject(),
+//                currentUser);
+//
+//    }
 }

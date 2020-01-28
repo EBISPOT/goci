@@ -12,7 +12,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 import uk.ac.ebi.spot.goci.service.SolrIndexer;
 
@@ -27,6 +26,8 @@ public class SolrIndexerApplication implements CommandLineRunner {
     @Value("${solr_index.all_threads:false}")
     private boolean allThreads = false;
 
+    @Autowired
+    private ReasonedOntologyLoader reasonedOntologyLoader;
 
     // list of publications to load
     private static String [] pmids = {};
@@ -44,6 +45,8 @@ public class SolrIndexerApplication implements CommandLineRunner {
 
             // parse any command line arguments
             int parseArgs = parseArguments(args);
+            //reasonedOntologyLoader.init();
+            //reasonedOntologyLoader.waitUntilReady();
 
             long start_time = System.currentTimeMillis();
             System.out.println("Building indexes with supplied params: " + Arrays.toString(args));

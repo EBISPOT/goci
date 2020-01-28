@@ -47,7 +47,7 @@ public class DepositionSampleService {
                 if(countryRecruitment != null){
                     String[] countries = countryRecruitment.split("\\|");
                     for(String country: countries){
-                        countryList.add(countryRepository.findByCountryName(country.trim()));
+                        countryList.add(countryRepository.findByCountryNameIgnoreCase(country.trim()));
 
                     }
                 }
@@ -56,9 +56,11 @@ public class DepositionSampleService {
                     ancestry.setNumberOfIndividuals(sampleDto.getSize());
                 }
                 ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
-                sampleDto.getAncestryCategory();
                 String ancestryStr = sampleDto.getAncestry();
                 String ancestryCat = sampleDto.getAncestryCategory();
+//                if(ancestryCat != null && !ancestryCat.endsWith("ancestry")){
+//                    ancestryCat += " ancestry";
+//                }
                 AncestralGroup ancestryGroup = null;
                 if(ancestryStr != null){
                     ancestryGroup = ancestralGroupRepository.findByAncestralGroup(ancestryStr);

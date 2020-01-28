@@ -35,12 +35,12 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="rendering" level="INFO" additivity="false">
+    <logger name="rendering" level="DEBUG" additivity="false">
         <appender-ref ref="RENDERING-FILE" />
     </logger>
 
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="FILE" />
     </root>
 </configuration> 

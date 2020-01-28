@@ -11,7 +11,9 @@ import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 31/05/2016.
@@ -76,20 +78,20 @@ public class StudyDeletionService {
         // Add deletion event
         trackingOperationService.delete(study, user);
         DeletedStudy deletedStudy = createDeletedStudy(study);
-        // Save deleted study details
-        getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
-        deletedStudyRepository.save(deletedStudy);
 
         // THOR - Don't delete the publication and Author - OR check if there is just a publication.
         Publication publication = study.getPublicationId();
         study.setPublicationId(null);
         studyRepository.save(study);
-
         // Delete study
         studyRepository.delete(study);
 
 
         publicationOperationsService.deletePublicationWithNoStudies(publication);
+
+        // Save deleted study details
+        getLog().info("Saving details of deleted study: ".concat(String.valueOf(deletedStudy.getId())));
+        deletedStudyRepository.save(deletedStudy);
 
     }
 
@@ -100,7 +102,7 @@ public class StudyDeletionService {
      * @return DeletedStudy object
      */
     private DeletedStudy createDeletedStudy(Study study) {
-        Collection<Event> events = study.getEvents();
+        List<Event> events = new ArrayList<>(study.getEvents());
         Long id = study.getId();
         // THOR
         String pubmed = study.getPublicationId().getPubmedId();
