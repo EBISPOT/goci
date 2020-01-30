@@ -43,7 +43,7 @@ public class DepositionAssociationService {
                 }
                 String pValue = associationDto.getPValue();
                 if (pValue != null) {
-                    String[] pValues = pValue.split("E");
+                    String[] pValues = pValue.toLowerCase().split("e");
                     int exponent = Integer.valueOf(pValues[1]);
                     int mantissa = Double.valueOf(pValues[0]).intValue();
                     association.setPvalueExponent(exponent);
