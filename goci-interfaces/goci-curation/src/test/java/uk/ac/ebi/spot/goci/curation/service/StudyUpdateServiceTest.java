@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.EventType;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.repository.StudyExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 
@@ -41,6 +42,9 @@ public class StudyUpdateServiceTest {
 
     @Mock
     private StudyTrackingOperationServiceImpl trackingOperationService;
+
+    @Mock
+    private StudyExtensionRepository extensionRepository;
 
     private StudyUpdateService studyUpdateService;
 
@@ -79,7 +83,8 @@ public class StudyUpdateServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        studyUpdateService = new StudyUpdateService(trackingOperationService, studyRepository, attributeUpdateService);
+        studyUpdateService = new StudyUpdateService(trackingOperationService, studyRepository, attributeUpdateService
+                , extensionRepository);
     }
 
     @Test

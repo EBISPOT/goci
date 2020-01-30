@@ -53,6 +53,9 @@ public class StudyControllerTest {
     private StudyRepository studyRepository;
 
     @Mock
+    private StudyExtensionRepository extensionRepository;
+
+    @Mock
     private HousekeepingRepository housekeepingRepository;
 
     @Mock
@@ -188,7 +191,8 @@ public class StudyControllerTest {
                                                               studyDuplicationService,
                                                               studyDeletionService,
                                                               eventsViewService, studyUpdateService,
-                                                              publicationOperationsService);
+                                                              publicationOperationsService,
+                                                              extensionRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 

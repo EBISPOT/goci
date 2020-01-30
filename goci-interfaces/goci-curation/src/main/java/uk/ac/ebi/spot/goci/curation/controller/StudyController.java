@@ -621,7 +621,7 @@ public class StudyController {
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
         study.getStudyExtension().setStudy(study);
-        studyUpdateService.updateStudy(studyId, study, null,
+        studyUpdateService.updateStudy(studyId, study,
                 currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message

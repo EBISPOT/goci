@@ -54,7 +54,7 @@ public class StudyUpdateService {
      * @param study           Study to update
      * @param user            User performing request
      */
-    public void updateStudy(Long existingStudyId, Study study, StudyExtension extension, SecureUser user) {
+    public void updateStudy(Long existingStudyId, Study study, SecureUser user) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(existingStudyId);
