@@ -58,7 +58,7 @@ public class Publication {
     @JsonIgnore
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "publicationId")
+    @OneToMany(mappedBy = "publicationId", cascade = CascadeType.ALL)
     @JsonIgnore
     private Collection<PublicationExtension> correspondingAuthors;
 
@@ -135,6 +135,12 @@ public class Publication {
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
 
+    public PublicationExtension getCorrespondingAuthor(){
+        if(correspondingAuthors != null && correspondingAuthors.size() != 0){
+            return correspondingAuthors.iterator().next();
+        }
+        return null;
+    }
     public Collection<PublicationExtension> getCorrespondingAuthors() { return correspondingAuthors; }
 
     public void setCorrespondingAuthors(Collection<PublicationExtension> correspondingAuthors) { this.correspondingAuthors =

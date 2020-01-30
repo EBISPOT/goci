@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -25,7 +26,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
     public SnpAssociationInteractionForm() {
     }
 
-    public SnpAssociationInteractionForm(Long associationId,
+    public SnpAssociationInteractionForm(Association association,
                                          String riskFrequency,
                                          String pvalueDescription,
                                          Integer pvalueMantissa,
@@ -46,7 +47,7 @@ public class SnpAssociationInteractionForm extends SnpAssociationForm {
                                          String betaUnit,
                                          String betaDirection,
                                          List<SnpFormColumn> snpFormColumns, Integer numOfInteractions) {
-        super(associationId,
+        super(association,
               riskFrequency,
               pvalueDescription,
               pvalueMantissa,

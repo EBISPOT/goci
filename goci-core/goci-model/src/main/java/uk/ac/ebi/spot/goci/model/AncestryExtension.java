@@ -2,10 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -15,6 +12,7 @@ public class AncestryExtension {
     private Long id;
 
     @OneToOne
+    @JoinColumn(name = "ancestry_id", unique = true)
     private Ancestry ancestry;
 
     private Long numberCases;

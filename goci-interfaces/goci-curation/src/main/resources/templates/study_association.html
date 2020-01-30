@@ -69,7 +69,8 @@
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">SNP Associations</li>
     </ol>
 </div>
@@ -169,6 +170,8 @@
                     <th style="font-size: small">Mapping</th>
                     <th style="font-size: small">Gene(s)</th>
                     <th style="font-size: small">Strongest SNP-Risk Allele</th>
+                    <th style="font-size: small">Effect Allele</th>
+                    <th style="font-size: small">Other Allele</th>
                     <th style="font-size: small">SNP</th>
                     <th style="font-size: small">Proxy SNP</th>
                     <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
@@ -221,6 +224,11 @@
                             <!--Strongest risk allele-->
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                             <!--SNPs-->
                             <td style="background-color: darkgrey" th:text="${snpAssociationTableView.snps}?: '' "></td>
@@ -334,6 +342,11 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+
                                 <!--SNPs-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.snps}?: '' "></td>
@@ -444,6 +457,11 @@
 
                                 <!--Strongest risk allele-->
                                 <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                                 <!--SNPs-->
                                 <td th:text="${snpAssociationTableView.snps}?: '' "></td>

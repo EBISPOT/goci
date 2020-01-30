@@ -63,6 +63,7 @@ import java.util.Map.Entry.*;
 @RequestMapping("/studies")
 public class StudyController {
 
+    private final StudyExtensionRepository studyExtensionRepository;
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private HousekeepingRepository housekeepingRepository;
@@ -116,7 +117,8 @@ public class StudyController {
                            StudyDeletionService studyDeletionService,
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
                            StudyUpdateService studyUpdateService,
-                           PublicationOperationsService publicationOperationsService) {
+                           PublicationOperationsService publicationOperationsService,
+                           StudyExtensionRepository studyExtensionRepository) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -137,6 +139,7 @@ public class StudyController {
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
         this.publicationOperationsService = publicationOperationsService;
+        this.studyExtensionRepository = studyExtensionRepository;
     }
 
     /* All studies and various filtered lists */
@@ -600,6 +603,12 @@ public class StudyController {
 
         Study studyToView = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToView);
+//        if(studyToView.getStudyExtension() == null){
+//            StudyExtension extension = new StudyExtension();
+//            extension.setStudy(studyToView);
+//            studyToView.setStudyExtension(extension);
+//        }
+        //model.addAttribute("extension", studyToView.getStudyExtension());
 
         return "study";
     }
@@ -607,10 +616,13 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
+    public String updateStudy(@ModelAttribute Study study,
+                              @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        studyUpdateService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
+        study.getStudyExtension().setStudy(study);
+        studyUpdateService.updateStudy(studyId, study, null,
+                currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -1007,6 +1019,12 @@ public class StudyController {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
+//    // Background traits
+//    @ModelAttribute("studyExtensions")
+//    public List<StudyExtension> populateBackgroundTraits() {
+//        return studyExtensionRepository.findAll(sortByTraitAsc());
+//    }
+//
     // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {

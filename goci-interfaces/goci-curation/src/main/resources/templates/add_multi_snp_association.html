@@ -54,7 +54,8 @@
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">Multi-SNP Haplotype Addition</li>
     </ol>
 </div>
@@ -168,6 +169,25 @@
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" id="multiSnpHaplotypeDescr"
                                            th:field="*{multiSnpHaplotypeDescr}"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="effectAllele" class="control-label col-md-2">Effect Allele</label>
+
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="effectAllele"
+                                           th:field="*{associationExtension.effectAllele}" name="effectAllele"
+                                           data-role="tagsinput"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="otherAllele" class="control-label col-md-2">Other Allele</label>
+
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" id="otherAllele"
+                                           th:field="*{associationExtension.otherAllele}" name="otherAllele"
+                                           data-role="tagsinput"/>
                                 </div>
                             </div>
 

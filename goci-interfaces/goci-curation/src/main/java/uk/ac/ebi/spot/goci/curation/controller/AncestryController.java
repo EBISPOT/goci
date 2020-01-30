@@ -181,6 +181,7 @@ public class AncestryController {
             redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }
 
+        ancestry.getAncestryExtension().setAncestry(ancestry);
         ancestryService.addAncestry(studyId, ancestry, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
@@ -232,7 +233,7 @@ public class AncestryController {
             redirectAttributes.addFlashAttribute("noCountryRecruitment",message);
         }
 
-
+        ancestry.getAncestryExtension().setAncestry(ancestry);
         ancestryService.updateAncestry(ancestry,
                                          currentUserDetailsService.getUserFromRequest(request));
 

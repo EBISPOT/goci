@@ -148,6 +148,7 @@ public class DepositionSyncService {
                         }else{
                             System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         }
+                        depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                         depositionPublicationService.updatePublication(depositionPublication);
                     }
                 }

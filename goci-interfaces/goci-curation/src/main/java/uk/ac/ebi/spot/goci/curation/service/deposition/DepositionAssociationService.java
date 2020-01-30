@@ -41,10 +41,9 @@ public class DepositionAssociationService {
                 if (associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
-                BigDecimal pValue = associationDto.getPValue();
+                String pValue = associationDto.getPValue();
                 if (pValue != null) {
-                    String pValString = pValue.toString();
-                    String[] pValues = pValString.split("E");
+                    String[] pValues = pValue.split("E");
                     int exponent = Integer.valueOf(pValues[1]);
                     int mantissa = Double.valueOf(pValues[0]).intValue();
                     association.setPvalueExponent(exponent);

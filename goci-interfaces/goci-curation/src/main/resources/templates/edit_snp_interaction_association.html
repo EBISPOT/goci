@@ -53,7 +53,8 @@
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">Editing interaction association</li>
     </ol>
 </div>

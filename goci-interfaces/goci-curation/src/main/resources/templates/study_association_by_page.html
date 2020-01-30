@@ -24,6 +24,11 @@
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+
                             <!--SNPs-->
                             <td style="background-color: darkgrey" th:text="${snpAssociationTableView.snps}?: '' "></td>
 
@@ -136,6 +141,11 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+
                                 <!--SNPs-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.snps}?: '' "></td>
@@ -246,6 +256,11 @@
 
                                 <!--Strongest risk allele-->
                                 <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td style="background-color: darkgrey"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                                 <!--SNPs-->
                                 <td th:text="${snpAssociationTableView.snps}?: '' "></td>

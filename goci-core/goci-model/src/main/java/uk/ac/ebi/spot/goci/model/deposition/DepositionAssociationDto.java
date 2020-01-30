@@ -25,7 +25,7 @@ public class DepositionAssociationDto {
     private String variantID;
 
     @JsonProperty("pvalue")
-    private BigDecimal pValue;
+    private String pValue;
 
     @JsonProperty("pvalue_text")
     private String pValueText;

@@ -85,7 +85,7 @@ public class Association implements Trackable {
     private AssociationReport associationReport;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "association", orphanRemoval = true, optional=true)
+    @OneToOne(mappedBy = "association", orphanRemoval = true, optional=true, cascade = CascadeType.ALL)
     private AssociationExtension associationExtension;
 
     @JsonIgnore
