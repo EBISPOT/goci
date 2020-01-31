@@ -5,13 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.SecureUser;
@@ -61,7 +60,8 @@ public class SubmissionController {
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class, params);
+        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class,
+                params);
 
 //        DepositionSubmissionListWrapper submissions =
 //                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
@@ -69,8 +69,7 @@ public class SubmissionController {
 //        while (i < submissions.getPage().getTotalPages()) {
 //            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
         DepositionSubmission[] submissions =
-                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
-                        DepositionSubmission[].class, params);
+                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
         for (DepositionSubmission submission : submissions) {
             Submission testSub = new Submission();
             testSub.setId(submission.getSubmissionId());
@@ -105,15 +104,17 @@ public class SubmissionController {
 
     @CrossOrigin
     @RequestMapping(value = "/import/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request) {
+    public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
+                                   RedirectAttributes redirectAttributes) {
         Map<String, Submission> submissionList = getSubmissions();
         DepositionSubmission depositionSubmission = getSubmission(submissionID);
         Submission submission = submissionList.get(submissionID);
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-        submissionService.importSubmission(depositionSubmission, currentUser);
+        List<String> statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);
 
         submission.setStatus("IMPORTED");
         model.addAttribute("submissions", submissionList.values());
+        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
 
         return "redirect:/submissions/new";
     }

@@ -41,12 +41,15 @@ public class DepositionAssociationService {
                 if (associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
-                BigDecimal pValue = associationDto.getPValue();
+                String pValue = associationDto.getPValue();
                 if (pValue != null) {
-                    int exponent = pValue.precision() - pValue.scale() - 1;
+                    String[] pValues = pValue.toLowerCase().split("e");
+                    int exponent = Integer.valueOf(pValues[1]);
+                    int mantissa = Double.valueOf(pValues[0]).intValue();
                     association.setPvalueExponent(exponent);
-                    association.setPvalueMantissa(pValue.unscaledValue().intValue());
+                    association.setPvalueMantissa(mantissa);
                 }
+                association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
                 List<Locus> locusList = new ArrayList<>();
                 Locus locus = new Locus();
@@ -79,6 +82,7 @@ public class DepositionAssociationService {
                 if(associationDto.getCiLower() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
                 }
+                association.setBetaDirection(associationDto.getBetaDirection());
                 AssociationExtension associationExtension = new AssociationExtension();
                 associationExtension.setAssociation(association);
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());

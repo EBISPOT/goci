@@ -2,14 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -50,7 +43,7 @@ public class Ancestry implements Trackable {
     @OneToOne
     private Study study;
 
-    @OneToOne(mappedBy = "ancestry", orphanRemoval = true, optional=true)
+    @OneToOne(mappedBy = "ancestry", orphanRemoval = true, optional=true, cascade = CascadeType.ALL)
     private AncestryExtension ancestryExtension;
 
     @ManyToMany

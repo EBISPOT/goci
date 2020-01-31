@@ -8,7 +8,7 @@
     <logger name="uk.ac.ebi.spot.goci" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
-    <logger name="uk.ac.ebi.spot.goci.ontology.owl" level="ERROR" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.ontology.owl" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 

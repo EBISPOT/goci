@@ -45,7 +45,8 @@
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>

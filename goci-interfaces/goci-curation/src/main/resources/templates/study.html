@@ -68,7 +68,8 @@
         <!--<li><a th:href="@{/studies?page=1&pubmed={pubmedId}(pubmedId=*{pubmedId})}">Studies</a></li>-->
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-             <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+             <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">Study Details</li>
     </ol>
 </div>
@@ -169,6 +170,14 @@
 
                 <!--Visible fields-->
                 <div class="form-group">
+                        <label for="accessionId" class="control-label col-md-2">Study Tag</label>
+                        <div class="col-md-5 static-field">
+                        <span type="text" th:field="*{studyTag}"
+                              th:text="${study.studyTag}"
+                              id="studyTag"></span>
+                        </div>
+                    </div>
+                <div class="form-group">
                     <label for="accessionId" class="control-label col-md-2">Accession ID</label>
 
                     <div class="col-md-5 static-field">
@@ -199,6 +208,28 @@
                         <!--<input type="text" th:field="*{author}" class="form-control" id="author" th:readonly="${study.housekeeping}"/>-->
                         <!--input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author" readonly="readonly" /-->
                     <b id="firstAuthorStatic"><span th:utext="*{publicationId.firstAuthor.fullname}" >Description</span></b>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="correspondingAuthor" class="control-label col-md-2">Corresponding Author</label>
+
+                    <div class="col-md-10 static-field">
+                        <b
+                                id="correspondingAuthor"><span
+                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().getCorrespondingAuthorName()} : ''" >
+                            Description</span></b>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="correspondingAuthorEmail" class="control-label col-md-2">Corresponding Author
+                        Email</label>
+
+                    <div class="col-md-10 static-field">
+                        <b
+                                id="correspondingAuthorEmail"><span
+                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().correspondingAuthorEmail} : ''" >Description</span></b>
                     </div>
 
                 </div>
@@ -373,7 +404,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="backgroundTrait" class="control-label col-md-2">Background Trait</label>
 
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               id="backgroundTrait"
+                               th:field="${study.studyExtension.backgroundTrait}"/>
+                    </div>
+                </div>
 
                 <div class="form-group">
 
@@ -381,6 +421,27 @@
                         <a th:href="@{/studies/{studyId}/associations/applyefotraits(studyId=${study.Id})}"
                            class="btn btn-default pull-right"
                            role="button">Apply EFO trait(s) to all SNPs</a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="mappedBackgroundTrait" class="control-label col-md-2">Mapped Background Trait</label>
+
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               id="mappedBackgroundTrait"
+                               th:field="${study.studyExtension.mappedBackgroundTrait}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="statisticalModel" class="control-label col-md-2">Statistical Model</label>
+
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               id="statisticalModel"
+                               th:field="${study.studyExtension.statisticalModel}"/>
                     </div>
                 </div>
 
@@ -436,6 +497,39 @@
                     <label for="fullPvalueSet" class="control-label col-md-2">Full p-Value Set</label>
 
                     <input id="fullPvalueSet" type="checkbox" th:field="*{fullPvalueSet}"/>
+                </div>
+                <div class="form-group">
+                    <label for="summaryStatisticsFile" class="control-label col-md-2">Summary Statistics File</label>
+
+                    <div class="col-md-10">
+                    <input id="summaryStatisticsFile" type="text"
+                           class="form-control" th:field="${study.studyExtension.summaryStatisticsFile}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="summaryStatisticsAssembly" class="control-label col-md-2">Summary Statistics Genome
+                        Assembly</label>
+
+                    <div class="col-md-10">
+                    <input id="summaryStatisticsAssembly" type="text"
+                           class="form-control" th:field="${study.studyExtension.summaryStatisticsAssembly}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cohort" class="control-label col-md-2">Cohort</label>
+
+                    <div class="col-md-10">
+                    <input id="cohort" type="text"
+                           class="form-control" th:field="${study.studyExtension.cohort}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cohortSpecificReference" class="control-label col-md-2">Cohort Specific Reference</label>
+
+                    <div class="col-md-10">
+                        <input id="cohortSpecificReference" type="text"
+                               class="form-control" th:field="${study.studyExtension.cohortSpecificReference}"/>
+                    </div>
                 </div>
 
 

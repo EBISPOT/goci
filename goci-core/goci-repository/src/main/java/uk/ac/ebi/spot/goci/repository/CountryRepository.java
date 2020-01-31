@@ -15,4 +15,5 @@ import uk.ac.ebi.spot.goci.model.Country;
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
     Country findByCountryName(String countryName);
+    Country findByCountryNameIgnoreCase(String countryName);
 }

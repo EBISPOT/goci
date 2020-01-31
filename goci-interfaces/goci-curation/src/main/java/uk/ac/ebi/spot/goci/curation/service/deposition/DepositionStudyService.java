@@ -60,20 +60,21 @@ public class DepositionStudyService {
 
     public void publishSummaryStats(Collection<DepositionStudyDto> studyDtos, Collection<Study> dbStudies,
                                     SecureUser currentUser) {
+        List<Long> studyIds = new ArrayList<>();
+        for (Study study : dbStudies) {
+            studyIds.add(study.getId());
+        }
         for(DepositionStudyDto studyDto: studyDtos) {
             String tag = studyDto.getStudyTag();
             boolean match = false;
-            for (Study study : dbStudies) {
+            for (Long studyId: studyIds) {
+                Study study = studyService.findOne(studyId);
                 if(study.getAccessionId().equals(studyDto.getAccession())){
                     publishSummaryStats(study, currentUser);
                     match = true;
                 }
             }
             if(!match){
-                List<Long> studyIds = new ArrayList<>();
-                for (Study study : dbStudies) {
-                    studyIds.add(study.getId());
-                }
                 for (Long studyId: studyIds) {
                     publishSummaryStats(studyService.findOne(studyId), currentUser);
                 }
@@ -94,15 +95,20 @@ public class DepositionStudyService {
             List<Platform> platformList = new ArrayList<>();
             String[] manufacturers = manufacturerString.split("\\|");
             for (String manufacturer : manufacturers) {
-                Platform platform = platformRepository.findByManufacturer(manufacturer);
+                Platform platform = platformRepository.findByManufacturer(manufacturer.trim());
                 platformList.add(platform);
             }
             study.setPlatforms(platformList);
         }
         List<GenotypingTechnology> gtList = new ArrayList<>();
-        GenotypingTechnology gtt =
-                genotypingTechnologyRepository.findByGenotypingTechnology(studyDto.getGenotypingTechnology());
-        gtList.add(gtt);
+        String genotypingTech = studyDto.getGenotypingTechnology();
+        if(genotypingTech != null) {
+            String[] technologies = genotypingTech.split("\\|");
+            for (String technology : technologies) {
+                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(technology.trim());
+                gtList.add(gtt);
+            }
+        }
         study.setGenotypingTechnologies(gtList);
 
         study.setPublicationId(publication);
@@ -123,7 +129,7 @@ public class DepositionStudyService {
         if(efoTrait != null){
             String[] efoTraits = efoTrait.split("\\|");
             for(String trait: efoTraits){
-                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait());
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait().trim());
                 efoTraitList.add(dbTrait);
             }
         }
@@ -131,6 +137,7 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setEfoTraits(efoTraitList);
+        study.setStudyDesignComment(studyDto.getArrayInformation());
         studyService.save(study);
         StudyExtension studyExtension = new StudyExtension();
         studyExtension.setBackgroundTrait(studyDto.getBackgroundTrait());
@@ -160,17 +167,17 @@ public class DepositionStudyService {
                              String noteSubject,
                              SecureUser currentUser) {
         Collection<StudyNote> studyNotes = study.getNotes();
-        if (studyNotes != null && studyNotes.size() != 0) {
-            int length = studyNotes.size();
-            StudyNote[] notes = studyNotes.toArray(new StudyNote[0]);
-            for (int i = 0; i < length; i++) {
-                if(studyTag != null) {
-                    notes[i].setTextNote(studyTag + "\n" + noteText);
-                }else{
-                    notes[i].setTextNote(noteText);
-                }
-            }
-        } else {
+//        if (studyNotes != null && studyNotes.size() != 0) {
+//            int length = studyNotes.size();
+//            StudyNote[] notes = studyNotes.toArray(new StudyNote[0]);
+//            for (int i = 0; i < length; i++) {
+//                if(studyTag != null) {
+//                    notes[i].setTextNote(studyTag + "\n" + noteText);
+//                }else{
+//                    notes[i].setTextNote(noteText);
+//                }
+//            }
+//        } else {
             StudyNote note = noteOperationsService.createEmptyStudyNote(study, currentUser);
             if(studyTag != null) {
                 note.setTextNote(studyTag + "\n" + noteText);
@@ -193,17 +200,17 @@ public class DepositionStudyService {
             note.setStudy(study);
             noteRepository.save(note);
             study.addNote(note);
-        }
+//        }
         //study.setStudyDesignComment("DELETED " + study.getStudyDesignComment());
         studyService.save(study);
     }
 
-    public void addStudyNote(Study study, DepositionStudyDto studyDto, DepositionNoteDto noteDto,
-                             SecureUser currentUser,
-                             Curator curator) {
-        addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(), curator,
-                noteDto.getNoteSubject(),
-                currentUser);
-
-    }
+//    public void addStudyNote(Study study, DepositionStudyDto studyDto, DepositionNoteDto noteDto,
+//                             SecureUser currentUser,
+//                             Curator curator) {
+//        addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(), curator,
+//                noteDto.getNoteSubject(),
+//                currentUser);
+//
+//    }
 }

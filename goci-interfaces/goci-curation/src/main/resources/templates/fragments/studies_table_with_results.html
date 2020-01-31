@@ -136,7 +136,7 @@
 
         <td th:text="${study.publicationId?.publicationDate != null } ? ${#dates.format(study.publicationId?.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
-            <span th:text="${study.publicationId?.pubmedId}"></span>
+            <a th:href="@{/publication/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}" th:text="${study.publicationId?.pubmedId}"></a>
             &nbsp;&nbsp;
             <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>

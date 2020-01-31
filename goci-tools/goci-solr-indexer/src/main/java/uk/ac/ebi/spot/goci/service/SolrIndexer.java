@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -188,6 +189,7 @@ public class SolrIndexer {
         }
     }
 
+    @Transactional
     private int mapAllAssociations(ExecutorService taskExecutor, Collection<String> pubmedIds) throws InterruptedException {
         //Sort sort = new Sort(new Sort.Order("id"));
         if(runAssociations) {

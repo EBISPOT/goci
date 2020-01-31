@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.GenomicContext;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
@@ -32,7 +33,7 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
     public SnpAssociationStandardMultiForm() {
     }
 
-    public SnpAssociationStandardMultiForm(Long associationId,
+    public SnpAssociationStandardMultiForm(Association association,
                                            String riskFrequency,
                                            String pvalueDescription,
                                            Integer pvalueMantissa,
@@ -56,7 +57,7 @@ public class SnpAssociationStandardMultiForm extends SnpAssociationForm {
                                            Collection<String> authorReportedGenes,
                                            String multiSnpHaplotypeDescr,
                                            Integer multiSnpHaplotypeNum, Boolean multiSnpHaplotype) {
-        super(associationId,
+        super(association,
               riskFrequency,
               pvalueDescription,
               pvalueMantissa,

@@ -47,7 +47,7 @@ public class DepositionAssociationDtoTest {
                     associations = objectMapper.readValue(json, DepositionAssociationListWrapper.class);
             assertNotNull(associations);
             assertNotNull(associations.getAssociations().getAssociations().get(0));
-            BigDecimal pValue = associations.getAssociations().getAssociations().get(0).getPValue();
+            BigDecimal pValue = new BigDecimal(associations.getAssociations().getAssociations().get(0).getPValue());
             assertNotNull(pValue);
             BigInteger sv = pValue.unscaledValue();
             int exponent = pValue.precision() - pValue.scale() - 1;

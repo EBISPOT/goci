@@ -40,6 +40,7 @@ public class SnpAssociationTableViewService {
      */
     public SnpAssociationTableView createSnpAssociationTableView(Association association) {
         SnpAssociationTableView snpAssociationTableView = new SnpAssociationTableView();
+        snpAssociationTableView.setAssociationExtension(association.getAssociationExtension());
 
         // For SNP interaction studies snp, proxy snps, risk alleles etc
         // should be separated by an 'x'

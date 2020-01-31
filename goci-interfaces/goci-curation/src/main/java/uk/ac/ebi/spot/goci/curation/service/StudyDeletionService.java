@@ -11,7 +11,9 @@ import uk.ac.ebi.spot.goci.repository.DeletedStudyRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 31/05/2016.
@@ -100,7 +102,7 @@ public class StudyDeletionService {
      * @return DeletedStudy object
      */
     private DeletedStudy createDeletedStudy(Study study) {
-        Collection<Event> events = study.getEvents();
+        List<Event> events = new ArrayList<>(study.getEvents());
         Long id = study.getId();
         // THOR
         String pubmed = study.getPublicationId().getPubmedId();
