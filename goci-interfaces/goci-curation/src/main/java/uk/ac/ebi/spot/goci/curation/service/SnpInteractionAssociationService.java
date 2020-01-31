@@ -52,6 +52,7 @@ public class SnpInteractionAssociationService implements SnpAssociationFormServi
 
         // Set simple string and boolean values
         form.setAssociationId(association.getId());
+        form.setAssociationExtension(association.getAssociationExtension());
         form.setPvalueDescription(association.getPvalueDescription());
         form.setSnpType(association.getSnpType());
         form.setSnpApproved(association.getSnpApproved());

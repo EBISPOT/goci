@@ -52,6 +52,8 @@ public class AssociationDownloadService {
         String header =
                 "Gene(s)\tStrongest SNP-Risk Allele\tSNP\tProxy SNP" +
                         "\tIndependent SNP risk allele frequency in controls" +
+                        "\tEffect allele "+
+                        "\tOther allele "+
                         "\tRisk element (allele, haplotype or SNPxSNP interaction) frequency in controls" +
                         "\tP-value mantissa\tP-value exponent\tP-value description" +
                         "\tOR\tOR reciprocal" +
@@ -285,6 +287,8 @@ public class AssociationDownloadService {
 
     private void extractGeneticData(Association association, StringBuilder line) {
         final StringBuilder strongestAllele = new StringBuilder();
+        final StringBuilder effectAllele = new StringBuilder();
+        final StringBuilder otherAllele = new StringBuilder();
         final StringBuilder reportedGenes = new StringBuilder();
         final StringBuilder rsId = new StringBuilder();
         final StringBuilder proxySnpsRsIds = new StringBuilder();
@@ -409,11 +413,17 @@ public class AssociationDownloadService {
 
                 }
         );
-
-
+        if(association.getAssociationExtension() != null) {
+            setOrAppend(effectAllele, association.getAssociationExtension().getEffectAllele(), delimiter);
+            setOrAppend(otherAllele, association.getAssociationExtension().getOtherAllele(), delimiter);
+        }
         line.append(reportedGenes.toString());
         line.append("\t");
         line.append(strongestAllele.toString());
+        line.append("\t");
+        line.append(effectAllele);
+        line.append("\t");
+        line.append(otherAllele.toString());
         line.append("\t");
         line.append(rsId.toString());
         line.append("\t");

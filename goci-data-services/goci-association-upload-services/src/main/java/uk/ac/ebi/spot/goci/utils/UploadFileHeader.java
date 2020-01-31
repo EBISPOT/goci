@@ -13,6 +13,7 @@ public enum UploadFileHeader {
     BP,
     GENOME_BUILD,
     EFFECT_ALLELE,
+    SECONDARY_EFFECT_ALLELE,
     OTHER_ALLELES,
     // Curator spreadsheet = Risk element (allele, haplotype or SNPxSNP interaction) frequency in controls
     EFFECT_ELEMENT_FREQUENCY_IN_CONTROLS,

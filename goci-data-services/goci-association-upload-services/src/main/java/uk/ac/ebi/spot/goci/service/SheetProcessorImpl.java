@@ -82,6 +82,9 @@ public class SheetProcessorImpl implements UploadSheetProcessor {
                                 case EFFECT_ALLELE:
                                     associationUploadRow.setStrongestAllele(SheetCellProcessingService.processMandatoryStringValue(cell));
                                     break;
+                                case SECONDARY_EFFECT_ALLELE:
+                                    associationUploadRow.setEffectAllele(SheetCellProcessingService.processMandatoryStringValue(cell));
+                                    break;
                                 case OTHER_ALLELES:
                                     associationUploadRow.setOtherAllele(SheetCellProcessingService.processMandatoryStringValue(cell));
                                     break;

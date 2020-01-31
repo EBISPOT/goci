@@ -69,6 +69,7 @@ public interface SnpAssociationFormService {
             association.setBetaUnit(form.getBetaUnit().trim());
         }
         form.getAssociationExtension().setAssociation(association);
+        association.setAssociationExtension(form.getAssociationExtension());
         return association;
     }
 }

@@ -342,9 +342,9 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
-                                <td style="background-color: darkgrey"
+                                <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
-                                <td style="background-color: darkgrey"
+                                <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                                 <!--SNPs-->
@@ -458,10 +458,8 @@
                                 <!--Strongest risk allele-->
                                 <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
-                                <td style="background-color: darkgrey"
-                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
-                                <td style="background-color: darkgrey"
-                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+                                <td th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                                 <!--SNPs-->
                                 <td th:text="${snpAssociationTableView.snps}?: '' "></td>
