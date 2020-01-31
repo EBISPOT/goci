@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="LOG_FILE" value="./logs/gwas_deposition_sync.log" />
+
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
@@ -12,16 +15,16 @@
     </appender>
 
     <root level="OFF">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
     <logger name="uk.ac.ebi.spot.goci.curation" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </logger>
     <logger name="org.hibernate" level="ERROR" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </logger>
     <logger name="org.hibernate.jdbc" level="ERROR" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </logger>
 
     <logger name="com.zaxxer.hikari">
