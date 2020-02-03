@@ -22,7 +22,7 @@ $(document).ready(function () {
         $('.table-checkbox').prop("checked", $('#select_all').prop("checked"));
     });
 
-    $('#assignStatusForm').click(function () {
+    $('#assignStatus').click(function () {
         var data = {}
         data.status = $('#curationStatus').val();
         data.ids = []
@@ -31,13 +31,48 @@ $(document).ready(function () {
             v = this.id
             data.ids.push(v)
         })
-        $.getJSON("status_update",
-            {"data": data},
+        $.ajax({
+            type: "POST",
+            url: "status_update",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
             //Response
-            function(data) {
-                alert(data.message);
+            success: function (data) {
+                var msg = '';
+                for (let [key, value] of Object.entries(data)) {
+                    msg += key + ': ' + value + '\n';
+                }
+                alert(msg);
                 //Reload page
                 location.reload();
-            });
+            }
+        })
     });
+    $('#assignCurator').click(function () {
+        var data = {}
+        data.curator = $('#curator').val();
+        data.ids = []
+        $('.table-checkbox:checked').each(function () {
+            var v = $(this).attr('id')
+            v = this.id
+            data.ids.push(v)
+        })
+        $.ajax({
+            type: "POST",
+            url: "assign_curator",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            //Response
+            success: function (data) {
+                var msg = '';
+                for (let [key, value] of Object.entries(data)) {
+                    msg += key + ': ' + value + '\n';
+                }
+                alert(msg);
+                //Reload page
+                location.reload();
+            }
+        })
+    });
+
 })

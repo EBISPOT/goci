@@ -144,45 +144,39 @@
             <div class="col-md-3">
                 <div id="assignStatusForm">
 
-                    <form class="form-inline" name="assignStatusForm" role="form">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label for="curationStatus" class="control-label"></label>
-                                <select name="curationStatus" class="form-control select2-select" id="curationStatus">
-                                    <!--Empty value for first entry-->
-                                    <option value=""></option>
-                                    <option th:each="curationStatus : ${curationstatuses}"
-                                            th:value="${curationStatus.id}"
-                                            th:text="${curationStatus.status}"
-                                            th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
-                                    </option>
-                                </select>
-                            </div>
-                            <button type="submit"
-                                    class="btn btn-primary btn-sm">Save
-                            </button>
-                        </div>
-                    </form>
+                    <div class="form-group">
+                        <label for="curationStatus" class="control-label">Curator Status:</label>
+                        <select name="curationStatus" class="form-control select2-select" id="curationStatus">
+                            <!--Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curationStatus : ${curationstatuses}"
+                                    th:value="${curationStatus.id}"
+                                    th:text="${curationStatus.status}"
+                                    th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                            </option>
+                        </select>
+                        <a role="button" type="submit" id="assignStatus"
+                                class="btn btn-primary btn-sm">Save
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div id="assignCuratorForm">
 
-                    <form class="form-inline" name="assignCuratorForm" role="form">
-                        <div class="form-group">
-                            <label for="curator" class="control-label"></label>
-                            <select name="curator" class="form-control select2-select" id="curator">
-                                <!--Empty value for first entry-->
-                                <option value=""></option>
-                                <option th:each="curator : ${curators}"
-                                        th:value="${curator.id}"
-                                        th:text="${curator.lastName}"></option>
-                            </select>
-                            <button type="submit"
-                                    class="btn btn-primary btn-sm">Save
-                            </button>
-                        </div>
-                    </form>
+                    <div class="form-group">
+                        <label for="curator" class="control-label">Curator:</label>
+                        <select name="curator" class="form-control select2-select" id="curator">
+                            <!--Empty value for first entry-->
+                            <option value=""></option>
+                            <option th:each="curator : ${curators}"
+                                    th:value="${curator.id}"
+                                    th:text="${curator.lastName}"></option>
+                        </select>
+                        <a role="button" type="submit" id="assignCurator"
+                                class="btn btn-primary btn-sm">Save
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
