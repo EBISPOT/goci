@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
+
+        /*]]>*/
+    </script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+
+
+<div class="container-fluid" style="padding-top: 30px">
+
+    <ol class="breadcrumb background-color-complementary-accent">
+        <li><a th:href="@{/home}">GWAS</a></li>
+        <!--li><a href="studies.html" th:href="@{/studies}">Studies</a></-li-->
+        <li>Publication</li>
+        <li class="active" th:text="${publication.pubmedId}"></li>
+    </ol>
+
+
+    <div class="container-fluid" id="lower_container">
+
+        <!-- Summary panel -->
+        <div class="row" style="margin-top:10px">
+            <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
+                <div class="panel-heading background-color-primary-accent">
+                    <h3 class="panel-title">Publication information</h3>
+                </div>
+                <div class="clearfix" id="summary-panel-loading">
+                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span class="item-left-bold">PubMed ID</span>
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-pubmedid"
+                                 th:text="${publication.pubmedId}"></div>
+
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span class="item-left-bold">First author</span>
+                            </div>
+                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-author"
+                                 th:text="${publication.firstAuthor.fullname}"></div>
+
+                        </div>
+                    </div>
+
+                    <!--  data -->
+                    <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                                <span class="item-left-bold">Journal</span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-journal"
+                                 th:text="${publication.publication}">-
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                                <span>Publication date</span>
+                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Journal publication date YYYY-MM-DD"></span>
+                            </div>
+                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-datepublication"
+                                 th:text="${#calendars.format(publication.publicationDate,'YYYY-MM-dd')}">-
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="panel-links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3">
+                        <div style="margin-bottom: 0.6em">
+                            <button type="button" class="btn btn-default btn-sm" id="pubmedid_button">View in <b>PubMed</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        </div>
+                        <div style="margin-bottom: 0.6em">
+                            <button type="button" class="btn btn-default btn-sm" id="europepmc_button">View in <b>Europe PMC</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix" id="authorsList-panel-loading">
+                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="clearfix">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
+                                <span class="item-left-bold">Title</span>
+                            </div>
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" id="publication-title"
+                                 th:text="${publication.title}">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
+                                <span class="item-left-bold">Authors</span>
+                            </div>
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" id="publication-authors-list">
+                                <span th:each="author: ${publication.authors}">
+                                    <span th:text="${author.fullname}"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:0px">
+            <div class="col-md-2">
+                    <span class="study_count badge" style="background-color:
+                        #398A96;margin-left:10px" th:text="'Studies: ' + ${publication.studies.size()}"></span>
+            </div>
+            <div class="col-md-3">
+                <div id="assignStatusForm">
+
+                    <form class="form-inline" name="assignStatusForm" role="form">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="curationStatus" class="control-label"></label>
+                                <select name="curationStatus" class="form-control select2-select" id="curationStatus">
+                                    <!--Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="curationStatus : ${curationstatuses}"
+                                            th:value="${curationStatus.id}"
+                                            th:text="${curationStatus.status}"
+                                            th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                                    </option>
+                                </select>
+                            </div>
+                            <button type="submit"
+                                    class="btn btn-primary btn-sm">Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div id="assignCuratorForm">
+
+                    <form class="form-inline" name="assignCuratorForm" role="form">
+                        <div class="form-group">
+                            <label for="curator" class="control-label"></label>
+                            <select name="curator" class="form-control select2-select" id="curator">
+                                <!--Empty value for first entry-->
+                                <option value=""></option>
+                                <option th:each="curator : ${curators}"
+                                        th:value="${curator.id}"
+                                        th:text="${curator.lastName}"></option>
+                            </select>
+                            <button type="submit"
+                                    class="btn btn-primary btn-sm">Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select_all" class="checkbox"/></th>
+                        <th style="width:10%">Study Id</th>
+                        <th style="width:10%">Study Accession</th>
+                        <th style="width:20%">Disease Trait</th>
+                        <th style="width:20%">EFO Traits</th>
+                        <th style="width:10%">SNPs</th>
+                        <th style="width:10%">Curation Status</th>
+                        <th style="width:10%">Curator</th>
+                        <th style="width:10%">Study Tag</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="study,iter : ${publication.studies}">
+                        <td>
+                            <input type="checkbox" class="table-checkbox checkbox" th:id="${study.id}"/>
+                        </td>
+                        <td>
+                            <p>
+                                <a th:href="@{/studies/{studyId}(studyId=${study.id})}" th:text="${study.id}"></a>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.accessionId}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.diseaseTrait} ? ${study.diseaseTrait.trait}: ''"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:each="efo: ${study.efoTraits}">
+                                    <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
+                                       th:text="${efo.trait}"></a>
+                                </span>
+
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.getSnpCount()}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.housekeeping.curationStatus.status}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span
+                                        th:text="(${study.housekeeping.curator.firstName} ? ${study.housekeeping.curator.firstName} + ' ' : '') + ${study.housekeeping.curator.lastName}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.studyTag}"></span>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!--Include footer-->
+    <div th:include="fragments/footer :: page_footer"></div>
+    <script th:src="@{/js/goci-publication-page.js}"></script>
+</div>
+
+
+</body>
+</html>

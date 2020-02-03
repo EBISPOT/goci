@@ -21,7 +21,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="uk.ac.ebi.spot.goci.curation" level="WARN" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.curation" level="DEBUG" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
@@ -29,7 +29,7 @@
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.curation.service.FtpFileService" level="INFO" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.curation.service.FtpFileService" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
@@ -49,15 +49,19 @@
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="uk.ac.ebi.spot.goci.exception.EnsemblRestClientException" level="DEBUG" additivity="false">
+    <logger name="uk.ac.ebi.spot.goci.exception.EnsemblRestClientException" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="org.apache.tomcat.jdbc.pool" level="DEBUG" additivity="false">
+    <logger name="org.apache.tomcat.jdbc.pool" level="WARN" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="org.apache.http.wire" level="WARN" additivity="false">
         <appender-ref ref="FILE" />
     </logger>
 
