@@ -141,6 +141,7 @@ public class DepositionStudyService {
         studyService.save(study);
         StudyExtension studyExtension = new StudyExtension();
         studyExtension.setBackgroundTrait(studyDto.getBackgroundTrait());
+        studyExtension.setMappedBackgroundTrait(studyDto.getBackgroundEfoTrait());
         studyExtension.setCohort(studyDto.getCohort());
         studyExtension.setCohortSpecificReference(studyDto.getCohortId());
         studyExtension.setStatisticalModel(studyDto.getStatisticalModel());
