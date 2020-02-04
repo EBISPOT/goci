@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -17,10 +18,6 @@ public class StudyExtension {
     private Study study;
 
     private String statisticalModel;
-
-    private String backgroundTrait;
-
-    private String mappedBackgroundTrait;
 
     private String cohort;
 

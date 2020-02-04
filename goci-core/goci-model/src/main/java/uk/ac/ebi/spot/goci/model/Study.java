@@ -87,6 +87,19 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
+    @ManyToOne(optional = true)
+    @JoinTable(name = "STUDY_BACKGROUND_TRAIT",
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+    private DiseaseTrait backgroundTrait;
+
+    @ManyToMany()
+    @JoinTable(name = "STUDY_BACKGROUND_EFO_TRAIT",
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> mappedBackgroundTraits;
+
+
     @OneToOne(orphanRemoval = true)
     @JsonIgnore
     private Housekeeping housekeeping;
@@ -173,6 +186,8 @@ public class Study implements Trackable {
                  Collection<Ancestry> ancestries,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
+                 DiseaseTrait backgroundTrait,
+                 Collection<EfoTrait> mappedBackgroundTraits,
                  Housekeeping housekeeping,
                  StudyReport studyReport, Collection<Event> events,
                  Collection<SingleNucleotidePolymorphism> snps,
@@ -198,6 +213,8 @@ public class Study implements Trackable {
         this.ancestries = ancestries;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
+        this.backgroundTrait = backgroundTrait;
+        this.mappedBackgroundTraits = mappedBackgroundTraits;
         this.housekeeping = housekeeping;
         this.studyReport = studyReport;
         this.events = events;
@@ -291,6 +308,22 @@ public class Study implements Trackable {
 
     public void setEfoTraits(Collection<EfoTrait> efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public DiseaseTrait getBackgroundTrait() {
+        return backgroundTrait;
+    }
+
+    public void setBackgroundTrait(DiseaseTrait backgroundTrait) {
+        this.backgroundTrait = backgroundTrait;
+    }
+
+    public Collection<EfoTrait> getMappedBackgroundTraits() {
+        return mappedBackgroundTraits;
+    }
+
+    public void setMappedBackgroundTraits(Collection<EfoTrait> mappedBackgroundTraits) {
+        this.mappedBackgroundTraits = mappedBackgroundTraits;
     }
 
     public Housekeeping getHousekeeping() {

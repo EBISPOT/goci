@@ -120,10 +120,10 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setImputed(studyDto.getImputation());
-            Integer variantCount = studyDto.getVariantCount();
-            if(variantCount != -1) {
-                study.setSnpCount(variantCount);
-            }
+        Integer variantCount = studyDto.getVariantCount();
+        if(variantCount != -1) {
+            study.setSnpCount(variantCount);
+        }
         List<EfoTrait> efoTraitList = new ArrayList<>();
         String efoTrait = studyDto.getEfoTrait();
         if(efoTrait != null){
@@ -133,15 +133,26 @@ public class DepositionStudyService {
                 efoTraitList.add(dbTrait);
             }
         }
+        List<EfoTrait> mappedTraitList = new ArrayList<>();
+        study.setEfoTraits(efoTraitList);
+        String mappedBackgroundTrait = studyDto.getEfoTrait();
+        if(mappedBackgroundTrait != null) {
+            String[] efoTraits = mappedBackgroundTrait.split("\\|");
+            for (String trait : efoTraits) {
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait().trim());
+                mappedTraitList.add(dbTrait);
+            }
+        }
+        study.setMappedBackgroundTraits(mappedTraitList);
+        DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
+        study.setBackgroundTrait(backgroundTrait);
+
         if(studyDto.getSummaryStatisticsFile() != null){
             study.setFullPvalueSet(true);
         }
-        study.setEfoTraits(efoTraitList);
         study.setStudyDesignComment(studyDto.getArrayInformation());
         studyService.save(study);
         StudyExtension studyExtension = new StudyExtension();
-        studyExtension.setBackgroundTrait(studyDto.getBackgroundTrait());
-        studyExtension.setMappedBackgroundTrait(studyDto.getBackgroundEfoTrait());
         studyExtension.setCohort(studyDto.getCohort());
         studyExtension.setCohortSpecificReference(studyDto.getCohortId());
         studyExtension.setStatisticalModel(studyDto.getStatisticalModel());
