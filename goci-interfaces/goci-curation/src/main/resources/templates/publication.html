@@ -34,6 +34,9 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 </head>
 <body>
 
@@ -136,49 +139,108 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top:0px">
-            <div class="col-md-2">
-                    <span class="study_count badge" style="background-color:
-                        #398A96;margin-left:10px" th:text="'Studies: ' + ${publication.studies.size()}"></span>
-            </div>
-            <div class="col-md-3">
-                <div id="assignStatusForm">
+        <div class="row">
 
-                    <div class="form-group">
-                        <label for="curationStatus" class="control-label">Curator Status:</label>
-                        <select name="curationStatus" class="form-control select2-select" id="curationStatus">
-                            <!--Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curationStatus : ${curationstatuses}"
-                                    th:value="${curationStatus.id}"
-                                    th:text="${curationStatus.status}"
-                                    th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
-                            </option>
-                        </select>
-                        <a role="button" type="submit" id="assignStatus"
-                                class="btn btn-primary btn-sm">Save
-                        </a>
-                    </div>
-                </div>
+            <div class="form-inline col-sm-6">
+                <label for="curationStatus" class="col-form-label col-sm-2">Curator Status:</label>
+                <select name="curationStatus" class="form-control select2-select col-sm-2"
+                        style="width: 300px"
+                        id="curationStatus">
+                    <!--Empty value for first entry-->
+                    <option value=""></option>
+                    <option th:each="curationStatus : ${curationstatuses}"
+                            th:value="${curationStatus.id}"
+                            th:text="${curationStatus.status}"
+                            th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                    </option>
+                </select>
+                <a role="button" type="submit" id="assignStatus"
+                        class="btn btn-primary btn-sm col-sm-2">Save Status
+                </a>
             </div>
-            <div class="col-md-3">
-                <div id="assignCuratorForm">
+            <div class="form-inline col-sm-6">
+                <label for="curator" class="col-form-label col-sm-2">Curator:</label>
+                <select name="curator" class="form-control select2-select col-sm-2"
+                        style="width: 300px"
+                        id="curator">
+                    <!--Empty value for first entry-->
+                    <option value=""></option>
+                    <option th:each="curator : ${curators}"
+                            th:value="${curator.id}"
+                            th:text="${curator.lastName}"></option>
+                </select>
+                <a role="button" type="submit" id="assignCurator"
+                        class="btn btn-primary btn-sm col-sm-2">Save Curator
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-inline col-sm-6">
+                <label for="diseaseTrait" class="control-label col-sm-2">Disease Trait</label>
 
-                    <div class="form-group">
-                        <label for="curator" class="control-label">Curator:</label>
-                        <select name="curator" class="form-control select2-select" id="curator">
-                            <!--Empty value for first entry-->
-                            <option value=""></option>
-                            <option th:each="curator : ${curators}"
-                                    th:value="${curator.id}"
-                                    th:text="${curator.lastName}"></option>
-                        </select>
-                        <a role="button" type="submit" id="assignCurator"
-                                class="btn btn-primary btn-sm">Save
-                        </a>
-                    </div>
-                </div>
+                <select name="diseaseTrait" id="diseaseTrait"
+                        style="width: 300px"
+                        class="form-control select2-select col-sm-2">
+                    <!-- Empty value for first entry-->
+                    <option value=""></option>
+                    <option th:each="diseaseTrait : ${diseaseTraits}"
+                            th:value="${diseaseTrait.id}"
+                            th:text="${diseaseTrait.trait}"></option>
+                </select>
+                <a role="button" type="submit" id="saveDiseaseTrait"
+                   class="btn btn-primary btn-sm col-sm-2">Save Disease Trait
+                </a>
             </div>
+            <div class="form-inline col-sm-6">
+                <label for="EFOTrait" class="control-label col-sm-2">EFO Trait</label>
+
+                <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-sm-2"
+                        style="width: 300px"
+                        multiple="multiple" id="EFOTrait">
+                    <option th:each="efoTrait : ${efoTraits}"
+                            th:value="${efoTrait.id}"
+                            th:text="${efoTrait.trait}"></option>
+                </select>
+                <a role="button" type="submit" id="saveEfoTrait"
+                   class="btn btn-primary btn-sm col-sm-2">Save EFO Trait
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-inline col-sm-6">
+                <label for="backgroundTrait" class="control-label col-sm-2">Background Trait</label>
+
+                <select name="backgroundTrait" id="backgroundTrait"
+                        style="width: 300px"
+                        class="form-control select2-select col-sm-2">
+                    <!-- Empty value for first entry-->
+                    <option value=""></option>
+                    <option th:each="diseaseTrait : ${diseaseTraits}"
+                            th:value="${diseaseTrait.id}"
+                            th:text="${diseaseTrait.trait}"></option>
+                </select>
+                <a role="button" type="submit" id="saveBackgroundTrait"
+                   class="btn btn-primary btn-sm col-sm-2">Save Background Trait
+                </a>
+            </div>
+            <div class="form-inline col-sm-6">
+                <label for="mappedBackgroundTraits" class="control-label col-sm-2">Mapped Background Trait</label>
+
+                <select name="mappedBackgroundTraits"
+                        class="form-control select2-select col-sm-2"
+                        style="width: 300px"
+                        multiple="multiple" id="mappedBackgroundTraits">
+                    <option th:each="efoTrait : ${efoTraits}"
+                            th:value="${efoTrait.id}"
+                            th:text="${efoTrait.trait}"></option>
+                </select>
+                <a role="button" type="submit" id="saveBackgroundEfos"
+                   class="btn btn-primary btn-sm col-sm-2">Save Background EFOs
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <span class="study_count badge" style="background-color:#398A96;margin-left:10px" th:text="'Studies: ' + ${publication.studies.size()}"></span>
         </div>
 
         <div class="row">
@@ -191,6 +253,8 @@
                         <th style="width:10%">Study Accession</th>
                         <th style="width:20%">Disease Trait</th>
                         <th style="width:20%">EFO Traits</th>
+                        <th style="width:20%">Background Trait</th>
+                        <th style="width:20%">Background EFO Traits</th>
                         <th style="width:10%">SNPs</th>
                         <th style="width:10%">Curation Status</th>
                         <th style="width:10%">Curator</th>
@@ -220,6 +284,20 @@
                         <td>
                             <p>
                                 <span th:each="efo: ${study.efoTraits}">
+                                    <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
+                                       th:text="${efo.trait}"></a>
+                                </span>
+
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.backgroundTrait} ? ${study.backgroundTrait.trait}: ''"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:each="efo: ${study.mappedBackgroundTraits}">
                                     <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
                                        th:text="${efo.trait}"></a>
                                 </span>
@@ -261,7 +339,5 @@
     <div th:include="fragments/footer :: page_footer"></div>
     <script th:src="@{/js/goci-publication-page.js}"></script>
 </div>
-
-
 </body>
 </html>

@@ -20,14 +20,12 @@ import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.PublicationRepository;
-import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +47,10 @@ public class PublicationController {
     private CurrentUserDetailsService userDetailsService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private DiseaseTraitRepository diseaseTraitRepository;
+    @Autowired
+    private EfoTraitRepository efoTraitRepository;
 
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long publicationId) {
@@ -58,13 +60,25 @@ public class PublicationController {
         return "publication";
     }
 
+    // Disease Traits
+    @ModelAttribute("diseaseTraits")
+    public List<DiseaseTrait> populateDiseaseTraits() {
+        return diseaseTraitRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase()));
+    }
+
+    // EFO traits
+    @ModelAttribute("efoTraits")
+    public List<EfoTrait> populateEFOTraits() {
+        return efoTraitRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase()));
+    }
+
     // Curation statuses
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses() {
         return curationStatusRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "status").ignoreCase()));
     }
 
-    // Curation statuses
+    // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {
         return curatorRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase()));
@@ -102,7 +116,7 @@ public class PublicationController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST)
     public @ResponseBody
-    Map<String, String> updateSelectedCurator(@RequestBody String data,
+    Map<String, String> updateSelectedCurators(@RequestBody String data,
                                                HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
@@ -116,6 +130,132 @@ public class PublicationController {
                 Long studyId = node.asLong();
                 Study study = studyRepository.getOne(studyId);
                 studyOperationsService.assignStudyCurator(study, assignee, user);
+                result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/update_background_traits",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> updateBackgroundTraits(@RequestBody String data,
+                                              HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            Long backgroundTraitId = jsonObject.get("backgroundTrait").asLong();
+            DiseaseTrait diseaseTrait = diseaseTraitRepository.getOne(backgroundTraitId);
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setBackgroundTrait(diseaseTrait);
+                studyRepository.save(study);
+                result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/update_disease_traits",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> updateDiseaseTraits(@RequestBody String data,
+                                              HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            Long backgroundTraitId = jsonObject.get("diseaseTrait").asLong();
+            DiseaseTrait diseaseTrait = diseaseTraitRepository.getOne(backgroundTraitId);
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setDiseaseTrait(diseaseTrait);
+                studyRepository.save(study);
+                result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/update_efo_traits",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> updateEfoTraits(@RequestBody String data,
+                                           HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            ArrayNode backgroundTraitId = (ArrayNode) jsonObject.get("efoTraits");
+            List<EfoTrait> efoTraits = new ArrayList<>();
+            backgroundTraitId.forEach(node -> {
+                Long efoId = node.asLong();
+                EfoTrait trait = efoTraitRepository.findOne(efoId);
+                efoTraits.add(trait);
+            });
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setEfoTraits(efoTraits);
+                studyRepository.save(study);
+                result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/update_background_efo_traits",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> updateBackgroundEfoTraits(@RequestBody String data,
+                                        HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            ArrayNode backgroundTraitId = (ArrayNode) jsonObject.get("backgroundEfoTraits");
+            List<EfoTrait> efoTraits = new ArrayList<>();
+            backgroundTraitId.forEach(node -> {
+                Long efoId = node.asLong();
+                EfoTrait trait = efoTraitRepository.findOne(efoId);
+                efoTraits.add(trait);
+            });
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setMappedBackgroundTraits(efoTraits);
+                studyRepository.save(study);
                 result.put(studyId.toString(), "Updated");
             });
             // Return success message to view
