@@ -20,9 +20,13 @@
         </rollingPolicy>
     </appender>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <!--<appender-ref ref="CONSOLE" />-->
         <appender-ref ref="FILE" />
     </root>
+
+    <logger name="uk.ac.ebi.spot.goci.curation" level="DEBUG" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
 
 </configuration>
