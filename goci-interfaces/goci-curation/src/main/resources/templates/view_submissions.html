@@ -81,7 +81,6 @@
                             th:object="${submission}">
                           <button type="submit" class="btn btn-sm"
                                   th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-<!--                                  th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"-->
                                   th:text="${submission.submissionType.toString().equals('UNKNOWN')} ?'Error-Review' : Review"></button>
                       </form>
                   </div>
