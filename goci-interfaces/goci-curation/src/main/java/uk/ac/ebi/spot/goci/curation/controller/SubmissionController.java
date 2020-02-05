@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
+import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
@@ -48,11 +49,21 @@ public class SubmissionController {
         this.currentUserDetailsService = currentUserDetailsService;
     }
 
-    @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
         Map<String, Submission> submissionList = getSubmissions();
         model.addAttribute("submissions", submissionList.values());
         return "view_submissions";
+    }
+
+    @RequestMapping(value = "/{submissionId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
+    public String viewSubmission(Model model, @PathVariable String submissionId) {
+
+        DepositionSubmission depositionSubmission = getSubmission(submissionId);
+        Submission submission = buildSubmission(depositionSubmission);
+        model.addAttribute("submission", submission);
+        model.addAttribute("submissionData", depositionSubmission);
+        return "single_submission";
     }
 
     private Map<String, Submission> getSubmissions() {
@@ -71,16 +82,7 @@ public class SubmissionController {
         DepositionSubmission[] submissions =
                 template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
         for (DepositionSubmission submission : submissions) {
-            Submission testSub = new Submission();
-            testSub.setId(submission.getSubmissionId());
-            testSub.setPubMedID(submission.getPublication().getPmid());
-            testSub.setAuthor(submission.getPublication().getFirstAuthor());
-            testSub.setCurator(submission.getCreated().getUser().getName());
-            testSub.setStatus(submission.getStatus());
-            testSub.setTitle(submission.getPublication().getTitle());
-            testSub.setCreated(submission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-            testSub.setPublicationStatus(submission.getPublication().getStatus());
-            testSub.setSubmissionType(submissionService.getSubmissionType(submission));
+            Submission testSub = buildSubmission(submission);
             submissionList.put(testSub.getId(), testSub);
             params.put("page", ++i);
             //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
@@ -88,6 +90,20 @@ public class SubmissionController {
         }
         //}
         return submissionList;
+    }
+
+    private Submission buildSubmission(DepositionSubmission depositionSubmission){
+        Submission testSub = new Submission();
+        testSub.setId(depositionSubmission.getSubmissionId());
+        testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
+        testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
+        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+        testSub.setStatus(depositionSubmission.getStatus());
+        testSub.setTitle(depositionSubmission.getPublication().getTitle());
+        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
+        testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+        return testSub;
     }
 
     private DepositionSubmission getSubmission(String submissionID) {
@@ -103,7 +119,7 @@ public class SubmissionController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/import/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/{submissionID}/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
         Map<String, Submission> submissionList = getSubmissions();
@@ -116,7 +132,7 @@ public class SubmissionController {
         model.addAttribute("submissions", submissionList.values());
         redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
 
-        return "redirect:/submissions/new";
+        return "redirect:/submissions";
     }
 
     @CrossOrigin

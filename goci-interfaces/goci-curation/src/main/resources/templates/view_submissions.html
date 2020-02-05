@@ -75,18 +75,16 @@
               <tbody>
               <tr th:each="submission : ${submissions}">
                   <td>
-                      <div th:if="${submission.status.equals('SUBMITTED')}" th:remove="tag">
-                          <form class="form-inline" name="assignStatusForm" role="form" method="post"
-                                th:action="@{/submissions/import/{submissionID}(submissionID=${submission.id})}"
-                                th:object="${submission}">
-                              <button type="submit"
-                                      class="btn btn-sm"
-                                      th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                                      th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"
-                                      th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import">
-                              </button>
-                          </form>
-                      </div>
+                    <div>
+                      <form class="form-inline" name="assignStatusForm" role="form" method="get"
+                            th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
+                            th:object="${submission}">
+                          <button type="submit" class="btn btn-sm"
+                                  th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
+<!--                                  th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"-->
+                                  th:text="${submission.submissionType.toString().equals('UNKNOWN')} ?'Error-Review' : Review"></button>
+                      </form>
+                  </div>
 
                   </td>
                   <td>

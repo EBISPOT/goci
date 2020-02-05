@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
+
+        /*]]>*/
+    </script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="container-fluid" th:if="${!#strings.isEmpty(result)}">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong th:text="${result}">Success!</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <span th:text="${submissionData}"></span>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+        <div id="submission-info" class="panel panel-default"  style="padding-left:0px">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Submission Information</h3>
+            </div>
+            <div class="clearfix" id="submission-info-loading">
+                <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    <div class="clearfix">
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                            <span class="item-left-bold">Created Date</span>
+                        </div>
+                        <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="submission-created"
+                             th:text="${#dates.format(submissionData.created.timestamp,'yyyy-MM-dd')}"></div>
+
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                            <span class="item-left-bold">Created By</span>
+                        </div>
+                        <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="submission-created-by"
+                             th:text="${submissionData.created.user.name}"></div>
+
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                            <span class="item-left-bold">Submitted Date</span>
+                        </div>
+                        <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="submission-submitted"
+                             th:text="${submissionData.dateSubmitted} != null ? ${#dates.format(submissionData.dateSubmitted,'yyyy-MM-dd')} : ''">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+        <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Publication information</h3>
+            </div>
+            <div class="clearfix" id="summary-panel-loading">
+                <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    <div class="clearfix">
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                            <span class="item-left-bold">PubMed ID</span>
+                        </div>
+                        <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-pubmedid"
+                             th:text="${submissionData.publication.pmid}"></div>
+
+                    </div>
+                    <div class="clearfix">
+                        <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                            <span class="item-left-bold">First author</span>
+                        </div>
+                        <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-author"
+                             th:text="${submissionData.publication.firstAuthor}"></div>
+
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                        <span class="item-left-bold">Journal</span>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-journal"
+                         th:text="${submissionData.publication.journal}">-
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
+                        <span>Publication date</span>
+                        <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="Journal publication date YYYY-MM-DD"></span>
+                    </div>
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-datepublication"
+                         th:text="${submissionData.publication.publicationDate}">-
+                    </div>
+                </div>
+                <div class="clearfix" id="authorsList-panel-loading">
+                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="clearfix">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
+                                <span class="item-left-bold">Title</span>
+                            </div>
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" id="publication-title"
+                                 th:text="${submissionData.publication.title}">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
+                                <span class="item-left-bold">Corresponding Author</span>
+                            </div>
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11"
+                                 id="publication-corresponding-author"
+                                 th:text="${submissionData.publication.correspondingAuthor}">-</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
+                                <span class="item-left-bold">Publication Status</span>
+                            </div>
+                                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11"
+                                     id="publication-status"
+                                     th:text="${submissionData.publication.status}">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <form class="form-inline" name="assignStatusForm" role="form" method="post"
+              th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
+              th:object="${submission}">
+            <button type="submit" class="btn btn-sm"
+                    th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
+                    th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"
+                    th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
+        </form>
+
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script th:src="@{/js/goci-single-submission-page.js}"></script>
+</body>
+
+</html>
