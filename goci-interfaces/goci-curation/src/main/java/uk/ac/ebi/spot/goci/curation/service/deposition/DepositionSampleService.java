@@ -34,10 +34,10 @@ public class DepositionSampleService {
                 Ancestry ancestry = new Ancestry();
                 if (sampleDto.getStage().equalsIgnoreCase("Discovery")) {
                     ancestry.setType("initial");
-                    initialSampleSize += buildDescription(sampleDto);
+                    initialSampleSize += buildDescription(sampleDto) + ", ";
                 } else if (sampleDto.getStage().equalsIgnoreCase("Replication")) {
                     ancestry.setType("replication");
-                    replicateSampleSize += buildDescription(sampleDto);
+                    replicateSampleSize += buildDescription(sampleDto) + ", ";
                 }else{
                     studyNote.append("unknown ancestry type: " + sampleDto.getStage());
                 }
@@ -85,6 +85,14 @@ public class DepositionSampleService {
                 ancestry.setAncestryExtension(ancestryExtension);
                 ancestryRepository.save(ancestry);
             }
+        }
+        if(initialSampleSize.endsWith(", "))
+        {
+            initialSampleSize = initialSampleSize.substring(0, initialSampleSize.length() - 2);
+        }
+        if(replicateSampleSize.endsWith(", "))
+        {
+            replicateSampleSize = replicateSampleSize.substring(0, replicateSampleSize.length() - 2);
         }
         studyNote.append("initial: " + initialSampleSize + "\n");
         studyNote.append("replication: " + replicateSampleSize + "\n");
