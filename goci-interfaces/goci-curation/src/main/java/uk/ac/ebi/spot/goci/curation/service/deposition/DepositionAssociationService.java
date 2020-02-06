@@ -85,9 +85,9 @@ public class DepositionAssociationService {
                 if(associationDto.getBeta() != null) {
                     Double betaValue = associationDto.getBeta();
                     if(betaValue < 0){
-                        association.setBetaUnit("decrease");
+                        association.setBetaDirection("decrease");
                     }else{
-                        association.setBetaUnit("increase");
+                        association.setBetaDirection("increase");
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
                 }
@@ -96,13 +96,12 @@ public class DepositionAssociationService {
                 }else{
                     if(associationDto.getOddsRatio() != null) {
                         association.setRange(calculationService
-                                .setRange(associationDto.getStandardError(), associationDto.getOddsRatio()));
+                                .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
                     }else if(associationDto.getBeta() != null) {
                         association.setRange(calculationService
-                                .setRange(associationDto.getStandardError(), associationDto.getBeta()));
+                                .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
                     }
                 }
-                association.setBetaDirection(associationDto.getBetaDirection());
                 AssociationExtension associationExtension = new AssociationExtension();
                 associationExtension.setAssociation(association);
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());

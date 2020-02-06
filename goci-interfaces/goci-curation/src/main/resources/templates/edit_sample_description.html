@@ -154,7 +154,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="isolatedPopulation" class="control-label col-md-2">Ancestry Description:</label>
+                        <label for="ancestryDescriptor" class="control-label col-md-2">Ancestry Description</label>
+                        <input id="ancestryDescriptor" type="text" th:field="${ancestry.ancestryExtension.ancestryDescriptor}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="isolatedPopulation" class="control-label col-md-2">Founder/Isolated
+                            Population Description:</label>
                         <input id="isolatedPopulation" type="text" th:field="${ancestry.ancestryExtension.isolatedPopulation}"/>
                     </div>
 

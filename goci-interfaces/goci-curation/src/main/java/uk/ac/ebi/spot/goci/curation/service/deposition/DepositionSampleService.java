@@ -41,7 +41,6 @@ public class DepositionSampleService {
                 }else{
                     studyNote.append("unknown ancestry type: " + sampleDto.getStage());
                 }
-                ancestry.setDescription(sampleDto.getAncestryDescription());
                 List<Country> countryList = new ArrayList<>();
                 String countryRecruitment = sampleDto.getCountryRecruitement();
                 if(countryRecruitment != null){
@@ -62,21 +61,28 @@ public class DepositionSampleService {
 //                    ancestryCat += " ancestry";
 //                }
                 AncestralGroup ancestryGroup = null;
-                if(ancestryStr != null){
-                    ancestryGroup = ancestralGroupRepository.findByAncestralGroup(ancestryStr);
-                }else{
-                    ancestryGroup = ancestralGroupRepository.findByAncestralGroup(ancestryCat);
-                }
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
-                ancestryGroups.add(ancestryGroup);
+                if(ancestryStr != null){
+                    String[] groups = ancestryStr.split("\\|");
+                    for(String group: groups){
+                        ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
+                        ancestryGroups.add(ancestryGroup);
+                    }
+                }else if(ancestryCat != null){
+                    String[] groups = ancestryCat.split("\\|");
+                    for(String group: groups){
+                        ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
+                        ancestryGroups.add(ancestryGroup);
+                    }
+                }
                 ancestry.setAncestralGroups(ancestryGroups);
                 ancestry.setStudy(study);
-                if(sampleDto.getAncestry() != null) {
-                    ancestry.setDescription(sampleDto.getAncestry().replaceAll("\\|", ", "));
-                }
                 ancestryRepository.save(ancestry);
                 AncestryExtension ancestryExtension = new AncestryExtension();
                 ancestryExtension.setAncestry(ancestry);
+                if(sampleDto.getAncestry() != null) {
+                    ancestryExtension.setAncestryDescriptor(sampleDto.getAncestry().replaceAll("\\|", ", "));
+                }
                 ancestryExtension.setIsolatedPopulation(sampleDto.getAncestryDescription());
                 ancestryExtension.setNumberCases(sampleDto.getCases());
                 ancestryExtension.setNumberControls(sampleDto.getControls());
@@ -107,7 +113,7 @@ public class DepositionSampleService {
             ancestry = sampleDto.getAncestry().replaceAll("\\|", ", ");
         }
         else{
-            ancestry = sampleDto.getAncestryCategory();
+            ancestry = sampleDto.getAncestryCategory().replaceAll("\\|", ", ");
         }
         if(ancestry.toString().equalsIgnoreCase("nr")) {
             if (sampleDto.getCases() != null && sampleDto.getControls() != null) {

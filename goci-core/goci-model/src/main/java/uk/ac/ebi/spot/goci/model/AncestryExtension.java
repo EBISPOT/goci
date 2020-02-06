@@ -22,4 +22,6 @@ public class AncestryExtension {
     private String sampleDescription;
 
     private String isolatedPopulation;
+
+    private String ancestryDescriptor;
 }
