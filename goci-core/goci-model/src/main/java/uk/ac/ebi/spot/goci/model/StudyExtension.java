@@ -26,4 +26,6 @@ public class StudyExtension {
     private String summaryStatisticsFile;
 
     private String summaryStatisticsAssembly;
+
+    private String studyDescription;
 }

@@ -71,11 +71,16 @@ public class DepositionSampleService {
                 ancestryGroups.add(ancestryGroup);
                 ancestry.setAncestralGroups(ancestryGroups);
                 ancestry.setStudy(study);
-                ancestry.setDescription(sampleDto.getAncestry());
+                if(sampleDto.getAncestry() != null) {
+                    ancestry.setDescription(sampleDto.getAncestry().replaceAll("\\|", ", "));
+                }
                 ancestryRepository.save(ancestry);
                 AncestryExtension ancestryExtension = new AncestryExtension();
                 ancestryExtension.setAncestry(ancestry);
-                ancestryExtension.setAncestryDescriptor(sampleDto.getAncestryDescription());
+                ancestryExtension.setIsolatedPopulation(sampleDto.getAncestryDescription());
+                ancestryExtension.setNumberCases(sampleDto.getCases());
+                ancestryExtension.setNumberControls(sampleDto.getControls());
+                ancestryExtension.setSampleDescription(sampleDto.getSampleDescription());
                 extensionRepository.save(ancestryExtension);
                 ancestry.setAncestryExtension(ancestryExtension);
                 ancestryRepository.save(ancestry);
@@ -88,22 +93,34 @@ public class DepositionSampleService {
         return studyNote.toString();
     }
 
-    private String buildDescription(DepositionSampleDto sampleDto){
+    String buildDescription(DepositionSampleDto sampleDto){
         String ancestry = null;
-        if(sampleDto.getAncestry() != null && !sampleDto.getAncestry().contains("|")){
-            ancestry = sampleDto.getAncestry();
-
-        }else{
+        if(sampleDto.getAncestry() != null){
+            ancestry = sampleDto.getAncestry().replaceAll("\\|", ", ");
+        }
+        else{
             ancestry = sampleDto.getAncestryCategory();
         }
-        if(sampleDto.getCases() != null && sampleDto.getControls() != null){
-            return String.format("%,d", sampleDto.getCases()) + " " + ancestry + " ancestry cases, "
-                    + String.format("%,d", sampleDto.getControls()) + " " + ancestry + " ancestry controls\n";
-        }else if(sampleDto.getSize() != -1){
-            return String.format("%,d", sampleDto.getSize()) + " " + ancestry + " individuals";
+        if(ancestry.toString().equalsIgnoreCase("nr")) {
+            if (sampleDto.getCases() != null && sampleDto.getControls() != null) {
+                ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " cases, " +
+                        String.format("%,d", sampleDto.getControls()) + " " + ancestry + " controls";
+            } else if (sampleDto.getSize() != -1) {
+                 ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry + " individuals";
+            } else {
+                ancestry += " individuals";
+            }
         }else{
-            return ancestry + " individuals";
+            if (sampleDto.getCases() != null && sampleDto.getControls() != null) {
+                ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " ancestry cases, " +
+                        String.format("%,d", sampleDto.getControls()) + " " + ancestry + " ancestry controls";
+            } else if (sampleDto.getSize() != -1) {
+                ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry + " ancestry individuals";
+            } else {
+                ancestry += " ancestry individuals";
+            }
         }
+        return ancestry;
     }
 
 }

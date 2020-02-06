@@ -129,17 +129,17 @@ public class DepositionStudyService {
         if(efoTrait != null){
             String[] efoTraits = efoTrait.split("\\|");
             for(String trait: efoTraits){
-                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait().trim());
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait.trim());
                 efoTraitList.add(dbTrait);
             }
         }
         List<EfoTrait> mappedTraitList = new ArrayList<>();
         study.setEfoTraits(efoTraitList);
-        String mappedBackgroundTrait = studyDto.getEfoTrait();
+        String mappedBackgroundTrait = studyDto.getBackgroundEfoTrait();
         if(mappedBackgroundTrait != null) {
             String[] efoTraits = mappedBackgroundTrait.split("\\|");
             for (String trait : efoTraits) {
-                EfoTrait dbTrait = efoTraitRepository.findByShortForm(studyDto.getEfoTrait().trim());
+                EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait);
                 mappedTraitList.add(dbTrait);
             }
         }
@@ -153,6 +153,7 @@ public class DepositionStudyService {
         study.setStudyDesignComment(studyDto.getArrayInformation());
         studyService.save(study);
         StudyExtension studyExtension = new StudyExtension();
+        studyExtension.setStudyDescription(studyDto.getStudyDescription());
         studyExtension.setCohort(studyDto.getCohort());
         studyExtension.setCohortSpecificReference(studyDto.getCohortId());
         studyExtension.setStatisticalModel(studyDto.getStatisticalModel());

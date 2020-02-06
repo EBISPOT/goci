@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,6 @@ import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.Map.Entry.*;
 
 /**
  * Created by emma on 20/11/14.
@@ -151,6 +148,8 @@ public class StudyController {
                                  @RequestParam(value = "studytype", required = false) String studyType,
                                  @RequestParam(value = "efotraitid", required = false) Long efoTraitId,
                                  @RequestParam(value = "notesquery", required = false) String notesQuery,
+                                 @RequestParam(required = false) String gcstId,
+                                 @RequestParam(required = false) String studyId,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(value = "sorttype", required = false) String sortType,
@@ -366,17 +365,34 @@ public class StudyController {
             }
         }
         // If user entered curator
-        else {
-            if (curator != null) {
-                studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
-                        page - 1,
-                        sort));
-                filters = filters + "&curator=" + curator;
+        else if (curator != null) {
+            studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&curator=" + curator;
 
-                // Return this value so it appears in filter result
-                studySearchFilter.setCuratorSearchFilterId(curator);
-            }
+            // Return this value so it appears in filter result
+            studySearchFilter.setCuratorSearchFilterId(curator);
+        }
 
+        else if (gcstId != null) {
+            studyPage = studyRepository.findByAccessionId(gcstId, constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&gcstId=" + gcstId;
+
+            // Return this value so it appears in filter result
+            studySearchFilter.setGcstId(gcstId);
+        }
+
+        else if (studyId != null) {
+            studyPage = studyRepository.findById(Long.valueOf(studyId), constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&studyId=" + studyId;
+
+            // Return this value so it appears in filter result
+            studySearchFilter.setStudyId(studyId);
         }
 
         // Return URI, this will build thymeleaf links using by sort buttons.
@@ -459,6 +475,8 @@ public class StudyController {
         Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
         String notesQuery = studySearchFilter.getNotesQuery();
         Long diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
+        String gcstId = studySearchFilter.getGcstId();
+        String studyId = studySearchFilter.getStudyId();
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -503,6 +521,12 @@ public class StudyController {
         // If user entered curator
         else if (curator != null) {
             return "redirect:/studies?page=1&curator=" + curator;
+        }
+        else if(gcstId != null){
+            return "redirect:/studies?page=1&gcstId=" + gcstId;
+        }
+        else if(studyId != null){
+            return "redirect:/studies?page=1&studyId=" + studyId;
         }
 
         // If all else fails return all studies

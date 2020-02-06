@@ -29,6 +29,10 @@ public class StudySearchFilter {
 
     private String notesQuery;
 
+    private String gcstId;
+
+    private String studyId;
+
     public StudySearchFilter() {
     }
 
@@ -41,7 +45,9 @@ public class StudySearchFilter {
                              String studyType,
                              Long efoTraitSearchFilterId,
                              Long diseaseTraitSearchFilterId,
-                             String notesQuery) {
+                             String notesQuery,
+                             String gcstId,
+                             String studyId) {
         this.statusSearchFilterId = statusSearchFilterId;
         this.curatorSearchFilterId = curatorSearchFilterId;
         this.monthFilter = monthFilter;
@@ -52,6 +58,8 @@ public class StudySearchFilter {
         this.efoTraitSearchFilterId = efoTraitSearchFilterId;
         this.diseaseTraitSearchFilterId = diseaseTraitSearchFilterId;
         this.notesQuery = notesQuery;
+        this.gcstId = gcstId;
+        this.studyId = studyId;
     }
 
     public Long getStatusSearchFilterId() {
@@ -135,6 +143,20 @@ public class StudySearchFilter {
 
     public StudySearchFilter setDiseaseTraitSearchFilterId(Long diseaseTraitSearchFilterId) {
         this.diseaseTraitSearchFilterId = diseaseTraitSearchFilterId;
+        return this;
+    }
+
+    public String getGcstId(){ return gcstId;}
+
+    public StudySearchFilter setGcstId(String gcstId){
+        this.gcstId = gcstId;
+        return this;
+    }
+
+    public String getStudyId(){return studyId;}
+
+    public StudySearchFilter setStudyId(String studyId){
+        this.studyId = studyId;
         return this;
     }
 }

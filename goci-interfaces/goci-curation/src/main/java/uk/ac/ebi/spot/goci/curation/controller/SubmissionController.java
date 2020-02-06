@@ -119,7 +119,7 @@ public class SubmissionController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/{submissionID}/import", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
         Map<String, Submission> submissionList = getSubmissions();
@@ -132,7 +132,7 @@ public class SubmissionController {
         model.addAttribute("submissions", submissionList.values());
         redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
 
-        return "redirect:/submissions";
+        return "redirect:/submissions/" + submissionID;
     }
 
     @CrossOrigin

@@ -10,6 +10,7 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
 import uk.ac.ebi.spot.goci.repository.AssociationExtensionRepository;
 import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
+import uk.ac.ebi.spot.goci.utils.AssociationCalculationService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class DepositionAssociationService {
     MapCatalogService mapCatalogService;
     @Autowired
     AssociationExtensionRepository extensionRepository;
+    @Autowired
+    AssociationCalculationService calculationService;
 
     public DepositionAssociationService() {}
 
@@ -57,9 +60,15 @@ public class DepositionAssociationService {
                 studyNote.append("added SNP " + rsID + "\n");
                 RiskAllele riskAllele =
                         lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
+                if(associationDto.getProxyVariant() != null){
+                    List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
+                    proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
+                    riskAllele.setProxySnps(proxySnps);
+                }
                 List<RiskAllele> alleleList = new ArrayList<>();
                 alleleList.add(riskAllele);
                 locus.setStrongestRiskAlleles(alleleList);
+                associationDto.getProxyVariant();
                 locusList.add(locus);
                 association.setLoci(locusList);
                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
@@ -74,13 +83,24 @@ public class DepositionAssociationService {
                     association.setOrPerCopyNum(associationDto.getOddsRatio().floatValue());
                 }
                 if(associationDto.getBeta() != null) {
-                    association.setBetaNum(associationDto.getBeta().floatValue());
-                }
-                if(associationDto.getBetaUnit() != null) {
-                    association.setBetaUnit(associationDto.getBetaUnit());
+                    Double betaValue = associationDto.getBeta();
+                    if(betaValue < 0){
+                        association.setBetaUnit("decrease");
+                    }else{
+                        association.setBetaUnit("increase");
+                    }
+                    association.setBetaNum(Math.abs(betaValue.floatValue()));
                 }
                 if(associationDto.getCiLower() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
+                }else{
+                    if(associationDto.getOddsRatio() != null) {
+                        association.setRange(calculationService
+                                .setRange(associationDto.getStandardError(), associationDto.getOddsRatio()));
+                    }else if(associationDto.getBeta() != null) {
+                        association.setRange(calculationService
+                                .setRange(associationDto.getStandardError(), associationDto.getBeta()));
+                    }
                 }
                 association.setBetaDirection(associationDto.getBetaDirection());
                 AssociationExtension associationExtension = new AssociationExtension();

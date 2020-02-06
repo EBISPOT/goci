@@ -30,6 +30,13 @@ import java.util.List;
 public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecificationExecutor {
 
     @RestResource(exported = false)
+    Page<Study> findByAccessionId(String gcst, Pageable pageable);
+
+    @RestResource(exported = false)
+    Page<Study> findById(Long studyId, Pageable pageable);
+
+
+    @RestResource(exported = false)
     Collection<Study> findByDiseaseTraitId(Long diseaseTraitId);
 
     Page<Study> findByDiseaseTraitId(Long diseaseTraitId, Pageable pageable);

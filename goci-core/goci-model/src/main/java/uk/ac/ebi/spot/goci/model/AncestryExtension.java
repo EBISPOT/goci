@@ -15,13 +15,11 @@ public class AncestryExtension {
     @JoinColumn(name = "ancestry_id", unique = true)
     private Ancestry ancestry;
 
-    private Long numberCases;
+    private Integer numberCases;
 
-    private Long numberControls;
+    private Integer numberControls;
 
     private String sampleDescription;
-
-    private String ancestryDescriptor;
 
     private String isolatedPopulation;
 }

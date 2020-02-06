@@ -240,6 +240,11 @@
             </div>
         </div>
         <div class="row">
+            <a role="button" type="submit" id="deleteStudies"
+               class="btn btn-primary btn-sm col-sm-2">Delete Selected Studies
+            </a>
+        </div>
+        <div class="row">
             <span class="study_count badge" style="background-color:#398A96;margin-left:10px" th:text="'Studies: ' + ${publication.studies.size()}"></span>
         </div>
 
@@ -251,6 +256,7 @@
                         <th><input type="checkbox" id="select_all" class="checkbox"/></th>
                         <th style="width:10%">Study Id</th>
                         <th style="width:10%">Study Accession</th>
+                        <th style="width:10%">Has SumStats</th>
                         <th style="width:20%">Disease Trait</th>
                         <th style="width:20%">EFO Traits</th>
                         <th style="width:20%">Background Trait</th>
@@ -274,6 +280,11 @@
                         <td>
                             <p>
                                 <span th:text="${study.accessionId}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.fullPvalueSet}"></span>
                             </p>
                         </td>
                         <td>

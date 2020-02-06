@@ -252,7 +252,6 @@
                         <td><span th:each="ancestralGroup, iterStat: ${initialStudyAncestryDescription.ancestralGroups}"
                                   th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
                         </td>
-                        <td th:text="${initialStudyAncestryDescription.ancestryExtension} ? ${initialStudyAncestryDescription.ancestryExtension.ancestryDescriptor} : ''"></td>
                         <td th:text="${initialStudyAncestryDescription.ancestryExtension} ? ${initialStudyAncestryDescription.ancestryExtension.isolatedPopulation}: ''"></td>
                         <td><span th:each="countryOfOrigin, iterStat: ${initialStudyAncestryDescription.countryOfOrigin}"
                                   th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
@@ -321,7 +320,6 @@
                         <td><span th:each="ancestralGroup, iterStat: ${replicationStudyAncestryDescription.ancestralGroups}"
                                   th:text="(!${iterStat.last} ? ${ancestralGroup.ancestralGroup}+', ' : ${ancestralGroup.ancestralGroup}) ?: ''"></span>
                         </td>
-                        <td th:text="${replicationStudyAncestryDescription.ancestryExtension} ? ${replicationStudyAncestryDescription.ancestryExtension.ancestryDescriptor} : ''"></td>
                         <td th:text="${replicationStudyAncestryDescription.ancestryExtension} ? ${replicationStudyAncestryDescription.ancestryExtension.isolatedPopulation} : ''"></td>
                         <td><span th:each="countryOfOrigin, iterStat: ${replicationStudyAncestryDescription.countryOfOrigin}"
                                   th:text="(!${iterStat.last} ? ${countryOfOrigin.countryName}+', ' : ${countryOfOrigin.countryName}) ?: ''"></span>
@@ -414,14 +412,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="sampleDescription" class="control-label col-md-2">Ancestry Description:</label>
-                                <textarea class="col-md-6"
-                                          rows="5"
-                                          id="ancestryDescriptor"
-                                          th:field="${ancestry.ancestryExtension.ancestryDescriptor}"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="isolatedPopulation" class="control-label col-md-2">Founder:</label>
+                                <label for="isolatedPopulation" class="control-label col-md-2">Ancestry Description:</label>
                                 <input id="isolatedPopulation" type="text" th:field="${ancestry.ancestryExtension.isolatedPopulation}"/>
                             </div>
 

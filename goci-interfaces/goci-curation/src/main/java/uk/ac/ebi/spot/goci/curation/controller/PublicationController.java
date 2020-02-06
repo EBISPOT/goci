@@ -17,18 +17,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.*;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/publication")
@@ -51,6 +47,14 @@ public class PublicationController {
     private DiseaseTraitRepository diseaseTraitRepository;
     @Autowired
     private EfoTraitRepository efoTraitRepository;
+    @Autowired
+    private AssociationRepository associationRepository;
+    @Autowired
+    private StudyAssociationBatchDeletionEventService studyAssociationBatchDeletionEventService;
+    @Autowired
+    private AssociationDeletionService associationDeletionService;
+    @Autowired
+    private StudyDeletionService studyDeletionService;
 
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long publicationId) {
@@ -257,6 +261,34 @@ public class PublicationController {
                 study.setMappedBackgroundTraits(efoTraits);
                 studyRepository.save(study);
                 result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/delete_studies",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> deleteStudies(@RequestBody String data,
+                                                  HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
+                studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(), user);
+                studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
+                studyDeletionService.deleteStudy(studyRepository.getOne(studyId), user);
+                result.put(studyId.toString(), "Deleted");
             });
             // Return success message to view
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
