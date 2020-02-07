@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.format.DateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,8 @@ public class SubmissionController {
 
     @Autowired
     private RestTemplate template;
+    @Autowired
+    private ObjectMapper mapper;
 
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
@@ -62,7 +66,12 @@ public class SubmissionController {
         DepositionSubmission depositionSubmission = getSubmission(submissionId);
         Submission submission = buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
-        model.addAttribute("submissionData", depositionSubmission);
+        try {
+            model.addAttribute("submissionData", depositionSubmission);
+            model.addAttribute("submissionString", mapper.writeValueAsString(depositionSubmission));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return "single_submission";
     }
 

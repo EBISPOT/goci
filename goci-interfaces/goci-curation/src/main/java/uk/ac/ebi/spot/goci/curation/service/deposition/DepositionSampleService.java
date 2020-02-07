@@ -55,23 +55,15 @@ public class DepositionSampleService {
                     ancestry.setNumberOfIndividuals(sampleDto.getSize());
                 }
                 ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
-                String ancestryStr = sampleDto.getAncestry();
                 String ancestryCat = sampleDto.getAncestryCategory();
 //                if(ancestryCat != null && !ancestryCat.endsWith("ancestry")){
 //                    ancestryCat += " ancestry";
 //                }
-                AncestralGroup ancestryGroup = null;
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
-                if(ancestryStr != null){
-                    String[] groups = ancestryStr.split("\\|");
-                    for(String group: groups){
-                        ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
-                        ancestryGroups.add(ancestryGroup);
-                    }
-                }else if(ancestryCat != null){
+                if(ancestryCat != null){
                     String[] groups = ancestryCat.split("\\|");
                     for(String group: groups){
-                        ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
+                        AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
                         ancestryGroups.add(ancestryGroup);
                     }
                 }
