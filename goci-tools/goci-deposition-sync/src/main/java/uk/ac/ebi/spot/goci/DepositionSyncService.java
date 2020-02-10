@@ -166,6 +166,7 @@ public class DepositionSyncService {
             summaryStatsDto.setStudyAccession(study.getAccessionId());
             summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
             summaryStatsDto.setTrait(study.getDiseaseTrait().getTrait());
+            summaryStatsDto.setStudyTag(study.getStudyTag());
             if(study.getFullPvalueSet()){
                 hasFiles = true;
             }

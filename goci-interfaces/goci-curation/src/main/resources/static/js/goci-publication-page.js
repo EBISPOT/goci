@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('#loadingResults').hide();
     var table = $('#submissionDataTable').DataTable({
         "columns": [
             {"mData": "select_all", "sDefaultContent": "", "bSearchable": false, "bSortable": false},
@@ -26,6 +27,8 @@ $(document).ready(function () {
     });
 
     $('#assignStatus').click(function () {
+        $('#assignStatus').prop( "disabled", true );
+        $('#loadingResults').show();
         var data = {}
         data.status = $('#curationStatus').val();
         data.ids = []
@@ -41,6 +44,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#assignStatus').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -52,6 +57,8 @@ $(document).ready(function () {
         })
     });
     $('#assignCurator').click(function () {
+        $('#assignCurator').prop( "disabled", true );
+        $('#loadingResults').show();
         var data = {}
         data.curator = $('#curator').val();
         data.ids = []
@@ -67,6 +74,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#assignCurator').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -78,6 +87,8 @@ $(document).ready(function () {
         })
     });
     $('#saveBackgroundTrait').click(function () {
+        $('#saveBackgroundTrait').prop( "disabled", true );
+        $('#loadingResults').show();
         var data = {}
         data.backgroundTrait = $('#backgroundTrait').val();
         data.ids = []
@@ -93,6 +104,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#saveBackgroundTrait').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -104,6 +117,8 @@ $(document).ready(function () {
         })
     });
     $('#saveDiseaseTrait').click(function () {
+        $('#saveDiseaseTrait').prop( "disabled", true );
+        $('#loadingResults').show();
         var data = {}
         data.diseaseTrait = $('#diseaseTrait').val();
         data.ids = []
@@ -119,6 +134,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#saveDiseaseTrait').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -130,6 +147,8 @@ $(document).ready(function () {
         })
     });
     $('#saveEfoTrait').click(function () {
+        $('#loadingResults').show();
+        $('#saveEfoTrait').prop( "disabled", true );
         var data = {}
         data.efoTraits = $('#EFOTrait').val();
         data.ids = []
@@ -145,6 +164,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#saveEfoTrait').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -156,6 +177,8 @@ $(document).ready(function () {
         })
     });
     $('#saveBackgroundEfos').click(function () {
+        $('#loadingResults').show();
+        $('#saveBackgroundEfos').prop( "disabled", true );
         var data = {}
         data.backgroundEfoTraits = $('#mappedBackgroundTraits').val();
         data.ids = []
@@ -171,6 +194,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#saveBackgroundEfos').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';
@@ -182,6 +207,8 @@ $(document).ready(function () {
         })
     });
     $('#deleteStudies').click(function () {
+        $('#loadingResults').show();
+        $('#deleteStudies').prop( "disabled", true );
         var data = {}
         data.ids = []
         $('.table-checkbox:checked').each(function () {
@@ -196,6 +223,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
+                $('#deleteStudies').prop( "disabled", false );
+                $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
                     msg += key + ': ' + value + '\n';

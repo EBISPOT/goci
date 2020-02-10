@@ -79,22 +79,28 @@
                       <form class="form-inline" name="assignStatusForm" role="form" method="get"
                             th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
                             th:object="${submission}">
-                          <button type="submit" class="btn btn-sm"
-                                  th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                                  th:text="${submission.submissionType.toString().equals('UNKNOWN')} ?'Error-Review' : Review"></button>
+                          <div th:switch="${submission.status.toString()}">
+                              <button th:case="REVIEW" type="submit" class="btn-sm"
+                                      th:classappend="btn-warning"
+                                      th:text="Review"></button>
+                              <button th:case="CURATION_COMPLETE" type="submit" class="btn-sm"
+                                      th:classappend="btn-success"
+                                      th:text="Review"></button>
+                              <button th:case="COMPLETE" type="submit" class="btn-sm"
+                                      th:classappend="btn-success"
+                                      th:text="Review"></button>
+                              <button th:case="*" type="submit" class="btn-sm"
+                                      th:classappend="btn-primary"
+                                      th:text="Review"></button>
+                          </div>
                       </form>
                   </div>
 
                   </td>
                   <td>
-                      <div th:if="${submission.status.equals('SUBMITTED')}" th:remove="tag">
-                              <span
-                                      th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
-                      </div>
-                      <div th:unless="${submission.status.equals('SUBMITTED')}" th:remove="tag">
+                      <div>
                           <span
-                                  th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' :
-                                  ${submission.status}"></span>
+                              th:text="${submission.status.equals('CURATION_COMPLETE')} ? 'IMPORTED' : ${submission.status}"></span>
                       </div>
                   </td>
                   <td>

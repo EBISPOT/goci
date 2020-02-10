@@ -41,33 +41,44 @@
 <div th:include="fragments/header :: navbar"></div>
 
 <div class="container-fluid">
-    <div class="container-fluid" th:if="${!#strings.isEmpty(changesSaved)}">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert alert-success">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong th:text="${changesSaved}">Success!</strong>
-                </div>
+    <div class="row" th:if="${!#strings.isEmpty(changesSaved)}">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:text="${changesSaved}">Success!</strong>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-1">
-            <button class="button btn-sm" id="toggleSubmission">Show/Hide Submission</button>
+            <button class="btn btn-sm btn-primary" id="toggleSubmission">Show/Hide Submission</button>
         </div>
         <div class="col-md-12">
             <textarea name="submissionData" id="submissionData" style="width:100%; height:400px;display: none;"
                       th:text="${submissionString}"></textarea>
         </div>
-        <form class="form-inline" name="assignStatusForm" role="form" method="post"
+        <form class="form-inline" name="importForm" role="form" method="post"
               th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
               th:object="${submission}">
-            <button type="submit" class="btn btn-sm"
+            <button id="importButton" type="submit" class="btn btn-sm"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
                     th:disabled="${submission.submissionType.toString().equals('UNKNOWN')}"
                     th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
         </form>
+        <form class="form-inline" name="testMessageForm" role="form" method="post"
+              th:action="@{/submissions/{submissionID}/testError(submissionID=${submission.id})}"
+              th:object="${submission}">
+            <button id="testButton" type="submit" class="btn btn-sm">Test Error</button>
+        </form>
 
+    </div>
+    <div class="row">
+        <div id="loadingResults" class="col-md-offset-4">
+            <button class="btn btn-lg">
+                                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                      style="margin-right: 1em;"></span>
+            </button>
+        </div>
     </div>
     <div class="row" style="margin-top:10px">
         <div id="submission-info" class="panel panel-default"  style="padding-left:0px">
