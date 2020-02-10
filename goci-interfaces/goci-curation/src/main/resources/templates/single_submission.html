@@ -67,7 +67,7 @@
         </form>
         <form class="form-inline" name="testMessageForm" role="form" method="post"
               th:action="@{/submissions/{submissionID}/testError(submissionID=${submission.id})}"
-              th:object="${submission}">
+              th:object="${submission}" style="display:none;">
             <button id="testButton" type="submit" class="btn btn-sm">Test Error</button>
         </form>
 
