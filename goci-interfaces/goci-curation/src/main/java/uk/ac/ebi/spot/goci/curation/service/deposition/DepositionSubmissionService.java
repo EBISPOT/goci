@@ -176,6 +176,32 @@ public class DepositionSubmissionService {
         return submission;
     }
 
+    public String checkSubmissionErrors(DepositionSubmission submission){
+        Submission.SubmissionType type = getSubmissionType(submission);
+        if(type.equals(Submission.SubmissionType.UNKNOWN)){
+            boolean hasSumStats = false;
+            boolean hasMetadata = false;
+            boolean hasAssociations = false;
+            for(DepositionStudyDto studyDto: submission.getStudies()){
+                if(studyDto.getSummaryStatisticsFile() != null){
+                    hasSumStats = true;
+                }
+            }
+            for(DepositionSampleDto sampleDto: submission.getSamples()){
+                if(sampleDto.getStage() != null){
+                    hasMetadata = true;
+                }
+            }
+            for(DepositionAssociationDto associationDto: submission.getAssociations()){
+                if(associationDto.getStudyTag() != null){
+                    hasAssociations = true;
+                }
+            }
+            return "Has SumStats: " + hasSumStats + ", has metadata: " + hasMetadata + ", has associations: " + hasAssociations;
+        }
+        return null;
+    }
+
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
         boolean hasSumStats = false;
         boolean hasMetadata = false;

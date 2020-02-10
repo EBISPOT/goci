@@ -23,6 +23,8 @@ import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -66,8 +68,9 @@ public class SubmissionController {
         DepositionSubmission depositionSubmission = getSubmission(submissionId);
         Submission submission = buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
+        model.addAttribute("submissionData", depositionSubmission);
+        model.addAttribute("submissionError", submissionService.checkSubmissionErrors(depositionSubmission));
         try {
-            model.addAttribute("submissionData", depositionSubmission);
             model.addAttribute("submissionString", mapper.writeValueAsString(depositionSubmission));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -112,6 +115,9 @@ public class SubmissionController {
         testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
         testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
         testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+        if(testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)){
+            testSub.setStatus("REVIEW");
+        }
         return testSub;
     }
 
@@ -131,16 +137,35 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionID}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
-        Map<String, Submission> submissionList = getSubmissions();
-        DepositionSubmission depositionSubmission = getSubmission(submissionID);
-        Submission submission = submissionList.get(submissionID);
-        SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-        List<String> statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);
+        List<String> statusMessages = new ArrayList<>();
+        try {
+            Map<String, Submission> submissionList = getSubmissions();
+            DepositionSubmission depositionSubmission = getSubmission(submissionID);
+            Submission submission = submissionList.get(submissionID);
+            SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
+            statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);
 
-        submission.setStatus("IMPORTED");
-        model.addAttribute("submissions", submissionList.values());
+            submission.setStatus("IMPORTED");
+            model.addAttribute("submissions", submissionList.values());
+            redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
+        }catch(Exception e){
+            e.printStackTrace();
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            statusMessages.add(stringWriter.getBuffer().toString());
+        }
+        return "redirect:/submissions/" + submissionID;
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/{submissionID}/testError", produces = MediaType.TEXT_HTML_VALUE, method =
+            RequestMethod.POST)
+    public String importSubmissionError(@PathVariable String submissionID, Model model, HttpServletRequest request,
+                                   RedirectAttributes redirectAttributes) {
+        StringWriter stringWriter = new StringWriter();
+        new Throwable().printStackTrace(new PrintWriter(stringWriter));
+        List<String> statusMessages = Arrays.asList(new String[]{"Error 1", "Error 2", stringWriter.getBuffer().toString()});
         redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
-
         return "redirect:/submissions/" + submissionID;
     }
 

@@ -56,7 +56,14 @@
 
 
     <div class="container-fluid" id="lower_container">
-
+        <div class="row">
+            <div id="loadingResults" class="col-md-offset-4">
+                <button class="btn btn-lg">
+                                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                          style="margin-right: 1em;"></span>
+                </button>
+            </div>
+        </div>
         <!-- Summary panel -->
         <div class="row" style="margin-top:10px">
             <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
@@ -244,10 +251,6 @@
                class="btn btn-primary btn-sm col-sm-2">Delete Selected Studies
             </a>
         </div>
-        <div class="row">
-            <span class="study_count badge" style="background-color:#398A96;margin-left:10px" th:text="'Studies: ' + ${publication.studies.size()}"></span>
-        </div>
-
         <div class="row">
             <div class="col-md-12">
                 <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
