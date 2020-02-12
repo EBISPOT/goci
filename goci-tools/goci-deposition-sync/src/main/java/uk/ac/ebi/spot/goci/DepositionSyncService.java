@@ -110,7 +110,7 @@ public class DepositionSyncService {
         Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
         for (Publication p : gociPublications) {
             String pubmedId = p.getPubmedId();
-            System.out.println("checking pmid " + pubmedId);
+            //System.out.println("checking pmid " + pubmedId);
             boolean isPublished = isPublished(p);
 //            boolean isAvailable = isAvailable(p);
             DepositionPublication newPublication = createPublication(p);
@@ -118,7 +118,7 @@ public class DepositionSyncService {
             if(initialSync) { // add all publications to mongo
                 if (newPublication != null && depositionPublication == null) {
                     if(isPublished) {
-                        System.out.println("adding published publication" + pubmedId + " to mongo");
+                        System.out.println("adding published publication " + pubmedId + " to mongo");
                         if(addSummaryStatsData(newPublication, p)){
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                         }
@@ -131,10 +131,10 @@ public class DepositionSyncService {
                 if(depositionPublication == null) { // add new publication
                     if (newPublication != null) {
                         if(isPublished) {
-                            System.out.println("adding published publication" + pubmedId + " to mongo");
+                            System.out.println("adding published publication " + pubmedId + " to mongo");
                         }else {
                             newPublication.setStatus("ELIGIBLE");
-                            System.out.println("adding eligible publication" + pubmedId + " to mongo");
+                            System.out.println("adding eligible publication " + pubmedId + " to mongo");
                         }
                         depositionPublicationService.addPublication(newPublication);
                     }
@@ -149,7 +149,14 @@ public class DepositionSyncService {
                             System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         }
                         depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        depositionPublicationService.updatePublication(depositionPublication);
+                        //depositionPublicationService.updatePublication(depositionPublication);
+                    }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                        if(addSummaryStatsData(newPublication, p)) {
+                            newPublication.setStatus("PUBLISHED_WITH_SS");
+                            System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
+                            depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                            depositionPublicationService.updatePublication(depositionPublication);
+                        }
                     }
                 }
             }
@@ -195,7 +202,7 @@ public class DepositionSyncService {
             if(isPublished && depositionPublication.getStatus().equals("PUBLISHED") && addSummaryStatsData(depositionPublication, p)){
                 depositionPublication.setStatus("PUBLISHED_WITH_SS");
                 System.out.println("updating " + depositionPublication.getPmid());
-                depositionPublicationService.updatePublication(depositionPublication);
+//                depositionPublicationService.updatePublication(depositionPublication);
             }
         }
     }
