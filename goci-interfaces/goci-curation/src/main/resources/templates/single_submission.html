@@ -57,7 +57,7 @@
             <textarea name="submissionData" id="submissionData" style="width:100%; height:400px;display: none;"
                       th:text="${submissionString}"></textarea>
         </div>
-        <form class="form-inline" name="importForm" role="form" method="post"
+        <form class="form-inline" name="importForm" role="form" method="post" id="importForm"
               th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm"

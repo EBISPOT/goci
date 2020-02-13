@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('#importButton').click(function () {
         $('#loadingResults').show();
         $('#importButton').prop( "disabled", true );
-
+        $('#importForm').submit();
     });
     $('#testButton').click(function () {
         $('#loadingResults').show();
