@@ -139,7 +139,7 @@ public class DepositionSyncService {
                         depositionPublicationService.addPublication(newPublication);
                     }
                 }else {//check publication status, update if needed
-                    if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                    if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED") && !depositionPublication.getStatus().equals("PUBLISHED_WITH_SS")) { //sync newly
                         // published publications
                         newPublication.setStatus("PUBLISHED");
                         if(addSummaryStatsData(newPublication, p)){
