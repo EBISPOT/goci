@@ -141,21 +141,21 @@ public class DepositionSyncService {
                 }else {//check publication status, update if needed
                     if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         // published publications
-                        depositionPublication.setStatus("PUBLISHED");
+                        newPublication.setStatus("PUBLISHED");
                         if(addSummaryStatsData(newPublication, p)){
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
                         }else{
                             System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         }
-                        depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        //depositionPublicationService.updatePublication(depositionPublication);
+                        newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                        depositionPublicationService.updatePublication(newPublication);
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         if(addSummaryStatsData(newPublication, p)) {
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
-                            depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                            depositionPublicationService.updatePublication(depositionPublication);
+                            newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                            depositionPublicationService.updatePublication(newPublication);
                         }
                     }
                 }
