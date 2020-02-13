@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-association-file-validator</artifactId>
-    <version>2.4.19</version>
+    <version>2.4.20</version>
     <packaging>jar</packaging>
 
     <name>GOCI Association File Validator Application</name>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.4.19</version>
+        <version>2.4.20</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
