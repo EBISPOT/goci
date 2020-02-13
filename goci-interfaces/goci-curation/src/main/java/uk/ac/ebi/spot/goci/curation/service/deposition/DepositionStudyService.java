@@ -47,11 +47,14 @@ public class DepositionStudyService {
     StudyExtensionRepository studyExtensionRepository;
 
 
-    public void publishSummaryStats(Study study, SecureUser currentUser) {
+    public void publishSummaryStats(Study study, SecureUser currentUser, String studyTag) {
         UnpublishReason tempReason = unpublishReasonRepository.findById(1L);
         CurationStatus currentStatus = study.getHousekeeping().getCurationStatus();
         //studyOperationsService.unpublishStudy(study.getId(), tempReason, currentUser);
         study.setFullPvalueSet(true);
+        if(studyTag != null){
+            study.setStudyTag(studyTag);
+        }
         studyService.save(study);
 //        studyOperationsService
 //                .assignStudyStatus(study, new StatusAssignment(currentStatus.getId(), currentStatus.getStatus()),
@@ -70,13 +73,13 @@ public class DepositionStudyService {
             for (Long studyId: studyIds) {
                 Study study = studyService.findOne(studyId);
                 if(study.getAccessionId().equals(studyDto.getAccession())){
-                    publishSummaryStats(study, currentUser);
+                    publishSummaryStats(study, currentUser, tag);
                     match = true;
                 }
             }
             if(!match){
                 for (Long studyId: studyIds) {
-                    publishSummaryStats(studyService.findOne(studyId), currentUser);
+                    publishSummaryStats(studyService.findOne(studyId), currentUser, null);
                 }
             }
         }
