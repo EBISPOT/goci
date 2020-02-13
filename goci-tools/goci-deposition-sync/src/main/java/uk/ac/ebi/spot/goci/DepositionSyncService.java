@@ -149,7 +149,7 @@ public class DepositionSyncService {
                             System.out.println("setting publication status to PUBLISHED for " + pubmedId);
                         }
                         depositionPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        //depositionPublicationService.updatePublication(depositionPublication);
+                        depositionPublicationService.updatePublication(depositionPublication);
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         if(addSummaryStatsData(newPublication, p)) {
                             newPublication.setStatus("PUBLISHED_WITH_SS");
