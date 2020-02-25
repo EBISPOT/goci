@@ -6,14 +6,16 @@ $(document).ready(function () {
             {"mData": "studyId", "sDefaultContent": "", "sTitle": "Study Id", "bSearchable": true},
             {"mData": "accession", "sDefaultContent": "", "sTitle": "Study Accession", "bSearchable": true},
             {"mData": "hasSumStats", "sDefaultContent": "", "sTitle": "Has SumStats", "bSearchable": true},
+            {"mData": "hasStudyFiles", "sDefaultContent": "", "sTitle": "Has Study Files", "bSearchable": true},
             {"mData": "diseaseTrait", "sDefaultContent": "", "sTitle": "Disease Trait", "bSearchable": true},
             {"mData": "efoTraits", "sDefaultContent": "", "sTitle": "EFO Traits", "bSearchable": true},
             {"mData": "backgroundTrait", "sDefaultContent": "", "sTitle": "Background Trait", "bSearchable": true},
             {"mData": "backgroundEfoTraits", "sDefaultContent": "", "sTitle": "Background EFO Traits", "bSearchable": true},
-            {"mData": "snps", "sTitle": "SNPs", "bSearchable": true},
+            {"mData": "associationCount", "sTitle": "Association Count", "bSearchable": true},
             {"mData": "status", "sDefaultContent": "", "sTitle": "Curation Status", "bSearchable": true},
             {"mData": "curator", "sTitle": "Curator", "bSearchable": true},
-            {"mData": "studyTag", "sDefaultContent": "", "sTitle": "Study Tag", "bSearchable": true}
+            {"mData": "studyTag", "sDefaultContent": "", "sTitle": "Study Tag", "bSearchable": true},
+            {"mData": "tagDuplicatedNote", "sDefaultContent": "", "sTitle": "Duplicate", "bSearchable": true}
         ],
         "aLengthMenu": [
             [5, 10, 25, 50, 100, -1],
@@ -219,6 +221,35 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: "delete_studies",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            //Response
+            success: function (data) {
+                $('#deleteStudies').prop( "disabled", false );
+                $('#loadingResults').hide();
+                var msg = '';
+                for (let [key, value] of Object.entries(data)) {
+                    msg += key + ': ' + value + '\n';
+                }
+                alert(msg);
+                //Reload page
+                location.reload();
+            }
+        })
+    });
+    $('#addSumStats').click(function () {
+        $('#loadingResults').show();
+        $('#addSumStats').prop( "disabled", true );
+        var data = {}
+        data.ids = []
+        $('.table-checkbox:checked').each(function () {
+            var v = $(this).attr('id')
+            v = this.id
+            data.ids.push(v)
+        })
+        $.ajax({
+            type: "POST",
+            url: "add_sum_stats",
             data: JSON.stringify(data),
             contentType: 'application/json',
             //Response

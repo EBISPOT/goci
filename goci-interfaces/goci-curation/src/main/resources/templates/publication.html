@@ -113,7 +113,8 @@
 
                     <div id="panel-links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3">
                         <div style="margin-bottom: 0.6em">
-                            <button type="button" class="btn btn-default btn-sm" id="pubmedid_button">View in <b>PubMed</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
+                            <button type="button" class="btn btn-default btn-sm" id="pubmedid_button">View in <b>
+                                PubMed</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
                         </div>
                         <div style="margin-bottom: 0.6em">
                             <button type="button" class="btn btn-default btn-sm" id="europepmc_button">View in <b>Europe PMC</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
@@ -250,6 +251,9 @@
             <a role="button" type="submit" id="deleteStudies"
                class="btn btn-primary btn-sm col-sm-2">Delete Selected Studies
             </a>
+            <a role="button" type="submit" id="addSumStats"
+               class="btn btn-primary btn-sm col-sm-2">Add Summary Stats
+            </a>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -260,14 +264,16 @@
                         <th style="width:10%">Study Id</th>
                         <th style="width:10%">Study Accession</th>
                         <th style="width:10%">Has SumStats</th>
+                        <th style="width:10%">Has Study Files</th>
                         <th style="width:20%">Disease Trait</th>
                         <th style="width:20%">EFO Traits</th>
                         <th style="width:20%">Background Trait</th>
                         <th style="width:20%">Background EFO Traits</th>
-                        <th style="width:10%">SNPs</th>
+                        <th style="width:10%">Association Count</th>
                         <th style="width:10%">Curation Status</th>
                         <th style="width:10%">Curator</th>
                         <th style="width:10%">Study Tag</th>
+                        <th style="width:10%">Duplicate</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -282,12 +288,21 @@
                         </td>
                         <td>
                             <p>
-                                <span th:text="${study.accessionId}"></span>
+                                <a
+                                        th:href="@{https://www.ebi.ac.uk/gwas/studies/{accessionId}(accessionId=${study.accessionId})}"></a>
                             </p>
                         </td>
                         <td>
                             <p>
                                 <span th:text="${study.fullPvalueSet}"></span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <span th:if="${studyFiles.contains(study.id.toString())}">
+                                    <a
+                                            th:href="@{/studies/{studyId}/studyfiles(studyId=${study.id})}" th:text="${study.id}"></a>
+                                </span>
                             </p>
                         </td>
                         <td>
@@ -299,7 +314,7 @@
                             <p>
                                 <span th:each="efo: ${study.efoTraits}">
                                     <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
-                                       th:text="${efo.trait}"></a>
+                                       th:text="${efo.trait}"></a><br/>
                                 </span>
 
                             </p>
@@ -313,14 +328,14 @@
                             <p>
                                 <span th:each="efo: ${study.mappedBackgroundTraits}">
                                     <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
-                                       th:text="${efo.trait}"></a>
+                                       th:text="${efo.trait}"></a><br/>
                                 </span>
 
                             </p>
                         </td>
                         <td>
                             <p>
-                                <span th:text="${study.getSnpCount()}"></span>
+                                <span th:text="${study.getAssociations().size()}"></span>
                             </p>
                         </td>
                         <td>
@@ -339,6 +354,11 @@
                                 <span th:text="${study.studyTag}"></span>
                             </p>
                         </td>
+                        <td>
+                            <p>
+                                <span th:text="${study.tagDuplicatedNote}"></span>
+                            </p>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -352,6 +372,19 @@
     <!--Include footer-->
     <div th:include="fragments/footer :: page_footer"></div>
     <script th:src="@{/js/goci-publication-page.js}"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function () {
+
+            $("#pubmedid_button").attr('onclick', "window.open('https://www.ncbi.nlm.nih.gov/pubmed/?term=" +
+                [[${publication.pubmedId}]] +
+                "',    '_blank')");
+            $("#europepmc_button").attr('onclick', "window.open('https://http://europepmc.org/article/MED/" +
+                [[${publication.pubmedId}]] +
+                "',    '_blank')");
+        })
+        /*]]>*/
+    </script>
 </div>
 </body>
 </html>

@@ -421,15 +421,15 @@ public class AssociationDownloadService {
         line.append("\t");
         line.append(strongestAllele.toString());
         line.append("\t");
-        line.append(effectAllele);
-        line.append("\t");
-        line.append(otherAllele.toString());
-        line.append("\t");
         line.append(rsId.toString());
         line.append("\t");
         line.append(proxySnpsRsIds.toString());
         line.append("\t");
         line.append(riskAlleleFrequency.toString());
+        line.append("\t");
+        line.append(effectAllele);
+        line.append("\t");
+        line.append(otherAllele.toString());
         line.append("\t");
     }
 

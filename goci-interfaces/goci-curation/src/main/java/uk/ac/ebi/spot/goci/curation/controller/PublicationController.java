@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
 import uk.ac.ebi.spot.goci.curation.service.*;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
@@ -55,12 +56,22 @@ public class PublicationController {
     private AssociationDeletionService associationDeletionService;
     @Autowired
     private StudyDeletionService studyDeletionService;
+    @Autowired
+    private StudyFileService studyFileService;
 
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long publicationId) {
 
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
+        Set<String> studiesWithFiles = new HashSet<>();
+        for(Study study: publication.getStudies()){
+            List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
+            if(studyFiles != null && studyFiles.size() != 0){
+                studiesWithFiles.add(study.getId().toString());
+            }
+        }
         model.addAttribute("publication", publication);
+        model.addAttribute("studyFiles", studiesWithFiles);
         return "publication";
     }
 
@@ -289,6 +300,33 @@ public class PublicationController {
                 studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
                 studyDeletionService.deleteStudy(studyRepository.getOne(studyId), user);
                 result.put(studyId.toString(), "Deleted");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/add_sum_stats",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> addSummaryStats(@RequestBody String data,
+                                      HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setFullPvalueSet(true);
+                studyRepository.save(study);
+                result.put(studyId.toString(), "Added");
             });
             // Return success message to view
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
