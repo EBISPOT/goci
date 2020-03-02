@@ -142,17 +142,13 @@ public class DepositionSyncService {
                     if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED") && !depositionPublication.getStatus().equals("PUBLISHED_WITH_SS")) { //sync newly
                         // published publications
                         newPublication.setStatus("PUBLISHED");
-                        if(addSummaryStatsData(newPublication, p)){
-                            newPublication.setStatus("PUBLISHED_WITH_SS");
-                            System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
-                        }else{
-                            System.out.println("setting publication status to PUBLISHED for " + pubmedId);
-                        }
+                        addSummaryStatsData(newPublication, p);
+                        System.out.println("setting publication status to " + newPublication.getStatus() + " for " +
+                                " " + pubmedId);
                         newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                         depositionPublicationService.updatePublication(newPublication);
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         if(addSummaryStatsData(newPublication, p)) {
-                            newPublication.setStatus("PUBLISHED_WITH_SS");
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                             depositionPublicationService.updatePublication(newPublication);
@@ -181,6 +177,9 @@ public class DepositionSyncService {
             summaryStatsDtoList.add(summaryStatsDto);
         }
         depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
+        if(hasFiles){
+            depositionPublication.setStatus("PUBLISHED_WITH_SS");
+        }
         return hasFiles;
     }
 
