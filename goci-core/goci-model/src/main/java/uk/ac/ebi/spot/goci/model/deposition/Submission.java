@@ -17,7 +17,17 @@ public class Submission {
     private String publicationStatus;
 
     private SubmissionType submissionType;
-    public enum SubmissionType {METADATA, METADATA_AND_SUM_STATS, SUM_STATS, METADATA_AND_TOP_ASSOCIATIONS,
-        METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS, UNKNOWN };
+    public enum SubmissionType {
+        METADATA("Metadata"),
+        METADATA_AND_SUM_STATS("Metadata and Summary Stats"),
+        SUM_STATS("Summary Stats"),
+        METADATA_AND_TOP_ASSOCIATIONS("Metadata and Top Associations"),
+        METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS("Metadata Summary Stats and Top Associations"),
+        UNKNOWN("Unknown");
+        public final String label;
+        private SubmissionType(String label){
+            this.label = label;
+        }
+    };
 
 }

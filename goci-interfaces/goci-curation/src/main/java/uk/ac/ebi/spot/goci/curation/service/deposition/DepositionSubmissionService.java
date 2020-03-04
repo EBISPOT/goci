@@ -204,17 +204,19 @@ public class DepositionSubmissionService {
     }
 
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
+        String publicationStatus = submission.getPublication().getStatus();
         boolean hasSumStats = false;
         boolean hasMetadata = false;
         boolean hasAssociations = false;
+        if(publicationStatus.equals("UNDER_SUBMISSION")){
+            hasMetadata = true;
+        }
+        else if(publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")){
+            hasSumStats = true;
+        }
         for(DepositionStudyDto studyDto: submission.getStudies()){
             if(studyDto.getSummaryStatisticsFile() != null){
                 hasSumStats = true;
-            }
-        }
-        for(DepositionSampleDto sampleDto: submission.getSamples()){
-            if(sampleDto.getStage() != null){
-                hasMetadata = true;
             }
         }
         for(DepositionAssociationDto associationDto: submission.getAssociations()){
