@@ -46,7 +46,6 @@ public class DepositionStudyService {
     @Autowired
     StudyExtensionRepository studyExtensionRepository;
 
-
     public void publishSummaryStats(Study study, SecureUser currentUser, String studyTag) {
         UnpublishReason tempReason = unpublishReasonRepository.findById(1L);
         CurationStatus currentStatus = study.getHousekeeping().getCurationStatus();
@@ -171,11 +170,15 @@ public class DepositionStudyService {
 
     public void deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
         if(dbStudies != null) {
-            for (int i = 0; i < dbStudies.size(); i++) {
-                addStudyNote(dbStudies.toArray(new Study[0])[i], null,
+
+            dbStudies.forEach(study -> {
+                addStudyNote(study, null,
                         "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
                 //          studyService.deleteByStudyId(study.getId());
-            }
+                Housekeeping houseKeeping = study.getHousekeeping();
+                houseKeeping.setCurationStatus(statusRepository.findByStatus("Requires Review"));
+                studyOperationsService.updateHousekeeping(houseKeeping, study, currentUser);
+            });
         }
     }
 
