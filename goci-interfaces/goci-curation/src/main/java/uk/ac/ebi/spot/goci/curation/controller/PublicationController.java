@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.apache.commons.text.similarity.CosineSimilarity;
+import org.apache.commons.text.similarity.FuzzyScore;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +21,12 @@ import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
 import uk.ac.ebi.spot.goci.curation.service.*;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
+import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -58,9 +64,43 @@ public class PublicationController {
     private StudyDeletionService studyDeletionService;
     @Autowired
     private StudyFileService studyFileService;
+    @Autowired
+    private EuropepmcPubMedSearchService europepmcPubMedSearchService;
+    @Autowired
+    private DepositionSubmissionService submissionService;
+
+
+    @RequestMapping(value = "/match/{pubmedId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<ArrayList<Map<String,String>>> matchPublication(Model model, @PathVariable String pubmedId) {
+        FuzzyScore fuzzyScore = new FuzzyScore(Locale.ENGLISH);
+        LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+        ArrayList<Map<String,String>> results = new ArrayList<>();
+        EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
+        String searchTitle = europePMCResult.getPublication().getTitle();
+        String searchAuthor = europePMCResult.getFirstAuthor().getFullname();
+        CharSequence searchString = searchTitle.toLowerCase() + " " + searchAuthor.toLowerCase();
+        Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
+        Map<String, String> props = new HashMap<>();
+        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
+            Submission submission = e.getValue();
+            String matchTitle = submission.getTitle();
+            String matchAuthor = submission.getAuthor();
+            CharSequence matchString = matchTitle.toLowerCase() + " " + matchAuthor.toLowerCase();
+            Integer score = fuzzyScore.fuzzyScore(searchString, matchString);
+            Integer ldScore = levenshteinDistance.apply(searchString, matchString);
+            props.put("fuzzyScore", score.toString());
+            props.put("levDistance", ldScore.toString());
+            results.add(props);
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        return new ResponseEntity<>(results,responseHeaders, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String viewStudy(Model model, @PathVariable Long publicationId) {
+    public String viewPublication(Model model, @PathVariable Long publicationId) {
 
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
         Set<String> studiesWithFiles = new HashSet<>();
