@@ -73,12 +73,23 @@ public class DepositionSubmissionService {
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
 
-    public Map<String, Submission> getSubmissions(){
+    public Map<String, Submission> getSubmissionsBasic(){
+        String url = "/submission-envelopes";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getSubmissions() {
+        String url = "/submissions?page={page}";
+        return getSubmissions(url);
+    }
+
+    private Map<String, Submission> getSubmissions(String url){
+
         Map<String, Submission> submissionList = new TreeMap<>();
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class,
+        String response = template.getForObject(depositionIngestURL + url, String.class,
                 params);
 
 //        DepositionSubmissionListWrapper submissions =

@@ -461,7 +461,7 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
-        Map<String, Submission> submissionMap = submissionService.getSubmissions();
+        Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
         Map<String, String> pubmedMap = new HashMap<>();
         for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
             Submission submission = e.getValue();
