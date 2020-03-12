@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.curation.service.deposition;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,6 +72,74 @@ public class DepositionSubmissionService {
         this.authorRepository = authorRepository;
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
+
+    public Map<String, Submission> getSubmissionsBasic(){
+        String url = "/submission-envelopes";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getSubmissions() {
+        String url = "/submissions?page={page}";
+        return getSubmissions(url);
+    }
+
+    private Map<String, Submission> getSubmissions(String url){
+
+        Map<String, Submission> submissionList = new TreeMap<>();
+        int i = 0;
+        Map<String, Integer> params = new HashMap<>();
+        params.put("page", i);
+        String response = template.getForObject(depositionIngestURL + url, String.class,
+                params);
+
+//        DepositionSubmissionListWrapper submissions =
+//                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
+//                        DepositionSubmissionListWrapper.class, params);
+//        while (i < submissions.getPage().getTotalPages()) {
+//            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
+        DepositionSubmission[] submissions =
+                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
+        for (DepositionSubmission submission : submissions) {
+            Submission testSub = buildSubmission(submission);
+            submissionList.put(testSub.getId(), testSub);
+            params.put("page", ++i);
+            //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
+            //              DepositionSubmissionListWrapper.class, params);
+        }
+        return submissionList;
+    }
+
+    public DepositionSubmission getSubmission(String submissionID){
+        Map<String, String> params = new HashMap<>();
+        params.put("submissionID", submissionID);
+        String response =
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
+        DepositionSubmission submission =
+                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
+                        params);
+
+        return submission;
+
+    }
+
+    public Submission buildSubmission(DepositionSubmission depositionSubmission){
+        Submission testSub = new Submission();
+        testSub.setId(depositionSubmission.getSubmissionId());
+        testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
+        testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
+        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+        testSub.setStatus(depositionSubmission.getStatus());
+        testSub.setTitle(depositionSubmission.getPublication().getTitle());
+        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
+        testSub.setSubmissionType(getSubmissionType(depositionSubmission));
+        if(testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)){
+            testSub.setStatus("REVIEW");
+        }
+        return testSub;
+    }
+
+
 
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         List<String> statusMessages = new ArrayList<>();
@@ -204,17 +273,19 @@ public class DepositionSubmissionService {
     }
 
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
+        String publicationStatus = submission.getPublication().getStatus();
         boolean hasSumStats = false;
         boolean hasMetadata = false;
         boolean hasAssociations = false;
+        if(publicationStatus.equals("UNDER_SUBMISSION")){
+            hasMetadata = true;
+        }
+        else if(publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")){
+            hasSumStats = true;
+        }
         for(DepositionStudyDto studyDto: submission.getStudies()){
             if(studyDto.getSummaryStatisticsFile() != null){
                 hasSumStats = true;
-            }
-        }
-        for(DepositionSampleDto sampleDto: submission.getSamples()){
-            if(sampleDto.getStage() != null){
-                hasMetadata = true;
             }
         }
         for(DepositionAssociationDto associationDto: submission.getAssociations()){

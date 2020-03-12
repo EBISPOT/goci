@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -84,6 +85,10 @@ public class Publication {
     @OneToMany(mappedBy="publication",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PublicationAuthors> publicationAuthors;
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String submissionId;
 
     // JPA no-args constructor
     public Publication() {
@@ -168,5 +173,13 @@ public class Publication {
 
     public void setPublicationAuthors(List<PublicationAuthors> publicationAuthors) {
         this.publicationAuthors = publicationAuthors;
+    }
+
+    public String getSubmissionId(){
+        return submissionId;
+    }
+
+    public void setSubmissionId(String submissionId){
+        this.submissionId = submissionId;
     }
 }

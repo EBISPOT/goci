@@ -66,7 +66,7 @@ public class SubmissionController {
     public String viewSubmission(Model model, @PathVariable String submissionId) {
 
         DepositionSubmission depositionSubmission = getSubmission(submissionId);
-        Submission submission = buildSubmission(depositionSubmission);
+        Submission submission = submissionService.buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
         model.addAttribute("submissionData", depositionSubmission);
         model.addAttribute("submissionError", submissionService.checkSubmissionErrors(depositionSubmission));
@@ -79,58 +79,13 @@ public class SubmissionController {
     }
 
     private Map<String, Submission> getSubmissions() {
-        Map<String, Submission> submissionList = new TreeMap<>();
-        int i = 0;
-        Map<String, Integer> params = new HashMap<>();
-        params.put("page", i);
-        String response = template.getForObject(depositionIngestURL + "/submissions?page={page}", String.class,
-                params);
-
-//        DepositionSubmissionListWrapper submissions =
-//                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
-//                        DepositionSubmissionListWrapper.class, params);
-//        while (i < submissions.getPage().getTotalPages()) {
-//            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
-        DepositionSubmission[] submissions =
-                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
-        for (DepositionSubmission submission : submissions) {
-            Submission testSub = buildSubmission(submission);
-            submissionList.put(testSub.getId(), testSub);
-            params.put("page", ++i);
-            //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
-            //              DepositionSubmissionListWrapper.class, params);
-        }
+        Map<String, Submission> submissionList = submissionService.getSubmissions();
         //}
         return submissionList;
     }
 
-    private Submission buildSubmission(DepositionSubmission depositionSubmission){
-        Submission testSub = new Submission();
-        testSub.setId(depositionSubmission.getSubmissionId());
-        testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
-        testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-        testSub.setStatus(depositionSubmission.getStatus());
-        testSub.setTitle(depositionSubmission.getPublication().getTitle());
-        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-        testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-        testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
-        if(testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)){
-            testSub.setStatus("REVIEW");
-        }
-        return testSub;
-    }
-
     private DepositionSubmission getSubmission(String submissionID) {
-        Map<String, String> params = new HashMap<>();
-        params.put("submissionID", submissionID);
-        String response =
-                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
-        DepositionSubmission submission =
-                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
-                        params);
-
-        return submission;
+        return submissionService.getSubmission(submissionID);
     }
 
     @CrossOrigin

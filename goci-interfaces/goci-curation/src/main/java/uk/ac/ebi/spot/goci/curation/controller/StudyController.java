@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +32,9 @@ import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
@@ -61,6 +60,7 @@ import java.util.concurrent.Callable;
 public class StudyController {
 
     private final StudyExtensionRepository studyExtensionRepository;
+    private final DepositionSubmissionService submissionService;
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private HousekeepingRepository housekeepingRepository;
@@ -115,7 +115,8 @@ public class StudyController {
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
                            StudyUpdateService studyUpdateService,
                            PublicationOperationsService publicationOperationsService,
-                           StudyExtensionRepository studyExtensionRepository) {
+                           StudyExtensionRepository studyExtensionRepository,
+                           DepositionSubmissionService submissionService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -137,6 +138,7 @@ public class StudyController {
         this.studyUpdateService = studyUpdateService;
         this.publicationOperationsService = publicationOperationsService;
         this.studyExtensionRepository = studyExtensionRepository;
+        this.submissionService = submissionService;
     }
 
     /* All studies and various filtered lists */
@@ -459,7 +461,43 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
+        Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
+        Map<String, String> pubmedMap = new HashMap<>();
+        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
+            Submission submission = e.getValue();
+            pubmedMap.put(submission.getPubMedID(), e.getKey());
+        }
+        if(sortType != null && (sortType.equals("activesubmissionsortasc") || sortType.equals(
+                "activesubmissionsortdesc"))){
+            Page<Study> sortedPage = sortActiveSubmissions(sortType, studyPage, pubmedMap, page, sort);
+            model.addAttribute("studies", sortedPage);
+        }else if(sortType == null){
+            Page<Study> sortedPage = sortActiveSubmissions("activesubmissionsortasc", studyPage, pubmedMap, page, sort);
+            model.addAttribute("studies", sortedPage);
+        }
+        model.addAttribute("submissions", pubmedMap);
         return "studies";
+    }
+
+    private Page<Study> sortActiveSubmissions(String sortType, Page<Study> studyPage, Map<String, String> pubmedMap,
+                                              int page, Sort sort){
+        List<Study> submissionStudies = new ArrayList<>();
+        List<Study> sortedStudies = new ArrayList<>();
+        studyPage.forEach(study -> {
+            if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
+                submissionStudies.add(study);
+            }else{
+                sortedStudies.add(study);
+            }
+        });
+        if(sortType.equals("activesubmissionsortasc")) {
+            sortedStudies.addAll(0, submissionStudies);
+        }else{
+            sortedStudies.addAll(submissionStudies);
+        }
+        Page<Study> sortedPage = new PageImpl<>(sortedStudies, constructPageSpecification(page - 1,
+                sort), sortedStudies.size());
+        return sortedPage;
     }
 
     // Redirects from landing page and main page
@@ -937,6 +975,8 @@ public class StudyController {
         sortTypeMap.put("curatorsortdesc", sortByCuratorDesc());
         sortTypeMap.put("curationstatussortasc", sortByCurationStatusAsc());
         sortTypeMap.put("curationstatussortdesc", sortByCurationStatusDesc());
+        sortTypeMap.put("activesubmissionsortasc", sortByPublicationDateAsc());
+        sortTypeMap.put("activesubmissionsortdesc", sortByPublicationDateDesc());
 
 
         if (sortType != null && !sortType.isEmpty()) {

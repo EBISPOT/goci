@@ -35,13 +35,22 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md">Pubmed ID
+        <th class="col-md-1">Pubmed ID
             <div>
                 <a th:href="@{${uri}(sorttype=pubmedsortasc)}"
                    class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
                 <a th:href="@{${uri}(sorttype=pubmedsortdesc)}"
                    class="btn btn-default btn-xs"><span
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
+            </div>
+        </th>
+        <th class="col-md-1">Active Submission
+            <div>
+                <a th:href="@{${uri}(sorttype=activesubmissionsortasc)}"
+                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
+                <a th:href="@{${uri}(sorttype=activesubmissionsortdesc)}"
+                   class="btn btn-default btn-xs"><span
+                        class="glyphicon glyphicon-sort-by-attributes-alt"></span></a>
             </div>
         </th>
         <!--<th class="col-md-1">User Requested-->
@@ -73,7 +82,7 @@
             </div>
         </th>
         <th class="col-md-1">EFO Trait</th>
-        <th class="col-md-2">Curator
+        <th class="col-md">Curator
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                 <a th:href="@{${uri}(sorttype=curatorsortasc)}"
                    class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -82,7 +91,7 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md-2">Curation Status
+        <th class="col-md">Curation Status
             <div th:if="${totalStudies &gt; 1 and #bools.isTrue(pagination) }">
                 <a th:href="@{${uri}(sorttype=curationstatussortasc)}"
                    class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -91,7 +100,7 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md-1">Notes</th>
+        <th class="col-md-2">Notes</th>
     </tr>
     </thead>
     <tbody>
@@ -137,7 +146,6 @@
         <td th:text="${study.publicationId?.publicationDate != null } ? ${#dates.format(study.publicationId?.publicationDate,'yyyy-MM-dd')} : ''"></td>
         <td><p>
             <a th:href="@{/publication/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}" th:text="${study.publicationId?.pubmedId}"></a>
-            &nbsp;&nbsp;
             <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a>
@@ -159,6 +167,12 @@
 
                 </ul>
             </div>
+        </td>
+        <td>
+            <a th:if="${submissions.containsKey(study.publicationId?.pubmedId)}"
+               th:href="@{/submissions/{submissionId}(submissionId=${submissions.get(study.publicationId?.pubmedId)})}" title="Note: This Publication has an active submission">
+                <span class="glyphicon glyphicon-warning-sign text-danger"></span>
+            </a>
         </td>
 
         <!--<td th:text="${study.userRequested} ?: ''"></td>-->
