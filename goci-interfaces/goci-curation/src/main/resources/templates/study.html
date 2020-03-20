@@ -268,8 +268,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <a th:if="${study.publicationId?.activeSubmission}"
+                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
+                        <span class="glyphicon glyphicon-warning-sign text-danger col-md-1"
+                              style="font-size: 25px"></span>
+                    </a>
 
-                    <label for="pubmed" class="control-label col-md-2">Pubmed</label>
+                    <label for="pubmed" class="control-label col-md-1">Pubmed</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />

@@ -1,0 +1,121 @@
+[
+  {
+    "submissionId": "5e4af36ea74da5000168edbf",
+    "publication": {
+      "pmid": "31960908",
+      "title": "Genome wide scan identifying novel genetic loci regulating salivary metabolite levels",
+      "journal": "Hum Mol Genet",
+      "firstAuthor": "Nag A",
+      "publicationDate": "2020-01-21",
+      "status": "UNDER_SUBMISSION"
+    },
+    "status": "CURATION_COMPLETE",
+    "globusFolder": "c27cd630-6d6f-468e-9d33-4fc86339c9c1",
+    "globusOriginId": "ac2e7e20-51c1-11ea-971b-021304b0cca7",
+    "studies": [
+      {
+        "study_tag": "salivary_mgwas",
+        "genotyping_technology": "Genome-wide genotyping array",
+        "array_manufacturer": "Illumina",
+        "imputation": true,
+        "variant_count": 9600000,
+        "statistical_model": "Linear mixed model",
+        "trait": "salivary metabolites",
+        "summary_statistics_file": "sumstats_nag.tsv",
+        "checksum": "d6fff25810b5583915f01dc0e6edf198",
+        "summary_statistics_assembly": "GRCh37",
+        "readme_file": "ReadMe File – summary_stats_nag_et_al.txt.gz\n\n1. Nag A, Kurushima Y, Bowyer RCE, Wells PM, Weiss S, Peitzner M, et al (2020). Genome-wide scan identifies novel genetic loci regulating salivary metabolite levels. Human Molecular Genetics. doi: 10.1093/hmg/ddz308\n\n2. The “metabolite” column provides information on the metabolite that was tested. Annotation of the metabolites is provided in the accompanying file named ‘metabolite_annotation.xls’ \n\n3. The file summary_stats_nag_et_al.txt.gz contains summary statistics for 476 metabolites that were analysed in the salivary mGWAS. All variant-metabolite associations with p<0.0001 (0.05/476) have been provided in the file.",
+        "cohort": "TwinsUK"
+      }
+    ],
+    "associations": [],
+    "samples": [
+      {
+        "study_tag": "salivary_mgwas",
+        "size": 1419,
+        "ancestry_category": "European",
+        "country_recruitement": "United Kingdom",
+        "stage": "discovery"
+      }
+    ],
+    "notes": [],
+    "created": {
+      "user": {
+        "name": "Abhishek Nag",
+        "email": "abhishek.nag@kcl.ac.uk",
+        "nickname": "28347c14aacda3cd447eb959af051827a271a702",
+        "userReference": "usr-f03df6c3-09ff-462f-a948-dc41d0e397c8",
+        "domains": []
+      },
+      "timestamp": "2020-02-17T20:11:19.575Z"
+    }
+  },
+  {
+    "submissionId": "5e613a18b8b8fd000143a5a2",
+    "publication": {
+      "pmid": "29903748",
+      "title": "Transethnic, Genome-Wide Analysis Reveals Immune-Related Risk Alleles and Phenotypic Correlates in Pediatric Steroid-Sensitive Nephrotic Syndrome.",
+      "journal": "J Am Soc Nephrol",
+      "firstAuthor": "Debiec H",
+      "publicationDate": "2018-06-14",
+      "status": "PUBLISHED"
+    },
+    "status": "STARTED",
+    "globusFolder": "04ae7dce-53a2-470a-adb6-6a260db0e50a",
+    "globusOriginId": "b9721ad4-5f08-11ea-af52-0201714f6eab",
+    "studies": [],
+    "associations": [],
+    "samples": [],
+    "notes": [],
+    "created": {
+      "user": {
+        "name": "Matthew Sampson",
+        "email": "matthew.sampson@childrens.harvard.edu",
+        "nickname": "628005d2b6f2e8eb0eb135dd06ec41adebcdbe88",
+        "userReference": "usr-d26c1e4b-04d4-4a8a-b302-5db97f13084d",
+        "domains": []
+      },
+      "timestamp": "2020-03-05T17:42:26.299Z"
+    }
+  },
+  {
+    "submissionId": "5e616335ead99700014812c2",
+    "publication": {
+      "pmid": "30395268",
+      "title": "Genome-wide meta-analysis and replication studies in multiple ethnicities identify novel adolescent idiopathic scoliosis susceptibility loci.",
+      "journal": "Hum Mol Genet",
+      "firstAuthor": "Khanshour AM",
+      "publicationDate": "2018-11-01",
+      "status": "PUBLISHED"
+    },
+    "status": "SUBMITTED",
+    "globusFolder": "c6120526-3a05-43c4-a0ae-2bc8223ab029",
+    "globusOriginId": "3ae5d624-5f21-11ea-af52-0201714f6eab",
+    "studies": [
+      {
+        "study_tag": "Discovery",
+        "study_accession": "GCST006902",
+        "sample_description": "2,295 East Asian ancestry cases, 11,084 East Asian ancestry controls, 1,503 European ancestry cases, 18,594 European ancestry controls",
+        "trait": "Adolescent idiopathic scoliosis",
+        "summary_statistics_file": "https://app.globus.org/file-manager?destination_id=3ae5d624-5f21-11ea-af52-0201714f6eab&destination_path=%2F",
+        "checksum": "9b2aa55d3b00e27cc4f9f02ce744579d",
+        "summary_statistics_assembly": "GRCh37",
+        "readme_file": "https://app.globus.org/file-manager?destination_id=3ae5d624-5f21-11ea-af52-0201714f6eab&destination_path=%2F",
+        "cohort": "JP1, HK, Texas-GWAS1, Texas-GWAS2, Texas-GWAS3"
+      }
+    ],
+    "associations": [],
+    "samples": [],
+    "notes": [],
+    "created": {
+      "user": {
+        "name": "Anas Khanshour",
+        "email": "anas.khanshour@gmail.com",
+        "nickname": "53b393062fe958a2afd7692edd7fdecef492823d",
+        "userReference": "usr-7ee1a933-f3f0-4e4b-b30d-e31147ce4418",
+        "domains": []
+      },
+      "timestamp": "2020-03-05T20:38:05.176Z"
+    }
+  }
+]

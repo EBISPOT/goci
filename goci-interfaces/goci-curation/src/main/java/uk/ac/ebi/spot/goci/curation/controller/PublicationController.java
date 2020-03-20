@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.apache.commons.text.similarity.CosineSimilarity;
-import org.apache.commons.text.similarity.FuzzyScore;
-import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.apache.commons.text.similarity.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -70,35 +68,52 @@ public class PublicationController {
     private DepositionSubmissionService submissionService;
 
 
-    @RequestMapping(value = "/match/{pubmedId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    @RequestMapping(value = "/match", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<ArrayList<Map<String,String>>> matchPublication(Model model, @PathVariable String pubmedId) {
-        FuzzyScore fuzzyScore = new FuzzyScore(Locale.ENGLISH);
+    ResponseEntity<Map<String, Object>> matchPublication(Model model, @RequestBody String pubmedId) {
+        Map<String, Object> results = new HashMap<>();
+        CosineDistance cosScore = new CosineDistance();
         LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
-        ArrayList<Map<String,String>> results = new ArrayList<>();
+        JaroWinklerSimilarity jwDistance = new JaroWinklerSimilarity();
         EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
+        Map<String, String> searchProps = new HashMap<>();
+        searchProps.put("pubMedID", europePMCResult.getPublication().getPubmedId());
+        searchProps.put("author", europePMCResult.getFirstAuthor().getFullname());
+        searchProps.put("title", europePMCResult.getPublication().getTitle());
+        results.put("search", searchProps);
         String searchTitle = europePMCResult.getPublication().getTitle();
         String searchAuthor = europePMCResult.getFirstAuthor().getFullname();
         CharSequence searchString = searchTitle.toLowerCase() + " " + searchAuthor.toLowerCase();
         Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
-        Map<String, String> props = new HashMap<>();
+        List<Map<String, String>> data = new ArrayList<>();
         for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
+            Map<String, String> props = new HashMap<>();
             Submission submission = e.getValue();
             String matchTitle = submission.getTitle();
             String matchAuthor = submission.getAuthor();
             CharSequence matchString = matchTitle.toLowerCase() + " " + matchAuthor.toLowerCase();
-            Integer score = fuzzyScore.fuzzyScore(searchString, matchString);
+            Double score = cosScore.apply(searchString, matchString) * 100;
             Integer ldScore = levenshteinDistance.apply(searchString, matchString);
-            props.put("fuzzyScore", score.toString());
-            props.put("levDistance", ldScore.toString());
-            results.add(props);
+            Double jwScore = jwDistance.apply(searchString, matchString) * 100;
+            props.put("cosScore", normalizeScore(score.intValue()).toString());
+            props.put("levDistance", normalizeScore(ldScore).toString());
+            props.put("jwScore", new Integer(jwScore.intValue()).toString());
+            props.put("pubMedID", submission.getPubMedID());
+            props.put("author", submission.getAuthor());
+            props.put("title", submission.getTitle());
+            data.add(props);
         }
+        data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
+        results.put("data", data);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
         return new ResponseEntity<>(results,responseHeaders, HttpStatus.OK);
     }
 
+    private Integer normalizeScore(int score){
+        return 100 - score > 0 ? 100 - score : 0;
+    }
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewPublication(Model model, @PathVariable Long publicationId) {
 

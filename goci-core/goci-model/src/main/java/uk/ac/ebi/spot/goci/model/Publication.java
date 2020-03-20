@@ -90,6 +90,9 @@ public class Publication {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String submissionId;
 
+    @Transient
+    private boolean activeSubmission = false;
+
     // JPA no-args constructor
     public Publication() {
     }
@@ -182,4 +185,8 @@ public class Publication {
     public void setSubmissionId(String submissionId){
         this.submissionId = submissionId;
     }
+
+    public boolean isActiveSubmission(){ return activeSubmission;}
+
+    public void setActiveSubmission(boolean activeSubmission){this.activeSubmission = activeSubmission;}
 }

@@ -44,15 +44,6 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md-1">Active Submission
-            <div>
-                <a th:href="@{${uri}(sorttype=activesubmissionsortasc)}"
-                   class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
-                <a th:href="@{${uri}(sorttype=activesubmissionsortdesc)}"
-                   class="btn btn-default btn-xs"><span
-                        class="glyphicon glyphicon-sort-by-attributes-alt"></span></a>
-            </div>
-        </th>
         <!--<th class="col-md-1">User Requested-->
             <!--<div>-->
                 <!--<a th:href="@{${uri}(sorttype=userrequestedsortasc)}"-->
@@ -149,6 +140,10 @@
             <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
                 <span class="glyphicon glyphicon-print color-primary-bold"></span>
             </a>
+            <a th:if="${study.publicationId?.activeSubmission}"
+               th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
+                <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
+            </a>
         </p>
 
             <div class="btn-group">
@@ -167,12 +162,6 @@
 
                 </ul>
             </div>
-        </td>
-        <td>
-            <a th:if="${submissions.containsKey(study.publicationId?.pubmedId)}"
-               th:href="@{/submissions/{submissionId}(submissionId=${submissions.get(study.publicationId?.pubmedId)})}" title="Note: This Publication has an active submission">
-                <span class="glyphicon glyphicon-warning-sign text-danger"></span>
-            </a>
         </td>
 
         <!--<td th:text="${study.userRequested} ?: ''"></td>-->

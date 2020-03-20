@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
@@ -19,6 +20,8 @@ import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -51,6 +54,9 @@ public class DepositionSubmissionService {
     @Value("${deposition.token}")
     private String depositionToken;
 
+    @Value("classpath:submissions.json")
+    private Resource submissionFile;
+
     public DepositionSubmissionService(@Autowired PublicationService publicationService,
                                        @Autowired StudyService studyService,
                                        @Autowired StudyOperationsService studyOperationsService,
@@ -75,8 +81,8 @@ public class DepositionSubmissionService {
 
     public Map<String, Submission> getSubmissionsBasic(){
         String url = "/submission-envelopes";
-        //return getSubmissions(url);
-        return new TreeMap<>();
+        return getSubmissions(url);
+//        return new TreeMap<>();
     }
 
     public Map<String, Submission> getSubmissions() {
@@ -90,23 +96,34 @@ public class DepositionSubmissionService {
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-        String response = template.getForObject(depositionIngestURL + url, String.class,
-                params);
-
+//        String response = template.getForObject(depositionIngestURL + url, String.class,
+//                params);
 //        DepositionSubmissionListWrapper submissions =
 //                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
 //                        DepositionSubmissionListWrapper.class, params);
 //        while (i < submissions.getPage().getTotalPages()) {
 //            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
-        DepositionSubmission[] submissions =
-                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
-        for (DepositionSubmission submission : submissions) {
-            Submission testSub = buildSubmission(submission);
-            submissionList.put(testSub.getId(), testSub);
-            params.put("page", ++i);
-            //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
-            //              DepositionSubmissionListWrapper.class, params);
+
+        try {
+            DepositionSubmission[] submissions =
+                    mapper.readValue(submissionFile.getInputStream(), DepositionSubmission[].class);
+            for (DepositionSubmission submission : submissions) {
+                Submission testSub = buildSubmission(submission);
+                submissionList.put(testSub.getId(), testSub);
+                params.put("page", ++i);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+//        DepositionSubmission[] submissions =
+//                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}", DepositionSubmission[].class, params);
+//        for (DepositionSubmission submission : submissions) {
+//            Submission testSub = buildSubmission(submission);
+//            submissionList.put(testSub.getId(), testSub);
+//            params.put("page", ++i);
+//            //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
+//            //              DepositionSubmissionListWrapper.class, params);
+//        }
         return submissionList;
     }
 

@@ -49,7 +49,7 @@
                     <label class="control-label col-md-2">Search Submissions for Pubmed ID</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmedId" placeholder="Search for Pubmed ID"/>
+                        <input type="text" class="form-control" id="pubmedSearchId" placeholder="Search for Pubmed ID"/>
                     </div>
                 </div>
 
@@ -57,6 +57,15 @@
                     <div class="col-md-offset-2 col-md-10">
                         <button type="button" id="searchPubMed" class="btn btn-primary">Search</button>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1">PubMed ID</label><label id="pubmedLabel"></label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1">Author</label><label id="pubmedAuthor"></label>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1">Title</label><label id="pubmedTitle"></label>
                 </div>
             </form>
         </div>
@@ -68,11 +77,12 @@
             <table id="pubmedSearchDatatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th>Pubmed ID</th>
-                    <th>Author</th>
-                    <th>Title</th>
-                    <th>Fuzzy Score</th>
-                    <th>Levenshtein Distance</th>
+                    <th class="col-sm-1">Pubmed ID</th>
+                    <th class="col-sm-1">Author</th>
+                    <th class="col-sm-1">Title</th>
+                    <th class="col-sm-1">Cosine Score</th>
+                    <th class="col-sm-1">Levenshtein Distance</th>
+                    <th class="col-sm-1">JaroWinkler Score</th>
                 </tr>
                 </thead>
             </table>
