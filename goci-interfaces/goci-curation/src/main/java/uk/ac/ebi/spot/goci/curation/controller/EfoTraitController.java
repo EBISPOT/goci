@@ -17,6 +17,8 @@ import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -86,16 +88,24 @@ public class EfoTraitController {
         // Check format of CURIE
         String[] uriSplit = efoTrait.getUri().split("/");
         String curie = uriSplit[uriSplit.length -1];
+        String ontologyPrefix = curie.split("_")[0].toLowerCase();
+        ArrayList<String> PREFIX_OUTLIERS = new ArrayList<>(Arrays.asList(
+                "orphanet", "hancestro", "ncit"));
 
-        // The CURIE should be formatted as: EFO_1234567
+
+        // The CURIE should be formatted as: PREFIX_1234567 for OBO Foundry ontologies
         String CURIE_REGEX = "^(([a-zA-Z])+_(\\d\\d\\d\\d\\d\\d\\d))$";
         Pattern curiePattern = Pattern.compile(CURIE_REGEX);
         Matcher curieMatch = curiePattern.matcher(curie);
-        if (!curieMatch.find()) {
-            String invalidCurieMessage = "The URI value entered \"" + efoTrait.getUri() + "\" is not valid. " +
-                    "The URI value should be formatted similar to: http://www.ebi.ac.uk/efo/EFO_1234567.";
-            redirectAttributes.addFlashAttribute("efoTraitExists", invalidCurieMessage);
-            return "redirect:/efotraits";
+
+        if (!PREFIX_OUTLIERS.contains(ontologyPrefix)) {
+            if (!curieMatch.find()) {
+                String invalidCurieMessage = "The URI value entered \"" + efoTrait.getUri() + "\" is not valid. " +
+                        "The URI value for OBO Foundry ontologies should be formatted similar " +
+                        "to: http://www.ebi.ac.uk/efo/EFO_1234567. \n Did you copy-paste the entire URI?";
+                redirectAttributes.addFlashAttribute("efoTraitExists", invalidCurieMessage);
+                return "redirect:/efotraits";
+            }
         }
 
 
