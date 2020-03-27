@@ -168,6 +168,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @Query(nativeQuery = true, value = "update study s set s.publication_id=null where s.id=:studyId")
     void setPublicationIdNull(@Param("studyId") Long studyId);
 
-
+    @RestResource(exported = false)
+    @Query(value = "SELECT 'GCST' || accession_seq.nextval FROM dual", nativeQuery =
+            true)
+    String getNextAccessionId();
 }
 

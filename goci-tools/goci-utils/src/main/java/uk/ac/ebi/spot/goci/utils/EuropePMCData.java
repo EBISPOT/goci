@@ -18,6 +18,8 @@ public class EuropePMCData {
 
     private Author firstAuthor = null;
 
+    private String doi = null;
+
     public Boolean getError() { return error; }
 
     public void setError(Boolean error) { this.error = error; }
@@ -39,4 +41,12 @@ public class EuropePMCData {
     public void setFirstAuthor(Author firstAuthor) { this.firstAuthor = firstAuthor; }
 
     public Author getFirstAuthor() { return firstAuthor; }
+
+    public void setDoi(String doi){
+        this.doi = doi;
+    }
+
+    public String getDoi(){
+        return doi;
+    }
 }

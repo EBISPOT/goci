@@ -36,6 +36,7 @@ $(document).ready(function() {
                 $('#pubmedLabel').text(search.pubMedID)
                 $('#pubmedAuthor').text(search.author)
                 $('#pubmedTitle').text(search.title)
+                $('#doiLabel').text(search.doi)
                 console.log(data);
                 var table = $('#pubmedSearchDatatable').dataTable();
                 var oSettings = table.fnSettings();

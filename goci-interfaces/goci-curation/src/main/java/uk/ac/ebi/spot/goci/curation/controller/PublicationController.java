@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.commons.text.similarity.*;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -66,6 +69,8 @@ public class PublicationController {
     private EuropepmcPubMedSearchService europepmcPubMedSearchService;
     @Autowired
     private DepositionSubmissionService submissionService;
+    @Autowired
+    private GenotypingTechnologyRepository genotypingTechnologyRepository;
 
 
     @RequestMapping(value = "/match", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -80,30 +85,35 @@ public class PublicationController {
         searchProps.put("pubMedID", europePMCResult.getPublication().getPubmedId());
         searchProps.put("author", europePMCResult.getFirstAuthor().getFullname());
         searchProps.put("title", europePMCResult.getPublication().getTitle());
+        searchProps.put("doi", europePMCResult.getDoi());
         results.put("search", searchProps);
         String searchTitle = europePMCResult.getPublication().getTitle();
         String searchAuthor = europePMCResult.getFirstAuthor().getFullname();
-        CharSequence searchString = searchTitle.toLowerCase() + " " + searchAuthor.toLowerCase();
-        Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
         List<Map<String, String>> data = new ArrayList<>();
-        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
-            Map<String, String> props = new HashMap<>();
-            Submission submission = e.getValue();
-            String matchTitle = submission.getTitle();
-            String matchAuthor = submission.getAuthor();
-            CharSequence matchString = matchTitle.toLowerCase() + " " + matchAuthor.toLowerCase();
-            Double score = cosScore.apply(searchString, matchString) * 100;
-            Integer ldScore = levenshteinDistance.apply(searchString, matchString);
-            Double jwScore = jwDistance.apply(searchString, matchString) * 100;
-            props.put("cosScore", normalizeScore(score.intValue()).toString());
-            props.put("levDistance", normalizeScore(ldScore).toString());
-            props.put("jwScore", new Integer(jwScore.intValue()).toString());
-            props.put("pubMedID", submission.getPubMedID());
-            props.put("author", submission.getAuthor());
-            props.put("title", submission.getTitle());
-            data.add(props);
+        try {
+            CharSequence searchString = buildSearch(searchAuthor, searchTitle);
+            Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
+            for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
+                Map<String, String> props = new HashMap<>();
+                Submission submission = e.getValue();
+                String matchTitle = submission.getTitle();
+                String matchAuthor = submission.getAuthor();
+                CharSequence matchString = buildSearch(matchAuthor, matchTitle);
+                Double score = cosScore.apply(searchString, matchString) * 100;
+                Integer ldScore = levenshteinDistance.apply(searchString, matchString);
+                Double jwScore = jwDistance.apply(searchString, matchString) * 100;
+                props.put("cosScore", normalizeScore(score.intValue()).toString());
+                props.put("levDistance", normalizeScore(ldScore).toString());
+                props.put("jwScore", new Integer(jwScore.intValue()).toString());
+                props.put("pubMedID", submission.getPubMedID());
+                props.put("author", submission.getAuthor());
+                props.put("title", submission.getTitle());
+                data.add(props);
+            }
+            data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
         results.put("data", data);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
@@ -111,6 +121,19 @@ public class PublicationController {
         return new ResponseEntity<>(results,responseHeaders, HttpStatus.OK);
     }
 
+    private CharSequence buildSearch(String author, String title) throws IOException {
+        StringBuffer result = new StringBuffer();
+        EnglishAnalyzer filter = new EnglishAnalyzer();
+        String search = author.toLowerCase() + " " + title.toLowerCase();
+        TokenStream stream = filter.tokenStream("", search.toString());
+        stream.reset();
+        CharTermAttribute term = stream.addAttribute(CharTermAttribute.class);
+        while(stream.incrementToken()){
+            result.append(term.buffer()).append(" ");
+        }
+        stream.close();
+        return result.toString().trim();
+    }
     private Integer normalizeScore(int score){
         return 100 - score > 0 ? 100 - score : 0;
     }
@@ -390,4 +413,40 @@ public class PublicationController {
         }
         return result;
     }
+
+    @RequestMapping(value = "/update_genotyping_technology",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> updateGenotypingTechnology(@RequestBody String data,
+                                                  HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            ArrayNode technologyIds = (ArrayNode) jsonObject.get("technology");
+            List<GenotypingTechnology> technologies = new ArrayList<>();
+            technologyIds.forEach(node -> {
+                String technology = node.asText();
+                GenotypingTechnology tech = genotypingTechnologyRepository.findByGenotypingTechnology(technology);
+                technologies.add(tech);
+            });
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                study.setGenotypingTechnologies(technologies);
+                studyRepository.save(study);
+                result.put(studyId.toString(), "Updated");
+            });
+            // Return success message to view
+//            message = "Successfully updated " + studyIds.size() + " study statuses";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
 }
