@@ -5,13 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSummaryStatsDto;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionSummaryStatsStatusDto;
+import uk.ac.ebi.spot.goci.repository.BodyOfWorkRepository;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.repository.CuratorRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishedStudyRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
+import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
 import java.util.*;
@@ -23,6 +26,9 @@ public class DepositionSyncService {
     private final Curator levelOneCurator;
     private final CurationStatus awaitingCuration;
     private final CurationStatus awaitingLiterature;
+    private final DepositionSubmissionService submissionService;
+    private final BodyOfWorkRepository bodyOfWorkRepository;
+    private final UnpublishedStudyRepository unpublishedRepository;
     private PublicationService publicationService;
 
     private DepositionPublicationService depositionPublicationService;
@@ -34,11 +40,18 @@ public class DepositionSyncService {
     public DepositionSyncService(@Autowired PublicationService publicationService,
                                  @Autowired DepositionPublicationService depositionPublicationService,
                                  @Autowired CurationStatusRepository statusRepository,
-                                 @Autowired CuratorRepository curatorRepository) {
+                                 @Autowired CuratorRepository curatorRepository,
+                                 @Autowired DepositionSubmissionService submissionService,
+                                 @Autowired BodyOfWorkRepository bodyOfWorkRepository,
+                                 @Autowired UnpublishedStudyRepository unpublishedRepository) {
         this.curatorRepository = curatorRepository;
         this.statusRepository = statusRepository;
         this.depositionPublicationService = depositionPublicationService;
         this.publicationService = publicationService;
+        this.submissionService = submissionService;
+        this.bodyOfWorkRepository = bodyOfWorkRepository;
+        this.unpublishedRepository = unpublishedRepository;
+
         curationComplete = statusRepository.findByStatus("Publish study");
         levelOneCurator = curatorRepository.findByLastName("Level 1 Curator");
         awaitingCuration = statusRepository.findByStatus("Awaiting Curation");
@@ -158,6 +171,45 @@ public class DepositionSyncService {
             }
 
         }
+    }
+
+    /**
+     * method to import new studies from deposition that do not have a PubMed ID. We want to keep them separate from
+     * existing studies to indicate the different level of review. But we do want them stored in GOCI so they can be
+     * searched and displayed.
+     */
+    public void syncUnpublishedStudies(){
+        Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
+        //if unpublished_studies does not have accession, add
+        //check body of work, if not found, add
+        //else if accession exists, check publication for change, update
+        //curation import will need to prune unpublished_studies and body_of_work
+        submissions.forEach((s, submission) -> {
+            if(submission.getStatus().equals("SUBMITTED") && submission.getPublication() == null){
+                submission.getStudies().forEach(studyDto -> {
+                    String studyTag = studyDto.getStudyTag();
+                    UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
+                    if(unpublishedStudy == null){
+                        unpublishedStudy = unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto,
+                                submission));
+                        //process bodies of work
+                        List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
+                    }
+                });
+                submission.setStatus("IMPORTED");
+                submissionService.updateSubmission(submission);
+            }
+        });
+    }
+
+    private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag){
+        List<DepositionSampleDto> sampleDtoList = new ArrayList<>();
+        submission.getSamples().forEach(depositionSampleDto -> {
+            if(depositionSampleDto.getStudyTag().equals(studyTag)){
+                sampleDtoList.add(depositionSampleDto);
+            }
+        });
+        return sampleDtoList;
     }
 
     private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){

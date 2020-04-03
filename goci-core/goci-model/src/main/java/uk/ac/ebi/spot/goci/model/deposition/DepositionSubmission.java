@@ -29,5 +29,7 @@ public class DepositionSubmission {
     private List<DepositionNoteDto> notes;
     @JsonProperty("date_submitted")
     private LocalDate dateSubmitted;
+    @JsonProperty("globus_folder")
+    private String globusFolder;
 
 }
