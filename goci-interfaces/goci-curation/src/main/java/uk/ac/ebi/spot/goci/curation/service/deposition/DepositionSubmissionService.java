@@ -104,34 +104,25 @@ public class DepositionSubmissionService {
         int i = 0;
         Map<String, Integer> params = new HashMap<>();
         params.put("page", i);
-//        String response = template.getForObject(depositionIngestURL + url, String.class,
-//                params);
-//        DepositionSubmissionListWrapper submissions =
-//                template.getForObject(depositionIngestURL + "/submissions" + "?page={page}",
-//                        DepositionSubmissionListWrapper.class, params);
-//        while (i < submissions.getPage().getTotalPages()) {
-//            for (DepositionSubmission submission : submissions.getWrapper().getSubmissions()) {
 
-        try {
-            DepositionSubmission[] submissions =
-                    mapper.readValue(submissionFile.getInputStream(), DepositionSubmission[].class);
-            for (DepositionSubmission submission : submissions) {
-                Submission testSub = buildSubmission(submission);
-                submissionList.put(testSub.getId(), testSub);
-                params.put("page", ++i);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        DepositionSubmission[] submissions =
-//                template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
-//        for (DepositionSubmission submission : submissions) {
-//            Submission testSub = buildSubmission(submission);
-//            submissionList.put(testSub.getId(), testSub);
-//            params.put("page", ++i);
-//            //      submissions = template.getForObject(depositionIngestURL + "/submissions?page={page}",
-//            //              DepositionSubmissionListWrapper.class, params);
+//        try {
+//            DepositionSubmission[] submissions =
+//                    mapper.readValue(submissionFile.getInputStream(), DepositionSubmission[].class);
+//            for (DepositionSubmission submission : submissions) {
+//                Submission testSub = buildSubmission(submission);
+//                submissionList.put(testSub.getId(), testSub);
+//                params.put("page", ++i);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
+        DepositionSubmission[] submissions =
+                template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
+        for (DepositionSubmission submission : submissions) {
+            Submission testSub = buildSubmission(submission);
+            submissionList.put(testSub.getId(), testSub);
+            params.put("page", ++i);
+        }
         return submissionList;
     }
 
