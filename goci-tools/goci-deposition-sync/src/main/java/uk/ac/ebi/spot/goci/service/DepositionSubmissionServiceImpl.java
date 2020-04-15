@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Service
 public class DepositionSubmissionServiceImpl implements DepositionSubmissionService {
 
     @Value("${deposition.ingest.uri}")

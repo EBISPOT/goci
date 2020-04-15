@@ -2,9 +2,11 @@ $(document).ready(function() {
 
     $('#pubmedSearchDatatable').DataTable({
         "columns": [
+            { "mData": "submissionID","sTitle": "Submission ID" },
             { "mData": "pubMedID","sTitle": "Pubmed ID" },
             { "mData": "author", "sDefaultContent": "", "sTitle":"Author" },
             { "mData": "title", "sDefaultContent": "", "sTitle": "Title"   }, // <-- which values to use inside object
+            { "mData": "doi", "sDefaultContent": "", "sTitle": "DOI" },
             { "mData": "cosScore", "sDefaultContent": "", "sTitle": "Cosine Score" },
             { "mData": "levDistance", "sDefaultContent": "", "sTitle": "Levenschtein Distance" },
             { "mData": "jwScore", "sDefaultContent": "", "sTitle": "Jaro Winkler Distance" },
@@ -15,7 +17,7 @@ $(document).ready(function() {
             [5,10,25, 50, 100, "All"]
         ],
         "iDisplayLength": -1,
-        "order": [[ 3, "desc" ]],
+        "order": [[ 6, "desc" ]],
     } );
 
     $("#searchPubMed").click(function () {

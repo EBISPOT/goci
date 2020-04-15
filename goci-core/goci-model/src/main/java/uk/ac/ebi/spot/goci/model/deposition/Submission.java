@@ -15,6 +15,7 @@ public class Submission {
     private String curator;
     private String created;
     private String publicationStatus;
+    private String doi;
 
     private SubmissionType submissionType;
     public enum SubmissionType {

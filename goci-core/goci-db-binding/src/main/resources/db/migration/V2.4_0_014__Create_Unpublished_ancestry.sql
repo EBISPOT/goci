@@ -1,0 +1,60 @@
+/*
+
+################################################################################
+
+Create unpublished_ancestry
+
+author: Jon Stewart
+date:    06 April 2020
+version: 2.4.0.014
+
+################################################################################
+*/
+--------------------------------------------------------
+--  DDL for Table UNPUBLISHED_ANCESTRY
+--------------------------------------------------------
+
+  CREATE TABLE "GWAS"."UNPUBLISHED_ANCESTRY"
+   (	"ID" NUMBER(*,0),
+	"STUDY_TAG" VARCHAR2(50 BYTE),
+	"STAGE" VARCHAR2(50 BYTE),
+	"CASES" NUMBER(*,0),
+	"CONTROLS" NUMBER(*,0),
+	"SIZE" NUMBER(*,0),
+	"SAMPLE_DESCRIPTION" VARCHAR2(255 BYTE),
+	"ANCESTRY_CATEGORY" VARCHAR2(20 BYTE),
+	"ANCESTRY" VARCHAR2(255 BYTE),
+	"ANCESTRY_DESCRIPTION" VARCHAR2(255 BYTE),
+	"COUNTRY_RECRUITMENT" VARCHAR2(255 BYTE),
+	"STUDY_ID" NUMBER(*,0)
+   ) SEGMENT CREATION DEFERRED
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255
+ NOCOMPRESS LOGGING
+  TABLESPACE "SPOT_DATA" ;
+--------------------------------------------------------
+--  DDL for Index UNPUBLISHED_ANCESTRY_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "GWAS"."UNPUBLISHED_ANCESTRY_PK" ON "GWAS"."UNPUBLISHED_ANCESTRY" ("ID")
+  PCTFREE 10 INITRANS 2 MAXTRANS 255
+  TABLESPACE "SPOT_DATA" ;
+--------------------------------------------------------
+--  DDL for Index UNP_ANC_STUDY_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "GWAS"."UNP_ANC_STUDY_IDX" ON "GWAS"."UNPUBLISHED_ANCESTRY" ("STUDY_ID")
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS
+  TABLESPACE "SPOT_DATA" ;
+--------------------------------------------------------
+--  Constraints for Table UNPUBLISHED_ANCESTRY
+--------------------------------------------------------
+
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("STUDY_ID" NOT NULL ENABLE);
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" ADD CONSTRAINT "UNPUBLISHED_ANCESTRY_PK" PRIMARY KEY ("ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255
+  TABLESPACE "SPOT_DATA"  ENABLE;
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("CONTROLS" NOT NULL ENABLE);
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("CASES" NOT NULL ENABLE);
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("STAGE" NOT NULL ENABLE);
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("STUDY_TAG" NOT NULL ENABLE);
+  ALTER TABLE "GWAS"."UNPUBLISHED_ANCESTRY" MODIFY ("ID" NOT NULL ENABLE);

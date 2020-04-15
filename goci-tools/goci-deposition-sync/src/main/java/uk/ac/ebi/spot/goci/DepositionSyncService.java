@@ -5,14 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
-import uk.ac.ebi.spot.goci.model.deposition.DepositionSummaryStatsDto;
-import uk.ac.ebi.spot.goci.repository.BodyOfWorkRepository;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.UnpublishedStudyRepository;
+import uk.ac.ebi.spot.goci.model.deposition.*;
+import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
@@ -29,6 +23,7 @@ public class DepositionSyncService {
     private final DepositionSubmissionService submissionService;
     private final BodyOfWorkRepository bodyOfWorkRepository;
     private final UnpublishedStudyRepository unpublishedRepository;
+    private final UnpublishedAncestryRepository unpublishedAncestryRepo;
     private PublicationService publicationService;
 
     private DepositionPublicationService depositionPublicationService;
@@ -43,7 +38,8 @@ public class DepositionSyncService {
                                  @Autowired CuratorRepository curatorRepository,
                                  @Autowired DepositionSubmissionService submissionService,
                                  @Autowired BodyOfWorkRepository bodyOfWorkRepository,
-                                 @Autowired UnpublishedStudyRepository unpublishedRepository) {
+                                 @Autowired UnpublishedStudyRepository unpublishedRepository,
+                                 @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo) {
         this.curatorRepository = curatorRepository;
         this.statusRepository = statusRepository;
         this.depositionPublicationService = depositionPublicationService;
@@ -51,6 +47,7 @@ public class DepositionSyncService {
         this.submissionService = submissionService;
         this.bodyOfWorkRepository = bodyOfWorkRepository;
         this.unpublishedRepository = unpublishedRepository;
+        this.unpublishedAncestryRepo = unpublishedAncestryRepo;
 
         curationComplete = statusRepository.findByStatus("Publish study");
         levelOneCurator = curatorRepository.findByLastName("Level 1 Curator");
@@ -183,7 +180,7 @@ public class DepositionSyncService {
         //if unpublished_studies does not have accession, add
         //check body of work, if not found, add
         //else if accession exists, check publication for change, update
-        //curation import will need to prune unpublished_studies and body_of_work
+        //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
             if(submission.getStatus().equals("SUBMITTED") && submission.getPublication() == null){
                 submission.getStudies().forEach(studyDto -> {
@@ -192,8 +189,30 @@ public class DepositionSyncService {
                     if(unpublishedStudy == null){
                         unpublishedStudy = unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto,
                                 submission));
-                        //process bodies of work
+                        //add bodies of work
+                        BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
+                        BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
+                           bodyOfWorkRepository.save(bodyOfWork);
+                        //add ancestries
                         List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
+                        List<UnpublishedAncestry> ancestryList = new ArrayList<>();
+                        UnpublishedStudy finalUnpublishedStudy = unpublishedStudy;
+                        sampleDtoList.forEach(sampleDto->{
+                            UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto);
+                            ancestry.setStudy(finalUnpublishedStudy);
+                            ancestryList.add(ancestry);
+                        });
+                        unpublishedStudy.setAncestries(ancestryList);
+                        unpublishedRepository.save(unpublishedStudy);
+                        unpublishedAncestryRepo.save(ancestryList);
+                    }else {//check for changes to body of work
+                        Collection<BodyOfWork> bodyOfWorks = unpublishedStudy.getBodiesOfWork();
+                        BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
+                        bodyOfWorks.forEach(bodyOfWork -> {
+                            if(bodyOfWork.getPublicationId().equals(bodyOfWorkDto.getBodyOfWorkId())){
+                                //create/update body of work
+                            }
+                        });
                     }
                 });
                 submission.setStatus("IMPORTED");

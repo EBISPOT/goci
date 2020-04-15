@@ -64,7 +64,7 @@ public class UnpublishedStudy {
     @JsonManagedReference
     private Collection<BodyOfWork> bodiesOfWork;
 
-    @OneToMany
+    @OneToMany(mappedBy = "study", orphanRemoval = true)
     private Collection<UnpublishedAncestry> ancestries;
 
     public static UnpublishedStudy createFromStudy(DepositionStudyDto studyDto, DepositionSubmission submissionDto) {

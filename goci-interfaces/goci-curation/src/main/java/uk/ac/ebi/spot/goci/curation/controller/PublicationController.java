@@ -102,12 +102,14 @@ public class PublicationController {
                 Double score = cosScore.apply(searchString, matchString) * 100;
                 Integer ldScore = levenshteinDistance.apply(searchString, matchString);
                 Double jwScore = jwDistance.apply(searchString, matchString) * 100;
+                props.put("submissionID", submission.getId());
                 props.put("cosScore", normalizeScore(score.intValue()).toString());
                 props.put("levDistance", normalizeScore(ldScore).toString());
                 props.put("jwScore", new Integer(jwScore.intValue()).toString());
                 props.put("pubMedID", submission.getPubMedID());
                 props.put("author", submission.getAuthor());
                 props.put("title", submission.getTitle());
+                props.put("doi", submission.getDoi());
                 data.add(props);
             }
             data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
@@ -129,7 +131,7 @@ public class PublicationController {
         stream.reset();
         CharTermAttribute term = stream.addAttribute(CharTermAttribute.class);
         while(stream.incrementToken()){
-            result.append(term.buffer()).append(" ");
+            result.append(term.toString()).append(" ");
         }
         stream.close();
         return result.toString().trim();

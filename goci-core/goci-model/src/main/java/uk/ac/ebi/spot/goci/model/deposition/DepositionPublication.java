@@ -29,4 +29,5 @@ public class DepositionPublication{
     private String status;
     @JsonProperty("ssTemplateEntries")
     private List<DepositionSummaryStatsDto> summaryStatsDtoList;
+    private String doi;
 }

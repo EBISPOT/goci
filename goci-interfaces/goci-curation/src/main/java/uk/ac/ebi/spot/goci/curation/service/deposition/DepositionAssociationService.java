@@ -73,8 +73,11 @@ public class DepositionAssociationService {
                 association.setLoci(locusList);
                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
                 associationList.add(association);
-                if(associationDto.getEffectAlleleFrequency() != null) {
+                if(associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
                     association.setRiskFrequency(associationDto.getEffectAlleleFrequency().toString());
+                }
+                else{
+                    association.setRiskFrequency("NR");
                 }
                 if(associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());

@@ -13,9 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
-import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
-import uk.ac.ebi.spot.goci.repository.CuratorRepository;
-import uk.ac.ebi.spot.goci.repository.PublicationExtensionRepository;
+import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -37,6 +35,9 @@ public class DepositionSubmissionService {
     private final CuratorRepository curatorRepository;
     private final EventOperationsService eventOperationsService;
     private final PublicationExtensionRepository authorRepository;
+    private final BodyOfWorkRepository bodyOfWorkRepository;
+    private final UnpublishedStudyRepository unpublishedRepository;
+    private final UnpublishedAncestryRepository unpublishedAncestryRepo;
 
     @Autowired
     @Qualifier("JodaMapper")
@@ -66,7 +67,10 @@ public class DepositionSubmissionService {
                                        @Autowired CurationStatusRepository statusRepository,
                                        @Autowired CuratorRepository curatorRepository,
                                        @Autowired EventOperationsService eventOperationsService,
-                                       @Autowired PublicationExtensionRepository authorRepository) {
+                                       @Autowired PublicationExtensionRepository authorRepository,
+                                       @Autowired BodyOfWorkRepository bodyOfWorkRepository,
+                                       @Autowired UnpublishedStudyRepository unpublishedRepository,
+                                       @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo) {
         this.publicationService = publicationService;
         this.studyService = studyService;
         this.studyOperationsService = studyOperationsService;
@@ -76,6 +80,10 @@ public class DepositionSubmissionService {
         this.curatorRepository = curatorRepository;
         this.eventOperationsService = eventOperationsService;
         this.authorRepository = authorRepository;
+        this.bodyOfWorkRepository = bodyOfWorkRepository;
+        this.unpublishedRepository = unpublishedRepository;
+        this.unpublishedAncestryRepo = unpublishedAncestryRepo;
+
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
 
@@ -142,17 +150,34 @@ public class DepositionSubmissionService {
 
     public Submission buildSubmission(DepositionSubmission depositionSubmission){
         Submission testSub = new Submission();
-        testSub.setId(depositionSubmission.getSubmissionId());
-        testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
-        testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-        testSub.setStatus(depositionSubmission.getStatus());
-        testSub.setTitle(depositionSubmission.getPublication().getTitle());
-        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-        testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-        testSub.setSubmissionType(getSubmissionType(depositionSubmission));
-        if(testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)){
-            testSub.setStatus("REVIEW");
+        if(depositionSubmission.getBodyOfWork() != null){
+            testSub.setId(depositionSubmission.getSubmissionId());
+//            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
+            testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getAuthorName());
+            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+            testSub.setStatus(depositionSubmission.getStatus());
+            testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
+            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
+            testSub.setDoi(depositionSubmission.getBodyOfWork().getDoi());
+            if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+                testSub.setStatus("REVIEW");
+            }
+        }else if(depositionSubmission.getPublication() != null) {
+            testSub.setId(depositionSubmission.getSubmissionId());
+            testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
+            testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
+            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+            testSub.setStatus(depositionSubmission.getStatus());
+            testSub.setTitle(depositionSubmission.getPublication().getTitle());
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
+            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
+            testSub.setDoi(depositionSubmission.getPublication().getDoi());
+            if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+                testSub.setStatus("REVIEW");
+            }
         }
         return testSub;
     }
@@ -182,7 +207,7 @@ public class DepositionSubmissionService {
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
         List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
         List<DepositionSampleDto> samples = depositionSubmission.getSamples();
-        List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+        //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
         List<DepositionNoteDto> notes = depositionSubmission.getNotes();
 
         //check submission status. if PUBLISHED, import summary stats, set state DONE
@@ -235,6 +260,7 @@ public class DepositionSubmissionService {
                     studyService.save(study);
                     statusMessages.add(studyNote.toString());
                 }
+                cleanupPrePublishedStudies(studies);
             }
             publicationService.save(publication);
             depositionSubmission.setDateSubmitted(new LocalDate());
@@ -327,6 +353,27 @@ public class DepositionSubmissionService {
             return Submission.SubmissionType.SUM_STATS;
         }
         return Submission.SubmissionType.UNKNOWN;
+    }
+
+    private void cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList){
+        studyDtoList.forEach(studyDto -> {
+            UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
+            if(unpublishedStudy != null){
+                Collection<BodyOfWork> bodyOfWorks = unpublishedStudy.getBodiesOfWork();
+                Collection<UnpublishedAncestry> ancestries = unpublishedStudy.getAncestries();
+                unpublishedAncestryRepo.delete(ancestries);
+                Set<UnpublishedStudy> referencedStudies = new HashSet<>();
+                bodyOfWorks.forEach(bodyOfWork -> {
+                    bodyOfWork.getStudies().forEach(study->{
+                        referencedStudies.add(study);
+                    });
+                });
+                if(referencedStudies.size() <= 1){
+                    bodyOfWorkRepository.delete(bodyOfWorks);
+                }
+                unpublishedRepository.delete(unpublishedStudy);
+            }
+        });
     }
 
 //    private DepositionStudyList getStudies(String submissionID) {
