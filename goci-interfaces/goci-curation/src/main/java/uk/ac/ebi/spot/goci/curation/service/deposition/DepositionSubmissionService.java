@@ -318,14 +318,18 @@ public class DepositionSubmissionService {
         else if(publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")){
             hasSumStats = true;
         }
-        for(DepositionStudyDto studyDto: submission.getStudies()){
-            if(studyDto.getSummaryStatisticsFile() != null){
-                hasSumStats = true;
+        if(submission.getStudies() != null) {
+            for (DepositionStudyDto studyDto : submission.getStudies()) {
+                if (studyDto.getSummaryStatisticsFile() != null) {
+                    hasSumStats = true;
+                }
             }
         }
-        for(DepositionAssociationDto associationDto: submission.getAssociations()){
-            if(associationDto.getStudyTag() != null){
-                hasAssociations = true;
+        if(submission.getAssociations() != null) {
+            for (DepositionAssociationDto associationDto : submission.getAssociations()) {
+                if (associationDto.getStudyTag() != null) {
+                    hasAssociations = true;
+                }
             }
         }
         if(hasMetadata && hasSumStats && hasAssociations){
