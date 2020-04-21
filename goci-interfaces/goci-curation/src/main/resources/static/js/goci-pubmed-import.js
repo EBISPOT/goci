@@ -16,7 +16,7 @@ $(document).ready(function() {
             [5,10,25, 50, 100, -1],
             [5,10,25, 50, 100, "All"]
         ],
-        "iDisplayLength": -1,
+        "iDisplayLength": 10,
         "order": [[ 6, "desc" ]],
     } );
 
