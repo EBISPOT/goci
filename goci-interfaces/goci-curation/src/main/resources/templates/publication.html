@@ -289,7 +289,7 @@
                         <td>
                             <p>
                                 <a
-                                        th:href="@{https://www.ebi.ac.uk/gwas/studies/{accessionId}(accessionId=${study.accessionId})}"></a>
+                                        th:href="@{https://www.ebi.ac.uk/gwas/studies/{accessionId}(accessionId=${study.accessionId})}" th:text="${study.accessionId}"></a>
                             </p>
                         </td>
                         <td>
