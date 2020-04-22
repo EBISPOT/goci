@@ -210,8 +210,8 @@ public class DepositionSubmissionService {
         //else import metadata, set state CURATOR_REVIEW
         if (submissionType == Submission.SubmissionType.SUM_STATS) { //if submission type is SUM_STATS only
             depositionStudyService.publishSummaryStats(studies, dbStudies, currentUser);
-            depositionSubmission.setStatus("COMPLETE");
-            //depositionSubmission.getPublication().setStatus("PUBLISHED_WITH_SS");
+            depositionSubmission.setStatus("CURATION_COMPLETE");
+            depositionSubmission.getPublication().setStatus("PUBLISHED_WITH_SS");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
             template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
