@@ -17,6 +17,7 @@ import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 

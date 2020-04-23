@@ -149,10 +149,13 @@ public class DepositionSubmissionService {
         if(depositionSubmission.getBodyOfWork() != null){
             testSub.setId(depositionSubmission.getSubmissionId());
 //            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
-            if(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
-                testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
-            }else{
-                testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' + depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
+                if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
+                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+                } else {
+                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' +
+                            depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+                }
             }
             testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
             testSub.setStatus(depositionSubmission.getStatus());
@@ -321,6 +324,9 @@ public class DepositionSubmissionService {
     }
 
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
+        if(submission.getBodyOfWork() != null) {
+            return Submission.SubmissionType.PRE_PUBLISHED;
+        }
         String publicationStatus = submission.getPublication().getStatus();
         boolean hasSumStats = false;
         boolean hasMetadata = false;
