@@ -57,7 +57,7 @@ public class SubmissionController {
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
-        Map<String, Submission> submissionList = getSubmissions();
+        Map<String, Submission> submissionList = submissionService.getSubmissions();
         model.addAttribute("submissions", submissionList.values());
         return "view_submissions";
     }
@@ -94,8 +94,8 @@ public class SubmissionController {
                                    RedirectAttributes redirectAttributes) {
         List<String> statusMessages = new ArrayList<>();
         try {
-            Map<String, Submission> submissionList = getSubmissions();
-            DepositionSubmission depositionSubmission = getSubmission(submissionID);
+            Map<String, Submission> submissionList = submissionService.getSubmissions();
+            DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
             Submission submission = submissionList.get(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
             statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DepositionAuthor {
-    private String authorName;
+    private String group;
+    private String firstName;
+    private String lastName;
     private String email;
 }

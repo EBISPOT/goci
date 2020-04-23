@@ -149,7 +149,11 @@ public class DepositionSubmissionService {
         if(depositionSubmission.getBodyOfWork() != null){
             testSub.setId(depositionSubmission.getSubmissionId());
 //            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
-            testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getAuthorName());
+            if(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
+                testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+            }else{
+                testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' + depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+            }
             testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
             testSub.setStatus(depositionSubmission.getStatus());
             testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
@@ -190,7 +194,11 @@ public class DepositionSubmissionService {
         if(depositionSubmission.getPublication().getCorrespondingAuthor() != null){
             PublicationExtension author = new PublicationExtension();
             author.setCorrespondingAuthorEmail(depositionSubmission.getPublication().getCorrespondingAuthor().getEmail());
-            author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getAuthorName());
+            if(depositionSubmission.getPublication().getCorrespondingAuthor().getGroup() != null) {
+                author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getGroup());
+            }else{
+                author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getFirstName() + ' ' + depositionSubmission.getPublication().getCorrespondingAuthor().getLastName());
+            }
             authorRepository.save(author);
             List<PublicationExtension> authorList = new ArrayList<>();
             authorList.add(author);

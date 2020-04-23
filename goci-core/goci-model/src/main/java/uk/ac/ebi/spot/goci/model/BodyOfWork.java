@@ -43,7 +43,11 @@ public class BodyOfWork{
         bodyOfWork.setPubMedId(dto.getPmids() != null ? dto.getPmids().get(0) : null);
         bodyOfWork.setJournal(dto.getJournal());
         bodyOfWork.setTitle(dto.getTitle());
-        bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getAuthorName());
+        if(dto.getFirstAuthor().getGroup() != null) {
+            bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getGroup());
+        }else{
+            bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getFirstName() + ' ' + dto.getFirstAuthor().getLastName());
+        }
         //bodyOfWork.setPublicationDate(dto.get);
         bodyOfWork.setDoi(dto.getDoi());
         return bodyOfWork;
