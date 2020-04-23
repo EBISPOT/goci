@@ -8,7 +8,8 @@
       "firstAuthor" : "Yang J",
       "publicationDate" : "2010-11-02",
       "correspondingAuthor" : {
-        "authorName" : "Jing Yang"
+        "firstName" : "Jing",
+        "lastName" : "Yang"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -24,7 +25,8 @@
       "firstAuthor" : "Thorleifsson G",
       "publicationDate" : "2007-08-09",
       "correspondingAuthor" : {
-        "authorName" : "Gudmar Thorleifsson"
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -40,7 +42,8 @@
       "firstAuthor" : "Thorleifsson G",
       "publicationDate" : "2009-06-28",
       "correspondingAuthor" : {
-        "authorName" : "Gudmar Thorleifsson"
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -56,7 +59,8 @@
       "firstAuthor" : "Thorleifsson G",
       "publicationDate" : "2008-12-14",
       "correspondingAuthor" : {
-        "authorName" : "Gudmar Thorleifsson"
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -72,7 +76,8 @@
       "firstAuthor" : "Steinthorsdottir V",
       "publicationDate" : "2007-04-26",
       "correspondingAuthor" : {
-        "authorName" : "Valgerdur Steinthorsdottir"
+        "firstName" : "Valgerdur",
+        "lastName" : "Steinthorsdottir"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -88,7 +93,8 @@
       "firstAuthor" : "Sulem P",
       "publicationDate" : "2011-10-09",
       "correspondingAuthor" : {
-        "authorName" : "Patrick Sulem"
+        "firstName" : "Patrick",
+        "lastName" : "Sulem"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -104,7 +110,8 @@
       "firstAuthor" : "Sulem P",
       "publicationDate" : "2009-05-15",
       "correspondingAuthor" : {
-        "authorName" : "Patrick Sulem"
+        "firstName" : "Patrick",
+        "lastName" : "Sulem"
       },
       "status" : "UNDER_SUBMISSION",
       "_links" : {
@@ -112,215 +119,8 @@
           "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e303?pmid=false"
         }
       }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e304",
-      "pmid" : "17478679",
-      "title" : "A common variant on chromosome 9p21 affects the risk of myocardial infarction.",
-      "journal" : "Science",
-      "firstAuthor" : "Helgadottir A",
-      "publicationDate" : "2007-05-03",
-      "correspondingAuthor" : {
-        "authorName" : "Anna Helgadottir"
-      },
-      "status" : "UNDER_SUBMISSION",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e304?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e305",
-      "pmid" : "21964575",
-      "title" : "Mutations in BRIP1 confer high risk of ovarian cancer.",
-      "journal" : "Nat Genet",
-      "firstAuthor" : "Rafnar T",
-      "publicationDate" : "2011-10-02",
-      "correspondingAuthor" : {
-        "authorName" : "Thorunn Rafnar"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e305?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e306",
-      "pmid" : "20171287",
-      "title" : "Voxelwise genome-wide association study (vGWAS).",
-      "journal" : "Neuroimage",
-      "firstAuthor" : "Stein JL",
-      "publicationDate" : "2010-02-17",
-      "correspondingAuthor" : {
-        "authorName" : "Jason L Stein"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e306?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e307",
-      "pmid" : "17470457",
-      "title" : "Calmodulin-binding transcription activator 1 (CAMTA1) alleles predispose human episodic memory performance.",
-      "journal" : "Hum Mol Genet",
-      "firstAuthor" : "Huentelman MJ",
-      "publicationDate" : "2007-04-30",
-      "correspondingAuthor" : {
-        "authorName" : "Matthew J Huentelman"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e307?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e308",
-      "pmid" : "21044948",
-      "title" : "Dissection of the genetics of Parkinson's disease identifies an additional association 5' of SNCA and multiple associated haplotypes at 17q21.",
-      "journal" : "Hum Mol Genet",
-      "firstAuthor" : "Spencer CC",
-      "publicationDate" : "2010-11-02",
-      "correspondingAuthor" : {
-        "authorName" : "Chris C A Spencer"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e308?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e309",
-      "pmid" : "20953190",
-      "title" : "A genome-wide association study identifies new psoriasis susceptibility loci and an interaction between HLA-C and ERAP1.",
-      "journal" : "Nat Genet",
-      "firstAuthor" : "Strange A",
-      "publicationDate" : "2010-10-17",
-      "correspondingAuthor" : {
-        "authorName" : "Amy Strange"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e309?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30a",
-      "pmid" : "26416757",
-      "title" : "A novel locus of resistance to severe malaria in a region of ancient balancing selection.",
-      "journal" : "Nature",
-      "firstAuthor" : "Band G",
-      "publicationDate" : "2015-09-30",
-      "correspondingAuthor" : {
-        "authorName" : "Gavin Band"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30a?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30b",
-      "pmid" : "23202125",
-      "title" : "Large-scale association analysis identifies new risk loci for coronary artery disease.",
-      "journal" : "Nat Genet",
-      "firstAuthor" : "Deloukas P",
-      "publicationDate" : "2013-01-01",
-      "correspondingAuthor" : {
-        "authorName" : "Panos Deloukas"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30b?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30c",
-      "pmid" : "22170493",
-      "title" : "Genome-wide meta-analysis of psoriatic arthritis identifies susceptibility locus at REL.",
-      "journal" : "J Invest Dermatol",
-      "firstAuthor" : "Ellinghaus E",
-      "publicationDate" : "2011-12-15",
-      "correspondingAuthor" : {
-        "authorName" : "Eva Ellinghaus"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30c?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30d",
-      "pmid" : "17804789",
-      "title" : "Genome-wide association study for Crohn's disease in the Quebec Founder Population identifies multiple validated disease loci.",
-      "journal" : "Proc Natl Acad Sci U S A",
-      "firstAuthor" : "Raelson JV",
-      "publicationDate" : "2007-09-05",
-      "correspondingAuthor" : {
-        "authorName" : "John V Raelson"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30d?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30e",
-      "pmid" : "18723019",
-      "title" : "Genome-wide association analysis in sarcoidosis and Crohn's disease unravels a common susceptibility locus on 10p12.2.",
-      "journal" : "Gastroenterology",
-      "firstAuthor" : "Franke A",
-      "publicationDate" : "2008-07-21",
-      "correspondingAuthor" : {
-        "authorName" : "Andre Franke"
-      },
-      "status" : "UNDER_SUBMISSION",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30e?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e30f",
-      "pmid" : "22174851",
-      "title" : "Genomewide association study for determinants of HIV-1 acquisition and viral set point in HIV-1 serodiscordant couples with quantified virus exposure.",
-      "journal" : "PLoS One",
-      "firstAuthor" : "Lingappa JR",
-      "publicationDate" : "2011-12-12",
-      "correspondingAuthor" : {
-        "authorName" : "Jairam R Lingappa"
-      },
-      "status" : "UNDER_SUBMISSION",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e30f?pmid=false"
-        }
-      }
-    }, {
-      "publicationId" : "5d403399218e4cbdf409e310",
-      "pmid" : "20173735",
-      "title" : "ITPA gene variants protect against anaemia in patients treated for chronic hepatitis C.",
-      "journal" : "Nature",
-      "firstAuthor" : "Fellay J",
-      "publicationDate" : "2010-02-21",
-      "correspondingAuthor" : {
-        "authorName" : "Jacques Fellay"
-      },
-      "status" : "ELIGIBLE",
-      "_links" : {
-        "self" : {
-          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e310?pmid=false"
-        }
-      }
-    } ]
+    }
+    ]
   },
   "_links" : {
     "first" : {

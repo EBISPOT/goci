@@ -6,7 +6,8 @@
   "firstAuthor" : "Yang J",
   "publicationDate" : "2010-11-02",
   "correspondingAuthor" : {
-    "authorName" : "Jing Yang"
+    "firstName" : "Jing",
+    "lastName" : "Yang"
   },
   "status" : "UNDER_SUBMISSION",
   "_links" : {
