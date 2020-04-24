@@ -138,18 +138,16 @@ public class DepositionSyncService {
                     depositionPublicationService.addPublication(newPublication);
                 }
             }else {
-                if(depositionPublication == null) { // add new publication
-                    if (newPublication != null) {
-                        if(isPublished) {
-                            System.out.println("adding published publication " + pubmedId + " to mongo");
-                        }else {
-                            newPublication.setStatus("ELIGIBLE");
-                            System.out.println("adding eligible publication " + pubmedId + " to mongo");
-                        }
-                        depositionPublicationService.addPublication(newPublication);
+                if(depositionPublication == null && newPublication != null) { // add new publication
+                    if(isPublished) {
+                        System.out.println("adding published publication " + pubmedId + " to mongo");
+                    }else {
+                        newPublication.setStatus("ELIGIBLE");
+                        System.out.println("adding eligible publication " + pubmedId + " to mongo");
                     }
+                    depositionPublicationService.addPublication(newPublication);
                 }else if(newPublication != null){//check publication status, update if needed
-                    if (isPublished && !depositionPublication.getStatus().equals("PUBLISHED") && !depositionPublication.getStatus().equals("PUBLISHED_WITH_SS")) { //sync newly
+                    if (isPublished && (depositionPublication.getStatus().equals("ELIGIBLE") || depositionPublication.getStatus().equals("CURATION_STARTED"))) { //sync newly
                         // published publications
                         newPublication.setStatus("PUBLISHED");
                         addSummaryStatsData(newPublication, p);
@@ -158,8 +156,10 @@ public class DepositionSyncService {
                         newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                         depositionPublicationService.updatePublication(newPublication);
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                        //published summary stats
                         if(addSummaryStatsData(newPublication, p)) {
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
+                            newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                             depositionPublicationService.updatePublication(newPublication);
                         }
@@ -184,39 +184,47 @@ public class DepositionSyncService {
         submissions.forEach((s, submission) -> {
             if(submission.getStatus().equals("SUBMITTED") && submission.getPublication() == null){
                 submission.getStudies().forEach(studyDto -> {
-                    String studyTag = studyDto.getStudyTag();
-                    UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
-                    if(unpublishedStudy == null){
-                        unpublishedStudy = unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto,
-                                submission));
-                        //add bodies of work
-                        BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
-                        BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
-                           bodyOfWorkRepository.save(bodyOfWork);
-                        //add ancestries
-                        List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
-                        List<UnpublishedAncestry> ancestryList = new ArrayList<>();
-                        UnpublishedStudy finalUnpublishedStudy = unpublishedStudy;
-                        sampleDtoList.forEach(sampleDto->{
-                            UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto);
-                            ancestry.setStudy(finalUnpublishedStudy);
-                            ancestryList.add(ancestry);
-                        });
-                        unpublishedStudy.setAncestries(ancestryList);
-                        unpublishedRepository.save(unpublishedStudy);
-                        unpublishedAncestryRepo.save(ancestryList);
-                    }else {//check for changes to body of work
-                        Collection<BodyOfWork> bodyOfWorks = unpublishedStudy.getBodiesOfWork();
-                        BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
-                        bodyOfWorks.forEach(bodyOfWork -> {
-                            if(bodyOfWork.getPublicationId().equals(bodyOfWorkDto.getBodyOfWorkId())){
-                                //create/update body of work
+                    BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
+                    if(bodyOfWorkDto.getEmbargoUntilPublished() == true || (bodyOfWorkDto.getEmbargoDate() != null && bodyOfWorkDto.getEmbargoDate().isBefore(new LocalDate()))){
+                    }else {
+                        String studyTag = studyDto.getStudyTag();
+                        UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
+                        if (unpublishedStudy == null) {
+                            unpublishedStudy =
+                                    unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto, submission));
+                            Set<UnpublishedStudy> studies = new HashSet<>();
+                            studies.add(unpublishedStudy);
+                            //add bodies of work
+                            BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
+                            bodyOfWork.setStudies(studies);
+                            bodyOfWorkRepository.save(bodyOfWork);
+                            //add ancestries
+                            List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
+                            List<UnpublishedAncestry> ancestryList = new ArrayList<>();
+                            for (DepositionSampleDto sampleDto : sampleDtoList) {
+                                UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto, unpublishedStudy);
+                                ancestryList.add(ancestry);
                             }
-                        });
+                            unpublishedAncestryRepo.save(ancestryList);
+                            unpublishedStudy.setAncestries(ancestryList);
+                            unpublishedRepository.save(unpublishedStudy);
+                        } else {//check for changes to body of work
+                            Collection<BodyOfWork> bodyOfWorks = unpublishedStudy.getBodiesOfWork();
+                            bodyOfWorks.forEach(bodyOfWork -> {
+                                if (bodyOfWork.getPublicationId().equals(bodyOfWorkDto.getBodyOfWorkId())) {
+                                    //create/update body of work
+//                                    BodyOfWork updateBodyOfWork = BodyOfWork.create(bodyOfWorkDto);
+//                                    updateBodyOfWork.setId(bodyOfWork.getId());
+//                                    if (!updateBodyOfWork.equals(bodyOfWork)) {
+//                                        bodyOfWorkRepository.save(updateBodyOfWork);
+//                                    }
+                                }
+                            });
+                        }
+//                        submission.setStatus("IMPORTED");
+//                        submissionService.updateSubmission(submission);
                     }
                 });
-                submission.setStatus("IMPORTED");
-                submissionService.updateSubmission(submission);
             }
         });
     }

@@ -43,7 +43,7 @@ public class UnpublishedAncestry {
     @JoinColumn(name = "study_id", unique = true)
     private UnpublishedStudy study;
 
-    public static UnpublishedAncestry create(DepositionSampleDto sampleDto){
+    public static UnpublishedAncestry create(DepositionSampleDto sampleDto, UnpublishedStudy unpublishedStudy){
         UnpublishedAncestry ancestry = new UnpublishedAncestry();
         ancestry.setStudyTag(sampleDto.getStudyTag());
         ancestry.setStage(sampleDto.getStage());
@@ -55,6 +55,7 @@ public class UnpublishedAncestry {
         ancestry.setAncestry(sampleDto.getAncestry());
         ancestry.setAncestryDescription(sampleDto.getAncestryDescription());
         ancestry.setCountryRecruitment(sampleDto.getCountryRecruitement());
+        ancestry.setStudy(unpublishedStudy);
         return ancestry;
     }
 }

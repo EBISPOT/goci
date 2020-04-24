@@ -49,7 +49,11 @@ public class BodyOfWork{
             bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getFirstName() + ' ' + dto.getFirstAuthor().getLastName());
         }
         //bodyOfWork.setPublicationDate(dto.get);
-        bodyOfWork.setDoi(dto.getDoi());
+        if(dto.getDoi() != null) {
+            bodyOfWork.setDoi(dto.getDoi());
+        }else{
+            bodyOfWork.setDoi(dto.getPreprintServerDOI());
+        }
         return bodyOfWork;
     }
 }

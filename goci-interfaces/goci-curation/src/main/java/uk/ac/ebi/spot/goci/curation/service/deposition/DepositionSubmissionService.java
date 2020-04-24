@@ -272,7 +272,7 @@ public class DepositionSubmissionService {
             publicationService.save(publication);
             depositionSubmission.setDateSubmitted(new LocalDate());
             depositionSubmission.setStatus("CURATION_COMPLETE");
-            depositionSubmission.getPublication().setStatus("CURATION COMPLETE");
+            depositionSubmission.getPublication().setStatus("CURATION_STARTED");
             try {
                 String message = mapper.writeValueAsString(depositionSubmission);
                 template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
