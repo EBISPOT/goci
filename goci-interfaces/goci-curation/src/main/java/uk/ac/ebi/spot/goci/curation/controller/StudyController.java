@@ -461,7 +461,7 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
-        Map<String, String> pubmedMap = getSubmissionPubMedIds();
+        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         studyPage.forEach(study->{
             if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
                 study.getPublicationId().setActiveSubmission(true);
@@ -470,15 +470,6 @@ public class StudyController {
         return "studies";
     }
 
-    private Map<String, String> getSubmissionPubMedIds(){
-        Map<String, String> pubmedMap = new HashMap<>();
-        Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
-        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
-            Submission submission = e.getValue();
-            pubmedMap.put(submission.getPubMedID(), e.getKey());
-        }
-        return pubmedMap;
-    }
     // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
@@ -643,7 +634,7 @@ public class StudyController {
     public String viewStudy(Model model, @PathVariable Long studyId) {
 
         Study studyToView = studyRepository.findOne(studyId);
-        Map<String, String> pubmedMap = getSubmissionPubMedIds();
+        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if(pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())){
             studyToView.getPublicationId().setActiveSubmission(true);
         }

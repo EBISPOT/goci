@@ -77,8 +77,12 @@
                                 <span class="item-left-bold">PubMed ID</span>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-pubmedid"
-                                 th:text="${publication.pubmedId}"></div>
-
+                                 th:text="${publication.pubmedId}">
+                                <a th:if="${publication.activeSubmission}"
+                                   th:href="@{/submissions/{submissionId}(submissionId=${publication.pubmedId})}" title="Note: This Publication has an active submission">
+                                    <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
+                                </a>
+                            </div>
                         </div>
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">

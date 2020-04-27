@@ -150,6 +150,11 @@ public class PublicationController {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
+        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
+            if(pubmedMap.containsKey(publication.getPubmedId())){
+                publication.setActiveSubmission(true);
+            }
+
         model.addAttribute("publication", publication);
         model.addAttribute("studyFiles", studiesWithFiles);
         return "publication";

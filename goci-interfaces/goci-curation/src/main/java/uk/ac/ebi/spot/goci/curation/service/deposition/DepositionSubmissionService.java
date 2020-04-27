@@ -87,6 +87,18 @@ public class DepositionSubmissionService {
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
 
+    public Map<String, String> getSubmissionPubMedIds(){
+        Map<String, String> pubmedMap = new HashMap<>();
+        Map<String, Submission> submissionMap = getSubmissionsBasic();
+        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
+            Submission submission = e.getValue();
+            if(submission.getPubMedID() != null) {
+                pubmedMap.put(submission.getPubMedID(), e.getKey());
+            }
+        }
+        return pubmedMap;
+    }
+
     public Map<String, Submission> getSubmissionsBasic(){
         //String url = "/submission-envelopes";
         String url = "/submissions";
