@@ -66,8 +66,8 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewSubmission(Model model, @PathVariable String submissionId) {
 
-        DepositionSubmission depositionSubmission = getSubmission(submissionId);
-        Submission submission = submissionService.buildSubmission(depositionSubmission);
+        DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionId);
+        Submission submission = buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
         model.addAttribute("submissionData", depositionSubmission);
         model.addAttribute("submissionError", submissionService.checkSubmissionErrors(depositionSubmission));
@@ -79,14 +79,59 @@ public class SubmissionController {
         return "single_submission";
     }
 
-    private Map<String, Submission> getSubmissions() {
-        Map<String, Submission> submissionList = submissionService.getSubmissions();
-        //}
-        return submissionList;
-    }
-
-    private DepositionSubmission getSubmission(String submissionID) {
-        return submissionService.getSubmission(submissionID);
+    private Submission buildSubmission(DepositionSubmission depositionSubmission){
+        Submission testSub = new Submission();
+        testSub.setId(depositionSubmission.getSubmissionId());
+        if(depositionSubmission.getPublication() != null) {
+            testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
+            testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
+            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+            testSub.setStatus(depositionSubmission.getStatus());
+            testSub.setTitle(depositionSubmission.getPublication().getTitle());
+            testSub.setJournal(depositionSubmission.getPublication().getJournal());
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
+            testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+            testSub.setPublicationDate(depositionSubmission.getPublication().getPublicationDate());
+            if(depositionSubmission.getPublication().getCorrespondingAuthor() != null) {
+                DepositionAuthor author = depositionSubmission.getPublication().getCorrespondingAuthor();
+                if(author.getGroup() != null){
+                    testSub.setCorrespondingAuthor(author.getGroup());
+                }else{
+                    testSub.setCorrespondingAuthor(author.getFirstName() + ' ' + author.getLastName());
+                }
+            }
+            if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+                testSub.setStatus("REVIEW");
+            }
+        }else if(depositionSubmission.getBodyOfWork() != null){
+            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
+                if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
+                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+                } else {
+                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' +
+                            depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+                }
+            }
+            if(depositionSubmission.getBodyOfWork().getCorrespondingAuthors() != null) {
+                DepositionAuthor author = depositionSubmission.getBodyOfWork().getCorrespondingAuthors().get(0);
+                if(author.getGroup() != null){
+                    testSub.setCorrespondingAuthor(author.getGroup());
+                }else{
+                    testSub.setCorrespondingAuthor(author.getFirstName() + ' ' + author.getLastName());
+                }
+            }
+            testSub.setStatus(depositionSubmission.getStatus());
+            testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
+            testSub.setJournal(depositionSubmission.getBodyOfWork().getJournal());
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
+            testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+            if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+                testSub.setStatus("REVIEW");
+            }
+        }
+        return testSub;
     }
 
     @CrossOrigin
