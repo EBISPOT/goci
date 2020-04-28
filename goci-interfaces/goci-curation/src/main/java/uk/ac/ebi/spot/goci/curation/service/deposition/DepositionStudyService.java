@@ -9,6 +9,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionNoteDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
 import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class DepositionStudyService {
     EfoTraitRepository efoTraitRepository;
     @Autowired
     StudyExtensionRepository studyExtensionRepository;
+    @Autowired
+    EventOperationsService eventOperationsService;
 
 
     public void publishSummaryStats(Study study, SecureUser currentUser, String studyTag) {
@@ -122,7 +125,6 @@ public class DepositionStudyService {
         if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("")) {
             study.setFullPvalueSet(true);
         }
-        study.setImputed(studyDto.getImputation());
         Integer variantCount = studyDto.getVariantCount();
         if(variantCount != -1) {
             study.setSnpCount(variantCount);
@@ -177,6 +179,13 @@ public class DepositionStudyService {
                 //          studyService.deleteByStudyId(study.getId());
             }
         }
+        CurationStatus requiresReview = statusRepository.findByStatus("Requires review");
+        dbStudies.forEach(study -> {
+            study.getHousekeeping().setCurationStatus(requiresReview);
+            Event event = eventOperationsService.createEvent("REQUIRES_REVIEW", currentUser,
+                    requiresReview.getStatus());
+            study.getEvents().add(event);
+        });
     }
 
     public void addStudyNote(Study study, String studyTag, String noteText, String noteStatus, Curator noteCurator,

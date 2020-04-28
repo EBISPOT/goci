@@ -263,7 +263,11 @@ public class DepositionSubmissionService {
                         studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
                     }
 
-                    eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study creation");
+                    Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " +
+                            "creation");
+                    List<Event> events = new ArrayList<>();
+                    events.add(event);
+                    study.setEvents(events);
                     depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
                             curator,
                             "Import study creation", currentUser);
