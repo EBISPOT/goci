@@ -186,7 +186,7 @@ public class Publication {
         this.submissionId = submissionId;
     }
 
-    public boolean isActiveSubmission(){ return activeSubmission;}
+    public boolean getActiveSubmission(){ return activeSubmission;}
 
     public void setActiveSubmission(boolean activeSubmission){this.activeSubmission = activeSubmission;}
 }
