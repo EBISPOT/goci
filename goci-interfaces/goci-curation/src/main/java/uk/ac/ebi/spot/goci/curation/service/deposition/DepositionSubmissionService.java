@@ -90,12 +90,7 @@ public class DepositionSubmissionService {
     public Map<String, String> getSubmissionPubMedIds(){
         Map<String, String> pubmedMap = new HashMap<>();
         Map<String, Submission> submissionMap = getSubmissionsBasic();
-        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
-            Submission submission = e.getValue();
-            if(submission.getPubMedID() != null) {
-                pubmedMap.put(submission.getPubMedID(), e.getKey());
-            }
-        }
+        submissionMap.entrySet().stream().filter(e->e.getValue().getPubMedID() != null).forEach(e->pubmedMap.put(e.getValue().getPubMedID(), e.getKey()));
         return pubmedMap;
     }
 
@@ -132,11 +127,10 @@ public class DepositionSubmissionService {
             //        }
             DepositionSubmission[] submissions =
                     template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
-            for (DepositionSubmission submission : submissions) {
-                Submission testSub = buildSubmission(submission);
+            Arrays.stream(submissions).forEach(s->{
+                Submission testSub = buildSubmission(s);
                 submissionList.put(testSub.getId(), testSub);
-                params.put("page", ++i);
-            }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -158,8 +152,12 @@ public class DepositionSubmissionService {
 
     public Submission buildSubmission(DepositionSubmission depositionSubmission){
         Submission testSub = new Submission();
+        testSub.setId(depositionSubmission.getSubmissionId());
+        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+        testSub.setStatus(depositionSubmission.getStatus());
+        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setSubmissionType(getSubmissionType(depositionSubmission));
         if(depositionSubmission.getBodyOfWork() != null){
-            testSub.setId(depositionSubmission.getSubmissionId());
 //            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
             if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
                 if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
@@ -169,26 +167,17 @@ public class DepositionSubmissionService {
                             depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
                 }
             }
-            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-            testSub.setStatus(depositionSubmission.getStatus());
             testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
             testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
             testSub.setDoi(depositionSubmission.getBodyOfWork().getDoi());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
         }else if(depositionSubmission.getPublication() != null) {
-            testSub.setId(depositionSubmission.getSubmissionId());
             testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
             testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-            testSub.setStatus(depositionSubmission.getStatus());
             testSub.setTitle(depositionSubmission.getPublication().getTitle());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
             testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
             testSub.setDoi(depositionSubmission.getPublication().getDoi());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
@@ -342,6 +331,9 @@ public class DepositionSubmissionService {
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
         if(submission.getBodyOfWork() != null) {
             return Submission.SubmissionType.PRE_PUBLISHED;
+        }
+        else if(submission.getBodyOfWork() == null && submission.getPublication() == null) {
+            return Submission.SubmissionType.UNKNOWN;
         }
         String publicationStatus = submission.getPublication().getStatus();
         boolean hasSumStats = false;
