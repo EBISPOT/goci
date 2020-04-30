@@ -4,6 +4,7 @@ package uk.ac.ebi.spot.goci.curation.component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,11 @@ import java.util.List;
 
 @Component
 public class EnsemblReleaseCheck {
+    @Value("${ensembl.server}")
+    private String ensemblRestServer;
+
+    @Value("${ensembl.db_version}")
+    private String ensemblDbVersion;
 
     private EnsemblRelease ensemblRelease;
 
@@ -86,7 +92,7 @@ public class EnsemblReleaseCheck {
 
                     // Send email
                     mailService.sendReleaseChangeEmail(null,
-                                                       latestEnsemblReleaseNumber);
+                                                       latestEnsemblReleaseNumber, ensemblRestServer, ensemblDbVersion);
 
                 }
                 else {
@@ -103,7 +109,7 @@ public class EnsemblReleaseCheck {
 
                             // Send email
                             mailService.sendReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase,
-                                                               latestEnsemblReleaseNumber);
+                                                               latestEnsemblReleaseNumber, ensemblRestServer, ensemblDbVersion);
 
                             // Perform remapping and set performer
                             getLog().info("New Ensembl release identified: " + latestEnsemblReleaseNumber);

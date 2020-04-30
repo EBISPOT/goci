@@ -70,13 +70,15 @@ public class MailService extends GOCIMailService {
      * @param currentEnsemblReleaseNumberInDatabase current release number in database
      * @param latestEnsemblReleaseNumber            new release number from Ensembl
      */
-    public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber) {
+    public void sendReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase, int latestEnsemblReleaseNumber,
+                                       String ensemblRestServer, String ensemblDbVersion) {
 
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
         email.setTo(this.devMailTo);
         email.setLink(this.link);
         email.setFrom(this.getFrom());
-        email.createReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase, latestEnsemblReleaseNumber);
+        email.createReleaseChangeEmail(currentEnsemblReleaseNumberInDatabase, latestEnsemblReleaseNumber,
+                ensemblRestServer, ensemblDbVersion);
         sendEmail(email);
     }
 
