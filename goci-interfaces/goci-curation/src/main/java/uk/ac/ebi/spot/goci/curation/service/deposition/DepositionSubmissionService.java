@@ -95,8 +95,8 @@ public class DepositionSubmissionService {
     }
 
     public Map<String, Submission> getSubmissionsBasic(){
-        String url = "/submission-envelopes";
-        //String url = "/submissions";
+        //String url = "/submission-envelopes";
+        String url = "/submissions";
         return getSubmissions(url);
 //        return new TreeMap<>();
     }
