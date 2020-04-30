@@ -179,7 +179,7 @@ public class DepositionStudyService {
                 //          studyService.deleteByStudyId(study.getId());
             }
         }
-        CurationStatus requiresReview = statusRepository.findByStatus("Requires review");
+        CurationStatus requiresReview = statusRepository.findByStatus("Requires Review");
         dbStudies.forEach(study -> {
             study.getHousekeeping().setCurationStatus(requiresReview);
             Event event = eventOperationsService.createEvent("REQUIRES_REVIEW", currentUser,
