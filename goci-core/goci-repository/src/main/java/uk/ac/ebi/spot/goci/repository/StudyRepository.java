@@ -16,6 +16,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by emma on 20/11/14.
@@ -172,5 +173,15 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @Query(value = "SELECT 'GCST' || accession_seq.nextval FROM dual", nativeQuery =
             true)
     String getNextAccessionId();
+
+    @Query("select s.id from Study s where s.diseaseTrait is not null ")
+    Set<Long> findStudiesWithDiseaseTrait();
+
+    @Query("select s.id from Study s join s.housekeeping h where h.catalogPublishDate is null ")
+    Set<Long> findStudiesWithNullPublishedDate();
+
+    @Query("select s.id from Study s join s.housekeeping h where h.catalogUnpublishDate is not null ")
+    Set<Long> findStudiesWithNotNullUnpublishedDate();
+
 }
 
