@@ -14,7 +14,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 /**
@@ -110,15 +109,4 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     @RestResource(exported = false)
     Page<Association> findByStudyPublicationIdPubmedId(String pubmedId, Pageable pageable);
-
-    @Query("select a.id from Association a join a.study s where s.diseaseTrait is not null")
-    Set<Long> findAssociationsWithDiseaseTrait();
-
-    @Query("select a.id from Association a join a.study s join s.housekeeping h where h.catalogPublishDate is null ")
-    Set<Long> findAssociationsWithNullPublishedDate();
-
-    @Query("select a.id from Association a join a.study s join s.housekeeping h where h.catalogUnpublishDate is not " +
-            "null ")
-    Set<Long> findAssociationsWithNotNullUnpublishedDate();
-
 }

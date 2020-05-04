@@ -124,21 +124,6 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Long> findStudiesWithDiseaseTrait(){
-        return studyRepository.findStudiesWithDiseaseTrait();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<Long> findStudiesWithNotNullUnpublishedDate(){
-        return studyRepository.findStudiesWithNotNullUnpublishedDate();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<Long> findStudiesWithNullPublishedDate(){
-        return studyRepository.findStudiesWithNullPublishedDate();
-    }
-
-    @Transactional(readOnly = true)
     public List<Study> deepFindPublishedStudies() {
         List<Study> studies =
                 studyRepository.findByHousekeepingCatalogPublishDateIsNotNullAndHousekeepingCatalogUnpublishDateIsNull();
