@@ -44,8 +44,10 @@ import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.utils.FilterProperties;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 //import uk.ac.ebi.spot.goci.utils.OntologyUtils;
 
@@ -151,61 +153,49 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
         // grab all studies from the DAO
         getLog().debug("Fetching studies that require conversion to OWL using StudyRepository...");
 
-        Set<Long> studyIds = getStudyService().findStudiesWithDiseaseTrait();
-        Set<Long> studiesWithNullPublishedDate = getStudyService().findStudiesWithNullPublishedDate();
-        Set<Long> studiesWithNotNullUnpublishedDate = getStudyService().findStudiesWithNotNullUnpublishedDate();
+        Collection<Study> studies = getStudyService().deepFindPublishedStudies();
 
         //TODO : check with Tony probably better to do it at the Repository/Service level
         //Discard studies which are not associated with a disease trait and those which haven't been published yet
         //by the GWAS catalog.
-        Iterator<Long> it = studyIds.iterator();
-        while(it.hasNext()){
-            Long studyId = it.next();
-            if(studiesWithNotNullUnpublishedDate.contains(studyId)){
-                it.remove();
+        Iterator<Study> iterator = studies.iterator();
+        while (iterator.hasNext()) {
+            Study study = iterator.next();
+            //Remove study which have no diseaseTrait.
+            if (study.getDiseaseTrait() == null) {
+                iterator.remove();
+                getLog().error("Study '" + study.getId() + "' has no disease trait");
             }
-            else if(studiesWithNullPublishedDate.contains(studyId)){
-                it.remove();
-            }
-        }
-//        Iterator<Study> iterator = studies.iterator();
-//        while (iterator.hasNext()) {
-//            Study study = iterator.next();
-//            //Remove study which have no diseaseTrait.
-//            if (studyIds.contains(study.getId())) {
-//                iterator.remove();
-//                getLog().error("Study '" + study.getId() + "' has no disease trait");
-//            }
-//            else if (study.getHousekeeping().getCatalogPublishDate() == null) {
-//                iterator.remove();
-//                getLog().error("Study '" + study.getId() + "' has not yet been published");
-//
-//            }
-//            //Remove studies that have been unpublished
-//            else if (study.getHousekeeping().getCatalogUnpublishDate() != null) {
-//                iterator.remove();
-//                getLog().error("Study '" + study.getId() + "' has been unpublished");
-//            }
-//            //            }else {
-//            //
-//            //                //Remove study which have no associations where pvalue is not null.
-//            //                Collection<Association> associations = study.getAssociations();
-//            //                Iterator<Association> associationIterator = associations.iterator();
-//            //                int associationCount = 0;
-//            //                while (associationIterator.hasNext()) {
-//            //                    Association association = associationIterator.next();
-//            //
-//            //                    if (association.getPvalueExponent() != null && association.getPvalueMantissa() != null) {
-//            //                        associationCount++;
-//            //                    }
-//            //                }
-//            //                if (associationCount == 0) {
-//            //                    iterator.remove();
-//            //                }
-//            //            }
-//        }
+            else if (study.getHousekeeping().getCatalogPublishDate() == null) {
+                iterator.remove();
+                getLog().error("Study '" + study.getId() + "' has not yet been published");
 
-        getLog().debug("Query complete, got " + studyIds.size() + " studies");
+            }
+            //Remove studies that have been unpublished
+            else if (study.getHousekeeping().getCatalogUnpublishDate() != null) {
+                iterator.remove();
+                getLog().error("Study '" + study.getId() + "' has been unpublished");
+            }
+            //            }else {
+            //
+            //                //Remove study which have no associations where pvalue is not null.
+            //                Collection<Association> associations = study.getAssociations();
+            //                Iterator<Association> associationIterator = associations.iterator();
+            //                int associationCount = 0;
+            //                while (associationIterator.hasNext()) {
+            //                    Association association = associationIterator.next();
+            //
+            //                    if (association.getPvalueExponent() != null && association.getPvalueMantissa() != null) {
+            //                        associationCount++;
+            //                    }
+            //                }
+            //                if (associationCount == 0) {
+            //                    iterator.remove();
+            //                }
+            //            }
+        }
+
+        getLog().debug("Query complete, got " + studies.size() + " studies");
 
         // if studies limit is not set, convert all data, else filter to first n studies and associated data
         if (getStudiesLimit() == -1 &&
@@ -214,40 +204,25 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             System.out.println("Converting all available data");
             // grab all other data from the DAO
             getLog().debug("Fetching traits that require conversion to OWL using AssociationRepository...");
-            Set<Long> associationIds = getAssociationService().findAssociationsWithDiseaseTrait();
-            Set<Long> associationWithNullPublishedDate =
-                    getAssociationService().findAssociationsWithNullPublishedDate();
-            Set<Long> associationWithNotNullUnpublishedDate =
-                    getAssociationService().findAssociationsWithNotNullUnpublishedDate();
-            //Collection<Association> traitAssociations = getAssociationService().findReallyAll();
+            Collection<Association> traitAssociations = getAssociationService().findReallyAll();
 
             //TODO check with Tony how to do that in a better way from service or repository (how to not get associations linked to study with no trait.
             //Discard all the associations which are linked to study which are not linked to a disease trait or haven't
             //been published yet in the GWAS catalog.
-            Iterator<Long> iterator = associationIds.iterator();
-            while(iterator.hasNext()){
-                Long associationId = iterator.next();
-                if(associationWithNullPublishedDate.contains(associationId)){
-                    iterator.remove();
+            Iterator<Association> associationIterator = traitAssociations.iterator();
+            while (associationIterator.hasNext()) {
+                Association association = associationIterator.next();
+                if (association.getStudy().getDiseaseTrait() == null) {
+                    associationIterator.remove();
                 }
-                else if(associationWithNotNullUnpublishedDate.contains(associationId)){
-                    iterator.remove();
+                else if (association.getStudy().getHousekeeping().getCatalogPublishDate() == null) {
+                    associationIterator.remove();
+
+                }
+                else if (association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null) {
+                    associationIterator.remove();
                 }
             }
-//            Iterator<Association> associationIterator = traitAssociations.iterator();
-//            while (associationIterator.hasNext()) {
-//                Association association = associationIterator.next();
-//                if (association.getStudy().getDiseaseTrait() == null) {
-//                    associationIterator.remove();
-//                }
-//                else if (association.getStudy().getHousekeeping().getCatalogPublishDate() == null) {
-//                    associationIterator.remove();
-//
-//                }
-//                else if (association.getStudy().getHousekeeping().getCatalogUnpublishDate() != null) {
-//                    associationIterator.remove();
-//                }
-//            }
             getLog().debug(
                     "Fetching SNPs that require conversion to OWL using SingleNucleotidePolymorphismRepository...");
             Collection<SingleNucleotidePolymorphism> snps = getSingleNucleotidePolymorphismService().findAll();
@@ -258,32 +233,20 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
             getLog().debug("Converting SNPs...");
             getConverter().addSNPsToOntology(snps, conversion);
             getLog().debug("Converting Trait Associations...");
-            iterator = associationIds.iterator();
-            Collection<Association> allAssociations = new ArrayList<Association>();
-            while (iterator.hasNext()) {
-                Association nextAssociation = associationRepository.getOne(iterator.next());
-                allAssociations.add(nextAssociation);
-            }
-            getConverter().addAssociationsToOntology(allAssociations, conversion);
+            getConverter().addAssociationsToOntology(traitAssociations, conversion);
             getLog().debug("Converting Studies...");
-            it = studyIds.iterator();
-            Collection<Study> allStudies = new ArrayList<Study>();
-            while (it.hasNext()) {
-                Study nextStudy = studyRepository.getOne(it.next());
-                allStudies.add(nextStudy);
-            }
-            getConverter().addStudiesToOntology(allStudies, conversion);
+            getConverter().addStudiesToOntology(studies, conversion);
             getLog().debug("All conversion done!");
 
             return conversion;
         }
         else {
             System.out.println("Data conforming to the filter only");
-            return filterAndPublishGWASData(conversion, studyIds);
+            return filterAndPublishGWASData(conversion, studies);
         }
     }
 
-    private OWLOntology filterAndPublishGWASData(OWLOntology conversion, Collection<Long> studies)
+    private OWLOntology filterAndPublishGWASData(OWLOntology conversion, Collection<Study> studies)
             throws OWLConversionException {
 
         //TODO : check with tony : Discard studies which are not yet associated with a trait.
@@ -310,9 +273,9 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
 
         int count = 0;
         int studyLimit = getStudiesLimit() == -1 ? Integer.MAX_VALUE : getStudiesLimit();
-        Iterator<Long> studyIterator = studies.iterator();
+        Iterator<Study> studyIterator = studies.iterator();
         while (count < studyLimit && studyIterator.hasNext()) {
-            Study nextStudy = studyRepository.getOne(studyIterator.next());
+            Study nextStudy = studyIterator.next();
 
             //only process a study if no date filter has been provided or if the study's publication date is smaller than the filter date
             if (FilterProperties.getDateFilter() == null ||

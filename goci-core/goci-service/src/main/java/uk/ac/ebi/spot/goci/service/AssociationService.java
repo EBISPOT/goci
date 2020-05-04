@@ -95,21 +95,6 @@ public class AssociationService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Long> findAssociationsWithDiseaseTrait(){
-        return associationRepository.findAssociationsWithDiseaseTrait();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<Long> findAssociationsWithNotNullUnpublishedDate(){
-        return associationRepository.findAssociationsWithNotNullUnpublishedDate();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<Long> findAssociationsWithNullPublishedDate(){
-        return associationRepository.findAssociationsWithNullPublishedDate();
-    }
-
-    @Transactional(readOnly = true)
     public List<Association> findAll(Sort sort) {
         List<Association> allAssociations = associationRepository.findAll(sort);
         allAssociations.forEach(this::loadAssociatedData);
