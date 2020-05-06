@@ -309,7 +309,7 @@ public class DepositionSubmissionService {
             boolean hasMetadata = false;
             boolean hasAssociations = false;
             for(DepositionStudyDto studyDto: submission.getStudies()){
-                if(studyDto.getSummaryStatisticsFile() != null){
+                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
                     hasSumStats = true;
                 }
             }
@@ -347,7 +347,7 @@ public class DepositionSubmissionService {
         }
         if(submission.getStudies() != null) {
             for (DepositionStudyDto studyDto : submission.getStudies()) {
-                if (studyDto.getSummaryStatisticsFile() != null) {
+                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
                     hasSumStats = true;
                 }
             }

@@ -212,26 +212,18 @@
 
                 </div>
                 <div class="form-group">
-                    <label for="correspondingAuthor" class="control-label col-md-2">Corresponding Author</label>
-
-                    <div class="col-md-10 static-field">
-                        <b
-                                id="correspondingAuthor"><span
-                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().getCorrespondingAuthorName()} : ''" >
-                            Description</span></b>
-                    </div>
-
+                    <label for="correspondingAuthors" class="control-label col-md-2">Corresponding authors
+                    </label>
+                    <span id="correspondingAuthors" th:each="author: ${study.publicationId.correspondingAuthors}">
+                                    <span th:text="${author.fullname}"/>
+                            </span>
                 </div>
                 <div class="form-group">
-                    <label for="correspondingAuthorEmail" class="control-label col-md-2">Corresponding Author
-                        Email</label>
-
-                    <div class="col-md-10 static-field">
-                        <b
-                                id="correspondingAuthorEmail"><span
-                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().correspondingAuthorEmail} : ''" >Description</span></b>
-                    </div>
-
+                    <label for="correspondingAuthorsEmail" class="control-label col-md-2">Corresponding author emails
+                    </label>
+                    <span id="correspondingAuthorsEmail" th:each="author: ${study.publicationId.correspondingAuthors}">
+                                    <span th:text="${author.correspondingAuthorEmail}"/>
+                            </span>
                 </div>
 
                 <div class="form-group">
@@ -274,7 +266,7 @@
                               style="font-size: 25px"></span>
                     </a>
 
-                    <label for="pubmed" class="control-label col-md-1">Pubmed</label>
+                    <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />

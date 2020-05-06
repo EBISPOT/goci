@@ -509,6 +509,9 @@ public class EnsemblMappingPipeline {
         SingleNucleotidePolymorphism snp_tmp =
                 new SingleNucleotidePolymorphism();
         snp_tmp.setRsId(getEnsemblMappingResult().getRsId());
+        if(getEnsemblMappingResult().getRsId() == null){
+            throw new IllegalArgumentException("error, no RS ID found for location " + snp_location.getId());
+        }
 
         // Get closest gene
         if (intergenic) {

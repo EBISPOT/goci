@@ -55,7 +55,7 @@
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                    th:disabled="${submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
+                    th:disabled="${submission.submissionType.toString().equals('CURATION_COMPLETE') || submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
                     th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
         </form>
         <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
@@ -79,32 +79,41 @@
             <div class="panel-heading background-color-primary-accent">
                 <h3 class="panel-title">Submission Information</h3>
             </div>
-            <div class="clearfix" id="submission-info-loading">
-                <div class="panel-body col-sm-12">
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+            <div class="clearfix panel-body" id="submission-info-loading">
+                <div class="col-sm-12">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Created Date</span>
                         </div>
-                        <div class="col-sm-3" id="submission-created"
+                        <div class="col-sm-2" id="submission-created"
                              th:text="${#dates.format(submission.created,'yyyy-MM-dd')}">created
                             date</div>
 
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Created By</span>
                         </div>
-                        <div class="col-sm-3" id="submission-created-by"
+                        <div class="col-sm-2" id="submission-created-by"
                              th:text="${submissionData.created.user.name}">created by</div>
-
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Submission Status</span>
                         </div>
-                        <div class="col-sm-3" id="submission-status"
+                        <div class="col-sm-2" id="submission-status"
                              th:text="${submission.status}">status
                         </div>
+                </div>
+                <div class="clearfix col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Id</span>
+                    </div>
+                    <div class="col-sm-2" id="submission-id">
+                        <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}"
+                           th:text="${submission.id}" target="_blank"></a>
+
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Type</span>
+                    </div>
+                    <div class="col-sm-2" id="submission-type"
+                         th:text="${submission.submissionType}">type
                     </div>
                 </div>
             </div>
@@ -128,9 +137,7 @@
                         <div class="col-sm-3">
                             <span class="item-left-bold">PubMed ID</span>
                         </div>
-                        <div class="col-sm-3" id="publication-pubmedid"
-                             th:text="${submission.pubMedID}">pubmed id
-                        </div>
+                        <a th:href="@{/publication/{pubmedId}(pubmedId=${submission.pubMedID})}" th:text="${submission.pubMedID}"></a>
                     </div>
                     <div class="clearfix col-sm-6">
                         <div class="col-sm-3">

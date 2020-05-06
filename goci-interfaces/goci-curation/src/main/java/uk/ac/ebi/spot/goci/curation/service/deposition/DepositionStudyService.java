@@ -122,7 +122,7 @@ public class DepositionStudyService {
         study.setHousekeeping(housekeeping);
         housekeeping.setCurator(levelTwoCurator);
         housekeeping.setCurationStatus(levelOneCurationComplete);
-        if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("")) {
+        if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")) {
             study.setFullPvalueSet(true);
         }
         Integer variantCount = studyDto.getVariantCount();
@@ -152,7 +152,7 @@ public class DepositionStudyService {
         DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
         study.setBackgroundTrait(backgroundTrait);
 
-        if(studyDto.getSummaryStatisticsFile() != null){
+        if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
             study.setFullPvalueSet(true);
         }
         study.setStudyDesignComment(studyDto.getArrayInformation());
