@@ -115,6 +115,9 @@ public class DepositionSyncService {
      */
     public void syncPublications(boolean initialSync) {
         //read all publications from GOCI
+        List<String> newPubs = new ArrayList<>();
+        List<String> updatePubs = new ArrayList<>();
+        List<String> sumStatsPubs = new ArrayList<>();
         List<Publication> gociPublications = publicationService.findAll();
         //if publication not in Deposition, insert
         Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
@@ -140,12 +143,19 @@ public class DepositionSyncService {
             }else {
                 if(depositionPublication == null && newPublication != null) { // add new publication
                     if(isPublished) {
-                        System.out.println("adding published publication " + pubmedId + " to mongo");
+                        if(addSummaryStatsData(newPublication, p)) {
+                            System.out.println("adding published publication w/ sumstats " + pubmedId);
+                            newPublication.setStatus("PUBLISHED_WITH_SS");
+                            newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                        }else {
+                            System.out.println("adding published publication " + pubmedId + " to mongo");
+                        }
                     }else {
                         newPublication.setStatus("ELIGIBLE");
                         System.out.println("adding eligible publication " + pubmedId + " to mongo");
                     }
                     depositionPublicationService.addPublication(newPublication);
+                    newPubs.add(newPublication.getPmid());
                 }else if(newPublication != null){//check publication status, update if needed
                     if (isPublished && (depositionPublication.getStatus().equals("ELIGIBLE") || depositionPublication.getStatus().equals("CURATION_STARTED"))) { //sync newly
                         // published publications
@@ -155,6 +165,7 @@ public class DepositionSyncService {
                                 " " + pubmedId);
                         newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                         depositionPublicationService.updatePublication(newPublication);
+                        updatePubs.add(newPublication.getPmid());
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         //published summary stats
                         if(addSummaryStatsData(newPublication, p)) {
@@ -162,12 +173,18 @@ public class DepositionSyncService {
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                             depositionPublicationService.updatePublication(newPublication);
+                            sumStatsPubs.add(newPublication.getPmid());
                         }
                     }
                 }
             }
-
         }
+        System.out.println("created " + newPubs.size());
+        System.out.println(Arrays.toString(newPubs.toArray()));
+        System.out.println("published " + updatePubs.size());
+        System.out.println(Arrays.toString(updatePubs.toArray()));
+        System.out.println("added sum stats " + sumStatsPubs.size());
+        System.out.println(Arrays.toString(sumStatsPubs.toArray()));
     }
 
     /**
