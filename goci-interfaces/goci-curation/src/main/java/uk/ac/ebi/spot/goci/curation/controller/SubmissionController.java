@@ -148,13 +148,13 @@ public class SubmissionController {
 
             submission.setStatus("IMPORTED");
             model.addAttribute("submissions", submissionList.values());
-            redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
         }catch(Exception e){
             e.printStackTrace();
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
             statusMessages.add(stringWriter.getBuffer().toString());
         }
+        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
         return "redirect:/submissions/" + submissionID;
     }
 

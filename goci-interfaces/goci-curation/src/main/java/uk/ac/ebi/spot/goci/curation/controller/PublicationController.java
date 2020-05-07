@@ -381,7 +381,8 @@ public class PublicationController {
             studyIds.forEach(node -> {
                 Long studyId = node.asLong();
                 Collection<Association> studyAssociations = associationRepository.findByStudyId(studyId);
-                studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(), user);
+                //studyAssociationBatchDeletionEventService.createBatchUploadEvent(studyId, studyAssociations.size(),
+                //        user);
                 studyAssociations.forEach(association -> associationDeletionService.deleteAssociation(association, user));
                 studyDeletionService.deleteStudy(studyRepository.getOne(studyId), user);
                 result.put(studyId.toString(), "Deleted");

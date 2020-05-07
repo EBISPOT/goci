@@ -140,8 +140,8 @@ public class DepositionSubmissionService {
     public DepositionSubmission getSubmission(String submissionID){
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        String response =
-                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
+//        String response =
+//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
         DepositionSubmission submission =
                 template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
                         params);
@@ -226,7 +226,7 @@ public class DepositionSubmissionService {
             depositionSubmission.getPublication().setStatus("PUBLISHED_WITH_SS");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
-            template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
+            //template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
             statusMessages.add("imported summary stats");
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
@@ -280,7 +280,7 @@ public class DepositionSubmissionService {
             depositionSubmission.getPublication().setStatus("CURATION_STARTED");
             try {
                 String message = mapper.writeValueAsString(depositionSubmission);
-                template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
+                //template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -309,7 +309,7 @@ public class DepositionSubmissionService {
             boolean hasMetadata = false;
             boolean hasAssociations = false;
             for(DepositionStudyDto studyDto: submission.getStudies()){
-                if(studyDto.getSummaryStatisticsFile() != null){
+                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
                     hasSumStats = true;
                 }
             }
@@ -347,7 +347,7 @@ public class DepositionSubmissionService {
         }
         if(submission.getStudies() != null) {
             for (DepositionStudyDto studyDto : submission.getStudies()) {
-                if (studyDto.getSummaryStatisticsFile() != null) {
+                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
                     hasSumStats = true;
                 }
             }
@@ -397,55 +397,4 @@ public class DepositionSubmissionService {
             }
         });
     }
-
-//    private DepositionStudyList getStudies(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies", String.class,
-//                        params);
-//        DepositionStudyListWrapper studyList =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies",
-//                        DepositionStudyListWrapper.class, params);
-//        if (studyList.getStudies() == null) {
-//            studyList.setStudies(new DepositionStudyList());
-//        }
-//        return studyList.getStudies();
-//    }
-//
-//    private DepositionAssociationList getAssociations(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/associations", String.class,
-//                        params);
-//        DepositionAssociationListWrapper associationListWrapper =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/associations",
-//                        DepositionAssociationListWrapper.class, params);
-//        if (associationListWrapper.getAssociations() == null) {
-//            associationListWrapper.setAssociations(new DepositionAssociationList());
-//        }
-//        return associationListWrapper.getAssociations();
-//    }
-//
-//    private DepositionSampleList getSamples(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/samples", String.class,
-//                        params);
-//        DepositionSampleListWrapper sampleListWrapper =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/samples",
-//                        DepositionSampleListWrapper.class, params);
-//        if (sampleListWrapper.getSamplesList() == null) {
-//            sampleListWrapper.setSamplesList(new DepositionSampleList());
-//        }
-//        return sampleListWrapper.getSamplesList();
-//    }
-//
-//    private DepositionNoteList getNotes(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        return new DepositionNoteList();
-//    }
 }

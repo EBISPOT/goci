@@ -48,29 +48,33 @@ public class DepositionAssociationService {
                 if (pValue != null && pValue.toLowerCase().contains("e")) {
                     String[] pValues = pValue.toLowerCase().split("e");
                     int exponent = Integer.valueOf(pValues[1]);
-                    int mantissa = Double.valueOf(pValues[0]).intValue();
+                    int mantissa = (int) Math.round(Double.valueOf(pValues[0]));
                     association.setPvalueExponent(exponent);
                     association.setPvalueMantissa(mantissa);
                 }
                 association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
-                List<Locus> locusList = new ArrayList<>();
-                Locus locus = new Locus();
-                SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
-                studyNote.append("added SNP " + rsID + "\n");
-                RiskAllele riskAllele =
-                        lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
-                if(associationDto.getProxyVariant() != null){
-                    List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
-                    proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
-                    riskAllele.setProxySnps(proxySnps);
+                if(rsID != null) {
+                    List<Locus> locusList = new ArrayList<>();
+                    Locus locus = new Locus();
+                    SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
+                    studyNote.append("added SNP " + rsID + "\n");
+                    RiskAllele riskAllele =
+                            lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
+                    if (associationDto.getProxyVariant() != null) {
+                        List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
+                        proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
+                        riskAllele.setProxySnps(proxySnps);
+                    }
+                    List<RiskAllele> alleleList = new ArrayList<>();
+                    alleleList.add(riskAllele);
+                    locus.setStrongestRiskAlleles(alleleList);
+                    associationDto.getProxyVariant();
+                    locusList.add(locus);
+                    association.setLoci(locusList);
+                }else{
+                    throw new IllegalArgumentException("error, no rs_id found for " + associationDto.getStudyTag());
                 }
-                List<RiskAllele> alleleList = new ArrayList<>();
-                alleleList.add(riskAllele);
-                locus.setStrongestRiskAlleles(alleleList);
-                associationDto.getProxyVariant();
-                locusList.add(locus);
-                association.setLoci(locusList);
                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
                 associationList.add(association);
                 if(associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
@@ -94,13 +98,13 @@ public class DepositionAssociationService {
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
                 }
-                if(associationDto.getCiLower() != null) {
+                if(associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
                 }else{
-                    if(associationDto.getOddsRatio() != null) {
+                    if(associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
-                    }else if(associationDto.getBeta() != null) {
+                    }else if(associationDto.getBeta() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
                     }
