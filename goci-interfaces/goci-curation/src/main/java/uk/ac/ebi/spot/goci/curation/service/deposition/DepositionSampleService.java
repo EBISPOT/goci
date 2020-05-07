@@ -44,7 +44,7 @@ public class DepositionSampleService {
                 List<Country> countryList = new ArrayList<>();
                 String countryRecruitment = sampleDto.getCountryRecruitement();
                 if(countryRecruitment != null){
-                    String[] countries = countryRecruitment.split("\\|");
+                    String[] countries = countryRecruitment.split("\\||,");
                     for(String country: countries){
                         countryList.add(countryRepository.findByCountryNameIgnoreCase(country.trim()));
 
@@ -61,7 +61,7 @@ public class DepositionSampleService {
 //                }
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
                 if(ancestryCat != null){
-                    String[] groups = ancestryCat.split("\\|");
+                    String[] groups = ancestryCat.split("\\||,");
                     for(String group: groups){
                         AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
                         ancestryGroups.add(ancestryGroup);
@@ -108,7 +108,7 @@ public class DepositionSampleService {
             ancestry = sampleDto.getAncestryCategory().replaceAll("\\|", ", ");
         }
         if(ancestry.toString().equalsIgnoreCase("nr")) {
-            if (sampleDto.getCases() != null && sampleDto.getControls() != null) {
+            if (sampleDto.getCases() != null && sampleDto.getControls() != null && sampleDto.getCases() != 0 && sampleDto.getControls() != 0) {
                 ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " cases, " +
                         String.format("%,d", sampleDto.getControls()) + " " + ancestry + " controls";
             } else if (sampleDto.getSize() != -1) {
@@ -117,7 +117,7 @@ public class DepositionSampleService {
                 ancestry += " individuals";
             }
         }else{
-            if (sampleDto.getCases() != null && sampleDto.getControls() != null) {
+            if (sampleDto.getCases() != null && sampleDto.getControls() != null && sampleDto.getCases() != 0 && sampleDto.getControls() != 0) {
                 ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " ancestry cases, " +
                         String.format("%,d", sampleDto.getControls()) + " " + ancestry + " ancestry controls";
             } else if (sampleDto.getSize() != -1) {

@@ -101,10 +101,10 @@ public class DepositionAssociationService {
                 if(associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
                 }else{
-                    if(associationDto.getOddsRatio() != null) {
+                    if(associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
-                    }else if(associationDto.getBeta() != null) {
+                    }else if(associationDto.getBeta() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
                     }

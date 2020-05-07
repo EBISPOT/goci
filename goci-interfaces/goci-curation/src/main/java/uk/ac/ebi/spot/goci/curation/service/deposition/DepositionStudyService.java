@@ -99,7 +99,7 @@ public class DepositionStudyService {
         String manufacturerString = studyDto.getArrayManufacturer();
         if (manufacturerString != null) {
             List<Platform> platformList = new ArrayList<>();
-            String[] manufacturers = manufacturerString.split("\\|");
+            String[] manufacturers = manufacturerString.split("\\||,");
             for (String manufacturer : manufacturers) {
                 Platform platform = platformRepository.findByManufacturer(manufacturer.trim());
                 platformList.add(platform);
@@ -109,7 +109,7 @@ public class DepositionStudyService {
         List<GenotypingTechnology> gtList = new ArrayList<>();
         String genotypingTech = studyDto.getGenotypingTechnology();
         if(genotypingTech != null) {
-            String[] technologies = genotypingTech.split("\\|");
+            String[] technologies = genotypingTech.split("\\||,");
             for (String technology : technologies) {
                 GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(technology.trim());
                 gtList.add(gtt);
@@ -132,7 +132,7 @@ public class DepositionStudyService {
         List<EfoTrait> efoTraitList = new ArrayList<>();
         String efoTrait = studyDto.getEfoTrait();
         if(efoTrait != null){
-            String[] efoTraits = efoTrait.split("\\|");
+            String[] efoTraits = efoTrait.split("\\||,");
             for(String trait: efoTraits){
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait.trim());
                 efoTraitList.add(dbTrait);
@@ -142,7 +142,7 @@ public class DepositionStudyService {
         study.setEfoTraits(efoTraitList);
         String mappedBackgroundTrait = studyDto.getBackgroundEfoTrait();
         if(mappedBackgroundTrait != null) {
-            String[] efoTraits = mappedBackgroundTrait.split("\\|");
+            String[] efoTraits = mappedBackgroundTrait.split("\\||,");
             for (String trait : efoTraits) {
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait);
                 mappedTraitList.add(dbTrait);
@@ -179,7 +179,7 @@ public class DepositionStudyService {
                 //          studyService.deleteByStudyId(study.getId());
             }
         }
-        CurationStatus requiresReview = statusRepository.findByStatus("Requires review");
+        CurationStatus requiresReview = statusRepository.findByStatus("Requires Review");
         dbStudies.forEach(study -> {
             study.getHousekeeping().setCurationStatus(requiresReview);
             Event event = eventOperationsService.createEvent("REQUIRES_REVIEW", currentUser,
